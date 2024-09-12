@@ -114,6 +114,7 @@ class EventSerializer
             $this->sipe('id', 'setUuid', $data, $event);
         } else {
             $event->refreshUuid();
+            $event->setUuid($event->getUuid());
         }
 
         $this->sipe('code', 'setCode', $data, $event);

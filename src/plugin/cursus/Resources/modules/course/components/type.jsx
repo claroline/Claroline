@@ -92,7 +92,7 @@ const CreationType = (props) => {
                   request: {
                     method: 'POST',
                     body: JSON.stringify({
-                      ids: selected.length ? [selected[selected.length - 1].id] : [],
+                      ids: selected.length ? [selected[0].id] : [],
                       workspace: props.contextId
                     })
                   },

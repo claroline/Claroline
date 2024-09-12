@@ -40,7 +40,7 @@ const CatalogList = (props) =>
       url={['apiv2_cursus_course_list']}
     >
       <p className="text-center my-5 mt-1">
-        <span className="h1 fa fa-bullseye mb-3 text-body-tertiary" />
+        <span className="h1 fa fa-graduation-cap mb-3 text-body-tertiary" />
         <b className="h5 d-block">{trans('no_courses', {}, 'cursus')}</b>
         <span className="text-body-secondary">{trans('no_courses_help', {}, 'cursus')}</span>
       </p>

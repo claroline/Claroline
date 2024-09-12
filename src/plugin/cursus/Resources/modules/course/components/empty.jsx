@@ -30,7 +30,7 @@ const EmptyCourse = (props) =>
   >
     <ContentSizing size="md">
       <p className="text-center my-5">
-        <span className="h1 fa fa-bullseye mb-3 text-body-tertiary"/>
+        <span className="h1 fa fa-graduation-cap mb-3 text-body-tertiary"/>
         <b className="h5 d-block">{trans('no_course', {}, 'cursus')}</b>
         <span className="text-body-secondary">{trans('no_course_help', {}, 'cursus')}</span>
       </p>

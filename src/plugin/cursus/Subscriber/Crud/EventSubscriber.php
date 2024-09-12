@@ -20,7 +20,6 @@ use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Manager\EventManager;
-use Ramsey\Uuid\Uuid as BaseUuid;
 
 class EventSubscriber extends AbstractPlannedSubscriber
 {
@@ -113,8 +112,6 @@ class EventSubscriber extends AbstractPlannedSubscriber
 
         /** @var Event $copy */
         $copy = $event->getCopy();
-
-        $copy->setUuid(BaseUuid::uuid4()->toString());
 
         $copyCode = $this->om->getRepository(Event::class)->findNextUnique('code', $original->getCode());
 
