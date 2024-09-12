@@ -185,6 +185,12 @@ const CourseAbout = (props) => {
           </AlertBlock>
         }
 
+        {get(props.activeSession, 'meta.canceled') === true &&
+          <AlertBlock type="info" title={trans('cancel_session_info', {}, 'actions')}>
+            {get(props.activeSession, 'meta.cancelReason')}
+          </AlertBlock>
+        }
+
         {!isEmpty(props.activeSession) &&
           <div className="content-resume">
             <div className="content-resume-info content-resume-primary">

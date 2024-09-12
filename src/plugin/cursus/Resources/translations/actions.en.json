@@ -18,5 +18,12 @@
   "restore_training_help": "Restore the training in the list of active trainings.",
 
   "delete_training": "Delete training",
-  "delete_training_help": "Permanently delete the training."
+  "delete_training_help": "Permanently delete the training.",
+
+  "cancel_session_title": "{1} Cancel session | [2,Inf[ Cancel multiple sessions",
+  "cancel_session_message": "{1} You are about to cancel this session : | [2,Inf[ You are about to cancel these %count% sessions :",
+  "cancel_session_reason": "Enter the reason for the cancellation",
+  "cancel_session_template": "Select a cancellation template",
+  "cancel_session_info": "Session canceled",
+  "send_cancel_mail": "Send a cancellation email"
 }

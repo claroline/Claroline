@@ -90,6 +90,24 @@ class Session extends AbstractTraining implements IdentifiableInterface
      */
     private ?Template $invitationTemplate = null;
 
+    /**
+     * @ORM\Column(name="canceled", type="boolean")
+     */
+    private bool $canceled = false;
+
+    /**
+     * @ORM\Column(name="cancel_reason", type="string", nullable=true)
+     */
+    private ?string $cancelReason = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
+     *
+     * @ORM\JoinColumn(name="canceled_template_id", nullable=true, onDelete="SET NULL")
+     */
+    private ?Template $canceledTemplate = null;
+
+
     public function __construct()
     {
         $this->refreshUuid();
@@ -210,5 +228,37 @@ class Session extends AbstractTraining implements IdentifiableInterface
     public function setInvitationTemplate(Template $template = null): void
     {
         $this->invitationTemplate = $template;
+    }
+
+    public function isCanceled(): bool
+    {
+        return $this->canceled;
+    }
+
+    public function setCanceled(bool $canceled): void
+    {
+        $this->canceled = $canceled;
+    }
+
+    public function getCancelReason(): ?string
+    {
+        return $this->cancelReason;
+    }
+
+    public function setCancelReason(?string $cancelReason): self
+    {
+        $this->cancelReason = $cancelReason;
+
+        return $this;
+    }
+
+    public function getCanceledTemplate(): ?Template
+    {
+        return $this->canceledTemplate;
+    }
+
+    public function setCanceledTemplate(Template $template = null): void
+    {
+        $this->canceledTemplate = $template;
     }
 }

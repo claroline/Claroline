@@ -18,5 +18,13 @@
   "restore_training_help": "Permet de restaurer la formation dans la liste des formations actives.",
 
   "delete_training": "Supprimer la formation",
-  "delete_training_help": "Permet de supprimer définitivement la formation."
+  "delete_training_help": "Permet de supprimer définitivement la formation.",
+
+  "cancel_session_title": "{1} Annulation d'une session | [2,Inf[ Annulation de plusieurs sessions",
+  "cancel_session_message": "{1} Vous êtes sur le point d'annuler cette session : | [2,Inf[ Vous êtes sur le point d'annuler ces %count% sessions :",
+  "cancel_session_reason": "Saisissez la raison de l'annulation",
+  "cancel_session_template": "Sélectionnez un template d'annulation",
+  "cancel_session_info": "Session annulée",
+  "send_cancel_mail": "Envoyer un mail d'annulation"
+
 }

@@ -93,6 +93,12 @@ export default {
         displayed: false,
         sortable: false,
         filterable: true
+      }, {
+        name: 'meta.canceled',
+        label: trans('canceled'),
+        type: 'boolean',
+        filterable: true,
+        displayable: true
       }
     ],
     card: SessionCard

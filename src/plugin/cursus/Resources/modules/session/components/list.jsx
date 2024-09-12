@@ -5,13 +5,14 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl'
 import {param} from '#/main/app/config'
 import {hasPermission} from '#/main/app/security'
-import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {route} from '#/plugin/cursus/routing'
 import {SessionCard} from '#/plugin/cursus/session/components/card'
 import {EventStatus} from '#/plugin/cursus/components/event-status'
+import {MODAL_SESSION_CANCEL} from '#/plugin/cursus/session/modals/cancel'
 
 const SessionList = (props) =>
   <ListData
@@ -125,6 +126,17 @@ const SessionList = (props) =>
         group: trans('transfer'),
         target: ['apiv2_cursus_session_download_pdf', {id: rows[0].id}],
         scope: ['object']
+      }, {
+        name: 'canceled',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-ban',
+        label: trans('cancel', {}, 'actions'),
+        displayed: hasPermission('edit', rows[0]),
+        group: trans('management'),
+        scope: ['object', 'collection'],
+        modal: [MODAL_SESSION_CANCEL, {
+          sessions: rows
+        }]
       }]
 
       if (props.actions) {

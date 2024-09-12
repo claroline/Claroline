@@ -291,6 +291,7 @@ class CourseController extends AbstractCrudController
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['course'] = $course->getUuid();
+        $params['hiddenFilters']['canceled'] = false;
 
         // hide hidden sessions for non admin
         if (!$this->checkToolAccess('EDIT')) {
