@@ -24,7 +24,8 @@ use Claroline\CoreBundle\Entity\Location;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Planning\PlannedObjectRepository")
+ *
  * @ORM\Table(name="claro_planned_object")
  */
 class PlannedObject
@@ -74,6 +75,7 @@ class PlannedObject
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Location")
+     *
      * @ORM\JoinColumn(name="location_id", nullable=true, onDelete="SET NULL")
      */
     private ?Location $location = null;

@@ -83,6 +83,8 @@ const EventsTool = (props) =>
                 path={props.path}
                 canEdit={props.canEdit}
                 contextType={props.contextType}
+                contextId={props.currentContext.data}
+                openForm={props.openForm}
               />
             )
           }

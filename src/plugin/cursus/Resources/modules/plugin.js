@@ -44,7 +44,8 @@ registry.add('ClarolineCursusBundle', {
       'export-pdf': () => { return import(/* webpackChunkName: "training-action-course-export-pdf" */ '#/plugin/cursus/actions/course/export-pdf') },
       'delete'    : () => { return import(/* webpackChunkName: "training-action-course-delete" */     '#/plugin/cursus/actions/course/delete') },
       'archive'   : () => { return import(/* webpackChunkName: "training-action-course-archive" */    '#/plugin/cursus/actions/course/archive') },
-      'restore' : () => { return import(/* webpackChunkName: "training-action-course-restore" */  '#/plugin/cursus/actions/course/restore') }
+      'restore'   : () => { return import(/* webpackChunkName: "training-action-course-restore" */    '#/plugin/cursus/actions/course/restore') },
+      'copy'      : () => { return import(/* webpackChunkName: "training-action-course-copy" */       '#/plugin/cursus/actions/course/copy') }
     },
     training_presence: {
       'export-pdf'             : () => { return import(/* webpackChunkName: "training-action-presence-export-pdf" */ '#/plugin/cursus/actions/presence/export-pdf') },

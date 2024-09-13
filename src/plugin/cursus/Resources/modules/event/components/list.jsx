@@ -4,16 +4,17 @@ import {connect} from 'react-redux'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
-import {trans} from '#/main/app/intl/translation'
+import {url} from '#/main/app/api'
 import {hasPermission} from '#/main/app/security'
-import {LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {actions as listActions} from '#/main/app/content/list/store'
-import {constants as listConst} from '#/main/app/content/list/constants'
+import {ASYNC_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {constants} from '#/plugin/cursus/constants'
-import {EventStatus} from '#/plugin/cursus/components/event-status'
 import {EventCard} from '#/plugin/cursus/event/components/card'
+import {EventStatus} from '#/plugin/cursus/components/event-status'
+import {constants as listConst} from '#/main/app/content/list/constants'
 import {MODAL_TRAINING_EVENT_ABOUT} from '#/plugin/cursus/event/modals/about'
 import {MODAL_TRAINING_EVENT_PARAMETERS} from '#/plugin/cursus/event/modals/parameters'
 
@@ -46,6 +47,28 @@ const Events = (props) =>
         scope: ['object'],
         group: trans('management'),
         displayed: hasPermission('edit', rows[0])
+      }, {
+        name: 'copy',
+        type: ASYNC_BUTTON,
+        icon: 'fa fa-fw fa-clone',
+        label: trans('copy', {}, 'actions'),
+        displayed: hasPermission('edit', rows[0]),
+        confirm: {
+          title: transChoice('copy_event_confirm_title', rows.length, {}, 'actions'),
+          subtitle: 1 === rows.length ? rows[0].name : transChoice('count_elements', rows.length, {count: rows.length}),
+          message: transChoice('copy_event_confirm_message', rows.length, {count: rows.length}, 'actions')
+        },
+        request: {
+          url: url(['apiv2_cursus_event_copy']),
+          request: {
+            method: 'POST',
+            body: JSON.stringify({
+              ids: rows.map(row => row.id)
+            })
+          }
+        },
+        group: trans('management'),
+        scope: ['object', 'collection']
       }, {
         name: 'export-pdf',
         type: URL_BUTTON,

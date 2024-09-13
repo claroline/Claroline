@@ -13,10 +13,12 @@ namespace Claroline\CursusBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -42,6 +44,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class CourseController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
+    use RequestDecoderTrait;
 
     private TokenStorageInterface $tokenStorage;
     private RoutingHelper $routing;
@@ -191,6 +194,46 @@ class CourseController extends AbstractCrudController
             if ($this->authorization->isGranted('ADMINISTRATE', $course) && $course->isArchived()) {
                 $course->setArchived(false);
                 $processed[] = $course;
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (Course $course) {
+            return $this->serializer->serialize($course);
+        }, $processed));
+    }
+
+    /**
+     * @Route("/copy", name="copy", methods={"POST"})
+     */
+    public function copyAction(Request $request): JsonResponse
+    {
+        $processed = [];
+
+        $this->om->startFlushSuite();
+
+        $data = $this->decodeRequest($request);
+
+        $workspaceData = $data['workspace'] ?? null;
+        $workspace = null;
+
+        if ($workspaceData) {
+            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['workspace']['id']]);
+        }
+
+        /** @var Course[] $courses */
+        $courses = $this->om->getRepository(Course::class)->findBy([
+            'uuid' => $data['ids'],
+        ]);
+
+        foreach ($courses as $course) {
+            if ($this->authorization->isGranted('ADMINISTRATE', $course)) {
+                $copy = $this->crud->copy($course);
+                if (1 === count($courses) && $workspace) {
+                    $copy->setWorkspace($workspace);
+                }
+                $processed[] = $copy;
             }
         }
 

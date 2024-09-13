@@ -462,7 +462,7 @@ class SessionManager
             'session_description' => $session->getDescription(),
             'session_trainers' => $trainersList,
             'cancel_reason' => $session->getCancelReason(),
-            'workspace_url' => $workspace ? $this->routingHelper->workspaceUrl($workspace) : ''
+            'workspace_url' => $workspace ? $this->routingHelper->workspaceUrl($workspace) : '',
         ],
             $this->templateManager->formatDatePlaceholder('session_start', $session->getStartDate()),
             $this->templateManager->formatDatePlaceholder('session_end', $session->getEndDate()),
@@ -501,12 +501,12 @@ class SessionManager
                 $content = $this->templateManager->getTemplate($templateName, $placeholders, $locale);
             }
 
-//            $this->eventDispatcher->dispatch(new SendMessageEvent(
-//                $content,
-//                $title,
-//                [$user],
-//                $session->getCreator()
-//            ), MessageEvents::MESSAGE_SENDING);
+            $this->eventDispatcher->dispatch(new SendMessageEvent(
+                $content,
+                $title,
+                [$user],
+                $session->getCreator()
+            ), MessageEvents::MESSAGE_SENDING);
         }
     }
 

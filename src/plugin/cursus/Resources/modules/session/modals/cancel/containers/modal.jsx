@@ -10,7 +10,7 @@ import {SessionCancelModal as SessionCancelModalComponent} from '#/plugin/cursus
 const SessionCancelModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
+      formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME))
     })
   )(SessionCancelModalComponent)
 )

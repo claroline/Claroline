@@ -181,9 +181,14 @@ class SessionSerializer
         ];
     }
 
-    public function deserialize(array $data, Session $session): Session
+    public function deserialize(array $data, Session $session, array $options): Session
     {
-        $this->sipe('id', 'setUuid', $data, $session);
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $session);
+        } else {
+            $session->refreshUuid();
+        }
+
         $this->sipe('code', 'setCode', $data, $session);
         $this->sipe('name', 'setName', $data, $session);
         $this->sipe('description', 'setDescription', $data, $session);

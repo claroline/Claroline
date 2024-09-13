@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Repository;
 
+use Claroline\AppBundle\Repository\UniqueValueFinder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
@@ -18,6 +19,8 @@ use Doctrine\ORM\EntityRepository;
 
 class EventRepository extends EntityRepository
 {
+    use UniqueValueFinder;
+
     public function countParticipants(Event $event): array
     {
         return [

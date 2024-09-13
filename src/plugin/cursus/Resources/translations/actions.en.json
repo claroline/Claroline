@@ -25,5 +25,12 @@
   "cancel_session_reason": "Enter the reason for the cancellation",
   "cancel_session_template": "Select a cancellation template",
   "cancel_session_info": "Session canceled",
-  "send_cancel_mail": "Send a cancellation email"
+  "send_cancel_mail": "Send a cancellation email",
+
+  "copy_course_confirm_title": "{1} Training copy | [2,Inf[ Trainings copy",
+  "copy_course_confirm_message": "{1} Are you sure you want to copy this training ? | [2,Inf[ Are you sure you want to copy these %count% trainings?",
+  "copy_session_confirm_title": "{1} Session copy | [2,Inf[ Sessions copy",
+  "copy_session_confirm_message": "{1} Are you sure you want to copy this session ? | [2,Inf[ Are you sure you want to copy these %count% sessions?",
+  "copy_event_confirm_title": "{1} Event copy | [2,Inf[ Events copy",
+  "copy_event_confirm_message": "{1} Are you sure you want to copy this event ? | [2,Inf[ Are you sure you want to copy these %count% events?"
 }

@@ -97,17 +97,15 @@ const SessionCancelModal = props => {
           }
         }
       }}
-    >
-
-
-  </ConfirmModal>
+    />
   )
 }
 
 SessionCancelModal.propTypes = {
+  formData: T.object.isRequired,
   sessions:  T.arrayOf(T.shape(
     SessionTypes.propTypes
-  )),
+  ))
 }
 
 export {

@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Repository;
 
+use Claroline\AppBundle\Repository\UniqueValueFinder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CursusBundle\Entity\Course;
@@ -20,6 +21,8 @@ use Doctrine\ORM\EntityRepository;
 
 class SessionRepository extends EntityRepository
 {
+    use UniqueValueFinder;
+
     public function findByWorkspace(Workspace $workspace)
     {
         return $this->getEntityManager()

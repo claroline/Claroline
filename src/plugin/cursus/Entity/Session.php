@@ -107,7 +107,6 @@ class Session extends AbstractTraining implements IdentifiableInterface
      */
     private ?Template $canceledTemplate = null;
 
-
     public function __construct()
     {
         $this->refreshUuid();
