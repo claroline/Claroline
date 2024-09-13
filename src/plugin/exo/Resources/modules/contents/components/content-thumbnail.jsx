@@ -43,7 +43,7 @@ const Actions = props =>
     {props.hasSortBtn && props.connectDragSource(
       <span
         role="button"
-        title={trans('move')}
+        title={trans('move', {}, 'actions')}
         className="action-button fa fa-arrows drag-handle"
         draggable="true"
       />

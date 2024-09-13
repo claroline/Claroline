@@ -93,7 +93,7 @@ class Choice extends Component {
             type={CALLBACK_BUTTON}
             disabled={!this.props.deletable}
             icon="fa fa-fw fa-trash"
-            label={trans('delete')}
+            label={trans('delete', {}, 'actions')}
             callback={this.props.delete}
             tooltip="top"
             dangerous={true}

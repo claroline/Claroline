@@ -606,12 +606,12 @@ let Item = props =>
       >
         {props.connectDragSource(
           <span
-            role="button"
-            title={trans('move', {}, 'actions')}
-            draggable={true}
             className="btn btn-text-secondary drag-handle"
+            role="button"
+            draggable={true}
+            aria-labelledby={`pair-item-${props.item.id}-drag`}
           >
-            <span className="fa fa-fw fa-arrows" />
+            <span className="fa fa-fw fa-arrows" aria-hidden={true} />
           </span>
         )}
       </TooltipOverlay>
