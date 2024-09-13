@@ -1,6 +1,4 @@
 import React, {Component} from 'react'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
 import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
 
@@ -12,6 +10,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {makeId} from '#/main/core/scaffolding/id'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
 import {SCORE_SUM} from '#/plugin/exo/quiz/enums'
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
@@ -309,7 +308,7 @@ class Pair extends Component {
             />
           }
 
-          <div className="form-check">
+          <div className="form-check mt-3">
             <label>
               <input
                 type="checkbox"
@@ -590,7 +589,7 @@ let Item = props =>
     <div className="right-controls">
       <Button
         id={`set-item-${props.item.id}-delete`}
-        className="btn-link"
+        className="btn btn-text-secondary"
         type={CALLBACK_BUTTON}
         icon="fa fa-fw fa-trash"
         label={trans('delete', {}, 'actions')}
@@ -600,25 +599,22 @@ let Item = props =>
         dangerous={true}
       />
 
-      {props.connectDragSource(
-        <div>
-          <OverlayTrigger
-            placement="top"
-            overlay={
-              <Tooltip id={`item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
-            }
+      <TooltipOverlay
+        id={`pair-item-${props.item.id}-drag`}
+        tip={trans('move', {}, 'actions')}
+        disabled={props.isDragging}
+      >
+        {props.connectDragSource(
+          <span
+            role="button"
+            title={trans('move', {}, 'actions')}
+            draggable={true}
+            className="btn btn-text-secondary drag-handle"
           >
-            <span
-              role="button"
-              title={trans('move')}
-              draggable="true"
-              className="btn-link default drag-handle"
-            >
-              <span className="fa fa-fw fa-arrows" />
-            </span>
-          </OverlayTrigger>
-        </div>
-      )}
+            <span className="fa fa-fw fa-arrows" />
+          </span>
+        )}
+      </TooltipOverlay>
     </div>
   </div>
 
@@ -627,7 +623,8 @@ Item.propTypes = {
   index: T.number.isRequired,
   item: T.object.isRequired,
   onUpdate: T.func.isRequired,
-  onDelete: T.func.isRequired
+  onDelete: T.func.isRequired,
+  isDragging: T.bool.isRequired
 }
 
 Item = makeDraggable(Item, 'ITEM', PairItemDragPreview)

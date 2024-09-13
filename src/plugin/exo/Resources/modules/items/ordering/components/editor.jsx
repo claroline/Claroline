@@ -178,7 +178,7 @@ class Item extends Component {
               {this.props.connectDragSource(
                 <span
                   title={trans('move', {}, 'actions')}
-                  draggable="true"
+                  draggable={true}
                   className="btn btn-text-secondary drag-handle"
                 >
                   <span className="fa fa-fw fa-arrows" />
