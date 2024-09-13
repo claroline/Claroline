@@ -40,7 +40,7 @@ const PairItem = props =>
         <Button
           id={`pair-${props.item.id}-delete`}
           type={CALLBACK_BUTTON}
-          className="btn btn-text-body p-0"
+          className="btn btn-text-secondary p-0"
           icon="fa fa-fw fa-trash"
           label={trans('delete', {}, 'actions')}
           callback={() => props.handleItemRemove(props.item.id)}
@@ -103,12 +103,12 @@ PairRowList.propTypes = {
 
 let Item = props => {
   const element =
-    <div className="pair-answer-item answer-item pair-item">
+    <div className={classes('pair-answer-item answer-item pair-item', {'drag-handle': props.draggable})}>
       <ContentHtml className="pair-item-content">{props.item.data}</ContentHtml>
 
       {props.draggable &&
-        <div className="item-actions">
-          <span className="pair-item-drag fa fa-arrows text-secondary" />
+        <div className="item-actions" role="presentation">
+          <span className="drag-handle fa fa-arrows text-secondary" aria-hidden={true} />
         </div>
       }
     </div>

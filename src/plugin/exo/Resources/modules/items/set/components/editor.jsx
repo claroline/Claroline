@@ -2,9 +2,6 @@ import React, {Component} from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
 
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
-
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -22,6 +19,7 @@ import {SetItem as SetItemType} from '#/plugin/exo/items/set/prop-types'
 import {utils} from '#/plugin/exo/items/set/utils'
 import {SetItemDragPreview} from '#/plugin/exo/items/set/components/set-item-drag-preview'
 import {FeedbackEditorButton} from '#/plugin/exo/buttons/feedback/components/button'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
 const addItem = (items, saveCallback) => {
   const newItems = cloneDeep(items)
@@ -307,10 +305,10 @@ const Set = (props) =>
         />
       </div>
 
-      <div className="right-controls">
+      <div className="right-controls" role="presentation">
         <Button
           id={`set-${props.set.id}-delete`}
-          className="btn-link"
+          className="btn btn-text-secondary"
           type={CALLBACK_BUTTON}
           icon="fa fa-fw fa-trash"
           label={trans('delete', {}, 'actions')}
@@ -406,10 +404,10 @@ let Item = (props) =>
       />
     </div>
 
-    <div className="right-controls">
+    <div className="right-controls" role="presentation">
       <Button
         id={`set-item-${props.item.id}-delete`}
-        className="btn-link"
+        className="btn btn-text-secondary"
         type={CALLBACK_BUTTON}
         icon="fa fa-fw fa-trash"
         label={trans('delete', {}, 'actions')}
@@ -419,24 +417,22 @@ let Item = (props) =>
         dangerous={true}
       />
 
-      {props.connectDragSource(
-        <div>
-          <OverlayTrigger
-            placement="top"
-            overlay={
-              <Tooltip id={`set-item-${props.item.id}-drag`}>{trans('move', {}, 'actions')}</Tooltip>
-            }
+      <TooltipOverlay
+        id={`set-item-${props.item.id}-drag`}
+        tip={trans('move', {}, 'actions')}
+        disabled={props.isDragging}
+      >
+        {props.connectDragSource(
+          <span
+            className="btn btn-text-secondary drag-handle"
+            role="button"
+            aria-labelledby={`set-item-${props.item.id}-drag`}
+            draggable={true}
           >
-            <span
-              title={trans('move', {}, 'actions')}
-              draggable="true"
-              className="btn-link default drag-handle"
-            >
-              <span className="fa fa-fw fa-arrows" />
-            </span>
-          </OverlayTrigger>
-        </div>
-      )}
+            <span className="fa fa-fw fa-arrows" aria-hidden={true} />
+          </span>
+        )}
+      </TooltipOverlay>
     </div>
   </div>
 
@@ -444,6 +440,7 @@ Item.propTypes = {
   index: T.number.isRequired,
   item: T.object.isRequired,
   deletable: T.bool.isRequired,
+  isDragging: T.bool.isRequired,
   onUpdate: T.func.isRequired,
   onDelete: T.func.isRequired,
   connectDragSource: T.func.isRequired
