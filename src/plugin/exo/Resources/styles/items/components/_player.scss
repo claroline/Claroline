@@ -6,6 +6,10 @@
             color: $answer-item-hover-color;
             background: $answer-item-hover-bg;
             border-color: $answer-item-hover-border-color;
+
+            .drag-handle {
+                color: $answer-item-hover-color !important;
+            }
         }
     }
 
@@ -22,7 +26,6 @@
     .used-hint {
         display: flex;
         align-items: baseline;
-        //margin-top: map-get($spacers, 3);
         padding: $answer-item-padding;
         color: var(--#{$prefix}warning-text-emphasis);
         background: var(--#{$prefix}warning-bg-subtle);

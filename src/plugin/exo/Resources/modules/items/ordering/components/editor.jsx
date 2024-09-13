@@ -177,11 +177,12 @@ class Item extends Component {
             >
               {this.props.connectDragSource(
                 <span
-                  title={trans('move', {}, 'actions')}
-                  draggable={true}
                   className="btn btn-text-secondary drag-handle"
+                  aria-labelledby={`ordering-item-${this.props.id}-drag`}
+                  draggable={true}
+                  role="button"
                 >
-                  <span className="fa fa-fw fa-arrows" />
+                  <span className="fa fa-fw fa-arrows" aria-hidden={true} />
                 </span>
               )}
             </TooltipOverlay>

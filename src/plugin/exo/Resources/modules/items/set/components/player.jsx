@@ -2,9 +2,6 @@ import React, {Component} from 'react'
 import classes from 'classnames'
 import {PropTypes as T} from 'prop-types'
 
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
-
 import {trans} from '#/main/app/intl/translation'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
@@ -39,7 +36,7 @@ const Association = props =>
     {props.removable &&
       <Button
         id={`ass-${props.association.itemId}-${props.association.setId}-delete`}
-        className="btn-link"
+        className="btn btn-text-secondary"
         type={CALLBACK_BUTTON}
         icon="fa fa-fw fa-trash"
         label={trans('delete', {}, 'actions')}
@@ -106,33 +103,22 @@ SetList.propTypes = {
   onAssociationItemDrop: T.func.isRequired
 }
 
-let Item = props =>
-  <div className="set-answer-item answer-item">
-    <ContentHtml className="item-content">
-      {props.item.data}
-    </ContentHtml>
+let Item = props => {
+  const element =
+    <div className={classes('set-answer-item answer-item', {'drag-handle': props.draggable})}>
+      <ContentHtml className="item-content">
+        {props.item.data}
+      </ContentHtml>
 
-    {props.connectDragSource(
-      <div>
-        <OverlayTrigger
-          placement="top"
-          overlay={
-            <Tooltip id={`item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
-          }
-        >
-          <span
-            title={trans('move', {}, 'quiz')}
-            draggable="true"
-            className="btn-link default drag-handle"
-          >
-            {props.draggable &&
-              <span className="fa fa-arrows"/>
-            }
-          </span>
-        </OverlayTrigger>
-      </div>
-    )}
-  </div>
+      {props.draggable &&
+        <div className="item-actions" role="presentation">
+          <span className="drag-handle fa fa-arrows text-secondary" aria-hidden={true} />
+        </div>
+      }
+    </div>
+
+  return props.draggable ? props.connectDragSource(element) : element
+}
 
 Item.propTypes = {
   connectDragSource: T.func.isRequired,
@@ -186,7 +172,7 @@ class SetPlayer extends Component {
 
   render() {
     return (
-      <div className="set-item set-player row">
+      <div className="set-item set-player row user-select-none">
         <div className="items-col col-md-5 col-sm-5 col-xs-5">
           <ItemList items={this.props.item.items} draggable={!this.props.disabled}/>
         </div>
