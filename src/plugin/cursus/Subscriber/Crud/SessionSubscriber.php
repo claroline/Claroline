@@ -11,12 +11,16 @@
 
 namespace Claroline\CursusBundle\Subscriber\Crud;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\FileManager;
+use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Manager\SessionManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -26,8 +30,10 @@ class SessionSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
         private readonly FileManager $fileManager,
-        private readonly SessionManager $sessionManager
+        private readonly SessionManager $sessionManager,
+        private readonly Crud $crud,
     ) {
     }
 
@@ -39,6 +45,8 @@ class SessionSubscriber implements EventSubscriberInterface
             CrudEvents::getEventName(CrudEvents::PRE_UPDATE, Session::class) => 'preUpdate',
             CrudEvents::getEventName(CrudEvents::POST_UPDATE, Session::class) => 'postUpdate',
             CrudEvents::getEventName(CrudEvents::POST_DELETE, Session::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_COPY, Session::class) => 'preCopy',
+            CrudEvents::getEventName(CrudEvents::POST_COPY, Session::class) => 'postCopy',
         ];
     }
 
@@ -157,6 +165,45 @@ class SessionSubscriber implements EventSubscriberInterface
 
         if ($session->getThumbnail()) {
             $this->fileManager->unlinkFile(Session::class, $session->getUuid(), $session->getThumbnail());
+        }
+    }
+
+    public function preCopy(CopyEvent $event): void
+    {
+        /** @var Course $course */
+        $course = $event->getExtra()['parent'];
+
+        /** @var Session $copy */
+        $copy = $event->getCopy();
+
+        $copy->setCourse($course);
+        $copy->setCreatedAt(new \DateTime());
+        $copy->setUpdatedAt(new \DateTime());
+
+        $copyName = $this->om->getRepository(Session::class)->findNextUnique('name', $copy->getName());
+        $copyCode = $this->om->getRepository(Session::class)->findNextUnique('code', $copy->getCode());
+        $copy->setName($copyName);
+        $copy->setCode($copyCode);
+    }
+
+    public function postCopy(CopyEvent $event): void
+    {
+        /** @var Session $original */
+        $original = $event->getObject();
+
+        /** @var Session $copy */
+        $copy = $event->getCopy();
+
+        foreach ($original->getEvents() as $event) {
+            $this->crud->copy($event, [], ['parent' => $copy]);
+        }
+
+        if ($copy->getPoster()) {
+            $this->fileManager->linkFile(Session::class, $copy->getUuid(), $copy->getPoster());
+        }
+
+        if ($copy->getThumbnail()) {
+            $this->fileManager->linkFile(Session::class, $copy->getUuid(), $copy->getThumbnail());
         }
     }
 }

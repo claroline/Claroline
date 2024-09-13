@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Group;
@@ -45,6 +46,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SessionController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
+    use RequestDecoderTrait;
 
     private TokenStorageInterface $tokenStorage;
     private TranslatorInterface $translator;
@@ -127,6 +129,35 @@ class SessionController extends AbstractCrudController
         return new JsonResponse(
             $this->crud->list(Session::class, $params, $options['list'] ?? [])
         );
+    }
+
+    /**
+     * @Route("/copy", name="copy", methods={"POST"})
+     */
+    public function copyAction(Request $request): JsonResponse
+    {
+        $processed = [];
+
+        $this->om->startFlushSuite();
+
+        $data = $this->decodeRequest($request);
+
+        /** @var Session[] $sessions */
+        $sessions = $this->om->getRepository(Session::class)->findBy([
+            'uuid' => $data['ids'],
+        ]);
+
+        foreach ($sessions as $session) {
+            if ($this->authorization->isGranted('EDIT', $session)) {
+                $processed[] = $this->crud->copy($session, [], ['parent' => $session->getCourse()]);
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (Session $session) {
+            return $this->serializer->serialize($session);
+        }, $processed));
     }
 
     /**

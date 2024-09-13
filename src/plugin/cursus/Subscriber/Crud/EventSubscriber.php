@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Subscriber\Crud;
 
+use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\CoreBundle\Subscriber\Crud\Planning\AbstractPlannedSubscriber;
 use Claroline\CursusBundle\Entity\Event;
@@ -97,5 +98,24 @@ class EventSubscriber extends AbstractPlannedSubscriber
                 }, $sessionGroups));
             }
         }
+    }
+
+    public function preCopy(CopyEvent $event): void
+    {
+        parent::preCopy($event);
+
+        /** @var Session $session */
+        $session = $event->getExtra()['parent'];
+
+        /** @var Event $original */
+        $original = $event->getObject();
+
+        /** @var Event $copy */
+        $copy = $event->getCopy();
+
+        $copyCode = $this->om->getRepository(Event::class)->findNextUnique('code', $original->getCode());
+
+        $copy->setCode($copyCode);
+        $copy->setSession($session);
     }
 }
