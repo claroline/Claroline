@@ -12,7 +12,6 @@
 namespace Claroline\CommunityBundle\Command;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
@@ -25,7 +24,6 @@ class DeleteDisabledCommand extends Command
 {
     public function __construct(
         private readonly ObjectManager $om,
-        private readonly FinderProvider $finder,
         private readonly Crud $crud
     ) {
         parent::__construct();
@@ -44,17 +42,14 @@ class DeleteDisabledCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $users = $this->finder->searchEntities(User::class, [
-            'filters' => [
-                'isEnabled' => false,
-            ],
-            'limit' => $input->getOption('limit'),
-        ]);
+        $users = $this->om->getRepository(User::class)->findBy([
+            'disabled' => true
+        ], [], $input->getOption('limit'));
 
         $this->om->startFlushSuite();
 
-        $output->writeln(sprintf('Found %d disabled users / Will delete %d users.', $users['totalResults'], $input->getOption('limit')));
-        foreach ($users['data'] as $user) {
+        $output->writeln(sprintf('Found %d disabled users / Will delete %d users.', count($users), $input->getOption('limit')));
+        foreach ($users as $user) {
             $output->writeln(sprintf('Deleting "%s" (%s).', $user->getUsername(), $user->getUuid()));
 
             if ($input->getOption('force')) {

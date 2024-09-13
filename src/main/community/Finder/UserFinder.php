@@ -14,7 +14,6 @@ namespace Claroline\CommunityBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Doctrine\ORM\QueryBuilder;
@@ -87,10 +86,6 @@ class UserFinder extends AbstractFinder
                 case 'id': // should not exist
                     $qb->andWhere('obj.uuid IN (:userUuids)');
                     $qb->setParameter('userUuids', is_array($filterValue) ? $filterValue : [$filterValue]);
-                    break;
-
-                case 'hasPersonalWorkspace':
-                    $qb->andWhere('obj.personalWorkspace IS NOT NULL');
                     break;
 
                 case 'group':
@@ -262,7 +257,7 @@ class UserFinder extends AbstractFinder
                     $qb->orderBy('obj.lastName', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
                     break;
                 case 'isDisabled':
-                    $qb->orderBy('obj.isEnabled', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+                    $qb->orderBy('obj.disabled', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
                     break;
             }
         }
@@ -272,7 +267,7 @@ class UserFinder extends AbstractFinder
     {
         return [
             'name' => 'last_name',
-            'isDisabled' => 'is_enabled',
+            'isDisabled' => 'disabled',
         ];
     }
 }

@@ -63,7 +63,7 @@ class MessageController extends AbstractCrudController
     public function getReceivedAction(Request $request): JsonResponse
     {
         return new JsonResponse(
-            $this->crud->list($this->getClass(), array_merge(
+            $this->crud->list(self::getClass(), array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['removed' => false, 'sent' => false]]
             ))
@@ -109,7 +109,7 @@ class MessageController extends AbstractCrudController
     public function getSentAction(Request $request): JsonResponse
     {
         return new JsonResponse(
-            $this->crud->list($this->getClass(), array_merge(
+            $this->crud->list(self::getClass(), array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['sent' => true, 'removed' => false]]
             ))

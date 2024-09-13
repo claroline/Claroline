@@ -24,7 +24,6 @@ class DeleteArchivedCommand extends Command
 {
     public function __construct(
         private readonly ObjectManager $om,
-        private readonly FinderProvider $finder,
         private readonly Crud $crud
     ) {
         parent::__construct();
@@ -42,16 +41,13 @@ class DeleteArchivedCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $workspaces = $this->finder->searchEntities(Workspace::class, [
-            'filters' => [
-                'archived' => true,
-            ],
-            'limit' => $input->getOption('limit'),
-        ]);
+        $workspaces = $this->om->getRepository(Workspace::class)->findBy([
+            'archived' => true,
+        ], [], $input->getOption('limit'));
 
         $this->om->startFlushSuite();
 
-        $output->writeln(sprintf('Found %d archived workspaces / Will delete %d workspaces.', $workspaces['totalResults'], $input->getOption('limit')));
+        $output->writeln(sprintf('Found %d archived workspaces / Will delete %d workspaces.', count($workspaces), $input->getOption('limit')));
         foreach ($workspaces['data'] as $workspace) {
             $output->writeln(sprintf('Deleting "%s" (%s).', $workspace->getName(), $workspace->getUuid()));
 

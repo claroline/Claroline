@@ -2,28 +2,76 @@
 
 namespace Claroline\AppBundle\API\Finder;
 
+use Closure;
+use Countable;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\QueryBuilder;
 
-class FinderResult
+class FinderResult implements FinderResultInterface, Countable
 {
-    private Paginator $paginator;
+    private ?int $count = null;
+    private ?iterable $results = null;
 
     public function __construct(
-        Query $query
+        private readonly string $name,
+        private readonly FinderQuery $searchQuery,
+        private readonly QueryBuilder $queryBuilder,
+        private readonly ?Closure $rowTransformer = null
     ) {
-        $this->paginator = new Paginator($query/* , false */);
     }
 
     public function count(): int
     {
-        return count($this->paginator);
+        if (null === $this->count) {
+            $this->count = $this->getCountQuery()
+                ->getSingleScalarResult();
+        }
+
+        return $this->count;
     }
 
-    public function get(): iterable
+    public function getItems(): iterable
     {
-        return $this->paginator
-            ->getQuery()
-            ->toIterable();
+        if (null === $this->results) {
+            if (0 < $this->searchQuery->getPageSize()) {
+                $this->queryBuilder->setFirstResult($this->searchQuery->getPage() * $this->searchQuery->getPageSize());
+                $this->queryBuilder->setMaxResults($this->searchQuery->getPageSize());
+            }
+
+            $this->results = $this->queryBuilder
+                ->getQuery()
+                ->toIterable();
+        }
+
+        if (null !== $this->rowTransformer) {
+            foreach ($this->results as $result) {
+                yield ($this->rowTransformer)($result);
+            }
+        }
+
+        return $this->results;
+    }
+
+    private function getCountQuery(): Query
+    {
+        $countQueryBuilder = clone $this->queryBuilder;
+
+        return $countQueryBuilder
+            ->select($countQueryBuilder->getDQLPart('distinct') ?
+                $countQueryBuilder->expr()->countDistinct($this->name) :
+                $countQueryBuilder->expr()->count($this->name)
+            )
+            ->distinct(false)
+            ->setFirstResult(0)
+            ->setMaxResults(null)
+            ->getQuery();
+    }
+
+    /**
+     * @deprecated dev only
+     */
+    public function getQuery(): Query
+    {
+        return $this->queryBuilder->getQuery();
     }
 }

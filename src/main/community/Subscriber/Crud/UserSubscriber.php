@@ -213,7 +213,7 @@ class UserSubscriber implements EventSubscriberInterface
         $user->setPlainPassword(uniqid());
         $user->setUsername('username#'.$user->getId());
         $user->setAdministrativeCode('code#'.$user->getId());
-        $user->setIsEnabled(false);
+        $user->setDisabled(true);
 
         $this->om->persist($user);
 
@@ -258,7 +258,7 @@ class UserSubscriber implements EventSubscriberInterface
             case PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL:
                 $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
                 $user->setResetPasswordHash($password);
-                $user->setIsEnabled(false);
+                $user->setDisabled(true);
                 $this->mailManager->sendEnableAccountMessage($user);
 
                 break;

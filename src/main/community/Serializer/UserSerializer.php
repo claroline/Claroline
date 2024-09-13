@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\FacetManager;
-use Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager;
 use Claroline\CoreBundle\Repository\Facet\FieldFacetRepository;
 use Claroline\CoreBundle\Repository\Facet\FieldFacetValueRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -34,8 +33,7 @@ class UserSerializer
         private readonly ObjectManager $om,
         private readonly PlatformConfigurationHandler $config,
         private readonly OrganizationSerializer $organizationSerializer,
-        private readonly FacetManager $facetManager,
-        private readonly WorkspaceUserQueueManager $workspaceUserQueueManager
+        private readonly FacetManager $facetManager
     ) {
         $this->fieldFacetRepo = $om->getRepository(FieldFacet::class);
         $this->fieldFacetValueRepo = $om->getRepository(FieldFacetValue::class);
@@ -65,15 +63,6 @@ class UserSerializer
     {
         $token = $this->tokenStorage->getToken();
 
-        $showEmailRoles = $this->config->getParameter('profile.show_email') ?? [];
-        $showEmail = empty($showEmailRoles);
-        if ($token && !empty($showEmailRoles)) {
-            $isOwner = $token->getUser() instanceof User && $token->getUser()->getId() === $user->getId();
-            $showEmail = $isOwner || !empty(array_filter($token->getRoleNames(), function (string $role) use ($showEmailRoles) {
-                return 'ROLE_ADMIN' === $role || in_array($role, $showEmailRoles);
-            }));
-        }
-
         if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
             return [
                 'id' => $user->getUuid(),
@@ -83,6 +72,15 @@ class UserSerializer
                 'picture' => $user->getPicture(),
                 'username' => $user->getUsername(), // required because used to user profile URL
             ];
+        }
+
+        $showEmailRoles = $this->config->getParameter('profile.show_email') ?? [];
+        $showEmail = empty($showEmailRoles);
+        if ($token && !empty($showEmailRoles)) {
+            $isOwner = $token->getUser() instanceof User && $token->getUser()->getId() === $user->getId();
+            $showEmail = $isOwner || !empty(array_filter($token->getRoleNames(), function (string $role) use ($showEmailRoles) {
+                return 'ROLE_ADMIN' === $role || in_array($role, $showEmailRoles);
+            }));
         }
 
         $serializedUser = [
@@ -262,7 +260,7 @@ class UserSerializer
     private function serializeRestrictions(User $user): array
     {
         return [
-            'disabled' => !$user->isEnabled(),
+            'disabled' => $user->isDisabled(),
             'removed' => $user->isRemoved(),
             'dates' => DateRangeNormalizer::normalize($user->getInitDate(), $user->getExpirationDate()),
         ];
@@ -271,7 +269,7 @@ class UserSerializer
     private function deserializeRestrictions(array $restrictions, User $user): void
     {
         if (isset($restrictions['disabled'])) {
-            $user->setIsEnabled(!$restrictions['disabled']);
+            $user->setDisabled($restrictions['disabled']);
         }
 
         if (isset($restrictions['removed'])) {

@@ -12,27 +12,10 @@ import {
   ANNOUNCE_DETAIL_RESET,
   ANNOUNCE_ADD,
   ANNOUNCE_DELETE,
-  ANNOUNCE_CHANGE,
-  ANNOUNCES_SORT_TOGGLE,
-  ANNOUNCES_PAGE_CHANGE
+  ANNOUNCE_CHANGE
 } from '#/plugin/announcement/resources/announcement/store/actions'
 
 const reducer = combineReducers({
-  /**
-   * Manages announcement pagination.
-   */
-  currentPage: makeReducer(0, {
-    [ANNOUNCES_PAGE_CHANGE]: (state, action) => action.page
-  }),
-
-  /**
-   * Manages announcement posts sort (posts can only be ordered by date).
-   * NB. 1 is for ASC, -1 is for DESC
-   */
-  sortOrder: makeReducer(-1, {
-    [ANNOUNCES_SORT_TOGGLE]: (state) => 0-state
-  }),
-
   announcement: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.announcement
   }),

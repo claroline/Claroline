@@ -124,7 +124,7 @@ class RoleSubscriber implements EventSubscriberInterface
 
                 $users = [];
                 foreach ($groupUsers as $user) {
-                    if ($user->isEnabled() && !$user->isRemoved() && !$user->hasRole($role->getName(), false)) {
+                    if (!$user->isDisabled() && !$user->isRemoved() && !$user->hasRole($role->getName(), false)) {
                         $users[] = $user;
                     }
                 }

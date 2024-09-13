@@ -17,7 +17,7 @@ use Doctrine\ORM\EntityRepository;
 
 class EventUserRepository extends EntityRepository
 {
-    public function findBySessionAndUser(Session $session, User $user)
+    public function findBySessionAndUser(Session $session, User $user): array
     {
         return $this->getEntityManager()
             ->createQuery('

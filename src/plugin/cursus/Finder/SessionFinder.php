@@ -104,7 +104,7 @@ class SessionFinder extends AbstractFinder
                     break;
 
                 case 'userPending':
-                    $qb->leftJoin('Claroline\CursusBundle\Entity\Registration\SessionUser', 'su', 'WITH', 'su.session = obj');
+                    $qb->leftJoin(SessionUser::class, 'su', 'WITH', 'su.session = obj');
                     $qb->leftJoin('su.user', 'u');
                     $qb->andWhere('(su.confirmed = 0 AND su.validated = 0)');
                     $qb->andWhere('u.uuid = :userId');

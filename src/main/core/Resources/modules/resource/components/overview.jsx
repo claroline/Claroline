@@ -33,7 +33,7 @@ const ResourceOverview = props => {
       root={true}
     >
       {description &&
-        <PageSection size="md" className="py-5">
+        <PageSection size="md" className="py-5 px-4">
           <ContentHtml className="lead">{description}</ContentHtml>
         </PageSection>
       }

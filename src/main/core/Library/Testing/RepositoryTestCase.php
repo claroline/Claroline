@@ -154,10 +154,10 @@ abstract class RepositoryTestCase extends WebTestCase
         $role = new Role();
         $role->setName($name);
         $role->setTranslationKey($name);
-        $role->setType(Role::PLATFORM_ROLE);
+        $role->setType(Role::PLATFORM);
 
         if ($workspace) {
-            $role->setType(Role::WS_ROLE);
+            $role->setType(Role::WORKSPACE);
             $role->setWorkspace($workspace);
         }
 

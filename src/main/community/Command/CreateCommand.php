@@ -23,7 +23,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Creates an user, optionally with a specific role (default to simple user).
+ * Creates a user, optionally with a specific role (default to simple user).
  */
 class CreateCommand extends Command
 {

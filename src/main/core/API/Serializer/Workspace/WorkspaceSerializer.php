@@ -72,6 +72,7 @@ class WorkspaceSerializer
                 'thumbnail' => $workspace->getThumbnail(),
                 'meta' => [
                     'model' => $workspace->isModel(),
+                    'public' => $workspace->isPublic(),
                     'description' => $workspace->getDescription(),
                 ],
             ];

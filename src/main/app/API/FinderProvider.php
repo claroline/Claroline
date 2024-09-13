@@ -11,30 +11,22 @@
 
 namespace Claroline\AppBundle\API;
 
-use Claroline\AppBundle\API\Finder\FinderInterface;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\AppBundle\Persistence\ObjectManager;
 
 class FinderProvider
 {
-    private ObjectManager $om;
-    private SerializerProvider $serializer;
-    private iterable $finders;
-
     public function __construct(
-        ObjectManager $om,
-        iterable $finders,
-        SerializerProvider $serializer
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly iterable $finders
     ) {
-        $this->om = $om;
-        $this->finders = $finders;
-        $this->serializer = $serializer;
     }
 
     /**
      * Gets a registered finder instance.
      */
-    public function get(string $class): FinderInterface
+    public function get(string $class): AbstractFinder
     {
         $finders = $this->finders instanceof \Traversable ? iterator_to_array($this->finders) : $this->finders;
         if (!isset($finders[$class])) {
@@ -52,32 +44,6 @@ class FinderProvider
         $finders = $this->finders instanceof \Traversable ? iterator_to_array($this->finders) : $this->finders;
 
         return array_values($finders);
-    }
-
-    public function find(string $class, FinderQuery $query, ?array $options = []): array
-    {
-        $results = $this->get($class)->search($query);
-
-        $generator = function () use ($results, $options) {
-            $count = 0;
-            foreach ($results->get() as $result) {
-                yield $this->serializer->serialize($result, $options);
-                $this->om->detach($result);
-
-                if (0 === ++$count % 30) {
-                    flush();
-                }
-            }
-        };
-
-        return [
-            'data' => $generator(),
-            'totalResults' => $results->count(),
-            'page' => $query->getPage(),
-            'pageSize' => $query->getPageSize(),
-            'filters' => self::decodeFilters($query->getFilters()),
-            // 'sortBy' => $sortBy,
-        ];
     }
 
     /**
@@ -159,7 +125,7 @@ class FinderProvider
     public static function parseQueryParams(array $finderParams = []): array
     {
         $filters = isset($finderParams['filters']) ? self::parseFilters($finderParams['filters']) : [];
-        $sortBy = isset($finderParams['sortBy']) ? self::parseSortBy($finderParams['sortBy']) : null;
+        $sortBy = /*isset($finderParams['sortBy']) ? self::parseSortBy($finderParams['sortBy']) :*/ null;
         $page = isset($finderParams['page']) ? (int) $finderParams['page'] : 0;
         $limit = isset($finderParams['limit']) ? (int) $finderParams['limit'] : -1;
 

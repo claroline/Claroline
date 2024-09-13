@@ -73,14 +73,6 @@ class WorkspaceFinder extends AbstractFinder
                         $qb->setParameter('ruId', $currentUser instanceof User ? $currentUser->getId() : null);
                     }
                     break;
-                case 'createdAfter':
-                    $qb->andWhere("obj.createdAt >= :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
-                case 'createdBefore':
-                    $qb->andWhere("obj.createdAt <= :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
                 case 'organization':
                 case 'organizations':
                     if (!$organizationJoin) {
@@ -118,17 +110,7 @@ class WorkspaceFinder extends AbstractFinder
         return [
             'administrated' => [
                 'type' => 'boolean',
-                'description' => 'The the current user administrate the organization of the workspace',
-            ],
-
-            'createdBefore' => [
-                'type' => 'date',
-                'description' => 'Workspace created after',
-            ],
-
-            'createdAfter' => [
-                'type' => 'date',
-                'description' => 'Workspace created before',
+                'description' => 'The current user administrate the organization of the workspace',
             ],
 
             'user' => [

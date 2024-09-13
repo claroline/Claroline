@@ -148,7 +148,7 @@ class CourseRepository extends EntityRepository
             WHERE ffv.fieldFacet = :field
               AND s.course = :course
               AND (su.type = :learnerType AND su.confirmed = 1 AND su.validated = 1)
-              AND (u.isEnabled = true AND u.isRemoved = false AND u.technical = false)
+              AND (u.disabled = false AND u.isRemoved = false AND u.technical = false)
         ';
 
         if ($session) {
@@ -215,7 +215,7 @@ class CourseRepository extends EntityRepository
                 WHERE su.type = :registrationType
                   AND s.course = :course
                   AND (su.confirmed = 0 OR su.validated = 0)
-                  AND u.isEnabled = true AND u.isRemoved = false AND u.technical = false
+                  AND u.disabled = false AND u.isRemoved = false AND u.technical = false
             ')
             ->setParameters([
                 'registrationType' => AbstractRegistration::LEARNER,
@@ -233,7 +233,7 @@ class CourseRepository extends EntityRepository
             LEFT JOIN su.user AS u
             WHERE s.course = :course
               AND (su.type = :type AND su.confirmed = 1 AND su.validated = 1)
-              AND (u.isEnabled = true AND u.isRemoved = false AND u.technical = false)
+              AND (u.disabled = false AND u.isRemoved = false AND u.technical = false)
         ';
 
         if ($session) {

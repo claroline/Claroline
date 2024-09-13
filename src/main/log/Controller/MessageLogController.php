@@ -37,7 +37,7 @@ class MessageLogController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/current", name="apiv2_logs_functional_list_current", methods={"GET"})
+     * @Route("/current", name="apiv2_logs_message_list_current", methods={"GET"})
      */
     public function listForCurrentUserAction(Request $request): JsonResponse
     {

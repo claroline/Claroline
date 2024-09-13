@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Installation\DataFixtures;
 
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Template\TemplateContent;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
@@ -20,19 +19,18 @@ use Claroline\InstallationBundle\Fixtures\PostUpdateInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LogLevel;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Environment;
 
 abstract class AbstractTemplateFixture extends AbstractFixture implements PostInstallInterface, PostUpdateInterface, ContainerAwareInterface, LoggerAwareInterface
 {
-    use LoggableTrait;
+    use LoggerAwareTrait;
 
-    /** @var Environment */
-    protected $twig;
+    protected Environment $twig;
 
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(ContainerInterface $container = null): void
     {
         $this->twig = $container->get('twig');
     }
@@ -47,26 +45,26 @@ abstract class AbstractTemplateFixture extends AbstractFixture implements PostIn
      */
     abstract protected function getSystemTemplates(): array;
 
-    public function load(ObjectManager $om)
+    public function load(ObjectManager $manager): void
     {
         $toLoad = $this->getSystemTemplates();
         foreach ($toLoad as $templateName => $templateContents) {
-            $this->loadSystemTemplate($om, $templateName, $templateContents);
+            $this->loadSystemTemplate($manager, $templateName, $templateContents);
         }
 
-        $om->flush();
+        $manager->flush();
     }
 
-    private function loadSystemTemplate(ObjectManager $om, string $templateName, array $contents)
+    private function loadSystemTemplate(ObjectManager $om, string $templateName, array $contents): void
     {
-        $this->log(sprintf('DataFixtures : Load system template "%s" for type "%s"', $templateName, static::getTemplateType()));
+        $this->logger->info(sprintf('DataFixtures : Load system template "%s" for type "%s"', $templateName, static::getTemplateType()));
 
         $templateTypeRepo = $om->getRepository(TemplateType::class);
 
         /** @var TemplateType $templateType */
         $templateType = $templateTypeRepo->findOneBy(['name' => static::getTemplateType()]);
         if (empty($templateType)) {
-            $this->log(sprintf('DataFixtures : Template type %s does not exist.', static::getTemplateType()), LogLevel::WARNING);
+            $this->logger->warning(sprintf('DataFixtures : Template type %s does not exist.', static::getTemplateType()));
 
             return;
         }

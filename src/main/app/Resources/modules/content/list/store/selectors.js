@@ -25,7 +25,7 @@ const sortByQueryString = createSelector(
   [sortBy],
   (sortBy) => {
     if (sortBy.property && 0 !== sortBy.direction) {
-      return `sortBy=${-1 === sortBy.direction ? '-':''}${sortBy.property}`
+      return `sortBy[${sortBy.property}]=${-1 === sortBy.direction ? 'DESC':'ASC'}`
     }
 
     return ''
@@ -33,7 +33,7 @@ const sortByQueryString = createSelector(
 )
 
 /**
- * Creates an URL query sting based on the list current config.
+ * Creates a URL query sting based on the list current config.
  * Format: ?filters[FILTER_NAME]=FILTER_VALUE&sortBy=SORT_NAME&page=0&limit=-1
  *
  * @param {object} listState

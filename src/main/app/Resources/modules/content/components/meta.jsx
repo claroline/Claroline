@@ -7,9 +7,6 @@ import {displayDate} from '#/main/app/intl/date'
 import {UserMicro} from '#/main/core/user/components/micro'
 import {User as UserTypes} from '#/main/community/prop-types'
 
-// todo use in announces
-// todo use in claco-form
-
 const ContentMeta = props =>
   <div className={classes('content-meta', props.className)}>
     <UserMicro

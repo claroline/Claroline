@@ -55,11 +55,6 @@ export default (contextType, contextData, refresher, currentUser) => {
         type: 'string',
         label: trans('code')
       }, {
-        name: 'meta.personalWorkspace',
-        alias: 'hasPersonalWorkspace',
-        type: 'boolean',
-        label: trans('has_personal_workspace')
-      }, {
         name: 'restrictions.disabled',
         alias: 'isDisabled',
         type: 'boolean',

@@ -8,7 +8,7 @@ import {selectors} from '#/plugin/announcement/resources/announcement/store'
 const AnnouncementOverview = connect(
   (state) => ({
     path: resourceSelectors.path(state),
-    posts: selectors.posts(state)
+    posts: selectors.sortedPosts(state)
   })
 )(AnnouncementOverviewComponent)
 

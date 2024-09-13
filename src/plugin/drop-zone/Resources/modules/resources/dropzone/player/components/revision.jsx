@@ -2,14 +2,12 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {url} from '#/main/app/api'
 import {hasPermission} from '#/main/app/security'
 import {matchPath, withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
-import {MODAL_BUTTON, ASYNC_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_SELECTION} from '#/main/app/modals/selection'
 import {Button} from '#/main/app/action/components/button'
 import {ContentComments} from '#/main/app/content/components/comments'
@@ -113,7 +111,6 @@ RevisionComponent.propTypes = {
   dropzone: T.shape(DropzoneType.propTypes).isRequired,
   revision: T.shape(RevisionType.propTypes),
   drop: T.shape(DropType.propTypes),
-  showModal: T.func.isRequired,
   saveDropComment: T.func.isRequired,
   saveRevisionComment: T.func.isRequired,
   saveDocument: T.func.isRequired,
@@ -135,7 +132,6 @@ const Revision = withRouter(connect(
     saveRevisionComment(revisionId, comment) {
       dispatch(actions.saveRevisionComment(revisionId, comment))
     },
-    showModal: (type, props) => dispatch(modalActions.showModal(type, props)),
     saveDocument(dropId, revisionId, documentType, documentData) {
       dispatch(actions.saveManagerDocument(dropId, revisionId, documentType, documentData))
     },

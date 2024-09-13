@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Entity\Planning;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid as BaseUuid;
 
 /**
  * Define a planned object.
@@ -26,10 +27,8 @@ abstract class AbstractPlanned
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Planning\PlannedObject", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="planned_object_id", onDelete="CASCADE", nullable=false)
-     *
-     * @var PlannedObject
      */
-    protected $plannedObject;
+    protected ?PlannedObject $plannedObject = null;
 
     public function __construct()
     {
@@ -38,7 +37,7 @@ abstract class AbstractPlanned
 
     abstract public static function getType(): string;
 
-    public function setUuid(string $uuid)
+    public function setUuid(string $uuid): void
     {
         // keep uuids synced to have the same id when we serialize the generic planned object
         // and when we serialize an implementation
@@ -48,11 +47,21 @@ abstract class AbstractPlanned
         $this->uuid = $uuid;
     }
 
+    public function refreshUuid(): void
+    {
+        // keep uuids synced to have the same id when we serialize the generic planned object
+        // and when we serialize an implementation
+        $this->uuid = BaseUuid::uuid4()->toString();
+        if ($this->getPlannedObject()) {
+            $this->getPlannedObject()->setUuid($this->uuid);
+        }
+    }
+
     /**
      * Auto wrap getters/setters of the PlannedObject to hide the relation and keep implementations simple.
      * NB. It would have been better to avoid magic call, but there are too many methods to keep synced.
      */
-    public function __call(string $method, array $arguments = [])
+    public function __call(string $method, array $arguments = []): mixed
     {
         if (method_exists($this->plannedObject, $method)) {
             return call_user_func_array([$this->plannedObject, $method], $arguments);
@@ -73,7 +82,7 @@ abstract class AbstractPlanned
         return $this->plannedObject;
     }
 
-    public function setPlannedObject(PlannedObject $plannedObject)
+    public function setPlannedObject(PlannedObject $plannedObject): void
     {
         $this->plannedObject = $plannedObject;
     }

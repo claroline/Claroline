@@ -78,7 +78,7 @@ class MessageManager
 
         $ids = [];
         $filteredUsers = array_filter($userReceivers, function (User $user) use (&$ids) {
-            if (!$user->isEnabled() || $user->isRemoved() || !$user->isAccountNonExpired()) {
+            if ($user->isDisabled() || $user->isRemoved() || !$user->isAccountNonExpired()) {
                 // never send messages to disabled users (we might need to manage it in repos instead)
                 return false;
             }

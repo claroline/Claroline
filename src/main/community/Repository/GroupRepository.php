@@ -36,7 +36,7 @@ class GroupRepository extends EntityRepository
                 WHERE w.id = :workspaceId
            ')
             ->setParameter('workspaceId', $workspace->getId())
-            ->setParameter('type', Role::WS_ROLE)
+            ->setParameter('type', Role::WORKSPACE)
             ->getResult();
     }
 

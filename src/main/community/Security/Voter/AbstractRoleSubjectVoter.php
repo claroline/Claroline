@@ -76,7 +76,7 @@ class AbstractRoleSubjectVoter extends AbstractVoter
                 return true;
             }
 
-            if (Role::PLATFORM_ROLE === $role->getType() && in_array($role->getName(), $token->getRoleNames())) {
+            if (Role::PLATFORM === $role->getType() && in_array($role->getName(), $token->getRoleNames())) {
                 return false;
             }
 

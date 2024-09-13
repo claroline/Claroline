@@ -17,8 +17,8 @@ import {UserAvatar} from '#/main/app/user/components/avatar'
 const UserMicro = props => {
   if (props.link && props.name) {
     return (
-      <LinkButton className={classes('user-micro', props.className)} target={route(props)}>
-        <UserAvatar user={props} size="xs" />
+      <LinkButton className={classes('user-micro text-reset', props.className)} target={route(props)}>
+        <UserAvatar user={props} size="xs" noStatus={props.noStatus} />
 
         {props.name}
       </LinkButton>
@@ -27,7 +27,7 @@ const UserMicro = props => {
 
   return (
     <div className={classes('user-micro', props.className)}>
-      <UserAvatar user={props} size="xs" />
+      <UserAvatar user={props} size="xs" noStatus={props.noStatus} />
 
       {props.name || trans('unknown')}
     </div>
@@ -41,7 +41,8 @@ UserMicro.propTypes = {
   username: T.string,
   className: T.string,
   picture: T.string,
-  link: T.bool
+  link: T.bool,
+  noStatus: T.bool
 }
 
 UserMicro.defaultProps = {

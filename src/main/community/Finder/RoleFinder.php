@@ -54,13 +54,13 @@ class RoleFinder extends AbstractFinder
                 case 'type':
                     switch ($filterValue) {
                         case 'workspace':
-                            $filterValue = Role::WS_ROLE;
+                            $filterValue = Role::WORKSPACE;
                             break;
                         case 'user':
-                            $filterValue = Role::USER_ROLE;
+                            $filterValue = Role::USER;
                             break;
                         case 'platform':
-                            $filterValue = Role::PLATFORM_ROLE;
+                            $filterValue = Role::PLATFORM;
                             break;
                     }
                     $qb->andWhere("obj.{$filterName} = :{$filterName}");

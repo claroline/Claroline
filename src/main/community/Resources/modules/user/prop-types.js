@@ -29,7 +29,7 @@ const User = {
       id: T.string.isRequired,
       name: T.string.isRequired,
       translationKey: T.string.isRequired,
-      type: T.number.isRequired
+      type: T.string.isRequired
     }))
   },
   defaultProps: {

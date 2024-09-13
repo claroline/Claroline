@@ -1,9 +1,8 @@
 import {trans} from '#/main/app/intl/translation'
 
-// TODO : should be a string for better data readability (requires api changes)
-const ROLE_PLATFORM  = 1
-const ROLE_WORKSPACE = 2
-const ROLE_USER      = 4
+const ROLE_PLATFORM  = 'platform'
+const ROLE_WORKSPACE = 'workspace'
+const ROLE_USER      = 'user'
 
 const ROLE_TYPES = {
   [ROLE_PLATFORM] : trans('platform'),

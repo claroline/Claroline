@@ -18,10 +18,12 @@ use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\AppBundle\Entity\Meta\Disabled;
 use Claroline\CommunityBundle\Model\HasGroups;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -39,8 +41,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     name="claro_user",
  *     indexes={
  *
- *         @ORM\Index(name="code_idx", columns={"administrative_code"}),
- *         @ORM\Index(name="enabled_idx", columns={"is_enabled"}),
+ *         @ORM\Index(name="disabled_idx", columns={"is_disabled"}),
  *         @ORM\Index(name="is_removed", columns={"is_removed"})
  * })
  */
@@ -51,6 +52,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     use Poster;
     use Thumbnail;
     use Description;
+    use Disabled;
     use HasGroups;
 
     /**
@@ -166,13 +168,6 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      * @ORM\Column(type="boolean")
      */
     private bool $hasAcceptedTerms = false;
-
-    /**
-     * This should be renamed because this field really means "is not deleted".
-     *
-     * @ORM\Column(name="is_enabled", type="boolean")
-     */
-    private bool $isEnabled = true;
 
     /**
      * @ORM\Column(name="is_removed", type="boolean")
@@ -475,7 +470,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
             return false;
         }
 
-        if (!$user->isEnabled() || $user->isRemoved()) {
+        if ($user->isDisabled() || $user->isRemoved()) {
             return false;
         }
 
@@ -584,7 +579,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     public function isAccountNonExpired(): bool
     {
         $roles = $this->getRoles();
-        if (in_array('ROLE_ADMIN', $roles, true)) {
+        if (in_array(PlatformRoles::ADMIN, $roles, true)) {
             return true;
         }
 
@@ -599,16 +594,6 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     public function setTechnical(bool $technical): void
     {
         $this->technical = $technical;
-    }
-
-    public function isEnabled(): bool
-    {
-        return $this->isEnabled;
-    }
-
-    public function setIsEnabled(bool $isEnabled): void
-    {
-        $this->isEnabled = $isEnabled;
     }
 
     public function setMailNotified(bool $mailNotified): void
@@ -774,25 +759,9 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         $this->isRemoved = $isRemoved;
     }
 
-    // alias
-    public function remove(): void
-    {
-        $this->setRemoved(true);
-    }
-
     public function isRemoved(): bool
     {
         return $this->isRemoved;
-    }
-
-    public function enable(): void
-    {
-        $this->isEnabled = true;
-    }
-
-    public function disable(): void
-    {
-        $this->isEnabled = false;
     }
 
     public function setLastActivity(\DateTimeInterface $date): void

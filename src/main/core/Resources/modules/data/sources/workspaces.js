@@ -50,12 +50,12 @@ export default (contextType, contextData, refresher, currentUser) => ({
       label: trans('personal_workspace'),
       type: 'boolean',
       alias: 'personal'
-    }, {
+    }, /*{
       name: 'createdAfter',
       label: trans('created_after'),
       type: 'date',
       displayable: false
-    }, /*{
+    }, {
       name: 'createdBefore',
       label: trans('created_before'),
       type: 'date'

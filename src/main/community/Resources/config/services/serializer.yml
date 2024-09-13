@@ -42,4 +42,3 @@ services:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\CommunityBundle\Serializer\OrganizationSerializer'
             - '@Claroline\CoreBundle\Manager\FacetManager'
-            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager'

@@ -74,17 +74,10 @@
     }
 }
 
-/*a.list-primary-action,
-button.list-primary-action {
-    @extend .btn;
-    @extend .btn-link;
-}*/
-
 .list-primary-action {
     text-align: inherit;
     display: block; // fill cell
     width: 100%;
-    //font-weight: $font-weight-bolder;
 }
 
 .list-footer {
@@ -97,14 +90,10 @@ button.list-primary-action {
 
     .count {
         font-weight: $font-weight-bolder;
-        //margin: map-get($spacers, 3);
     }
 
     .pagination-container {
         margin-left: auto;
-        /*margin-right: map-get($spacers, 1);
-        margin-top: map-get($spacers, 2);
-        margin-bottom: map-get($spacers, 2);*/
     }
 }
 

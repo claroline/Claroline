@@ -147,7 +147,7 @@ class UserController extends AbstractCrudController
 
         $processed = [];
         foreach ($users as $user) {
-            if (!$user->isEnabled() && $this->checkPermission('ADMINISTRATE', $user)) {
+            if ($user->isDisabled() && $this->checkPermission('ADMINISTRATE', $user)) {
                 $this->manager->enable($user);
                 $processed[] = $user;
             }
@@ -178,7 +178,7 @@ class UserController extends AbstractCrudController
 
         $processed = [];
         foreach ($users as $user) {
-            if ($user->isEnabled() && $this->checkPermission('ADMINISTRATE', $user)) {
+            if (!$user->isDisabled() && $this->checkPermission('ADMINISTRATE', $user)) {
                 $this->manager->disable($user);
                 $processed[] = $user;
             }

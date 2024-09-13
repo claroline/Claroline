@@ -106,40 +106,6 @@ class WorkspaceEvaluationController
     }
 
     /**
-     * @Route("/{workspace}/user/{user}", name="apiv2_workspace_evaluation_delete", methods={"DELETE"})
-     *
-     * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     */
-    public function deleteAction(Workspace $workspace, User $user): JsonResponse
-    {
-        $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
-            'workspace' => $workspace,
-            'user' => $user,
-        ]);
-
-        $this->checkPermission('DELETE', $workspaceEvaluation, [], true);
-
-        $this->om->startFlushSuite();
-
-        // delete workspace evaluation
-        $this->crud->delete($workspaceEvaluation, [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS]);
-
-        // delete all resource evaluations for the current workspace
-        $resourceEvaluations = $this->finder->searchEntities(ResourceUserEvaluation::class, [
-            'filters' => ['workspace' => $workspace->getUuid(), 'user' => $user->getUuid()],
-        ])['data'];
-
-        foreach ($resourceEvaluations as $resourceEvaluation) {
-            $this->crud->delete($resourceEvaluation, [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS]);
-        }
-
-        $this->om->endFlushSuite();
-
-        return new JsonResponse(null, 204);
-    }
-
-    /**
      * Initializes evaluations for all the users of a workspace.
      *
      * @Route("/{workspace}/init", name="apiv2_workspace_evaluations_init", methods={"PUT"})

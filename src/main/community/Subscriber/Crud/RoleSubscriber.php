@@ -43,12 +43,12 @@ class RoleSubscriber implements EventSubscriberInterface
 
         if (empty($role->getName())) {
             switch ($role->getType()) {
-                case Role::WS_ROLE:
+                case Role::WORKSPACE:
                     if ($role->getWorkspace()) {
                         $role->setName(strtoupper('role_ws_'.TextNormalizer::toKey($role->getTranslationKey())).'_'.$role->getWorkspace()->getUuid());
                     }
                     break;
-                case Role::USER_ROLE:
+                case Role::USER:
                     if (!empty($role->getUsers())) {
                         // user roles are only assigned to one user
                         $owner = $role->getUsers()[0];
@@ -66,7 +66,7 @@ class RoleSubscriber implements EventSubscriberInterface
         /** @var Role $role */
         $role = $event->getObject();
 
-        if (Role::WS_ROLE === $role->getType() && $role->getWorkspace()) {
+        if (Role::WORKSPACE === $role->getType() && $role->getWorkspace()) {
             // give open access to all the workspace resource
             $this->conn
                 ->prepare('
@@ -92,7 +92,7 @@ class RoleSubscriber implements EventSubscriberInterface
                     'roleId' => $role->getId(),
                     'contextId' => $role->getWorkspace()->getUuid(),
                 ]);
-        } elseif (Role::PLATFORM_ROLE === $role->getType()) {
+        } elseif (Role::PLATFORM === $role->getType()) {
             // init access rights for the desktop tools
             $this->conn
                 ->prepare('

@@ -62,7 +62,7 @@ class CreateOrUpdate extends AbstractImporter
 
             if ($user) {
                 foreach ($user->getEntityRoles() as $role) {
-                    if (Role::USER_ROLE === $role->getType()) {
+                    if (Role::USER === $role->getType()) {
                         $roles[] = $role;
                     }
                 }

@@ -11,81 +11,21 @@
 
 namespace Claroline\AppBundle\Persistence;
 
-use Claroline\AppBundle\Log\LoggableTrait;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\UnitOfWork;
-use Doctrine\Persistence\ObjectManager as ObjectManagerInterface;
-use Doctrine\Persistence\ObjectManagerDecorator;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LogLevel;
+use Doctrine\ORM\Decorator\EntityManagerDecorator;
 
-class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterface
+class ObjectManager extends EntityManagerDecorator
 {
-    use LoggableTrait;
-
-    private $flushSuiteLevel = 0;
-    private $supportsTransactions = false;
-    private $hasEventManager = false;
-    private $hasUnitOfWork = false;
-    private $activateLog = false;
-    private $allowForceFlush = true;
-    private $showFlushLevel = false;
-
-    /**
-     * ObjectManager constructor.
-     */
-    public function __construct(ObjectManagerInterface $om)
-    {
-        $this->wrapped = $om;
-        $this->supportsTransactions
-            = $this->hasEventManager
-            = $this->hasUnitOfWork
-            = $om instanceof EntityManagerInterface;
-    }
-
-    /**
-     * Checks if the underlying manager supports transactions.
-     *
-     * @return bool
-     */
-    public function supportsTransactions()
-    {
-        return $this->supportsTransactions;
-    }
-
-    /**
-     * Checks if the underlying manager has an event manager.
-     *
-     * @return bool
-     */
-    public function hasEventManager()
-    {
-        return $this->hasEventManager;
-    }
-
-    /**
-     * Checks if the underlying manager has an unit of work.
-     *
-     * @return bool
-     */
-    public function hasUnitOfWork()
-    {
-        return $this->hasUnitOfWork;
-    }
+    private int $flushSuiteLevel = 0;
 
     /**
      * {@inheritdoc}
      *
      * This operation has no effect if one or more flush suite is active.
      */
-    public function flush()
+    public function flush($entity = null): void
     {
         if (0 === $this->flushSuiteLevel) {
-            if ($this->activateLog) {
-                $this->log('Flush was started.');
-            }
-            parent::flush();
+            parent::flush($entity);
         }
     }
 
@@ -94,12 +34,9 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
      * all the flush operations are suspended. Flush suites can be nested, which means
      * that the flush takes place only when all the opened suites have been closed.
      */
-    public function startFlushSuite()
+    public function startFlushSuite(): void
     {
         ++$this->flushSuiteLevel;
-        if ($this->activateLog && $this->showFlushLevel) {
-            $this->logFlushLevel();
-        }
     }
 
     /**
@@ -108,7 +45,7 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
      *
      * @throws NoFlushSuiteStartedException if no flush suite has been started
      */
-    public function endFlushSuite()
+    public function endFlushSuite(): void
     {
         if (0 === $this->flushSuiteLevel) {
             throw new NoFlushSuiteStartedException('No flush suite has been started');
@@ -116,172 +53,20 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
 
         --$this->flushSuiteLevel;
         $this->flush();
-        if ($this->activateLog && $this->showFlushLevel) {
-            $this->logFlushLevel();
-        }
     }
 
     /**
      * Forces a flush.
      */
-    public function forceFlush()
+    public function forceFlush(): void
     {
-        if ($this->allowForceFlush) {
-            if ($this->activateLog) {
-                $this->log('Flush was forced for level '.$this->flushSuiteLevel.'.');
-            }
-            parent::flush();
-        }
+        parent::flush();
     }
 
-    /**
-     * @return QueryBuilder
-     */
-    public function createQueryBuilder()
+    public function find($className, mixed $id, $lockMode = null, $lockVersion = null): ?object
     {
-        return $this->wrapped->createQueryBuilder();
-    }
-
-    /**
-     * @param string $dql
-     *
-     * @return QueryBuilder
-     */
-    public function createQuery($dql = '')
-    {
-        return $this->wrapped->createQuery($dql);
-    }
-
-    /**
-     * Starts a transaction.
-     *
-     * @throws UnsupportedMethodException if the method is not supported by
-     *                                    the underlying object manager
-     */
-    public function beginTransaction()
-    {
-        $this->assertIsSupported($this->supportsTransactions, __METHOD__);
-        $this->wrapped->getConnection()->beginTransaction();
-    }
-
-    /**
-     * Commits a transaction.
-     *
-     * @throws UnsupportedMethodException if the method is not supported by
-     *                                    the underlying object manager
-     */
-    public function commit()
-    {
-        $this->assertIsSupported($this->supportsTransactions, __METHOD__);
-        $this->wrapped->getConnection()->commit();
-    }
-
-    /**
-     * Rollbacks a transaction.
-     *
-     * @throws UnsupportedMethodException if the method is not supported by
-     *                                    the underlying object manager
-     */
-    public function rollBack()
-    {
-        $this->assertIsSupported($this->supportsTransactions, __METHOD__);
-        $this->wrapped->getConnection()->rollBack();
-    }
-
-    /**
-     * Returns the event manager.
-     *
-     * @throws UnsupportedMethodException if the method is not supported by
-     *                                    the underlying object manager
-     */
-    public function getEventManager()
-    {
-        $this->assertIsSupported($this->hasEventManager, __METHOD__);
-
-        return $this->wrapped->getEventManager();
-    }
-
-    /**
-     * Returns the unit of work.
-     *
-     * @return UnitOfWork
-     *
-     * @throws UnsupportedMethodException if the method is not supported by
-     *                                    the underlying object manager
-     */
-    public function getUnitOfWork()
-    {
-        $this->assertIsSupported($this->hasUnitOfWork, __METHOD__);
-
-        return $this->wrapped->getUnitOfWork();
-    }
-
-    private function assertIsSupported($isSupportedFlag, $method)
-    {
-        if (!$isSupportedFlag) {
-            throw new UnsupportedMethodException("The method '{$method}' is not supported by the underlying object manager");
-        }
-    }
-
-    /**
-     * Please be carefull if you remove the force flush...
-     */
-    public function allowForceFlush($bool)
-    {
-        $this->allowForceFlush = $bool;
-    }
-
-    public function activateLog()
-    {
-        $this->activateLog = true;
-
-        return $this;
-    }
-
-    public function disableLog()
-    {
-        $this->activateLog = false;
-
-        return $this;
-    }
-
-    public function showFlushLevel()
-    {
-        $this->showFlushLevel = true;
-    }
-
-    public function hideFlushLevel()
-    {
-        $this->showFlushLevel = false;
-    }
-
-    private function logFlushLevel()
-    {
-        $stack = debug_backtrace();
-
-        foreach ($stack as $call) {
-            if ('endFlushSuite' === $call['function'] || 'startFlushSuite' === $call['function']) {
-                if (method_exists($this, 'log')) {
-                    $this->log('Function "'.$call['function'].'" was called from file '.$call['file'].' on line '.$call['line'].'.', LogLevel::DEBUG);
-                } else {
-                    echo 'Function "'.$call['function'].'" was called from file '.$call['file'].' on line '.$call['line'].'.';
-                }
-            }
-        }
-
-        $this->log('Flush level: '.$this->flushSuiteLevel.'.');
-    }
-
-    /**
-     * @param string     $class
-     * @param string|int $id
-     *
-     * @return object|null
-     */
-    public function find($class, $id)
-    {
-        return $this->wrapped->getRepository($class)->findOneBy(
-            !is_numeric($id) && property_exists($class, 'uuid') ?
+        return $this->wrapped->getRepository($className)->findOneBy(
+            !is_numeric($id) && property_exists($className, 'uuid') ?
                 ['uuid' => $id] :
                 ['id' => $id]
         );

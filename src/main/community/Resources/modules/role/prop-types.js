@@ -7,7 +7,7 @@ const Role = {
     id: T.string,
     name: T.string,
     translationKey: T.string,
-    type: T.number.isRequired,
+    type: T.string.isRequired,
     meta: T.shape({
       readOnly: T.bool,
       personalWorkspaceCreationEnabled: T.bool

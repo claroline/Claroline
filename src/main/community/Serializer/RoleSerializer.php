@@ -68,9 +68,9 @@ class RoleSerializer
                     'delete' => $administrate || $this->authorization->isGranted('DELETE', $role),
                 ];
 
-                if (Role::WS_ROLE === $role->getType() && $role->getWorkspace()) {
+                if (Role::WORKSPACE === $role->getType() && $role->getWorkspace()) {
                     $serialized['workspace'] = $this->workspaceSerializer->serialize($role->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]);
-                } elseif (Role::USER_ROLE === $role->getType()) {
+                } elseif (Role::USER === $role->getType()) {
                     if (count($role->getUsers()->toArray()) > 0) {
                         $serialized['user'] = $this->userSerializer->serialize($role->getUsers()->toArray()[0], [SerializerInterface::SERIALIZE_MINIMAL]);
                     } else {

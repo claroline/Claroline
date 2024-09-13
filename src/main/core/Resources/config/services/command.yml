@@ -25,20 +25,11 @@ services:
     Claroline\CoreBundle\Command\Resource\DeleteInactiveCommand:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\Crud'
         tags:
             - { name: 'console.command', command: 'claroline:resource:delete-inactive' }
 
     # Workspace
-    Claroline\CoreBundle\Command\Workspace\ArchiveCommand:
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:workspace:archive' }
-
     Claroline\CoreBundle\Command\Workspace\BuildDefaultsCommand:
         arguments:
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
@@ -61,7 +52,6 @@ services:
     Claroline\CoreBundle\Command\Workspace\DeleteArchivedCommand:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\Crud'
         tags:
             - { name: 'console.command', command: 'claroline:workspace:delete-archived' }

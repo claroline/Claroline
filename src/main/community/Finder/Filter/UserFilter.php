@@ -18,9 +18,9 @@ class UserFilter implements FinderFilterInterface
     {
         // if we don't explicitly request for it, we will not return disabled or removed users
         if (!in_array('disabled', array_keys($searches)) || !$searches['disabled']) {
-            $qb->andWhere("({$alias}.id IS NULL OR ({$alias}.isEnabled = TRUE AND {$alias}.isRemoved = FALSE))");
+            $qb->andWhere("({$alias}.id IS NULL OR ({$alias}.disabled = FALSE AND {$alias}.isRemoved = FALSE))");
         } else {
-            $qb->andWhere("{$alias}.isEnabled = FALSE");
+            $qb->andWhere("{$alias}.disabled = TRUE");
             $qb->andWhere("{$alias}.isRemoved = FALSE");
         }
 

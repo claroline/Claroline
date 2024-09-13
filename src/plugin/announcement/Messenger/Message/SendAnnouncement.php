@@ -4,31 +4,15 @@ namespace Claroline\AnnouncementBundle\Messenger\Message;
 
 use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
 
-class SendAnnouncement implements AsyncHighMessageInterface
+final class SendAnnouncement implements AsyncHighMessageInterface
 {
-    /** @var string */
-    private $content;
-    /** @var string */
-    private $object;
-    /** @var int[] */
-    private $receiverIds;
-    /** @var int */
-    private $announcementId;
-    /** @var int|null */
-    private $senderId;
-
     public function __construct(
-        string $content,
-        string $object,
-        array $receiverIds,
-        int $announcementId,
-        ?int $senderId = null
+        private readonly string $content,
+        private readonly string $object,
+        private readonly array $receiverIds,
+        private readonly int $announcementId,
+        private readonly ?int $senderId = null
     ) {
-        $this->content = $content;
-        $this->object = $object;
-        $this->receiverIds = $receiverIds;
-        $this->announcementId = $announcementId;
-        $this->senderId = $senderId;
     }
 
     public function getContent(): string

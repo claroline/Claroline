@@ -78,6 +78,7 @@ services:
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager'
+            - '@Claroline\AppBundle\API\Finder\FinderFactory'
 
     Claroline\CoreBundle\Controller\Platform\ConnectionMessageController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

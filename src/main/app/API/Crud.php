@@ -57,7 +57,7 @@ class Crud
         if ('id' === $idProp) {
             $object = $this->om->getRepository($class)->findOneBy(['uuid' => $id]);
         } else {
-            if (is_a($class, CrudEntityInterface::class)) {
+            if (is_a($class, CrudEntityInterface::class, true)) {
                 $identifiers = call_user_func([$class, 'getIdentifiers']);
             } else {
                 $identifiers = $this->schema->getIdentifiers($class);
@@ -83,7 +83,7 @@ class Crud
         if ('id' === $idProp) {
             $object = $this->om->getRepository($class)->count(['uuid' => $id]);
         } else {
-            if (is_a($class, CrudEntityInterface::class)) {
+            if (is_a($class, CrudEntityInterface::class, true)) {
                 $identifiers = call_user_func([$class, 'getIdentifiers']);
             } else {
                 $identifiers = $this->schema->getIdentifiers($class);
@@ -110,16 +110,25 @@ class Crud
         return $this->om->getObject($data, $class, $identifiers);
     }
 
+    /**
+     * @deprecated
+     */
     public function count(string $class, array $query = []): int
     {
         return $this->finder->count($class, $query);
     }
 
+    /**
+     * @deprecated
+     */
     public function search(string $class, FinderQuery $query, ?array $options = []): array
     {
         return $this->finder->find($class, $query, $options);
     }
 
+    /**
+     * @deprecated
+     */
     public function list(string $class, array $query = [], array $options = []): array
     {
         $results = $this->finder->searchEntities($class, $query);
@@ -207,7 +216,7 @@ class Crud
         }
 
         // validates submitted data.
-        if (!in_array(self::NO_VALIDATION, $options)) {
+        if (!in_array(self::NO_VALIDATION, $options) && !empty($data)) {
             $this->validator->validate($class, $data, ValidatorProvider::UPDATE, true, $options);
         }
 

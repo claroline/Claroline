@@ -40,7 +40,7 @@ class ResourceSource
         $options['hiddenFilters']['hidden'] = false;
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
-            //parent allow to fetch things outside of the workspace.
+            // parent allow to fetch things outside the workspace.
             if (!isset($options['filters']) || !array_key_exists('parent', $options['filters'])) {
                 // only grab workspace root directory content
                 /** @var ResourceNode $workspaceRoot */

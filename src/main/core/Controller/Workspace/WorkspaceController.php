@@ -13,8 +13,10 @@ namespace Claroline\CoreBundle\Controller\Workspace;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Finder\FinderFactory;
 use Claroline\AppBundle\API\Finder\FinderQuery;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
@@ -24,6 +26,7 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Finder\WorkspaceType;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
@@ -49,7 +52,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class WorkspaceController extends AbstractCrudController
 {
     use HasGroupsTrait; // to remove : only the list endpoint is used
-    use HasRolesTrait;
+    use HasRolesTrait; // to remove : only the list endpoint is used
     use PermissionCheckerTrait;
 
     public function __construct(
@@ -59,7 +62,8 @@ class WorkspaceController extends AbstractCrudController
         private readonly TempFileManager $tempManager,
         private readonly RoleManager $roleManager,
         private readonly WorkspaceManager $workspaceManager,
-        private readonly WorkspaceRestrictionsManager $restrictionsManager
+        private readonly WorkspaceRestrictionsManager $restrictionsManager,
+        private readonly FinderFactory $finder
     ) {
         $this->authorization = $authorization;
     }
@@ -72,32 +76,6 @@ class WorkspaceController extends AbstractCrudController
     public static function getClass(): string
     {
         return Workspace::class;
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="The list of registerable workspaces for the current security token.",
-     *     queryString={
-     *         "$finder",
-     *         {"name": "page", "type": "integer", "description": "The queried page."},
-     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
-     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     }
-     * )
-     *
-     * @Route("/list/registerable", name="list_registerable", methods={"GET"})
-     */
-    public function listRegisterableAction(Request $request): JsonResponse
-    {
-        return new JsonResponse($this->crud->list(
-            Workspace::class,
-            array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
-                'displayable' => true,
-                'model' => false,
-                'selfRegistration' => true,
-            ])]),
-            $this->getOptions()['list']
-        ));
     }
 
     /**
@@ -143,15 +121,53 @@ class WorkspaceController extends AbstractCrudController
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        return new StreamedJsonResponse($this->crud->search(
-            Workspace::class,
-            FinderQuery::fromRequest($request)
-                ->addFilters([
-                    'model' => false,
-                    'roles' => $this->tokenStorage->getToken()->getRoleNames(),
-                ]),
-            $this->getOptions()['list']
-        ));
+        $workspaces = $this->finder->create(WorkspaceType::class)
+            ->addFilters([
+                'model' => false,
+                'roles' => $this->tokenStorage->getToken()->getRoleNames(),
+            ])
+            ->sortBy(['name' => 'ASC'])
+            ->handleRequest($request)
+            ->getResult(function (Workspace $workspace): array {
+                return $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_LIST]);
+            })
+        ;
+
+        return new StreamedJsonResponse([
+            'totalResults' => $workspaces->count(),
+            'data' => $workspaces->getItems(),
+        ]);
+    }
+
+    /**
+     * @Route("/test", name="test", methods={"GET"})
+     */
+    public function testAction(Request $request): StreamedJsonResponse
+    {
+        $finder = $this->finder->create(WorkspaceType::class)
+            ->addFilters([
+                'roles' => $this->tokenStorage->getToken()->getRoleNames(),
+            ])
+            ->sortBy(['name' => 'ASC'])
+            ->handleRequest($request)
+            ->getResult(function (Workspace $workspace): array {
+                return $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_MINIMAL]);
+            })
+        ;
+
+        $queryParams = $finder->getQuery()->getParameters()->toArray();
+
+        return new StreamedJsonResponse([
+            'sql' => $finder->getQuery()->getSQL(),
+            'parameters' => array_map(function ($parameter) {
+                return [
+                    'name' => $parameter->getName(),
+                    'type' => $parameter->getType(),
+                    'value' => $parameter->getValue(),
+                ];
+            }, $queryParams),
+            'data' => $finder->getItems(),
+        ]);
     }
 
     /**

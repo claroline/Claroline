@@ -78,7 +78,7 @@ class TeamRepository extends EntityRepository
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
             WHERE u.isRemoved = false
-            AND u.isEnabled = true
+            AND u.disabled = false
             AND (
                 u IN (
                     SELECT DISTINCT u1
@@ -89,7 +89,7 @@ class TeamRepository extends EntityRepository
                         WHERE r12.workspace = :workspace
                     )
                     WHERE u1.isRemoved = false
-                    AND u1.isEnabled = true
+                    AND u1.disabled = false
                 )
                 OR u IN (
                     SELECT DISTINCT u2
@@ -101,7 +101,7 @@ class TeamRepository extends EntityRepository
                         WHERE r22.workspace = :workspace
                     )
                     WHERE u2.isRemoved = false
-                    AND u2.isEnabled = true
+                    AND u2.disabled = false
                 )
             )
             AND u NOT IN (
@@ -126,7 +126,7 @@ class TeamRepository extends EntityRepository
                     AND r52.name = :workspaceManagerName
                 )
                 WHERE u5.isRemoved = false
-                AND u5.isEnabled = true
+                AND u5.disabled = false
             )
             AND u NOT IN (
                 SELECT DISTINCT u6
@@ -139,7 +139,7 @@ class TeamRepository extends EntityRepository
                     AND r62.name = :workspaceManagerName
                 )
                 WHERE u6.isRemoved = false
-                AND u6.isEnabled = true
+                AND u6.disabled = false
             )
         ";
         $query = $this->getEntityManager()->createQuery($dql);

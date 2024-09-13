@@ -55,7 +55,7 @@ const AnnouncementPost = (props) => {
           icon: 'fa fa-fw fa-trash',
           label: trans('delete', {}, 'actions'),
           callback: () => {
-            props.remove()
+            props.remove(props.aggregateId, props.announcement)
             history.push(props.path)
           },
           dangerous: true,

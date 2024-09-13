@@ -25,12 +25,6 @@ const CommunityTool = (props) =>
     ]}
     menu={[
       {
-        name: 'activity',
-        type: LINK_BUTTON,
-        label: trans('activity'),
-        target: `${props.path}/activity`,
-        displayed: props.canShowActivity && (props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.contextData, 'meta.model'))
-      }, {
         name: 'users',
         type: LINK_BUTTON,
         label: trans('users', {}, 'community'),
@@ -66,6 +60,12 @@ const CommunityTool = (props) =>
         label: trans('roles', {}, 'community'),
         target: `${props.path}/roles`,
         displayed: props.canEdit
+      }, {
+        name: 'activity',
+        type: LINK_BUTTON,
+        label: trans('activity'),
+        target: `${props.path}/activity`,
+        displayed: props.canShowActivity && (props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.contextData, 'meta.model'))
       }
     ]}
     pages={[

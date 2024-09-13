@@ -17,8 +17,8 @@ services:
     Claroline\AppBundle\API\FinderProvider:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - !tagged_iterator { tag: 'claroline.finder', default_index_method: 'getClass' }
             - '@Claroline\AppBundle\API\SerializerProvider'
+            - !tagged_iterator { tag: 'claroline.finder', default_index_method: 'getClass' }
 
     Claroline\AppBundle\API\Crud:
         arguments:

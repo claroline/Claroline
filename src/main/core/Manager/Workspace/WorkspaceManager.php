@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager\Workspace;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
@@ -22,11 +21,12 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class WorkspaceManager implements LoggerAwareInterface
 {
-    use LoggableTrait;
+    use LoggerAwareTrait;
 
     private UserRepository $userRepo;
     private WorkspaceRepository $workspaceRepo;
@@ -238,18 +238,18 @@ class WorkspaceManager implements LoggerAwareInterface
     public function getDefaultModel($isPersonal = false, $restore = false): Workspace
     {
         $name = $isPersonal ? 'default_personal' : 'default_workspace';
-        $this->log('Search default workspace '.$name);
+        $this->logger->debug('Search default workspace '.$name);
         $workspace = $this->workspaceRepo->findOneBy(['code' => $name]);
 
         if (!$workspace || $restore) {
-            $this->log('Rebuilding...');
+            $this->logger->debug('Rebuilding...');
             if ($workspace && $restore) {
-                $this->log('Removing workspace...');
+                $this->logger->debug('Removing workspace...');
                 $this->om->remove($workspace);
                 $this->om->flush();
             }
 
-            $this->log(sprintf('Import from archive "%s"...', $this->defaultWorkspacePath));
+            $this->logger->debug(sprintf('Import from archive "%s"...', $this->defaultWorkspacePath));
 
             $workspace = new Workspace();
             $workspace->setName($name);

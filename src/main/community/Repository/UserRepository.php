@@ -31,7 +31,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
     {
         return $this->createQueryBuilder('u')
             ->where('(UPPER(u.username) LIKE :search OR UPPER(u.firstName) LIKE :search OR UPPER(u.lastName) LIKE :search)')
-            ->andWhere('u.isEnabled = true AND u.isRemoved = false')
+            ->andWhere('u.disabled = false AND u.isRemoved = false')
             ->setFirstResult(0)
             ->setMaxResults($nbResults)
             ->setParameter('search', '%'.strtoupper($search).'%')
@@ -112,7 +112,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
             JOIN u.groups g
             WHERE g.id = :groupId
               AND u.isRemoved = false
-              AND u.isEnabled = true
+              AND u.disabled = false
               AND u.technical = false
         ');
 
@@ -138,7 +138,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
             LEFT JOIN ur.workspace uws
             WHERE (uws.id IN (:workspaces) OR grws.id IN (:workspaces))
               AND u.isRemoved = false
-              AND u.isEnabled = true
+              AND u.disabled = false
               AND u.technical = false
         ';
         $query = $this->getEntityManager()->createQuery($dql);
@@ -162,7 +162,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
             ->createQuery('
                 SELECT u FROM Claroline\CoreBundle\Entity\User u
                 WHERE u.isRemoved = false
-                  AND u.isEnabled = true
+                  AND u.disabled = false
                   AND u.username IN (:usernames)
             ')
             ->setParameter('usernames', $usernames)
@@ -174,7 +174,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
         $qb = $this->createQueryBuilder('user')
             ->select('COUNT(DISTINCT user.id)')
             ->where('user.isRemoved = false')
-            ->andWhere('user.isEnabled = true')
+            ->andWhere('user.disabled = false')
             ->andWhere('user.technical = false');
 
         if (!empty($organizations)) {
@@ -200,7 +200,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
             LEFT JOIN claro_user_role AS ur ON (u.id = ur.user_id)
             WHERE (ur.role_id IN (:roles)) 
               AND u.is_removed = false 
-              AND u.is_enabled = true
+              AND u.disabled = false
               AND u.technical = false
         ';
 
@@ -212,7 +212,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
                 LEFT JOIN claro_group_role AS gr ON (ug.group_id = gr.group_id)
                 WHERE (gr.role_id IN (:roles)) 
                 AND u.is_removed = false 
-                AND u.is_enabled = true
+                AND u.disabled = false
                 AND u.technical = false
             )";
         }

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Hidden;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Display\Thumbnail;
@@ -38,7 +39,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\Tree(type="materializedPath")
  * @ORM\HasLifecycleCallbacks
  */
-class ResourceNode
+class ResourceNode implements CrudEntityInterface
 {
     // identifiers
     use Id;
@@ -238,6 +239,11 @@ class ResourceNode
 
         $this->rights = new ArrayCollection();
         $this->children = new ArrayCollection();
+    }
+
+    public static function getIdentifiers(): array
+    {
+        return ['code', 'slug'];
     }
 
     /**

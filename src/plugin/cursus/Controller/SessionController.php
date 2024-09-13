@@ -112,28 +112,6 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/public", name="public", methods={"GET"})
-     */
-    public function listPublicAction(Request $request): JsonResponse
-    {
-        $options = static::getOptions();
-        $params = $request->query->all();
-
-        $params['hiddenFilters'] = $this->getDefaultHiddenFilters();
-        $params['hiddenFilters']['publicRegistration'] = true;
-        $params['hiddenFilters']['terminated'] = false;
-
-        // hide hidden sessions for non admin
-        if (!$this->checkToolAccess('EDIT')) {
-            $params['hiddenFilters']['hidden'] = false;
-        }
-
-        return new JsonResponse(
-            $this->crud->list(Session::class, $params, $options['list'] ?? [])
-        );
-    }
-
-    /**
      * @Route("/copy", name="copy", methods={"POST"})
      */
     public function copyAction(Request $request): JsonResponse

@@ -21,17 +21,6 @@ actions.fetchUserProgression = (workspaceId, userId) => (dispatch) => dispatch({
   }
 })
 
-actions.deleteUserProgression = (workspaceId, userId) => (dispatch) => dispatch({
-  [API_REQUEST]: {
-    type: 'delete',
-    url: ['apiv2_workspace_evaluation_delete', {workspace: workspaceId, user: userId}],
-    success: () => dispatch(listActions.invalidateData(selectors.STORE_NAME + '.workspaceEvaluations')),
-    request: {
-      method: 'DELETE'
-    }
-  }
-})
-
 actions.addRequiredResources = (workspaceId, resources) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: url(['apiv2_workspace_required_resource_add', {workspace: workspaceId}], {ids: resources.map(r => r.id)}),

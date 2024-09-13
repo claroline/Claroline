@@ -1,4 +1,20 @@
 services:
+    Claroline\CommunityBundle\Finder\OrganizationType:
+        tags: [ claroline.finder.type ]
+        arguments:
+            - '@security.token_storage'
+
+    Claroline\CommunityBundle\Finder\RoleType:
+        tags: [ claroline.finder.type ]
+        arguments:
+            - '@security.token_storage'
+
+    Claroline\CommunityBundle\Finder\UserType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\CommunityBundle\Finder\GroupType:
+        tags: [ claroline.finder.type ]
+
     # Finders
     Claroline\CommunityBundle\Finder\GroupFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder

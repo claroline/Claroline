@@ -20,21 +20,21 @@ const WorkspaceCard = props =>
     icon={!props.data.thumbnail ? props.data.name.charAt(0) : null}
     title={
       <>
-        <TooltipOverlay
-          id={'ws-type'+props.data.id}
-          position="top"
-          tip={classes({
-            [trans('workspace_public_registration', {}, 'workspace')]: get(props.data, 'registration.selfRegistration'),
-            [trans('workspace_model', {}, 'workspace')]: get(props.data, 'meta.model'),
-            [trans('workspace_personal', {}, 'workspace')]: get(props.data, 'meta.personal')
-          })}
-        >
-          <span className={classes({
-            'fa fa-fw fa-globe me-2': get(props.data, 'registration.selfRegistration'),
-            'fa fa-fw fa-stamp me-2': get(props.data, 'meta.model'),
-            'fa fa-fw fa-user me-2': get(props.data, 'meta.personal')
-          })} aria-hidden={true} />
-        </TooltipOverlay>
+        {(get(props.data, 'meta.personal') || get(props.data, 'meta.public')) &&
+          <TooltipOverlay
+            id={'ws-type'+props.data.id}
+            position="top"
+            tip={classes({
+              [trans('workspace_public_registration', {}, 'workspace')]: get(props.data, 'meta.public'),
+              [trans('workspace_personal', {}, 'workspace')]: get(props.data, 'meta.personal')
+            })}
+          >
+            <span className={classes({
+              'fa fa-fw fa-globe me-2': get(props.data, 'meta.public'),
+              'fa fa-fw fa-user me-2': get(props.data, 'meta.personal')
+            })} aria-hidden={true} />
+          </TooltipOverlay>
+        }
 
         {props.data.name}
       </>

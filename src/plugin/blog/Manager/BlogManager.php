@@ -75,15 +75,12 @@ class BlogManager
         $blog->setInfos($infos);
 
         $this->objectManager->flush();
-
-        return $this->objectManager->getUnitOfWork();
     }
 
     /**
      * Get tags used in the blog.
      *
-     * @param Blog  $blog
-     * @param array $posts
+     * @param Blog $blog
      *
      * @return array
      */
@@ -103,7 +100,7 @@ class BlogManager
         );
         $tags = $event->getResponse();
 
-        //only keep max tag number, if defined
+        // only keep max tag number, if defined
         if ($blog->getOptions()->isTagTopMode() && $blog->getOptions()->getMaxTag() > 0) {
             arsort($tags);
             $tags = array_slice($tags, 0, $blog->getOptions()->getMaxTag());

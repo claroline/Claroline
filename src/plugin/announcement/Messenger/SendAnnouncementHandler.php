@@ -20,8 +20,7 @@ class SendAnnouncementHandler implements MessageHandlerInterface
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly RoutingHelper $routing,
         private readonly ObjectManager $objectManager,
-        private readonly TemplateManager $templateManager,
-
+        private readonly TemplateManager $templateManager
     ) {
     }
 

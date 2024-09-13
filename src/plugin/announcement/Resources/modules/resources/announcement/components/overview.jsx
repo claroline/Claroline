@@ -20,14 +20,14 @@ const Announce = (props) =>
   <article className={classes('d-flex flex-column', props.className)}>
     {props.announcement.poster &&
       <Thumbnail
-        className="rounded-4 mb-auto"
+        className="rounded-4 mb-4"
         size="lg"
         thumbnail={props.announcement.poster}
         name={props.announcement.title}
       />
     }
 
-    <div className="text-body-tertiary mt-4 d-flex align-items-center gap-3" role="presentation">
+    <div className="text-body-tertiary mt-auto d-flex align-items-center gap-3" role="presentation">
       {get(props.announcement, 'meta.publishedAt') &&
         <Datetime className="fs-sm" value={get(props.announcement, 'meta.publishedAt')} long={true} />
       }

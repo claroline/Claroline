@@ -6,15 +6,17 @@ use Symfony\Component\HttpFoundation\Request;
 
 class FinderQuery
 {
-    private ?string $fulltext;
+    public const ALL = -1;
+
+    private ?string $search;
     private array $filters;
     private array $sortBy;
     private int $page;
     private int $pageSize;
 
-    public function __construct(string $fulltext = null, array $filters = [], array $sortBy = null, ?int $page = 0, ?int $pageSize = -1)
+    public function __construct(string $search = null, array $filters = [], array $sortBy = [], ?int $page = 0, ?int $pageSize = self::ALL)
     {
-        $this->fulltext = $fulltext;
+        $this->search = $search;
         $this->filters = $filters;
         $this->sortBy = $sortBy;
         $this->page = $page;
@@ -30,21 +32,21 @@ class FinderQuery
 
         return new self(
             !empty($query['q']) ? $query['q'] : null,
-            !empty($query['filters']) ? self::parseFilters($query['filters']) : [],
-            !empty($query['sortBy']) ? self::parseSortBy($query['sortBy']) : [],
+            !empty($query['filters']) ? $query['filters'] : [],
+            !empty($query['sortBy']) ? $query['sortBy'] : [],
             !empty($query['page']) ? (int) $query['page'] : 0,
-            !empty($query['pageSize']) ? (int) $query['pageSize'] : -1
+            !empty($query['limit']) ? (int) $query['limit'] : self::ALL
         );
     }
 
-    public function getFulltext(): ?string
+    public function getSearch(): ?string
     {
-        return $this->fulltext;
+        return $this->search;
     }
 
-    public function setFulltext(?string $fulltext): self
+    public function setSearch(?string $search): self
     {
-        $this->fulltext = $fulltext;
+        $this->search = $search;
 
         return $this;
     }
@@ -78,14 +80,41 @@ class FinderQuery
         return $this->sortBy;
     }
 
-    public function setSortBy(string $propName, string $sortDirection): void
+    public function getSort(string $sortName): mixed
     {
-        $this->sortBy = [$propName, $sortDirection];
+        if (array_key_exists($sortName, $this->sortBy)) {
+            return $this->sortBy[$sortName];
+        }
+
+        return null;
+    }
+
+    public function addSorts(array $sort): self
+    {
+        foreach ($sort as $sortName => $sortDirection) {
+            $this->addSort($sortName, $sortDirection);
+        }
+
+        return $this;
+    }
+
+    public function addSort(string $propName, string $sortDirection): void
+    {
+        $this->sortBy[$propName] = $sortDirection;
     }
 
     public function getFilters(): array
     {
         return $this->filters;
+    }
+
+    public function getFilter(string $filterName): mixed
+    {
+        if (array_key_exists($filterName, $this->filters)) {
+            return $this->filters[$filterName];
+        }
+
+        return null;
     }
 
     public function addFilters(array $filters): self
@@ -102,59 +131,5 @@ class FinderQuery
         $this->filters[$filterName] = $filterValue;
 
         return $this;
-    }
-
-    private static function parseFilters(array $filters): array
-    {
-        $parsed = [];
-        foreach ($filters as $property => $value) {
-            // don't keep empty filters
-            if ('' !== $value) {
-                if (null !== $value) {
-                    // parse filter value
-                    if (is_numeric($value)) {
-                        // convert numbers
-                        $floatValue = floatval($value);
-                        if ($value === $floatValue.'') {
-                            // dumb check to allow users search with strings like '001' without catching it as a number
-                            $value = $floatValue;
-                        }
-                    } else {
-                        // convert booleans
-                        $booleanValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-                        if (null !== $booleanValue) {
-                            $value = $booleanValue;
-                        }
-                    }
-                }
-
-                $parsed[$property] = $value;
-            }
-        }
-
-        return $parsed;
-    }
-
-    private static function parseSortBy(?string $sortBy): ?array
-    {
-        // default values
-        $property = null;
-        $direction = null;
-
-        if (!empty($sortBy)) {
-            if (str_starts_with($sortBy, '-')) {
-                $property = substr($sortBy, 1);
-                $direction = 'DESC';
-            } else {
-                $property = $sortBy;
-                $direction = 'ASC';
-            }
-        }
-
-        if ($property && $direction) {
-            return [$property, $direction];
-        }
-
-        return null;
     }
 }

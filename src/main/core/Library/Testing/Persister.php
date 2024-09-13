@@ -45,7 +45,7 @@ class Persister
         $user->setMailValidated(true);
         $user->addRole($roleUser);
         $user->setCreationDate(new \DateTime());
-        $user->setIsEnabled(true);
+        $user->setDisabled(false);
         $this->container->get('claroline.manager.role_manager')->createUserRole($user);
         $this->om->persist($user);
 

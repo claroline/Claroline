@@ -32,8 +32,8 @@ class GeneratorTest extends MockeryTestCase
         $this->schemaTool = m::mock('Doctrine\ORM\Tools\SchemaTool');
         $this->fromSchema = m::mock('Doctrine\DBAL\Schema\Schema');
         $this->toSchema = m::mock('Doctrine\DBAL\Schema\Schema');
-        $this->entityAMetadata = m::mock('Doctrine\ORM\Mapping\ClassMetadataInfo');
-        $this->entityBMetadata = m::mock('Doctrine\ORM\Mapping\ClassMetadataInfo');
+        $this->entityAMetadata = m::mock('Doctrine\ORM\Mapping\ClassMetadata');
+        $this->entityBMetadata = m::mock('Doctrine\ORM\Mapping\ClassMetadata');
         $this->metadata = [$this->entityAMetadata, $this->entityBMetadata];
     }
 

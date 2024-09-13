@@ -16,7 +16,7 @@ const WorkspaceMenu = (props) =>
     title={
       <>
         {!isEmpty(props.workspace) ? props.workspace.name : trans('workspace')}
-        <small>
+        <small className="text-truncate">
           {!isEmpty(props.roles) ?
             props.roles.map(role => trans(role.translationKey)).join(', ') :
             trans('guest')

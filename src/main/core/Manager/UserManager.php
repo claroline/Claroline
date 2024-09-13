@@ -78,22 +78,20 @@ class UserManager
         $this->om->flush();
     }
 
-    public function countEnabledUsers(?array $organizations = []): int
-    {
-        return $this->userRepo->countUsers($organizations);
-    }
-
     /**
      * Activates a User and set the init date to now.
      */
     public function activateUser(User $user): void
     {
-        $user->setIsEnabled(true);
+        $this->om->startFlushSuite();
+
         $user->setMailValidated(true);
         $user->setResetPasswordHash(null);
-
         $this->om->persist($user);
-        $this->om->flush();
+
+        $this->enable($user);
+
+        $this->om->endFlushSuite();
     }
 
     public function setInitDate(User $user): void
@@ -124,8 +122,8 @@ class UserManager
 
     public function enable(User $user): User
     {
-        if (!$user->isEnabled()) {
-            $user->enable();
+        if ($user->isDisabled()) {
+            $user->setDisabled(false);
 
             $this->om->persist($user);
             $this->om->flush();
@@ -138,8 +136,8 @@ class UserManager
 
     public function disable(User $user): User
     {
-        if ($user->isEnabled()) {
-            $user->disable();
+        if (!$user->isDisabled()) {
+            $user->setDisabled(true);
 
             $this->om->persist($user);
             $this->om->flush();
@@ -193,7 +191,7 @@ class UserManager
         $usersLimitReached = false;
 
         if ($this->platformConfigHandler->getParameter('restrictions.users')) {
-            $usersCount = $this->countEnabledUsers();
+            $usersCount = $this->userRepo->countUsers();
 
             if ($usersCount >= $this->platformConfigHandler->getParameter('restrictions.users')) {
                 $usersLimitReached = true;

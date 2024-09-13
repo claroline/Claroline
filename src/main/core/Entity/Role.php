@@ -35,10 +35,9 @@ class Role implements CrudEntityInterface
     use Description;
     use Locked;
 
-    // TODO : should be a string for better data readability
-    public const PLATFORM_ROLE = 1;
-    public const WS_ROLE = 2;
-    public const USER_ROLE = 4;
+    public const PLATFORM = 'platform';
+    public const WORKSPACE = 'workspace';
+    public const USER = 'user';
 
     /**
      * @ORM\Column(unique=true)
@@ -55,20 +54,20 @@ class Role implements CrudEntityInterface
     private ?string $translationKey = null;
 
     /**
-     * should be unidirectional.
-     *
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     mappedBy="roles",
      *     fetch="EXTRA_LAZY"
      * )
+     *
+     * @deprecated should be unidirectional.
      */
     private Collection $users;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="entity_type", type="string", length="10")
      */
-    private int $type = self::PLATFORM_ROLE;
+    private string $type = self::PLATFORM;
 
     /**
      * @ORM\ManyToOne(
@@ -131,12 +130,12 @@ class Role implements CrudEntityInterface
         return $this->name;
     }
 
-    public function setType(int $type): void
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    public function getType(): int
+    public function getType(): string
     {
         return $this->type;
     }

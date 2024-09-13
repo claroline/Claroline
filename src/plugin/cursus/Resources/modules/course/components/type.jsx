@@ -69,7 +69,7 @@ const CreationType = (props) => {
           }
         }, {
           id: 'create-empty',
-          icon: 'plus-circle',
+          icon: 'graduation-cap',
           label: trans('create_mode_empty', {}, 'cursus'),
           description: trans('create_mode_empty_desc', {}, 'cursus'),
           action: {

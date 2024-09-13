@@ -30,12 +30,7 @@ const RoleListComponent = props => {
           type: 'translation',
           label: trans('name'),
           displayed: true,
-          primary: true/*,
-          calculated: (row) => {
-            const workspaceCode = row.workspace ? row.workspace.code : null
-
-            return  trans(row.translationKey) + (workspaceCode ? ' (' + workspaceCode + ')' : '')
-          }*/
+          primary: true
         }, {
           name: 'name',
           type: 'string',

@@ -1,6 +1,56 @@
 services:
+    Claroline\AppBundle\API\Finder\FinderRegistry:
+        arguments:
+            - !tagged_iterator { tag: 'claroline.finder.type' }
+
+    Claroline\AppBundle\API\Finder\FinderFactory:
+        arguments:
+          - '@Claroline\AppBundle\API\Finder\FinderRegistry'
+          - '@doctrine.orm.entity_manager'
+
+    claroline.finder:
+        alias: Claroline\AppBundle\API\Finder\FinderFactory
+        public: true
+
+    # Base finder types
+    Claroline\AppBundle\API\Finder\Type\BooleanType:
+        tags: [claroline.finder.type]
+
+    Claroline\AppBundle\API\Finder\Type\CallbackType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\AppBundle\API\Finder\Type\ChoiceType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\AppBundle\API\Finder\Type\CreatorType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\AppBundle\API\Finder\Type\DateType:
+        tags: [claroline.finder.type]
+
+    Claroline\AppBundle\API\Finder\Type\EntityType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\AppBundle\API\Finder\Type\HiddenType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\AppBundle\API\Finder\Type\NumericType:
+        tags: [claroline.finder.type]
+
+    Claroline\AppBundle\API\Finder\Type\PeriodStatusType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\AppBundle\API\Finder\Type\PublicType:
+        tags: [claroline.finder.type]
+        arguments:
+            - '@security.authorization_checker'
+
+    Claroline\AppBundle\API\Finder\Type\TextType:
+        tags: [claroline.finder.type]
+
+    # deprecated
     Claroline\AppBundle\API\Finder\AbstractFinder:
-        abstract:  true
+        abstract: true
         calls:
             - method: setObjectManager
               arguments:

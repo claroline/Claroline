@@ -96,7 +96,7 @@ class RoleRepository extends EntityRepository
                 AND r.name = :name
                 AND r.translationKey = :key
             ')
-            ->setParameter('type', Role::USER_ROLE)
+            ->setParameter('type', Role::USER)
             ->setParameter('name', 'ROLE_USER_'.strtoupper($username))
             ->setParameter('key', $username)
             ->getOneOrNullResult();

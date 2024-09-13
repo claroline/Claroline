@@ -50,7 +50,7 @@ class MailManager
             'username' => $user->getUsername(),
         ];
 
-        if (!$user->isEnabled()) {
+        if ($user->isDisabled()) {
             $subject = $this->templateManager->getTemplate('user_disabled', $placeholders, $locale, 'title');
             $body = $this->templateManager->getTemplate('user_disabled', $placeholders, $locale);
 

@@ -18,7 +18,7 @@ const MenuButton = () => {
       type={CALLBACK_BUTTON}
       className="app-menu-toggle position-relative"
       label={trans(menuOpened ? 'hide-menu' : 'show-menu', {}, 'actions')}
-      icon="fa fa-bars"
+      icon="fa fa-fw fa-bars"
       tooltip="bottom"
       callback={() => dispatch(contextActions.toggleMenu())}
     />

@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
@@ -13,7 +14,6 @@ import {
 } from '#/main/app/action/prop-types'
 import isArray from 'lodash/isArray'
 
-// TODO : maybe manage it in action module (it's duplicated for cards)
 const StaticPrimaryAction = props => {
   if (isEmpty(props.action) || props.action.disabled || (props.action.displayed !== undefined && !props.action.displayed)) {
     return (
@@ -28,7 +28,7 @@ const StaticPrimaryAction = props => {
       {...props.action}
       icon={undefined}
       label={props.children}
-      className={props.className}
+      className={classes('btn btn-link p-0', props.className)}
     />
   )
 }

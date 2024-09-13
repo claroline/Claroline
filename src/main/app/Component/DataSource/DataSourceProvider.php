@@ -52,4 +52,9 @@ class DataSourceProvider extends AbstractComponentProvider
     public function getDataSource(string $name, string $context, ContextSubjectInterface $contextSubject = null)
     {
     }
+
+    public function open(string $toolName, string $context, ContextSubjectInterface $contextSubject = null)
+    {
+
+    }
 }

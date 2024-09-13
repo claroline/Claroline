@@ -45,7 +45,7 @@ const DataCellContent = props => {
     <TableCell className={classes(props.className, `${props.column.type}-cell`, props.column.primary && 'primary-cell')}>
       {props.action &&
         <ListPrimaryAction
-          className="list-primary-action btn btn-link p-0"
+          className="list-primary-action"
           action={props.action}
         >
           {cellRendering || '-'}

@@ -7,5 +7,3 @@ services:
     Claroline\AppBundle\Persistence\ObjectManager:
         arguments:
             - '@doctrine.orm.entity_manager'
-        calls:
-            - setLogger: [ '@logger' ]

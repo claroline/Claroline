@@ -63,7 +63,7 @@ class DesktopContext extends AbstractContext
         }
 
         return array_filter($currentUser->getEntityRoles(), function (Role $role) {
-            return Role::PLATFORM_ROLE === $role->getType();
+            return Role::PLATFORM === $role->getType();
         });
     }
 

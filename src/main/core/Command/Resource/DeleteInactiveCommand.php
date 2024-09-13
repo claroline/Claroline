@@ -12,9 +12,9 @@
 namespace Claroline\CoreBundle\Command\Resource;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -24,7 +24,6 @@ class DeleteInactiveCommand extends Command
 {
     public function __construct(
         private readonly ObjectManager $om,
-        private readonly FinderProvider $finder,
         private readonly Crud $crud
     ) {
         parent::__construct();
@@ -46,19 +45,19 @@ class DeleteInactiveCommand extends Command
         $filters = [
             'active' => false,
         ];
+
         if (!empty($input->getOption('workspace'))) {
-            $filters['workspace'] = $input->getOption('workspace');
+            $filters['workspace'] = $this->om->getRepository(Workspace::class)->findOneBy([
+                'uuid' => $input->getOption('workspace'),
+            ]);
         }
 
-        $resources = $this->finder->searchEntities(ResourceNode::class, [
-            'filters' => $filters,
-            'limit' => $input->getOption('limit'),
-        ]);
+        $resources = $this->om->getRepository(ResourceNode::class)->findBy($filters, [], $input->getOption('limit'));
 
         $this->om->startFlushSuite();
 
-        $output->writeln(sprintf('Found %d inactive resources / Will delete %d resources.', $resources['totalResults'], $input->getOption('limit')));
-        foreach ($resources['data'] as $resource) {
+        $output->writeln(sprintf('Found %d inactive resources / Will delete %d resources.', count($resources), $input->getOption('limit')));
+        foreach ($resources as $resource) {
             $output->writeln(sprintf('Deleting "%s" (%s).', $resource->getName(), $resource->getUuid()));
 
             if ($input->getOption('force')) {

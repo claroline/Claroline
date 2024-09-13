@@ -39,7 +39,7 @@ class UserChecker implements UserCheckerInterface
             return;
         }
 
-        if (!$user->isEnabled() || $user->isRemoved()) {
+        if ($user->isDisabled() || $user->isRemoved()) {
             $message = $this->translator->trans('account_deleted', [
                 '%support_email%' => $this->config->getParameter('help.support_email') ?? '',
             ], 'security');

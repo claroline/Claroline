@@ -187,7 +187,7 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
 
     public static function getIdentifiers(): array
     {
-        return ['code'];
+        return ['code', 'slug'];
     }
 
     public function __toString(): string

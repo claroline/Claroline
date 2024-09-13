@@ -34,7 +34,7 @@ class RoleManager
         $role->setName($name);
         $role->setTranslationKey($translationKey);
         $role->setLocked($isReadOnly);
-        $role->setType(Role::WS_ROLE);
+        $role->setType(Role::WORKSPACE);
         $role->setWorkspace($workspace);
 
         $this->om->persist($role);
@@ -55,7 +55,7 @@ class RoleManager
         $role->setTranslationKey($translationKey);
         $role->setLocked($isReadOnly);
         $role->setPersonalWorkspaceCreationEnabled(true);
-        $role->setType(Role::PLATFORM_ROLE);
+        $role->setType(Role::PLATFORM);
         $this->om->persist($role);
 
         if ($makeGroup) {
@@ -86,7 +86,7 @@ class RoleManager
             $role->setName($roleName);
             $role->setTranslationKey($username);
             $role->setLocked(true);
-            $role->setType(Role::USER_ROLE);
+            $role->setType(Role::USER);
             $this->om->persist($role);
         }
 

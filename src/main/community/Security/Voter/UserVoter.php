@@ -147,7 +147,7 @@ class UserVoter extends AbstractRoleSubjectVoter
             // allow anonymous registration only if the user is created with the default role
             if (0 === count(array_filter($user->getEntityRoles(), function (Role $role) use ($defaultRole) {
                 // search for not allowed roles
-                return Role::PLATFORM_ROLE === $role->getType() && $defaultRole !== $role->getName();
+                return Role::PLATFORM === $role->getType() && $defaultRole !== $role->getName();
             }))) {
                 return VoterInterface::ACCESS_GRANTED;
             }
