@@ -33,25 +33,17 @@
   .pair {
     // Display both items on the same line
     .form-group {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-
-    .checkbox {
-      margin-bottom: 0;
-    }
-
-    .pair-item,
-    .pair-item-placeholder {
-      width: 49%; // not ideal because we have no control on the size of the gape
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: $answer-item-padding;
     }
 
     .pair-item {
-      background-color: #fff;
-      border: 1px solid white;
-      padding: $padding-base-vertical $padding-base-horizontal;
-      border-radius: $border-radius;
+      background-color: var(--#{$prefix}body-bg);
+      border: $input-border-width solid var(--#{$prefix}body-bg);
+      padding: $input-padding-y $input-padding-x;
+      line-height: $input-line-height;
+      border-radius: var(--#{$prefix}border-radius);
 
       .item-content {
         text-overflow: ellipsis;
@@ -78,20 +70,21 @@
 /* PLAYER */
 .pair-player {
   .pair {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-
-    .pair-item,
-    .pair-item-placeholder {
-      width: 49%; // not ideal because we have no control on the size of the gape
-    }
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $answer-item-padding;
 
     .pair-item {
-      background-color: #fff;
-      border: 1px solid white;
-      padding: $padding-base-vertical $padding-base-horizontal;
-      border-radius: $border-radius;
+      background-color: var(--#{$prefix}body-bg);
+      border: $answer-item-border-width solid var(--#{$prefix}body-bg);
+      padding: $answer-item-padding;
+      border-radius: var(--#{$prefix}border-radius);
+    }
+
+    .drop-placeholder {
+      flex: 1;
+      padding: $answer-item-padding;
+      border-radius: var(--#{$prefix}border-radius);
     }
   }
 
@@ -102,12 +95,6 @@
     > p { // remove margin on tinyMCE container
       margin-bottom: 0;
     }
-  }
-
-  .btn-drag .drag-handle,
-  .btn-item-remove {
-    padding: 0;
-    border: none;
   }
 }
 
@@ -137,5 +124,19 @@
   .unanswered-item {
     padding: 10px;
     margin-top: 10px;
+  }
+}
+
+.pair-answer-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .pair-item-content {
+    margin-right: auto;
+  }
+
+  .item-actions {
+    margin-left: ($answer-item-padding * .5);
   }
 }

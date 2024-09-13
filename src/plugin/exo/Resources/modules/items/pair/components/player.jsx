@@ -3,16 +3,15 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import times from 'lodash/times'
 
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
-
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {utils} from '#/plugin/exo/items/pair/utils'
 import {PairItemDragPreview} from '#/plugin/exo/items/pair/components/pair-item-drag-preview'
+
 
 let DropBox = props => props.connectDropTarget(
   <div className={classes('pair-item-placeholder drop-placeholder placeholder-md placeholder-hover', {
@@ -34,20 +33,21 @@ DropBox.propTypes = {
 DropBox = makeDroppable(DropBox, 'ITEM')
 
 const PairItem = props =>
-  <div className="pair-item">
+  <div className="pair-item pair-answer-item">
+    <ContentHtml className="pair-item-content">{props.item.data}</ContentHtml>
     {props.item.removable && props.removable &&
-      <Button
-        id={`pair-${props.item.id}-delete`}
-        type={CALLBACK_BUTTON}
-        className="btn-link btn-item-remove pull-right"
-        icon="fa fa-fw fa-trash"
-        label={trans('delete', {}, 'actions')}
-        callback={() => props.handleItemRemove(props.item.id)}
-        tooltip="top"
-      />
+      <div className="item-actions" role="presentation">
+        <Button
+          id={`pair-${props.item.id}-delete`}
+          type={CALLBACK_BUTTON}
+          className="btn btn-text-body p-0"
+          icon="fa fa-fw fa-trash"
+          label={trans('delete', {}, 'actions')}
+          callback={() => props.handleItemRemove(props.item.id)}
+          tooltip="top"
+        />
+      </div>
     }
-
-    <div className="item-content" dangerouslySetInnerHTML={{__html: props.item.data}} />
   </div>
 
 PairItem.propTypes = {
@@ -102,35 +102,18 @@ PairRowList.propTypes = {
 }
 
 let Item = props => {
-  return (
-    <div className="answer-item item">
-      {props.connectDragSource(
-        <div className="btn-drag pull-right">
-          <OverlayTrigger
-            placement="top"
-            overlay={
-              <Tooltip id={`item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
-            }
-          >
-            <span
-              draggable="true"
-              className={classes(
-                'btn',
-                'btn-link',
-                'default',
-                'drag-handle'
-              )}
-            >
-              {props.draggable &&
-                <span className="fa fa-fw fa-arrows" />
-              }
-            </span>
-          </OverlayTrigger>
+  const element =
+    <div className="pair-answer-item answer-item pair-item">
+      <ContentHtml className="pair-item-content">{props.item.data}</ContentHtml>
+
+      {props.draggable &&
+        <div className="item-actions">
+          <span className="pair-item-drag fa fa-arrows text-secondary" />
         </div>
-      )}
-      <div className="item-content" dangerouslySetInnerHTML={{__html: props.item.data}} />
+      }
     </div>
-  )
+
+  return props.draggable ? props.connectDragSource(element) : element
 }
 
 Item.propTypes = {
@@ -208,7 +191,7 @@ class PairPlayer extends Component {
 
   render() {
     return (
-      <div className="pair-player row">
+      <div className="pair-player row user-select-none">
         <div className="col-md-5 col-sm-5 items-col">
           <ItemList items={this.state.items} draggable={!this.props.disabled}/>
         </div>
