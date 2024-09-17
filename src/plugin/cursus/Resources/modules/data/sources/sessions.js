@@ -95,6 +95,7 @@ export default {
         filterable: true
       }, {
         name: 'meta.canceled',
+        alias: 'canceled',
         label: trans('canceled'),
         type: 'boolean',
         filterable: true,

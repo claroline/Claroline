@@ -16,6 +16,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
@@ -508,6 +509,40 @@ class SessionManager
                 $session->getCreator()
             ), MessageEvents::MESSAGE_SENDING);
         }
+    }
+
+    public function cancelSessions(array $sessionIds, ?string $cancelReason = null, ?array $cancelTemplateData = null): array
+    {
+        $processed = [];
+
+        $this->om->startFlushSuite();
+
+        /** @var Session[] $sessions */
+        $sessions = $this->sessionRepo->findBy([
+            'uuid' => $sessionIds,
+        ]);
+
+        foreach ($sessions as $session) {
+            if (!$session->isCanceled()) {
+                $session->setCanceled(true);
+                $session->setCancelReason($cancelReason);
+
+                $cancelTemplate = null;
+                if (!empty($cancelTemplateData['id'])) {
+                    $cancelTemplate = $this->om->getRepository(Template::class)->findOneBy(['uuid' => $cancelTemplateData['id']]);
+                    if ($cancelTemplate) {
+                        $this->sendSessionCancel($session);
+                    }
+                }
+
+                $session->setCanceledTemplate($cancelTemplate);
+                $processed[] = $session;
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        return $processed;
     }
 
     /**

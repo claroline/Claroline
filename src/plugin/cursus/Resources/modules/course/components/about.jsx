@@ -65,7 +65,7 @@ const CourseAbout = (props) => {
   const courseRegistration = getCourseRegistration(props.registrations)
 
   const availableSessions = props.availableSessions
-    .filter(session => (!props.activeSession || props.activeSession.id !== session.id) && !get(session, 'restrictions.hidden'))
+    .filter(session => (!props.activeSession || props.activeSession.id !== session.id) && !get(session, 'restrictions.hidden') && !get(session, 'meta.canceled'))
 
   return (
     <div className="row mt-3">
@@ -187,7 +187,9 @@ const CourseAbout = (props) => {
 
         {get(props.activeSession, 'meta.canceled') === true &&
           <AlertBlock type="info" title={trans('cancel_session_info', {}, 'actions')}>
-            {get(props.activeSession, 'meta.cancelReason')}
+            <ContentHtml>
+              {get(props.activeSession, 'meta.cancelReason')}
+            </ContentHtml>
           </AlertBlock>
         }
 

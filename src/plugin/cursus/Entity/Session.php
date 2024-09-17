@@ -96,7 +96,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
     private bool $canceled = false;
 
     /**
-     * @ORM\Column(name="cancel_reason", type="string", nullable=true)
+     * @ORM\Column(name="cancel_reason", type="text", nullable=true)
      */
     private ?string $cancelReason = null;
 

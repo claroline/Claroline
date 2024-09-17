@@ -19,7 +19,7 @@ class NewMessageNotification extends AbstractNotification
     public static function getSubscribedEvents(): array
     {
         return [
-            MessageEvents::MESSAGE_SENDING => 'notifyNewMessage',
+            //            MessageEvents::MESSAGE_SENDING => 'notifyNewMessage',
         ];
     }
 

@@ -34,19 +34,20 @@ const CourseEditorOverview = () =>
         primary: true,
         fields: [
           {
-            name: 'description',
+            name: 'plainDescription',
             type: 'string',
             label: trans('description_short'),
-            help: trans('course_short_desc_help', {}, 'cursus'),
+            help: trans('course_short_desc_help', {}, 'cursus')
+
+          }, {
+            name: 'description',
+            label: trans('description_long'),
+            type: 'html',
+            help: trans('course_long_desc_help', {}, 'cursus'),
             options: {
               long: true,
               minRows: 2
             }
-          }, {
-            name: 'plainDescription',
-            label: trans('description_long'),
-            type: 'html',
-            help: trans('course_long_desc_help', {}, 'cursus')
           }, {
             name: 'meta.duration',
             type: 'number',

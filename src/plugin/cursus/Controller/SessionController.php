@@ -17,7 +17,6 @@ use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
@@ -164,45 +163,43 @@ class SessionController extends AbstractCrudController
     }
 
     /**
+     * @Route("/{id}/list/canceled", name="list_canceled", methods={"GET"})
+     *
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
+     */
+    public function listCanceledAction(Course $course, Request $request): JsonResponse
+    {
+        $this->checkPermission('EDIT', $course, [], true);
+
+        $filters = $request->query->all();
+        $filters['hiddenFilters'] = $filters['hiddenFilters'] ?? [];
+
+        $filters['hiddenFilters'] = array_merge($filters['hiddenFilters'], [
+            'course' => $course->getUuid(),
+            'canceled' => true,
+        ]);
+
+        return new JsonResponse(
+            $this->crud->list(Session::class, $filters)
+        );
+    }
+
+    /**
      * @Route("/cancel", name="cancel", methods={"POST"})
      */
     public function cancelAction(Request $request): JsonResponse
     {
-        $processed = [];
-
-        $this->om->startFlushSuite();
-
         $data = $this->decodeRequest($request);
 
-        /** @var Session[] $sessions */
-        $sessions = $this->om->getRepository(Session::class)->findBy([
-            'uuid' => $data['ids'],
-        ]);
-
-        foreach ($sessions as $session) {
-            if ($this->authorization->isGranted('EDIT', $session) && !$session->isCanceled()) {
-                $session->setCanceled(true);
-                $session->setCancelReason($data['cancelReason'] ?? null);
-
-                $cancelTemplate = null;
-                $templateRepo = $this->om->getRepository(Template::class);
-                if (!empty($data['canceledTemplate']) && $data['canceledTemplate']['id']) {
-                    $cancelTemplate = $templateRepo->findOneBy(['uuid' => $data['canceledTemplate']['id']]);
-                    //                    if ($cancelTemplate) {
-                    //                        $this->manager->sendSessionCancel($session);
-                    //                    }
-                }
-                $session->setCanceledTemplate($cancelTemplate);
-
-                $processed[] = $session;
-            }
-        }
-
-        $this->om->endFlushSuite();
+        $processedSessions = $this->manager->cancelSessions(
+            $data['ids'],
+            $data['cancelReason'] ?? null,
+            $data['canceledTemplate'] ?? null
+        );
 
         return new JsonResponse(array_map(function (Session $session) {
             return $this->serializer->serialize($session);
-        }, $processed));
+        }, $processedSessions));
     }
 
     /**

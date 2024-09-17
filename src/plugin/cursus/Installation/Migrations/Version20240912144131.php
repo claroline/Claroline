@@ -18,7 +18,7 @@ final class Version20240912144131 extends AbstractMigration
             ALTER TABLE claro_cursusbundle_course_session 
             ADD canceled_template_id INT DEFAULT NULL, 
             ADD canceled TINYINT(1) NOT NULL, 
-            ADD cancel_reason VARCHAR(255) DEFAULT NULL
+            ADD cancel_reason LONGTEXT DEFAULT NULL
         ');
         $this->addSql('
             ALTER TABLE claro_cursusbundle_course_session 
