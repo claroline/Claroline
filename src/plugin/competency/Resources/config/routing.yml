@@ -1,6 +1,0 @@
-# JSON API
-hevinci_competency_bundle_api:
-    resource: "@HeVinciCompetencyBundle/Controller/"
-    type: annotation
-    options:
-        expose: true

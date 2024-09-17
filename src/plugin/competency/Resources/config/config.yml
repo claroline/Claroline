@@ -1,6 +1,0 @@
-plugin:
-    resource_actions:
-        - name: manage_competencies
-          group: management
-          decoder: administrate
-          scope: [object]

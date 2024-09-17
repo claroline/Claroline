@@ -1,9 +1,0 @@
-{
-    "Each value must be unique.": "Each value must be unique.",
-    "This ability does not exist.": "This competency does not exist.",
-    "framework_import.conflict_issue": "Some data in this framework are in conflict with existing data.",
-    "framework_import.data_issue": "Some data in this framework are inconsistent.",
-    "framework_import.json_issue": "This file can not be parsed. Check that it is a JSON file.",
-    "framework_import.original_error": "Error : %msg%",
-    "framework_import.schema_issue": "The data contained in this file don't meet the expected framework format."
-}

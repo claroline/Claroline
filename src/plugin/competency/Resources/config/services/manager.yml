@@ -1,7 +1,0 @@
-services:
-    HeVinci\CompetencyBundle\Manager\CompetencyManager:
-        public: true # for tests
-        arguments:
-            - '@HeVinci\CompetencyBundle\Transfer\Converter'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@translator'

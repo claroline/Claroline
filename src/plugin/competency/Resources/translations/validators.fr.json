@@ -1,9 +1,0 @@
-{
-    "Each value must be unique.": "Chaque valeur doit être unique.",
-    "This ability does not exist.": "Cette compétence n'existe pas.",
-    "framework_import.conflict_issue": "Certaines données contenues dans ce référentiel sont en conflit avec les données existantes.",
-    "framework_import.data_issue": "Certaines données contenues dans ce référentiel sont inconsistantes.",
-    "framework_import.json_issue": "Ce fichier ne peut pas être analysé. Vérifiez qu'il sagit bien d'un fichier JSON.",
-    "framework_import.original_error": "Erreur : %msg%",
-    "framework_import.schema_issue": "Les données contenues dans ce fichier ne répondent pas au format de référentiel attendu."
-}
