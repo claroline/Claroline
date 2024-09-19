@@ -16,7 +16,7 @@
   "add_card": "Ajouter une carte",
   "new_card": "Nouvelle carte",
   "card_delete_confirm": "Suppression de la carte",
-  "card_delete_message": "Êtes-vous sûr de vouloir supprimer cette carte ?",
+  "card_delete_message": "Êtes-vous sûr(e) de vouloir supprimer cette carte ?",
 
   "deck_confirm_edit_title" : "Modification de la ressource",
   "deck_confirm_edit_question" : "Ces modifications affecteront la progression des tentatives en cours des utilisateurs. Voulez-vous continuer ?",

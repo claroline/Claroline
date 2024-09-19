@@ -247,7 +247,7 @@ class SearchUnified extends Component {
 
   render() {
     return (
-      <form className="list-search search-unified" action="#">
+      <form className="list-search search-unified" role="search">
         <div className="search-current" role="presentation">
           <span className="search-icon fa fa-search" />
 

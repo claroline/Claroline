@@ -1,12 +1,9 @@
-import {createElement} from 'react'
 import get from 'lodash/get'
 
 import {hasPermission} from '#/main/app/security'
 import {url} from '#/main/app/api'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {trans, transChoice} from '#/main/app/intl/translation'
-
-import {UserCard} from '#/main/community/user/components/card'
 
 /**
  * Delete users action.
@@ -22,20 +19,12 @@ export default (users, refresher) => {
     displayed: 0 !== processable.length,
     dangerous: true,
     confirm: {
-      title: transChoice('user_delete_confirm_title', processable.length, {}, 'community'),
-      subtitle: 1 === processable.length ? processable[0].name : transChoice('count_elements', processable.length, {count: processable.length}),
-      message: transChoice('user_delete_confirm_message', processable.length, {count: processable.length}, 'community'),
-      additional: [
-        createElement('div', {
-          key: 'additional',
-          className: 'modal-body'
-        }, processable.map(user => createElement(UserCard, {
-          key: user.id,
-          orientation: 'row',
-          size: 'xs',
-          data: user
-        })))
-      ]
+      message: transChoice('user_delete_confirm_message', processable.length, {count: '<b class="fw-bold">'+processable.length+'</b>'}, 'community'),
+      additional: trans('irreversible_action_confirm'),
+      items:  processable.map(item => ({
+        thumbnail: item.picture,
+        name: item.name
+      }))
     },
     request: {
       url: url(['apiv2_user_delete'], {ids: processable.map(user=> user.id)}),

@@ -20,7 +20,6 @@ class LoginModal extends Component {
       <BaseModal
         {...omit(this.props, 'fadeModal', 'hideModal', 'onLogin', 'onAbort')}
         autoFocus={true}
-        enforceFocus={false}
         dialogClassName="login-modal"
         size="lg"
         onHide={this.props.fadeModal}

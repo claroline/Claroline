@@ -89,5 +89,7 @@
   "hide-menu": "Fermer le menu",
   "initialize": "Initialiser",
   "purge": "Purger",
-  "hide": "Cacher"
+  "hide": "Cacher",
+  "reset": "Réinitialiser",
+  "show": "Voir"
 }

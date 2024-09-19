@@ -1,19 +1,19 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useHistory} from 'react-router-dom'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
-import {displayDate, trans} from '#/main/app/intl'
+import {trans} from '#/main/app/intl'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {PageSection} from '#/main/app/page'
 import {ResourcePage} from '#/main/core/resource'
+import {UserMicro} from '#/main/core/user/components/micro'
+import {Datetime} from '#/main/app/components/date'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 import {MODAL_ANNOUNCEMENT_SENDING} from '#/plugin/announcement/resources/announcement/modals/sending'
-import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
-import {UserMicro} from '#/main/core/user/components/micro'
-
 
 const AnnouncementPost = (props) => {
   const history = useHistory()
@@ -78,7 +78,7 @@ const AnnouncementPost = (props) => {
           <span>-</span>
 
           {get(props.announcement, 'meta.publishedAt') &&
-            <span className="">{displayDate(get(props.announcement, 'meta.publishedAt') , true)}</span>
+            <Datetime value={get(props.announcement, 'meta.publishedAt')} long={true} />
           }
         </div>
 

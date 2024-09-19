@@ -3,15 +3,11 @@ import set from 'lodash/set'
 
 import {makeInstanceAction, makeInstanceActionCreator} from '#/main/app/store/actions'
 
-import {displayDate} from '#/main/app/intl/date'
 import {trans} from '#/main/app/intl/translation'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as alertActions} from '#/main/app/overlays/alert/store'
 import {constants as alertConstants} from '#/main/app/overlays/alert/constants'
 import {constants as actionConstants} from '#/main/app/action/constants'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 
 /**
@@ -46,70 +42,6 @@ actions.reset = (formName, data = {}, isNew = false) => ({
   type: makeInstanceAction(FORM_RESET, formName),
   data: data,
   isNew: isNew
-})
-
-//the dispatch returned in the success function isn't the same as the first one
-//async request doesn't work with the usual way otherwise
-actions.getItemLock = (className, id) => (dispatch) => {
-  if (id) {
-    dispatch({
-      [API_REQUEST]: {
-        url: ['apiv2_object_lock_get', {class: className, id}],
-        silent: true,
-        request: {
-          method: 'GET'
-        },
-        success: (response) => {
-          if (response.value) {
-            return dispatch(actions.validateLock(response, className, id))
-          }
-
-          dispatch(actions.lockItem(className, id))
-        }
-      }
-    })
-  } else {
-    //something went wrong (ie removed element)
-  }
-}
-
-actions.validateLock = (lock) => (dispatch, getState) => {
-  const currentUser = securitySelectors.currentUser(getState())
-
-  if (lock.user.username !== currentUser.username) {
-    dispatch(
-      modalActions.showModal(MODAL_CONFIRM, {
-        title: trans('update_object'),
-        dangerous: true,
-        icon: 'fa fa-fw fa-check',
-        question: trans('object_currently_modified', {username: lock.user.username, date: displayDate(lock.updated)}),
-        confirmButtonText: trans('update_anyway'),
-        handleConfirm: () => {
-          dispatch(actions.lockItem(lock.className, lock.id))
-        }
-      })
-    )
-  }
-}
-
-actions.lockItem = (className, id) => ({
-  [API_REQUEST]: {
-    url: ['apiv2_object_lock', {class: className, id}],
-    silent: true,
-    request: {
-      method: 'PUT'
-    }
-  }
-})
-
-actions.unlockItem = (className, id) => ({
-  [API_REQUEST]: {
-    url: ['apiv2_object_unlock', {class: className, id}],
-    silent: true,
-    request: {
-      method: 'PUT'
-    }
-  }
 })
 
 actions.errors = (formName, errors) => (dispatch) => {

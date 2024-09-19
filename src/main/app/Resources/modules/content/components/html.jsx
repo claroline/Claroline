@@ -5,15 +5,13 @@ import omit from 'lodash/omit'
 
 /**
  * Interprets and displays HTML content.
- *
- * @param props
- * @constructor
  */
 const ContentHtml = props =>
   <div
-    {...omit(props, 'children')}
-    className={classes('content-html text-justify', props.className)}
+    {...omit(props, 'children', 'align')}
+    className={classes('content-html', `text-${props.align}`,props.className)}
     dangerouslySetInnerHTML={{ __html: props.children }}
+    role="presentation"
   />
 
 ContentHtml.propTypes = {
@@ -25,7 +23,12 @@ ContentHtml.propTypes = {
   /**
    * Additional classes to add to the DOM.
    */
-  className: T.string
+  className: T.string,
+  align: T.oneOf(['start', 'center', 'end', 'justify']).isRequired
+}
+
+ContentHtml.defaultProps = {
+  align: 'justify'
 }
 
 export {

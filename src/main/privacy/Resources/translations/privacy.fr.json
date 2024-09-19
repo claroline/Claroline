@@ -14,7 +14,7 @@
   "export_data": "Exporter mes données",
   "request_deletion" : "Demander la suppression de mon compte",
   "delete_account" : "Demande de suppression de mon compte",
-  "delete_account_message" : "Êtes-vous sûr de vouloir demander la suppression de votre compte ?",
+  "delete_account_message" : "Êtes-vous sûr(e) de vouloir demander la suppression de votre compte ?",
   "account_deletion": {
     "subject": "Demande de suppression de compte",
     "body": "L'utilisateur %name% <br/> ID : %id% <br/> souhaite supprimer son compte. Veuillez prendre les mesures appropriées.<br/><hr/>"

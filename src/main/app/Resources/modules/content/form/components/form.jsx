@@ -50,25 +50,12 @@ class Form extends Component {
   }
 
   componentDidMount() {
-    if (this.props.lock && this.props.lock.className) {
-      this.props.getLock(this.props.lock.className, this.props.lock.id)
-
-      this.setState({logChecked: true})
-    }
-
     window.addEventListener('beforeunload', this.warnPendingChanges)
   }
 
   componentWillUnmount() {
     // if client route has changed, it will not trigger before unload
     window.removeEventListener('beforeunload', this.warnPendingChanges)
-  }
-
-  componentDidUpdate(previousProps) {
-    if (previousProps.lock && this.props.lock && this.props.lock.id !== previousProps.lock.id) {
-      this.props.getLock(this.props.lock.className, this.props.lock.id)
-      this.setState({logChecked: true})
-    }
   }
 
   render() {
@@ -118,13 +105,6 @@ Form.propTypes = {
    */
   alertExit: T.bool,
   children: T.node.isRequired,
-
-  lock: T.shape({
-    id: T.string.isRequired,
-    className: T.string.isRequired
-  }),
-  getLock: T.func,
-  unlock: T.func,
 
   /**
    * The save action of the form (if provided, form toolbar will be displayed).

@@ -17,7 +17,7 @@ const WorkspaceCard = props =>
     })}
     id={props.data.id}
     poster={props.data.thumbnail}
-    icon={!props.data.thumbnail ? <>{props.data.name.charAt(0)}</> : null}
+    icon={!props.data.thumbnail ? props.data.name.charAt(0) : null}
     title={
       <>
         <TooltipOverlay

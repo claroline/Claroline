@@ -83,7 +83,8 @@ class ModalEmpty extends Component {
       <BaseModal
         {...omit(this.props, 'fadeModal', 'hideModal', 'closeButton', 'className', 'children')}
         autoFocus={true}
-        enforceFocus={false}
+        enforceFocus={true}
+        restoreFocus={true}
         dialogClassName={this.props.className}
         fullscreen={this.props.fullscreen}
         show={this.props.show && !this.props.disabled}
@@ -109,7 +110,7 @@ ModalEmpty.propTypes = {
   closeButton: T.bool,
   size: T.oneOf(['sm', 'lg', 'xl']),
   fullscreen: T.oneOf([true, 'sm-down','md-down', 'lg-down', 'xl-down', 'xxl-down']),
-  restoreFocus: T.bool,
+
   // modal events (from react-bootstrap)
   onEnter: T.func,
   onEntering: T.func,
@@ -127,9 +128,7 @@ ModalEmpty.propTypes = {
 }
 
 ModalEmpty.defaultProps = {
-  disabled: true,
-  closeButton: true,
-  restoreFocus: true
+  disabled: true
 }
 
 export {

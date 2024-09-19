@@ -30,7 +30,7 @@ function createActionDefinition(action) {
       // append some defaults from action spec
       icon: action.confirm.icon || action.icon,
       title: action.confirm.title || action.label,
-      question: action.confirm.message,
+      question: typeof action.confirm === 'string' ? action.confirm : action.confirm.message,
       dangerous: action.dangerous,
 
       // forward original action to the confirmation modal

@@ -436,6 +436,7 @@
     "finish_confirm_question": "Are you sure you want to finish the quiz ? You will no longer be able to change your answers for this attempt.",
     "hint_confirm_title": "Use a hint",
     "hint_confirm_question": "Are you sure you want to use this hint ?",
+    "hint_confirm_additional": "{1} By using this hint you will lose %count% point on the total for the question. | [2,Inf[  By using this hint you will lose %count% points on the total for the question.",
     "show_end_navigation_help": "If checked, the shortcuts 'Show my answers' and 'Restart' will be displayed.",
     "show_end_confirm": "Confirm attempts submissions",
     "show_end_confirm_help": "If checked, a confirmation will be displayed to users before completing the quiz.",

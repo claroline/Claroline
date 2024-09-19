@@ -1,7 +1,4 @@
 {
-  "password_reset": "Reset password",
-  "password_reset_confirm_title": "Password reset",
-  "password_reset_confirm_message": "An e-mail containing a link to change to the user.<br> By clicking on the link, the user will be redirected to a page where he can set a new password.",
   "add_group": "Add a group",
   "add_role": "Add a group",
   "add_user": "Add a user",

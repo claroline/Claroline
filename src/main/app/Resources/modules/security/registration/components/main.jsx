@@ -21,7 +21,6 @@ class RegistrationMain extends Component {
   render() {
     let steps = []
 
-
     steps = steps.concat([
       {
         title: trans('my_account'),
@@ -70,7 +69,7 @@ class RegistrationMain extends Component {
               </div>
             ) : undefined
           },
-          callback: () => this.props.register(this.props.user, this.props.termOfService, (user) => {
+          callback: () => this.props.register(this.props.user, (user) => {
             this.props.onRegister(user)
           })
         }}

@@ -1,12 +1,9 @@
-import {createElement} from 'react'
 import get from 'lodash/get'
 
 import {hasPermission} from '#/main/app/security'
 import {url} from '#/main/app/api'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {trans, transChoice} from '#/main/app/intl/translation'
-
-import {RoleCard} from '#/main/community/role/components/card'
 
 /**
  * Delete roles action.
@@ -23,20 +20,12 @@ export default (roles, refresher) => {
     displayed: -1 !== roles.findIndex(role => hasPermission('delete', role)),
     dangerous: true,
     confirm: {
-      title: transChoice('role_delete_confirm_title', processable.length, {}, 'community'),
-      subtitle: 1 === processable.length ? processable[0].name : transChoice('count_elements', processable.length, {count: processable.length}),
-      message: transChoice('role_delete_confirm_message', processable.length, {count: processable.length}, 'community'),
-      additional: [
-        createElement('div', {
-          key: 'additional',
-          className: 'modal-body'
-        }, processable.map(group => createElement(RoleCard, {
-          key: group.id,
-          orientation: 'row',
-          size: 'xs',
-          data: group
-        })))
-      ]
+      message: transChoice('role_delete_confirm_message', processable.length, {count: '<b class="fw-bold">'+processable.length+'</b>'}, 'community'),
+      additional: trans('irreversible_action_confirm'),
+      items:  processable.map(item => ({
+        thumbnail: item.thumbnail,
+        name: item.name
+      }))
     },
     request: {
       url: url(['apiv2_role_delete'], {ids: processable.map(role => role.id)}),

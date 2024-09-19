@@ -10,8 +10,6 @@ import {asset} from '#/main/app/config/asset'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 import {withModal} from '#/main/app/overlays/modal/withModal'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {MODAL_ALERT} from '#/main/app/modals/alert'
 import {
   actions as listActions,
   select as listSelect
@@ -30,6 +28,7 @@ import {MessageComments} from '#/plugin/forum/resources/forum/player/components/
 import {SubjectForm} from '#/plugin/forum/resources/forum/player/components/subject-form'
 import {MessagesSort} from '#/plugin/forum/resources/forum/player/components/messages-sort'
 import {ResourcePage} from '#/main/core/resource'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 class SubjectComponent extends Component {
   constructor(props) {
@@ -56,15 +55,18 @@ class SubjectComponent extends Component {
   }
 
   createMessage(subjectId, content) {
-    this.props.createMessage(subjectId, content, this.props.forum.moderation)
-
     if (!this.props.moderator &&
       (this.props.forum.moderation === 'PRIOR_ALL' || (this.props.forum.moderation === 'PRIOR_ONCE' && !this.props.isValidatedUser))) {
-      this.props.showModal(MODAL_ALERT, {
-        title: trans('moderated_posts', {}, 'forum'),
+      this.props.showModal(MODAL_CONFIRM, {
         message: trans('moderated_posts_explanation', {}, 'forum'),
-        type: 'info'
+        confirmAction: {
+          type: CALLBACK_BUTTON,
+          label: trans('reply', {}, 'actions'),
+          callback: () => this.props.createMessage(subjectId, content, this.props.forum.moderation)
+        }
       })
+    } else {
+      this.props.createMessage(subjectId, content, this.props.forum.moderation)
     }
   }
 
@@ -75,29 +77,19 @@ class SubjectComponent extends Component {
 
 
   deleteSubject(subjectId) {
-    this.props.showModal(MODAL_CONFIRM, {
-      dangerous: true,
-      icon: 'fa fa-fw fa-trash',
-      title: trans('delete_subject', {}, 'forum'),
-      question: trans('remove_subject_confirm_message', {}, 'forum'),
-      handleConfirm: () => this.props.deleteSubject([subjectId], this.props.history.push, this.props.path)
-    })
+    this.props.deleteSubject([subjectId], this.props.history.push, this.props.path)
   }
 
   deleteMessage(messageId) {
-    this.props.showModal(MODAL_CONFIRM, {
-      dangerous: true,
-      icon: 'fa fa-fw fa-trash',
-      title: trans('delete_message', {}, 'forum'),
-      question: trans('remove_post_confirm_message', {}, 'forum'),
-      handleConfirm: () => this.props.deleteMessage(messageId)
-    })
+    this.props.deleteMessage(messageId)
   }
 
   render() {
     if (isEmpty(this.props.subject) && !this.props.showSubjectForm) {
       return(
-        <span>Loading</span>
+        <ResourcePage>
+          <span>Loading</span>
+        </ResourcePage>
       )
     }
     return (
@@ -208,6 +200,7 @@ class SubjectComponent extends Component {
                   label: trans('delete'),
                   displayed: this.props.currentUser && get(this.props.subject, 'meta.creator.id') === this.props.currentUser.id || this.props.moderator,
                   callback: () => this.deleteSubject(this.props.subject.id),
+                  confirm: trans('remove_subject_confirm_message', {}, 'forum'),
                   dangerous: true
                 }
               ]}
@@ -257,6 +250,7 @@ class SubjectComponent extends Component {
                             label: trans('delete', {}, 'actions'),
                             displayed:  this.props.currentUser && (message.meta.creator.id === this.props.currentUser.id || this.props.moderator),
                             callback: () => this.deleteMessage(message.id),
+                            confirm: trans('remove_post_confirm_message', {}, 'forum'),
                             dangerous: true
                           }
                         ]}

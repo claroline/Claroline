@@ -1,4 +1,4 @@
-import React, {createElement} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
@@ -10,7 +10,6 @@ import {getPlatformRoles, getWorkspaceRoles} from '#/main/community/utils'
 
 import {GroupList as BaseGroupList} from '#/main/community/group/components/list'
 import {selectors} from '#/main/community/tools/community/group/store/selectors'
-import {GroupCard} from '#/main/community/group/components/card'
 import {MODAL_REGISTER} from '#/main/community/modals/register'
 import {PageListSection} from '#/main/app/page/components/list-section'
 
@@ -63,20 +62,11 @@ const GroupList = props =>
             callback: () => props.unregisterGroups(rows, props.contextData),
             displayed: props.canRegister,
             confirm: {
-              title: transChoice('group_unregister_confirm_title', rows.length, {}, 'community'),
-              subtitle: 1 === rows.length ? rows[0].name : transChoice('count_elements', rows.length, {count: rows.length}),
-              message: transChoice('group_unregister_confirm_message', rows.length, {count: rows.length}, 'community'),
-              additional: [
-                createElement('div', {
-                  key: 'additional',
-                  className: 'modal-body'
-                }, rows.map(group => createElement(GroupCard, {
-                  key: group.id,
-                  orientation: 'row',
-                  size: 'xs',
-                  data: group
-                })))
-              ]
+              message: transChoice('group_unregister_confirm_message', rows.length, {count: '<b class="fw-bold">'+rows.length+'</b>'}, 'community'),
+              items:  rows.map(item => ({
+                thumbnail: item.thumbnail,
+                name: item.name
+              }))
             },
             dangerous: true
           }] : []

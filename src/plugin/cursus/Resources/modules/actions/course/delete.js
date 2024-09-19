@@ -1,11 +1,7 @@
-import {createElement} from 'react'
-
 import {hasPermission} from '#/main/app/security'
 import {url} from '#/main/app/api'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {trans, transChoice} from '#/main/app/intl/translation'
-
-import {CourseCard} from '#/plugin/cursus/course/components/card'
 
 /**
  * Delete courses action.
@@ -21,20 +17,12 @@ export default (courses, refresher) => {
     displayed: 0 !== processable.length,
     dangerous: true,
     confirm: {
-      title: transChoice('course_delete_confirm_title', processable.length, {}, 'cursus'),
-      subtitle: 1 === processable.length ? processable[0].name : transChoice('count_elements', processable.length, {count: processable.length}),
-      message: transChoice('course_delete_confirm_message', processable.length, {count: processable.length}, 'cursus'),
-      additional: [
-        createElement('div', {
-          key: 'additional',
-          className: 'modal-body'
-        }, processable.map(course => createElement(CourseCard, {
-          key: course.id,
-          orientation: 'row',
-          size: 'xs',
-          data: course
-        })))
-      ]
+      message: transChoice('course_delete_confirm_message', processable.length, {count: '<b class="fw-bold">'+processable.length+'</b>'}, 'cursus'),
+      additional: trans('irreversible_action_confirm'),
+      items:  processable.map(item => ({
+        thumbnail: item.thumbnail,
+        name: item.name
+      }))
     },
     request: {
       url: url(['apiv2_cursus_course_delete'], {ids: processable.map(course => course.id)}),

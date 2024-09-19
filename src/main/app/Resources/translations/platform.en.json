@@ -29,6 +29,7 @@
   "date_format": "m/d/Y",
   "time_format": "H:i",
   "action_confirm_message": "Are you sure you want to do this action?",
+  "irreversible_action_confirm": "Please note that this action is irreversible.",
   "max_filesize": "Max. file size : %size%",
   "user_online": "Online",
   "user_absent": "Absent",

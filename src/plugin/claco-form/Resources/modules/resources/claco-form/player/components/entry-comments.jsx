@@ -6,8 +6,6 @@ import classes from 'classnames'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 import {trans} from '#/main/app/intl/translation'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
@@ -41,12 +39,7 @@ class EntryCommentsComponent extends Component {
   }
 
   deleteComment(commentId) {
-    this.props.showModal(MODAL_CONFIRM, {
-      icon: 'fa fa-fw fa-trash',
-      title: trans('delete_comment', {}, 'clacoform'),
-      question: trans('delete_comment_confirm_message', {}, 'clacoform'),
-      handleConfirm: () => this.props.deleteComment(commentId)
-    })
+    this.props.deleteComment(commentId)
   }
 
   createNewComment(comment) {
@@ -157,13 +150,13 @@ class EntryCommentsComponent extends Component {
                     {
                       type: CALLBACK_BUTTON,
                       icon: 'fa fa-fw fa-pencil',
-                      label: trans('edit'),
+                      label: trans('edit', {}, 'actions'),
                       displayed: this.canEditComment(comment),
                       callback: () => this.showCommentForm(comment)
                     }, {
                       type: CALLBACK_BUTTON,
                       icon: 'fa fa-fw fa-check',
-                      label: trans('activate'),
+                      label: trans('activate', {}, 'actions'),
                       displayed: this.props.canManage && (0 === comment.status || 2 === comment.status),
                       callback: () => this.props.activateComment(comment.id)
                     }, {
@@ -175,9 +168,10 @@ class EntryCommentsComponent extends Component {
                     }, {
                       type: CALLBACK_BUTTON,
                       icon: 'fa fa-fw fa-trash',
-                      label: trans('delete'),
+                      label: trans('delete', {}, 'actions'),
                       displayed: this.props.canManage,
                       callback: () => this.deleteComment(comment.id),
+                      confirm: trans('delete_comment_confirm_message', {}, 'clacoform'),
                       dangerous: true
                     }
                   ]}
@@ -203,8 +197,7 @@ EntryCommentsComponent.propTypes = {
   editComment: T.func.isRequired,
   deleteComment: T.func.isRequired,
   activateComment: T.func.isRequired,
-  blockComment: T.func.isRequired,
-  showModal: T.func.isRequired
+  blockComment: T.func.isRequired
 }
 
 const EntryComments = connect(
@@ -229,9 +222,6 @@ const EntryComments = connect(
     },
     blockComment(commentId) {
       dispatch(actions.blockComment(commentId))
-    },
-    showModal(type, props) {
-      dispatch(modalActions.showModal(type, props))
     }
   })
 )(EntryCommentsComponent)

@@ -8,8 +8,6 @@ import classes from 'classnames'
 import {hasPermission} from '#/main/app/security'
 import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {CALLBACK_BUTTON, CallbackButton} from '#/main/app/buttons'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {makeId} from '#/main/core/scaffolding/id'
@@ -25,6 +23,7 @@ import {Audio as AudioType, Section as SectionType} from '#/plugin/audio-player/
 import {Waveform} from '#/plugin/audio-player/waveform/components/waveform'
 import {SectionsComments} from '#/plugin/audio-player/files/audio/components/sections-comments'
 import {ResourcePage} from '#/main/core/resource'
+import {Toolbar} from '#/main/app/action'
 
 const Transcripts = props =>
   <div className="audio-player-transcripts">
@@ -41,53 +40,58 @@ Transcripts.propTypes = {
 
 const Section = props =>
   <div className="audio-player-section">
-    <div className="section-controls">
-      {props.section.showHelp &&
-        <CallbackButton
-          className={classes('btn section-btn', {'activated': props.options.showHelp})}
-          callback={() => props.updateOption(props.section.id, 'showHelp', !props.options.showHelp)}
-          primary={true}
-        >
-          <span className="fa fa-question"/>
-        </CallbackButton>
-      }
-      {props.section.commentsAllowed &&
-        <CallbackButton
-          className={classes('btn section-btn', {'activated': props.options.showComment})}
-          callback={() => props.updateOption(props.section.id, 'showComment', !props.options.showComment)}
-          primary={true}
-        >
-          <span className="fa fa-comment-alt"/>
-        </CallbackButton>
-      }
-      {props.section.showAudio && props.section.audioUrl &&
-        <CallbackButton
-          className={classes('btn section-btn', {'activated': props.options.showAudioUrl})}
-          callback={() => props.updateOption(props.section.id, 'showAudioUrl', !props.options.showAudioUrl)}
-          primary={true}
-        >
-          <span className="fa fa-volume-up"/>
-        </CallbackButton>
-      }
-      {constants.USER_TYPE === props.section.type && props.currentUser &&
-        <CallbackButton
-          className="btn section-btn"
-          callback={() => props.deleteSection()}
-          dangerous={true}
-        >
-          <span className="fa fa-trash"/>
-        </CallbackButton>
-      }
-    </div>
+    <Toolbar
+      className="section-controls"
+      tooltip="bottom"
+      buttonName="btn btn-body section-btn"
+      actions={[
+        {
+          name: 'help',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-question',
+          label: trans('show-help', {}, 'actions'),
+          callback: () => props.updateOption(props.section.id, 'showHelp', !props.options.showHelp),
+          displayed: props.section.showHelp
+        }, {
+          name: 'comment',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-comment-alt',
+          label: trans('show-comments', {}, 'actions'),
+          callback: () => props.updateOption(props.section.id, 'showComment', !props.options.showComment),
+          displayed: props.section.commentsAllowed,
+          className: classes({'activated': props.options.showComment})
+        }, {
+          name: 'url',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-volume-up',
+          label: trans('show', {}, 'actions'),
+          callback: () => props.updateOption(props.section.id, 'showAudioUrl', !props.options.showAudioUrl),
+          displayed: props.section.showAudio && props.section.audioUrl,
+          className: classes({'activated': props.options.showAudioUrl})
+        }, {
+          name: 'delete',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-trash',
+          label: trans('delete', {}, 'actions'),
+          callback: () => props.deleteSection(),
+          confirm: trans('section_deletion_confirm_message', {}, 'audio'),
+          dangerous: true,
+          displayed: constants.USER_TYPE === props.section.type && props.currentUser
+        }
+      ]}
+    />
+
     <div className="section-display">
       {props.section.title &&
         <h3>{props.section.title}</h3>
       }
+
       {props.options.showHelp &&
         <ContentHtml className="section-help">
           {props.section.help}
         </ContentHtml>
       }
+
       {props.options.showComment && (!props.section.comment || props.options.showCommentForm ?
         <UserMessageForm
           user={props.currentUser}
@@ -123,17 +127,15 @@ const Section = props =>
             {
               icon: 'fa fa-fw fa-pencil',
               type: CALLBACK_BUTTON,
-              label: trans('edit'),
-              displayed: true,
+              label: trans('edit', {}, 'actions'),
               callback: () => props.updateOption(props.section.id, 'showCommentForm', true)
             }, {
               icon: 'fa fa-fw fa-trash',
               type: CALLBACK_BUTTON,
-              label: trans('delete'),
-              displayed: true,
-              callback: () => props.section.comment && props.section.comment.id ?
-                props.deleteComment(props.section.comment.id) :
-                false,
+              label: trans('delete', {}, 'actions'),
+              displayed: props.section.comment && props.section.comment.id,
+              confirm: trans('comment_deletion_confirm_message'),
+              callback: () => props.deleteComment(props.section.comment.id),
               dangerous: true
             }
           ]}
@@ -414,25 +416,13 @@ const AudioPlayer = connect(
       dispatch(actions.saveSection(sections, section, isNew))
     },
     deleteSection(sections, sectionId) {
-      dispatch(modalActions.showModal(MODAL_CONFIRM, {
-        icon: 'fa fa-fw fa-trash',
-        title: trans('section_deletion', {}, 'audio'),
-        question: trans('section_deletion_confirm_message', {}, 'audio'),
-        dangerous: true,
-        handleConfirm: () => dispatch(actions.deleteSection(sections, sectionId))
-      }))
+      dispatch(actions.deleteSection(sections, sectionId))
     },
     saveComment(sections, sectionId, comment) {
       dispatch(actions.saveSectionComment(sections, sectionId, comment))
     },
     deleteComment(sections, sectionId, commentId) {
-      dispatch(modalActions.showModal(MODAL_CONFIRM, {
-        icon: 'fa fa-fw fa-trash',
-        title: trans('comment_deletion'),
-        question: trans('comment_deletion_confirm_message'),
-        dangerous: true,
-        handleConfirm: () => dispatch(actions.deleteSectionComment(sections, sectionId, commentId))
-      }))
+      dispatch(actions.deleteSectionComment(sections, sectionId, commentId))
     }
   })
 )(Audio)

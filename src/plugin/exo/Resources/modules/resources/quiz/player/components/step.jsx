@@ -22,7 +22,7 @@ const PlayerStep = props => {
       }
 
       {props.description &&
-        <ContentHtml className="step-description">{props.description}</ContentHtml>
+        <ContentHtml className="mb-3 lead">{props.description}</ContentHtml>
       }
 
       {props.items.map(item =>

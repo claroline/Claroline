@@ -1,12 +1,9 @@
-import {createElement} from 'react'
 import get from 'lodash/get'
 
 import {url} from '#/main/app/api'
 import {hasPermission} from '#/main/app/security'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
-
-import {UserCard} from '#/main/community/user/components/card'
 
 export default (users, refresher) => {
   const processable = users.filter(user => hasPermission('administrate', user) && !get(user, 'restrictions.disabled', false))
@@ -19,20 +16,12 @@ export default (users, refresher) => {
     displayed: 0 !== processable.length,
     dangerous: true,
     confirm: {
-      title: transChoice('user_disable_confirm_title', processable.length, {}, 'community'),
-      subtitle: 1 === processable.length ? processable[0].name : transChoice('count_elements', processable.length, {count: processable.length}),
-      message: transChoice('user_disable_confirm_message', processable.length, {count: processable.length}, 'community'),
-      additional: [
-        createElement('div', {
-          key: 'additional',
-          className: 'modal-body'
-        }, processable.map(user => createElement(UserCard, {
-          key: user.id,
-          orientation: 'row',
-          size: 'xs',
-          data: user
-        })))
-      ]
+      message: transChoice('user_disable_confirm_message', processable.length, {count: '<b class="fw-bold">'+processable.length+'</b>'}, 'community'),
+      additional: trans('Les utilisateurs désactivés ne peuvent plus se connecter à la plateforme.'),
+      items:  processable.map(item => ({
+        thumbnail: item.picture,
+        name: item.name
+      }))
     },
     request: {
       url: url(['apiv2_user_disable'], {ids: users.map(u => u.id)}),

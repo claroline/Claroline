@@ -71,7 +71,7 @@ class SearchFull extends Component {
 
   render() {
     return (
-      <div className="list-search search-full">
+      <search className="list-search search-full">
         {this.props.available.map(availableFilter =>
           <DataFilter
             id={this.props.id+'-'+toKey(availableFilter.name)}
@@ -99,7 +99,7 @@ class SearchFull extends Component {
           disabled={this.props.disabled || !this.state.updated}
           primary={true}
         />
-      </div>
+      </search>
     )
   }
 }

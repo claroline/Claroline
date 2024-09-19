@@ -36,12 +36,6 @@ const Form = connect(
     },
     cancelForm() {
       dispatch(actions.cancelChanges(ownProps.name))
-    },
-    getLock(className, id) {
-      dispatch(actions.getItemLock(className, id))
-    },
-    unlock(className, id) {
-      dispatch(actions.unlockItem(className, id))
     }
   }),
   (stateProps, dispatchProps, ownProps) => {
@@ -70,10 +64,6 @@ const Form = connect(
                   ownProps.onSave(response)
                 }
               })
-
-              if (ownProps.lock && ownProps.lock.autoUnlock) {
-                dispatchProps.unlock(ownProps.lock.className, ownProps.lock.id)
-              }
             }
           }
         },

@@ -21,7 +21,7 @@ const StaticToolbar = (props) => {
   const toolbar = buildToolbar(props.toolbar, props.actions, props.scope)
 
   return (0 !== toolbar.length &&
-    <nav role="toolbar" className={classes(props.className, props.name)} style={props.style}>
+    <nav role={props.role} className={classes(props.className, props.name)} style={props.style}>
       {toolbar.map((group, groupIndex) => [
         0 !== groupIndex && props.separatorName &&
           <span
@@ -70,7 +70,7 @@ const PromisedToolbar = (props) =>
   <Await
     for={props.actions}
     placeholder={
-      <div className={props.className}>
+      <div className={props.className} role="progressbar">
         <span className={classes(props.name ? `${props.name}-btn` : null, props.buttonName, 'default')}>
           <span className="fa fa-fw fa-spinner fa-spin" />
         </span>

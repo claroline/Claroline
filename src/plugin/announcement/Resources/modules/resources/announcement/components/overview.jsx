@@ -5,7 +5,8 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {getPlainText} from '#/main/app/data/types/html/utils'
-import {displayDate, trans} from '#/main/app/intl'
+import {trans} from '#/main/app/intl'
+import {Datetime} from '#/main/app/components/date'
 import {LinkButton} from '#/main/app/buttons'
 import {Thumbnail} from '#/main/app/components/thumbnail'
 import {PageSection} from '#/main/app/page'
@@ -28,9 +29,8 @@ const Announce = (props) =>
 
     <div className="text-body-tertiary mt-4 d-flex align-items-center gap-3" role="presentation">
       {get(props.announcement, 'meta.publishedAt') &&
-        <span className="fs-sm">{displayDate(get(props.announcement, 'meta.publishedAt') , true)}</span>
+        <Datetime className="fs-sm" value={get(props.announcement, 'meta.publishedAt')} long={true} />
       }
-
 
       {!isEmpty(props.announcement.tags) &&
         <div className="" role="presentation">

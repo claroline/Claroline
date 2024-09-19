@@ -1,25 +1,25 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-
-import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata.jsx'
-// import {Hint} from '#/plugin/exo/items/components/hint.jsx'
+import classes from 'classnames'
 
 import {ContentHtml} from '#/main/app/content/components/html'
 import {trans, transChoice} from '#/main/app/intl/translation'
+import {Button} from '#/main/app/action'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {Badge} from '#/main/app/components/badge'
+
+import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
 
 const UsedHint = props =>
-  <div className="used-hint">
-    <span className="fa fa-fw fa-lightbulb" />
-    <ContentHtml className="hint-text">
+  <li className="list-group-item list-group-item-info d-flex gap-3 align-items-baseline">
+    <ContentHtml className="hint-text flex-fill">
       {props.value}
     </ContentHtml>
 
     {props.penalty > 0 &&
-      <span className="badge hint-penalty-info">
-        {transChoice('hint_penalty', props.penalty, {count: props.penalty}, 'quiz')}
-      </span>
+      <Badge variant="info">{transChoice('hint_penalty', props.penalty, {count: props.penalty}, 'quiz')}</Badge>
     }
-  </div>
+  </li>
 
 UsedHint.propTypes = {
   value: T.string.isRequired,
@@ -27,20 +27,28 @@ UsedHint.propTypes = {
 }
 
 const Hint = props =>
-  <button
-    type="button"
-    className="btn btn-outline-secondary w-100 hint-btn text-start"
-    onClick={props.showHint}
-  >
-    <span className="fa fa-fw fa-lightbulb"/>
+  <li className="list-group-item d-flex align-items-baseline gap-3">
     {trans('hint', {number: props.number}, 'quiz')}
 
     {props.penalty > 0 &&
-      <span className="text-danger hint-penalty-info">
+      <Badge className="ms-auto" variant="secondary" subtle={true}>
         {transChoice('hint_penalty', props.penalty, {count: props.penalty}, 'quiz')}
-      </span>
+      </Badge>
     }
-  </button>
+
+    <Button
+      type={CALLBACK_BUTTON}
+      className={classes('btn btn-body', !props.penalty && 'ms-auto')}
+      size="sm"
+      callback={props.showHint}
+      label={trans('show', {}, 'actions')}
+      confirm={{
+        message: trans('hint_confirm_question', {}, 'quiz'),
+        additional: props.penalty > 0 ? transChoice('hint_confirm_additional', props.penalty, {count: '<b class="fw-bold">'+props.penalty+'</b>'}, 'quiz') : undefined,
+        button: trans('show', {}, 'actions')
+      }}
+    />
+  </li>
 
 Hint.propTypes = {
   penalty: T.number,
@@ -72,9 +80,9 @@ const Hints = props => {
   })
 
   return (
-    <div className="item-hints">
+    <ul className="list-group">
       {hints}
-    </div>
+    </ul>
   )
 }
 

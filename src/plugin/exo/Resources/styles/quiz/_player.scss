@@ -1,18 +1,10 @@
 /* PLAYER ROOT CONTAINER */
 .quiz-player {
-  /*max-width: $quiz-container-width;
-  width: 100%; !* for IE11 : can not apply auto margin with max-width *!
-  margin: 0 auto;*/
-
   .progress {
     margin-bottom: calc($component-margin-bottom - 4px);
   }
 
   .score-gauge {
-    margin-bottom: $component-margin-bottom;
-  }
-
-  .step-description {
     margin-bottom: $component-margin-bottom;
   }
 

@@ -12,5 +12,8 @@
   "display_internal_account": "Afficher l'authentification Claroline Connect",
   "force_password_complexity": "Forcer la complexité des mots de passe utilisateur",
   "tokens_help": "Les jetons d'authentifications sont utilisés pour vous identifié lors de l'utilisation de l'API.",
-  "tokens_info": "Usage avancé pour les utilisateurs souhaitant manipuler les données sans passer par l'interface utilisateur."
+  "tokens_info": "Usage avancé pour les utilisateurs souhaitant manipuler les données sans passer par l'interface utilisateur.",
+  "user_password_reset_confirm_message": "{1} Êtes-vous sûr(e) de vouloir réinitialiser le mot de passe de cet utilisateur ? | [2,Inf[ Êtes-vous sûr(e) de vouloir réinitialiser le mot de passe de ces %count% utilisateurs ?",
+  "group_password_reset_confirm_message": "{1} Êtes-vous sûr(e) de vouloir réinitialiser le mot de passe de tous les utlisateurs de ce groupe ? | [2,Inf[ Êtes-vous sûr(e) de vouloir réinitialiser le mot de passe de tous les utlisateurs de ces %count% groupes ?",
+  "password_reset_confirm_help": "Un e-mail contenant un lien pour changer le mot de passe sera envoyé à l'utilisateur.<br> En cliquant sur le lien, l'utilisateur sera redirigé vers une page où il pourra définir un nouveau mot de passe."
 }

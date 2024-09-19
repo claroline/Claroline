@@ -80,6 +80,7 @@ const PromisedAction = {
 const Toolbar = {
   propTypes: {
     id: T.string,
+    role: T.string,
 
     /**
      * The base class of the toolbar (it's used to generate classNames which can be used for styling).
@@ -155,6 +156,7 @@ const Toolbar = {
   },
   defaultProps: {
     className: 'toolbar',
+    role: 'toolbar',
     disabled: false
   }
 }

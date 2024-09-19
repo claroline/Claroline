@@ -9,8 +9,7 @@ import {toKey} from '#/main/core/scaffolding/text'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Heading} from '#/main/app/components/heading'
-import {MODAL_BUTTON} from '#/main/app/buttons'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 import {
@@ -66,18 +65,15 @@ const WidgetCol = props =>
         }
         <Button
           className="btn btn-outline-danger"
-          type={MODAL_BUTTON}
+          type={CALLBACK_BUTTON}
           icon="fa fa-fw fa-trash"
           size="sm"
           label={trans('delete', {}, 'actions')}
           dangerous={true}
-          modal={[MODAL_CONFIRM, {
-            dangerous: true,
-            icon: 'fa fa-fw fa-trash',
-            title: trans('widget_delete_confirm_title', {}, 'widget'),
-            question: trans('widget_delete_confirm_message', {}, 'widget'),
-            handleConfirm: () => props.deleteContent(props.content)
-          }]}
+          confirm={{
+            message: trans('widget_delete_confirm_message', {}, 'widget')
+          }}
+          callback={() => props.deleteContent(props.content)}
           disabled={props.disabled}
         />
       </div>

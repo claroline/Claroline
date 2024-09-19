@@ -10,5 +10,8 @@
   "allow_change_password": "Allow users to change their password",
   "display_client_ip": "Display client IP address",
   "display_internal_account": "Display Claroline Connect authentication",
-  "force_password_complexity": "Force the complexity of user passwords"
+  "force_password_complexity": "Force the complexity of user passwords",
+  "user_password_reset_confirm_message": "{1} Are you sure you want to reset the passwords of this user ? | [2,Inf[ Are you sure you want to reset the passwords of these %count% users?",
+  "group_password_reset_confirm_message": "{1} Are you sure you want to reset the password for all users in this group? | [2,Inf[ Are you sure you want to reset the password for all users in these %count% groups?",
+  "password_reset_confirm_message": "An e-mail containing a link to change to the user.<br> By clicking on the link, the user will be redirected to a page where he can set a new password."
 }

@@ -1,9 +1,7 @@
 import {hasPermission} from '#/main/app/security'
 import {url} from '#/main/app/api'
-import {trans} from '#/main/app/intl/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
-
-// TODO : move in authentication bundle
 
 export default (users) => {
   const processable = users.filter(user => hasPermission('administrate', user))
@@ -12,11 +10,16 @@ export default (users) => {
     name: 'password-reset',
     type: ASYNC_BUTTON,
     icon: 'fa fa-fw fa-user-lock',
-    label: trans('password_reset', {}, 'actions'),
+    label: trans('reset-password', {}, 'actions'),
     displayed: 0 !== processable.length,
     confirm: {
-      title: trans('password_reset_confirm_title', {}, 'actions'),
-      message: trans('password_reset_confirm_message', {}, 'actions')
+      message: transChoice('user_password_reset_confirm_message', processable.length, {count: '<b class="fw-bold">'+processable.length+'</b>'}, 'security'),
+      additional: trans('password_reset_confirm_help', {}, 'security'),
+      button: trans('reset', {}, 'actions'),
+      items:  processable.map(item => ({
+        thumbnail: item.picture,
+        name: item.name
+      }))
     },
     request: {
       type: 'send',

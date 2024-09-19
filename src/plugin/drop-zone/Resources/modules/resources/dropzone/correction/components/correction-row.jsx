@@ -3,8 +3,8 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
+import {Button, Toolbar} from '#/main/app/action'
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {DropzoneType, CorrectionType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
@@ -41,13 +41,7 @@ class CorrectionRow extends Component {
   }
 
   deleteCorrection(correctionId) {
-    this.props.showModal(MODAL_CONFIRM, {
-      icon: 'fa fa-fw fa-trash',
-      title: trans('delete_correction', {}, 'dropzone'),
-      question: trans('delete_correction_confirm_message', {}, 'dropzone'),
-      dangerous: true,
-      handleConfirm: () => this.props.deleteCorrection(correctionId)
-    })
+    this.props.deleteCorrection(correctionId)
   }
 
   render() {
@@ -69,69 +63,64 @@ class CorrectionRow extends Component {
           }
         </td>
         <td>
-          <a
-            className="pointer-hand"
-            onClick={() => {
-              this.props.showModal(
-                MODAL_CORRECTION,
-                {
-                  title: trans(
-                    'correction_from',
-                    {name: `${this.props.correction.teamName ? `[${this.props.correction.teamName}] ` : ''}
-                      ${this.props.correction.user.firstName} ${this.props.correction.user.lastName}
-                    `},
-                    'dropzone'
-                  ),
-                  correction: this.props.correction,
-                  dropzone: this.props.dropzone
-                }
-              )
-            }}
-          >
-            {this.props.correction.teamName ? `[${this.props.correction.teamName}] ` : ''}
-            {`${this.props.correction.user.firstName} ${this.props.correction.user.lastName}`}
-          </a>
+          <Button
+            type={MODAL_BUTTON}
+            modal={[MODAL_CORRECTION, {
+              title: trans(
+                'correction_from',
+                {name: `${this.props.correction.teamName ? `[${this.props.correction.teamName}] ` : ''}
+                    ${this.props.correction.user.firstName} ${this.props.correction.user.lastName}
+                  `},
+                'dropzone'
+              ),
+              correction: this.props.correction,
+              dropzone: this.props.dropzone
+            }]}
+            label={
+              <>
+                {this.props.correction.teamName ? `[${this.props.correction.teamName}] ` : ''}
+                {`${this.props.correction.user.firstName} ${this.props.correction.user.lastName}`}
+              </>
+            }
+          />
         </td>
         <td>{this.props.correction.startDate}</td>
         <td>{this.props.correction.endDate}</td>
         <td>{this.props.correction.score} / {this.props.dropzone.parameters.scoreMax}</td>
         <td>
-          <div className="btn-group">
-            {this.props.correction.finished &&
-              <button
-                className="btn btn-default btn-sm"
-                type="button"
-                onClick={() => this.props.switchCorrectionValidation(this.props.correction.id)}
-              >
-                {this.props.correction.valid ? trans('invalidate_correction', {}, 'dropzone') : trans('revalidate_correction', {}, 'dropzone')}
-              </button>
-            }
-            {!this.props.correction.finished &&
-              <button
-                className="btn btn-default btn-sm"
-                type="button"
-                onClick={() => this.showCorrectionEditionForm()}
-              >
-                {trans('edit', {}, 'platform')}
-              </button>
-            }
-            {!this.props.correction.finished && this.props.correction.startDate !== this.props.correction.lastEditionDate &&
-              <button
-                className="btn btn-default btn-sm"
-                type="button"
-                onClick={() => this.props.submitCorrection(this.props.correction.id)}
-              >
-                {trans('submit_correction', {}, 'dropzone')}
-              </button>
-            }
-            <button
-              className="btn btn-danger btn-sm"
-              type="button"
-              onClick={() => this.deleteCorrection(this.props.correction.id)}
-            >
-              {trans('delete', {}, 'platform')}
-            </button>
-          </div>
+          <Toolbar
+            className="btn-group"
+            buttonName="btn btn-body"
+            size="sm"
+            actions={[
+              {
+                name: 'validate',
+                type: CALLBACK_BUTTON,
+                label: this.props.correction.valid ? trans('invalidate_correction', {}, 'dropzone') : trans('revalidate_correction', {}, 'dropzone'),
+                callback: () => this.props.switchCorrectionValidation(this.props.correction.id),
+                displayed: this.props.correction.finished
+              }, {
+                name: 'edit',
+                type: CALLBACK_BUTTON,
+                label: trans('edit', {}, 'actions'),
+                callback: () => this.showCorrectionEditionForm(),
+                displayed: !this.props.correction.finished
+              }, {
+                name: 'submit',
+                type: CALLBACK_BUTTON,
+                label: trans('submit_correction', {}, 'dropzone'),
+                callback: () => this.props.submitCorrection(this.props.correction.id),
+                displayed: !this.props.correction.finished && this.props.correction.startDate !== this.props.correction.lastEditionDate
+              }, {
+                name: 'delete',
+                type: CALLBACK_BUTTON,
+                label: trans('delete', {}, 'platform'),
+                callback: () => this.deleteCorrection(this.props.correction.id),
+                confirm: trans('delete_correction_confirm_message', {}, 'dropzone'),
+                dangerous: true
+              }
+            ]}
+          />
         </td>
       </tr>
     )
@@ -145,25 +134,20 @@ CorrectionRow.propTypes = {
   submitCorrection: T.func.isRequired,
   switchCorrectionValidation: T.func.isRequired,
   deleteCorrection: T.func.isRequired,
-  showModal: T.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const ConnectedCorrectionRow = connect(
+  (state) => ({
     dropzone: selectors.dropzone(state)
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
+  }),
+  (dispatch) => ({
     saveCorrection: (correction) => dispatch(actions.saveCorrection(correction)),
     submitCorrection: (correctionId) => dispatch(actions.submitCorrection(correctionId)),
     switchCorrectionValidation: (correctionId) => dispatch(actions.switchCorrectionValidation(correctionId)),
-    deleteCorrection: (correctionId) => dispatch(actions.deleteCorrection(correctionId)),
-    showModal: (type, props) => dispatch(modalActions.showModal(type, props))
-  }
+    deleteCorrection: (correctionId) => dispatch(actions.deleteCorrection(correctionId))
+  })
+)(CorrectionRow)
+
+export {
+  ConnectedCorrectionRow as CorrectionRow
 }
-
-const ConnectedCorrectionRow = connect(mapStateToProps, mapDispatchToProps)(CorrectionRow)
-
-export {ConnectedCorrectionRow as CorrectionRow}

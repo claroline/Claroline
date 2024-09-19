@@ -2,7 +2,7 @@
     "add_tab": "Ajouter un onglet",
     "tab_add_child": "Ajouter un sous-onglet",
     "home_tab_delete_confirm_title": "Suppression d'un onglet",
-    "home_tab_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer cet onglet ?",
+    "home_tab_delete_confirm_message": "Êtes-vous sûr(e) de vouloir supprimer cet onglet ?",
     "new_tab": "Nouvel onglet",
     "new_tab_configure": "2. Configurer l'onglet",
     "new_tab_select": "1. Choisir le type d'onglet à créer",

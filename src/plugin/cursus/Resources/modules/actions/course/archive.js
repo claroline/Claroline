@@ -1,12 +1,9 @@
-import {createElement} from 'react'
 import get from 'lodash/get'
 
 import {url} from '#/main/app/api'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {hasPermission} from '#/main/app/security'
 import {trans, transChoice} from '#/main/app/intl/translation'
-
-import {CourseCard} from '#/plugin/cursus/course/components/card'
 
 /**
  * Archive action.
@@ -22,20 +19,11 @@ export default (courses, refresher) => {
     displayed: 0 !== processable.length,
     dangerous: true,
     confirm: {
-      title: transChoice('archive_training_confirm_title', processable.length, {}, 'actions'),
-      message: transChoice('archive_training_confirm_message', processable.length, {count: processable.length}, 'actions'),
-      additional: [
-        createElement('div', {
-          key: 'additional',
-          className: 'modal-body'
-        }, processable.map(course => createElement(CourseCard, {
-          key: course.id,
-          orientation: 'row',
-          className: 'mb-2',
-          size: 'xs',
-          data: course
-        })))
-      ]
+      message: transChoice('archive_training_confirm_message', processable.length, {count: '<b class="fw-bold">'+processable.length+'</b>'}, 'actions'),
+      items:  processable.map(item => ({
+        thumbnail: item.thumbnail,
+        name: item.name
+      }))
     },
     request: {
       url: url(['apiv2_cursus_course_archive']),

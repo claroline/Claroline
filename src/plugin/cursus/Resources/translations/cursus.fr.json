@@ -30,7 +30,7 @@
     "courses": "Formations",
     "course_appearance_help": "Personnalisez les paramètres d'affichage avancés de votre formation.",
     "course_delete_confirm_title": "{1} Suppression d'une formation | [2,Inf[ Suppression de plusieurs formations",
-    "course_delete_confirm_message": "{1} Êtes-vous sûr de vouloir supprimer ce formation ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% formations ?",
+    "course_delete_confirm_message": "{1} Êtes-vous sûr(e) de vouloir supprimer ce formation ? | [2,Inf[ Êtes-vous sûr(e) de vouloir supprimer ces %count% formations ?",
     "course_history_help": "Retrouvez toutes les modifications effectuées sur vos formations.",
     "course_long_desc_help": "Décrivez de manière détaillée le contenu de votre formation (La description détaillée est affichée sur la vue \"À propos\" à la place de la description courte).",
     "course_permissions_help": "Gérez les différents droits et de modifications de votre formation.",

@@ -56,7 +56,6 @@ const FormData = (props) => {
       displayLevel={props.displayLevel}
       title={props.title}
       alertExit={props.alertExit}
-      lock={props.lock}
       save={props.save}
       cancel={props.cancel}
       buttons={props.buttons}
@@ -159,11 +158,6 @@ FormData.propTypes = {
     DataFormSectionTypes.propTypes
   )).isRequired,
   locked: T.arrayOf(T.string), // a list of inputs to be locked in form
-
-  lock: T.shape({
-    id: T.string.isRequired,
-    className: T.string.isRequired
-  }),
 
   onSave: T.func,
 

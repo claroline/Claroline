@@ -73,10 +73,7 @@ PlayerMain.propTypes = {
   file: T.shape(
     FileTypes.propTypes
   ).isRequired,
-  workspace: T.object,
-  createComment: T.func.isRequired,
-  editComment: T.func.isRequired,
-  deleteComment: T.func.isRequired
+  workspace: T.object
 }
 
 export {

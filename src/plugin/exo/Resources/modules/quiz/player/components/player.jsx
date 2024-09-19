@@ -49,7 +49,7 @@ const CurrentStep = props => {
       }
 
       {props.step.description &&
-        <ContentHtml className="step-description">{props.step.description}</ContentHtml>
+        <ContentHtml className="mb-3 lead">{props.step.description}</ContentHtml>
       }
 
       {props.items.map((item, index) => (
@@ -362,7 +362,6 @@ const Player = withRouter(connect(
   },
   dispatch => ({
     start() {
-      // The return is to be able to link on the Promise (this is not really clean)
       return dispatch(actions.play())
     },
     updateAnswer(questionId, answerData) {
@@ -394,11 +393,7 @@ const Player = withRouter(connect(
       }
     },
     showHint(quizId, paperId, questionId, hint) {
-      dispatch(modalActions.showModal(MODAL_CONFIRM, {
-        title: trans('hint_confirm_title', {}, 'quiz'),
-        question: trans('hint_confirm_question', {}, 'quiz'),
-        handleConfirm: () => dispatch(actions.showHint(quizId, paperId, questionId, hint))
-      }))
+      dispatch(actions.showHint(quizId, paperId, questionId, hint))
     },
     showTimeOverMessage() {
       dispatch(modalActions.showModal(MODAL_ALERT, {

@@ -14,9 +14,9 @@
   "add_color": "Ajouter une couleur",
   "new_color_chart": "Nouvelle palette de couleurs",
   "color_chart_delete_confirm_title": "Suppression de la palette de couleurs",
-  "color_chart_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer cette palette de couleurs ?",
+  "color_chart_delete_confirm_message": "Êtes-vous sûr(e) de vouloir supprimer cette palette de couleurs ?",
   "icon_set_delete_confirm_title": "{1} Suppression d'un jeu d'icones | [2,Inf[ Suppression de plusieurs jeux d'icones",
-  "icon_set_delete_confirm_message": "{1} Êtes-vous sûr de vouloir supprimer ce jeu d'icones ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% jeux d'icones ?",
+  "icon_set_delete_confirm_message": "{1} Êtes-vous sûr(e) de vouloir supprimer ce jeu d'icones ? | [2,Inf[ Êtes-vous sûr(e) de vouloir supprimer ces %count% jeux d'icones ?",
 
   "theme_mode": "Mode",
   "theme_mode_auto": "Système",

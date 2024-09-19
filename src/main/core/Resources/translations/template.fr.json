@@ -2,7 +2,7 @@
     "author_desc": "Auteur du contenu",
     "loading": "Nous chargeons votre template...",
     "template_delete_confirm": "Suppression du template",
-    "template_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer ce template ?",
+    "template_delete_confirm_message": "Êtes-vous sûr(e) de vouloir supprimer ce template ?",
     "email_layout": "Layout de mail",
     "email_layout_desc": "Le layout utilisé pour les mails envoyés par la plateforme.",
     "user_registration": "Confirmation d'inscription à la plateforme",
