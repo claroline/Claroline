@@ -7,6 +7,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentTabs} from '#/main/app/content/components/tabs'
 import {ToolPage} from '#/main/core/tool'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
+import {PageListSection} from '#/main/app/page/components/list-section'
 
 import {SessionList} from '#/plugin/cursus/session/components/list'
 import {selectors} from '#/plugin/cursus/tools/trainings/session/store/selectors'
@@ -50,52 +51,58 @@ const SessionMain = (props) =>
           exact: true,
           onEnter: () => props.invalidateList(),
           render: () => (
-            <SessionList
-              path={props.path}
-              name={selectors.STORE_NAME}
-              url={['apiv2_cursus_my_sessions_active']}
-              actions={(rows) => [
-                {
-                  type: LINK_BUTTON,
-                  icon: 'fa fa-fw fa-book',
-                  label: trans('open-workspace', {}, 'actions'),
-                  target: rows[0].workspace ? workspaceRoute(rows[0].workspace) : '',
-                  displayed: !!rows[0].workspace,
-                  scope: ['object']
-                }
-              ]}
-            />
+            <PageListSection>
+              <SessionList
+                path={props.path}
+                name={selectors.STORE_NAME}
+                url={['apiv2_cursus_my_sessions_active']}
+                actions={(rows) => [
+                  {
+                    type: LINK_BUTTON,
+                    icon: 'fa fa-fw fa-book',
+                    label: trans('open-workspace', {}, 'actions'),
+                    target: rows[0].workspace ? workspaceRoute(rows[0].workspace) : '',
+                    displayed: !!rows[0].workspace,
+                    scope: ['object']
+                  }
+                ]}
+              />
+            </PageListSection>
           )
         }, {
           path: '/ended',
           onEnter: () => props.invalidateList(),
           render: () => (
-            <SessionList
-              path={props.path}
-              name={selectors.STORE_NAME}
-              url={['apiv2_cursus_my_sessions_ended']}
-              actions={(rows) => [
-                {
-                  name: 'open-workspace',
-                  type: LINK_BUTTON,
-                  icon: 'fa fa-fw fa-book',
-                  label: trans('open-workspace', {}, 'actions'),
-                  target: rows[0].workspace ? workspaceRoute(rows[0].workspace) : '',
-                  displayed: !!rows[0].workspace,
-                  scope: ['object']
-                }
-              ]}
-            />
+            <PageListSection>
+              <SessionList
+                path={props.path}
+                name={selectors.STORE_NAME}
+                url={['apiv2_cursus_my_sessions_ended']}
+                actions={(rows) => [
+                  {
+                    name: 'open-workspace',
+                    type: LINK_BUTTON,
+                    icon: 'fa fa-fw fa-book',
+                    label: trans('open-workspace', {}, 'actions'),
+                    target: rows[0].workspace ? workspaceRoute(rows[0].workspace) : '',
+                    displayed: !!rows[0].workspace,
+                    scope: ['object']
+                  }
+                ]}
+              />
+            </PageListSection>
           )
         }, {
           path: '/pending',
           onEnter: () => props.invalidateList(),
           render: () => (
-            <SessionList
-              path={props.path}
-              name={selectors.STORE_NAME}
-              url={['apiv2_cursus_my_sessions_pending']}
-            />
+            <PageListSection>
+              <SessionList
+                path={props.path}
+                name={selectors.STORE_NAME}
+                url={['apiv2_cursus_my_sessions_pending']}
+              />
+            </PageListSection>
           )
         }
       ]}

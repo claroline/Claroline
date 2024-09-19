@@ -60,8 +60,12 @@ const EventsTool = (props) =>
         component: CourseCreation
       }, {
         path: '/course/:courseSlug/edit',
-        onEnter: () => props.openForm(props.course.slug),
-        component: CourseEditor
+        render: (params = {}) => (
+          <CourseEditor
+            path={props.path}
+            slug={params.match.params.courseSlug}
+          />
+        )
       }, {
         path: '/course',
         onEnter: () => {

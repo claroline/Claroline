@@ -30,8 +30,12 @@ const CatalogMain = (props) =>
         component: CourseCreation
       }, {
         path: '/:slug/edit',
-        onEnter: (params = {}) => props.openForm(params.slug),
-        component: CourseEditor
+        render: (params = {}) => (
+          <CourseEditor
+            path={props.path}
+            slug={params.match.params.slug}
+          />
+        )
       }, {
         path: '/:slug',
         onEnter: (params = {}) => props.open(params.slug),

@@ -33,6 +33,9 @@ const reducer = combineReducers({
       [LOAD_COURSE]: () => true
     })
   }),
+  courseSessionsCanceled: makeListReducer(selectors.STORE_NAME+'.courseSessionsCanceled', {
+    sortBy: {property: 'order', direction: 1}
+  }),
   courseEvents: makeListReducer(selectors.STORE_NAME+'.courseEvents', {
     filters: [{property: 'status', value: 'not_ended'}],
     sortBy: {property: 'startDate', direction: 1}

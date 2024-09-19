@@ -45,6 +45,8 @@
 
     "archived_trainings": "Archived trainings",
     "archived_trainings_help": "Manage archived trainings.",
+    "canceled_sessions": "Canceled sessions",
+    "canceled_sessions_help": "List of canceled sessions.",
 
     "my_courses": "My trainings",
     "new_course": "New training",

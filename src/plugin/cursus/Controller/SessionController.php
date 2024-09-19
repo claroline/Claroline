@@ -106,6 +106,8 @@ class SessionController extends AbstractCrudController
             }
         }
 
+        $filters['canceled'] = false;
+
         return $filters;
     }
 
@@ -158,6 +160,46 @@ class SessionController extends AbstractCrudController
         return new JsonResponse(array_map(function (Session $session) {
             return $this->serializer->serialize($session);
         }, $processed));
+    }
+
+    /**
+     * @Route("/{id}/list/canceled", name="list_canceled", methods={"GET"})
+     *
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
+     */
+    public function listCanceledAction(Course $course, Request $request): JsonResponse
+    {
+        $this->checkPermission('EDIT', $course, [], true);
+
+        $filters = $request->query->all();
+        $filters['hiddenFilters'] = $filters['hiddenFilters'] ?? [];
+
+        $filters['hiddenFilters'] = array_merge($filters['hiddenFilters'], [
+            'course' => $course->getUuid(),
+            'canceled' => true,
+        ]);
+
+        return new JsonResponse(
+            $this->crud->list(Session::class, $filters)
+        );
+    }
+
+    /**
+     * @Route("/cancel", name="cancel", methods={"POST"})
+     */
+    public function cancelAction(Request $request): JsonResponse
+    {
+        $data = $this->decodeRequest($request);
+
+        $processedSessions = $this->manager->cancelSessions(
+            $data['ids'],
+            $data['cancelReason'] ?? null,
+            $data['canceledTemplate'] ?? null
+        );
+
+        return new JsonResponse(array_map(function (Session $session) {
+            return $this->serializer->serialize($session);
+        }, $processedSessions));
     }
 
     /**

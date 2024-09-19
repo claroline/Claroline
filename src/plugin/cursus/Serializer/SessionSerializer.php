@@ -139,6 +139,8 @@ class SessionSerializer
                 'updated' => DateNormalizer::normalize($session->getUpdatedAt()),
                 'duration' => $session->getCourse() ? $session->getCourse()->getDefaultSessionDuration() : null,
                 'default' => $session->isDefaultSession(),
+                'canceled' => $session->isCanceled(),
+                'cancelReason' => $session->getCancelReason(),
             ],
             'display' => [
                 'order' => $session->getOrder(),
@@ -172,6 +174,9 @@ class SessionSerializer
             }, $session->getResources()->toArray()),
             'invitationTemplate' => $session->getInvitationTemplate() ?
                 $this->templateSerializer->serialize($session->getInvitationTemplate(), [Options::SERIALIZE_MINIMAL]) :
+                null,
+            'canceledTemplate' => $session->getCanceledTemplate() ?
+                $this->templateSerializer->serialize($session->getCanceledTemplate(), [Options::SERIALIZE_MINIMAL]) :
                 null,
         ];
     }
@@ -288,6 +293,12 @@ class SessionSerializer
             $template = $this->templateRepo->findOneBy(['uuid' => $data['invitationTemplate']['id']]);
         }
         $session->setInvitationTemplate($template);
+
+        $cancelTemplate = null;
+        if (!empty($data['canceledTemplate']) && $data['canceledTemplate']['id']) {
+            $cancelTemplate = $this->templateRepo->findOneBy(['uuid' => $data['canceledTemplate']['id']]);
+        }
+        $session->setCanceledTemplate($cancelTemplate);
 
         return $session;
     }

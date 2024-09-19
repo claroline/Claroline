@@ -16,6 +16,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
@@ -424,6 +425,124 @@ class SessionManager
                 $session->getCreator()
             ), MessageEvents::MESSAGE_SENDING);
         }
+    }
+
+    /**
+     * Sends cancellation notice to session users.
+     */
+    public function sendSessionCancel(Session $session): void
+    {
+        $templateName = 'training_session_canceled';
+
+        $workspace = $session->getWorkspace();
+        $course = $session->getCourse();
+        $trainersList = '';
+        /** @var SessionUser[] $sessionTrainers */
+        $sessionTrainers = $this->sessionUserRepo->findBy([
+            'session' => $session,
+            'type' => AbstractRegistration::TUTOR,
+        ]);
+
+        if (0 < count($sessionTrainers)) {
+            $trainersList = '<ul>';
+
+            foreach ($sessionTrainers as $sessionTrainer) {
+                $user = $sessionTrainer->getUser();
+                $trainersList .= '<li>'.$user->getFirstName().' '.$user->getLastName().'</li>';
+            }
+            $trainersList .= '</ul>';
+        }
+
+        $basicPlaceholders = array_merge([
+            'course_name' => $course->getName(),
+            'course_code' => $course->getCode(),
+            'course_description' => $course->getDescription(),
+            'session_url' => $this->routingHelper->desktopUrl('trainings').'/course/'.$session->getCourse()->getSlug().'/'.$session->getUuid(),
+            'session_poster' => $session->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$session->getPoster().'" style="max-width: 100%;" />' : '',
+            'session_name' => $session->getName(),
+            'session_description' => $session->getDescription(),
+            'session_trainers' => $trainersList,
+            'cancel_reason' => $session->getCancelReason(),
+            'workspace_url' => $workspace ? $this->routingHelper->workspaceUrl($workspace) : '',
+        ],
+            $this->templateManager->formatDatePlaceholder('session_start', $session->getStartDate()),
+            $this->templateManager->formatDatePlaceholder('session_end', $session->getEndDate()),
+        );
+
+        $sessionLearners = $this->sessionUserRepo->findBy(['session' => $session]);
+        $sessionGroups = $this->sessionGroupRepo->findBy(['session' => $session]);
+
+        $users = [];
+        foreach ($sessionLearners as $sessionLearner) {
+            $user = $sessionLearner->getUser();
+            $users[$user->getUuid()] = $user;
+        }
+        foreach ($sessionGroups as $sessionGroup) {
+            $group = $sessionGroup->getGroup();
+            $groupUsers = $group->getUsers();
+
+            foreach ($groupUsers as $user) {
+                $users[$user->getUuid()] = $user;
+            }
+        }
+
+        foreach ($users as $user) {
+            $locale = $user->getLocale();
+            $placeholders = array_merge($basicPlaceholders, [
+                'first_name' => $user->getFirstName(),
+                'last_name' => $user->getLastName(),
+                'username' => $user->getUsername(),
+            ]);
+
+            if ($session->getCanceledTemplate()) {
+                $title = $this->templateManager->getTemplateContent($session->getCanceledTemplate(), $placeholders, $locale, 'title');
+                $content = $this->templateManager->getTemplateContent($session->getCanceledTemplate(), $placeholders, $locale);
+            } else {
+                $title = $this->templateManager->getTemplate($templateName, $placeholders, $locale, 'title');
+                $content = $this->templateManager->getTemplate($templateName, $placeholders, $locale);
+            }
+
+            $this->eventDispatcher->dispatch(new SendMessageEvent(
+                $content,
+                $title,
+                [$user],
+                $session->getCreator()
+            ), MessageEvents::MESSAGE_SENDING);
+        }
+    }
+
+    public function cancelSessions(array $sessionIds, ?string $cancelReason = null, ?array $cancelTemplateData = null): array
+    {
+        $processed = [];
+
+        $this->om->startFlushSuite();
+
+        /** @var Session[] $sessions */
+        $sessions = $this->sessionRepo->findBy([
+            'uuid' => $sessionIds,
+        ]);
+
+        foreach ($sessions as $session) {
+            if (!$session->isCanceled()) {
+                $session->setCanceled(true);
+                $session->setCancelReason($cancelReason);
+
+                $cancelTemplate = null;
+                if (!empty($cancelTemplateData['id'])) {
+                    $cancelTemplate = $this->om->getRepository(Template::class)->findOneBy(['uuid' => $cancelTemplateData['id']]);
+                    if ($cancelTemplate) {
+                        $this->sendSessionCancel($session);
+                    }
+                }
+
+                $session->setCanceledTemplate($cancelTemplate);
+                $processed[] = $session;
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        return $processed;
     }
 
     /**

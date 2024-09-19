@@ -20,6 +20,8 @@
     "training_session_invitation_desc": "Template used for the mail sent for the invitation to a training session.",
     "training_session_confirmation": "Confirmation of registration for a training session",
     "training_session_confirmation_desc": "Template used for the email requesting confirmation of registration for a training session.",
+    "training_session_canceled": "Cancellation of a training session",
+    "training_session_canceled_desc": "Template used for the email sent for the cancellation of a training session.",
 
     "course_code_desc": "The code of the training",
     "course_description_desc": "The description of the training",

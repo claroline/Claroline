@@ -20,6 +20,13 @@
   "delete_training": "Delete training",
   "delete_training_help": "Permanently delete the training.",
 
+  "cancel_session_title": "{1} Cancel session | [2,Inf[ Cancel multiple sessions",
+  "cancel_session_message": "{1} You are about to cancel this session : | [2,Inf[ You are about to cancel these %count% sessions :",
+  "cancel_session_reason": "Enter the reason for the cancellation",
+  "cancel_session_template": "Select a cancellation template",
+  "cancel_session_info": "Session canceled",
+  "send_cancel_mail": "Send a cancellation email",
+
   "copy_course_confirm_title": "{1} Training copy | [2,Inf[ Trainings copy",
   "copy_course_confirm_message": "{1} Are you sure you want to copy this training ? | [2,Inf[ Are you sure you want to copy these %count% trainings?",
   "copy_session_confirm_title": "{1} Session copy | [2,Inf[ Sessions copy",

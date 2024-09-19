@@ -23,6 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Theme.
  *
  * @ORM\Entity(repositoryClass="Claroline\ThemeBundle\Repository\ThemeRepository")
+ *
  * @ORM\Table(name="claro_theme")
  */
 class Theme
@@ -51,12 +52,12 @@ class Theme
     /**
      * @ORM\Column(nullable=true)
      */
-    private ?string $primaryColor;
+    private ?string $primaryColor = null;
 
     /**
      * @ORM\Column(nullable=true)
      */
-    private ?string $secondaryColor;
+    private ?string $secondaryColor = null;
 
     public function __construct()
     {
