@@ -12,42 +12,4 @@
             }
         }
     }
-
-    .hint-btn {
-        position: relative;
-
-        .hint-penalty-info {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-        }
-    }
-
-    .used-hint {
-        display: flex;
-        align-items: baseline;
-        padding: $answer-item-padding;
-        color: var(--#{$prefix}warning-text-emphasis);
-        background: var(--#{$prefix}warning-bg-subtle);
-        border: $answer-item-border-width solid var(--#{$prefix}warning-border-subtle);
-        @include border-radius($answer-item-border-radius);
-
-        .fa {
-            margin-right: $answer-item-padding;
-        }
-
-        .hint-text {
-            flex-grow: 1;
-        }
-
-        .hint-penalty-info {
-            margin-left: map-get($spacers, 3);
-            background: var(--#{$prefix}warning-text-emphasis);
-            color: var(--#{$prefix}warning-bg-subtle);
-        }
-
-        + .used-hint {
-            margin-top: map-get($spacers, 2);
-        }
-    }
 }

@@ -54,6 +54,7 @@ const Action = {
      */
     confirm: T.oneOfType([
       T.bool,
+      T.string,
       T.shape({
         title: T.string,
         subtitle: T.string,

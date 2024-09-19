@@ -1,78 +1,85 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import {useSelector, useDispatch} from 'react-redux'
+import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
+import {trans} from '#/main/app/intl'
 import {toKey} from '#/main/core/scaffolding/text'
-import {Await} from '#/main/app/components/await'
 import {Button, Toolbar} from '#/main/app/action'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Action, PromisedAction} from '#/main/app/action/prop-types'
 
-const PageNav = (props) =>  {
-  if (isEmpty(props.actions)) {
-    return null
-  }
+import {actions as contextActions, selectors as contextSelectors} from '#/main/app/context/store'
+
+const MenuButton = () => {
+  const dispatch = useDispatch()
+  const menuOpened = useSelector(contextSelectors.menuOpened)
 
   return (
-    <ul className="nav nav-underline flex-nowrap">
-      {props.actions
-        .filter(action => undefined === action.displayed || action.displayed)
-        .map((action) =>
-          <li className="nav-item" key={action.name || toKey(action.label)}>
-            <Button
-              {...action}
-              className="nav-link"
-            />
-          </li>
-        )
-      }
-    </ul>
+    <Button
+      id="toggle-menu"
+      type={CALLBACK_BUTTON}
+      className="app-menu-toggle position-relative"
+      label={trans(menuOpened ? 'hide-menu' : 'show-menu', {}, 'actions')}
+      icon="fa fa-fw fa-bars"
+      tooltip="bottom"
+      callback={() => dispatch(contextActions.toggleMenu())}
+    />
   )
 }
 
-PageNav.propTypes = {
-  actions: T.arrayOf(T.shape({
-    // action types
-  }))
+const PageMenu = (props) => {
+  const displayedNav = props.nav
+    .filter(action => undefined === action.displayed || action.displayed)
+
+  return (
+    <div className="mx-4 my-3 d-flex gap-3 flex-nowrap align-items-center" role="presentation">
+      {!props.embedded &&
+        <MenuButton />
+      }
+
+      {!isEmpty(displayedNav) &&
+        <nav className="page-nav ms-auto">
+          <ul className="nav nav-underline flex-nowrap">
+            {displayedNav.map((nav) =>
+              <li className="nav-item" key={nav.name || toKey(nav.label)}>
+                <Button
+                  {...nav}
+                  className="nav-link"
+                />
+              </li>
+            )}
+          </ul>
+        </nav>
+      }
+
+      {props.actions &&
+        <Toolbar
+          className={classes('nav nav-underline flex-nowrap', isEmpty(props.nav))}
+          buttonName="nav-link"
+          toolbar={props.toolbar}
+          tooltip="bottom"
+          actions={props.actions}
+        />
+      }
+    </div>
+  )
 }
 
-const PageMenu = (props) =>
-  <nav className="page-nav ms-auto d-flex gap-3 flex-nowrap" role="presentation">
-    {props.nav instanceof Promise ?
-      <Await for={props.nav} then={(resolvedActions) => (
-        <PageNav actions={resolvedActions} />
-      )} /> :
-      <PageNav actions={props.nav} />
-    }
-
-    {props.actions &&
-      <Toolbar
-        className="nav nav-underline text-shrink-0 flex-nowrap"
-        buttonName="nav-link"
-        toolbar={props.toolbar}
-        tooltip="bottom"
-        actions={props.actions}
-      />
-    }
-  </nav>
-
 PageMenu.propTypes = {
+  embedded: T.bool.isRequired,
+
   /**
    * The main navigation elements.
    */
-  nav: T.oneOfType([
-    // a regular array of actions
-    T.arrayOf(T.shape(
-      Action.propTypes
-    )),
-    // a promise that will resolve a list of actions
-    T.shape(
-      PromisedAction.propTypes
-    )
-  ]),
+  nav: T.arrayOf(T.shape(
+    Action.propTypes
+  )),
   toolbar: T.string,
 
   /**
-   * A list of additional actions.
+   * A list of actions.
    */
   actions: T.oneOfType([
     // a regular array of actions
@@ -87,6 +94,7 @@ PageMenu.propTypes = {
 }
 
 PageMenu.defaultProps = {
+  nav: [],
   toolbar: 'more'
 }
 

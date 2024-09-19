@@ -10,7 +10,7 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 
 import {PageTitle} from '#/main/app/page/components/title'
-import {PageNav} from '#/main/app/page/components/nav'
+import {PageMenu} from '#/main/app/page/components/menu'
 import {Await} from '#/main/app/components/await'
 
 const PageActions = (props) => {
@@ -106,9 +106,9 @@ const PageHeader = props =>
       'border-bottom border-1': !props.poster
     })}
   >
-    <PageNav
+    <PageMenu
       embedded={props.embedded}
-      menu={props.menu}
+      {...props.menu}
     />
 
     <div className="page-header-content m-4 gap-4" role="presentation">
