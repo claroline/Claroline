@@ -31,19 +31,6 @@ const OrganizationList = (props) =>
         path={props.path}
         name={selectors.LIST_NAME}
         url={['apiv2_organization_list']}
-        tree={true}
-        customActions={(rows) => [
-          {
-            name: 'add',
-            type: 'link',
-            icon: 'fa fa-fw fa-plus',
-            label: trans('add_sub_organization', {}, 'actions'),
-            target: props.path+'/organizations/new/' + rows[0].id,
-            displayed: hasPermission('edit', rows[0]),
-            scope: ['object'],
-            group: trans('management')
-          }
-        ]}
       />
     </PageListSection>
   </ToolPage>

@@ -56,7 +56,7 @@ const PageMenu = (props) => {
 
       {props.actions &&
         <Toolbar
-          className={classes('nav nav-underline flex-nowrap', isEmpty(props.nav))}
+          className={classes('nav nav-underline flex-nowrap', isEmpty(props.nav) && 'ms-auto')}
           buttonName="nav-link"
           toolbar={props.toolbar}
           tooltip="bottom"

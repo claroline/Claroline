@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\CoreBundle\Manager\LockManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\HomeBundle\Entity\HomeTab;
 use Claroline\HomeBundle\Manager\HomeManager;
@@ -26,7 +25,6 @@ class HomeTabController extends AbstractCrudController
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        private readonly LockManager $lockManager,
         private readonly HomeManager $manager
     ) {
         $this->authorization = $authorization;
@@ -151,8 +149,6 @@ class HomeTabController extends AbstractCrudController
     private function cleanDatabase(array $installedTabs, array $ids): void
     {
         foreach ($installedTabs as $installedTab) {
-            $this->lockManager->unlock(HomeTab::class, $installedTab->getUuid());
-
             if (!in_array($installedTab->getUuid(), $ids)) {
                 // the tab no longer exist we can remove it
                 $this->crud->delete($installedTab);

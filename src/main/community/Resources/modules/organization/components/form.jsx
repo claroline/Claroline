@@ -47,10 +47,6 @@ const OrganizationFormComponent = props => {
               type: 'string',
               label: trans('code'),
               required: true
-            }, {
-              name: 'parent',
-              type: 'organization',
-              label: trans('parent')
             }
           ]
         }, {
@@ -64,23 +60,11 @@ const OrganizationFormComponent = props => {
               options: {
                 long: true
               }
-            }, /*{
-              name: 'type',
-              type: 'choice',
-              label: trans('type'),
-              options: {
-                choices: constants.ORGANIZATION_TYPES
-              }
-            }, */{
+            }, {
               name: 'email',
               type: 'email',
               label: trans('email')
-            }/*, {
-              name: 'vat',
-              label: trans('vat_number'),
-              type: 'string',
-              required: false
-            }*/
+            }
           ]
         }, {
           icon: 'fa fa-fw fa-desktop',
@@ -108,27 +92,7 @@ const OrganizationFormComponent = props => {
                 trans('make_organization_public_help1', {}, 'community'),
                 trans('make_organization_public_help2', {}, 'community')
               ]
-            }/*, {
-              name: 'restrictions.maxUsers',
-              type: 'boolean',
-              label: trans('restrict_users_count'),
-              calculated: (organization) => get(organization, 'restrictions.maxUsers') || get(organization, 'restrictions.users', -1) > -1,
-              onChange: (enabled) => {
-                if (!enabled) {
-                  props.updateProp('restrictions.users', -1)
-                } else {
-                  props.updateProp('restrictions.users', null)
-                }
-              },
-              linked: [
-                {
-                  name: 'restrictions.users',
-                  type: 'number',
-                  label: trans('users_count'),
-                  displayed: (organization) => get(organization, 'restrictions.maxUsers') || get(organization, 'restrictions.users', -1) > -1
-                }
-              ]
-            }*/
+            }
           ]
         }
       ]}

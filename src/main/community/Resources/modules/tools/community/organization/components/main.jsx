@@ -17,16 +17,9 @@ const OrganizationMain = props =>
         component: OrganizationList,
         exact: true
       }, {
-        path: '/new/:parent?',
+        path: '/new',
         component: OrganizationCreate,
-        onEnter: (params) => {
-          let parent
-          if (params.parent) {
-            parent = props.organizations.find(organization => organization.id === params.parent)
-          }
-
-          props.new(parent)
-        }
+        onEnter: props.new
       }, {
         path: '/:id/edit',
         component: OrganizationEdit,

@@ -44,10 +44,6 @@ export default (contextType, contextData, refresher, currentUser) => {
         type: 'email',
         label: trans('email')
       }, {
-        name: 'parent',
-        type: 'organization',
-        label: trans('parent')
-      }, {
         name: 'restrictions.public',
         alias: 'public',
         type: 'boolean',

@@ -4,5 +4,4 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Manager\LockManager'
             - '@Claroline\HomeBundle\Manager\HomeManager'

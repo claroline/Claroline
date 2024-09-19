@@ -1,4 +1,4 @@
-import React, {createElement, useState} from 'react'
+import React, {createElement} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
@@ -8,7 +8,6 @@ import {trans} from '#/main/app/intl/translation'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {actions as listActions} from '#/main/app/content/list/store'
-import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {getActions, getDefaultAction} from '#/main/community/organization/utils'
 import {OrganizationCard} from '#/main/community/organization/components/card'
@@ -21,75 +20,64 @@ const OrganizationListComponent = props => {
     delete: () => props.invalidate(props.name)
   }, props.refresher || {})
 
-  const [displayMode, setDisplayMode] = useState(props.tree ? listConst.DISPLAY_TREE : listConst.DEFAULT_DISPLAY_MODE)
+  return (
+    <ListData
+      primaryAction={(row) => getDefaultAction(row, refresher, props.path, props.currentUser)}
+      actions={(rows) => getActions(rows, refresher, props.path, props.currentUser).then((actions) => [].concat(actions, props.customActions(rows)))}
+      definition={[
+        {
+          name: 'name',
+          type: 'string',
+          label: trans('name'),
+          displayed: true,
+          primary: true,
+          render: (organization) => (
+            <div className="d-flex flex-direction-row gap-3 align-items-center" role="presentation">
+              <Thumbnail thumbnail={organization.thumbnail} name={organization.name} size="xs" square={true} />
+              {organization.name}
+            </div>
+          )
+        }, {
+          name: 'code',
+          type: 'string',
+          label: trans('code')
+        }, {
+          name: 'meta.description',
+          type: 'string',
+          label: trans('description'),
+          options: {long: true},
+          displayed: true,
+          sortable: false
+        }, {
+          name: 'meta.default',
+          type: 'boolean',
+          label: trans('default')
+        }, {
+          name: 'email',
+          type: 'email',
+          label: trans('email')
+        }, {
+          name: 'parent',
+          type: 'organization',
+          label: trans('parent')
+        }, {
+          name: 'restrictions.public',
+          alias: 'public',
+          type: 'boolean',
+          label: trans('public')
+        }
+      ].concat(props.customDefinition)}
 
-  const display = {
-    current: displayMode,
-    available: merge([], listConst.DEFAULT_DISPLAY_MODES, [listConst.DISPLAY_TREE]),
-    changeDisplay: (newDisplay) => {
-      if (displayMode !== newDisplay && (listConst.DISPLAY_TREE === newDisplay || listConst.DISPLAY_TREE === displayMode)) {
-        props.invalidate(props.name)
-      }
+      {...omit(props, 'path', 'url', 'autoload', 'customDefinition', 'customActions', 'refresher', 'invalidate')}
 
-      setDisplayMode(newDisplay)
-    }
-  }
-
-  return createElement(ListData, merge({
-    display: display,
-    primaryAction: (row) => getDefaultAction(row, refresher, props.path, props.currentUser),
-    actions: (rows) => getActions(rows, refresher, props.path, props.currentUser).then((actions) => [].concat(actions, props.customActions(rows))),
-    definition: [
-      {
-        name: 'name',
-        type: 'string',
-        label: trans('name'),
-        displayed: true,
-        primary: true,
-        render: (organization) => (
-          <div className="d-flex flex-direction-row gap-3 align-items-center">
-            <Thumbnail thumbnail={organization.thumbnail} name={organization.name} size="xs" square={true} />
-            {organization.name}
-          </div>
-        )
-      }, {
-        name: 'code',
-        type: 'string',
-        label: trans('code')
-      }, {
-        name: 'meta.description',
-        type: 'string',
-        label: trans('description'),
-        options: {long: true},
-        displayed: true,
-        sortable: false
-      }, {
-        name: 'meta.default',
-        type: 'boolean',
-        label: trans('default')
-      }, {
-        name: 'email',
-        type: 'email',
-        label: trans('email')
-      }, {
-        name: 'parent',
-        type: 'organization',
-        label: trans('parent')
-      }, {
-        name: 'restrictions.public',
-        alias: 'public',
-        type: 'boolean',
-        label: trans('public')
-      }
-    ].concat(props.customDefinition)
-  }, omit(props, 'path', 'url', 'autoload', 'customDefinition', 'customActions', 'refresher', 'invalidate'), {
-    name: props.name,
-    fetch: {
-      url: listConst.DISPLAY_TREE === displayMode ? ['apiv2_organization_list_recursive'] : props.url,
-      autoload: props.autoload
-    },
-    card: OrganizationCard
-  }))
+      name={props.name}
+      fetch={{
+        url: props.url,
+        autoload: props.autoload
+      }}
+      card={OrganizationCard}
+    />
+  )
 }
 
 OrganizationListComponent.propTypes = {
@@ -97,7 +85,6 @@ OrganizationListComponent.propTypes = {
   name: T.string.isRequired,
   autoload: T.bool,
   url: T.oneOfType([T.string, T.array]).isRequired,
-  tree: T.bool.isRequired,
   customDefinition: T.arrayOf(T.shape({
     // data list prop types
   })),
@@ -113,7 +100,6 @@ OrganizationListComponent.propTypes = {
 
 OrganizationListComponent.defaultProps = {
   autoload: true,
-  tree: false,
   customDefinition: [],
   customActions: () => []
 }

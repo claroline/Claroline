@@ -14,10 +14,8 @@ const OrganizationMain = connect(
     open(id) {
       dispatch(actions.open(id))
     },
-    new(parent = null) {
-      dispatch(actions.new({
-        parent: parent
-      }))
+    new() {
+      dispatch(actions.new())
     }
   })
 )(OrganizationMainComponent)

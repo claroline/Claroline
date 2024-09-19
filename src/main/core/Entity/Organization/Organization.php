@@ -23,19 +23,13 @@ use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid as BaseUuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\OrganizationRepository")
- *
+ * @ORM\Entity()
  * @ORM\Table(name="claro__organization")
- *
- * @Gedmo\Tree(type="nested")
  */
 class Organization implements CrudEntityInterface
 {
@@ -49,60 +43,11 @@ class Organization implements CrudEntityInterface
     use Thumbnail;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private ?int $position = null;
-
-    /**
      * @ORM\Column(nullable=true, type="string")
      *
      * @Assert\Email()
      */
     private ?string $email = null;
-
-    /**
-     * @Gedmo\TreeLeft
-     *
-     * @ORM\Column(name="lft", type="integer")
-     */
-    protected ?int $lft = null;
-
-    /**
-     * @Gedmo\TreeLevel
-     *
-     * @ORM\Column(name="lvl", type="integer")
-     */
-    protected ?int $lvl = null;
-
-    /**
-     * @Gedmo\TreeRight
-     *
-     * @ORM\Column(name="rgt", type="integer")
-     */
-    protected ?int $rgt = null;
-
-    /**
-     * @Gedmo\TreeRoot
-     *
-     * @ORM\Column(name="root", type="integer", nullable=true)
-     */
-    protected ?int $root = null;
-
-    /**
-     * @Gedmo\TreeParent
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", inversedBy="children")
-     *
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    private ?Organization $parent = null;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", mappedBy="parent")
-     *
-     * @ORM\OrderBy({"name" = "ASC"})
-     */
-    private Collection $children;
 
     /**
      * @ORM\Column(name="is_default", type="boolean")
@@ -114,7 +59,6 @@ class Organization implements CrudEntityInterface
         $this->refreshUuid();
         // todo : generate unique from name for a more beautiful code
         $this->code = BaseUuid::uuid4()->toString();
-        $this->children = new ArrayCollection();
     }
 
     public static function getIdentifiers(): array
@@ -125,26 +69,6 @@ class Organization implements CrudEntityInterface
     public function __toString(): string
     {
         return $this->name;
-    }
-
-    public function setPosition(?int $position = null): void
-    {
-        $this->position = $position;
-    }
-
-    public function getPosition(): ?int
-    {
-        return $this->position;
-    }
-
-    public function getParent(): ?Organization
-    {
-        return $this->parent;
-    }
-
-    public function setParent(?Organization $parent = null): void
-    {
-        $this->parent = $parent;
     }
 
     public function setEmail(?string $email): void
@@ -165,26 +89,6 @@ class Organization implements CrudEntityInterface
     public function isDefault(): bool
     {
         return $this->default;
-    }
-
-    public function getChildren(): Collection
-    {
-        return $this->children;
-    }
-
-    public function getRoot(): ?int
-    {
-        return $this->root;
-    }
-
-    public function getLeft(): ?int
-    {
-        return $this->lft;
-    }
-
-    public function getRight(): ?int
-    {
-        return $this->rgt;
     }
 
     /**

@@ -93,11 +93,6 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
-    Claroline\CoreBundle\Controller\ObjectLockController:
-        arguments:
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\Manager\LockManager'
-
     Claroline\CoreBundle\Controller\Platform\ParametersController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true

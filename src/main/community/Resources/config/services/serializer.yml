@@ -9,7 +9,6 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CommunityBundle\Serializer\ProfileSerializer:
         arguments:

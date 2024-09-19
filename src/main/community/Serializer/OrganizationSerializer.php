@@ -2,10 +2,8 @@
 
 namespace Claroline\CommunityBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -14,8 +12,7 @@ class OrganizationSerializer
     use SerializerTrait;
 
     public function __construct(
-        private readonly AuthorizationCheckerInterface $authorization,
-        private readonly ObjectManager $om
+        private readonly AuthorizationCheckerInterface $authorization
     ) {
     }
 
@@ -71,7 +68,6 @@ class OrganizationSerializer
             'meta' => [
                 'description' => $organization->getDescription(),
                 'default' => $organization->isDefault(),
-                'position' => $organization->getPosition(),
             ],
             'restrictions' => [
                 'public' => $organization->isPublic(),
@@ -87,14 +83,6 @@ class OrganizationSerializer
             ];
         }
 
-        if (in_array(Options::IS_RECURSIVE, $options)) {
-            $serialized['children'] = array_map(function (Organization $child) use ($options) {
-                return $this->serialize($child, $options);
-            }, $organization->getChildren()->toArray());
-        } else {
-            $serialized['parent'] = !empty($organization->getParent()) ? $this->serialize($organization->getParent(), [SerializerInterface::SERIALIZE_MINIMAL]) : null;
-        }
-
         return $serialized;
     }
 
@@ -107,17 +95,6 @@ class OrganizationSerializer
         $this->sipe('thumbnail', 'setThumbnail', $data, $organization);
         $this->sipe('meta.description', 'setDescription', $data, $organization);
         $this->sipe('restrictions.public', 'setPublic', $data, $organization);
-
-        if (array_key_exists('parent', $data)) {
-            $parent = null;
-            if (!empty($data['parent'])) {
-                $parent = $this->om->getRepository(Organization::class)->findOneBy([
-                    'uuid' => $data['parent']['id'],
-                ]);
-            }
-
-            $organization->setParent($parent);
-        }
 
         return $organization;
     }

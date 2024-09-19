@@ -8,21 +8,14 @@ const Organization = {
     thumbnail: T.string,
     poster: T.string,
     email: T.string,
-    parent: T.shape({
-      id: T.string.isRequired,
-      name: T.string.isRequired
-    }),
     meta: T.shape({
       description: T.string
     }),
     restrictions: T.shape({
-      public: T.bool,
-      users: T.number
+      public: T.bool
     })
   },
-  defaultProps: {
-    parent: null
-  }
+  defaultProps: {}
 }
 
 export {

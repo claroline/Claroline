@@ -79,12 +79,6 @@ services:
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
 
-    Claroline\CoreBundle\Manager\LockManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@security.authorization_checker'
-            - '@security.token_storage'
-
     Claroline\CoreBundle\Manager\LocaleManager:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

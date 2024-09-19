@@ -6,7 +6,6 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Event\CrudEvents;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\FileManager;
@@ -17,7 +16,6 @@ class OrganizationSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly ObjectManager $om,
         private readonly FileManager $fileManager
     ) {
     }
@@ -54,13 +52,6 @@ class OrganizationSubscriber implements EventSubscriberInterface
 
         if ($organization->getThumbnail()) {
             $this->fileManager->linkFile(Organization::class, $organization->getUuid(), $organization->getThumbnail());
-        }
-
-        $key = $this->cryptoManager->generatePair();
-        if ($key) {
-            $key->setOrganization($organization);
-            $this->om->persist($key);
-            $this->om->flush();
         }
     }
 
