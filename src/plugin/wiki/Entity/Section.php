@@ -9,12 +9,10 @@ use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @Gedmo\Tree(type="nested")
- */
 #[ORM\Table(name: 'icap__wiki_section')]
 #[ORM\Entity(repositoryClass: \Icap\WikiBundle\Repository\SectionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[Gedmo\Tree(type: 'nested')]
 class Section
 {
     use Id;
@@ -23,10 +21,8 @@ class Section
     #[ORM\Column(type: 'boolean', nullable: false)]
     protected $visible = true;
 
-    /**
-     * @Gedmo\Timestampable(on="create")
-     */
     #[ORM\Column(type: 'datetime', name: 'creation_date')]
+    #[Gedmo\Timestampable(on: 'create')]
     protected $creationDate;
 
     /**
@@ -50,35 +46,25 @@ class Section
     #[ORM\Column(type: 'datetime', name: 'deletion_date', nullable: true)]
     protected $deletionDate;
 
-    /**
-     * @Gedmo\TreeLeft
-     */
     #[ORM\Column(name: 'lft', type: 'integer')]
+    #[Gedmo\TreeLeft]
     private $left;
 
-    /**
-     * @Gedmo\TreeLevel
-     */
     #[ORM\Column(name: 'lvl', type: 'integer')]
+    #[Gedmo\TreeLevel]
     private $level;
 
-    /**
-     * @Gedmo\TreeRight
-     */
     #[ORM\Column(name: 'rgt', type: 'integer')]
+    #[Gedmo\TreeRight]
     private $right;
 
-    /**
-     * @Gedmo\TreeRoot
-     */
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Gedmo\TreeRoot]
     private $root;
 
-    /**
-     * @Gedmo\TreeParent
-     */
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: \Icap\WikiBundle\Entity\Section::class)]
+    #[Gedmo\TreeParent]
     protected $parent;
 
     /**

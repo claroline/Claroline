@@ -34,11 +34,10 @@ class IconSet
     public const DATA_ICON_SET = 'data';
 
     /**
-     * @Gedmo\Slug(fields={"name"}, unique=true, updatable=false, separator="_")
-     *
      * @deprecated
      */
     #[ORM\Column(unique: true)]
+    #[Gedmo\Slug(fields: ['name'], unique: true, updatable: false, separator: '_')]
     private ?string $cname = null;
 
     #[ORM\Column(name: 'is_default', type: 'boolean', options: ['default' => 0])]

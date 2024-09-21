@@ -30,28 +30,20 @@ class Post extends Statusable
     #[ORM\Column(type: 'text')]
     private ?string $content;
 
-    /**
-     * @Gedmo\Slug(fields={"title"}, unique=true, updatable=false)
-     */
     #[ORM\Column(length: 128, unique: true)]
+    #[Gedmo\Slug(fields: ['title'], unique: true, updatable: false)]
     private ?string $slug;
 
-    /**
-     * @Gedmo\Timestampable(on="create")
-     */
     #[ORM\Column(type: 'datetime', name: 'creation_date')]
+    #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeInterface $creationDate;
 
-    /**
-     * @Gedmo\Timestampable(on="change", field={"title", "content"})
-     */
     #[ORM\Column(type: 'datetime', name: 'modification_date', nullable: true)]
+    #[Gedmo\Timestampable(on: 'change', field: ['title', 'content'])]
     private ?\DateTimeInterface $modificationDate;
 
-    /**
-     * @Gedmo\Timestampable(on="change", field="status", value="1")
-     */
     #[ORM\Column(type: 'datetime', name: 'publication_date', nullable: true)]
+    #[Gedmo\Timestampable(on: 'change', field: 'status', value: '1')]
     private ?\DateTimeInterface $publicationDate;
 
     #[ORM\Column(type: 'integer', options: ['default' => '0'])]

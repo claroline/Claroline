@@ -41,10 +41,8 @@ class Assertion
     #[ORM\ManyToOne(targetEntity: \Claroline\OpenBadgeBundle\Entity\BadgeClass::class)]
     private ?BadgeClass $badge = null;
 
-    /**
-     * @Gedmo\Timestampable(on="create")
-     */
     #[ORM\Column(type: 'datetime')]
+    #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeInterface $issuedOn = null;
 
     #[ORM\OneToMany(targetEntity: \Claroline\OpenBadgeBundle\Entity\Evidence::class, mappedBy: 'assertion')]

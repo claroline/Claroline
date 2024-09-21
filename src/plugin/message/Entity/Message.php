@@ -18,13 +18,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @Gedmo\Tree(type="nested")
- */
 #[ORM\Table(name: 'claro_message')]
 #[ORM\Index(name: 'level_idx', columns: ['lvl'])]
 #[ORM\Index(name: 'root_idx', columns: ['root'])]
 #[ORM\Entity]
+#[Gedmo\Tree(type: 'nested')]
 class Message
 {
     use Id;
@@ -45,10 +43,10 @@ class Message
 
     /**
      *
-     * @Gedmo\Timestampable(on="create")
      * @var \DateTime
      */
     #[ORM\Column(type: 'datetime')]
+    #[Gedmo\Timestampable(on: 'create')]
     protected $date;
 
     /**
@@ -57,39 +55,30 @@ class Message
     #[ORM\OneToMany(targetEntity: \Claroline\MessageBundle\Entity\UserMessage::class, mappedBy: 'message')]
     protected $userMessages;
 
-    /**
-     * @Gedmo\TreeLeft
-     */
     #[ORM\Column(type: 'integer')]
+    #[Gedmo\TreeLeft]
     protected $lft;
 
-    /**
-     * @Gedmo\TreeLevel
-     */
     #[ORM\Column(type: 'integer')]
+    #[Gedmo\TreeLevel]
     protected $lvl;
 
-    /**
-     * @Gedmo\TreeRight
-     */
     #[ORM\Column(type: 'integer')]
+    #[Gedmo\TreeRight]
     protected $rgt;
 
-    /**
-     * @Gedmo\TreeRoot
-     */
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Gedmo\TreeRoot]
     protected $root;
 
     /**
-     * @Gedmo\TreeParent
-     *
      *
      *
      * @var Message
      */
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: \Claroline\MessageBundle\Entity\Message::class, inversedBy: 'children')]
+    #[Gedmo\TreeParent]
     protected $parent;
 
     /**

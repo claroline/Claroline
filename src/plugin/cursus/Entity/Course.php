@@ -28,10 +28,8 @@ class Course extends AbstractTraining
     use IsPublic;
     use Archived;
 
-    /**
-     * @Gedmo\Slug(fields={"name"})
-     */
     #[ORM\Column(length: 128, unique: true)]
+    #[Gedmo\Slug(fields: ['name'])]
     private string $slug;
 
     

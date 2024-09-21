@@ -65,10 +65,8 @@ class Step
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $secondaryResources;
 
-    /**
-     * @Gedmo\Slug(fields={"title"}, unique=false, updatable=false)
-     */
     #[ORM\Column(length: 128)]
+    #[Gedmo\Slug(fields: ['title'], unique: false, updatable: false)]
     private ?string $slug = null;
 
     public function __construct()

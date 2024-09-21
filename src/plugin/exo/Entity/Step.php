@@ -47,10 +47,8 @@ class Step
     #[ORM\OrderBy(['order' => 'ASC'])]
     private $stepQuestions;
 
-    /**
-     * @Gedmo\Slug(fields={"title"}, unique=false)
-     */
     #[ORM\Column(length: 128)]
+    #[Gedmo\Slug(fields: ['title'], unique: false)]
     private $slug;
 
     /**

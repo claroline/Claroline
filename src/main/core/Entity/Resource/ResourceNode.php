@@ -33,12 +33,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Base entity for all resources.
- *
- * @Gedmo\Tree(type="materializedPath")
  */
 #[ORM\Table(name: 'claro_resource_node')]
 #[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[Gedmo\Tree(type: 'materializedPath')]
 class ResourceNode implements CrudEntityInterface
 {
     // identifiers
@@ -71,18 +70,16 @@ class ResourceNode implements CrudEntityInterface
 
     /**
      * @var \DateTime
-     *
-     * @Gedmo\Timestampable(on="create")
      */
     #[ORM\Column(name: 'creation_date', type: 'datetime')]
+    #[Gedmo\Timestampable(on: 'create')]
     private $creationDate;
 
     /**
      * @var \DateTime
-     *
-     * @Gedmo\Timestampable(on="update")
      */
     #[ORM\Column(name: 'modification_date', type: 'datetime')]
+    #[Gedmo\Timestampable(on: 'update')]
     private $modificationDate;
 
     /**
@@ -102,27 +99,24 @@ class ResourceNode implements CrudEntityInterface
 
     /**
      * @var string
-     *
-     * @Gedmo\TreePathSource
      */
     #[ORM\Column]
+    #[Gedmo\TreePathSource]
     private $name;
 
     /**
      * @var ResourceNode
-     *
-     * @Gedmo\TreeParent
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class, inversedBy: 'children')]
+    #[Gedmo\TreeParent]
     protected $parent;
 
     /**
-     * @Gedmo\TreeLevel
-     *
      * @todo this property shouldn't be nullable (is it due to materialized path strategy ?)
      */
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Gedmo\TreeLevel]
     protected $lvl;
 
     /**
@@ -135,11 +129,11 @@ class ResourceNode implements CrudEntityInterface
     /**
      * @var string
      *
-     * @Gedmo\TreePath(separator="`")
      *
      * @todo remove me
      */
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Gedmo\TreePath(separator: '`')]
     protected $path;
 
     /**
@@ -196,11 +190,10 @@ class ResourceNode implements CrudEntityInterface
     protected $viewsCount = 0;
 
     /**
-     * @Gedmo\Slug(fields={"name"})
-     *
      * @var string
      */
     #[ORM\Column(length: 128, unique: true)]
+    #[Gedmo\Slug(fields: ['name'])]
     private $slug;
 
     /**

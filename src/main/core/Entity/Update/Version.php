@@ -38,10 +38,10 @@ class Version
 
     /**
      *
-     * @Gedmo\Timestampable(on="create")
      * @var \DateTime
      */
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Gedmo\Timestampable(on: 'create')]
     protected $date;
 
     public function __construct($version = null, $commit = null, $branch = null, $bundle = null)

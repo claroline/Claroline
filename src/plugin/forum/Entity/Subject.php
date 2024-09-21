@@ -30,16 +30,14 @@ class Subject
     protected $title;
 
     /**
-     * @Gedmo\Timestampable(on="create")
      * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime')]
+    #[Gedmo\Timestampable(on: 'create')]
     protected $creationDate;
 
-    /**
-     * @Gedmo\Timestampable(on="update")
-     */
     #[ORM\Column(type: 'datetime')]
+    #[Gedmo\Timestampable(on: 'update')]
     protected $updated;
 
     /**

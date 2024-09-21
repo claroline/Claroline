@@ -19,22 +19,16 @@ class Comment extends Statusable
     #[ORM\Column(type: 'text')]
     private ?string $message;
 
-    /**
-     * @Gedmo\Timestampable(on="create")
-     */
     #[ORM\Column(type: 'datetime', name: 'creation_date')]
+    #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeInterface $creationDate;
 
-    /**
-     * @Gedmo\Timestampable(on="change", field="status", value="1")
-     */
     #[ORM\Column(type: 'datetime', name: 'publication_date', nullable: true)]
+    #[Gedmo\Timestampable(on: 'change', field: 'status', value: '1')]
     private ?\DateTimeInterface $publicationDate;
 
-    /**
-     * @Gedmo\Timestampable(on="change", field="message")
-     */
     #[ORM\Column(type: 'datetime', name: 'update_date', nullable: true)]
+    #[Gedmo\Timestampable(on: 'change', field: 'message')]
     private ?\DateTimeInterface $updateDate;
 
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'SET NULL')]

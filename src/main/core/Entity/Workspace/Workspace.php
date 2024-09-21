@@ -68,10 +68,8 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
     use AllowedIps;
     use HasOrganizations;
 
-    /**
-     * @Gedmo\Slug(fields={"code"})
-     */
     #[ORM\Column(length: 128, unique: true)]
+    #[Gedmo\Slug(fields: ['code'])]
     private ?string $slug = null;
 
     #[ORM\Column(name: 'isModel', type: 'boolean')]

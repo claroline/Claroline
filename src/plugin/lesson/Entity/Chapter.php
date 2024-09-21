@@ -8,11 +8,9 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @Gedmo\Tree(type="nested")
- */
 #[ORM\Table(name: 'icap__lesson_chapter')]
 #[ORM\Entity(repositoryClass: \Icap\LessonBundle\Repository\ChapterRepository::class)]
+#[Gedmo\Tree(type: 'nested')]
 class Chapter
 {
     use Id;
@@ -33,43 +31,30 @@ class Chapter
     #[ORM\ManyToOne(targetEntity: \Icap\LessonBundle\Entity\Lesson::class)]
     private ?Lesson $lesson;
 
-    /**
-     * @Gedmo\Slug(fields={"title"}, unique=true, updatable=false)
-     */
     #[ORM\Column(length: 128, unique: true, nullable: false)]
+    #[Gedmo\Slug(fields: ['title'], unique: true, updatable: false)]
     private ?string $slug;
 
-    /**
-     * @Gedmo\TreeLeft
-     */
     #[ORM\Column(name: 'lft', type: 'integer')]
+    #[Gedmo\TreeLeft]
     private ?int $left;
 
-    /**
-     * @Gedmo\TreeLevel
-     */
     #[ORM\Column(name: 'lvl', type: 'integer')]
+    #[Gedmo\TreeLevel]
     private ?int $level;
 
-    /**
-     * @Gedmo\TreeRight
-     */
     #[ORM\Column(name: 'rgt', type: 'integer')]
+    #[Gedmo\TreeRight]
     private ?int $right;
 
-    /**
-     * @Gedmo\TreeRoot
-     */
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Gedmo\TreeRoot]
     private ?int $root;
 
-    /**
-     * @Gedmo\TreeParent
-     *
-     *
-     */
+    
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: \Icap\LessonBundle\Entity\Chapter::class)]
+    #[Gedmo\TreeParent]
     private ?Chapter $parent = null;
 
     /**

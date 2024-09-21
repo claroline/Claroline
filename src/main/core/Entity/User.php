@@ -92,10 +92,8 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
     private ?Workspace $personalWorkspace = null;
 
-    /**
-     * @Gedmo\Timestampable(on="create")
-     */
     #[ORM\Column(name: 'creation_date', type: 'datetime')]
+    #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeInterface $created = null;
 
     #[ORM\Column(name: 'last_activity', type: 'datetime', nullable: true)]

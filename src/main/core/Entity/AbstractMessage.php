@@ -25,16 +25,12 @@ abstract class AbstractMessage
     #[ORM\Column(name: 'content', type: 'text')]
     protected $content;
 
-    /**
-     * @Gedmo\Timestampable(on="create")
-     */
     #[ORM\Column(name: 'created', type: 'datetime')]
+    #[Gedmo\Timestampable(on: 'create')]
     protected $creationDate;
 
-    /**
-     * @Gedmo\Timestampable(on="update")
-     */
     #[ORM\Column(type: 'datetime')]
+    #[Gedmo\Timestampable(on: 'update')]
     protected $updated;
 
     /**

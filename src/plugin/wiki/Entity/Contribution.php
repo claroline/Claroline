@@ -22,10 +22,8 @@ class Contribution
     #[ORM\Column(type: 'text', nullable: true)]
     protected $text;
 
-    /**
-     * @Gedmo\Timestampable(on="create")
-     */
     #[ORM\Column(type: 'datetime', name: 'creation_date')]
+    #[Gedmo\Timestampable(on: 'create')]
     protected $creationDate;
 
     /**
