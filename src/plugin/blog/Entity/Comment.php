@@ -40,7 +40,7 @@ class Comment extends Statusable
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
     private ?Post $post;
 
-    #[ORM\Column(type: 'smallint')]
+    #[ORM\Column(type: Types::SMALLINT)]
     private int $reported = 0;
 
     public function __construct()

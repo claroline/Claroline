@@ -20,7 +20,6 @@ const Moderation = (props) =>
       }, {
         path: '/blocked',
         render: () => {
-          console.log('coucou')
           const component = <Blocked path={props.path} />
 
           return component

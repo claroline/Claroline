@@ -43,10 +43,16 @@ class Group extends AbstractRoleSubject implements CrudEntityInterface
     use Code;
 
     
+    /**
+     * @var Collection<int, Role>
+     */
     #[ORM\JoinTable(name: 'claro_group_role')]
     #[ORM\ManyToMany(targetEntity: Role::class, fetch: 'EXTRA_LAZY')]
     protected Collection $roles;
 
+    /**
+     * @var Collection<int, Organization>
+     */
     #[ORM\ManyToMany(targetEntity: Organization::class, fetch: 'EXTRA_LAZY')]
     private Collection $organizations;
 

@@ -24,12 +24,10 @@ class UserOrganizationReference
 {
     use Id;
 
-    
     #[ORM\JoinColumn(name: 'user_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userOrganizationReferences', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'userOrganizationReferences')]
     private User $user;
 
-    
     #[ORM\JoinColumn(name: 'organization_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Organization::class)]
     private ?Organization $organization = null;

@@ -33,7 +33,7 @@ class OrderingItem implements AnswerPartInterface
 
     #[ORM\JoinColumn(name: 'ujm_question_ordering_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: OrderingQuestion::class, inversedBy: 'items')]
-    private $question;
+    private ?OrderingQuestion $question = null;
 
     /**
      * OrderingItem constructor.

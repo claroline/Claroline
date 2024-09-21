@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Template;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -34,7 +35,7 @@ class Template
      */
     #[ORM\JoinColumn(name: 'claro_template_type', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: TemplateType::class)]
-    private $type;
+    private ?TemplateType $type = null;
 
     /**
      * System templates can not be edited nor deleted by users.
@@ -47,10 +48,10 @@ class Template
     private $system = false;
 
     /**
-     * @var ArrayCollection|TemplateContent[]
+     * @var Collection<int, TemplateContent>
      */
     #[ORM\OneToMany(targetEntity: TemplateContent::class, mappedBy: 'template', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private $contents;
+    private Collection $contents;
 
     public function __construct()
     {

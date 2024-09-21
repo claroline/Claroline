@@ -78,6 +78,9 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
     #[ORM\Column(name: 'isModel', type: Types::BOOLEAN)]
     private bool $model = false;
 
+    /**
+     * @var Collection<int, Role>
+     */
     #[ORM\OneToMany(mappedBy: 'workspace', targetEntity: Role::class, fetch: 'EXTRA_LAZY')]
     private Collection $roles;
 
@@ -129,6 +132,9 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
     private ?array $successCondition = [];
 
     
+    /**
+     * @var Collection<int, Organization>
+     */
     #[ORM\JoinTable(name: 'workspace_organization')]
     #[ORM\ManyToMany(targetEntity: Organization::class)]
     private Collection $organizations;

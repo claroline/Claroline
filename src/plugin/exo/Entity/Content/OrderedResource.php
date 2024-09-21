@@ -19,7 +19,7 @@ abstract class OrderedResource
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
-    protected $resourceNode;
+    protected ?ResourceNode $resourceNode = null;
 
     /**
      * Gets id.

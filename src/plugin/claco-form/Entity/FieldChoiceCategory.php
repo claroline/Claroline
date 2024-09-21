@@ -21,15 +21,15 @@ class FieldChoiceCategory extends AbstractFacetValue
 {
     #[ORM\JoinColumn(name: 'field_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Field::class, inversedBy: 'fieldChoiceCategories')]
-    protected $field;
+    protected ?Field $field = null;
 
     #[ORM\JoinColumn(name: 'category_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Category::class)]
-    protected $category;
+    protected ?Category $category = null;
 
     #[ORM\JoinColumn(name: 'field_facet_choice_id', nullable: true, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: FieldFacetChoice::class)]
-    protected $fieldFacetChoice;
+    protected ?FieldFacetChoice $fieldFacetChoice = null;
 
     public function getType(): string
     {

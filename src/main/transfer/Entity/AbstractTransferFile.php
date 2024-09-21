@@ -62,7 +62,7 @@ abstract class AbstractTransferFile implements TransferFileInterface
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Workspace::class)]
-    protected $workspace;
+    protected ?Workspace $workspace = null;
 
     public function __construct()
     {

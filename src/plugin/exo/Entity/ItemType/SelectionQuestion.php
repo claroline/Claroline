@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -55,16 +56,16 @@ class SelectionQuestion extends AbstractItem
      * The list of selections present in the text.
      *
      *
-     * @var Selection[]|ArrayCollection
+     * @var Collection<int, Selection>
      */
     #[ORM\OneToMany(targetEntity: Selection::class, mappedBy: 'interactionSelection', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private $selections;
+    private Collection $selections;
 
     /**
-     * @var Color[]|ArrayCollection
+     * @var Collection<int, Color>
      */
     #[ORM\OneToMany(targetEntity: Color::class, mappedBy: 'interactionSelection', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private $colors;
+    private Collection $colors;
 
     /**
      * SelectionQuestion constructor.

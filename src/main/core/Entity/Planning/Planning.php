@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Planning;
 
+use Doctrine\Common\Collections\Collection;
 use Claroline\CoreBundle\Repository\Planning\PlanningRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -29,13 +30,13 @@ class Planning
 
     /**
      *
-     * @var PlannedObject[]|ArrayCollection
+     * @var Collection<int, PlannedObject>
      */
     #[ORM\JoinTable(name: 'claro_planning_planned_object')]
     #[ORM\JoinColumn(name: 'planning_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'planned_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: PlannedObject::class)]
-    private $plannedObjects;
+    private Collection $plannedObjects;
 
     public function __construct()
     {

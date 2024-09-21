@@ -27,7 +27,7 @@ abstract class AbstractResource
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\OneToOne(targetEntity: ResourceNode::class)]
-    protected $resourceNode;
+    protected ?ResourceNode $resourceNode = null;
 
     /**
      * Only used for setting ResourceNode mimeType in old creation.

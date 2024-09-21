@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Update;
 
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Repository\VersionRepository;
 use DateTime;
@@ -41,7 +42,7 @@ class Version
 
     /**
      *
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     #[Gedmo\Timestampable(on: 'create')]

@@ -61,7 +61,7 @@ class Answer
      *
      * @var array
      */
-    #[ORM\Column(name: 'used_hints', type: 'simple_array', nullable: true)]
+    #[ORM\Column(name: 'used_hints', type: Types::SIMPLE_ARRAY, nullable: true)]
     private $usedHints = [];
 
     /**
@@ -69,7 +69,7 @@ class Answer
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Paper::class, inversedBy: 'answers')]
-    private $paper;
+    private ?Paper $paper = null;
 
     /**
      * The id of the question that is answered.

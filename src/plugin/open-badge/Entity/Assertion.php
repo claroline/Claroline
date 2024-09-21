@@ -48,6 +48,9 @@ class Assertion
     #[Gedmo\Timestampable(on: 'create')]
     private ?DateTimeInterface $issuedOn = null;
 
+    /**
+     * @var Collection<int, Evidence>
+     */
     #[ORM\OneToMany(targetEntity: Evidence::class, mappedBy: 'assertion')]
     private Collection $evidences;
 

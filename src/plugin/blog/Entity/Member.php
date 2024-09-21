@@ -24,10 +24,10 @@ class Member
     use Id;
 
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
-    protected $user;
+    protected ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: Blog::class, inversedBy: 'members', cascade: ['persist'])]
-    protected $blog;
+    protected ?Blog $blog = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
     protected $trusted = false;

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
+use Doctrine\Common\Collections\Collection;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
@@ -42,15 +43,15 @@ class PanelFacet
      */
     #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Facet::class, inversedBy: 'panelFacets')]
-    private $facet;
+    private ?Facet $facet = null;
 
     /**
      *
-     * @var ArrayCollection
+     * @var Collection<int, FieldFacet>
      */
     #[ORM\OneToMany(mappedBy: 'panelFacet', targetEntity: FieldFacet::class, cascade: ['all'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
-    private $fieldsFacet;
+    private Collection $fieldsFacet;
 
     public function __construct()
     {

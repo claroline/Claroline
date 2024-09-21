@@ -26,15 +26,7 @@ class Choice extends AbstractChoice implements AnswerPartInterface
 
     #[ORM\JoinColumn(name: 'interaction_qcm_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: ChoiceQuestion::class, inversedBy: 'choices')]
-    private $interactionQCM;
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private ?ChoiceQuestion $interactionQCM = null;
 
     /**
      * Sets expected.

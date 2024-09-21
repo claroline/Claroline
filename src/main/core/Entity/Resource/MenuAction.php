@@ -61,7 +61,7 @@ class MenuAction
 
     #[ORM\JoinColumn(name: 'resource_type_id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: ResourceType::class)]
-    private $resourceType;
+    private ?ResourceType $resourceType = null;
 
     /**
      * The plugin which have introduced the action.
@@ -71,7 +71,7 @@ class MenuAction
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Plugin::class)]
-    private $plugin;
+    private ?Plugin $plugin = null;
 
     /**
      * @return string

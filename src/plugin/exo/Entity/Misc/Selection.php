@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -42,10 +43,13 @@ class Selection implements AnswerPartInterface
 
     #[ORM\JoinColumn(name: 'interation_selection_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: SelectionQuestion::class, inversedBy: 'selections')]
-    private $interactionSelection;
+    private ?SelectionQuestion $interactionSelection = null;
 
+    /**
+     * @var Collection<int, ColorSelection>
+     */
     #[ORM\OneToMany(targetEntity: ColorSelection::class, mappedBy: 'selection', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private $colorSelections;
+    private Collection $colorSelections;
 
     public function __construct()
     {

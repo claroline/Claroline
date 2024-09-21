@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -39,14 +40,14 @@ class Step
 
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Exercise::class, inversedBy: 'steps')]
-    private $exercise;
+    private ?Exercise $exercise = null;
 
     /**
-     * @var ArrayCollection|StepItem[]
+     * @var Collection<int, StepItem>
      */
     #[ORM\OneToMany(mappedBy: 'step', targetEntity: StepItem::class, cascade: ['all'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
-    private $stepQuestions;
+    private Collection $stepQuestions;
 
     #[ORM\Column(length: 128)]
     #[Gedmo\Slug(fields: ['title'], unique: false)]

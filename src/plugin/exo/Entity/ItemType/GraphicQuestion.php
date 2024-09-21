@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Content\Image;
@@ -24,13 +25,14 @@ class GraphicQuestion extends AbstractItem
      * @var Image
      */
     #[ORM\ManyToOne(targetEntity: Image::class, cascade: ['persist'])]
-    private $image;
+    private ?Image $image = null;
 
     /**
      * @todo remove the mapped by and add a join table
+     * @var Collection<int, Area>
      */
     #[ORM\OneToMany(targetEntity: Area::class, mappedBy: 'interactionGraphic', cascade: ['all'], orphanRemoval: true)]
-    private $areas;
+    private Collection $areas;
 
     /**
      * GraphicQuestion constructor.

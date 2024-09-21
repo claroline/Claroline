@@ -11,6 +11,7 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Resource;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -28,11 +29,11 @@ class Section
 
     #[ORM\JoinColumn(name: 'node_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
-    protected $resourceNode;
+    protected ?ResourceNode $resourceNode = null;
 
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected $user;
+    protected ?User $user = null;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
     private $title;
@@ -73,9 +74,12 @@ class Section
     #[ORM\Column(name: 'audio_description', type: Types::STRING, nullable: true)]
     private $audioDescription;
 
+    /**
+     * @var Collection<int, SectionComment>
+     */
     #[ORM\OneToMany(targetEntity: SectionComment::class, mappedBy: 'section')]
     #[ORM\OrderBy(['creationDate' => 'DESC'])]
-    protected $comments;
+    protected Collection $comments;
 
     public function __construct()
     {

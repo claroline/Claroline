@@ -11,6 +11,7 @@
 
 namespace Claroline\CommunityBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\CommunityBundle\Repository\TeamRepository;
 use Claroline\AppBundle\Entity\Display\Poster;
@@ -45,7 +46,7 @@ class Team
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Workspace::class)]
-    private $workspace;
+    private ?Workspace $workspace = null;
 
     /**
      *
@@ -54,16 +55,16 @@ class Team
      */
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     #[ORM\OneToOne(targetEntity: Role::class, cascade: ['remove'])]
-    private $role;
+    private ?Role $role = null;
 
     /**
      *
      *
-     * @var ArrayCollection|User[]
+     * @var Collection<int, User>
      */
     #[ORM\JoinTable(name: 'claro_team_users')]
     #[ORM\ManyToMany(targetEntity: User::class)]
-    private $users;
+    private Collection $users;
 
     /**
      *
@@ -72,7 +73,7 @@ class Team
      */
     #[ORM\JoinColumn(name: 'manager_role_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\OneToOne(targetEntity: Role::class, cascade: ['remove'])]
-    private $managerRole;
+    private ?Role $managerRole = null;
 
     /**
      * @var int
@@ -99,7 +100,7 @@ class Team
      */
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     #[ORM\OneToOne(targetEntity: ResourceNode::class)]
-    private $directory;
+    private ?ResourceNode $directory = null;
 
     /**
      * @var bool

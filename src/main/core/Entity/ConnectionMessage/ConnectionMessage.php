@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\ConnectionMessage;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Repository\ConnectionMessage\ConnectionMessageRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -53,31 +54,31 @@ class ConnectionMessage
 
     /**
      *
-     * @var ArrayCollection|Slide[]
+     * @var Collection<int, Slide>
      */
     #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'message', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
-    private $slides;
+    private Collection $slides;
 
     /**
      * List of roles the message is destined to.
      *
      *
-     * @var ArrayCollection|Role[]
+     * @var Collection<int, Role>
      */
     #[ORM\JoinTable(name: 'claro_connection_message_role')]
     #[ORM\ManyToMany(targetEntity: Role::class)]
-    private $roles;
+    private Collection $roles;
 
     /**
      * List of users for who the message doesn't have to be displayed anymore.
      *
      *
-     * @var ArrayCollection|User[]
+     * @var Collection<int, User>
      */
     #[ORM\JoinTable(name: 'claro_connection_message_user')]
     #[ORM\ManyToMany(targetEntity: User::class)]
-    private $users;
+    private Collection $users;
 
     /**
      * ConnectionMessage constructor.

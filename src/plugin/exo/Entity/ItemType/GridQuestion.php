@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -39,10 +40,10 @@ class GridQuestion extends AbstractItem
      * List of available cells for the question.
      *
      *
-     * @var ArrayCollection
+     * @var Collection<int, Cell>
      */
     #[ORM\OneToMany(targetEntity: Cell::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
-    private $cells;
+    private Collection $cells;
 
     /**
      * Sum sub mode ["cell", "row", "col"].

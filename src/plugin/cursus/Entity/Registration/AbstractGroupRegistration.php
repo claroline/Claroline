@@ -14,7 +14,7 @@ abstract class AbstractGroupRegistration extends AbstractRegistration
      */
     #[ORM\JoinColumn(name: 'group_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Group::class)]
-    protected $group;
+    protected ?Group $group = null;
 
     public function getGroup(): Group
     {

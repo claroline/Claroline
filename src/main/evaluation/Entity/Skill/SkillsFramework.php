@@ -22,10 +22,16 @@ class SkillsFramework implements CrudEntityInterface
     use Name;
     use Description;
 
+    /**
+     * @var Collection<int, Skill>
+     */
     #[ORM\OneToMany(mappedBy: 'skillsFramework', targetEntity: Skill::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $skills;
 
+    /**
+     * @var Collection<int, Workspace>
+     */
     #[ORM\JoinTable(name: 'claro_evaluation_skills_frameworks_workspaces')]
     #[ORM\JoinColumn(name: 'skills_framework_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'workspace_id', referencedColumnName: 'id', onDelete: 'CASCADE')]

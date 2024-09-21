@@ -20,7 +20,7 @@ class ItemResource extends OrderedResource
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: 'resources')]
-    private $question;
+    private ?Item $question = null;
 
     /**
      * Set question.

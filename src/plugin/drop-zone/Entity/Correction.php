@@ -11,6 +11,8 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Claroline\DropZoneBundle\Repository\CorrectionRepository;
 use DateTime;
@@ -33,7 +35,7 @@ class Correction
      */
     #[ORM\JoinColumn(name: 'drop_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Drop::class, inversedBy: 'corrections')]
-    protected $drop;
+    protected ?Drop $drop = null;
 
     /**
      *
@@ -41,7 +43,7 @@ class Correction
      */
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected $user;
+    protected ?User $user = null;
 
     /**
      * @var float
@@ -62,19 +64,19 @@ class Correction
     protected $valid = true;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'start_date', type: Types::DATETIME_MUTABLE, nullable: false)]
     protected $startDate;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'last_edition_date', type: Types::DATETIME_MUTABLE, nullable: false)]
     protected $lastEditionDate;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'end_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $endDate;
@@ -134,10 +136,10 @@ class Correction
     protected $teamName;
 
     /**
-     * @var Grade
+     * @var Collection<int, Grade>
      */
     #[ORM\OneToMany(targetEntity: Grade::class, mappedBy: 'correction', cascade: ['persist', 'remove'])]
-    protected $grades;
+    protected Collection $grades;
 
     /**
      * Correction constructor.

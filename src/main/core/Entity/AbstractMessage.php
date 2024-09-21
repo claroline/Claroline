@@ -41,7 +41,7 @@ abstract class AbstractMessage
      */
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
-    protected $creator;
+    protected ?User $creator = null;
 
     #[ORM\Column(nullable: true)]
     protected $author;

@@ -33,7 +33,7 @@ class EventInvitation
      */
     #[ORM\JoinColumn(name: 'event', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'eventInvitations')]
-    private $event;
+    private ?Event $event = null;
 
     /**
      *
@@ -41,7 +41,7 @@ class EventInvitation
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private $user;
+    private ?User $user = null;
 
     public function __construct(Event $event, User $user)
     {

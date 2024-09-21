@@ -43,7 +43,7 @@ class Slide
      */
     #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ConnectionMessage::class, inversedBy: 'slides')]
-    private $message;
+    private ?ConnectionMessage $message = null;
 
     /**
      * @var array

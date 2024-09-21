@@ -31,7 +31,7 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
      */
     #[ORM\JoinColumn(name: 'resource_node', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
-    private $resourceNode;
+    private ?ResourceNode $resourceNode = null;
 
     /**
      * @var int

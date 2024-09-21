@@ -19,7 +19,7 @@ class Shared
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private $user;
+    private ?User $user = null;
 
     /**
      * The shared question.
@@ -30,7 +30,7 @@ class Shared
     #[ORM\JoinColumn(name: 'question_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Item::class)]
-    private $question;
+    private ?Item $question = null;
 
     /**
      * Gives the user the ability to edit and delete the question.

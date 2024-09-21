@@ -34,6 +34,9 @@ class Category
     #[ORM\ManyToOne(targetEntity: ClacoForm::class, inversedBy: 'categories')]
     private ?ClacoForm $clacoForm = null;
 
+    /**
+     * @var Collection<int, User>
+     */
     #[ORM\JoinTable(name: 'claro_clacoformbundle_category_manager')]
     #[ORM\ManyToMany(targetEntity: User::class)]
     private Collection $managers;

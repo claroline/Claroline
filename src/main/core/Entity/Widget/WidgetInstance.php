@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
+use Doctrine\Common\Collections\Collection;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\DataSource;
@@ -35,7 +36,7 @@ class WidgetInstance
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Widget::class)]
-    private $widget;
+    private ?Widget $widget = null;
 
     /**
      * The parent container.
@@ -45,13 +46,13 @@ class WidgetInstance
      */
     #[ORM\JoinColumn(name: 'container_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: WidgetContainer::class, inversedBy: 'instances', cascade: ['persist', 'remove', 'refresh'])]
-    private $container;
+    private ?WidgetContainer $container = null;
 
     /**
-     * @var WidgetInstanceConfig[]
+     * @var Collection<int, WidgetInstanceConfig>
      */
     #[ORM\OneToMany(targetEntity: WidgetInstanceConfig::class, mappedBy: 'widgetInstance', cascade: ['persist', 'remove'])]
-    private $widgetInstanceConfigs;
+    private Collection $widgetInstanceConfigs;
 
     /**
      * The data source to fill the widget if any.
@@ -61,7 +62,7 @@ class WidgetInstance
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
     #[ORM\ManyToOne(targetEntity: DataSource::class)]
-    private $dataSource = null;
+    private ?DataSource $dataSource = null;
 
     /**
      * WidgetContainer constructor.

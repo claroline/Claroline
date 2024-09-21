@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -35,7 +36,7 @@ class ResourceRights
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Role::class)]
-    private $role;
+    private ?Role $role = null;
 
     /**
      *
@@ -43,17 +44,17 @@ class ResourceRights
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class, inversedBy: 'rights', cascade: ['persist'])]
-    private $resourceNode;
+    private ?ResourceNode $resourceNode = null;
 
     /**
      *
-     * @var ArrayCollection|ResourceType[]
+     * @var Collection<int, ResourceType>
      */
     #[ORM\JoinTable(name: 'claro_list_type_creation')]
     #[ORM\JoinColumn(name: 'resource_rights_id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'resource_type_id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: ResourceType::class, inversedBy: 'rights')]
-    private $resourceTypes;
+    private Collection $resourceTypes;
 
     public function __construct()
     {

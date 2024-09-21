@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,10 +28,10 @@ class ClozeQuestion extends AbstractItem
      * The list of holes present in the text.
      *
      *
-     * @var Hole[]|ArrayCollection
+     * @var Collection<int, Hole>
      */
     #[ORM\OneToMany(targetEntity: Hole::class, mappedBy: 'interactionHole', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private $holes;
+    private Collection $holes;
 
     /**
      * ClozeQuestion constructor.

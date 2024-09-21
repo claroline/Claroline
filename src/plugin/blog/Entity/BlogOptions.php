@@ -37,7 +37,7 @@ class BlogOptions
      * @var Blog
      */
     #[ORM\OneToOne(targetEntity: Blog::class, inversedBy: 'options', cascade: ['persist'])]
-    protected $blog;
+    protected ?Blog $blog = null;
 
     /**
      * @var bool
@@ -54,8 +54,8 @@ class BlogOptions
     /**
      * @var int
      */
-    #[ORM\Column(type: 'smallint', name: 'post_per_page')]
-    protected $postPerPage = 10;
+    #[ORM\Column(type: Types::SMALLINT, name: 'post_per_page')]
+    protected ?int $postPerPage = 10;
 
     /**
      * @var bool
@@ -72,8 +72,8 @@ class BlogOptions
     /**
      * @var int
      */
-    #[ORM\Column(type: 'smallint', name: 'comment_moderation_mode')]
-    protected $commentModerationMode = self::COMMENT_MODERATION_NONE;
+    #[ORM\Column(type: Types::SMALLINT, name: 'comment_moderation_mode')]
+    protected ?int $commentModerationMode = self::COMMENT_MODERATION_NONE;
 
     /**
      * @var bool
@@ -96,8 +96,8 @@ class BlogOptions
     /**
      * @var int
      */
-    #[ORM\Column(type: 'smallint', name: 'banner_height')]
-    protected $bannerHeight = 100;
+    #[ORM\Column(type: Types::SMALLINT, name: 'banner_height')]
+    protected ?int $bannerHeight = 100;
 
     /**
      * @var string
@@ -132,8 +132,8 @@ class BlogOptions
      *
      * Option for tag cloud rendering (Classic:0 (or null), 3D sphere:1, classic with number of article per tag: 2:1)
      */
-    #[ORM\Column(type: 'smallint', name: 'tag_cloud', nullable: true)]
-    protected $tagCloud = null;
+    #[ORM\Column(type: Types::SMALLINT, name: 'tag_cloud', nullable: true)]
+    protected ?int $tagCloud = null;
 
     /**
      * @var string
@@ -152,8 +152,8 @@ class BlogOptions
     /**
      * @var int
      */
-    #[ORM\Column(type: 'smallint', name: 'max_tag', nullable: false, options: ['default' => 50])]
-    protected $maxTag = 50;
+    #[ORM\Column(type: Types::SMALLINT, name: 'max_tag', nullable: false, options: ['default' => 50])]
+    protected int $maxTag = 50;
 
     /**
      * @return BlogOptions

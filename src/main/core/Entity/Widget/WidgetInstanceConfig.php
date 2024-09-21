@@ -29,15 +29,15 @@ class WidgetInstanceConfig
 
     #[ORM\JoinColumn(name: 'widget_instance_id', onDelete: 'CASCADE', nullable: true)]
     #[ORM\ManyToOne(targetEntity: WidgetInstance::class, inversedBy: 'widgetInstanceConfigs', cascade: ['persist', 'remove'])]
-    private $widgetInstance;
+    private ?WidgetInstance $widgetInstance = null;
 
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private $user;
+    private ?User $user = null;
 
     #[ORM\JoinColumn(name: 'workspace_id', nullable: true, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Workspace::class)]
-    private $workspace;
+    private ?Workspace $workspace = null;
 
     #[ORM\Column(name: 'widget_order', type: Types::INTEGER)]
     private $widgetOrder = 0;

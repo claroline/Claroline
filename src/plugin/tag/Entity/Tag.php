@@ -37,6 +37,7 @@ class Tag
 
     /**
      * The list of objects with the tag.
+     * @var Collection<int, TaggedObject>
      */
     #[ORM\OneToMany(targetEntity: TaggedObject::class, mappedBy: 'tag')]
     private Collection $taggedObjects;

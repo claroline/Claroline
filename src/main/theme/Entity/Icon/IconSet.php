@@ -47,6 +47,9 @@ class IconSet
     #[ORM\Column(nullable: true)]
     private ?string $type = null;
 
+    /**
+     * @var Collection<int, IconItem>
+     */
     #[ORM\OneToMany(mappedBy: 'iconSet', targetEntity: IconItem::class)]
     private Collection $icons;
 

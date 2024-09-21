@@ -33,15 +33,15 @@ class Section
      */
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected $author;
+    protected ?User $author = null;
 
     #[ORM\JoinColumn(name: 'active_contribution_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\OneToOne(targetEntity: Contribution::class, cascade: ['all'])]
-    protected $activeContribution;
+    protected ?Contribution $activeContribution = null;
 
     #[ORM\JoinColumn(name: 'wiki_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Wiki::class)]
-    protected $wiki;
+    protected ?Wiki $wiki = null;
 
     #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
     protected $deleted = false;
@@ -68,7 +68,7 @@ class Section
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Section::class)]
     #[Gedmo\TreeParent]
-    protected $parent;
+    protected ?Section $parent = null;
 
     /**
      * Variable used to define if section has moved during update, in order to invalidate client data.

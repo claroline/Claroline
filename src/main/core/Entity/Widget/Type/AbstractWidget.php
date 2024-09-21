@@ -19,7 +19,7 @@ abstract class AbstractWidget
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: WidgetInstance::class, cascade: ['persist'])]
-    private $widgetInstance;
+    private ?WidgetInstance $widgetInstance = null;
 
     /**
      * Get widget instance.

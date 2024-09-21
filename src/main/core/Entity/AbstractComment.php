@@ -29,7 +29,7 @@ abstract class AbstractComment
 
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected $user;
+    protected ?User $user = null;
 
     #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
     protected $creationDate;

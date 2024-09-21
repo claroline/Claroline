@@ -25,6 +25,9 @@ class Path extends AbstractResource
     use HasEndPage;
     use EvaluationFeedbacks;
 
+    /**
+     * @var Collection<int, Step>
+     */
     #[ORM\OneToMany(targetEntity: Step::class, mappedBy: 'path', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $steps;

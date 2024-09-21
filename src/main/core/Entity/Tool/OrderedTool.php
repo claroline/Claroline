@@ -54,6 +54,9 @@ class OrderedTool implements CrudEntityInterface
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private bool $fullscreen = false;
 
+    /**
+     * @var Collection<int, ToolRights>
+     */
     #[ORM\OneToMany(targetEntity: ToolRights::class, mappedBy: 'orderedTool')]
     private Collection $rights;
 

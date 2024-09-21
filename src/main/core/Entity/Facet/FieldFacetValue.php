@@ -28,7 +28,7 @@ class FieldFacetValue extends AbstractFacetValue
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
-    private $user;
+    private ?User $user = null;
 
     /**
      *
@@ -36,7 +36,7 @@ class FieldFacetValue extends AbstractFacetValue
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: false)]
     #[ORM\ManyToOne(targetEntity: FieldFacet::class, cascade: ['persist'])]
-    private $fieldFacet;
+    private ?FieldFacet $fieldFacet = null;
 
     public function getType(): string
     {

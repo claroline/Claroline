@@ -83,11 +83,17 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     private ?string $administrativeCode = null;
 
     
+    /**
+     * @var Collection<int, Group>
+     */
     #[ORM\JoinTable(name: 'claro_user_group')]
     #[ORM\ManyToMany(targetEntity: Group::class)]
     private Collection $groups;
 
     
+    /**
+     * @var Collection<int, Role>
+     */
     #[ORM\JoinTable(name: 'claro_user_role')]
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users', fetch: 'EXTRA_LAZY')]
     protected Collection $roles;
@@ -140,8 +146,11 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     private ?string $emailValidationHash = null;
 
     
+    /**
+     * @var Collection<int, UserOrganizationReference>
+     */
     #[ORM\JoinColumn(name: 'user_id', nullable: false)]
-    #[ORM\OneToMany(targetEntity: UserOrganizationReference::class, mappedBy: 'user', orphanRemoval: true, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserOrganizationReference::class, cascade: ['persist'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $userOrganizationReferences;
 
     #[ORM\Column(name: 'user_status', nullable: true)]

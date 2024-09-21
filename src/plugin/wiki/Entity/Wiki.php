@@ -18,10 +18,10 @@ class Wiki extends AbstractResource
 
     #[ORM\JoinColumn(name: 'root_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\OneToOne(targetEntity: Section::class, cascade: ['all'])]
-    private $root;
+    private ?Section $root = null;
 
-    #[ORM\Column(type: 'smallint', nullable: true)] // mode of wiki
-    protected $mode;
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)] // mode of wiki
+    protected ?int $mode = null;
 
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)] // Display or hide the section numbers in the wiki body
     protected $displaySectionNumbers = false;

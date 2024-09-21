@@ -16,7 +16,7 @@ trait Template
      */
     #[ORM\JoinColumn(name: 'template_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: TemplateEntity::class)]
-    protected $template;
+    protected ?TemplateEntity $template = null;
 
     public function getTemplate(): ?TemplateEntity
     {

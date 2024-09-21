@@ -2,6 +2,7 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -30,7 +31,7 @@ class Comment
      */
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL', nullable: true)]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected $user;
+    protected ?User $user = null;
 
     /**
      *
@@ -39,16 +40,16 @@ class Comment
      */
     #[ORM\JoinColumn(name: 'entry_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Entry::class, inversedBy: 'comments')]
-    protected $entry;
+    protected ?Entry $entry = null;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
     protected $creationDate;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'edition_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $editionDate;

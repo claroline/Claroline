@@ -11,6 +11,7 @@
 
 namespace Claroline\MessageBundle\Entity;
 
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -31,7 +32,7 @@ class UserMessage
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private $user;
+    private ?User $user = null;
 
     /**
      *
@@ -39,7 +40,7 @@ class UserMessage
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Message::class, inversedBy: 'userMessages')]
-    private $message;
+    private ?Message $message = null;
 
     /**
      * @var bool
@@ -60,7 +61,7 @@ class UserMessage
     protected $isSent = false;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'last_open_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $lastOpenDate;

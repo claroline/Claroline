@@ -32,6 +32,9 @@ class Step
     #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'children')]
     private ?Step $parent = null;
 
+    /**
+     * @var Collection<int, Step>
+     */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Step::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $children;
@@ -61,6 +64,7 @@ class Step
 
     /**
      * Secondary resources.
+     * @var Collection<int, SecondaryResource>
      */
     #[ORM\OneToMany(targetEntity: SecondaryResource::class, mappedBy: 'step', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]

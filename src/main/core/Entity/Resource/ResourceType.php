@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -37,11 +38,11 @@ class ResourceType
 
     /**
      *
-     * @var ArrayCollection|MaskDecoder[]
+     * @var Collection<int, MaskDecoder>
      * @todo : we may remove it after checking it's not used
      */
     #[ORM\OneToMany(targetEntity: MaskDecoder::class, mappedBy: 'resourceType', cascade: ['persist'])]
-    private $maskDecoders;
+    private Collection $maskDecoders;
 
     #[ORM\Column(name: 'is_exportable', type: Types::BOOLEAN)]
     private $exportable = false;
@@ -64,9 +65,10 @@ class ResourceType
 
     /**
      * @todo find a way to remove it (it's used in some DQL queries)
+     * @var Collection<int, ResourceRights>
      */
     #[ORM\ManyToMany(targetEntity: ResourceRights::class, mappedBy: 'resourceTypes')]
-    protected $rights;
+    protected Collection $rights;
 
     public function __construct()
     {

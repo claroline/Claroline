@@ -11,6 +11,8 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Claroline\DropZoneBundle\Repository\DropRepository;
 use DateTime;
@@ -34,7 +36,7 @@ class Drop
      */
     #[ORM\JoinColumn(name: 'dropzone_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Dropzone::class)]
-    protected $dropzone;
+    protected ?Dropzone $dropzone = null;
 
     /**
      *
@@ -42,16 +44,16 @@ class Drop
      */
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected $user;
+    protected ?User $user = null;
 
     /**
-     * @var Document
+     * @var Collection<int, Document>
      */
     #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'drop')]
-    protected $documents;
+    protected Collection $documents;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'drop_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $dropDate;
@@ -116,25 +118,31 @@ class Drop
     protected $teamName;
 
     /**
-     * @var ArrayCollection|Correction[]
+     * @var Collection<int, Correction>
      */
     #[ORM\OneToMany(targetEntity: Correction::class, mappedBy: 'drop')]
-    protected $corrections;
+    protected Collection $corrections;
 
     /**
      *
-     * @var User
+     * @var Collection<int, User>
      */
     #[ORM\JoinTable(name: 'claro_dropzonebundle_drop_users')]
     #[ORM\ManyToMany(targetEntity: User::class)]
-    protected $users;
+    protected Collection $users;
 
+    /**
+     * @var Collection<int, Revision>
+     */
     #[ORM\OneToMany(targetEntity: Revision::class, mappedBy: 'drop')]
     #[ORM\OrderBy(['creationDate' => 'DESC'])]
-    protected $revisions;
+    protected Collection $revisions;
 
+    /**
+     * @var Collection<int, DropComment>
+     */
     #[ORM\OneToMany(targetEntity: DropComment::class, mappedBy: 'drop')]
-    protected $comments;
+    protected Collection $comments;
 
     /**
      * Drop constructor.

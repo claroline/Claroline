@@ -29,7 +29,7 @@ class WorkspaceRegistrationQueue
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Role::class)]
-    private $role;
+    private ?Role $role = null;
 
     /**
      *
@@ -37,7 +37,7 @@ class WorkspaceRegistrationQueue
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private $user;
+    private ?User $user = null;
 
     /**
      *
@@ -45,7 +45,7 @@ class WorkspaceRegistrationQueue
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Workspace::class)]
-    private $workspace;
+    private ?Workspace $workspace = null;
 
     /**
      * @param mixed $role

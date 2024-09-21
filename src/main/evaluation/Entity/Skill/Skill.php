@@ -28,10 +28,16 @@ class Skill
     #[ORM\ManyToOne(targetEntity: Skill::class, inversedBy: 'children')]
     private ?Skill $parent = null;
 
+    /**
+     * @var Collection<int, \Claroline\EvaluationBundle\Entity\Skill\Skill>
+     */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Skill::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $children;
 
+    /**
+     * @var Collection<int, Ability>
+     */
     #[ORM\OneToMany(mappedBy: 'skill', targetEntity: Ability::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $abilities;

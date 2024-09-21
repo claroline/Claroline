@@ -23,6 +23,9 @@ class Text extends AbstractResource
     #[ORM\Column(type: Types::INTEGER)]
     private int $version = 1;
 
+    /**
+     * @var Collection<int, Revision>
+     */
     #[ORM\OneToMany(targetEntity: Revision::class, mappedBy: 'text', cascade: ['persist'])]
     #[ORM\OrderBy(['version' => 'DESC'])]
     private Collection $revisions;

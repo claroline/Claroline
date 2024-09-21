@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Misc\BooleanChoice;
@@ -13,8 +14,11 @@ use UJM\ExoBundle\Entity\Misc\BooleanChoice;
 #[ORM\Entity]
 class BooleanQuestion extends AbstractItem
 {
+    /**
+     * @var Collection<int, BooleanChoice>
+     */
     #[ORM\OneToMany(targetEntity: BooleanChoice::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
-    private $choices;
+    private Collection $choices;
 
     /**
      * Constructs a new instance of choices.

@@ -46,6 +46,7 @@ class Role implements CrudEntityInterface
 
     /**
      * @deprecated should be unidirectional.
+     * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles', fetch: 'EXTRA_LAZY')]
     private Collection $users;
@@ -55,7 +56,7 @@ class Role implements CrudEntityInterface
 
     
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: Workspace::class, inversedBy: 'roles')]
+    #[ORM\ManyToOne(targetEntity: Workspace::class, inversedBy: 'roles', fetch: 'EXTRA_LAZY')]
     private ?Workspace $workspace = null;
 
     #[ORM\Column(name: 'personal_workspace_creation_enabled', type: Types::BOOLEAN)]

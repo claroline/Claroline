@@ -28,7 +28,7 @@ class GridOdd implements AnswerPartInterface
      */
     #[ORM\JoinColumn(name: 'item_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: GridItem::class)]
-    private $item;
+    private ?GridItem $item = null;
 
     /**
      * The parent question.
@@ -38,7 +38,7 @@ class GridOdd implements AnswerPartInterface
      */
     #[ORM\JoinColumn(name: 'pair_question_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: PairQuestion::class, inversedBy: 'oddItems')]
-    private $question;
+    private ?PairQuestion $question = null;
 
     /**
      * Get item.

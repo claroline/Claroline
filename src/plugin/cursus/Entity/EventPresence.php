@@ -29,7 +29,7 @@ class EventPresence
      */
     #[ORM\JoinColumn(name: 'event_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Event::class)]
-    private $event;
+    private ?Event $event = null;
 
     /**
      *
@@ -38,7 +38,7 @@ class EventPresence
      */
     #[ORM\JoinColumn(name: 'user_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private $user;
+    private ?User $user = null;
 
     /**
      * @var string

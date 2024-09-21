@@ -21,11 +21,11 @@ class ColorSelection implements AnswerPartInterface
 
     #[ORM\JoinColumn(name: 'selection_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Selection::class, inversedBy: 'colorSelections')]
-    private $selection;
+    private ?Selection $selection = null;
 
     #[ORM\JoinColumn(name: 'color_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Color::class, inversedBy: 'colorSelections')]
-    private $color;
+    private ?Color $color = null;
 
     /**
      * @return Selection

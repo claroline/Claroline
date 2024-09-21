@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -48,16 +49,16 @@ class Hole
 
     #[ORM\JoinColumn(name: 'interaction_hole_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: ClozeQuestion::class, inversedBy: 'holes')]
-    private $interactionHole;
+    private ?ClozeQuestion $interactionHole = null;
 
     /**
      * The list of keywords attached to the hole.
      *
      *
-     * @var ArrayCollection
+     * @var Collection<int, Keyword>
      */
     #[ORM\OneToMany(targetEntity: Keyword::class, mappedBy: 'hole', cascade: ['all'], orphanRemoval: true)]
-    private $keywords;
+    private Collection $keywords;
 
     /**
      * Hole constructor.

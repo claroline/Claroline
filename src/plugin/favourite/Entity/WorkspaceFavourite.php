@@ -25,7 +25,7 @@ class WorkspaceFavourite extends AbstractFavourite
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Workspace::class)]
-    private $workspace;
+    private ?Workspace $workspace = null;
 
     /**
      * Get workspace.

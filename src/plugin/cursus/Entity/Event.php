@@ -32,7 +32,7 @@ class Event extends AbstractPlanned
      */
     #[ORM\JoinColumn(name: 'session_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Session::class, inversedBy: 'events')]
-    private $session;
+    private ?Session $session = null;
 
     /**
      * @var int
@@ -61,7 +61,7 @@ class Event extends AbstractPlanned
      */
     #[ORM\JoinColumn(name: 'presence_template_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: Template::class)]
-    private $presenceTemplate;
+    private ?Template $presenceTemplate = null;
 
     
     #[ORM\JoinColumn(name: 'invitation_template_id', nullable: true, onDelete: 'SET NULL')]

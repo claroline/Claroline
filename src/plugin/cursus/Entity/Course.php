@@ -44,14 +44,14 @@ class Course extends AbstractTraining
     /**
      *
      *
-     * @var Collection|Course[]
+     * @var Collection<int, \Claroline\CursusBundle\Entity\Course>
      */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Course::class)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $children;
 
     /**
-     * @var Collection|Session[]
+     * @var Collection<int, Session>
      */
     #[ORM\OneToMany(mappedBy: 'course', targetEntity: Session::class)]
     private Collection $sessions;
@@ -70,7 +70,9 @@ class Course extends AbstractTraining
 
     #[ORM\Column(name: 'session_duration', nullable: false, type: Types::FLOAT, options: ['default' => 1])]
     private float $defaultSessionDuration = 1; // in hours
-    
+    /**
+     * @var Collection<int, Organization>
+     */
     #[ORM\JoinTable(name: 'claro_cursusbundle_course_organizations')]
     #[ORM\ManyToMany(targetEntity: Organization::class)]
     private Collection $organizations;
@@ -80,7 +82,7 @@ class Course extends AbstractTraining
      *
      *
      *
-     * @var Collection|PanelFacet[]
+     * @var Collection<int, PanelFacet>
      */
     #[ORM\JoinTable(name: 'claro_cursusbundle_course_panel_facet')]
     #[ORM\JoinColumn(name: 'course_id', referencedColumnName: 'id', onDelete: 'CASCADE')]

@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Misc\GridItem;
@@ -27,25 +28,25 @@ class PairQuestion extends AbstractItem
      * List of available items for the question.
      *
      *
-     * @var GridItem[]|ArrayCollection
+     * @var Collection<int, GridItem>
      */
     #[ORM\JoinTable(name: 'ujm_question_pair_items')]
     #[ORM\JoinColumn(name: 'question_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'item_id', referencedColumnName: 'id', unique: true)]
     #[ORM\ManyToMany(targetEntity: GridItem::class, cascade: ['all'])]
-    private $items;
+    private Collection $items;
 
     /**
-     * @var GridRow[]|ArrayCollection
+     * @var Collection<int, GridRow>
      */
     #[ORM\OneToMany(targetEntity: GridRow::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
-    private $rows;
+    private Collection $rows;
 
     /**
-     * @var GridOdd[]|ArrayCollection
+     * @var Collection<int, GridOdd>
      */
     #[ORM\OneToMany(targetEntity: GridOdd::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
-    private $oddItems;
+    private Collection $oddItems;
 
     /**
      * PairQuestion constructor.

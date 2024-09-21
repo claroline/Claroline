@@ -26,6 +26,9 @@ class SessionUser extends AbstractUserRegistration
     #[ORM\ManyToOne(targetEntity: Session::class)]
     private ?Session $session = null;
 
+    /**
+     * @var Collection<int, FieldFacetValue>
+     */
     #[ORM\JoinTable(name: 'claro_cursusbundle_session_user_values')]
     #[ORM\JoinColumn(name: 'registration_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'value_id', referencedColumnName: 'id', unique: true, onDelete: 'CASCADE')]

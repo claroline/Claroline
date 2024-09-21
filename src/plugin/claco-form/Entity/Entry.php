@@ -11,6 +11,7 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\ClacoFormBundle\Repository\EntryRepository;
 use DateTimeInterface;
@@ -62,44 +63,44 @@ class Entry
     /**
      *
      *
-     * @var FieldValue[]
+     * @var Collection<int, FieldValue>
      */
     #[ORM\JoinTable(name: 'claro_clacoformbundle_entry_value')]
     #[ORM\OneToMany(targetEntity: FieldValue::class, mappedBy: 'entry', cascade: ['persist'])]
-    private $fieldValues;
+    private Collection $fieldValues;
 
     /**
      *
      *
-     * @var Comment[]
+     * @var Collection<int, Comment>
      */
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'entry')]
     #[ORM\OrderBy(['creationDate' => 'DESC'])]
-    private $comments;
+    private Collection $comments;
 
     /**
      *
      *
-     * @var Category[]
+     * @var Collection<int, Category>
      */
     #[ORM\JoinTable(name: 'claro_clacoformbundle_entry_category')]
     #[ORM\ManyToMany(targetEntity: Category::class)]
-    private $categories;
+    private Collection $categories;
 
     /**
      *
      *
-     * @var Keyword[]
+     * @var Collection<int, Keyword>
      */
     #[ORM\JoinTable(name: 'claro_clacoformbundle_entry_keyword')]
     #[ORM\ManyToMany(targetEntity: Keyword::class, cascade: ['persist'])]
-    private $keywords;
+    private Collection $keywords;
 
     /**
-     * @var EntryUser[]
+     * @var Collection<int, EntryUser>
      */
     #[ORM\OneToMany(targetEntity: EntryUser::class, mappedBy: 'entry')]
-    private $entryUsers;
+    private Collection $entryUsers;
 
     public function __construct()
     {

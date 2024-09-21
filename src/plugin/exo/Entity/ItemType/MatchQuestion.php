@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Misc\Association;
@@ -25,25 +26,25 @@ class MatchQuestion extends AbstractItem
 
     /**
      *
-     * @var ArrayCollection
+     * @var Collection<int, Label>
      */
     #[ORM\OneToMany(targetEntity: Label::class, mappedBy: 'interactionMatching', cascade: ['all'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
-    private $labels;
+    private Collection $labels;
 
     /**
      *
-     * @var ArrayCollection
+     * @var Collection<int, Proposal>
      */
     #[ORM\OneToMany(targetEntity: Proposal::class, mappedBy: 'interactionMatching', cascade: ['all'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
-    private $proposals;
+    private Collection $proposals;
 
     /**
-     * @var ArrayCollection
+     * @var Collection<int, Association>
      */
     #[ORM\OneToMany(targetEntity: Association::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
-    private $associations;
+    private Collection $associations;
 
     /**
      * MatchQuestion constructor.

@@ -26,7 +26,7 @@ class ItemObject
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: 'objects')]
-    private $question;
+    private ?Item $question = null;
 
     /**
      * The mime type of the Item object.

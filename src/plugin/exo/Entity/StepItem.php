@@ -29,7 +29,7 @@ class StepItem
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'stepQuestions')]
-    private $step;
+    private ?Step $step = null;
 
     /**
      * The linked question.
@@ -40,7 +40,7 @@ class StepItem
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Item::class, cascade: ['persist'])]
-    private $question;
+    private ?Item $question = null;
 
     /**
      * The answer is mandatory to continue the quiz.

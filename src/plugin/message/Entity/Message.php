@@ -11,6 +11,8 @@
 
 namespace Claroline\MessageBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -41,21 +43,21 @@ class Message
      */
     #[ORM\JoinColumn(name: 'sender_id', onDelete: 'CASCADE', nullable: true)]
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
-    protected $user;
+    protected ?User $user = null;
 
     /**
      *
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
     protected $date;
 
     /**
-     * @var UserMessage[]|ArrayCollection
+     * @var Collection<int, UserMessage>
      */
     #[ORM\OneToMany(targetEntity: UserMessage::class, mappedBy: 'message')]
-    protected $userMessages;
+    protected Collection $userMessages;
 
     #[ORM\Column(type: Types::INTEGER)]
     #[Gedmo\TreeLeft]
@@ -81,16 +83,16 @@ class Message
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: Message::class, inversedBy: 'children')]
     #[Gedmo\TreeParent]
-    protected $parent;
+    protected ?Message $parent = null;
 
     /**
      *
      *
-     * @var Message[]|ArrayCollection
+     * @var Collection<int, Message>
      */
-    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'parent')]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Message::class)]
     #[ORM\OrderBy(['lft' => 'ASC'])]
-    protected $children;
+    protected Collection $children;
 
     /**
      * @var string

@@ -61,6 +61,9 @@ class BBB extends AbstractResource
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $customUsernames = false;
 
+    /**
+     * @var Collection<int, Recording>
+     */
     #[ORM\OneToMany(mappedBy: 'meeting', targetEntity: Recording::class, orphanRemoval: true)]
     #[ORM\OrderBy(['startTime' => 'DESC'])]
     private Collection $recordings;

@@ -55,6 +55,9 @@ class Post extends Statusable
     #[ORM\Column(type: Types::BOOLEAN, name: 'pinned')]
     private bool $pinned = false;
 
+    /**
+     * @var Collection<int, Comment>
+     */
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, cascade: ['all'])]
     #[ORM\OrderBy(['creationDate' => 'DESC'])]
     private Collection $comments;

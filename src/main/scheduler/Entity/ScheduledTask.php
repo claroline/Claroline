@@ -11,6 +11,7 @@
 
 namespace Claroline\SchedulerBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Claroline\SchedulerBundle\Repository\ScheduledTaskRepository;
 use Doctrine\DBAL\Types\Types;
 use DateTimeInterface;
@@ -69,13 +70,13 @@ class ScheduledTask
     private $executionType = 'once';
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'scheduled_date', type: Types::DATETIME_MUTABLE)]
     private $scheduledDate;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'execution_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     private $executionDate = null;
@@ -93,7 +94,7 @@ class ScheduledTask
      * For recurring execution only, define when we will need to stop replaying the task.
      *
      *
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'end_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     private $endDate = null;
@@ -118,7 +119,7 @@ class ScheduledTask
 
     /**
      *
-     * @var ArrayCollection[]
+     * @var Collection<int, User>
      *
      * @deprecated
      */
@@ -126,7 +127,7 @@ class ScheduledTask
     #[ORM\JoinColumn(name: 'scheduled_task_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'user_id', referencedColumnName: 'id')]
     #[ORM\ManyToMany(targetEntity: User::class)]
-    private $users;
+    private Collection $users;
 
     /**
      *
@@ -136,7 +137,7 @@ class ScheduledTask
      */
     #[ORM\JoinColumn(name: 'group_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: Group::class)]
-    private $group;
+    private ?Group $group = null;
 
     /**
      *
@@ -144,7 +145,7 @@ class ScheduledTask
      */
     #[ORM\JoinColumn(name: 'workspace_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: Workspace::class)]
-    private $workspace;
+    private ?Workspace $workspace = null;
 
     public function __construct()
     {

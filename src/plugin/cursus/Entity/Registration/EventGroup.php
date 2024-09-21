@@ -26,7 +26,7 @@ class EventGroup extends AbstractGroupRegistration
      */
     #[ORM\JoinColumn(name: 'event_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Event::class)]
-    private $event;
+    private ?Event $event = null;
 
     public function getEvent(): Event
     {

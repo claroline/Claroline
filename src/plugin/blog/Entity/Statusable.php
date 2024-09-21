@@ -2,6 +2,7 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,8 +22,8 @@ class Statusable
     /**
      * @var int
      */
-    #[ORM\Column(type: 'smallint')]
-    protected $status = self::STATUS_UNPUBLISHED;
+    #[ORM\Column(type: Types::SMALLINT)]
+    protected ?int $status = self::STATUS_UNPUBLISHED;
 
     /**
      * @param int $status

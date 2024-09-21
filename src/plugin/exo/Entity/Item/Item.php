@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Item;
 
+use Doctrine\Common\Collections\Collection;
 use Datetime;
 use UJM\ExoBundle\Repository\ItemRepository;
 use Doctrine\DBAL\Types\Types;
@@ -79,31 +80,31 @@ class Item
      */
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private $creator;
+    private ?User $creator = null;
 
     /**
-     * @var ArrayCollection
+     * @var Collection<int, Hint>
      */
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Hint::class, cascade: ['remove', 'persist'], orphanRemoval: true)]
-    private $hints;
+    private Collection $hints;
 
     /**
      *
-     * @var ArrayCollection
+     * @var Collection<int, ItemObject>
      */
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: ItemObject::class, cascade: ['remove', 'persist'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
-    private $objects;
+    private Collection $objects;
 
     /**
      * A list of additional Resources that can help to answer the question.
      *
      *
-     * @var ArrayCollection
+     * @var Collection<int, ItemResource>
      */
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: ItemResource::class, cascade: ['remove', 'persist'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
-    private $resources;
+    private Collection $resources;
 
     /**
      * @var string

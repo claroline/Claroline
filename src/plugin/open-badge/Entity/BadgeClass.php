@@ -51,6 +51,9 @@ class BadgeClass
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $criteria = null;
 
+    /**
+     * @var Collection<int, Rule>
+     */
     #[ORM\OneToMany(targetEntity: Rule::class, mappedBy: 'badge', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $rules;
 

@@ -47,6 +47,7 @@ class Slideshow extends AbstractResource
 
     /**
      * The list of slides in the slideshow.
+     * @var Collection<int, Slide>
      */
     #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'slideshow', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]

@@ -11,6 +11,7 @@
 
 namespace Claroline\AgendaBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Claroline\CoreBundle\Entity\Planning\AbstractPlanned;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -27,7 +28,7 @@ class Event extends AbstractPlanned
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Workspace::class, cascade: ['persist'])]
-    private $workspace;
+    private ?Workspace $workspace = null;
 
     /**
      * Template used to send invitations to Users.
@@ -37,11 +38,14 @@ class Event extends AbstractPlanned
      */
     #[ORM\JoinColumn(name: 'invitation_template_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: Template::class)]
-    private $invitationTemplate;
+    private ?Template $invitationTemplate = null;
 
+    /**
+     * @var Collection<int, EventInvitation>
+     */
     #[ORM\JoinColumn(nullable: true)]
     #[ORM\OneToMany(targetEntity: EventInvitation::class, mappedBy: 'event')]
-    private $eventInvitations;
+    private Collection $eventInvitations;
 
     public function __construct()
     {

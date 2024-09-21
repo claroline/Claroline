@@ -23,7 +23,7 @@ class PublicFileUse
 
     #[ORM\JoinColumn(name: 'public_file_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: PublicFile::class)]
-    protected $publicFile;
+    protected ?PublicFile $publicFile = null;
 
     #[ORM\Column(name: 'object_uuid')]
     protected $objectUuid;

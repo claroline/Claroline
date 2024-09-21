@@ -32,7 +32,7 @@ class ScoTracking
      */
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL', nullable: true)]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected $user;
+    protected ?User $user = null;
 
     /**
      *
@@ -40,7 +40,7 @@ class ScoTracking
      */
     #[ORM\JoinColumn(name: 'sco_id', onDelete: 'CASCADE', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Sco::class)]
-    protected $sco;
+    protected ?Sco $sco = null;
 
     /**
      * @var int
@@ -69,8 +69,8 @@ class ScoTracking
     /**
      * For Scorm 2004 only.
      */
-    #[ORM\Column(name: 'score_scaled', type: 'decimal', precision: 10, scale: 7, nullable: true)]
-    protected $scoreScaled;
+    #[ORM\Column(name: 'score_scaled', type: Types::DECIMAL, precision: 10, scale: 7, nullable: true)]
+    protected ?string $scoreScaled = null;
 
     /**
      * @var string

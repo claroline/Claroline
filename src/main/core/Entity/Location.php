@@ -41,6 +41,9 @@ class Location implements IdentifiableInterface
     private ?string $phone = null;
 
     
+    /**
+     * @var Collection<int, Organization>
+     */
     #[ORM\JoinTable(name: 'claro__location_organization')]
     #[ORM\ManyToMany(targetEntity: Organization::class)]
     private Collection $organizations;

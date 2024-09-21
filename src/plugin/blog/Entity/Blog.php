@@ -2,6 +2,7 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,23 +15,23 @@ use Doctrine\ORM\Mapping as ORM;
 class Blog extends AbstractResource
 {
     /**
-     * @var Post[]
+     * @var Collection<int, Post>
      */
     #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'blog', cascade: ['all'])]
     #[ORM\OrderBy(['creationDate' => 'ASC'])]
-    protected $posts;
+    protected Collection $posts;
 
     /**
-     * @var Member[]
+     * @var Collection<int, Member>
      */
     #[ORM\OneToMany(targetEntity: Member::class, mappedBy: 'blog', cascade: ['all'])]
-    protected $members;
+    protected Collection $members;
 
     /**
      * @var BlogOptions
      */
     #[ORM\OneToOne(targetEntity: BlogOptions::class, mappedBy: 'blog', cascade: ['all'])]
-    protected $options;
+    protected ?BlogOptions $options = null;
 
     /**
      * @var string

@@ -15,7 +15,6 @@ const PlatformLogin = () => {
       <LoginMain
         forceInternalAccount={routeParams.forceInternalAccount}
         onLogin={() => {
-          console.log('coucou')
           history.push('/desktop')
         }}
       />

@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -34,11 +35,11 @@ class GridRow implements AnswerPartInterface
     /**
      * The list of items in the row.
      *
-     * @var ArrayCollection
+     * @var Collection<int, GridRowItem>
      */
     #[ORM\OneToMany(targetEntity: GridRowItem::class, mappedBy: 'row', cascade: ['all'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
-    private $rowItems;
+    private Collection $rowItems;
 
     /**
      * The parent question.
@@ -48,7 +49,7 @@ class GridRow implements AnswerPartInterface
      */
     #[ORM\JoinColumn(name: 'pair_question_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: PairQuestion::class, inversedBy: 'rows')]
-    private $question;
+    private ?PairQuestion $question = null;
 
     /**
      * GridRow constructor.

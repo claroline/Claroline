@@ -17,7 +17,7 @@ abstract class AbstractFavourite
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private $user;
+    private ?User $user = null;
 
     public function setUser(User $user)
     {

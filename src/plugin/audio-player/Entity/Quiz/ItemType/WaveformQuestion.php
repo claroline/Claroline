@@ -2,6 +2,7 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Quiz\ItemType;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\AudioPlayerBundle\Entity\Quiz\Misc\Section;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,8 +31,11 @@ class WaveformQuestion extends AbstractItem
     #[ORM\Column(name: 'answers_limit', type: Types::INTEGER)]
     private $answersLimit = 0;
 
+    /**
+     * @var Collection<int, Section>
+     */
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'waveform', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    protected $sections;
+    protected Collection $sections;
 
     /**
      * WaveformQuestion constructor.

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -38,7 +39,7 @@ class FieldFacetChoice
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: FieldFacet::class, inversedBy: 'fieldFacetChoices')]
-    private $fieldFacet;
+    private ?FieldFacet $fieldFacet = null;
 
     /**
      * @var int
@@ -46,20 +47,15 @@ class FieldFacetChoice
     #[ORM\Column(type: Types::INTEGER)]
     protected $position;
 
-    /**
-     *
-     *
-     * @var FieldFacetChoice
-     */
     #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: FieldFacetChoice::class, inversedBy: 'children')]
-    protected $parent;
+    protected ?FieldFacetChoice $parent = null;
 
     /**
-     * @var ArrayCollection
+     * @var Collection<int, FieldFacetChoice>
      */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: FieldFacetChoice::class, cascade: ['persist', 'remove'])]
-    protected $children;
+    protected Collection $children;
 
     /**
      * Constructor.

@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,9 +28,12 @@ class ChoiceQuestion extends AbstractItem
     #[ORM\Column(type: Types::BOOLEAN)]
     private $multiple = false;
 
+    /**
+     * @var Collection<int, Choice>
+     */
     #[ORM\OneToMany(targetEntity: Choice::class, mappedBy: 'interactionQCM', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
-    private $choices;
+    private Collection $choices;
 
     /**
      * @var string

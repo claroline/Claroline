@@ -25,7 +25,7 @@ class Hint implements PenaltyItemInterface
      * @var Item
      */
     #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: 'hints')]
-    private $question;
+    private ?Item $question = null;
 
     public function __construct()
     {

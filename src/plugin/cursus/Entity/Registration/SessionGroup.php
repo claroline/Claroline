@@ -24,7 +24,7 @@ class SessionGroup extends AbstractGroupRegistration
      */
     #[ORM\JoinColumn(name: 'session_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Session::class)]
-    private $session;
+    private ?Session $session = null;
 
     public function getSession(): Session
     {

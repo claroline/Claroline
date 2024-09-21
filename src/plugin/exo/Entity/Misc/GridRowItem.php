@@ -25,7 +25,7 @@ class GridRowItem
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: GridRow::class, inversedBy: 'rowItems')]
-    private $row;
+    private ?GridRow $row = null;
 
     /**
      *
@@ -36,7 +36,7 @@ class GridRowItem
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: GridItem::class, cascade: ['persist'])]
-    private $item;
+    private ?GridItem $item = null;
 
     /**
      * Get row.

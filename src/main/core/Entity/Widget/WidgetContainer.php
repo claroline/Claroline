@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
+use Doctrine\Common\Collections\Collection;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,16 +22,16 @@ class WidgetContainer
      * The list of content instances.
      *
      *
-     * @var ArrayCollection|WidgetInstance[]
+     * @var Collection<int, WidgetInstance>
      */
     #[ORM\OneToMany(targetEntity: WidgetInstance::class, mappedBy: 'container', cascade: ['persist', 'remove', 'refresh'])]
-    private $instances;
+    private Collection $instances;
 
     /**
-     * @var WidgetContainerConfig[]
+     * @var Collection<int, WidgetContainerConfig>
      */
     #[ORM\OneToMany(targetEntity: WidgetContainerConfig::class, mappedBy: 'widgetContainer', cascade: ['persist', 'remove'])]
-    protected $widgetContainerConfigs;
+    protected Collection $widgetContainerConfigs;
 
     /**
      * WidgetContainer constructor.

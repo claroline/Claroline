@@ -11,6 +11,7 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Claroline\ClacoFormBundle\Repository\FieldRepository;
 use BadMethodCallException;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -31,7 +32,7 @@ class Field
      */
     #[ORM\JoinColumn(name: 'claco_form_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ClacoForm::class, inversedBy: 'fields')]
-    protected $clacoForm;
+    protected ?ClacoForm $clacoForm = null;
 
     /**
      *
@@ -39,13 +40,13 @@ class Field
      */
     #[ORM\JoinColumn(name: 'field_facet_id', onDelete: 'CASCADE')]
     #[ORM\OneToOne(targetEntity: FieldFacet::class, cascade: ['persist', 'remove'])]
-    protected $fieldFacet;
+    protected ?FieldFacet $fieldFacet = null;
 
     /**
-     * @var FieldChoiceCategory[]
+     * @var Collection<int, FieldChoiceCategory>
      */
     #[ORM\OneToMany(targetEntity: FieldChoiceCategory::class, mappedBy: 'field')]
-    protected $fieldChoiceCategories;
+    protected Collection $fieldChoiceCategories;
 
     public function __construct()
     {

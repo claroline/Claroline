@@ -76,6 +76,9 @@ class FieldFacet
     #[ORM\ManyToOne(targetEntity: PanelFacet::class, inversedBy: 'fieldsFacet')]
     private ?PanelFacet $panelFacet = null;
 
+    /**
+     * @var Collection<int, FieldFacetChoice>
+     */
     #[ORM\OneToMany(targetEntity: FieldFacetChoice::class, mappedBy: 'fieldFacet')]
     private ?Collection $fieldFacetChoices;
 

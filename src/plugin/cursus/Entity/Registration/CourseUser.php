@@ -26,6 +26,9 @@ class CourseUser extends AbstractUserRegistration
     #[ORM\ManyToOne(targetEntity: Course::class)]
     private ?Course $course = null;
 
+    /**
+     * @var Collection<int, FieldFacetValue>
+     */
     #[ORM\JoinTable(name: 'claro_cursusbundle_course_user_values')]
     #[ORM\JoinColumn(name: 'registration_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'value_id', referencedColumnName: 'id', unique: true, onDelete: 'CASCADE')]

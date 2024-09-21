@@ -37,7 +37,7 @@ class Section implements AnswerPartInterface
 
     #[ORM\JoinColumn(name: 'waveform_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: WaveformQuestion::class, inversedBy: 'sections', cascade: ['persist'])]
-    private $waveform;
+    private ?WaveformQuestion $waveform = null;
 
     public function __construct()
     {

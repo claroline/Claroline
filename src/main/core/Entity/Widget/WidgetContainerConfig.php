@@ -103,7 +103,7 @@ class WidgetContainerConfig
      */
     #[ORM\JoinColumn(name: 'widget_container_id', onDelete: 'CASCADE', nullable: true)]
     #[ORM\ManyToOne(targetEntity: WidgetContainer::class, inversedBy: 'widgetContainerConfigs', cascade: ['persist'])]
-    protected $widgetContainer;
+    protected ?WidgetContainer $widgetContainer = null;
 
     /**
      * WidgetContainer constructor.

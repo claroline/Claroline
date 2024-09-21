@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,10 +16,10 @@ use UJM\ExoBundle\Entity\Misc\Keyword;
 class OpenQuestion extends AbstractItem
 {
     /**
-     * @var ArrayCollection
+     * @var Collection<int, Keyword>
      */
     #[ORM\OneToMany(targetEntity: Keyword::class, mappedBy: 'interactionopen', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private $keywords;
+    private Collection $keywords;
 
     /**
      * @var string

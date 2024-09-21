@@ -35,7 +35,7 @@ class Criterion
      */
     #[ORM\JoinColumn(name: 'dropzone_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Dropzone::class, inversedBy: 'criteria')]
-    protected $dropzone;
+    protected ?Dropzone $dropzone = null;
 
     public function __construct()
     {

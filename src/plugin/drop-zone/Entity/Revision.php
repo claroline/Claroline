@@ -11,6 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -28,20 +29,26 @@ class Revision
 
     #[ORM\JoinColumn(name: 'drop_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Drop::class, inversedBy: 'revisions')]
-    protected $drop;
+    protected ?Drop $drop = null;
 
     #[ORM\JoinColumn(name: 'creator_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected $creator;
+    protected ?User $creator = null;
 
     #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE, nullable: false)]
     protected $creationDate;
 
+    /**
+     * @var Collection<int, Document>
+     */
     #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'revision')]
-    protected $documents;
+    protected Collection $documents;
 
+    /**
+     * @var Collection<int, RevisionComment>
+     */
     #[ORM\OneToMany(targetEntity: RevisionComment::class, mappedBy: 'revision')]
-    protected $comments;
+    protected Collection $comments;
 
     public function __construct()
     {

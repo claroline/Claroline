@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -34,11 +35,11 @@ class OrderingQuestion extends AbstractItem
 
     /**
      *
-     * @var OrderingItem[]|ArrayCollection
+     * @var Collection<int, OrderingItem>
      */
     #[ORM\OneToMany(targetEntity: OrderingItem::class, mappedBy: 'question', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['position' => 'ASC'])]
-    private $items;
+    private Collection $items;
 
     /**
      * @var string

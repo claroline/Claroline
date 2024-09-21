@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\Common\Collections\Collection;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use DateTime;
@@ -73,14 +75,14 @@ class ResourceNode implements CrudEntityInterface
     private $license;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
     private $creationDate;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'modification_date', type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'update')]
@@ -91,7 +93,7 @@ class ResourceNode implements CrudEntityInterface
      */
     #[ORM\JoinColumn(name: 'resource_type_id', onDelete: 'CASCADE', nullable: false)]
     #[ORM\ManyToOne(targetEntity: ResourceType::class)]
-    private $resourceType;
+    private ?ResourceType $resourceType = null;
 
     /**
      * Display resource icon/evaluation when the resource is rendered.
@@ -108,13 +110,10 @@ class ResourceNode implements CrudEntityInterface
     #[Gedmo\TreePathSource]
     private $name;
 
-    /**
-     * @var ResourceNode
-     */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class, inversedBy: 'children')]
     #[Gedmo\TreeParent]
-    protected $parent;
+    protected ?ResourceNode $parent = null;
 
     /**
      * @todo this property shouldn't be nullable (is it due to materialized path strategy ?)
@@ -124,11 +123,11 @@ class ResourceNode implements CrudEntityInterface
     protected $lvl;
 
     /**
-     * @var ArrayCollection|ResourceNode[]
+     * @var Collection<int, \Claroline\CoreBundle\Entity\Resource\ResourceNode>
      */
     #[ORM\OneToMany(targetEntity: ResourceNode::class, mappedBy: 'parent')]
     #[ORM\OrderBy(['index' => 'ASC'])]
-    protected $children;
+    protected Collection $children;
 
     /**
      * @var string
@@ -149,10 +148,10 @@ class ResourceNode implements CrudEntityInterface
     protected $materializedPath;
 
     /**
-     * @var ArrayCollection|ResourceRights[]
+     * @var Collection<int, ResourceRights>
      */
     #[ORM\OneToMany(targetEntity: ResourceRights::class, mappedBy: 'resourceNode', orphanRemoval: true)]
-    protected $rights;
+    protected Collection $rights;
 
     /**
      * @var int

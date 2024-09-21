@@ -52,7 +52,7 @@ class Area implements AnswerPartInterface
      */
     #[ORM\JoinColumn(name: 'interaction_graphic_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: GraphicQuestion::class, inversedBy: 'areas')]
-    private $interactionGraphic;
+    private ?GraphicQuestion $interactionGraphic = null;
 
     public function __construct()
     {

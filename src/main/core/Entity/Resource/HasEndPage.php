@@ -52,7 +52,7 @@ trait HasEndPage
      */
     #[ORM\JoinColumn(name: 'end_back_target_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
-    private $endBackTarget;
+    private ?ResourceNode $endBackTarget = null;
 
     /**
      * Show buttons on the end page to download WS certificates (participation and success).

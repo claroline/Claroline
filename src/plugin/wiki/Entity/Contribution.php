@@ -34,11 +34,11 @@ class Contribution
      */
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected $contributor;
+    protected ?User $contributor = null;
 
     #[ORM\JoinColumn(name: 'section_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Section::class)]
-    protected $section;
+    protected ?Section $section = null;
 
     public function __construct()
     {

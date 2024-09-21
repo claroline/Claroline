@@ -31,7 +31,7 @@ class FieldValue
      */
     #[ORM\JoinColumn(name: 'entry_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Entry::class, inversedBy: 'fieldValues', cascade: ['persist'])]
-    protected $entry;
+    protected ?Entry $entry = null;
 
     /**
      *
@@ -39,7 +39,7 @@ class FieldValue
      */
     #[ORM\JoinColumn(name: 'field_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Field::class)]
-    protected $field;
+    protected ?Field $field = null;
 
     /**
      *
@@ -47,7 +47,7 @@ class FieldValue
      */
     #[ORM\JoinColumn(name: 'field_facet_value_id', onDelete: 'CASCADE')]
     #[ORM\OneToOne(targetEntity: FieldFacetValue::class, cascade: ['persist'])]
-    protected $fieldFacetValue;
+    protected ?FieldFacetValue $fieldFacetValue = null;
 
     public function __construct()
     {

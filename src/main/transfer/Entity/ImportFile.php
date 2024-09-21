@@ -25,7 +25,7 @@ class ImportFile extends AbstractTransferFile
      */
     #[ORM\JoinColumn(name: 'file_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: PublicFile::class)]
-    private $file;
+    private ?PublicFile $file = null;
 
     /**
      *

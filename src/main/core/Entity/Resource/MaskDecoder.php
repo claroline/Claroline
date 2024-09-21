@@ -42,7 +42,7 @@ class MaskDecoder
 
     #[ORM\JoinColumn(name: 'resource_type_id', onDelete: 'CASCADE', nullable: false)]
     #[ORM\ManyToOne(targetEntity: ResourceType::class, inversedBy: 'maskDecoders', cascade: ['persist'])]
-    protected $resourceType;
+    protected ?ResourceType $resourceType = null;
 
     /**
      * @param $position

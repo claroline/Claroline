@@ -11,6 +11,7 @@
 
 namespace Claroline\ScormBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -30,14 +31,17 @@ class Sco
      */
     #[ORM\JoinColumn(name: 'scorm_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Scorm::class, cascade: ['persist'], inversedBy: 'scos')]
-    protected $scorm;
+    protected ?Scorm $scorm = null;
 
     #[ORM\JoinColumn(name: 'sco_parent_id', nullable: true, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Sco::class, inversedBy: 'scoChildren')]
-    protected $scoParent;
+    protected ?Sco $scoParent = null;
 
+    /**
+     * @var Collection<int, Sco>
+     */
     #[ORM\OneToMany(mappedBy: 'scoParent', targetEntity: Sco::class)]
-    protected $scoChildren;
+    protected Collection $scoChildren;
 
     #[ORM\Column(name: 'entry_url', nullable: true)]
     protected $entryUrl;
@@ -75,14 +79,14 @@ class Sco
     /**
      * Score to pass for Scorm 2004.
      */
-    #[ORM\Column(name: 'score_decimal', type: 'decimal', precision: 10, scale: 7, nullable: true)]
-    protected $scoreToPassDecimal;
+    #[ORM\Column(name: 'score_decimal', type: Types::DECIMAL, precision: 10, scale: 7, nullable: true)]
+    protected ?string $scoreToPassDecimal = null;
 
     /**
      * For Scorm 2004 only.
      */
-    #[ORM\Column(name: 'completion_threshold', type: 'decimal', precision: 10, scale: 7, nullable: true)]
-    protected $completionThreshold;
+    #[ORM\Column(name: 'completion_threshold', type: Types::DECIMAL, precision: 10, scale: 7, nullable: true)]
+    protected ?string $completionThreshold = null;
 
     /**
      * For Scorm 1.2 only.
@@ -124,6 +128,9 @@ class Sco
         return $this->scoChildren;
     }
 
+    /**
+     * @param Collection<int, \Claroline\ScormBundle\Entity\Sco> $scoChildren
+     */
     public function setScoChildren($scoChildren)
     {
         $this->scoChildren = $scoChildren;

@@ -39,7 +39,7 @@ class CellChoice implements AnswerPartInterface
      */
     #[ORM\JoinColumn(name: 'cell_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Cell::class, inversedBy: 'choices')]
-    private $cell;
+    private ?Cell $cell = null;
 
     /**
      * @var bool

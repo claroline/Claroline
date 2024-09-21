@@ -36,7 +36,7 @@ class Grade
      */
     #[ORM\JoinColumn(name: 'correction_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Correction::class, inversedBy: 'grades')]
-    protected $correction;
+    protected ?Correction $correction = null;
 
     /**
      *
@@ -44,7 +44,7 @@ class Grade
      */
     #[ORM\JoinColumn(name: 'criterion_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Criterion::class)]
-    protected $criterion;
+    protected ?Criterion $criterion = null;
 
     public function __construct()
     {

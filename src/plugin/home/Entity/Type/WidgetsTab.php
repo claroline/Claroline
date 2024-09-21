@@ -14,6 +14,9 @@ class WidgetsTab extends AbstractTab
 {
     use Id;
 
+    /**
+     * @var Collection<int, WidgetContainer>
+     */
     #[ORM\JoinTable(name: 'claro_home_tab_widgets_containers')]
     #[ORM\JoinColumn(name: 'tab_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'container_id', referencedColumnName: 'id', onDelete: 'CASCADE', unique: true)]

@@ -24,6 +24,7 @@ class AnnouncementAggregate extends AbstractResource
 {
     /**
      * The list of announces in the aggregate.
+     * @var Collection<int, Announcement>
      */
     #[ORM\OneToMany(targetEntity: Announcement::class, mappedBy: 'aggregate', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $announcements;

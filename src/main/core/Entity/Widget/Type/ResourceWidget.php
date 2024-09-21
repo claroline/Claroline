@@ -23,7 +23,7 @@ class ResourceWidget extends AbstractWidget
      */
     #[ORM\JoinColumn(name: 'node_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
-    private $resourceNode = null;
+    private ?ResourceNode $resourceNode = null;
 
     /**
      * Choose to display the header of the resource.

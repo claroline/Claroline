@@ -60,7 +60,7 @@ class Dropzone extends AbstractResource
     #[ORM\Column(name: 'peer_review', type: Types::BOOLEAN, nullable: false)]
     private bool $peerReview = false;
 
-    #[ORM\Column(name: 'expected_correction_total', type: 'smallint', nullable: false)]
+    #[ORM\Column(name: 'expected_correction_total', type: Types::SMALLINT, nullable: false)]
     private int $expectedCorrectionTotal = 3;
 
     #[ORM\Column(name: 'display_notation_to_learners', type: Types::BOOLEAN, nullable: false)]
@@ -115,7 +115,7 @@ class Dropzone extends AbstractResource
     #[ORM\Column(name: 'criteria_enabled', type: Types::BOOLEAN, nullable: false)]
     private bool $criteriaEnabled = false;
 
-    #[ORM\Column(name: 'criteria_total', type: 'smallint', nullable: false)]
+    #[ORM\Column(name: 'criteria_total', type: Types::SMALLINT, nullable: false)]
     private int $criteriaTotal = 4;
 
     /**
@@ -133,6 +133,9 @@ class Dropzone extends AbstractResource
     #[ORM\Column(name: 'drop_closed', type: Types::BOOLEAN, nullable: false)]
     private bool $dropClosed = false;
 
+    /**
+     * @var Collection<int, Criterion>
+     */
     #[ORM\OneToMany(targetEntity: Criterion::class, mappedBy: 'dropzone', cascade: ['persist', 'remove'])]
     private Collection $criteria;
 

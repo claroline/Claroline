@@ -32,14 +32,20 @@ class ClacoForm extends AbstractResource
     private ?string $template = null;
 
     /**
-     * @var Field[]
+     * @var Collection<int, Field>
      */
     #[ORM\OneToMany(targetEntity: Field::class, mappedBy: 'clacoForm')]
-    private $fields;
+    private Collection $fields;
 
+    /**
+     * @var Collection<int, Category>
+     */
     #[ORM\OneToMany(targetEntity: Category::class, mappedBy: 'clacoForm')]
     private Collection $categories;
 
+    /**
+     * @var Collection<int, Keyword>
+     */
     #[ORM\OneToMany(targetEntity: Keyword::class, mappedBy: 'clacoForm', orphanRemoval: true)]
     private Collection $keywords;
 

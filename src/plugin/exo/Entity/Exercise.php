@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use UJM\ExoBundle\Repository\ExerciseRepository;
 use Doctrine\DBAL\Types\Types;
 use DateTime;
@@ -51,7 +52,7 @@ class Exercise extends AbstractResource
      * Date of availability of the corrections.
      *
      *
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'date_correction', type: Types::STRING, nullable: true)]
     private $dateCorrection;
@@ -213,11 +214,11 @@ class Exercise extends AbstractResource
     /**
      *
      *
-     * @var ArrayCollection|Step[]
+     * @var Collection<int, Step>
      */
     #[ORM\OneToMany(targetEntity: Step::class, mappedBy: 'exercise', cascade: ['all'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
-    private $steps;
+    private Collection $steps;
 
     public function __construct()
     {

@@ -25,11 +25,11 @@ class User
 
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ClarolineUser::class, cascade: ['persist', 'remove'])]
-    protected $user;
+    protected ?ClarolineUser $user = null;
 
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Forum::class, cascade: ['persist'])]
-    protected $forum;
+    protected ?Forum $forum = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
     protected $access = false;

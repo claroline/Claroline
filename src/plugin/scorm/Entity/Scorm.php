@@ -11,6 +11,7 @@
 
 namespace Claroline\ScormBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\ScormBundle\Repository\ScormRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -33,8 +34,11 @@ class Scorm extends AbstractResource
     #[ORM\Column(type: Types::FLOAT, nullable: true)]
     private $ratio = 56.25;
 
+    /**
+     * @var Collection<int, Sco>
+     */
     #[ORM\OneToMany(targetEntity: Sco::class, mappedBy: 'scorm', orphanRemoval: true, cascade: ['persist'])]
-    protected $scos;
+    protected Collection $scos;
 
     public function __construct()
     {

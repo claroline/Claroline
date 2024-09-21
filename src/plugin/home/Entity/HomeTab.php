@@ -75,11 +75,17 @@ class HomeTab
     private ?HomeTab $parent = null;
 
     
+    /**
+     * @var Collection<int, \Claroline\HomeBundle\Entity\HomeTab>
+     */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: HomeTab::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $children;
 
     
+    /**
+     * @var Collection<int, Role>
+     */
     #[ORM\JoinTable(name: 'claro_home_tab_roles')]
     #[ORM\ManyToMany(targetEntity: Role::class)]
     private Collection $roles;

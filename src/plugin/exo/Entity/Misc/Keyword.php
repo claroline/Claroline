@@ -40,7 +40,7 @@ class Keyword implements AnswerPartInterface
      */
     #[ORM\JoinColumn(name: 'interaction_open_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: OpenQuestion::class, inversedBy: 'keywords')]
-    private $interactionopen;
+    private ?OpenQuestion $interactionopen = null;
 
     /**
      * @deprecated this relation needs to be removed as it is not needed
@@ -49,7 +49,7 @@ class Keyword implements AnswerPartInterface
      */
     #[ORM\JoinColumn(name: 'hole_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Hole::class, inversedBy: 'keywords')]
-    private $hole;
+    private ?Hole $hole = null;
 
     /**
      * Get text.

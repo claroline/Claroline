@@ -17,7 +17,7 @@ class Task extends AbstractPlanned
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Workspace::class, cascade: ['persist'])]
-    private $workspace;
+    private ?Workspace $workspace = null;
 
     /**
      * @var bool

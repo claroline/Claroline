@@ -24,7 +24,7 @@ class RevisionComment extends AbstractComment
      */
     #[ORM\JoinColumn(name: 'revision_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Revision::class, inversedBy: 'comments')]
-    private $revision;
+    private ?Revision $revision = null;
 
     public function getRevision(): ?Revision
     {

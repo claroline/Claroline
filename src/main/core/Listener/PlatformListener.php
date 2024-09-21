@@ -15,7 +15,6 @@ use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\VersionManager;
@@ -23,7 +22,6 @@ use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PlatformListener
@@ -50,7 +48,6 @@ class PlatformListener
     ];
 
     public function __construct(
-        private readonly AuthorizationCheckerInterface $authorization,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly TranslatorInterface $translator,
         private readonly PlatformConfigurationHandler $config,
@@ -89,14 +86,6 @@ class PlatformListener
         // checks platform restrictions
         if ($this->config->getParameter('restrictions.disabled')) {
             throw new HttpException(503, 'Platform is not available (Platform is disabled).');
-        }
-
-        // checks platform maintenance
-        if (MaintenanceHandler::isMaintenanceEnabled()) {
-            // only disable for non admin
-            if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
-                throw new HttpException(503, 'Platform is not available (Platform is under maintenance).');
-            }
         }
     }
 

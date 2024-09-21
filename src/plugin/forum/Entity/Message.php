@@ -11,6 +11,7 @@
 
 namespace Claroline\ForumBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\AbstractMessage;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -32,10 +33,10 @@ class Message extends AbstractMessage
     protected ?Message $parent = null;
 
     /**
-     * @var Message[]
+     * @var Collection<int, \Claroline\ForumBundle\Entity\Message>
      */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Message::class)]
-    protected $children;
+    protected Collection $children;
 
     #[ORM\Column(type: Types::STRING)]
     protected string $moderation = Forum::VALIDATE_NONE;

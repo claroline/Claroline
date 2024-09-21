@@ -39,7 +39,7 @@ class TemplateType
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Plugin::class)]
-    private $plugin;
+    private ?Plugin $plugin = null;
 
     /**
      * @var array

@@ -15,7 +15,7 @@ class BooleanChoice extends AbstractChoice implements AnswerPartInterface
 {
     #[ORM\JoinColumn(name: 'boolean_question_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: BooleanQuestion::class, inversedBy: 'choices')]
-    private $question;
+    private ?BooleanQuestion $question = null;
 
     /**
      * @return BooleanQuestion

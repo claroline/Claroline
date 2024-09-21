@@ -18,7 +18,7 @@ class ResourceFavourite extends AbstractFavourite
      */
     #[ORM\JoinColumn(name: 'resource_node_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
-    private $resource;
+    private ?ResourceNode $resource = null;
 
     public function setResource(ResourceNode $resourceNode)
     {

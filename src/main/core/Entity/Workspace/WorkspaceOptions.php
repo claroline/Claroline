@@ -29,7 +29,7 @@ class WorkspaceOptions
      */
     #[ORM\JoinColumn(name: 'workspace_id', onDelete: 'CASCADE')]
     #[ORM\OneToOne(mappedBy: 'options', targetEntity: Workspace::class, cascade: ['persist'])]
-    private $workspace;
+    private ?Workspace $workspace = null;
 
     /**
      * The options of the workspace.

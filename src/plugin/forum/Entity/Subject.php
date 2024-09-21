@@ -11,6 +11,8 @@
 
 namespace Claroline\ForumBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -32,7 +34,7 @@ class Subject
     protected $title;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'created', type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
@@ -48,15 +50,15 @@ class Subject
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'subjects')]
-    protected $forum;
+    protected ?Forum $forum = null;
 
     /**
      *
-     * @var Message[]|ArrayCollection
+     * @var Collection<int, Message>
      */
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'subject')]
     #[ORM\OrderBy(['id' => 'ASC'])]
-    protected $messages;
+    protected Collection $messages;
 
     /**
      *
@@ -64,7 +66,7 @@ class Subject
      */
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
-    protected $creator;
+    protected ?User $creator = null;
 
     /**
      * @var bool
@@ -98,7 +100,7 @@ class Subject
      */
     #[ORM\JoinColumn(name: 'poster_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: PublicFile::class)]
-    protected $poster;
+    protected ?PublicFile $poster = null;
 
     /**
      * @var string

@@ -11,6 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use DateTimeInterface;
 use Claroline\DropZoneBundle\Repository\DocumentRepository;
 use Doctrine\DBAL\Types\Types;
 use DateTime;
@@ -38,7 +39,7 @@ class Document
      */
     #[ORM\JoinColumn(name: 'drop_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Drop::class, inversedBy: 'documents')]
-    protected $drop;
+    protected ?Drop $drop = null;
 
     /**
      * @var string
@@ -70,7 +71,7 @@ class Document
      */
     #[ORM\JoinColumn(name: 'resource_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
-    protected $resource;
+    protected ?ResourceNode $resource = null;
 
     /**
      *
@@ -78,17 +79,17 @@ class Document
      */
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected $user;
+    protected ?User $user = null;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'drop_date', type: Types::DATETIME_MUTABLE, nullable: false)]
     protected $dropDate;
 
     #[ORM\JoinColumn(name: 'revision_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: Revision::class, inversedBy: 'documents')]
-    protected $revision;
+    protected ?Revision $revision = null;
 
     #[ORM\Column(name: 'is_manager', type: Types::BOOLEAN)]
     protected $isManager = false;

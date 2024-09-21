@@ -22,15 +22,15 @@ class Association implements AnswerPartInterface
 
     #[ORM\JoinColumn(name: 'match_question_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: MatchQuestion::class, inversedBy: 'associations')]
-    private $question;
+    private ?MatchQuestion $question = null;
 
     #[ORM\JoinColumn(name: 'label_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Label::class)]
-    private $label;
+    private ?Label $label = null;
 
     #[ORM\JoinColumn(name: 'proposal_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Proposal::class)]
-    private $proposal;
+    private ?Proposal $proposal = null;
 
     /**
      * Get MatchQuestion.

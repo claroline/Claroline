@@ -23,7 +23,7 @@ class AudioParams
 
     #[ORM\JoinColumn(name: 'node_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
-    protected $resourceNode;
+    protected ?ResourceNode $resourceNode = null;
 
     #[ORM\Column(name: 'sections_type')]
     private $sectionsType = self::MANAGER_TYPE;

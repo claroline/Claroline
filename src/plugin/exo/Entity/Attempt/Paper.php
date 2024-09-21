@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Attempt;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Datetime;
 use UJM\ExoBundle\Repository\PaperRepository;
@@ -79,22 +80,22 @@ class Paper
      */
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private $user;
+    private ?User $user = null;
 
     /**
      * @var Exercise
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Exercise::class)]
-    private $exercise;
+    private ?Exercise $exercise = null;
 
     /**
      * The submitted answers for this attempt.
      *
-     * @var Answer[]|ArrayCollection
+     * @var Collection<int, Answer>
      */
     #[ORM\OneToMany(mappedBy: 'paper', targetEntity: Answer::class, cascade: ['all'], orphanRemoval: true)]
-    private $answers;
+    private Collection $answers;
 
     /**
      * Paper constructor.

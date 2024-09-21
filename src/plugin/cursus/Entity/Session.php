@@ -49,7 +49,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
     /**
      *
      *
-     * @var Collection|ResourceNode[]
+     * @var Collection<int, ResourceNode>
      */
     #[ORM\JoinTable(name: 'claro_cursusbundle_course_session_resources')]
     #[ORM\JoinColumn(name: 'resource_id', referencedColumnName: 'id')]
@@ -63,7 +63,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
     private ?Location $location = null;
 
     /**
-     * @var Collection|Event[]
+     * @var Collection<int, Event>
      */
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'session')]
     private Collection $events;

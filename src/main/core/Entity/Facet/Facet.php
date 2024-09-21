@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -44,11 +45,11 @@ class Facet
 
     /**
      *
-     * @var ArrayCollection|PanelFacet[]
+     * @var Collection<int, PanelFacet>
      */
     #[ORM\OneToMany(targetEntity: PanelFacet::class, mappedBy: 'facet', cascade: ['all'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
-    private $panelFacets;
+    private Collection $panelFacets;
 
     public function __construct()
     {

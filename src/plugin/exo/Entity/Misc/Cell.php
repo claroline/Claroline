@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -71,14 +72,14 @@ class Cell
      * The list of texts attached to the cell.
      *
      *
-     * @var ArrayCollection
+     * @var Collection<int, CellChoice>
      */
     #[ORM\OneToMany(targetEntity: CellChoice::class, mappedBy: 'cell', cascade: ['all'], orphanRemoval: true)]
-    private $choices;
+    private Collection $choices;
 
     #[ORM\JoinColumn(name: 'question_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: GridQuestion::class, inversedBy: 'cells')]
-    private $question;
+    private ?GridQuestion $question = null;
 
     /**
      * @var bool

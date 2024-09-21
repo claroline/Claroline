@@ -46,7 +46,7 @@ class TemplateContent
      */
     #[ORM\JoinColumn(name: 'template_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Template::class, inversedBy: 'contents')]
-    private $template;
+    private ?Template $template = null;
 
     public function getTitle(): ?string
     {

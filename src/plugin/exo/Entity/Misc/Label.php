@@ -23,7 +23,7 @@ class Label
 
     #[ORM\JoinColumn(name: 'interaction_matching_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: MatchQuestion::class, inversedBy: 'labels')]
-    private $interactionMatching;
+    private ?MatchQuestion $interactionMatching = null;
 
     public function __construct()
     {

@@ -47,7 +47,7 @@ class TaggedObject
      */
     #[ORM\JoinColumn(name: 'tag_id', onDelete: 'CASCADE', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Tag::class, inversedBy: 'taggedObjects')]
-    private $tag;
+    private ?Tag $tag = null;
 
     /**
      * Get tag.

@@ -19,10 +19,10 @@ class FlashcardDeck extends AbstractResource
     use HasEndPage;
 
     /**
-     * @var ArrayCollection|Flashcard[]
+     * @var Collection<int, Flashcard>
      */
     #[ORM\OneToMany(targetEntity: Flashcard::class, mappedBy: 'deck', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private $cards;
+    private Collection $cards;
 
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $draw = 0;

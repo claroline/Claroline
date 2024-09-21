@@ -11,6 +11,7 @@
 
 namespace Claroline\ForumBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use DateTimeInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -37,11 +38,11 @@ class Forum extends AbstractResource
 
     /**
      *
-     * @var ArrayCollection|Subject[]
+     * @var Collection<int, Subject>
      */
     #[ORM\OneToMany(targetEntity: Subject::class, mappedBy: 'forum')]
     #[ORM\OrderBy(['id' => 'ASC'])]
-    protected $subjects;
+    protected Collection $subjects;
 
     /**
      * @var string

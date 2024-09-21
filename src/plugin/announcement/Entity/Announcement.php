@@ -11,6 +11,7 @@
 
 namespace Claroline\AnnouncementBundle\Entity;
 
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use DateTime;
 use Claroline\AppBundle\Entity\Display\Poster;
@@ -55,13 +56,13 @@ class Announcement
     private $announcer;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE, nullable: false)]
     private $creationDate;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'publication_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     private $publicationDate;
@@ -73,13 +74,13 @@ class Announcement
     private $visible;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'visible_from', type: Types::DATETIME_MUTABLE, nullable: true)]
     private $visibleFrom;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'visible_until', type: Types::DATETIME_MUTABLE, nullable: true)]
     private $visibleUntil;
@@ -90,7 +91,7 @@ class Announcement
      */
     #[ORM\JoinColumn(name: 'creator_id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private $creator;
+    private ?User $creator = null;
 
     #[ORM\JoinColumn(name: 'aggregate_id', onDelete: 'CASCADE', nullable: false)]
     #[ORM\ManyToOne(targetEntity: AnnouncementAggregate::class, inversedBy: 'announcements')]
@@ -98,8 +99,11 @@ class Announcement
 
     #[ORM\JoinColumn(name: 'task_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: ScheduledTask::class)]
-    private $task;
+    private ?ScheduledTask $task = null;
 
+    /**
+     * @var Collection<int, Role>
+     */
     #[ORM\JoinTable(name: 'claro_announcement_roles')]
     #[ORM\ManyToMany(targetEntity: Role::class)]
     private Collection $roles;

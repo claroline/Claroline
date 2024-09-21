@@ -16,7 +16,7 @@ abstract class AbstractItem
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\OneToOne(targetEntity: Item::class)]
-    protected $question;
+    protected ?Item $question = null;
 
     final public function setQuestion(Item $question)
     {

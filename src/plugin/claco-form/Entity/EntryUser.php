@@ -23,7 +23,7 @@ class EntryUser
      */
     #[ORM\JoinColumn(name: 'entry_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Entry::class, inversedBy: 'entryUsers')]
-    protected $entry;
+    protected ?Entry $entry = null;
 
     /**
      *
@@ -31,7 +31,7 @@ class EntryUser
      */
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected $user;
+    protected ?User $user = null;
 
     #[ORM\Column(name: 'shared', type: Types::BOOLEAN)]
     protected $shared = false;

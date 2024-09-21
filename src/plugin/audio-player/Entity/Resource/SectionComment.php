@@ -2,6 +2,7 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Resource;
 
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -28,7 +29,7 @@ class SectionComment
      */
     #[ORM\JoinColumn(name: 'section_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Section::class, inversedBy: 'comments')]
-    protected $section;
+    protected ?Section $section = null;
 
     /**
      *
@@ -36,16 +37,16 @@ class SectionComment
      */
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected $user;
+    protected ?User $user = null;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
     protected $creationDate;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     #[ORM\Column(name: 'edition_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $editionDate;
