@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Meta\Order;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
@@ -20,11 +21,11 @@ class Choice extends AbstractChoice implements AnswerPartInterface
      *
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private $expected = false;
 
     #[ORM\JoinColumn(name: 'interaction_qcm_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\ChoiceQuestion::class, inversedBy: 'choices')]
+    #[ORM\ManyToOne(targetEntity: ChoiceQuestion::class, inversedBy: 'choices')]
     private $interactionQCM;
 
     /**

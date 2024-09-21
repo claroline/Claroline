@@ -2,20 +2,22 @@
 
 namespace Claroline\AppBundle\Entity\Restriction;
 
+use Doctrine\DBAL\Types\Types;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 trait AccessibleFrom
 {
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
-    #[ORM\Column(name: 'accessible_from', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'accessible_from', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $accessibleFrom;
 
     /**
      * Returns the resource accessible from date.
      */
-    public function getAccessibleFrom(): ?\DateTimeInterface
+    public function getAccessibleFrom(): ?DateTimeInterface
     {
         return $this->accessibleFrom;
     }
@@ -23,7 +25,7 @@ trait AccessibleFrom
     /**
      * Sets the resource accessible from date.
      */
-    public function setAccessibleFrom(?\DateTimeInterface $accessibleFrom = null): void
+    public function setAccessibleFrom(?DateTimeInterface $accessibleFrom = null): void
     {
         $this->accessibleFrom = $accessibleFrom;
     }

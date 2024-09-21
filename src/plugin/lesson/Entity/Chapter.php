@@ -2,6 +2,8 @@
 
 namespace Icap\LessonBundle\Entity;
 
+use Icap\LessonBundle\Repository\ChapterRepository;
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -9,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Table(name: 'icap__lesson_chapter')]
-#[ORM\Entity(repositoryClass: \Icap\LessonBundle\Repository\ChapterRepository::class)]
+#[ORM\Entity(repositoryClass: ChapterRepository::class)]
 #[Gedmo\Tree(type: 'nested')]
 class Chapter
 {
@@ -17,50 +19,50 @@ class Chapter
     use Uuid;
     use Poster;
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: Types::STRING, nullable: false)]
     private ?string $title;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $text;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $internalNote;
 
     
     #[ORM\JoinColumn(name: 'lesson_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Icap\LessonBundle\Entity\Lesson::class)]
+    #[ORM\ManyToOne(targetEntity: Lesson::class)]
     private ?Lesson $lesson;
 
     #[ORM\Column(length: 128, unique: true, nullable: false)]
     #[Gedmo\Slug(fields: ['title'], unique: true, updatable: false)]
     private ?string $slug;
 
-    #[ORM\Column(name: 'lft', type: 'integer')]
+    #[ORM\Column(name: 'lft', type: Types::INTEGER)]
     #[Gedmo\TreeLeft]
     private ?int $left;
 
-    #[ORM\Column(name: 'lvl', type: 'integer')]
+    #[ORM\Column(name: 'lvl', type: Types::INTEGER)]
     #[Gedmo\TreeLevel]
     private ?int $level;
 
-    #[ORM\Column(name: 'rgt', type: 'integer')]
+    #[ORM\Column(name: 'rgt', type: Types::INTEGER)]
     #[Gedmo\TreeRight]
     private ?int $right;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     #[Gedmo\TreeRoot]
     private ?int $root;
 
     
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Icap\LessonBundle\Entity\Chapter::class)]
+    #[ORM\ManyToOne(targetEntity: Chapter::class)]
     #[Gedmo\TreeParent]
     private ?Chapter $parent = null;
 
     /**
      * Custom numbering of the chapters.
      */
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $customNumbering = '';
 
     public function __construct()

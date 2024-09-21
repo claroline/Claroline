@@ -11,12 +11,14 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\CoreBundle\Repository\Resource\ResourceActionRepository;
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_menu_action')]
-#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Resource\ResourceActionRepository::class)]
+#[ORM\Entity(repositoryClass: ResourceActionRepository::class)]
 class MenuAction
 {
     use Id;
@@ -30,7 +32,7 @@ class MenuAction
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private $decoder;
 
     /**
@@ -42,23 +44,23 @@ class MenuAction
     /**
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private $scope = [];
 
     /**
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private $api = [];
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'is_default', type: 'boolean')]
+    #[ORM\Column(name: 'is_default', type: Types::BOOLEAN)]
     private $default = false;
 
     #[ORM\JoinColumn(name: 'resource_type_id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceType::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceType::class)]
     private $resourceType;
 
     /**
@@ -68,7 +70,7 @@ class MenuAction
      * @var Plugin
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Plugin::class)]
+    #[ORM\ManyToOne(targetEntity: Plugin::class)]
     private $plugin;
 
     /**

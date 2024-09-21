@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class ContentItem extends AbstractItem
 {
-    #[ORM\Column(name: 'content_data', type: 'text')]
+    #[ORM\Column(name: 'content_data', type: Types::TEXT)]
     private $data;
 
     /**

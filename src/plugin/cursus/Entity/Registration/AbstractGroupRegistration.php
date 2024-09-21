@@ -13,7 +13,7 @@ abstract class AbstractGroupRegistration extends AbstractRegistration
      * @var Group
      */
     #[ORM\JoinColumn(name: 'group_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Group::class)]
+    #[ORM\ManyToOne(targetEntity: Group::class)]
     protected $group;
 
     public function getGroup(): Group

@@ -2,6 +2,7 @@
 
 namespace Claroline\AgendaBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\Planning\AbstractPlanned;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,13 +16,13 @@ class Task extends AbstractPlanned
      * @var Workspace
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Workspace::class, cascade: ['persist'])]
     private $workspace;
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'is_task_done', type: 'boolean')]
+    #[ORM\Column(name: 'is_task_done', type: Types::BOOLEAN)]
     private $done = false;
 
     public static function getType(): string

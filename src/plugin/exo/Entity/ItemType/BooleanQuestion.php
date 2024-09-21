@@ -13,7 +13,7 @@ use UJM\ExoBundle\Entity\Misc\BooleanChoice;
 #[ORM\Entity]
 class BooleanQuestion extends AbstractItem
 {
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\BooleanChoice::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: BooleanChoice::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
     private $choices;
 
     /**

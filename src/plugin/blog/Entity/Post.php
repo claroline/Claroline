@@ -2,6 +2,9 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Icap\BlogBundle\Repository\PostRepository;
+use Doctrine\DBAL\Types\Types;
+use DateTimeInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Display\Poster;
@@ -14,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Table(name: 'icap__blog_post')]
-#[ORM\Entity(repositoryClass: \Icap\BlogBundle\Repository\PostRepository::class)]
+#[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Post extends Statusable
 {
@@ -24,35 +27,35 @@ class Post extends Statusable
     use Thumbnail;
     use Uuid;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $title;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $content;
 
     #[ORM\Column(length: 128, unique: true)]
     #[Gedmo\Slug(fields: ['title'], unique: true, updatable: false)]
     private ?string $slug;
 
-    #[ORM\Column(type: 'datetime', name: 'creation_date')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, name: 'creation_date')]
     #[Gedmo\Timestampable(on: 'create')]
-    private ?\DateTimeInterface $creationDate;
+    private ?DateTimeInterface $creationDate;
 
-    #[ORM\Column(type: 'datetime', name: 'modification_date', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, name: 'modification_date', nullable: true)]
     #[Gedmo\Timestampable(on: 'change', field: ['title', 'content'])]
-    private ?\DateTimeInterface $modificationDate;
+    private ?DateTimeInterface $modificationDate;
 
-    #[ORM\Column(type: 'datetime', name: 'publication_date', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, name: 'publication_date', nullable: true)]
     #[Gedmo\Timestampable(on: 'change', field: 'status', value: '1')]
-    private ?\DateTimeInterface $publicationDate;
+    private ?DateTimeInterface $publicationDate;
 
-    #[ORM\Column(type: 'integer', options: ['default' => '0'])]
+    #[ORM\Column(type: Types::INTEGER, options: ['default' => '0'])]
     private int $viewCounter = 0;
 
-    #[ORM\Column(type: 'boolean', name: 'pinned')]
+    #[ORM\Column(type: Types::BOOLEAN, name: 'pinned')]
     private bool $pinned = false;
 
-    #[ORM\OneToMany(targetEntity: \Comment::class, mappedBy: 'post', cascade: ['all'])]
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, cascade: ['all'])]
     #[ORM\OrderBy(['creationDate' => 'DESC'])]
     private Collection $comments;
 
@@ -60,7 +63,7 @@ class Post extends Statusable
     private ?string $author;
 
     #[ORM\JoinColumn(name: 'blog_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Icap\BlogBundle\Entity\Blog::class, inversedBy: 'posts')]
+    #[ORM\ManyToOne(targetEntity: Blog::class, inversedBy: 'posts')]
     private ?Blog $blog;
 
     public function __construct()
@@ -100,32 +103,32 @@ class Post extends Statusable
         return $this->slug;
     }
 
-    public function setCreationDate(\DateTimeInterface $creationDate): void
+    public function setCreationDate(DateTimeInterface $creationDate): void
     {
         $this->creationDate = $creationDate;
     }
 
-    public function getCreationDate(): ?\DateTimeInterface
+    public function getCreationDate(): ?DateTimeInterface
     {
         return $this->creationDate;
     }
 
-    public function setModificationDate(\DateTimeInterface $modificationDate): void
+    public function setModificationDate(DateTimeInterface $modificationDate): void
     {
         $this->modificationDate = $modificationDate;
     }
 
-    public function getModificationDate(): ?\DateTimeInterface
+    public function getModificationDate(): ?DateTimeInterface
     {
         return $this->modificationDate;
     }
 
-    public function setPublicationDate(\DateTimeInterface $publicationDate = null): void
+    public function setPublicationDate(DateTimeInterface $publicationDate = null): void
     {
         $this->publicationDate = $publicationDate;
     }
 
-    public function getPublicationDate(): ?\DateTimeInterface
+    public function getPublicationDate(): ?DateTimeInterface
     {
         return $this->publicationDate;
     }

@@ -11,6 +11,10 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\CursusBundle\Repository\SessionRepository;
+use DateTimeInterface;
+use DateTime;
 use Claroline\AppBundle\Entity\IdentifiableInterface;
 use Claroline\CoreBundle\Entity\Location;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -21,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 #[ORM\Table(name: 'claro_cursusbundle_course_session')]
-#[ORM\Entity(repositoryClass: \Claroline\CursusBundle\Repository\SessionRepository::class)]
+#[ORM\Entity(repositoryClass: SessionRepository::class)]
 class Session extends AbstractTraining implements IdentifiableInterface
 {
     public const REGISTRATION_AUTO = 0;
@@ -30,17 +34,17 @@ class Session extends AbstractTraining implements IdentifiableInterface
 
     
     #[ORM\JoinColumn(name: 'course_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CursusBundle\Entity\Course::class, inversedBy: 'sessions')]
+    #[ORM\ManyToOne(targetEntity: Course::class, inversedBy: 'sessions')]
     private ?Course $course = null;
 
-    #[ORM\Column(name: 'default_session', type: 'boolean')]
+    #[ORM\Column(name: 'default_session', type: Types::BOOLEAN)]
     private bool $defaultSession = false;
 
-    #[ORM\Column(name: 'start_date', type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $startDate = null;
+    #[ORM\Column(name: 'start_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $startDate = null;
 
-    #[ORM\Column(name: 'end_date', type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $endDate = null;
+    #[ORM\Column(name: 'end_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $endDate = null;
 
     /**
      *
@@ -50,26 +54,26 @@ class Session extends AbstractTraining implements IdentifiableInterface
     #[ORM\JoinTable(name: 'claro_cursusbundle_course_session_resources')]
     #[ORM\JoinColumn(name: 'resource_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'session_id', referencedColumnName: 'id', unique: true)]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class, orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: ResourceNode::class, orphanRemoval: true)]
     private Collection $resources;
 
     
     #[ORM\JoinColumn(name: 'location_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Location::class)]
+    #[ORM\ManyToOne(targetEntity: Location::class)]
     private ?Location $location = null;
 
     /**
      * @var Collection|Event[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\CursusBundle\Entity\Event::class, mappedBy: 'session')]
+    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'session')]
     private Collection $events;
 
-    #[ORM\Column(name: 'event_registration_type', type: 'integer', nullable: false, options: ['default' => 0])]
+    #[ORM\Column(name: 'event_registration_type', type: Types::INTEGER, nullable: false, options: ['default' => 0])]
     private int $eventRegistrationType = self::REGISTRATION_AUTO;
 
     
     #[ORM\JoinColumn(name: 'invitation_template_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\Template::class)]
+    #[ORM\ManyToOne(targetEntity: Template::class)]
     private ?Template $invitationTemplate = null;
 
     /**
@@ -122,29 +126,29 @@ class Session extends AbstractTraining implements IdentifiableInterface
         $this->defaultSession = $defaultSession;
     }
 
-    public function getStartDate(): ?\DateTimeInterface
+    public function getStartDate(): ?DateTimeInterface
     {
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate = null): void
+    public function setStartDate(DateTimeInterface $startDate = null): void
     {
         $this->startDate = $startDate;
     }
 
-    public function getEndDate(): ?\DateTimeInterface
+    public function getEndDate(): ?DateTimeInterface
     {
         return $this->endDate;
     }
 
-    public function setEndDate(\DateTimeInterface $endDate = null): void
+    public function setEndDate(DateTimeInterface $endDate = null): void
     {
         $this->endDate = $endDate;
     }
 
     public function isTerminated(): bool
     {
-        $now = new \DateTime();
+        $now = new DateTime();
 
         return $this->endDate && $now > $this->endDate;
     }

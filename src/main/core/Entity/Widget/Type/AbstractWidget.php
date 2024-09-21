@@ -18,7 +18,7 @@ abstract class AbstractWidget
      * @var WidgetInstance
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetInstance::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: WidgetInstance::class, cascade: ['persist'])]
     private $widgetInstance;
 
     /**

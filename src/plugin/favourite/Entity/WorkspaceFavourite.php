@@ -24,7 +24,7 @@ class WorkspaceFavourite extends AbstractFavourite
      * @var Workspace
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
+    #[ORM\ManyToOne(targetEntity: Workspace::class)]
     private $workspace;
 
     /**

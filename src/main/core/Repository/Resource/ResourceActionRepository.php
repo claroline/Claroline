@@ -35,7 +35,7 @@ class ResourceActionRepository extends ServiceEntityRepository
      *
      * @return MenuAction[]
      */
-    public function findAll($filterEnabled = true)
+    public function findAll($filterEnabled = true): array
     {
         if (!$filterEnabled) {
             return parent::findAll();

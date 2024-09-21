@@ -11,6 +11,9 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\ClacoFormBundle\Repository\ClacoFormRepository;
+use DateTime;
 use Claroline\AppBundle\Entity\Parameters\ListParameters;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,43 +22,43 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 #[ORM\Table(name: 'claro_clacoformbundle_claco_form')]
-#[ORM\Entity(repositoryClass: \Claroline\ClacoFormBundle\Repository\ClacoFormRepository::class)]
+#[ORM\Entity(repositoryClass: ClacoFormRepository::class)]
 class ClacoForm extends AbstractResource
 {
     // entries list configuration
     use ListParameters;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $template = null;
 
     /**
      * @var Field[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\Field::class, mappedBy: 'clacoForm')]
+    #[ORM\OneToMany(targetEntity: Field::class, mappedBy: 'clacoForm')]
     private $fields;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\Category::class, mappedBy: 'clacoForm')]
+    #[ORM\OneToMany(targetEntity: Category::class, mappedBy: 'clacoForm')]
     private Collection $categories;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\Keyword::class, mappedBy: 'clacoForm', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Keyword::class, mappedBy: 'clacoForm', orphanRemoval: true)]
     private Collection $keywords;
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $details = [];
 
     /**
      * Ask for confirmation when a user submit a new entry.
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $showConfirm = false;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $confirmMessage = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $helpMessage = null;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $statistics = false;
 
     public function __construct()
@@ -329,11 +332,11 @@ class ClacoForm extends AbstractResource
     public function getRandomStartDate()
     {
         return !is_null($this->details) && isset($this->details['random_start_date']) ?
-            new \DateTime($this->details['random_start_date']) :
+            new DateTime($this->details['random_start_date']) :
             null;
     }
 
-    public function setRandomStartDate(\DateTime $startDate = null)
+    public function setRandomStartDate(DateTime $startDate = null)
     {
         if (is_null($this->details)) {
             $this->details = [];
@@ -344,11 +347,11 @@ class ClacoForm extends AbstractResource
     public function getRandomEndDate()
     {
         return !is_null($this->details) && isset($this->details['random_end_date']) ?
-            new \DateTime($this->details['random_end_date']) :
+            new DateTime($this->details['random_end_date']) :
             null;
     }
 
-    public function setRandomEndDate(\DateTime $endDate = null)
+    public function setRandomEndDate(DateTime $endDate = null)
     {
         if (is_null($this->details)) {
             $this->details = [];

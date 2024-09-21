@@ -21,15 +21,15 @@ class Association implements AnswerPartInterface
     use FeedbackTrait;
 
     #[ORM\JoinColumn(name: 'match_question_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\MatchQuestion::class, inversedBy: 'associations')]
+    #[ORM\ManyToOne(targetEntity: MatchQuestion::class, inversedBy: 'associations')]
     private $question;
 
     #[ORM\JoinColumn(name: 'label_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Misc\Label::class)]
+    #[ORM\ManyToOne(targetEntity: Label::class)]
     private $label;
 
     #[ORM\JoinColumn(name: 'proposal_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Misc\Proposal::class)]
+    #[ORM\ManyToOne(targetEntity: Proposal::class)]
     private $proposal;
 
     /**

@@ -23,13 +23,13 @@ class WidgetContainer
      *
      * @var ArrayCollection|WidgetInstance[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetInstance::class, mappedBy: 'container', cascade: ['persist', 'remove', 'refresh'])]
+    #[ORM\OneToMany(targetEntity: WidgetInstance::class, mappedBy: 'container', cascade: ['persist', 'remove', 'refresh'])]
     private $instances;
 
     /**
      * @var WidgetContainerConfig[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetContainerConfig::class, mappedBy: 'widgetContainer', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: WidgetContainerConfig::class, mappedBy: 'widgetContainer', cascade: ['persist', 'remove'])]
     protected $widgetContainerConfigs;
 
     /**

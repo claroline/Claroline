@@ -11,6 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,7 +26,7 @@ class Criterion
     /**
      * @var string
      */
-    #[ORM\Column(name: 'instruction', type: 'text', nullable: false)]
+    #[ORM\Column(name: 'instruction', type: Types::TEXT, nullable: false)]
     protected $instruction;
 
     /**
@@ -33,7 +34,7 @@ class Criterion
      * @var Dropzone
      */
     #[ORM\JoinColumn(name: 'dropzone_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Dropzone::class, inversedBy: 'criteria')]
+    #[ORM\ManyToOne(targetEntity: Dropzone::class, inversedBy: 'criteria')]
     protected $dropzone;
 
     public function __construct()

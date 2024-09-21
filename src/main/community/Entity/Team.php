@@ -11,6 +11,8 @@
 
 namespace Claroline\CommunityBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\CommunityBundle\Repository\TeamRepository;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -26,7 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 #[ORM\Table(name: 'claro_team')]
-#[ORM\Entity(repositoryClass: \Claroline\CommunityBundle\Repository\TeamRepository::class)]
+#[ORM\Entity(repositoryClass: TeamRepository::class)]
 class Team
 {
     use Id;
@@ -42,7 +44,7 @@ class Team
      * @var Workspace
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
+    #[ORM\ManyToOne(targetEntity: Workspace::class)]
     private $workspace;
 
     /**
@@ -51,7 +53,7 @@ class Team
      * @var Role
      */
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Role::class, cascade: ['remove'])]
+    #[ORM\OneToOne(targetEntity: Role::class, cascade: ['remove'])]
     private $role;
 
     /**
@@ -60,7 +62,7 @@ class Team
      * @var ArrayCollection|User[]
      */
     #[ORM\JoinTable(name: 'claro_team_users')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToMany(targetEntity: User::class)]
     private $users;
 
     /**
@@ -69,25 +71,25 @@ class Team
      * @var Role
      */
     #[ORM\JoinColumn(name: 'manager_role_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Role::class, cascade: ['remove'])]
+    #[ORM\OneToOne(targetEntity: Role::class, cascade: ['remove'])]
     private $managerRole;
 
     /**
      * @var int
      */
-    #[ORM\Column(name: 'max_users', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'max_users', type: Types::INTEGER, nullable: true)]
     private $maxUsers;
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'self_registration', type: 'boolean')]
+    #[ORM\Column(name: 'self_registration', type: Types::BOOLEAN)]
     private $selfRegistration = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'self_unregistration', type: 'boolean')]
+    #[ORM\Column(name: 'self_unregistration', type: Types::BOOLEAN)]
     private $selfUnregistration = false;
 
     /**
@@ -96,19 +98,19 @@ class Team
      * @var ResourceNode
      */
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
+    #[ORM\OneToOne(targetEntity: ResourceNode::class)]
     private $directory;
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'is_public', type: 'boolean')]
+    #[ORM\Column(name: 'is_public', type: Types::BOOLEAN)]
     private $isPublic = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'dir_deletable', type: 'boolean', options: ['default' => 0])]
+    #[ORM\Column(name: 'dir_deletable', type: Types::BOOLEAN, options: ['default' => 0])]
     private $dirDeletable = false;
 
     public function __construct()

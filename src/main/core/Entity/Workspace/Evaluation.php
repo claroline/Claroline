@@ -24,7 +24,7 @@ class Evaluation extends AbstractUserEvaluation
 
     
     #[ORM\JoinColumn(name: 'workspace_id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
+    #[ORM\ManyToOne(targetEntity: Workspace::class)]
     private ?Workspace $workspace = null;
 
     public function __construct()

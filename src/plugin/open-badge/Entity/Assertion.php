@@ -11,6 +11,9 @@
 
 namespace Claroline\OpenBadgeBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\OpenBadgeBundle\Repository\AssertionRepository;
+use DateTimeInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -25,7 +28,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  */
 #[ORM\Table(name: 'claro__open_badge_assertion')]
-#[ORM\Entity(repositoryClass: \Claroline\OpenBadgeBundle\Repository\AssertionRepository::class)]
+#[ORM\Entity(repositoryClass: AssertionRepository::class)]
 class Assertion
 {
     use Id;
@@ -33,22 +36,22 @@ class Assertion
 
     
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $recipient = null;
 
     
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\OpenBadgeBundle\Entity\BadgeClass::class)]
+    #[ORM\ManyToOne(targetEntity: BadgeClass::class)]
     private ?BadgeClass $badge = null;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
-    private ?\DateTimeInterface $issuedOn = null;
+    private ?DateTimeInterface $issuedOn = null;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\OpenBadgeBundle\Entity\Evidence::class, mappedBy: 'assertion')]
+    #[ORM\OneToMany(targetEntity: Evidence::class, mappedBy: 'assertion')]
     private Collection $evidences;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $revoked = false;
 
     public function __construct()
@@ -78,12 +81,12 @@ class Assertion
         $this->badge = $badge;
     }
 
-    public function getIssuedOn(): \DateTimeInterface
+    public function getIssuedOn(): DateTimeInterface
     {
         return $this->issuedOn;
     }
 
-    public function setIssuedOn(\DateTimeInterface $issuedOn): void
+    public function setIssuedOn(DateTimeInterface $issuedOn): void
     {
         $this->issuedOn = $issuedOn;
     }

@@ -2,13 +2,14 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Claroline\ClacoFormBundle\Repository\KeywordRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_clacoformbundle_keyword')]
 #[ORM\UniqueConstraint(name: 'field_unique_name', columns: ['claco_form_id', 'keyword_name'])]
-#[ORM\Entity(repositoryClass: \Claroline\ClacoFormBundle\Repository\KeywordRepository::class)]
+#[ORM\Entity(repositoryClass: KeywordRepository::class)]
 class Keyword
 {
     use Id;
@@ -18,7 +19,7 @@ class Keyword
     private ?string $name = null;
 
     #[ORM\JoinColumn(name: 'claco_form_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\ClacoForm::class, inversedBy: 'keywords')]
+    #[ORM\ManyToOne(targetEntity: ClacoForm::class, inversedBy: 'keywords')]
     private ?ClacoForm $clacoForm = null;
 
     public function __construct()

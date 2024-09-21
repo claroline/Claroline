@@ -11,6 +11,7 @@
 
 namespace Claroline\TransferBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,7 +24,7 @@ class ImportFile extends AbstractTransferFile
      * @var PublicFile
      */
     #[ORM\JoinColumn(name: 'file_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\File\PublicFile::class)]
+    #[ORM\ManyToOne(targetEntity: PublicFile::class)]
     private $file;
 
     /**
@@ -31,7 +32,7 @@ class ImportFile extends AbstractTransferFile
      * @var string
      * @deprecated. we should use uuid instead.
      */
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     private $log;
 
     public function setFile(PublicFile $file)

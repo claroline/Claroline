@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -34,7 +35,7 @@ class WidgetContainerConfig
     #[ORM\Column]
     private $alignName = 'left';
 
-    #[ORM\Column(type: 'boolean', name: 'is_visible')]
+    #[ORM\Column(type: Types::BOOLEAN, name: 'is_visible')]
     protected $visible = true;
 
     /**
@@ -48,7 +49,7 @@ class WidgetContainerConfig
      *
      * @var array
      */
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private $layout = [];
 
     /**
@@ -93,7 +94,7 @@ class WidgetContainerConfig
      *
      * @var int
      */
-    #[ORM\Column(name: 'position', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'position', type: Types::INTEGER, nullable: true)]
     private $position = 0;
 
     /**
@@ -101,7 +102,7 @@ class WidgetContainerConfig
      * @var WidgetContainer
      */
     #[ORM\JoinColumn(name: 'widget_container_id', onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetContainer::class, inversedBy: 'widgetContainerConfigs', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: WidgetContainer::class, inversedBy: 'widgetContainerConfigs', cascade: ['persist'])]
     protected $widgetContainer;
 
     /**

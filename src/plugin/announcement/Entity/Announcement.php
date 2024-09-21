@@ -11,6 +11,8 @@
 
 namespace Claroline\AnnouncementBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use DateTime;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -43,7 +45,7 @@ class Announcement
      *
      * @var string
      */
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private $content;
 
     /**
@@ -53,33 +55,33 @@ class Announcement
     private $announcer;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'creation_date', type: 'datetime', nullable: false)]
+    #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE, nullable: false)]
     private $creationDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'publication_date', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'publication_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     private $publicationDate;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean', nullable: false)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private $visible;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'visible_from', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'visible_from', type: Types::DATETIME_MUTABLE, nullable: true)]
     private $visibleFrom;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'visible_until', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'visible_until', type: Types::DATETIME_MUTABLE, nullable: true)]
     private $visibleUntil;
 
     /**
@@ -87,25 +89,25 @@ class Announcement
      * @var User
      */
     #[ORM\JoinColumn(name: 'creator_id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private $creator;
 
     #[ORM\JoinColumn(name: 'aggregate_id', onDelete: 'CASCADE', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\AnnouncementBundle\Entity\AnnouncementAggregate::class, inversedBy: 'announcements')]
+    #[ORM\ManyToOne(targetEntity: AnnouncementAggregate::class, inversedBy: 'announcements')]
     private ?AnnouncementAggregate $aggregate = null;
 
     #[ORM\JoinColumn(name: 'task_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\SchedulerBundle\Entity\ScheduledTask::class)]
+    #[ORM\ManyToOne(targetEntity: ScheduledTask::class)]
     private $task;
 
     #[ORM\JoinTable(name: 'claro_announcement_roles')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
+    #[ORM\ManyToMany(targetEntity: Role::class)]
     private Collection $roles;
 
     public function __construct()
     {
         $this->refreshUuid();
-        $this->creationDate = new \DateTime();
+        $this->creationDate = new DateTime();
         $this->roles = new ArrayCollection();
     }
 
@@ -172,7 +174,7 @@ class Announcement
     /**
      * Get creation date.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreationDate()
     {
@@ -182,7 +184,7 @@ class Announcement
     /**
      * Set creation date.
      */
-    public function setCreationDate(\DateTime $creationDate)
+    public function setCreationDate(DateTime $creationDate)
     {
         $this->creationDate = $creationDate;
     }
@@ -190,7 +192,7 @@ class Announcement
     /**
      * Get publication date.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getPublicationDate()
     {
@@ -200,9 +202,9 @@ class Announcement
     /**
      * Set publication date.
      *
-     * @param \DateTime $publicationDate
+     * @param DateTime $publicationDate
      */
-    public function setPublicationDate(\DateTime $publicationDate = null)
+    public function setPublicationDate(DateTime $publicationDate = null)
     {
         $this->publicationDate = $publicationDate;
     }
@@ -230,7 +232,7 @@ class Announcement
     /**
      * Get visible from.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getVisibleFrom()
     {
@@ -240,9 +242,9 @@ class Announcement
     /**
      * Set visible from.
      *
-     * @param \DateTime $visibleFrom
+     * @param DateTime $visibleFrom
      */
-    public function setVisibleFrom(\DateTime $visibleFrom = null)
+    public function setVisibleFrom(DateTime $visibleFrom = null)
     {
         $this->visibleFrom = $visibleFrom;
     }
@@ -250,7 +252,7 @@ class Announcement
     /**
      * Get visible until.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getVisibleUntil()
     {
@@ -260,9 +262,9 @@ class Announcement
     /**
      * Set visible until.
      *
-     * @param \DateTime $visibleUntil
+     * @param DateTime $visibleUntil
      */
-    public function setVisibleUntil(\DateTime $visibleUntil = null)
+    public function setVisibleUntil(DateTime $visibleUntil = null)
     {
         $this->visibleUntil = $visibleUntil;
     }

@@ -11,6 +11,9 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\ClacoFormBundle\Repository\EntryRepository;
+use DateTimeInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -18,7 +21,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_clacoformbundle_entry')]
-#[ORM\Entity(repositoryClass: \Claroline\ClacoFormBundle\Repository\EntryRepository::class)]
+#[ORM\Entity(repositoryClass: EntryRepository::class)]
 class Entry
 {
     use Id;
@@ -31,30 +34,30 @@ class Entry
     #[ORM\Column]
     private ?string $title = null;
 
-    #[ORM\Column(name: 'entry_status', type: 'integer')]
+    #[ORM\Column(name: 'entry_status', type: Types::INTEGER)]
     private int $status = self::PENDING;
 
-    #[ORM\Column(name: 'locked', type: 'boolean', options: ['default' => 0])]
+    #[ORM\Column(name: 'locked', type: Types::BOOLEAN, options: ['default' => 0])]
     private bool $locked = false;
 
     
     #[ORM\JoinColumn(name: 'claco_form_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\ClacoForm::class, inversedBy: 'categories')]
+    #[ORM\ManyToOne(targetEntity: ClacoForm::class, inversedBy: 'categories')]
     private ?ClacoForm $clacoForm = null;
 
     
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user = null;
 
-    #[ORM\Column(name: 'creation_date', type: 'datetime', nullable: false)]
-    private ?\DateTimeInterface $creationDate = null;
+    #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE, nullable: false)]
+    private ?DateTimeInterface $creationDate = null;
 
-    #[ORM\Column(name: 'edition_date', type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $editionDate = null;
+    #[ORM\Column(name: 'edition_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $editionDate = null;
 
-    #[ORM\Column(name: 'publication_date', type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $publicationDate = null;
+    #[ORM\Column(name: 'publication_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $publicationDate = null;
 
     /**
      *
@@ -62,7 +65,7 @@ class Entry
      * @var FieldValue[]
      */
     #[ORM\JoinTable(name: 'claro_clacoformbundle_entry_value')]
-    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\FieldValue::class, mappedBy: 'entry', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: FieldValue::class, mappedBy: 'entry', cascade: ['persist'])]
     private $fieldValues;
 
     /**
@@ -70,7 +73,7 @@ class Entry
      *
      * @var Comment[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\Comment::class, mappedBy: 'entry')]
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'entry')]
     #[ORM\OrderBy(['creationDate' => 'DESC'])]
     private $comments;
 
@@ -80,7 +83,7 @@ class Entry
      * @var Category[]
      */
     #[ORM\JoinTable(name: 'claro_clacoformbundle_entry_category')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\Category::class)]
+    #[ORM\ManyToMany(targetEntity: Category::class)]
     private $categories;
 
     /**
@@ -89,13 +92,13 @@ class Entry
      * @var Keyword[]
      */
     #[ORM\JoinTable(name: 'claro_clacoformbundle_entry_keyword')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\Keyword::class, cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Keyword::class, cascade: ['persist'])]
     private $keywords;
 
     /**
      * @var EntryUser[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\EntryUser::class, mappedBy: 'entry')]
+    #[ORM\OneToMany(targetEntity: EntryUser::class, mappedBy: 'entry')]
     private $entryUsers;
 
     public function __construct()
@@ -159,32 +162,32 @@ class Entry
         $this->clacoForm = $clacoForm;
     }
 
-    public function getCreationDate(): ?\DateTimeInterface
+    public function getCreationDate(): ?DateTimeInterface
     {
         return $this->creationDate;
     }
 
-    public function setCreationDate(?\DateTimeInterface $creationDate = null): void
+    public function setCreationDate(?DateTimeInterface $creationDate = null): void
     {
         $this->creationDate = $creationDate;
     }
 
-    public function getEditionDate(): ?\DateTimeInterface
+    public function getEditionDate(): ?DateTimeInterface
     {
         return $this->editionDate;
     }
 
-    public function setEditionDate(?\DateTimeInterface $editionDate = null): void
+    public function setEditionDate(?DateTimeInterface $editionDate = null): void
     {
         $this->editionDate = $editionDate;
     }
 
-    public function getPublicationDate(): ?\DateTimeInterface
+    public function getPublicationDate(): ?DateTimeInterface
     {
         return $this->publicationDate;
     }
 
-    public function setPublicationDate(?\DateTimeInterface $publicationDate = null): void
+    public function setPublicationDate(?DateTimeInterface $publicationDate = null): void
     {
         $this->publicationDate = $publicationDate;
     }

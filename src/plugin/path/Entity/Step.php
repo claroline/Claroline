@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Display\Order;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -28,15 +29,15 @@ class Step
     use Poster;
 
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Step::class, inversedBy: 'children')]
+    #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'children')]
     private ?Step $parent = null;
 
-    #[ORM\OneToMany(targetEntity: \Step::class, mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Step::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $children;
 
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Innova\PathBundle\Entity\Path\Path::class, inversedBy: 'steps')]
+    #[ORM\ManyToOne(targetEntity: Path::class, inversedBy: 'steps')]
     private ?Path $path = null;
 
     /**
@@ -52,16 +53,16 @@ class Step
     private ?string $numbering = null;
 
     #[ORM\JoinColumn(name: 'resource_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     private ?ResourceNode $resource = null;
 
-    #[ORM\Column(name: 'showResourceHeader', type: 'boolean')]
+    #[ORM\Column(name: 'showResourceHeader', type: Types::BOOLEAN)]
     private bool $showResourceHeader = false;
 
     /**
      * Secondary resources.
      */
-    #[ORM\OneToMany(targetEntity: \Innova\PathBundle\Entity\SecondaryResource::class, mappedBy: 'step', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: SecondaryResource::class, mappedBy: 'step', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $secondaryResources;
 

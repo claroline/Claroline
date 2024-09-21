@@ -2,6 +2,7 @@
 
 namespace Claroline\AppBundle\Entity\Restriction;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait AccessCode
@@ -9,7 +10,7 @@ trait AccessCode
     /**
      * @var string
      */
-    #[ORM\Column(name: 'access_code', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'access_code', type: Types::STRING, nullable: true)]
     protected $accessCode;
 
     /**

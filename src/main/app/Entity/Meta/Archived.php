@@ -2,11 +2,12 @@
 
 namespace Claroline\AppBundle\Entity\Meta;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait Archived
 {
-    #[ORM\Column(name: 'archived', type: 'boolean')]
+    #[ORM\Column(name: 'archived', type: Types::BOOLEAN)]
     protected bool $archived = false;
 
     /**

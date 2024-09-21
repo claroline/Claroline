@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\EvaluationBundle\Entity\AbstractUserEvaluation;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -29,19 +30,19 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
      * @var ResourceNode
      */
     #[ORM\JoinColumn(name: 'resource_node', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     private $resourceNode;
 
     /**
      * @var int
      */
-    #[ORM\Column(name: 'nb_attempts', type: 'integer')]
+    #[ORM\Column(name: 'nb_attempts', type: Types::INTEGER)]
     private $nbAttempts = 0;
 
     /**
      * @var int
      */
-    #[ORM\Column(name: 'nb_openings', type: 'integer')]
+    #[ORM\Column(name: 'nb_openings', type: Types::INTEGER)]
     private $nbOpenings = 0;
 
     public function getResourceNode(): ?ResourceNode

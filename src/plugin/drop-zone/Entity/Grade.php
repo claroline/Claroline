@@ -11,6 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,7 +27,7 @@ class Grade
     /**
      * @var int
      */
-    #[ORM\Column(name: 'grade_value', type: 'integer', nullable: false)]
+    #[ORM\Column(name: 'grade_value', type: Types::INTEGER, nullable: false)]
     protected $value = 0;
 
     /**
@@ -34,7 +35,7 @@ class Grade
      * @var Correction
      */
     #[ORM\JoinColumn(name: 'correction_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Correction::class, inversedBy: 'grades')]
+    #[ORM\ManyToOne(targetEntity: Correction::class, inversedBy: 'grades')]
     protected $correction;
 
     /**
@@ -42,7 +43,7 @@ class Grade
      * @var Criterion
      */
     #[ORM\JoinColumn(name: 'criterion_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Criterion::class)]
+    #[ORM\ManyToOne(targetEntity: Criterion::class)]
     protected $criterion;
 
     public function __construct()

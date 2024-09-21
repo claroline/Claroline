@@ -11,6 +11,9 @@
 
 namespace Claroline\ScormBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use DateTime;
+use DateInterval;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -28,7 +31,7 @@ class ScoTracking
      * @var User
      */
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected $user;
 
     /**
@@ -36,31 +39,31 @@ class ScoTracking
      * @var Sco
      */
     #[ORM\JoinColumn(name: 'sco_id', onDelete: 'CASCADE', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ScormBundle\Entity\Sco::class)]
+    #[ORM\ManyToOne(targetEntity: Sco::class)]
     protected $sco;
 
     /**
      * @var int
      */
-    #[ORM\Column(name: 'score_raw', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'score_raw', type: Types::INTEGER, nullable: true)]
     protected $scoreRaw;
 
     /**
      * @var int
      */
-    #[ORM\Column(name: 'score_min', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'score_min', type: Types::INTEGER, nullable: true)]
     protected $scoreMin;
 
     /**
      * @var int
      */
-    #[ORM\Column(name: 'score_max', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'score_max', type: Types::INTEGER, nullable: true)]
     protected $scoreMax;
 
     /**
      * @var float
      */
-    #[ORM\Column(type: 'float')]
+    #[ORM\Column(type: Types::FLOAT)]
     protected $progression = 0;
 
     /**
@@ -84,13 +87,13 @@ class ScoTracking
     /**
      * For Scorm 1.2 only.
      */
-    #[ORM\Column(name: 'session_time', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'session_time', type: Types::INTEGER, nullable: true)]
     protected $sessionTime;
 
     /**
      * For Scorm 1.2 only.
      */
-    #[ORM\Column(name: 'total_time_int', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'total_time_int', type: Types::INTEGER, nullable: true)]
     protected $totalTimeInt;
 
     /**
@@ -108,7 +111,7 @@ class ScoTracking
     /**
      * For Scorm 1.2 only.
      */
-    #[ORM\Column(name: 'suspend_data', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'suspend_data', type: Types::TEXT, nullable: true)]
     protected $suspendData;
 
     /**
@@ -138,13 +141,13 @@ class ScoTracking
     /**
      * For Scorm 1.2 only.
      */
-    #[ORM\Column(name: 'is_locked', type: 'boolean', nullable: true)]
+    #[ORM\Column(name: 'is_locked', type: Types::BOOLEAN, nullable: true)]
     protected $isLocked;
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     protected $details;
 
-    #[ORM\Column(name: 'latest_date', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'latest_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     private $latestDate;
 
     public function __construct()
@@ -368,7 +371,7 @@ class ScoTracking
         return $this->latestDate;
     }
 
-    public function setLatestDate(\DateTime $latestDate = null)
+    public function setLatestDate(DateTime $latestDate = null)
     {
         $this->latestDate = $latestDate;
     }
@@ -433,8 +436,8 @@ class ScoTracking
         $formattedTime = '';
 
         if (!empty($this->totalTimeString) && 'PT' !== $this->totalTimeString && preg_match($pattern, $this->totalTimeString)) {
-            $interval = new \DateInterval($this->totalTimeString);
-            $time = new \DateTime();
+            $interval = new DateInterval($this->totalTimeString);
+            $time = new DateTime();
             $time->setTimestamp(0);
             $time->add($interval);
             $timeInSecond = $time->getTimestamp();

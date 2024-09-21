@@ -12,7 +12,7 @@ class MessageLog extends AbstractLog
 {
     
     #[ORM\JoinColumn(name: 'receiver_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $receiver = null;
 
     public function getReceiver(): ?User

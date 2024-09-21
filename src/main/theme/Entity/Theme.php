@@ -11,6 +11,8 @@
 
 namespace Claroline\ThemeBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\ThemeBundle\Repository\ThemeRepository;
 use Claroline\AppBundle\Entity\FromPlugin;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -23,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Theme.
  */
 #[ORM\Table(name: 'claro_theme')]
-#[ORM\Entity(repositoryClass: \Claroline\ThemeBundle\Repository\ThemeRepository::class)]
+#[ORM\Entity(repositoryClass: ThemeRepository::class)]
 class Theme
 {
     use Id;
@@ -38,7 +40,7 @@ class Theme
     /**
      * Is it the default platform theme ?
      */
-    #[ORM\Column(name: 'is_default', type: 'boolean')]
+    #[ORM\Column(name: 'is_default', type: Types::BOOLEAN)]
     private bool $default = false;
 
     #[ORM\Column(nullable: true)]

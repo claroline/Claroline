@@ -22,7 +22,7 @@ class Label
     use Uuid;
 
     #[ORM\JoinColumn(name: 'interaction_matching_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\MatchQuestion::class, inversedBy: 'labels')]
+    #[ORM\ManyToOne(targetEntity: MatchQuestion::class, inversedBy: 'labels')]
     private $interactionMatching;
 
     public function __construct()

@@ -13,6 +13,7 @@
 
 namespace Claroline\ThemeBundle\Entity\Icon;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Name;
@@ -32,11 +33,11 @@ class IconItem
     #[ORM\Column(name: 'relative_url')]
     private ?string $relativeUrl = null;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $svg = false;
 
     #[ORM\JoinColumn(name: 'icon_set_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \IconSet::class, inversedBy: 'icons', fetch: 'LAZY')]
+    #[ORM\ManyToOne(targetEntity: IconSet::class, fetch: 'LAZY', inversedBy: 'icons')]
     private ?IconSet $iconSet = null;
 
     public function __construct()

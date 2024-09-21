@@ -2,6 +2,9 @@
 
 namespace Icap\WikiBundle\Entity;
 
+use Icap\WikiBundle\Repository\ContributionRepository;
+use Doctrine\DBAL\Types\Types;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -9,20 +12,20 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Table(name: 'icap__wiki_contribution')]
-#[ORM\Entity(repositoryClass: \Icap\WikiBundle\Repository\ContributionRepository::class)]
+#[ORM\Entity(repositoryClass: ContributionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Contribution
 {
     use Id;
     use Uuid;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     protected $title;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     protected $text;
 
-    #[ORM\Column(type: 'datetime', name: 'creation_date')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, name: 'creation_date')]
     #[Gedmo\Timestampable(on: 'create')]
     protected $creationDate;
 
@@ -30,11 +33,11 @@ class Contribution
      * @var User
      */
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected $contributor;
 
     #[ORM\JoinColumn(name: 'section_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Icap\WikiBundle\Entity\Section::class)]
+    #[ORM\ManyToOne(targetEntity: Section::class)]
     protected $section;
 
     public function __construct()
@@ -94,7 +97,7 @@ class Contribution
     /**
      * Returns the resource creation date.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreationDate()
     {
@@ -142,7 +145,7 @@ class Contribution
     /**
      * Set section.
      *
-     * @param \Icap\WikiBundle\Entity\Section $section
+     * @param Section $section
      *
      * @return $this
      */
@@ -156,7 +159,7 @@ class Contribution
     /**
      * Get section.
      *
-     * @return \Icap\WikiBundle\Entity\Section
+     * @return Section
      */
     public function getSection()
     {

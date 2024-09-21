@@ -2,6 +2,8 @@
 
 namespace Claroline\EvaluationBundle\Entity;
 
+use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -16,38 +18,38 @@ class Certificate
     use Uuid;
     use Id;
 
-    #[ORM\Column(name: 'obtention_date', type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $obtentionDate = null;
+    #[ORM\Column(name: 'obtention_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $obtentionDate = null;
 
-    #[ORM\Column(name: 'issue_date', type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $issueDate = null;
+    #[ORM\Column(name: 'issue_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $issueDate = null;
 
-    #[ORM\Column(name: 'content', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'content', type: Types::TEXT, nullable: true)]
     private ?string $content = null;
 
-    #[ORM\Column(name: 'status', type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(name: 'status', type: Types::STRING, length: 255, nullable: false)]
     private string $status;
 
-    #[ORM\Column(name: 'score', type: 'float', nullable: false)]
+    #[ORM\Column(name: 'score', type: Types::FLOAT, nullable: false)]
     private float $score;
 
-    #[ORM\Column(name: 'language', type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(name: 'language', type: Types::STRING, length: 255, nullable: false)]
     private string $language;
 
     
     #[ORM\JoinColumn(name: 'evaluation_id', onDelete: 'SET NULL', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Evaluation::class)]
+    #[ORM\ManyToOne(targetEntity: Evaluation::class)]
     private ?Evaluation $evaluation;
 
     
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user;
 
-    #[ORM\Column(name: 'revoked', type: 'boolean', options: ['default' => false])]
+    #[ORM\Column(name: 'revoked', type: Types::BOOLEAN, options: ['default' => false])]
     private bool $revoked = false;
 
-    #[ORM\Column(name: 'revocation_reason', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'revocation_reason', type: Types::TEXT, nullable: true)]
     private ?string $revocationReason = null;
 
     public function __construct()
@@ -55,22 +57,22 @@ class Certificate
         $this->refreshUuid();
     }
 
-    public function getObtentionDate(): ?\DateTimeInterface
+    public function getObtentionDate(): ?DateTimeInterface
     {
         return $this->obtentionDate;
     }
 
-    public function setObtentionDate(?\DateTimeInterface $obtentionDate): void
+    public function setObtentionDate(?DateTimeInterface $obtentionDate): void
     {
         $this->obtentionDate = $obtentionDate;
     }
 
-    public function getIssueDate(): ?\DateTimeInterface
+    public function getIssueDate(): ?DateTimeInterface
     {
         return $this->issueDate;
     }
 
-    public function setIssueDate(?\DateTimeInterface $issueDate): void
+    public function setIssueDate(?DateTimeInterface $issueDate): void
     {
         $this->issueDate = $issueDate;
     }

@@ -24,7 +24,7 @@ class GridRowItem
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Misc\GridRow::class, inversedBy: 'rowItems')]
+    #[ORM\ManyToOne(targetEntity: GridRow::class, inversedBy: 'rowItems')]
     private $row;
 
     /**
@@ -35,7 +35,7 @@ class GridRowItem
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Misc\GridItem::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: GridItem::class, cascade: ['persist'])]
     private $item;
 
     /**

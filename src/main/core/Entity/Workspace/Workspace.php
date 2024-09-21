@@ -11,6 +11,9 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use Claroline\CoreBundle\Repository\WorkspaceRepository;
+use Doctrine\DBAL\Types\Types;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Hidden;
@@ -41,7 +44,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Table(name: 'claro_workspace')]
 #[ORM\Index(name: 'name_idx', columns: ['entity_name'])]
-#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\WorkspaceRepository::class)]
+#[ORM\Entity(repositoryClass: WorkspaceRepository::class)]
 class Workspace implements ContextSubjectInterface, CrudEntityInterface
 {
     // identifiers
@@ -72,71 +75,71 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
     #[Gedmo\Slug(fields: ['code'])]
     private ?string $slug = null;
 
-    #[ORM\Column(name: 'isModel', type: 'boolean')]
+    #[ORM\Column(name: 'isModel', type: Types::BOOLEAN)]
     private bool $model = false;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Role::class, mappedBy: 'workspace', fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(mappedBy: 'workspace', targetEntity: Role::class, fetch: 'EXTRA_LAZY')]
     private Collection $roles;
 
     
     #[ORM\JoinColumn(name: 'default_role_id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
+    #[ORM\ManyToOne(targetEntity: Role::class)]
     private ?Role $defaultRole;
 
     /**
      * @deprecated to move in community parameters
      */
-    #[ORM\Column(name: 'self_registration', type: 'boolean')]
+    #[ORM\Column(name: 'self_registration', type: Types::BOOLEAN)]
     private bool $selfRegistration = false;
 
     /**
      * @deprecated to move in community parameters
      */
-    #[ORM\Column(name: 'registration_validation', type: 'boolean')]
+    #[ORM\Column(name: 'registration_validation', type: Types::BOOLEAN)]
     private bool $registrationValidation = false;
 
     /**
      * @deprecated to move in community parameters
      */
-    #[ORM\Column(name: 'self_unregistration', type: 'boolean')]
+    #[ORM\Column(name: 'self_unregistration', type: Types::BOOLEAN)]
     private bool $selfUnregistration = false;
 
     /**
      * @deprecated to move in community parameters
      */
-    #[ORM\Column(name: 'max_teams', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'max_teams', type: Types::INTEGER, nullable: true)]
     private ?int $maxTeams = null;
 
-    #[ORM\Column(name: 'is_personal', type: 'boolean')]
+    #[ORM\Column(name: 'is_personal', type: Types::BOOLEAN)]
     private bool $personal = false;
 
     
-    #[ORM\JoinColumn(name: 'options_id', onDelete: 'SET NULL', nullable: true)]
-    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions::class, inversedBy: 'workspace', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'options_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\OneToOne(inversedBy: 'workspace', targetEntity: WorkspaceOptions::class, cascade: ['persist'])]
     private WorkspaceOptions $options;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $contactEmail = null;
 
     /**
      * The conditions to get a success status for the workspace evaluation.
      * Supported conditions : minimal score, min successful resources, max failed resources.
      */
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $successCondition = [];
 
     
     #[ORM\JoinTable(name: 'workspace_organization')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Organization\Organization::class)]
+    #[ORM\ManyToMany(targetEntity: Organization::class)]
     private Collection $organizations;
 
     // not mapped. Used for creation
     private $workspaceModel;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $estimatedDuration = null;
 
-    #[ORM\Column(name: 'score_total', type: 'float', options: ['default' => 100])]
+    #[ORM\Column(name: 'score_total', type: Types::FLOAT, options: ['default' => 100])]
     private float $scoreTotal = 100;
 
     public function __construct()

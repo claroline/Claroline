@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,11 +28,11 @@ class OrderingItem implements AnswerPartInterface
     /**
      * @var int
      */
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private $position;
 
     #[ORM\JoinColumn(name: 'ujm_question_ordering_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\OrderingQuestion::class, inversedBy: 'items')]
+    #[ORM\ManyToOne(targetEntity: OrderingQuestion::class, inversedBy: 'items')]
     private $question;
 
     /**

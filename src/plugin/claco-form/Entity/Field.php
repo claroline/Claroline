@@ -11,6 +11,8 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Claroline\ClacoFormBundle\Repository\FieldRepository;
+use BadMethodCallException;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_clacoformbundle_field')]
 #[ORM\UniqueConstraint(name: 'field_unique_name', columns: ['claco_form_id', 'field_facet_id'])]
-#[ORM\Entity(repositoryClass: \Claroline\ClacoFormBundle\Repository\FieldRepository::class)]
+#[ORM\Entity(repositoryClass: FieldRepository::class)]
 class Field
 {
     use Id;
@@ -28,7 +30,7 @@ class Field
      * @var ClacoForm
      */
     #[ORM\JoinColumn(name: 'claco_form_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\ClacoForm::class, inversedBy: 'fields')]
+    #[ORM\ManyToOne(targetEntity: ClacoForm::class, inversedBy: 'fields')]
     protected $clacoForm;
 
     /**
@@ -36,13 +38,13 @@ class Field
      * @var FieldFacet
      */
     #[ORM\JoinColumn(name: 'field_facet_id', onDelete: 'CASCADE')]
-    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacet::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: FieldFacet::class, cascade: ['persist', 'remove'])]
     protected $fieldFacet;
 
     /**
      * @var FieldChoiceCategory[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\FieldChoiceCategory::class, mappedBy: 'field')]
+    #[ORM\OneToMany(targetEntity: FieldChoiceCategory::class, mappedBy: 'field')]
     protected $fieldChoiceCategories;
 
     public function __construct()
@@ -60,7 +62,7 @@ class Field
             return call_user_func_array([$this->fieldFacet, $method], $arguments);
         }
 
-        throw new \BadMethodCallException(sprintf('Undefined method "%s".', $method));
+        throw new BadMethodCallException(sprintf('Undefined method "%s".', $method));
     }
 
     public function getClacoForm()

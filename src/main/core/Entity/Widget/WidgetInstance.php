@@ -34,7 +34,7 @@ class WidgetInstance
      * @var Widget
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Widget\Widget::class)]
+    #[ORM\ManyToOne(targetEntity: Widget::class)]
     private $widget;
 
     /**
@@ -44,13 +44,13 @@ class WidgetInstance
      * @var WidgetContainer
      */
     #[ORM\JoinColumn(name: 'container_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetContainer::class, inversedBy: 'instances', cascade: ['persist', 'remove', 'refresh'])]
+    #[ORM\ManyToOne(targetEntity: WidgetContainer::class, inversedBy: 'instances', cascade: ['persist', 'remove', 'refresh'])]
     private $container;
 
     /**
      * @var WidgetInstanceConfig[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetInstanceConfig::class, mappedBy: 'widgetInstance', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: WidgetInstanceConfig::class, mappedBy: 'widgetInstance', cascade: ['persist', 'remove'])]
     private $widgetInstanceConfigs;
 
     /**
@@ -60,7 +60,7 @@ class WidgetInstance
      * @var DataSource
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\DataSource::class)]
+    #[ORM\ManyToOne(targetEntity: DataSource::class)]
     private $dataSource = null;
 
     /**

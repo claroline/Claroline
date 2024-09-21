@@ -11,6 +11,7 @@
 
 namespace Claroline\ScormBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -27,15 +28,15 @@ class Sco
      *
      * @var Scorm
      */
-    #[ORM\JoinColumn(name: 'scorm_id', onDelete: 'CASCADE', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ScormBundle\Entity\Scorm::class, inversedBy: 'scos', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'scorm_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Scorm::class, cascade: ['persist'], inversedBy: 'scos')]
     protected $scorm;
 
-    #[ORM\JoinColumn(name: 'sco_parent_id', onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ScormBundle\Entity\Sco::class, inversedBy: 'scoChildren')]
+    #[ORM\JoinColumn(name: 'sco_parent_id', nullable: true, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Sco::class, inversedBy: 'scoChildren')]
     protected $scoParent;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\ScormBundle\Entity\Sco::class, mappedBy: 'scoParent')]
+    #[ORM\OneToMany(mappedBy: 'scoParent', targetEntity: Sco::class)]
     protected $scoChildren;
 
     #[ORM\Column(name: 'entry_url', nullable: true)]
@@ -47,13 +48,13 @@ class Sco
     #[ORM\Column(nullable: false)]
     protected $title;
 
-    #[ORM\Column(type: 'boolean', nullable: false)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     protected $visible;
 
-    #[ORM\Column(name: 'sco_parameters', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'sco_parameters', type: Types::TEXT, nullable: true)]
     protected $parameters;
 
-    #[ORM\Column(name: 'launch_data', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'launch_data', type: Types::TEXT, nullable: true)]
     protected $launchData;
 
     #[ORM\Column(name: 'max_time_allowed', nullable: true)]
@@ -62,13 +63,13 @@ class Sco
     #[ORM\Column(name: 'time_limit_action', nullable: true)]
     protected $timeLimitAction;
 
-    #[ORM\Column(type: 'boolean', nullable: false)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     protected $block;
 
     /**
      * Score to pass for Scorm 1.2.
      */
-    #[ORM\Column(name: 'score_int', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'score_int', type: Types::INTEGER, nullable: true)]
     protected $scoreToPassInt;
 
     /**

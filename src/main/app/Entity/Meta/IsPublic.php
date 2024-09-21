@@ -2,11 +2,12 @@
 
 namespace Claroline\AppBundle\Entity\Meta;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait IsPublic
 {
-    #[ORM\Column(name: 'is_public', type: 'boolean')]
+    #[ORM\Column(name: 'is_public', type: Types::BOOLEAN)]
     private bool $public = false;
 
     public function isPublic(): bool

@@ -11,26 +11,28 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Icap\BlogBundle\Repository\MemberRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User as User;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'icap__blog_member')]
-#[ORM\Entity(repositoryClass: \Icap\BlogBundle\Repository\MemberRepository::class)]
+#[ORM\Entity(repositoryClass: MemberRepository::class)]
 class Member
 {
     use Id;
 
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     protected $user;
 
-    #[ORM\ManyToOne(targetEntity: \Icap\BlogBundle\Entity\Blog::class, inversedBy: 'members', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Blog::class, inversedBy: 'members', cascade: ['persist'])]
     protected $blog;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $trusted = false;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $banned = false;
 
     public function setUser(User $user)

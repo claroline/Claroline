@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -28,7 +29,7 @@ class Selection implements AnswerPartInterface
      *
      * @var int
      */
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private $begin;
 
     /**
@@ -36,14 +37,14 @@ class Selection implements AnswerPartInterface
      *
      * @var int
      */
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private $end;
 
     #[ORM\JoinColumn(name: 'interation_selection_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\SelectionQuestion::class, inversedBy: 'selections')]
+    #[ORM\ManyToOne(targetEntity: SelectionQuestion::class, inversedBy: 'selections')]
     private $interactionSelection;
 
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\ColorSelection::class, mappedBy: 'selection', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ColorSelection::class, mappedBy: 'selection', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $colorSelections;
 
     public function __construct()

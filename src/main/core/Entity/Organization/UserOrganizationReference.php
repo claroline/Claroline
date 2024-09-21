@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Organization;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,24 +26,24 @@ class UserOrganizationReference
 
     
     #[ORM\JoinColumn(name: 'user_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, inversedBy: 'userOrganizationReferences', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userOrganizationReferences', cascade: ['persist'])]
     private User $user;
 
     
     #[ORM\JoinColumn(name: 'organization_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Organization\Organization::class)]
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
     private ?Organization $organization = null;
 
     /**
      * The organization is the main organization of the user.
      */
-    #[ORM\Column(name: 'is_main', type: 'boolean')]
+    #[ORM\Column(name: 'is_main', type: Types::BOOLEAN)]
     private bool $main = false;
 
     /**
      * The user is a manager of the organization.
      */
-    #[ORM\Column(name: 'is_manager', type: 'boolean')]
+    #[ORM\Column(name: 'is_manager', type: Types::BOOLEAN)]
     private bool $manager = false;
 
     public function getUser(): User

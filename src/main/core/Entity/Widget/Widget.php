@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\CoreBundle\Repository\Widget\WidgetRepository;
 use Claroline\AppBundle\Entity\FromPlugin;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -23,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Table(name: 'claro_widget')]
 #[ORM\UniqueConstraint(name: 'widget_plugin_unique', columns: ['name', 'plugin_id'])]
-#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Widget\WidgetRepository::class)]
+#[ORM\Entity(repositoryClass: WidgetRepository::class)]
 class Widget
 {
     use Id;
@@ -63,7 +65,7 @@ class Widget
      *
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private $sources = [];
 
     /**
@@ -72,7 +74,7 @@ class Widget
      *
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private $context = [
         self::CONTEXT_DESKTOP,
         self::CONTEXT_WORKSPACE,
@@ -83,7 +85,7 @@ class Widget
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'is_exportable', type: 'boolean')]
+    #[ORM\Column(name: 'is_exportable', type: Types::BOOLEAN)]
     private $exportable;
 
     /**
@@ -92,7 +94,7 @@ class Widget
      *
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private $tags = [];
 
     /**

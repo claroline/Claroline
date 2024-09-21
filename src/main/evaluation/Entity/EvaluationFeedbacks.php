@@ -2,14 +2,15 @@
 
 namespace Claroline\EvaluationBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait EvaluationFeedbacks
 {
-    #[ORM\Column(name: 'success_message', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'success_message', type: Types::TEXT, nullable: true)]
     private ?string $successMessage = null;
 
-    #[ORM\Column(name: 'failure_message', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'failure_message', type: Types::TEXT, nullable: true)]
     private ?string $failureMessage = null;
 
     public function getSuccessMessage(): ?string

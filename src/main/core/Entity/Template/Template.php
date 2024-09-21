@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Template;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Name;
@@ -32,7 +33,7 @@ class Template
      * @var TemplateType
      */
     #[ORM\JoinColumn(name: 'claro_template_type', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\TemplateType::class)]
+    #[ORM\ManyToOne(targetEntity: TemplateType::class)]
     private $type;
 
     /**
@@ -42,13 +43,13 @@ class Template
      *
      * @var bool
      */
-    #[ORM\Column(name: 'is_system', type: 'boolean')]
+    #[ORM\Column(name: 'is_system', type: Types::BOOLEAN)]
     private $system = false;
 
     /**
      * @var ArrayCollection|TemplateContent[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Template\TemplateContent::class, mappedBy: 'template', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: TemplateContent::class, mappedBy: 'template', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $contents;
 
     public function __construct()

@@ -17,7 +17,7 @@ class WidgetsTab extends AbstractTab
     #[ORM\JoinTable(name: 'claro_home_tab_widgets_containers')]
     #[ORM\JoinColumn(name: 'tab_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'container_id', referencedColumnName: 'id', onDelete: 'CASCADE', unique: true)]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetContainer::class, cascade: ['persist', 'remove'])]
+    #[ORM\ManyToMany(targetEntity: WidgetContainer::class, cascade: ['persist', 'remove'])]
     private Collection $widgetContainers;
 
     public function __construct()

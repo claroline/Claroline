@@ -2,6 +2,7 @@
 
 namespace Icap\LessonBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,18 +12,18 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class Lesson extends AbstractResource
 {
-    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'description', type: Types::TEXT, nullable: true)]
     private ?string $description;
 
     /**
      * Show overview to users or directly start the lesson.
      */
-    #[ORM\Column(name: 'show_overview', type: 'boolean', options: ['default' => 1])]
+    #[ORM\Column(name: 'show_overview', type: Types::BOOLEAN, options: ['default' => 1])]
     private bool $showOverview = true;
 
     
     #[ORM\JoinColumn(name: 'root_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\OneToOne(targetEntity: \Icap\LessonBundle\Entity\Chapter::class, cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: Chapter::class, cascade: ['all'])]
     private ?Chapter $root;
 
     /**

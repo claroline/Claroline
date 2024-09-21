@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +25,7 @@ class UserProgression
      *
      */
     #[ORM\JoinColumn(name: 'step_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Innova\PathBundle\Entity\Step::class)]
+    #[ORM\ManyToOne(targetEntity: Step::class)]
     private Step $step;
 
     /**
@@ -33,13 +34,13 @@ class UserProgression
      *
      */
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user = null;
 
     /**
      * Current state of the Step.
      */
-    #[ORM\Column(name: 'progression_status', type: 'string')]
+    #[ORM\Column(name: 'progression_status', type: Types::STRING)]
     private string $status = 'seen';
 
     public function getStep(): ?Step

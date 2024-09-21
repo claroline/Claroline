@@ -11,6 +11,7 @@
 
 namespace Claroline\AnnouncementBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,10 +24,10 @@ class AnnouncementSend
     use Uuid;
 
     #[ORM\JoinColumn(name: 'announcement_id', nullable: true, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\AnnouncementBundle\Entity\Announcement::class)]
+    #[ORM\ManyToOne(targetEntity: Announcement::class)]
     private ?Announcement $announcement = null;
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $data = [];
 
     public function __construct()

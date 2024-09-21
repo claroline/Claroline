@@ -2,6 +2,8 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -18,7 +20,7 @@ class Comment
     public const VALIDATED = 1;
     public const BLOCKED = 2;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     protected $content;
 
     /**
@@ -27,7 +29,7 @@ class Comment
      * @var User
      */
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected $user;
 
     /**
@@ -36,25 +38,25 @@ class Comment
      * @var Entry
      */
     #[ORM\JoinColumn(name: 'entry_id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\Entry::class, inversedBy: 'comments')]
+    #[ORM\ManyToOne(targetEntity: Entry::class, inversedBy: 'comments')]
     protected $entry;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'creation_date', type: 'datetime')]
+    #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
     protected $creationDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'edition_date', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'edition_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $editionDate;
 
     /**
      * @var int
      */
-    #[ORM\Column(name: 'comment_status', type: 'integer')]
+    #[ORM\Column(name: 'comment_status', type: Types::INTEGER)]
     protected $status;
 
     /**
@@ -124,7 +126,7 @@ class Comment
     /**
      * Get creation date.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreationDate()
     {
@@ -134,7 +136,7 @@ class Comment
     /**
      * Set creation date.
      */
-    public function setCreationDate(\DateTime $creationDate)
+    public function setCreationDate(DateTime $creationDate)
     {
         $this->creationDate = $creationDate;
     }
@@ -142,7 +144,7 @@ class Comment
     /**
      * Get edition date.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getEditionDate()
     {
@@ -152,7 +154,7 @@ class Comment
     /**
      * Set edition date.
      */
-    public function setEditionDate(\DateTime $editionDate = null)
+    public function setEditionDate(DateTime $editionDate = null)
     {
         $this->editionDate = $editionDate;
     }

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\File;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,7 +26,7 @@ class PublicFile
     /**
      * @var int
      */
-    #[ORM\Column(name: 'file_size', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'file_size', type: Types::INTEGER, nullable: true)]
     private $size;
 
     /**

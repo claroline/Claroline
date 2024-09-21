@@ -11,6 +11,10 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
+use DateTime;
+use InvalidArgumentException;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Hidden;
 use Claroline\AppBundle\Entity\Display\Poster;
@@ -35,7 +39,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * Base entity for all resources.
  */
 #[ORM\Table(name: 'claro_resource_node')]
-#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository::class)]
+#[ORM\Entity(repositoryClass: ResourceNodeRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\Tree(type: 'materializedPath')]
 class ResourceNode implements CrudEntityInterface
@@ -69,16 +73,16 @@ class ResourceNode implements CrudEntityInterface
     private $license;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'creation_date', type: 'datetime')]
+    #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
     private $creationDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'modification_date', type: 'datetime')]
+    #[ORM\Column(name: 'modification_date', type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'update')]
     private $modificationDate;
 
@@ -86,7 +90,7 @@ class ResourceNode implements CrudEntityInterface
      * @var ResourceType
      */
     #[ORM\JoinColumn(name: 'resource_type_id', onDelete: 'CASCADE', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceType::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceType::class)]
     private $resourceType;
 
     /**
@@ -94,7 +98,7 @@ class ResourceNode implements CrudEntityInterface
      *
      * @var bool
      */
-    #[ORM\Column(type: 'boolean', options: ['default' => 1])]
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 1])]
     private $showIcon = true;
 
     /**
@@ -108,21 +112,21 @@ class ResourceNode implements CrudEntityInterface
      * @var ResourceNode
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class, inversedBy: 'children')]
+    #[ORM\ManyToOne(targetEntity: ResourceNode::class, inversedBy: 'children')]
     #[Gedmo\TreeParent]
     protected $parent;
 
     /**
      * @todo this property shouldn't be nullable (is it due to materialized path strategy ?)
      */
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     #[Gedmo\TreeLevel]
     protected $lvl;
 
     /**
      * @var ArrayCollection|ResourceNode[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class, mappedBy: 'parent')]
+    #[ORM\OneToMany(targetEntity: ResourceNode::class, mappedBy: 'parent')]
     #[ORM\OrderBy(['index' => 'ASC'])]
     protected $children;
 
@@ -132,7 +136,7 @@ class ResourceNode implements CrudEntityInterface
      *
      * @todo remove me
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Gedmo\TreePath(separator: '`')]
     protected $path;
 
@@ -141,19 +145,19 @@ class ResourceNode implements CrudEntityInterface
      *
      * nullable true because it's a new property and migrations/updaters were needed
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     protected $materializedPath;
 
     /**
      * @var ArrayCollection|ResourceRights[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceRights::class, mappedBy: 'resourceNode', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ResourceRights::class, mappedBy: 'resourceNode', orphanRemoval: true)]
     protected $rights;
 
     /**
      * @var int
      */
-    #[ORM\Column(name: 'value', nullable: true, type: 'integer')]
+    #[ORM\Column(name: 'value', nullable: true, type: Types::INTEGER)]
     protected $index;
 
     /**
@@ -171,22 +175,22 @@ class ResourceNode implements CrudEntityInterface
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean', options: ['default' => 1])]
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 1])]
     protected $active = true;
 
-    #[ORM\Column(type: 'boolean', nullable: false)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     protected $fullscreen = false;
 
     /**
      * @todo split IPS & access code into 2 props.
      */
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     protected $accesses = [];
 
     /**
      * @var int
      */
-    #[ORM\Column(nullable: false, type: 'integer', name: 'views_count', options: ['default' => 0])]
+    #[ORM\Column(nullable: false, type: Types::INTEGER, name: 'views_count', options: ['default' => 0])]
     protected $viewsCount = 0;
 
     /**
@@ -239,7 +243,7 @@ class ResourceNode implements CrudEntityInterface
     /**
      * Returns the resource creation date.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreationDate()
     {
@@ -252,7 +256,7 @@ class ResourceNode implements CrudEntityInterface
      * NOTE : creation date is already handled by the timestamp listener; this
      *        setter exists mainly for testing purposes.
      */
-    public function setCreationDate(\DateTime $date)
+    public function setCreationDate(DateTime $date)
     {
         $this->creationDate = $date;
         $this->modificationDate = $date;
@@ -261,7 +265,7 @@ class ResourceNode implements CrudEntityInterface
     /**
      * Returns the resource modification date.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getModificationDate()
     {
@@ -271,7 +275,7 @@ class ResourceNode implements CrudEntityInterface
     /**
      * Sets the resource modification date.
      */
-    public function setModificationDate(\DateTime $date)
+    public function setModificationDate(DateTime $date)
     {
         $this->modificationDate = $date;
     }
@@ -383,12 +387,12 @@ class ResourceNode implements CrudEntityInterface
      *
      * @param string $name
      *
-     * @throws \InvalidArgumentException if the name contains the path separator ('/')
+     * @throws InvalidArgumentException if the name contains the path separator ('/')
      */
     public function setName($name)
     {
         if (false !== strpos(self::PATH_SEPARATOR, $name)) {
-            throw new \InvalidArgumentException('Invalid character "'.self::PATH_SEPARATOR.'" in resource name.');
+            throw new InvalidArgumentException('Invalid character "'.self::PATH_SEPARATOR.'" in resource name.');
         }
 
         $this->name = $name;

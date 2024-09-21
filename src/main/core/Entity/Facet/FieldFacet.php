@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
+use Claroline\CoreBundle\Repository\Facet\FieldFacetRepository;
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Display\Order;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -20,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 #[ORM\Table(name: 'claro_field_facet')]
-#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Facet\FieldFacetRepository::class)]
+#[ORM\Entity(repositoryClass: FieldFacetRepository::class)]
 class FieldFacet
 {
     use Id;
@@ -71,40 +73,40 @@ class FieldFacet
 
     
     #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Facet\PanelFacet::class, inversedBy: 'fieldsFacet')]
+    #[ORM\ManyToOne(targetEntity: PanelFacet::class, inversedBy: 'fieldsFacet')]
     private ?PanelFacet $panelFacet = null;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacetChoice::class, mappedBy: 'fieldFacet')]
+    #[ORM\OneToMany(targetEntity: FieldFacetChoice::class, mappedBy: 'fieldFacet')]
     private ?Collection $fieldFacetChoices;
 
-    #[ORM\Column(name: 'isRequired', type: 'boolean')]
+    #[ORM\Column(name: 'isRequired', type: Types::BOOLEAN)]
     private bool $required = false;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private ?array $options = [];
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private string $confidentiality = self::CONFIDENTIALITY_NONE;
 
-    #[ORM\Column(name: 'locked', type: 'boolean', options: ['default' => 0])]
+    #[ORM\Column(name: 'locked', type: Types::BOOLEAN, options: ['default' => 0])]
     private bool $locked = false;
 
-    #[ORM\Column(name: 'locked_edition', type: 'boolean', options: ['default' => 0])]
+    #[ORM\Column(name: 'locked_edition', type: Types::BOOLEAN, options: ['default' => 0])]
     private bool $lockedEditionOnly = false;
 
     #[ORM\Column(name: 'help', nullable: true)]
     private ?string $help = null;
 
-    #[ORM\Column(name: 'condition_field', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'condition_field', type: Types::STRING, nullable: true)]
     private ?string $conditionField = null;
 
-    #[ORM\Column(name: 'condition_comparator', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'condition_comparator', type: Types::STRING, nullable: true)]
     private ?string $conditionComparator = null;
 
-    #[ORM\Column(name: 'condition_value', type: 'json', nullable: true)]
+    #[ORM\Column(name: 'condition_value', type: Types::JSON, nullable: true)]
     private $conditionValue = null;
 
-    #[ORM\Column(name: 'hide_label', type: 'boolean')]
+    #[ORM\Column(name: 'hide_label', type: Types::BOOLEAN)]
     private bool $hideLabel = false;
 
     public function __construct()

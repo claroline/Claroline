@@ -16,7 +16,7 @@ abstract class AbstractFavourite
      * @var User
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private $user;
 
     public function setUser(User $user)

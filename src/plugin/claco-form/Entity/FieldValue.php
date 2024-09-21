@@ -11,6 +11,7 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Claroline\ClacoFormBundle\Repository\FieldValueRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
@@ -18,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_clacoformbundle_field_value')]
 #[ORM\UniqueConstraint(name: 'field_unique_name', columns: ['entry_id', 'field_id'])]
-#[ORM\Entity(repositoryClass: \Claroline\ClacoFormBundle\Repository\FieldValueRepository::class)]
+#[ORM\Entity(repositoryClass: FieldValueRepository::class)]
 class FieldValue
 {
     use Id;
@@ -29,7 +30,7 @@ class FieldValue
      * @var Entry
      */
     #[ORM\JoinColumn(name: 'entry_id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\Entry::class, inversedBy: 'fieldValues', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Entry::class, inversedBy: 'fieldValues', cascade: ['persist'])]
     protected $entry;
 
     /**
@@ -37,7 +38,7 @@ class FieldValue
      * @var Field
      */
     #[ORM\JoinColumn(name: 'field_id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\Field::class)]
+    #[ORM\ManyToOne(targetEntity: Field::class)]
     protected $field;
 
     /**
@@ -45,7 +46,7 @@ class FieldValue
      * @var FieldFacetValue
      */
     #[ORM\JoinColumn(name: 'field_facet_value_id', onDelete: 'CASCADE')]
-    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacetValue::class, cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: FieldFacetValue::class, cascade: ['persist'])]
     protected $fieldFacetValue;
 
     public function __construct()

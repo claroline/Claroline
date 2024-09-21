@@ -20,11 +20,11 @@ class ColorSelection implements AnswerPartInterface
     use FeedbackTrait;
 
     #[ORM\JoinColumn(name: 'selection_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Selection::class, inversedBy: 'colorSelections')]
+    #[ORM\ManyToOne(targetEntity: Selection::class, inversedBy: 'colorSelections')]
     private $selection;
 
     #[ORM\JoinColumn(name: 'color_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Color::class, inversedBy: 'colorSelections')]
+    #[ORM\ManyToOne(targetEntity: Color::class, inversedBy: 'colorSelections')]
     private $color;
 
     /**

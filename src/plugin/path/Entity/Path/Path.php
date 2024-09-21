@@ -2,6 +2,8 @@
 
 namespace Innova\PathBundle\Entity\Path;
 
+use Doctrine\DBAL\Types\Types;
+use Innova\PathBundle\Repository\PathRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\HasEndPage;
 use Claroline\CoreBundle\Entity\Resource\HasHomePage;
@@ -16,14 +18,14 @@ use Innova\PathBundle\Entity\Step;
  * Path resource.
  */
 #[ORM\Table(name: 'innova_path')]
-#[ORM\Entity(repositoryClass: \Innova\PathBundle\Repository\PathRepository::class)]
+#[ORM\Entity(repositoryClass: PathRepository::class)]
 class Path extends AbstractResource
 {
     use HasHomePage;
     use HasEndPage;
     use EvaluationFeedbacks;
 
-    #[ORM\OneToMany(targetEntity: \Innova\PathBundle\Entity\Step::class, mappedBy: 'path', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Step::class, mappedBy: 'path', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $steps;
 
@@ -36,11 +38,11 @@ class Path extends AbstractResource
     /**
      * Is it possible for the user to manually set the progression.
      */
-    #[ORM\Column(name: 'manual_progression_allowed', type: 'boolean')]
+    #[ORM\Column(name: 'manual_progression_allowed', type: Types::BOOLEAN)]
     private bool $manualProgressionAllowed = false;
 
     #[ORM\JoinColumn(name: 'resource_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     private ?ResourceNode $overviewResource = null;
 
     /**
@@ -49,19 +51,19 @@ class Path extends AbstractResource
     #[ORM\Column(options: ['default' => '_self'])]
     private string $secondaryResourcesTarget = '_self';
 
-    #[ORM\Column(name: 'score_total', type: 'float', options: ['default' => 100])]
+    #[ORM\Column(name: 'score_total', type: Types::FLOAT, options: ['default' => 100])]
     private ?float $scoreTotal = 100;
 
     /**
      * Score to obtain to pass.
      */
-    #[ORM\Column(name: 'success_score', type: 'float', nullable: true)]
+    #[ORM\Column(name: 'success_score', type: Types::FLOAT, nullable: true)]
     private ?float $successScore = 50;
 
     /**
      * @deprecated will be replaced by the score type on resource node
      */
-    #[ORM\Column(name: 'show_score', type: 'boolean')]
+    #[ORM\Column(name: 'show_score', type: Types::BOOLEAN)]
     private bool $showScore = false;
 
     public function __construct()

@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -47,48 +48,48 @@ class AbstractTraining
     protected ?string $plainDescription = null;
 
     #[ORM\JoinColumn(name: 'workspace_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
+    #[ORM\ManyToOne(targetEntity: Workspace::class)]
     protected ?Workspace $workspace = null;
 
     #[ORM\JoinColumn(name: 'learner_role_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
+    #[ORM\ManyToOne(targetEntity: Role::class)]
     protected ?Role $learnerRole = null;
 
     #[ORM\JoinColumn(name: 'tutor_role_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
+    #[ORM\ManyToOne(targetEntity: Role::class)]
     protected ?Role $tutorRole = null;
 
-    #[ORM\Column(name: 'public_registration', type: 'boolean')]
+    #[ORM\Column(name: 'public_registration', type: Types::BOOLEAN)]
     protected bool $publicRegistration = false;
 
-    #[ORM\Column(name: 'auto_registration', type: 'boolean')]
+    #[ORM\Column(name: 'auto_registration', type: Types::BOOLEAN)]
     protected bool $autoRegistration = false;
 
-    #[ORM\Column(name: 'public_unregistration', type: 'boolean')]
+    #[ORM\Column(name: 'public_unregistration', type: Types::BOOLEAN)]
     protected bool $publicUnregistration = false;
 
-    #[ORM\Column(name: 'registration_validation', type: 'boolean')]
+    #[ORM\Column(name: 'registration_validation', type: Types::BOOLEAN)]
     protected bool $registrationValidation = false;
 
-    #[ORM\Column(name: 'registration_mail', type: 'boolean')]
+    #[ORM\Column(name: 'registration_mail', type: Types::BOOLEAN)]
     protected bool $registrationMail = false;
 
-    #[ORM\Column(name: 'user_validation', type: 'boolean')]
+    #[ORM\Column(name: 'user_validation', type: Types::BOOLEAN)]
     protected bool $userValidation = false;
 
     /**
      * Enables the waiting list for the training.
      */
-    #[ORM\Column(name: 'pending_registrations', type: 'boolean')]
+    #[ORM\Column(name: 'pending_registrations', type: Types::BOOLEAN)]
     protected bool $pendingRegistrations = false;
 
-    #[ORM\Column(name: 'max_users', nullable: true, type: 'integer')]
+    #[ORM\Column(name: 'max_users', nullable: true, type: Types::INTEGER)]
     protected ?int $maxUsers = null;
 
-    #[ORM\Column(type: 'float', nullable: true)]
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
     protected ?float $price = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     protected ?string $priceDescription = null;
 
     public function getPlainDescription(): ?string

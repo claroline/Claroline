@@ -23,13 +23,13 @@ class GraphicQuestion extends AbstractItem
      *
      * @var Image
      */
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Content\Image::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Image::class, cascade: ['persist'])]
     private $image;
 
     /**
      * @todo remove the mapped by and add a join table
      */
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Area::class, mappedBy: 'interactionGraphic', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Area::class, mappedBy: 'interactionGraphic', cascade: ['all'], orphanRemoval: true)]
     private $areas;
 
     /**

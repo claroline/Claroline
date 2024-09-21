@@ -19,7 +19,7 @@ class Ability
     use Description;
 
     #[ORM\JoinColumn(name: 'skill_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\EvaluationBundle\Entity\Skill\Skill::class, inversedBy: 'abilities')]
+    #[ORM\ManyToOne(targetEntity: Skill::class, inversedBy: 'abilities')]
     private ?Skill $skill = null;
 
     public function __construct()

@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Entity\ConnectionMessage;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\CoreBundle\Repository\ConnectionMessage\ConnectionMessageRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
@@ -16,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * ConnectionMessage.
  */
 #[ORM\Table(name: 'claro_connection_message')]
-#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\ConnectionMessage\ConnectionMessageRepository::class)]
+#[ORM\Entity(repositoryClass: ConnectionMessageRepository::class)]
 class ConnectionMessage
 {
     // identifiers
@@ -46,14 +48,14 @@ class ConnectionMessage
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private $locked = false;
 
     /**
      *
      * @var ArrayCollection|Slide[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\ConnectionMessage\Slide::class, mappedBy: 'message', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'message', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private $slides;
 
@@ -64,7 +66,7 @@ class ConnectionMessage
      * @var ArrayCollection|Role[]
      */
     #[ORM\JoinTable(name: 'claro_connection_message_role')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
+    #[ORM\ManyToMany(targetEntity: Role::class)]
     private $roles;
 
     /**
@@ -74,7 +76,7 @@ class ConnectionMessage
      * @var ArrayCollection|User[]
      */
     #[ORM\JoinTable(name: 'claro_connection_message_user')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToMany(targetEntity: User::class)]
     private $users;
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Widget\Type;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,7 +20,7 @@ class SimpleWidget extends AbstractWidget
      *
      * @var string
      */
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private $content;
 
     /**

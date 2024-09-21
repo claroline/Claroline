@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Misc\Choice;
@@ -23,23 +24,23 @@ class ChoiceQuestion extends AbstractItem
      *
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private $multiple = false;
 
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Choice::class, mappedBy: 'interactionQCM', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Choice::class, mappedBy: 'interactionQCM', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private $choices;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private $numbering = ExerciseNumbering::NONE;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private $direction = Direction::VERTICAL;
 
     /**

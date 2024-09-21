@@ -26,7 +26,7 @@ abstract class AbstractResource
      * @var ResourceNode
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
+    #[ORM\OneToOne(targetEntity: ResourceNode::class)]
     protected $resourceNode;
 
     /**

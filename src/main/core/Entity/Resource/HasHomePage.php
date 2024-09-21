@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait HasHomePage
@@ -12,13 +13,13 @@ trait HasHomePage
      *
      * @var bool
      */
-    #[ORM\Column(name: 'show_overview', type: 'boolean')]
+    #[ORM\Column(name: 'show_overview', type: Types::BOOLEAN)]
     private $showOverview = true;
 
     /**
      * @var string
      */
-    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'description', type: Types::TEXT, nullable: true)]
     private $overviewMessage = '';
 
     public function getShowOverview(): bool

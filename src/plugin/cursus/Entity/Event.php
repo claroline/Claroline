@@ -11,6 +11,8 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\CursusBundle\Repository\EventRepository;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\CoreBundle\Entity\Planning\AbstractPlanned;
 use Claroline\CoreBundle\Entity\Template\Template;
@@ -18,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 #[ORM\Table(name: 'claro_cursusbundle_session_event')]
-#[ORM\Entity(repositoryClass: \Claroline\CursusBundle\Repository\EventRepository::class)]
+#[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event extends AbstractPlanned
 {
     use Code;
@@ -29,25 +31,25 @@ class Event extends AbstractPlanned
      * @var Session
      */
     #[ORM\JoinColumn(name: 'session_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CursusBundle\Entity\Session::class, inversedBy: 'events')]
+    #[ORM\ManyToOne(targetEntity: Session::class, inversedBy: 'events')]
     private $session;
 
     /**
      * @var int
      */
-    #[ORM\Column(name: 'max_users', nullable: true, type: 'integer')]
+    #[ORM\Column(name: 'max_users', nullable: true, type: Types::INTEGER)]
     private $maxUsers;
 
     /**
      * @var int
      */
-    #[ORM\Column(name: 'registration_type', type: 'integer', nullable: false, options: ['default' => 0])]
+    #[ORM\Column(name: 'registration_type', type: Types::INTEGER, nullable: false, options: ['default' => 0])]
     private $registrationType = Session::REGISTRATION_AUTO;
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'registration_mail', type: 'boolean')]
+    #[ORM\Column(name: 'registration_mail', type: Types::BOOLEAN)]
     private $registrationMail = true;
 
     /**
@@ -58,12 +60,12 @@ class Event extends AbstractPlanned
      * @var Template
      */
     #[ORM\JoinColumn(name: 'presence_template_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\Template::class)]
+    #[ORM\ManyToOne(targetEntity: Template::class)]
     private $presenceTemplate;
 
     
     #[ORM\JoinColumn(name: 'invitation_template_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\Template::class)]
+    #[ORM\ManyToOne(targetEntity: Template::class)]
     private ?Template $invitationTemplate = null;
 
     public static function getType(): string

@@ -34,23 +34,23 @@ class Evidence
 
     
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\OpenBadgeBundle\Entity\Assertion::class, inversedBy: 'evidences')]
+    #[ORM\ManyToOne(targetEntity: Assertion::class, inversedBy: 'evidences')]
     private ?Assertion $assertion = null;
 
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceUserEvaluation::class)]
     private ?ResourceUserEvaluation $resourceEvidence = null;
 
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Evaluation::class)]
+    #[ORM\ManyToOne(targetEntity: Evaluation::class)]
     private ?Evaluation $workspaceEvidence = null;
 
     
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\OpenBadgeBundle\Entity\Rules\Rule::class)]
+    #[ORM\ManyToOne(targetEntity: Rule::class)]
     private ?Rule $rule = null;
 
     
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user = null;
 
     public function __construct()

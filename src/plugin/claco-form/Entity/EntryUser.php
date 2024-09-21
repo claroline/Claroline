@@ -2,6 +2,8 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\ClacoFormBundle\Repository\EntryUserRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -9,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_clacoformbundle_entry_user')]
 #[ORM\UniqueConstraint(name: 'clacoform_unique_entry_user', columns: ['entry_id', 'user_id'])]
-#[ORM\Entity(repositoryClass: \Claroline\ClacoFormBundle\Repository\EntryUserRepository::class)]
+#[ORM\Entity(repositoryClass: EntryUserRepository::class)]
 class EntryUser
 {
     use Id;
@@ -20,7 +22,7 @@ class EntryUser
      * @var Entry
      */
     #[ORM\JoinColumn(name: 'entry_id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\Entry::class, inversedBy: 'entryUsers')]
+    #[ORM\ManyToOne(targetEntity: Entry::class, inversedBy: 'entryUsers')]
     protected $entry;
 
     /**
@@ -28,19 +30,19 @@ class EntryUser
      * @var User
      */
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected $user;
 
-    #[ORM\Column(name: 'shared', type: 'boolean')]
+    #[ORM\Column(name: 'shared', type: Types::BOOLEAN)]
     protected $shared = false;
 
-    #[ORM\Column(name: 'notify_edition', type: 'boolean')]
+    #[ORM\Column(name: 'notify_edition', type: Types::BOOLEAN)]
     protected $notifyEdition = false;
 
-    #[ORM\Column(name: 'notify_comment', type: 'boolean')]
+    #[ORM\Column(name: 'notify_comment', type: Types::BOOLEAN)]
     protected $notifyComment = false;
 
-    #[ORM\Column(name: 'notify_vote', type: 'boolean')]
+    #[ORM\Column(name: 'notify_vote', type: Types::BOOLEAN)]
     protected $notifyVote = false;
 
     public function __construct()

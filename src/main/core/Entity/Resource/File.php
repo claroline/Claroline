@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -25,7 +26,7 @@ class File extends AbstractResource
     // use the claroline file player to display the file
     public const OPENING_PLAYER = 'player';
 
-    #[ORM\Column(type: 'integer', nullable: false)]
+    #[ORM\Column(type: Types::INTEGER, nullable: false)]
     protected $size;
 
     #[ORM\Column(name: 'hash_name')]

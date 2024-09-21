@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,14 +24,14 @@ class Color
      *
      * @var string
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private $colorCode;
 
     #[ORM\JoinColumn(name: 'interaction_selection_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\SelectionQuestion::class, inversedBy: 'colors')]
+    #[ORM\ManyToOne(targetEntity: SelectionQuestion::class, inversedBy: 'colors')]
     private $interactionSelection;
 
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\ColorSelection::class, mappedBy: 'color', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ColorSelection::class, mappedBy: 'color', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $colorSelections;
 
     public function __construct()

@@ -11,12 +11,14 @@
 
 namespace Claroline\ScormBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\ScormBundle\Repository\ScormRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_scorm')]
-#[ORM\Entity(repositoryClass: \Claroline\ScormBundle\Repository\ScormRepository::class)]
+#[ORM\Entity(repositoryClass: ScormRepository::class)]
 class Scorm extends AbstractResource
 {
     const SCORM_12 = 'scorm_12';
@@ -28,10 +30,10 @@ class Scorm extends AbstractResource
     #[ORM\Column(name: 'hash_name')]
     protected $hashName;
 
-    #[ORM\Column(type: 'float', nullable: true)]
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
     private $ratio = 56.25;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\ScormBundle\Entity\Sco::class, mappedBy: 'scorm', orphanRemoval: true, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Sco::class, mappedBy: 'scorm', orphanRemoval: true, cascade: ['persist'])]
     protected $scos;
 
     public function __construct()

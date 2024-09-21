@@ -2,6 +2,7 @@
 
 namespace Claroline\LogBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\HasContext;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,13 +13,13 @@ class OperationalLog extends AbstractLog
 {
     use HasContext;
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: Types::STRING, nullable: false)]
     private ?string $objectClass = null;
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: Types::STRING, nullable: false)]
     private ?string $objectId = null;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private ?array $changeset = [];
 
     public function getObjectClass(): ?string

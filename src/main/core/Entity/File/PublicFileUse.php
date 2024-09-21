@@ -22,7 +22,7 @@ class PublicFileUse
     use Id;
 
     #[ORM\JoinColumn(name: 'public_file_id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\File\PublicFile::class)]
+    #[ORM\ManyToOne(targetEntity: PublicFile::class)]
     protected $publicFile;
 
     #[ORM\Column(name: 'object_uuid')]

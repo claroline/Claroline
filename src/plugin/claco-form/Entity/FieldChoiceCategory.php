@@ -20,15 +20,15 @@ use Doctrine\ORM\Mapping as ORM;
 class FieldChoiceCategory extends AbstractFacetValue
 {
     #[ORM\JoinColumn(name: 'field_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\Field::class, inversedBy: 'fieldChoiceCategories')]
+    #[ORM\ManyToOne(targetEntity: Field::class, inversedBy: 'fieldChoiceCategories')]
     protected $field;
 
     #[ORM\JoinColumn(name: 'category_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\Category::class)]
+    #[ORM\ManyToOne(targetEntity: Category::class)]
     protected $category;
 
     #[ORM\JoinColumn(name: 'field_facet_choice_id', nullable: true, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacetChoice::class)]
+    #[ORM\ManyToOne(targetEntity: FieldFacetChoice::class)]
     protected $fieldFacetChoice;
 
     public function getType(): string

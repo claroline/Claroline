@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\ConnectionMessage;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Poster;
@@ -21,7 +22,7 @@ class Slide
     /**
      * @var string
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private $content;
 
     /**
@@ -33,7 +34,7 @@ class Slide
     /**
      * @var int
      */
-    #[ORM\Column(name: 'slide_order', type: 'integer')]
+    #[ORM\Column(name: 'slide_order', type: Types::INTEGER)]
     private $order;
 
     /**
@@ -41,13 +42,13 @@ class Slide
      * @var ConnectionMessage
      */
     #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage::class, inversedBy: 'slides')]
+    #[ORM\ManyToOne(targetEntity: ConnectionMessage::class, inversedBy: 'slides')]
     private $message;
 
     /**
      * @var array
      */
-    #[ORM\Column(name: 'shortcuts', type: 'json', nullable: true)]
+    #[ORM\Column(name: 'shortcuts', type: Types::JSON, nullable: true)]
     private $shortcuts = [];
 
     /**

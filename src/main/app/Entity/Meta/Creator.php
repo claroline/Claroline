@@ -13,7 +13,7 @@ trait Creator
      *
      */
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $creator = null;
 
     /**

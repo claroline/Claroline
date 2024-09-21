@@ -2,6 +2,7 @@
 
 namespace Claroline\YouTubeBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,25 +11,25 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class Video extends AbstractResource
 {
-    #[ORM\Column(name: 'video_id', type: 'string', nullable: false)]
+    #[ORM\Column(name: 'video_id', type: Types::STRING, nullable: false)]
     private string $videoId;
 
-    #[ORM\Column(name: 'timecode_start', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'timecode_start', type: Types::INTEGER, nullable: true)]
     private ?int $timecodeStart = null;
 
-    #[ORM\Column(name: 'timecode_end', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'timecode_end', type: Types::INTEGER, nullable: true)]
     private ?int $timecodeEnd = null;
 
-    #[ORM\Column(name: 'autoplay', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'autoplay', type: Types::BOOLEAN, nullable: false)]
     private bool $autoplay = false;
 
-    #[ORM\Column(name: 'looping', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'looping', type: Types::BOOLEAN, nullable: false)]
     private bool $looping = false;
 
-    #[ORM\Column(name: 'controls', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'controls', type: Types::BOOLEAN, nullable: false)]
     private bool $controls = true;
 
-    #[ORM\Column(name: 'resume', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'resume', type: Types::BOOLEAN, nullable: false)]
     private bool $resume = false;
 
     public function getVideoId(): string

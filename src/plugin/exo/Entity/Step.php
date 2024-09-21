@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Order;
@@ -27,23 +28,23 @@ class Step
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     private $title;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private $description;
 
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Exercise::class, inversedBy: 'steps')]
+    #[ORM\ManyToOne(targetEntity: Exercise::class, inversedBy: 'steps')]
     private $exercise;
 
     /**
      * @var ArrayCollection|StepItem[]
      */
-    #[ORM\OneToMany(targetEntity: \StepItem::class, mappedBy: 'step', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'step', targetEntity: StepItem::class, cascade: ['all'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private $stepQuestions;
 

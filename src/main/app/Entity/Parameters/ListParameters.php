@@ -2,6 +2,7 @@
 
 namespace Claroline\AppBundle\Entity\Parameters;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,37 +15,37 @@ trait ListParameters
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $filterable = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $sortable = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $paginated = true;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $columnsFilterable = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $count = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $actions = true;
 
     /**
@@ -56,19 +57,19 @@ trait ListParameters
     /**
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     protected $availableSort = [];
 
     /**
      * @var int
      */
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     protected $pageSize = 15;
 
     /**
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     protected $availablePageSizes = [15, 30, 60, 120, -1];
 
     /**
@@ -80,7 +81,7 @@ trait ListParameters
     /**
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     protected $availableDisplays = ['tiles-sm'];
 
     /**
@@ -92,25 +93,25 @@ trait ListParameters
     /**
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     protected $filters = [];
 
     /**
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     protected $availableFilters = [];
 
     /**
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     protected $availableColumns = [];
 
     /**
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     protected $displayedColumns = [];
 
     /**
@@ -119,7 +120,7 @@ trait ListParameters
      *
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     protected $card = [];
 
     public function isFilterable(): bool

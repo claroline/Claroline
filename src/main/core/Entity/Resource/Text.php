@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,10 +20,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class Text extends AbstractResource
 {
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $version = 1;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\Revision::class, mappedBy: 'text', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Revision::class, mappedBy: 'text', cascade: ['persist'])]
     #[ORM\OrderBy(['version' => 'DESC'])]
     private Collection $revisions;
 

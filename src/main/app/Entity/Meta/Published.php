@@ -2,11 +2,12 @@
 
 namespace Claroline\AppBundle\Entity\Meta;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait Published
 {
-    #[ORM\Column(name: 'published', type: 'boolean', options: ['default' => 1])]
+    #[ORM\Column(name: 'published', type: Types::BOOLEAN, options: ['default' => 1])]
     protected bool $published = true;
 
     /**

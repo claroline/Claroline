@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Misc\Cell;
@@ -40,7 +41,7 @@ class GridQuestion extends AbstractItem
      *
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Cell::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Cell::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
     private $cells;
 
     /**
@@ -49,7 +50,7 @@ class GridQuestion extends AbstractItem
      *
      * @var string
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private $sumMode = self::SUM_CELL;
 
     /**
@@ -58,7 +59,7 @@ class GridQuestion extends AbstractItem
      *
      * @var int
      */
-    #[ORM\Column(name: 'grid_rows', type: 'integer')]
+    #[ORM\Column(name: 'grid_rows', type: Types::INTEGER)]
     private $rows;
 
     /**
@@ -67,7 +68,7 @@ class GridQuestion extends AbstractItem
      *
      * @var int
      */
-    #[ORM\Column(name: 'grid_columns', type: 'integer')]
+    #[ORM\Column(name: 'grid_columns', type: Types::INTEGER)]
     private $columns;
 
     /**
@@ -76,7 +77,7 @@ class GridQuestion extends AbstractItem
      *
      * @var int
      */
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private $borderWidth = 1;
 
     /**
@@ -85,7 +86,7 @@ class GridQuestion extends AbstractItem
      *
      * @var string
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private $borderColor = '#DDDDDD';
 
     /**

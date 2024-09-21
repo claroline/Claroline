@@ -2,6 +2,8 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use DateTimeInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -16,26 +18,26 @@ class Comment extends Statusable
     use Id;
     use Uuid;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $message;
 
-    #[ORM\Column(type: 'datetime', name: 'creation_date')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, name: 'creation_date')]
     #[Gedmo\Timestampable(on: 'create')]
-    private ?\DateTimeInterface $creationDate;
+    private ?DateTimeInterface $creationDate;
 
-    #[ORM\Column(type: 'datetime', name: 'publication_date', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, name: 'publication_date', nullable: true)]
     #[Gedmo\Timestampable(on: 'change', field: 'status', value: '1')]
-    private ?\DateTimeInterface $publicationDate;
+    private ?DateTimeInterface $publicationDate;
 
-    #[ORM\Column(type: 'datetime', name: 'update_date', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, name: 'update_date', nullable: true)]
     #[Gedmo\Timestampable(on: 'change', field: 'message')]
-    private ?\DateTimeInterface $updateDate;
+    private ?DateTimeInterface $updateDate;
 
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $author;
 
-    #[ORM\ManyToOne(targetEntity: \Icap\BlogBundle\Entity\Post::class, inversedBy: 'comments')]
+    #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
     private ?Post $post;
 
     #[ORM\Column(type: 'smallint')]
@@ -56,12 +58,12 @@ class Comment extends Statusable
         return $this->message;
     }
 
-    public function setCreationDate(?\DateTimeInterface $creationDate = null): void
+    public function setCreationDate(?DateTimeInterface $creationDate = null): void
     {
         $this->creationDate = $creationDate;
     }
 
-    public function getCreationDate(): ?\DateTimeInterface
+    public function getCreationDate(): ?DateTimeInterface
     {
         return $this->creationDate;
     }
@@ -86,22 +88,22 @@ class Comment extends Statusable
         return $this->post;
     }
 
-    public function setPublicationDate(\DateTimeInterface $publicationDate = null): void
+    public function setPublicationDate(DateTimeInterface $publicationDate = null): void
     {
         $this->publicationDate = $publicationDate;
     }
 
-    public function getPublicationDate(): ?\DateTimeInterface
+    public function getPublicationDate(): ?DateTimeInterface
     {
         return $this->publicationDate;
     }
 
-    public function setUpdateDate(\DateTimeInterface $updateDate = null): void
+    public function setUpdateDate(DateTimeInterface $updateDate = null): void
     {
         $this->updateDate = $updateDate;
     }
 
-    public function getUpdateDate(): ?\DateTimeInterface
+    public function getUpdateDate(): ?DateTimeInterface
     {
         return $this->updateDate;
     }

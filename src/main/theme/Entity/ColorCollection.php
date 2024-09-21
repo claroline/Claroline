@@ -2,6 +2,7 @@
 
 namespace Claroline\ThemeBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Name;
@@ -18,7 +19,7 @@ class ColorCollection
     use Uuid;
     use Name;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private array $colors = [];
 
     public function __construct()

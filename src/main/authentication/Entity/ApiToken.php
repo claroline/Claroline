@@ -11,6 +11,7 @@
 
 namespace Claroline\AuthenticationBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
@@ -30,10 +31,10 @@ class ApiToken
 
     
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user;
 
-    #[ORM\Column(type: 'string', length: 36, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 36, unique: true)]
     private ?string $token;
 
     public function __construct()

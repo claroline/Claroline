@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
+use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Hidden;
 use Claroline\AppBundle\Entity\Display\Order;
@@ -24,7 +26,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_ordered_tool')]
-#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Tool\OrderedToolRepository::class)]
+#[ORM\Entity(repositoryClass: OrderedToolRepository::class)]
 #[ORM\UniqueConstraint(name: 'context_unique_tool', columns: ['tool_name', 'context_name', 'context_id'])]
 class OrderedTool implements CrudEntityInterface
 {
@@ -37,22 +39,22 @@ class OrderedTool implements CrudEntityInterface
     use Order;
     use Hidden;
 
-    #[ORM\Column(name: 'tool_name', type: 'string', nullable: false)]
+    #[ORM\Column(name: 'tool_name', type: Types::STRING, nullable: false)]
     private ?string $name;
 
     /**
      * Display tool icon when the tool is rendered.
      */
-    #[ORM\Column(type: 'boolean', options: ['default' => 0])]
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 0])]
     private bool $showIcon = false;
 
     /**
      * Display in fullscreen when the tool is opened.
      */
-    #[ORM\Column(type: 'boolean', nullable: false)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private bool $fullscreen = false;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Tool\ToolRights::class, mappedBy: 'orderedTool')]
+    #[ORM\OneToMany(targetEntity: ToolRights::class, mappedBy: 'orderedTool')]
     private Collection $rights;
 
     public function __construct()

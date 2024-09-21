@@ -18,7 +18,7 @@ abstract class OrderedResource
      * Linked ResourceNode.
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     protected $resourceNode;
 
     /**

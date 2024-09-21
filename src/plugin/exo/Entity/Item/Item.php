@@ -2,6 +2,9 @@
 
 namespace UJM\ExoBundle\Entity\Item;
 
+use Datetime;
+use UJM\ExoBundle\Repository\ItemRepository;
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -10,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 
 #[ORM\Table(name: 'ujm_question')]
-#[ORM\Entity(repositoryClass: \UJM\ExoBundle\Repository\ItemRepository::class)]
+#[ORM\Entity(repositoryClass: ItemRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Item
 {
@@ -23,49 +26,49 @@ class Item
      *
      * @var string
      */
-    #[ORM\Column('mime_type', type: 'string')]
+    #[ORM\Column('mime_type', type: Types::STRING)]
     private $mimeType;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     private $title;
 
     /**
      * @var string
      */
-    #[ORM\Column(name: 'invite', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'invite', type: Types::TEXT, nullable: true)]
     private $content;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private $feedback;
 
     /**
      * The creation date of the question.
      *
      *
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'date_create', type: 'datetime')]
+    #[ORM\Column(name: 'date_create', type: Types::DATETIME_MUTABLE)]
     private $dateCreate;
 
     /**
      * The last update date of the question.
      *
      *
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'date_modify', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'date_modify', type: Types::DATETIME_MUTABLE, nullable: true)]
     private $dateModify;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private $description;
 
     /**
@@ -75,20 +78,20 @@ class Item
      * @var User
      */
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private $creator;
 
     /**
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \Hint::class, mappedBy: 'question', cascade: ['remove', 'persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Hint::class, cascade: ['remove', 'persist'], orphanRemoval: true)]
     private $hints;
 
     /**
      *
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \ItemObject::class, mappedBy: 'question', cascade: ['remove', 'persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: ItemObject::class, cascade: ['remove', 'persist'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private $objects;
 
@@ -98,14 +101,14 @@ class Item
      *
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \ItemResource::class, mappedBy: 'question', cascade: ['remove', 'persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: ItemResource::class, cascade: ['remove', 'persist'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private $resources;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private $scoreRule;
 
     /**
@@ -122,7 +125,7 @@ class Item
      *
      * @var bool
      */
-    #[ORM\Column(name: 'protect_update', type: 'boolean')]
+    #[ORM\Column(name: 'protect_update', type: Types::BOOLEAN)]
     private $protectUpdate = false;
 
     /**
@@ -132,13 +135,13 @@ class Item
      * @var bool
      * @deprecated. Moved on StepQuestion.
      */
-    #[ORM\Column(name: 'mandatory', type: 'boolean')]
+    #[ORM\Column(name: 'mandatory', type: Types::BOOLEAN)]
     private $mandatory = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'expected_answers', type: 'boolean')]
+    #[ORM\Column(name: 'expected_answers', type: Types::BOOLEAN)]
     private $expectedAnswers = true;
 
     /**
@@ -151,8 +154,8 @@ class Item
         $this->hints = new ArrayCollection();
         $this->objects = new ArrayCollection();
         $this->resources = new ArrayCollection();
-        $this->dateCreate = new \DateTime();
-        $this->dateModify = new \DateTime();
+        $this->dateCreate = new DateTime();
+        $this->dateModify = new DateTime();
     }
 
     /**
@@ -308,12 +311,12 @@ class Item
     public function updateDateCreate()
     {
         if (empty($this->dateCreate)) {
-            $this->dateCreate = new \DateTime();
+            $this->dateCreate = new DateTime();
         }
     }
 
     /**
-     * @return \Datetime
+     * @return Datetime
      */
     public function getDateCreate()
     {
@@ -323,11 +326,11 @@ class Item
     #[ORM\PreUpdate]
     public function updateDateModify()
     {
-        $this->dateModify = new \DateTime();
+        $this->dateModify = new DateTime();
     }
 
     /**
-     * @return \Datetime
+     * @return Datetime
      */
     public function getDateModify()
     {

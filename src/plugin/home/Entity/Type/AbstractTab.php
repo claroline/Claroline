@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class AbstractTab
 {
     #[ORM\JoinColumn(name: 'tab_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\OneToOne(targetEntity: \Claroline\HomeBundle\Entity\HomeTab::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: HomeTab::class, cascade: ['persist', 'remove'])]
     private ?HomeTab $tab = null;
 
     abstract public static function getType(): string;

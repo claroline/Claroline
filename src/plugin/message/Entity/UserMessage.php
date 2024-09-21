@@ -11,6 +11,8 @@
 
 namespace Claroline\MessageBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -28,7 +30,7 @@ class UserMessage
      * @var User
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private $user;
 
     /**
@@ -36,31 +38,31 @@ class UserMessage
      * @var Message
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\MessageBundle\Entity\Message::class, inversedBy: 'userMessages')]
+    #[ORM\ManyToOne(targetEntity: Message::class, inversedBy: 'userMessages')]
     private $message;
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'is_removed', type: 'boolean')]
+    #[ORM\Column(name: 'is_removed', type: Types::BOOLEAN)]
     protected $isRemoved = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'is_read', type: 'boolean')]
+    #[ORM\Column(name: 'is_read', type: Types::BOOLEAN)]
     protected $isRead = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'is_sent', type: 'boolean')]
+    #[ORM\Column(name: 'is_sent', type: Types::BOOLEAN)]
     protected $isSent = false;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'last_open_date', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'last_open_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $lastOpenDate;
 
     /**
@@ -81,7 +83,7 @@ class UserMessage
         $this->isRead = $isRead;
 
         if ($isRead) {
-            $now = new \DateTime();
+            $now = new DateTime();
             $this->setLastOpenDate($now);
         }
     }
@@ -135,7 +137,7 @@ class UserMessage
         $this->user = $user;
     }
 
-    public function setLastOpenDate(\DateTime $date)
+    public function setLastOpenDate(DateTime $date)
     {
         $this->lastOpenDate = $date;
     }

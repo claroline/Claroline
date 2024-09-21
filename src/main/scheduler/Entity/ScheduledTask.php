@@ -11,6 +11,10 @@
 
 namespace Claroline\SchedulerBundle\Entity;
 
+use Claroline\SchedulerBundle\Repository\ScheduledTaskRepository;
+use Doctrine\DBAL\Types\Types;
+use DateTimeInterface;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Name;
@@ -21,7 +25,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_scheduled_task')]
-#[ORM\Entity(repositoryClass: \Claroline\SchedulerBundle\Repository\ScheduledTaskRepository::class)]
+#[ORM\Entity(repositoryClass: ScheduledTaskRepository::class)]
 class ScheduledTask
 {
     use Id;
@@ -65,15 +69,15 @@ class ScheduledTask
     private $executionType = 'once';
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'scheduled_date', type: 'datetime')]
+    #[ORM\Column(name: 'scheduled_date', type: Types::DATETIME_MUTABLE)]
     private $scheduledDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'execution_date', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'execution_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     private $executionDate = null;
 
     /**
@@ -82,16 +86,16 @@ class ScheduledTask
      *
      * @var int
      */
-    #[ORM\Column(name: 'execution_interval', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'execution_interval', type: Types::INTEGER, nullable: true)]
     private $executionInterval = null;
 
     /**
      * For recurring execution only, define when we will need to stop replaying the task.
      *
      *
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'end_date', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'end_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     private $endDate = null;
 
     /**
@@ -106,10 +110,10 @@ class ScheduledTask
      *
      * @var string
      */
-    #[ORM\Column(name: 'parent_id', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'parent_id', type: Types::STRING, nullable: true)]
     private $parentId;
 
-    #[ORM\Column(name: 'task_data', type: 'json', nullable: true)]
+    #[ORM\Column(name: 'task_data', type: Types::JSON, nullable: true)]
     private $data;
 
     /**
@@ -121,7 +125,7 @@ class ScheduledTask
     #[ORM\JoinTable(name: 'claro_scheduled_task_users')]
     #[ORM\JoinColumn(name: 'scheduled_task_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToMany(targetEntity: User::class)]
     private $users;
 
     /**
@@ -131,7 +135,7 @@ class ScheduledTask
      * @deprecated
      */
     #[ORM\JoinColumn(name: 'group_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Group::class)]
+    #[ORM\ManyToOne(targetEntity: Group::class)]
     private $group;
 
     /**
@@ -139,7 +143,7 @@ class ScheduledTask
      * @var Workspace
      */
     #[ORM\JoinColumn(name: 'workspace_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
+    #[ORM\ManyToOne(targetEntity: Workspace::class)]
     private $workspace;
 
     public function __construct()
@@ -169,22 +173,22 @@ class ScheduledTask
         $this->executionType = $type;
     }
 
-    public function getScheduledDate(): ?\DateTimeInterface
+    public function getScheduledDate(): ?DateTimeInterface
     {
         return $this->scheduledDate;
     }
 
-    public function setScheduledDate(\DateTimeInterface $scheduledDate)
+    public function setScheduledDate(DateTimeInterface $scheduledDate)
     {
         $this->scheduledDate = clone $scheduledDate;
     }
 
-    public function getExecutionDate(): ?\DateTimeInterface
+    public function getExecutionDate(): ?DateTimeInterface
     {
         return $this->executionDate;
     }
 
-    public function setExecutionDate(?\DateTimeInterface $executionDate = null)
+    public function setExecutionDate(?DateTimeInterface $executionDate = null)
     {
         $this->executionDate = $executionDate ? clone $executionDate : null;
     }
@@ -199,12 +203,12 @@ class ScheduledTask
         $this->executionInterval = $executionInterval;
     }
 
-    public function setEndDate(?\DateTimeInterface $endDate = null)
+    public function setEndDate(?DateTimeInterface $endDate = null)
     {
         $this->endDate = $endDate ? clone $endDate : null;
     }
 
-    public function getEndDate(): ?\DateTimeInterface
+    public function getEndDate(): ?DateTimeInterface
     {
         return $this->endDate;
     }

@@ -26,7 +26,7 @@ class Event extends AbstractPlanned
      * @var Workspace
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Workspace::class, cascade: ['persist'])]
     private $workspace;
 
     /**
@@ -36,11 +36,11 @@ class Event extends AbstractPlanned
      * @var Template
      */
     #[ORM\JoinColumn(name: 'invitation_template_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\Template::class)]
+    #[ORM\ManyToOne(targetEntity: Template::class)]
     private $invitationTemplate;
 
     #[ORM\JoinColumn(nullable: true)]
-    #[ORM\OneToMany(targetEntity: \Claroline\AgendaBundle\Entity\EventInvitation::class, mappedBy: 'event')]
+    #[ORM\OneToMany(targetEntity: EventInvitation::class, mappedBy: 'event')]
     private $eventInvitations;
 
     public function __construct()

@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
@@ -27,7 +28,7 @@ class Cell
      *
      * @var string
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private $data = null;
 
     /**
@@ -36,7 +37,7 @@ class Cell
      *
      * @var int
      */
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private $coordsX = null;
 
     /**
@@ -45,7 +46,7 @@ class Cell
      *
      * @var int
      */
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private $coordsY = null;
 
     /**
@@ -54,7 +55,7 @@ class Cell
      *
      * @var string
      */
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: Types::STRING, nullable: false)]
     private $color = '#000';
 
     /**
@@ -63,7 +64,7 @@ class Cell
      *
      * @var string
      */
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: Types::STRING, nullable: false)]
     private $background = '#fff';
 
     /**
@@ -72,23 +73,23 @@ class Cell
      *
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\CellChoice::class, mappedBy: 'cell', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: CellChoice::class, mappedBy: 'cell', cascade: ['all'], orphanRemoval: true)]
     private $choices;
 
     #[ORM\JoinColumn(name: 'question_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\GridQuestion::class, inversedBy: 'cells')]
+    #[ORM\ManyToOne(targetEntity: GridQuestion::class, inversedBy: 'cells')]
     private $question;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private $selector = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private $input = false;
 
     /**

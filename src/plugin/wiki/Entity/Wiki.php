@@ -2,6 +2,7 @@
 
 namespace Icap\WikiBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,16 +17,16 @@ class Wiki extends AbstractResource
     const READ_ONLY_MODE = 2;
 
     #[ORM\JoinColumn(name: 'root_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\OneToOne(targetEntity: \Icap\WikiBundle\Entity\Section::class, cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: Section::class, cascade: ['all'])]
     private $root;
 
     #[ORM\Column(type: 'smallint', nullable: true)] // mode of wiki
     protected $mode;
 
-    #[ORM\Column(type: 'boolean', nullable: false)] // Display or hide the section numbers in the wiki body
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)] // Display or hide the section numbers in the wiki body
     protected $displaySectionNumbers = false;
 
-    #[ORM\Column(type: 'boolean', name: 'display_contents', nullable: false, options: ['default' => true])] // Display or hide the section numbers in the wiki body
+    #[ORM\Column(type: Types::BOOLEAN, name: 'display_contents', nullable: false, options: ['default' => true])] // Display or hide the section numbers in the wiki body
     protected $displayContents = true;
 
     //Temporary variable used only by onCopy method of WikiListener

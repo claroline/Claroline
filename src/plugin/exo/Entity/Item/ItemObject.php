@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Item;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Order;
@@ -24,7 +25,7 @@ class ItemObject
      * @var Item
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Item\Item::class, inversedBy: 'objects')]
+    #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: 'objects')]
     private $question;
 
     /**
@@ -33,10 +34,10 @@ class ItemObject
      *
      * @var string
      */
-    #[ORM\Column('mime_type', type: 'string')]
+    #[ORM\Column('mime_type', type: Types::STRING)]
     private $mimeType;
 
-    #[ORM\Column(name: 'object_data', type: 'text')]
+    #[ORM\Column(name: 'object_data', type: Types::TEXT)]
     private $data;
 
     /**

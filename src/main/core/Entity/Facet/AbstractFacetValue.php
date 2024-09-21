@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +25,7 @@ abstract class AbstractFacetValue
     /**
      * @var mixed
      */
-    #[ORM\Column(name: 'field_value', type: 'json', nullable: true)]
+    #[ORM\Column(name: 'field_value', type: Types::JSON, nullable: true)]
     private $value;
 
     public function __construct()

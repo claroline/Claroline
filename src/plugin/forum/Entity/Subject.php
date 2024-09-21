@@ -11,6 +11,8 @@
 
 namespace Claroline\ForumBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\File\PublicFile;
@@ -30,13 +32,13 @@ class Subject
     protected $title;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'created', type: 'datetime')]
+    #[ORM\Column(name: 'created', type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
     protected $creationDate;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'update')]
     protected $updated;
 
@@ -45,14 +47,14 @@ class Subject
      * @var Forum
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ForumBundle\Entity\Forum::class, inversedBy: 'subjects')]
+    #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'subjects')]
     protected $forum;
 
     /**
      *
      * @var Message[]|ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\ForumBundle\Entity\Message::class, mappedBy: 'subject')]
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'subject')]
     #[ORM\OrderBy(['id' => 'ASC'])]
     protected $messages;
 
@@ -61,31 +63,31 @@ class Subject
      * @var User
      */
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     protected $creator;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $sticked = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $closed = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $flagged = false;
 
     /**
      * @var int
      */
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     protected $viewCount = 0;
 
     /**
@@ -95,13 +97,13 @@ class Subject
      * @todo only store file URL
      */
     #[ORM\JoinColumn(name: 'poster_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\File\PublicFile::class)]
+    #[ORM\ManyToOne(targetEntity: PublicFile::class)]
     protected $poster;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     protected $moderation = Forum::VALIDATE_NONE;
 
     public function __construct()
@@ -109,8 +111,8 @@ class Subject
         $this->refreshUuid();
 
         $this->messages = new ArrayCollection();
-        $this->creationDate = new \DateTime();
-        $this->updated = new \DateTime();
+        $this->creationDate = new DateTime();
+        $this->updated = new DateTime();
     }
 
     public function getTitle(): ?string

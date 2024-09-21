@@ -2,6 +2,8 @@
 
 namespace Claroline\TransferBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use DateTimeInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\CreatedAt;
@@ -21,22 +23,22 @@ abstract class AbstractTransferFile implements TransferFileInterface
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     protected $name;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     protected $action;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     protected $status = self::PENDING;
 
     /**
      * @var string
      */
-    #[ORM\Column(name: 'file_format', type: 'string')]
+    #[ORM\Column(name: 'file_format', type: Types::STRING)]
     protected $format;
 
     /**
@@ -45,13 +47,13 @@ abstract class AbstractTransferFile implements TransferFileInterface
      *
      * @var mixed
      */
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     protected $extra;
 
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $executionDate;
 
     /**
@@ -59,7 +61,7 @@ abstract class AbstractTransferFile implements TransferFileInterface
      * @var Workspace
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
+    #[ORM\ManyToOne(targetEntity: Workspace::class)]
     protected $workspace;
 
     public function __construct()
@@ -117,12 +119,12 @@ abstract class AbstractTransferFile implements TransferFileInterface
         $this->format = $format;
     }
 
-    public function getExecutionDate(): ?\DateTimeInterface
+    public function getExecutionDate(): ?DateTimeInterface
     {
         return $this->executionDate;
     }
 
-    public function setExecutionDate(?\DateTimeInterface $date = null)
+    public function setExecutionDate(?DateTimeInterface $date = null)
     {
         $this->executionDate = $date;
     }

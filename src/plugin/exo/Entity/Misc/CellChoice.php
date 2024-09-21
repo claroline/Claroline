@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,26 +25,26 @@ class CellChoice implements AnswerPartInterface
     /**
      * @var string
      */
-    #[ORM\Column(name: 'response', type: 'string', length: 255)]
+    #[ORM\Column(name: 'response', type: Types::STRING, length: 255)]
     private $text;
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'caseSensitive', type: 'boolean', nullable: true)]
+    #[ORM\Column(name: 'caseSensitive', type: Types::BOOLEAN, nullable: true)]
     private $caseSensitive;
 
     /**
      * @var Cell
      */
     #[ORM\JoinColumn(name: 'cell_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Misc\Cell::class, inversedBy: 'choices')]
+    #[ORM\ManyToOne(targetEntity: Cell::class, inversedBy: 'choices')]
     private $cell;
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'expected', type: 'boolean', nullable: true)]
+    #[ORM\Column(name: 'expected', type: Types::BOOLEAN, nullable: true)]
     private $expected;
 
     /**

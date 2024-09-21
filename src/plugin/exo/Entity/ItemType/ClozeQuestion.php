@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Misc\Hole;
@@ -19,7 +20,7 @@ class ClozeQuestion extends AbstractItem
      *
      * @var string
      */
-    #[ORM\Column(name: 'htmlWithoutValue', type: 'text')]
+    #[ORM\Column(name: 'htmlWithoutValue', type: Types::TEXT)]
     private $text;
 
     /**
@@ -28,7 +29,7 @@ class ClozeQuestion extends AbstractItem
      *
      * @var Hole[]|ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Hole::class, mappedBy: 'interactionHole', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Hole::class, mappedBy: 'interactionHole', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $holes;
 
     /**

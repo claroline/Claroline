@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Template;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Name;
@@ -29,7 +30,7 @@ class TemplateType
     /**
      * @var string
      */
-    #[ORM\Column(name: 'entity_type', type: 'string')]
+    #[ORM\Column(name: 'entity_type', type: Types::STRING)]
     private $type;
 
     /**
@@ -37,13 +38,13 @@ class TemplateType
      * @var Plugin
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Plugin::class)]
+    #[ORM\ManyToOne(targetEntity: Plugin::class)]
     private $plugin;
 
     /**
      * @var array
      */
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private $placeholders = [];
 
     /**

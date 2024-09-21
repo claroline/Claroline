@@ -11,6 +11,8 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\ClacoFormBundle\Repository\CategoryRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -19,7 +21,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_clacoformbundle_category')]
-#[ORM\Entity(repositoryClass: \Claroline\ClacoFormBundle\Repository\CategoryRepository::class)]
+#[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
 {
     use Id;
@@ -29,14 +31,14 @@ class Category
     private ?string $name = null;
 
     #[ORM\JoinColumn(name: 'claco_form_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\ClacoForm::class, inversedBy: 'categories')]
+    #[ORM\ManyToOne(targetEntity: ClacoForm::class, inversedBy: 'categories')]
     private ?ClacoForm $clacoForm = null;
 
     #[ORM\JoinTable(name: 'claro_clacoformbundle_category_manager')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToMany(targetEntity: User::class)]
     private Collection $managers;
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $details = [];
 
     public function __construct()

@@ -2,6 +2,7 @@
 
 namespace Claroline\CursusBundle\Entity\Registration;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,18 +12,18 @@ abstract class AbstractUserRegistration extends AbstractRegistration
     /**
      * The registration request has been confirmed by the user.
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected bool $confirmed = false;
 
     /**
      * The registration request has been validated by a manager.
      * It is false when the registration requires manual validation or if there is no more seats to validate the registration.
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected bool $validated = false;
 
     #[ORM\JoinColumn(name: 'user_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $user = null;
 
     public function isConfirmed(): bool

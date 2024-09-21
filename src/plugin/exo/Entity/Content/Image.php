@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Content;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,31 +20,31 @@ class Image
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private $title;
 
     /**
      * @var string
      */
-    #[ORM\Column(name: 'url', type: 'string', length: 255)]
+    #[ORM\Column(name: 'url', type: Types::STRING, length: 255)]
     private $url;
 
     /**
      * @var string
      */
-    #[ORM\Column(name: 'type', type: 'string', length: 255)]
+    #[ORM\Column(name: 'type', type: Types::STRING, length: 255)]
     private $type;
 
     /**
      * @var int
      */
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private $width;
 
     /**
      * @var int
      */
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private $height;
 
     /**

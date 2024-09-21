@@ -22,7 +22,7 @@ class Proposal
     use Uuid;
 
     #[ORM\JoinColumn(name: 'interaction_matching_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\MatchQuestion::class, inversedBy: 'proposals')]
+    #[ORM\ManyToOne(targetEntity: MatchQuestion::class, inversedBy: 'proposals')]
     private $interactionMatching;
 
     /**

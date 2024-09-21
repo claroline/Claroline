@@ -12,7 +12,7 @@ class SecurityLog extends AbstractLog
 {
     
     #[ORM\JoinColumn(name: 'target_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $target = null;
 
     public function getTarget(): ?User

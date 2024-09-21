@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -43,14 +44,14 @@ class Area implements AnswerPartInterface
     /**
      * @var float
      */
-    #[ORM\Column(type: 'float')]
+    #[ORM\Column(type: Types::FLOAT)]
     private $size;
 
     /**
      * @deprecated this needs to be deleted to keep things separated
      */
     #[ORM\JoinColumn(name: 'interaction_graphic_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\GraphicQuestion::class, inversedBy: 'areas')]
+    #[ORM\ManyToOne(targetEntity: GraphicQuestion::class, inversedBy: 'areas')]
     private $interactionGraphic;
 
     public function __construct()

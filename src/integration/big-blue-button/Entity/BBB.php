@@ -11,34 +11,36 @@
 
 namespace Claroline\BigBlueButtonBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\BigBlueButtonBundle\Repository\BBBRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_bigbluebuttonbundle_bbb')]
-#[ORM\Entity(repositoryClass: \Claroline\BigBlueButtonBundle\Repository\BBBRepository::class)]
+#[ORM\Entity(repositoryClass: BBBRepository::class)]
 class BBB extends AbstractResource
 {
-    #[ORM\Column(name: 'welcome_message', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'welcome_message', type: Types::TEXT, nullable: true)]
     private ?string $welcomeMessage = null;
 
-    #[ORM\Column(name: 'end_message', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'end_message', type: Types::TEXT, nullable: true)]
     private ?string $endMessage = null;
 
-    #[ORM\Column(name: 'new_tab', type: 'boolean')]
+    #[ORM\Column(name: 'new_tab', type: Types::BOOLEAN)]
     private bool $newTab = true;
 
-    #[ORM\Column(name: 'moderator_required', type: 'boolean')]
+    #[ORM\Column(name: 'moderator_required', type: Types::BOOLEAN)]
     private bool $moderatorRequired = true;
 
-    #[ORM\Column(name: 'record', type: 'boolean')]
+    #[ORM\Column(name: 'record', type: Types::BOOLEAN)]
     private bool $record = false;
 
-    #[ORM\Column(type: 'float', nullable: true)]
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
     private ?float $ratio = 56.25;
 
-    #[ORM\Column(name: 'activated', type: 'boolean')]
+    #[ORM\Column(name: 'activated', type: Types::BOOLEAN)]
     private bool $activated = true;
 
     /**
@@ -56,10 +58,10 @@ class BBB extends AbstractResource
     /**
      * Allows users to change their username before entering the room.
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $customUsernames = false;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\BigBlueButtonBundle\Entity\Recording::class, mappedBy: 'meeting', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'meeting', targetEntity: Recording::class, orphanRemoval: true)]
     #[ORM\OrderBy(['startTime' => 'DESC'])]
     private Collection $recordings;
 

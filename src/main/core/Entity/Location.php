@@ -42,7 +42,7 @@ class Location implements IdentifiableInterface
 
     
     #[ORM\JoinTable(name: 'claro__location_organization')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Organization\Organization::class)]
+    #[ORM\ManyToMany(targetEntity: Organization::class)]
     private Collection $organizations;
 
     public function __construct()

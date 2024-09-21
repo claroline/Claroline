@@ -40,15 +40,15 @@ class PanelFacet
      *
      * @todo : to remove. Only used in profile
      */
-    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Facet\Facet::class, inversedBy: 'panelFacets')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Facet::class, inversedBy: 'panelFacets')]
     private $facet;
 
     /**
      *
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacet::class, mappedBy: 'panelFacet', cascade: ['all'])]
+    #[ORM\OneToMany(mappedBy: 'panelFacet', targetEntity: FieldFacet::class, cascade: ['all'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private $fieldsFacet;
 

@@ -11,6 +11,9 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use DateTimeInterface;
+use DateTime;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -30,86 +33,86 @@ class Dropzone extends AbstractResource
     const DROP_TYPE_USER = 'user';
     const DROP_TYPE_TEAM = 'team';
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $instruction = null;
 
-    #[ORM\Column(name: 'correction_instruction', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'correction_instruction', type: Types::TEXT, nullable: true)]
     private ?string $correctionInstruction = null;
 
-    #[ORM\Column(name: 'success_message', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'success_message', type: Types::TEXT, nullable: true)]
     private ?string $successMessage = null;
 
-    #[ORM\Column(name: 'fail_message', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'fail_message', type: Types::TEXT, nullable: true)]
     private ?string $failMessage = null;
 
-    #[ORM\Column(name: 'workspace_resource_enabled', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'workspace_resource_enabled', type: Types::BOOLEAN, nullable: false)]
     private bool $workspaceResourceEnabled = false;
 
-    #[ORM\Column(name: 'upload_enabled', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'upload_enabled', type: Types::BOOLEAN, nullable: false)]
     private bool $uploadEnabled = true;
 
-    #[ORM\Column(name: 'url_enabled', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'url_enabled', type: Types::BOOLEAN, nullable: false)]
     private bool $urlEnabled = false;
 
-    #[ORM\Column(name: 'rich_text_enabled', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'rich_text_enabled', type: Types::BOOLEAN, nullable: false)]
     private bool $richTextEnabled = false;
 
-    #[ORM\Column(name: 'peer_review', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'peer_review', type: Types::BOOLEAN, nullable: false)]
     private bool $peerReview = false;
 
     #[ORM\Column(name: 'expected_correction_total', type: 'smallint', nullable: false)]
     private int $expectedCorrectionTotal = 3;
 
-    #[ORM\Column(name: 'display_notation_to_learners', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'display_notation_to_learners', type: Types::BOOLEAN, nullable: false)]
     private bool $displayNotationToLearners = true;
 
-    #[ORM\Column(name: 'display_notation_message_to_learners', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'display_notation_message_to_learners', type: Types::BOOLEAN, nullable: false)]
     private bool $displayNotationMessageToLearners = false;
 
-    #[ORM\Column(name: 'score_to_pass', type: 'float', nullable: false)]
+    #[ORM\Column(name: 'score_to_pass', type: Types::FLOAT, nullable: false)]
     private ?float $scoreToPass = 50;
 
-    #[ORM\Column(name: 'score_max', type: 'integer', nullable: false)]
+    #[ORM\Column(name: 'score_max', type: Types::INTEGER, nullable: false)]
     private int $scoreMax = 100;
 
-    #[ORM\Column(name: 'drop_type', type: 'text', nullable: false)]
+    #[ORM\Column(name: 'drop_type', type: Types::TEXT, nullable: false)]
     private string $dropType = self::DROP_TYPE_USER;
 
-    #[ORM\Column(name: 'manual_planning', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'manual_planning', type: Types::BOOLEAN, nullable: false)]
     private bool $manualPlanning = true;
 
-    #[ORM\Column(name: 'manual_state', type: 'text', nullable: false)]
+    #[ORM\Column(name: 'manual_state', type: Types::TEXT, nullable: false)]
     private string $manualState = self::STATE_NOT_STARTED;
 
-    #[ORM\Column(name: 'drop_start_date', type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $dropStartDate = null;
+    #[ORM\Column(name: 'drop_start_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $dropStartDate = null;
 
-    #[ORM\Column(name: 'drop_end_date', type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $dropEndDate = null;
+    #[ORM\Column(name: 'drop_end_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $dropEndDate = null;
 
-    #[ORM\Column(name: 'review_start_date', type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $reviewStartDate = null;
+    #[ORM\Column(name: 'review_start_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $reviewStartDate = null;
 
-    #[ORM\Column(name: 'review_end_date', type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $reviewEndDate = null;
+    #[ORM\Column(name: 'review_end_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $reviewEndDate = null;
 
-    #[ORM\Column(name: 'comment_in_correction_enabled', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'comment_in_correction_enabled', type: Types::BOOLEAN, nullable: false)]
     private bool $commentInCorrectionEnabled = false;
 
-    #[ORM\Column(name: 'comment_in_correction_forced', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'comment_in_correction_forced', type: Types::BOOLEAN, nullable: false)]
     private bool $commentInCorrectionForced = false;
 
-    #[ORM\Column(name: 'display_corrections_to_learners', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'display_corrections_to_learners', type: Types::BOOLEAN, nullable: false)]
     private bool $displayCorrectionsToLearners = false;
 
     /**
      * Depend on displayCorrectionsToLearners, need displayCorrectionsToLearners to be true in order to work.
      * Allow users to flag that they are not agree with the correction.
      */
-    #[ORM\Column(name: 'correction_denial_enabled', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'correction_denial_enabled', type: Types::BOOLEAN, nullable: false)]
     private bool $correctionDenialEnabled = false;
 
-    #[ORM\Column(name: 'criteria_enabled', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'criteria_enabled', type: Types::BOOLEAN, nullable: false)]
     private bool $criteriaEnabled = false;
 
     #[ORM\Column(name: 'criteria_total', type: 'smallint', nullable: false)]
@@ -120,35 +123,35 @@ class Dropzone extends AbstractResource
      * when time is up, all drop not already closed will be closed and flaged as uncompletedDrop.
      * That will allow them to access the next step ( correction by users or admins ).
      */
-    #[ORM\Column(name: 'auto_close_drops_at_drop_end_date', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'auto_close_drops_at_drop_end_date', type: Types::BOOLEAN, nullable: false)]
     private bool $autoCloseDropsAtDropEndDate = true;
 
     /**
      * Becomes true when all the drops have been force closed at the end of the evaluation.
      * (Used when `autoCloseDropsAtDropEndDate` = true).
      */
-    #[ORM\Column(name: 'drop_closed', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'drop_closed', type: Types::BOOLEAN, nullable: false)]
     private bool $dropClosed = false;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\DropZoneBundle\Entity\Criterion::class, mappedBy: 'dropzone', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Criterion::class, mappedBy: 'dropzone', cascade: ['persist', 'remove'])]
     private Collection $criteria;
 
     /**
      * Display the name of the corrector.
      */
-    #[ORM\Column(name: 'corrector_displayed', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'corrector_displayed', type: Types::BOOLEAN, nullable: false)]
     private bool $correctorDisplayed = false;
 
     /**
      * Allows to submit drop for a revision.
      */
-    #[ORM\Column(name: 'revision_enabled', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'revision_enabled', type: Types::BOOLEAN, nullable: false)]
     private bool $revisionEnabled = false;
 
     /**
      * If true, drops for the current dropzone can not be deleted.
      */
-    #[ORM\Column(name: 'lock_drops', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'lock_drops', type: Types::BOOLEAN, nullable: false)]
     private bool $lockDrops = false;
 
     public function __construct()
@@ -288,42 +291,42 @@ class Dropzone extends AbstractResource
         $this->manualState = $manualState;
     }
 
-    public function getDropStartDate(): ?\DateTimeInterface
+    public function getDropStartDate(): ?DateTimeInterface
     {
         return $this->dropStartDate;
     }
 
-    public function setDropStartDate(\DateTimeInterface $dropStartDate = null): void
+    public function setDropStartDate(DateTimeInterface $dropStartDate = null): void
     {
         $this->dropStartDate = $dropStartDate;
     }
 
-    public function getDropEndDate(): ?\DateTimeInterface
+    public function getDropEndDate(): ?DateTimeInterface
     {
         return $this->dropEndDate;
     }
 
-    public function setDropEndDate(\DateTimeInterface $dropEndDate = null): void
+    public function setDropEndDate(DateTimeInterface $dropEndDate = null): void
     {
         $this->dropEndDate = $dropEndDate;
     }
 
-    public function getReviewStartDate(): ?\DateTimeInterface
+    public function getReviewStartDate(): ?DateTimeInterface
     {
         return $this->reviewStartDate;
     }
 
-    public function setReviewStartDate(\DateTimeInterface $reviewStartDate = null): void
+    public function setReviewStartDate(DateTimeInterface $reviewStartDate = null): void
     {
         $this->reviewStartDate = $reviewStartDate;
     }
 
-    public function getReviewEndDate(): ?\DateTimeInterface
+    public function getReviewEndDate(): ?DateTimeInterface
     {
         return $this->reviewEndDate;
     }
 
-    public function setReviewEndDate(\DateTimeInterface $reviewEndDate = null): void
+    public function setReviewEndDate(DateTimeInterface $reviewEndDate = null): void
     {
         $this->reviewEndDate = $reviewEndDate;
     }
@@ -465,7 +468,7 @@ class Dropzone extends AbstractResource
 
     public function isDropEnabled(): bool
     {
-        $currentDate = new \DateTime();
+        $currentDate = new DateTime();
 
         return (
             $this->manualPlanning &&
@@ -479,7 +482,7 @@ class Dropzone extends AbstractResource
 
     public function isReviewEnabled(): bool
     {
-        $currentDate = new \DateTime();
+        $currentDate = new DateTime();
 
         return $this->peerReview && ((
             $this->manualPlanning &&

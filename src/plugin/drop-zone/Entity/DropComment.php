@@ -23,7 +23,7 @@ class DropComment extends AbstractComment
      * @var Drop
      */
     #[ORM\JoinColumn(name: 'drop_id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Drop::class, inversedBy: 'comments')]
+    #[ORM\ManyToOne(targetEntity: Drop::class, inversedBy: 'comments')]
     private $drop;
 
     public function getDrop(): ?Drop

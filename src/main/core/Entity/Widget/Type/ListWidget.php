@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Widget\Type;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Parameters\ListParameters;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,7 +20,7 @@ class ListWidget extends AbstractWidget
     /**
      * @var int
      */
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private $maxResults;
 
     public function getMaxResults()

@@ -13,6 +13,7 @@
 
 namespace Claroline\ThemeBundle\Entity\Icon;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Name;
@@ -37,16 +38,16 @@ class IconSet
      * @deprecated
      */
     #[ORM\Column(unique: true)]
-    #[Gedmo\Slug(fields: ['name'], unique: true, updatable: false, separator: '_')]
+    #[Gedmo\Slug(fields: ['name'], updatable: false, unique: true, separator: '_')]
     private ?string $cname = null;
 
-    #[ORM\Column(name: 'is_default', type: 'boolean', options: ['default' => 0])]
+    #[ORM\Column(name: 'is_default', type: Types::BOOLEAN, options: ['default' => 0])]
     private bool $default = false;
 
     #[ORM\Column(nullable: true)]
     private ?string $type = null;
 
-    #[ORM\OneToMany(targetEntity: \IconItem::class, mappedBy: 'iconSet')]
+    #[ORM\OneToMany(mappedBy: 'iconSet', targetEntity: IconItem::class)]
     private Collection $icons;
 
     public function __construct()

@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Widget\Type;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,13 +22,13 @@ class ResourceWidget extends AbstractWidget
      * @var ResourceNode
      */
     #[ORM\JoinColumn(name: 'node_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     private $resourceNode = null;
 
     /**
      * Choose to display the header of the resource.
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private $showResourceHeader = false;
 
     /**

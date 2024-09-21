@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait HasEndPage
@@ -12,7 +13,7 @@ trait HasEndPage
      *
      * @var bool
      */
-    #[ORM\Column(name: 'show_end_page', type: 'boolean')]
+    #[ORM\Column(name: 'show_end_page', type: Types::BOOLEAN)]
     private $showEndPage = false;
 
     /**
@@ -21,7 +22,7 @@ trait HasEndPage
      *
      * @var string
      */
-    #[ORM\Column(name: 'end_message', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'end_message', type: Types::TEXT, nullable: true)]
     private $endMessage = '';
 
     /**
@@ -30,19 +31,19 @@ trait HasEndPage
      *
      * @var bool
      */
-    #[ORM\Column(name: 'end_navigation', type: 'boolean')]
+    #[ORM\Column(name: 'end_navigation', type: Types::BOOLEAN)]
     private $endNavigation = false;
 
     /**
      * @var string
      */
-    #[ORM\Column(name: 'end_back_type', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'end_back_type', type: Types::TEXT, nullable: true)]
     private $endBackType;
 
     /**
      * @var string
      */
-    #[ORM\Column(name: 'end_back_label', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'end_back_label', type: Types::TEXT, nullable: true)]
     private $endBackLabel;
 
     /**
@@ -50,7 +51,7 @@ trait HasEndPage
      * @var ResourceNode
      */
     #[ORM\JoinColumn(name: 'end_back_target_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     private $endBackTarget;
 
     /**
@@ -59,7 +60,7 @@ trait HasEndPage
      *
      * @var bool
      */
-    #[ORM\Column(name: 'show_workspace_certificates', type: 'boolean')]
+    #[ORM\Column(name: 'show_workspace_certificates', type: Types::BOOLEAN)]
     private $showWorkspaceCertificates = false;
 
     public function getShowEndPage(): bool

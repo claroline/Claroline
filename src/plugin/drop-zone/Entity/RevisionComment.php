@@ -23,7 +23,7 @@ class RevisionComment extends AbstractComment
      * @var Revision
      */
     #[ORM\JoinColumn(name: 'revision_id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Revision::class, inversedBy: 'comments')]
+    #[ORM\ManyToOne(targetEntity: Revision::class, inversedBy: 'comments')]
     private $revision;
 
     public function getRevision(): ?Revision

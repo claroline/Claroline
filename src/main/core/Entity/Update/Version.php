@@ -11,12 +11,15 @@
 
 namespace Claroline\CoreBundle\Entity\Update;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\CoreBundle\Repository\VersionRepository;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Table(name: 'claro_version')]
-#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\VersionRepository::class)]
+#[ORM\Entity(repositoryClass: VersionRepository::class)]
 class Version
 {
     use Id;
@@ -33,14 +36,14 @@ class Version
     #[ORM\Column]
     protected $bundle;
 
-    #[ORM\Column(name: 'is_upgraded', type: 'boolean')]
+    #[ORM\Column(name: 'is_upgraded', type: Types::BOOLEAN)]
     protected $isUpgraded = false;
 
     /**
      *
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     #[Gedmo\Timestampable(on: 'create')]
     protected $date;
 

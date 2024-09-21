@@ -38,7 +38,7 @@ class Tag
     /**
      * The list of objects with the tag.
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\TagBundle\Entity\TaggedObject::class, mappedBy: 'tag')]
+    #[ORM\OneToMany(targetEntity: TaggedObject::class, mappedBy: 'tag')]
     private Collection $taggedObjects;
 
     public function __construct()

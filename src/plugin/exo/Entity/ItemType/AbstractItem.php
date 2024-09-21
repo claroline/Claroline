@@ -15,7 +15,7 @@ abstract class AbstractItem
      * @var Item
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\OneToOne(targetEntity: \UJM\ExoBundle\Entity\Item\Item::class)]
+    #[ORM\OneToOne(targetEntity: Item::class)]
     protected $question;
 
     final public function setQuestion(Item $question)

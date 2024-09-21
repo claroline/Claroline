@@ -11,6 +11,9 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\DropZoneBundle\Repository\DropRepository;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -19,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_dropzonebundle_drop')]
 #[ORM\UniqueConstraint(name: 'dropzone_drop_unique_dropzone_team', columns: ['dropzone_id', 'team_id'])]
-#[ORM\Entity(repositoryClass: \Claroline\DropZoneBundle\Repository\DropRepository::class)]
+#[ORM\Entity(repositoryClass: DropRepository::class)]
 class Drop
 {
     use Id;
@@ -30,7 +33,7 @@ class Drop
      * @var Dropzone
      */
     #[ORM\JoinColumn(name: 'dropzone_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Dropzone::class)]
+    #[ORM\ManyToOne(targetEntity: Dropzone::class)]
     protected $dropzone;
 
     /**
@@ -38,31 +41,31 @@ class Drop
      * @var User
      */
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected $user;
 
     /**
      * @var Document
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\DropZoneBundle\Entity\Document::class, mappedBy: 'drop')]
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'drop')]
     protected $documents;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'drop_date', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'drop_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $dropDate;
 
     /**
      * @var float
      */
-    #[ORM\Column(name: 'score', type: 'float', nullable: true)]
+    #[ORM\Column(name: 'score', type: Types::FLOAT, nullable: true)]
     protected $score;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean', nullable: false)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     protected $finished = false;
 
     /**
@@ -71,7 +74,7 @@ class Drop
      *
      * @var bool
      */
-    #[ORM\Column(name: 'auto_closed_drop', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'auto_closed_drop', type: Types::BOOLEAN, nullable: false)]
     protected $autoClosedDrop = false;
 
     /**
@@ -81,7 +84,7 @@ class Drop
      *
      * @var bool
      */
-    #[ORM\Column(name: 'unlocked_drop', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'unlocked_drop', type: Types::BOOLEAN, nullable: false)]
     protected $unlockedDrop = false;
 
     /**
@@ -91,13 +94,13 @@ class Drop
      *
      * @var bool
      */
-    #[ORM\Column(name: 'unlocked_user', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'unlocked_user', type: Types::BOOLEAN, nullable: false)]
     protected $unlockedUser = false;
 
     /**
      * @var int
      */
-    #[ORM\Column(name: 'team_id', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'team_id', type: Types::INTEGER, nullable: true)]
     protected $teamId;
 
     /**
@@ -115,7 +118,7 @@ class Drop
     /**
      * @var ArrayCollection|Correction[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\DropZoneBundle\Entity\Correction::class, mappedBy: 'drop')]
+    #[ORM\OneToMany(targetEntity: Correction::class, mappedBy: 'drop')]
     protected $corrections;
 
     /**
@@ -123,14 +126,14 @@ class Drop
      * @var User
      */
     #[ORM\JoinTable(name: 'claro_dropzonebundle_drop_users')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToMany(targetEntity: User::class)]
     protected $users;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\DropZoneBundle\Entity\Revision::class, mappedBy: 'drop')]
+    #[ORM\OneToMany(targetEntity: Revision::class, mappedBy: 'drop')]
     #[ORM\OrderBy(['creationDate' => 'DESC'])]
     protected $revisions;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\DropZoneBundle\Entity\DropComment::class, mappedBy: 'drop')]
+    #[ORM\OneToMany(targetEntity: DropComment::class, mappedBy: 'drop')]
     protected $comments;
 
     /**
@@ -201,14 +204,14 @@ class Drop
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDropDate()
     {
         return $this->dropDate;
     }
 
-    public function setDropDate(\DateTime $dropDate = null)
+    public function setDropDate(DateTime $dropDate = null)
     {
         $this->dropDate = $dropDate;
     }

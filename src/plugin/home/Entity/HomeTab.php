@@ -11,6 +11,7 @@
 
 namespace Claroline\HomeBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Display\Color;
 use Claroline\AppBundle\Entity\Display\Hidden;
 use Claroline\AppBundle\Entity\Display\Icon;
@@ -61,7 +62,7 @@ class HomeTab
     #[ORM\Column(nullable: true)]
     private ?string $name = null;
 
-    #[ORM\Column(nullable: false, type: 'text')]
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
     private string $longTitle = '';
 
     /**
@@ -70,17 +71,17 @@ class HomeTab
      *
      */
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\HomeBundle\Entity\HomeTab::class, inversedBy: 'children')]
+    #[ORM\ManyToOne(targetEntity: HomeTab::class, inversedBy: 'children')]
     private ?HomeTab $parent = null;
 
     
-    #[ORM\OneToMany(targetEntity: \Claroline\HomeBundle\Entity\HomeTab::class, mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: HomeTab::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $children;
 
     
     #[ORM\JoinTable(name: 'claro_home_tab_roles')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
+    #[ORM\ManyToMany(targetEntity: Role::class)]
     private Collection $roles;
 
     public function __construct()

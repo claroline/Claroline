@@ -2,6 +2,7 @@
 
 namespace Claroline\AppBundle\Entity\Meta;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 trait DescriptionHtml
 {
-    #[ORM\Column(name: 'description_html', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'description_html', type: Types::TEXT, nullable: true)]
     protected ?string $descriptionHtml = null;
 
     public function getDescriptionHtml(): ?string

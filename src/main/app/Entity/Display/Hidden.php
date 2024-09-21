@@ -2,11 +2,12 @@
 
 namespace Claroline\AppBundle\Entity\Display;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait Hidden
 {
-    #[ORM\Column(type: 'boolean', options: ['default' => 0])]
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 0])]
     protected bool $hidden = false;
 
     /**

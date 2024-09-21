@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Organization;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Display\Thumbnail;
@@ -39,10 +40,10 @@ class Organization implements CrudEntityInterface
     use Poster;
     use Thumbnail;
 
-    #[ORM\Column(nullable: true, type: 'string')]
+    #[ORM\Column(nullable: true, type: Types::STRING)]
     private ?string $email = null;
 
-    #[ORM\Column(name: 'is_default', type: 'boolean')]
+    #[ORM\Column(name: 'is_default', type: Types::BOOLEAN)]
     private bool $default = false;
 
     public function __construct()

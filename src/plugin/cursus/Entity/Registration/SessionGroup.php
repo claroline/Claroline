@@ -23,7 +23,7 @@ class SessionGroup extends AbstractGroupRegistration
      * @var Session
      */
     #[ORM\JoinColumn(name: 'session_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CursusBundle\Entity\Session::class)]
+    #[ORM\ManyToOne(targetEntity: Session::class)]
     private $session;
 
     public function getSession(): Session

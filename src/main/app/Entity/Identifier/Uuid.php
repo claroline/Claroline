@@ -2,6 +2,7 @@
 
 namespace Claroline\AppBundle\Entity\Identifier;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid as BaseUuid;
 
@@ -10,7 +11,7 @@ use Ramsey\Uuid\Uuid as BaseUuid;
  */
 trait Uuid
 {
-    #[ORM\Column('uuid', type: 'string', length: 36, unique: true)]
+    #[ORM\Column('uuid', type: Types::STRING, length: 36, unique: true)]
     protected string $uuid;
 
     /**

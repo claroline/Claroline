@@ -11,6 +11,9 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Claroline\DropZoneBundle\Repository\DocumentRepository;
+use Doctrine\DBAL\Types\Types;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -18,7 +21,7 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_dropzonebundle_document')]
-#[ORM\Entity(repositoryClass: \Claroline\DropZoneBundle\Repository\DocumentRepository::class)]
+#[ORM\Entity(repositoryClass: DocumentRepository::class)]
 class Document
 {
     use Id;
@@ -34,31 +37,31 @@ class Document
      * @var Drop
      */
     #[ORM\JoinColumn(name: 'drop_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Drop::class, inversedBy: 'documents')]
+    #[ORM\ManyToOne(targetEntity: Drop::class, inversedBy: 'documents')]
     protected $drop;
 
     /**
      * @var string
      */
-    #[ORM\Column(name: 'document_type', type: 'text', nullable: false)]
+    #[ORM\Column(name: 'document_type', type: Types::TEXT, nullable: false)]
     protected $type;
 
     /**
      * @var array
      */
-    #[ORM\Column(name: 'file_array', type: 'json', nullable: true)]
+    #[ORM\Column(name: 'file_array', type: Types::JSON, nullable: true)]
     protected $file;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     protected $url;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     protected $content;
 
     /**
@@ -66,7 +69,7 @@ class Document
      * @var ResourceNode
      */
     #[ORM\JoinColumn(name: 'resource_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     protected $resource;
 
     /**
@@ -74,20 +77,20 @@ class Document
      * @var User
      */
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected $user;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'drop_date', type: 'datetime', nullable: false)]
+    #[ORM\Column(name: 'drop_date', type: Types::DATETIME_MUTABLE, nullable: false)]
     protected $dropDate;
 
     #[ORM\JoinColumn(name: 'revision_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Revision::class, inversedBy: 'documents')]
+    #[ORM\ManyToOne(targetEntity: Revision::class, inversedBy: 'documents')]
     protected $revision;
 
-    #[ORM\Column(name: 'is_manager', type: 'boolean')]
+    #[ORM\Column(name: 'is_manager', type: Types::BOOLEAN)]
     protected $isManager = false;
 
     public function __construct()
@@ -196,14 +199,14 @@ class Document
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDropDate()
     {
         return $this->dropDate;
     }
 
-    public function setDropDate(\DateTime $dropDate)
+    public function setDropDate(DateTime $dropDate)
     {
         $this->dropDate = $dropDate;
     }

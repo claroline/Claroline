@@ -27,7 +27,7 @@ class MatchQuestion extends AbstractItem
      *
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Label::class, mappedBy: 'interactionMatching', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Label::class, mappedBy: 'interactionMatching', cascade: ['all'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private $labels;
 
@@ -35,14 +35,14 @@ class MatchQuestion extends AbstractItem
      *
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Proposal::class, mappedBy: 'interactionMatching', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Proposal::class, mappedBy: 'interactionMatching', cascade: ['all'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private $proposals;
 
     /**
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Association::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Association::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
     private $associations;
 
     /**

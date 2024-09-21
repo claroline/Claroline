@@ -2,6 +2,7 @@
 
 namespace Claroline\AgendaBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,7 +24,7 @@ class EventInvitation
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private $status = self::UNKNOWN;
 
     /**
@@ -31,7 +32,7 @@ class EventInvitation
      * @var Event
      */
     #[ORM\JoinColumn(name: 'event', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\AgendaBundle\Entity\Event::class, inversedBy: 'eventInvitations')]
+    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'eventInvitations')]
     private $event;
 
     /**
@@ -39,7 +40,7 @@ class EventInvitation
      * @var User
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private $user;
 
     public function __construct(Event $event, User $user)

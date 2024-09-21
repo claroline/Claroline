@@ -2,6 +2,7 @@
 
 namespace Claroline\FlashcardBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,15 +21,15 @@ class CardDrawnProgression
 
     
     #[ORM\JoinColumn(name: 'flashcard_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\FlashcardBundle\Entity\Flashcard::class)]
+    #[ORM\ManyToOne(targetEntity: Flashcard::class)]
     private Flashcard $flashcard;
 
     
     #[ORM\JoinColumn(name: 'resource_evaluation_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceEvaluation::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceEvaluation::class)]
     private ResourceEvaluation $resourceEvaluation;
 
-    #[ORM\Column(name: 'success_count', type: 'integer')]
+    #[ORM\Column(name: 'success_count', type: Types::INTEGER)]
     private int $successCount;
 
     public function __construct()

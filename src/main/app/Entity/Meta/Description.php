@@ -2,6 +2,7 @@
 
 namespace Claroline\AppBundle\Entity\Meta;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 trait Description
 {
-    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'description', type: Types::TEXT, nullable: true)]
     protected ?string $description = null;
 
     public function getDescription(): ?string

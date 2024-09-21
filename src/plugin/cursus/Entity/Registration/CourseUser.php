@@ -23,13 +23,13 @@ use Doctrine\ORM\Mapping as ORM;
 class CourseUser extends AbstractUserRegistration
 {
     #[ORM\JoinColumn(name: 'course_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CursusBundle\Entity\Course::class)]
+    #[ORM\ManyToOne(targetEntity: Course::class)]
     private ?Course $course = null;
 
     #[ORM\JoinTable(name: 'claro_cursusbundle_course_user_values')]
     #[ORM\JoinColumn(name: 'registration_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'value_id', referencedColumnName: 'id', unique: true, onDelete: 'CASCADE')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacetValue::class, cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: FieldFacetValue::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $facetValues;
 
     public function __construct()

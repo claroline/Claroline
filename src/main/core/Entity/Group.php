@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\CommunityBundle\Repository\GroupRepository;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Display\Thumbnail;
@@ -27,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 #[ORM\Table(name: 'claro_group')]
-#[ORM\Entity(repositoryClass: \Claroline\CommunityBundle\Repository\GroupRepository::class)]
+#[ORM\Entity(repositoryClass: GroupRepository::class)]
 class Group extends AbstractRoleSubject implements CrudEntityInterface
 {
     use Id;
@@ -42,10 +44,10 @@ class Group extends AbstractRoleSubject implements CrudEntityInterface
 
     
     #[ORM\JoinTable(name: 'claro_group_role')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Role::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\ManyToMany(targetEntity: Role::class, fetch: 'EXTRA_LAZY')]
     protected Collection $roles;
 
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Organization\Organization::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\ManyToMany(targetEntity: Organization::class, fetch: 'EXTRA_LAZY')]
     private Collection $organizations;
 
     public function __construct()

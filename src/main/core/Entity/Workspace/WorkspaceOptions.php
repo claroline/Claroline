@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -27,7 +28,7 @@ class WorkspaceOptions
      * @var Workspace
      */
     #[ORM\JoinColumn(name: 'workspace_id', onDelete: 'CASCADE')]
-    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class, mappedBy: 'options', cascade: ['persist'])]
+    #[ORM\OneToOne(mappedBy: 'options', targetEntity: Workspace::class, cascade: ['persist'])]
     private $workspace;
 
     /**
@@ -37,7 +38,7 @@ class WorkspaceOptions
      * @var array
      * @todo split into multiple columns
      */
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private $details = [];
 
     /**
@@ -46,7 +47,7 @@ class WorkspaceOptions
      *
      * @var array
      */
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private $breadcrumbItems = ['desktop', 'workspaces', 'current', 'tool'];
 
     /**

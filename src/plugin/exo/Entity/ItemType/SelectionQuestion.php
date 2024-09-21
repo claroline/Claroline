@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Misc\Color;
@@ -24,7 +25,7 @@ class SelectionQuestion extends AbstractItem
      *
      * @var string
      */
-    #[ORM\Column(name: 'text', type: 'text')]
+    #[ORM\Column(name: 'text', type: Types::TEXT)]
     private $text;
 
     /**
@@ -33,7 +34,7 @@ class SelectionQuestion extends AbstractItem
      *
      * @var string
      */
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: Types::STRING, nullable: false)]
     private $mode = self::MODE_SELECT;
     /**
      * The max amount of tries for find mode.
@@ -41,13 +42,13 @@ class SelectionQuestion extends AbstractItem
      *
      * @var int
      */
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private $tries = 0;
 
     /**
      * @var float
      */
-    #[ORM\Column(type: 'float', nullable: true)]
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
     private $penalty = null;
 
     /**
@@ -56,13 +57,13 @@ class SelectionQuestion extends AbstractItem
      *
      * @var Selection[]|ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Selection::class, mappedBy: 'interactionSelection', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Selection::class, mappedBy: 'interactionSelection', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $selections;
 
     /**
      * @var Color[]|ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Color::class, mappedBy: 'interactionSelection', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Color::class, mappedBy: 'interactionSelection', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $colors;
 
     /**

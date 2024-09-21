@@ -11,6 +11,7 @@
 
 namespace Claroline\OpenBadgeBundle\Entity\Rules;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Group;
@@ -39,35 +40,35 @@ class Rule
     public const IN_GROUP = 'in_group';
     public const IN_ROLE = 'in_role';
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: Types::STRING, nullable: false)]
     protected ?string $action = null;
 
     
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\OpenBadgeBundle\Entity\BadgeClass::class, inversedBy: 'rules')]
+    #[ORM\ManyToOne(targetEntity: BadgeClass::class, inversedBy: 'rules')]
     private ?BadgeClass $badge = null;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private array $data = [];
 
     
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     private ?ResourceNode $node = null;
 
     
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
+    #[ORM\ManyToOne(targetEntity: Workspace::class)]
     private ?Workspace $workspace = null;
 
     
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
+    #[ORM\ManyToOne(targetEntity: Role::class)]
     private ?Role $role = null;
 
     
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Group::class)]
+    #[ORM\ManyToOne(targetEntity: Group::class)]
     private ?Group $group = null;
 
     public function __construct()

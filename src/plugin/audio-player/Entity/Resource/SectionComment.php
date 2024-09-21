@@ -2,6 +2,8 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -17,7 +19,7 @@ class SectionComment
     /**
      * @var string
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     protected $content;
 
     /**
@@ -25,7 +27,7 @@ class SectionComment
      * @var Section
      */
     #[ORM\JoinColumn(name: 'section_id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\AudioPlayerBundle\Entity\Resource\Section::class, inversedBy: 'comments')]
+    #[ORM\ManyToOne(targetEntity: Section::class, inversedBy: 'comments')]
     protected $section;
 
     /**
@@ -33,25 +35,25 @@ class SectionComment
      * @var User
      */
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected $user;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'creation_date', type: 'datetime')]
+    #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
     protected $creationDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'edition_date', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'edition_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $editionDate;
 
     public function __construct()
     {
         $this->refreshUuid();
-        $this->creationDate = new \DateTime();
+        $this->creationDate = new DateTime();
     }
 
     public function getContent()
@@ -92,7 +94,7 @@ class SectionComment
         return $this->creationDate;
     }
 
-    public function setCreationDate(\DateTime $creationDate)
+    public function setCreationDate(DateTime $creationDate)
     {
         $this->creationDate = $creationDate;
     }
@@ -102,7 +104,7 @@ class SectionComment
         return $this->editionDate;
     }
 
-    public function setEditionDate(\DateTime $editionDate = null)
+    public function setEditionDate(DateTime $editionDate = null)
     {
         $this->editionDate = $editionDate;
     }

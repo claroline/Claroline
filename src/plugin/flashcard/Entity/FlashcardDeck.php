@@ -2,6 +2,7 @@
 
 namespace Claroline\FlashcardBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\HasEndPage;
 use Claroline\CoreBundle\Entity\Resource\HasHomePage;
@@ -20,25 +21,25 @@ class FlashcardDeck extends AbstractResource
     /**
      * @var ArrayCollection|Flashcard[]
      */
-    #[ORM\OneToMany(targetEntity: \Flashcard::class, mappedBy: 'deck', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Flashcard::class, mappedBy: 'deck', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $cards;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $draw = 0;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $showProgression = true;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $customButtons = false;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $rightButtonLabel = null;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $wrongButtonLabel = null;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $showLeitnerRules = false;
 
     public function __construct()

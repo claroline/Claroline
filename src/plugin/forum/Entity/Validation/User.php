@@ -11,6 +11,8 @@
 
 namespace Claroline\ForumBundle\Entity\Validation;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\ForumBundle\Entity\Forum;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User as ClarolineUser;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,20 +24,20 @@ class User
     use Id;
 
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: ClarolineUser::class, cascade: ['persist', 'remove'])]
     protected $user;
 
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ForumBundle\Entity\Forum::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Forum::class, cascade: ['persist'])]
     protected $forum;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $access = false;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $banned = false;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected $notified = false;
 
     public function setUser(ClarolineUser $user)

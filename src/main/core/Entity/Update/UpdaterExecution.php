@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Update;
 
+use Claroline\InstallationBundle\Repository\UpdaterExecutionRepository;
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * It can be used to avoid executing the same updater more than once.
  */
 #[ORM\Table(name: 'claro_update')]
-#[ORM\Entity(repositoryClass: \Claroline\InstallationBundle\Repository\UpdaterExecutionRepository::class)]
+#[ORM\Entity(repositoryClass: UpdaterExecutionRepository::class)]
 class UpdaterExecution
 {
     use Id;
@@ -27,7 +29,7 @@ class UpdaterExecution
     /**
      * @var string the FQCN of the executed updater
      */
-    #[ORM\Column(name: 'updater_class', type: 'string', unique: true)]
+    #[ORM\Column(name: 'updater_class', type: Types::STRING, unique: true)]
     private $updaterClass;
 
     public function __construct(string $updaterClass)

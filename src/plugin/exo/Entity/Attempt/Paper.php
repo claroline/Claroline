@@ -2,6 +2,11 @@
 
 namespace UJM\ExoBundle\Entity\Attempt;
 
+use Doctrine\DBAL\Types\Types;
+use Datetime;
+use UJM\ExoBundle\Repository\PaperRepository;
+use DateTimeInterface;
+use stdClass;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -13,41 +18,41 @@ use UJM\ExoBundle\Entity\Exercise;
  * A paper represents a user attempt to a quiz.
  */
 #[ORM\Table(name: 'ujm_paper')]
-#[ORM\Entity(repositoryClass: \UJM\ExoBundle\Repository\PaperRepository::class)]
+#[ORM\Entity(repositoryClass: PaperRepository::class)]
 class Paper
 {
     use Id;
     use Uuid;
 
-    #[ORM\Column(name: 'num_paper', type: 'integer')]
+    #[ORM\Column(name: 'num_paper', type: Types::INTEGER)]
     private $number = 1;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private $start;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private $end = null;
 
     /**
      * The generated structure (steps and questions) for the attempt.
      */
-    #[ORM\Column(name: 'ordre_question', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'ordre_question', type: Types::TEXT, nullable: true)]
     private $structure;
 
     /**
      * Used to store temp decoded structure to avoid decoding many times in the same life cycle.
      *
-     * @var \stdClass
+     * @var stdClass
      */
     private $decodedStructure = null;
 
-    #[ORM\Column(name: 'interupt', type: 'boolean', nullable: true)]
+    #[ORM\Column(name: 'interupt', type: Types::BOOLEAN, nullable: true)]
     private $interrupted = true;
 
-    #[ORM\Column(type: 'float', nullable: true)]
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
     private $score = null;
 
-    #[ORM\Column(type: 'float', nullable: true)]
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
     private $total = null;
 
     /**
@@ -55,7 +60,7 @@ class Paper
      *
      * @var bool
      */
-    #[ORM\Column(name: 'anonymous', type: 'boolean', nullable: true)]
+    #[ORM\Column(name: 'anonymous', type: Types::BOOLEAN, nullable: true)]
     private $anonymized = false;
 
     /**
@@ -63,7 +68,7 @@ class Paper
      *
      * @var bool
      */
-    #[ORM\Column(name: 'invalidated', type: 'boolean')]
+    #[ORM\Column(name: 'invalidated', type: Types::BOOLEAN)]
     private $invalidated = false;
 
     /**
@@ -73,14 +78,14 @@ class Paper
      * @var User
      */
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private $user;
 
     /**
      * @var Exercise
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Exercise::class)]
+    #[ORM\ManyToOne(targetEntity: Exercise::class)]
     private $exercise;
 
     /**
@@ -88,7 +93,7 @@ class Paper
      *
      * @var Answer[]|ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Attempt\Answer::class, mappedBy: 'paper', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'paper', targetEntity: Answer::class, cascade: ['all'], orphanRemoval: true)]
     private $answers;
 
     /**
@@ -98,7 +103,7 @@ class Paper
     {
         $this->refreshUuid();
 
-        $this->start = new \DateTime();
+        $this->start = new DateTime();
         $this->answers = new ArrayCollection();
     }
 
@@ -122,23 +127,23 @@ class Paper
         return $this->number;
     }
 
-    public function setStart(?\DateTimeInterface $start = null): void
+    public function setStart(?DateTimeInterface $start = null): void
     {
         $this->start = $start;
     }
 
-    public function getStart(): ?\DateTimeInterface
+    public function getStart(): ?DateTimeInterface
     {
         return $this->start;
     }
 
-    public function setEnd(?\DateTimeInterface $end = null): void
+    public function setEnd(?DateTimeInterface $end = null): void
     {
         $this->end = $end;
     }
 
     /**
-     * @return \Datetime
+     * @return Datetime
      */
     public function getEnd()
     {

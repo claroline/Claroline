@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,12 +21,12 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'claro_resource_rights')]
 #[ORM\Index(name: 'mask_idx', columns: ['mask'])]
 #[ORM\UniqueConstraint(name: 'resource_rights_unique_resource_role', columns: ['resourceNode_id', 'role_id'])]
-#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository::class)]
+#[ORM\Entity(repositoryClass: ResourceRightsRepository::class)]
 class ResourceRights
 {
     use Id;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private $mask = 0;
 
     /**
@@ -32,7 +34,7 @@ class ResourceRights
      * @var Role
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
+    #[ORM\ManyToOne(targetEntity: Role::class)]
     private $role;
 
     /**
@@ -40,7 +42,7 @@ class ResourceRights
      * @var ResourceNode
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class, inversedBy: 'rights', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: ResourceNode::class, inversedBy: 'rights', cascade: ['persist'])]
     private $resourceNode;
 
     /**
@@ -50,7 +52,7 @@ class ResourceRights
     #[ORM\JoinTable(name: 'claro_list_type_creation')]
     #[ORM\JoinColumn(name: 'resource_rights_id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'resource_type_id', onDelete: 'CASCADE')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceType::class, inversedBy: 'rights')]
+    #[ORM\ManyToMany(targetEntity: ResourceType::class, inversedBy: 'rights')]
     private $resourceTypes;
 
     public function __construct()

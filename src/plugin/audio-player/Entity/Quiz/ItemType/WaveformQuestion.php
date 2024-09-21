@@ -2,6 +2,7 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Quiz\ItemType;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AudioPlayerBundle\Entity\Quiz\Misc\Section;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,16 +21,16 @@ class WaveformQuestion extends AbstractItem
      */
     use PenaltyTrait;
 
-    #[ORM\Column(name: 'url', type: 'string')]
+    #[ORM\Column(name: 'url', type: Types::STRING)]
     private $url;
 
-    #[ORM\Column(name: 'tolerance', type: 'float')]
+    #[ORM\Column(name: 'tolerance', type: Types::FLOAT)]
     private $tolerance = 1;
 
-    #[ORM\Column(name: 'answers_limit', type: 'integer')]
+    #[ORM\Column(name: 'answers_limit', type: Types::INTEGER)]
     private $answersLimit = 0;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\AudioPlayerBundle\Entity\Quiz\Misc\Section::class, mappedBy: 'waveform', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'waveform', cascade: ['persist', 'remove'], orphanRemoval: true)]
     protected $sections;
 
     /**

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Parameters\ListParameters;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,7 +27,7 @@ class Directory extends AbstractResource
      *
      * @var bool
      */
-    #[ORM\Column(name: 'is_upload_destination', type: 'boolean')]
+    #[ORM\Column(name: 'is_upload_destination', type: Types::BOOLEAN)]
     private $uploadDestination = false;
 
     /**

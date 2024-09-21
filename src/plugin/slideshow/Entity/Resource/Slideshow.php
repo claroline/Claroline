@@ -2,6 +2,7 @@
 
 namespace Claroline\SlideshowBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,37 +18,37 @@ class Slideshow extends AbstractResource
     /**
      * Autoplay the slideshow on open.
      */
-    #[ORM\Column(name: 'auto_play', type: 'boolean', options: ['default' => 0])]
+    #[ORM\Column(name: 'auto_play', type: Types::BOOLEAN, options: ['default' => 0])]
     private bool $autoPlay = false;
 
     /**
      * Interval between 2 slides (in ms).
      */
-    #[ORM\Column(name: 'slide_interval', type: 'integer')]
+    #[ORM\Column(name: 'slide_interval', type: Types::INTEGER)]
     private int $interval = 5000;
 
     /**
      * Show overview to users or directly start the slideshow.
      */
-    #[ORM\Column(name: 'show_overview', type: 'boolean', options: ['default' => 0])]
+    #[ORM\Column(name: 'show_overview', type: Types::BOOLEAN, options: ['default' => 0])]
     private bool $showOverview = false;
 
     /**
      * Show controls to users.
      */
-    #[ORM\Column(name: 'show_controls', type: 'boolean', options: ['default' => 0])]
+    #[ORM\Column(name: 'show_controls', type: Types::BOOLEAN, options: ['default' => 0])]
     private bool $showControls = false;
 
     /**
      * Description of the slideshow to be shown on the overview.
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     /**
      * The list of slides in the slideshow.
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\SlideshowBundle\Entity\Resource\Slide::class, mappedBy: 'slideshow', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'slideshow', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $slides;
 

@@ -2,6 +2,7 @@
 
 namespace Claroline\EvaluationBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait Evaluated
@@ -9,16 +10,16 @@ trait Evaluated
     /**
      * The evaluation will produce a score.
      */
-    #[ORM\Column(type: 'boolean', options: ['default' => 0])]
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 0])]
     protected bool $evaluated = false;
 
-    #[ORM\Column(type: 'boolean', options: ['default' => 0])]
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 0])]
     protected bool $required = false;
 
     /**
      * The estimated time required to do the resource (in minutes).
      */
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     protected ?int $estimatedDuration = null;
 
     /**

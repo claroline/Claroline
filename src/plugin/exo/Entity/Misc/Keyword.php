@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
@@ -23,13 +24,13 @@ class Keyword implements AnswerPartInterface
     /**
      * @var string
      */
-    #[ORM\Column(name: 'response', type: 'string', length: 255)]
+    #[ORM\Column(name: 'response', type: Types::STRING, length: 255)]
     private $text;
 
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'caseSensitive', type: 'boolean', nullable: true)]
+    #[ORM\Column(name: 'caseSensitive', type: Types::BOOLEAN, nullable: true)]
     private $caseSensitive;
 
     /**
@@ -38,7 +39,7 @@ class Keyword implements AnswerPartInterface
      * @var OpenQuestion
      */
     #[ORM\JoinColumn(name: 'interaction_open_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\OpenQuestion::class, inversedBy: 'keywords')]
+    #[ORM\ManyToOne(targetEntity: OpenQuestion::class, inversedBy: 'keywords')]
     private $interactionopen;
 
     /**
@@ -47,7 +48,7 @@ class Keyword implements AnswerPartInterface
      * @var Hole
      */
     #[ORM\JoinColumn(name: 'hole_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Misc\Hole::class, inversedBy: 'keywords')]
+    #[ORM\ManyToOne(targetEntity: Hole::class, inversedBy: 'keywords')]
     private $hole;
 
     /**

@@ -13,12 +13,12 @@ class FunctionalLog extends AbstractLog
 {
     
     #[ORM\JoinColumn(name: 'resource_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     private ?ResourceNode $resource = null;
 
     
     #[ORM\JoinColumn(name: 'workspace_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
+    #[ORM\ManyToOne(targetEntity: Workspace::class)]
     private ?Workspace $workspace = null;
 
     public function getResource(): ?ResourceNode

@@ -21,18 +21,18 @@ class Skill
     use Description;
 
     #[ORM\JoinColumn(name: 'skills_framework_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\EvaluationBundle\Entity\Skill\SkillsFramework::class, inversedBy: 'skills')]
+    #[ORM\ManyToOne(targetEntity: SkillsFramework::class, inversedBy: 'skills')]
     private ?SkillsFramework $skillsFramework = null;
 
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\EvaluationBundle\Entity\Skill\Skill::class, inversedBy: 'children')]
+    #[ORM\ManyToOne(targetEntity: Skill::class, inversedBy: 'children')]
     private ?Skill $parent = null;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\EvaluationBundle\Entity\Skill\Skill::class, mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Skill::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $children;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\EvaluationBundle\Entity\Skill\Ability::class, mappedBy: 'skill', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'skill', targetEntity: Ability::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $abilities;
 

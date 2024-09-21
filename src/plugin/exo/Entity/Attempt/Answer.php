@@ -2,6 +2,8 @@
 
 namespace UJM\ExoBundle\Entity\Attempt;
 
+use UJM\ExoBundle\Repository\AnswerRepository;
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +13,7 @@ use UJM\ExoBundle\Entity\Item\Item;
  * An answer represents a user answer to a question.
  */
 #[ORM\Table(name: 'ujm_response')]
-#[ORM\Entity(repositoryClass: \UJM\ExoBundle\Repository\AnswerRepository::class)]
+#[ORM\Entity(repositoryClass: AnswerRepository::class)]
 class Answer
 {
     use Id;
@@ -28,7 +30,7 @@ class Answer
      *
      * @var float
      */
-    #[ORM\Column(name: 'mark', type: 'float', nullable: true)]
+    #[ORM\Column(name: 'mark', type: Types::FLOAT, nullable: true)]
     private $score;
 
     /**
@@ -36,13 +38,13 @@ class Answer
      *
      * @var string
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private $feedback = '';
 
     /**
      * @var int
      */
-    #[ORM\Column(name: 'nb_tries', type: 'integer')]
+    #[ORM\Column(name: 'nb_tries', type: Types::INTEGER)]
     private $tries = 0;
 
     /**
@@ -50,7 +52,7 @@ class Answer
      *
      * @var string
      */
-    #[ORM\Column(name: 'response', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'response', type: Types::TEXT, nullable: true)]
     private $data;
 
     /**
@@ -66,7 +68,7 @@ class Answer
      * @var Paper
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Attempt\Paper::class, inversedBy: 'answers')]
+    #[ORM\ManyToOne(targetEntity: Paper::class, inversedBy: 'answers')]
     private $paper;
 
     /**
@@ -74,7 +76,7 @@ class Answer
      *
      * @var Item
      */
-    #[ORM\Column(name: 'question_id', type: 'string', length: 36)]
+    #[ORM\Column(name: 'question_id', type: Types::STRING, length: 36)]
     private $questionId;
 
     public function __construct()

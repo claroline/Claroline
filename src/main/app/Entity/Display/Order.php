@@ -2,6 +2,7 @@
 
 namespace Claroline\AppBundle\Entity\Display;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,7 +13,7 @@ trait Order
     /**
      * Order of the element.
      */
-    #[ORM\Column(name: 'entity_order', type: 'integer')]
+    #[ORM\Column(name: 'entity_order', type: Types::INTEGER)]
     protected int $order = 0;
 
     public function getOrder(): int

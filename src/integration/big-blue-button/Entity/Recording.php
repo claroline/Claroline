@@ -2,6 +2,7 @@
 
 namespace Claroline\BigBlueButtonBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,25 +15,25 @@ class Recording
     use Uuid;
 
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\BigBlueButtonBundle\Entity\BBB::class, inversedBy: 'recordings')]
+    #[ORM\ManyToOne(targetEntity: BBB::class, inversedBy: 'recordings')]
     private ?BBB $meeting = null;
 
     #[ORM\Column]
     private ?string $recordId = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private ?string $startTime = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private ?string $endTime;
 
     #[ORM\Column]
     private ?string $status = null;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $participants = 0;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private ?array $medias = [];
 
     public function __construct()

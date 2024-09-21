@@ -2,6 +2,9 @@
 
 namespace Claroline\CursusBundle\Entity\Registration;
 
+use Doctrine\DBAL\Types\Types;
+use DateTimeInterface;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,14 +21,14 @@ abstract class AbstractRegistration
     #[ORM\Column(name: 'registration_type')]
     protected string $type = self::LEARNER;
 
-    #[ORM\Column(name: 'registration_date', type: 'datetime')]
-    protected \DateTimeInterface $date;
+    #[ORM\Column(name: 'registration_date', type: Types::DATETIME_MUTABLE)]
+    protected DateTimeInterface $date;
 
     public function __construct()
     {
         $this->refreshUuid();
 
-        $this->date = new \DateTime();
+        $this->date = new DateTime();
     }
 
     public function getType(): string
@@ -38,12 +41,12 @@ abstract class AbstractRegistration
         $this->type = $type;
     }
 
-    public function getDate(): \DateTimeInterface
+    public function getDate(): DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): void
+    public function setDate(DateTimeInterface $date): void
     {
         $this->date = $date;
     }

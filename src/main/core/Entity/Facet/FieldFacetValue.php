@@ -11,11 +11,12 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
+use Claroline\CoreBundle\Repository\Facet\FieldFacetValueRepository;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_field_facet_value')]
-#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Facet\FieldFacetValueRepository::class)]
+#[ORM\Entity(repositoryClass: FieldFacetValueRepository::class)]
 class FieldFacetValue extends AbstractFacetValue
 {
     /**
@@ -26,7 +27,7 @@ class FieldFacetValue extends AbstractFacetValue
      * @var User
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     private $user;
 
     /**
@@ -34,7 +35,7 @@ class FieldFacetValue extends AbstractFacetValue
      * @var FieldFacet
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacet::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: FieldFacet::class, cascade: ['persist'])]
     private $fieldFacet;
 
     public function getType(): string

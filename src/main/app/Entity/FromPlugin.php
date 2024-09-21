@@ -11,7 +11,7 @@ trait FromPlugin
      * The plugin that have introduced the entity.
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Plugin::class)]
+    #[ORM\ManyToOne(targetEntity: Plugin::class)]
     protected ?Plugin $plugin = null;
 
     public function getPlugin(): ?Plugin

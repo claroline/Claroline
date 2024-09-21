@@ -15,7 +15,7 @@ trait Template
      * @var TemplateEntity
      */
     #[ORM\JoinColumn(name: 'template_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\Template::class)]
+    #[ORM\ManyToOne(targetEntity: TemplateEntity::class)]
     protected $template;
 
     public function getTemplate(): ?TemplateEntity

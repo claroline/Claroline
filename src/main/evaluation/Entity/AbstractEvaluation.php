@@ -11,6 +11,8 @@
 
 namespace Claroline\EvaluationBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use DateTimeInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\EvaluationBundle\Library\EvaluationInterface;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
@@ -43,33 +45,33 @@ abstract class AbstractEvaluation implements EvaluationInterface
     /** @deprecated use Claroline\EvaluationBundle\Library\EvaluationStatus instead */
     public const STATUS_PRIORITY = EvaluationStatus::PRIORITY;
 
-    #[ORM\Column(name: 'evaluation_date', type: 'datetime', nullable: true)]
-    protected ?\DateTimeInterface $date = null;
+    #[ORM\Column(name: 'evaluation_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    protected ?DateTimeInterface $date = null;
 
     #[ORM\Column(name: 'evaluation_status')]
     protected string $status = EvaluationStatus::NOT_ATTEMPTED;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     protected int $duration = 0;
 
-    #[ORM\Column(name: 'score', type: 'float', nullable: true)]
+    #[ORM\Column(name: 'score', type: Types::FLOAT, nullable: true)]
     protected ?float $score = null;
 
-    #[ORM\Column(name: 'score_min', type: 'float', nullable: true)]
+    #[ORM\Column(name: 'score_min', type: Types::FLOAT, nullable: true)]
     protected ?float $scoreMin = 0;
 
-    #[ORM\Column(name: 'score_max', type: 'float', nullable: true)]
+    #[ORM\Column(name: 'score_max', type: Types::FLOAT, nullable: true)]
     protected ?float $scoreMax = null;
 
-    #[ORM\Column(name: 'progression', type: 'float')]
+    #[ORM\Column(name: 'progression', type: Types::FLOAT)]
     protected ?float $progression = 0;
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date = null): void
+    public function setDate(DateTimeInterface $date = null): void
     {
         $this->date = $date;
     }

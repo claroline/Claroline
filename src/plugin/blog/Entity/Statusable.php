@@ -2,6 +2,7 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
 
 class Statusable
@@ -28,12 +29,12 @@ class Statusable
      *
      * @return Statusable
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function setStatus($status)
     {
         if (!in_array($status, $this->statusList)) {
-            throw new \InvalidArgumentException(sprintf('Invalid status for %s.', __CLASS__));
+            throw new InvalidArgumentException(sprintf('Invalid status for %s.', __CLASS__));
         }
         $this->status = $status;
 

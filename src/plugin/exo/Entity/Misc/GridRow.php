@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,7 +28,7 @@ class GridRow implements AnswerPartInterface
      *
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private $ordered;
 
     /**
@@ -35,7 +36,7 @@ class GridRow implements AnswerPartInterface
      *
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\GridRowItem::class, mappedBy: 'row', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: GridRowItem::class, mappedBy: 'row', cascade: ['all'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private $rowItems;
 
@@ -46,7 +47,7 @@ class GridRow implements AnswerPartInterface
      * @var PairQuestion
      */
     #[ORM\JoinColumn(name: 'pair_question_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\PairQuestion::class, inversedBy: 'rows')]
+    #[ORM\ManyToOne(targetEntity: PairQuestion::class, inversedBy: 'rows')]
     private $question;
 
     /**

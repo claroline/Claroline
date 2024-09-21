@@ -11,6 +11,7 @@
 
 namespace Claroline\OpenBadgeBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Display\Color;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -47,37 +48,37 @@ class BadgeClass
     #[ORM\Column]
     private ?string $image = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $criteria = null;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\OpenBadgeBundle\Entity\Rules\Rule::class, mappedBy: 'badge', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Rule::class, mappedBy: 'badge', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $rules;
 
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Organization\Organization::class)]
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
     private ?Organization $issuer = null;
 
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
+    #[ORM\ManyToOne(targetEntity: Workspace::class)]
     private ?Workspace $workspace = null;
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
     private bool $enabled = true;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $durationValidation = null;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $hideRecipients = false;
 
     /**
      * Allows whose owns the badge to grant it to others.
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $issuingPeer = false;
 
     /**
      * Notifies users when they are granted the badge.
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $notifyGrant = false;
 
     public function __construct()

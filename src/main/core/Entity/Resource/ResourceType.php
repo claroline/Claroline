@@ -11,13 +11,15 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_resource_type')]
-#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository::class)]
+#[ORM\Entity(repositoryClass: ResourceTypeRepository::class)]
 class ResourceType
 {
     use Id;
@@ -38,10 +40,10 @@ class ResourceType
      * @var ArrayCollection|MaskDecoder[]
      * @todo : we may remove it after checking it's not used
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\MaskDecoder::class, mappedBy: 'resourceType', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: MaskDecoder::class, mappedBy: 'resourceType', cascade: ['persist'])]
     private $maskDecoders;
 
-    #[ORM\Column(name: 'is_exportable', type: 'boolean')]
+    #[ORM\Column(name: 'is_exportable', type: Types::BOOLEAN)]
     private $exportable = false;
 
     /**
@@ -50,20 +52,20 @@ class ResourceType
      *
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private ?array $tags = [];
 
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Plugin::class)]
+    #[ORM\ManyToOne(targetEntity: Plugin::class)]
     private ?Plugin $plugin = null;
 
-    #[ORM\Column(name: 'is_enabled', type: 'boolean')]
+    #[ORM\Column(name: 'is_enabled', type: Types::BOOLEAN)]
     private bool $isEnabled = true;
 
     /**
      * @todo find a way to remove it (it's used in some DQL queries)
      */
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceRights::class, mappedBy: 'resourceTypes')]
+    #[ORM\ManyToMany(targetEntity: ResourceRights::class, mappedBy: 'resourceTypes')]
     protected $rights;
 
     public function __construct()

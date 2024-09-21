@@ -19,7 +19,7 @@ abstract class AbstractUserEvaluation extends AbstractEvaluation
 {
     
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $user = null;
 
     public function getUser(): ?User

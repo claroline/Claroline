@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\EvaluationBundle\Repository\ResourceAttemptRepository;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,18 +23,18 @@ use Doctrine\ORM\Mapping as ORM;
  *
  */
 #[ORM\Table(name: 'claro_resource_evaluation')]
-#[ORM\Entity(repositoryClass: \Claroline\EvaluationBundle\Repository\ResourceAttemptRepository::class)]
+#[ORM\Entity(repositoryClass: ResourceAttemptRepository::class)]
 class ResourceEvaluation extends AbstractEvaluation
 {
     
     #[ORM\JoinColumn(name: 'resource_user_evaluation', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceUserEvaluation::class)]
     private ?ResourceUserEvaluation $resourceUserEvaluation;
 
-    #[ORM\Column(type: 'text', name: 'evaluation_comment', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, name: 'evaluation_comment', nullable: true)]
     private ?string $comment = null;
 
-    #[ORM\Column(name: 'more_data', type: 'json', nullable: true)]
+    #[ORM\Column(name: 'more_data', type: Types::JSON, nullable: true)]
     private ?array $data = [];
 
     public function getResourceUserEvaluation(): ?ResourceUserEvaluation

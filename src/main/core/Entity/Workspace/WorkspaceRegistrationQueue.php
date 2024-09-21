@@ -28,7 +28,7 @@ class WorkspaceRegistrationQueue
      * @var Role
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
+    #[ORM\ManyToOne(targetEntity: Role::class)]
     private $role;
 
     /**
@@ -36,7 +36,7 @@ class WorkspaceRegistrationQueue
      * @var User
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private $user;
 
     /**
@@ -44,7 +44,7 @@ class WorkspaceRegistrationQueue
      * @var Workspace
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
+    #[ORM\ManyToOne(targetEntity: Workspace::class)]
     private $workspace;
 
     /**

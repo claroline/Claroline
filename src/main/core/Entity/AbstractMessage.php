@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,14 +24,14 @@ abstract class AbstractMessage
     use Id;
     use Uuid;
 
-    #[ORM\Column(name: 'content', type: 'text')]
+    #[ORM\Column(name: 'content', type: Types::TEXT)]
     protected $content;
 
-    #[ORM\Column(name: 'created', type: 'datetime')]
+    #[ORM\Column(name: 'created', type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
     protected $creationDate;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'update')]
     protected $updated;
 
@@ -38,7 +40,7 @@ abstract class AbstractMessage
      * @var User
      */
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     protected $creator;
 
     #[ORM\Column(nullable: true)]
@@ -46,8 +48,8 @@ abstract class AbstractMessage
 
     public function __construct()
     {
-        $this->creationDate = new \DateTime();
-        $this->updated = new \DateTime();
+        $this->creationDate = new DateTime();
+        $this->updated = new DateTime();
         $this->refreshUuid();
     }
 

@@ -11,6 +11,10 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\CursusBundle\Repository\CourseRepository;
+use Claroline\CoreBundle\Entity\Organization\Organization;
+use DateTime;
 use Claroline\AppBundle\Entity\Meta\Archived;
 use Claroline\AppBundle\Entity\Meta\IsPublic;
 use Claroline\CommunityBundle\Model\HasOrganizations;
@@ -21,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Table(name: 'claro_cursusbundle_course')]
-#[ORM\Entity(repositoryClass: \Claroline\CursusBundle\Repository\CourseRepository::class)]
+#[ORM\Entity(repositoryClass: CourseRepository::class)]
 class Course extends AbstractTraining
 {
     use HasOrganizations;
@@ -34,7 +38,7 @@ class Course extends AbstractTraining
 
     
     #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CursusBundle\Entity\Course::class, inversedBy: 'children')]
+    #[ORM\ManyToOne(targetEntity: Course::class, inversedBy: 'children')]
     private ?Course $parent = null;
 
     /**
@@ -42,20 +46,20 @@ class Course extends AbstractTraining
      *
      * @var Collection|Course[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\CursusBundle\Entity\Course::class, mappedBy: 'parent')]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Course::class)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $children;
 
     /**
      * @var Collection|Session[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\CursusBundle\Entity\Session::class, mappedBy: 'course')]
+    #[ORM\OneToMany(mappedBy: 'course', targetEntity: Session::class)]
     private Collection $sessions;
 
     /**
      * Hides sessions to users.
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $hideSessions = false;
 
     /**
@@ -64,11 +68,11 @@ class Course extends AbstractTraining
     #[ORM\Column(nullable: true)]
     private ?string $sessionOpening = 'first_available';
 
-    #[ORM\Column(name: 'session_duration', nullable: false, type: 'float', options: ['default' => 1])]
+    #[ORM\Column(name: 'session_duration', nullable: false, type: Types::FLOAT, options: ['default' => 1])]
     private float $defaultSessionDuration = 1; // in hours
     
     #[ORM\JoinTable(name: 'claro_cursusbundle_course_organizations')]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Organization\Organization::class)]
+    #[ORM\ManyToMany(targetEntity: Organization::class)]
     private Collection $organizations;
 
     /**
@@ -81,7 +85,7 @@ class Course extends AbstractTraining
     #[ORM\JoinTable(name: 'claro_cursusbundle_course_panel_facet')]
     #[ORM\JoinColumn(name: 'course_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'panel_facet_id', referencedColumnName: 'id', onDelete: 'CASCADE', unique: true)]
-    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Facet\PanelFacet::class, cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: PanelFacet::class, cascade: ['persist'])]
     private Collection $panelFacets;
 
     public function __construct()
@@ -130,7 +134,7 @@ class Course extends AbstractTraining
 
     public function hasAvailableSession(): bool
     {
-        $now = new \DateTime();
+        $now = new DateTime();
         foreach ($this->sessions as $session) {
             if (empty($session->getEndDate()) || $session->getEndDate() > $now) {
                 return true;

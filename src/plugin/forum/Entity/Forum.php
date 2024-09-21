@@ -11,6 +11,8 @@
 
 namespace Claroline\ForumBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use DateTimeInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\HasHomePage;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,32 +39,32 @@ class Forum extends AbstractResource
      *
      * @var ArrayCollection|Subject[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\ForumBundle\Entity\Subject::class, mappedBy: 'forum')]
+    #[ORM\OneToMany(targetEntity: Subject::class, mappedBy: 'forum')]
     #[ORM\OrderBy(['id' => 'ASC'])]
     protected $subjects;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     protected $validationMode = self::VALIDATE_NONE;
 
     /**
      * @var int
      */
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     protected $displayMessages = 3;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     protected $dataListOptions = self::DISPLAY_LIST;
 
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $lockDate = null;
 
     /**
@@ -74,7 +76,7 @@ class Forum extends AbstractResource
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
     private $expandComments = false;
 
     public function __construct()
@@ -119,12 +121,12 @@ class Forum extends AbstractResource
         return $this->dataListOptions;
     }
 
-    public function setLockDate(\DateTimeInterface $date = null): void
+    public function setLockDate(DateTimeInterface $date = null): void
     {
         $this->lockDate = $date;
     }
 
-    public function getLockDate(): ?\DateTimeInterface
+    public function getLockDate(): ?DateTimeInterface
     {
         return $this->lockDate;
     }

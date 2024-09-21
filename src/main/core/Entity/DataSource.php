@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\CoreBundle\Repository\DataSourceRepository;
 use Claroline\AppBundle\Entity\FromPlugin;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -15,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  */
 #[ORM\Table(name: 'claro_data_source')]
-#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\DataSourceRepository::class)]
+#[ORM\Entity(repositoryClass: DataSourceRepository::class)]
 class DataSource
 {
     use Id;
@@ -53,7 +55,7 @@ class DataSource
      *
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private $context = [
         self::CONTEXT_DESKTOP,
         self::CONTEXT_WORKSPACE,
@@ -67,7 +69,7 @@ class DataSource
      *
      * @var array
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private $tags = [];
 
     /**

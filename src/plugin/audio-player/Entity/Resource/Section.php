@@ -11,6 +11,7 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -26,53 +27,53 @@ class Section
     use Uuid;
 
     #[ORM\JoinColumn(name: 'node_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     protected $resourceNode;
 
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected $user;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     private $title;
 
-    #[ORM\Column(name: 'section_start', type: 'float', nullable: false)]
+    #[ORM\Column(name: 'section_start', type: Types::FLOAT, nullable: false)]
     private $start;
 
-    #[ORM\Column(name: 'section_end', type: 'float', nullable: false)]
+    #[ORM\Column(name: 'section_end', type: Types::FLOAT, nullable: false)]
     private $end;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     private $color;
 
     #[ORM\Column(name: 'section_type')]
     private $type;
 
-    #[ORM\Column(name: 'show_transcript', type: 'boolean')]
+    #[ORM\Column(name: 'show_transcript', type: Types::BOOLEAN)]
     private $showTranscript = false;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private $transcript;
 
-    #[ORM\Column(name: 'comments_allowed', type: 'boolean')]
+    #[ORM\Column(name: 'comments_allowed', type: Types::BOOLEAN)]
     private $commentsAllowed = false;
 
-    #[ORM\Column(name: 'show_help', type: 'boolean')]
+    #[ORM\Column(name: 'show_help', type: Types::BOOLEAN)]
     private $showHelp = false;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private $help;
 
-    #[ORM\Column(name: 'show_audio', type: 'boolean')]
+    #[ORM\Column(name: 'show_audio', type: Types::BOOLEAN)]
     private $showAudio = false;
 
-    #[ORM\Column(name: 'audio_url', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'audio_url', type: Types::STRING, nullable: true)]
     private $audioUrl;
 
-    #[ORM\Column(name: 'audio_description', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'audio_description', type: Types::STRING, nullable: true)]
     private $audioDescription;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\AudioPlayerBundle\Entity\Resource\SectionComment::class, mappedBy: 'section')]
+    #[ORM\OneToMany(targetEntity: SectionComment::class, mappedBy: 'section')]
     #[ORM\OrderBy(['creationDate' => 'DESC'])]
     protected $comments;
 

@@ -19,7 +19,7 @@ class ItemResource extends OrderedResource
      * Owning Item.
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Item\Item::class, inversedBy: 'resources')]
+    #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: 'resources')]
     private $question;
 
     /**

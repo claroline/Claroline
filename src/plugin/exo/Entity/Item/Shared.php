@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Item;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,7 +18,7 @@ class Shared
      */
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private $user;
 
     /**
@@ -28,7 +29,7 @@ class Shared
      */
     #[ORM\JoinColumn(name: 'question_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Item\Item::class)]
+    #[ORM\ManyToOne(targetEntity: Item::class)]
     private $question;
 
     /**
@@ -37,7 +38,7 @@ class Shared
      *
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private $adminRights = false;
 
     /**

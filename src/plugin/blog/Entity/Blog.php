@@ -2,6 +2,7 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PostPersistEventArgs;
@@ -15,26 +16,26 @@ class Blog extends AbstractResource
     /**
      * @var Post[]
      */
-    #[ORM\OneToMany(targetEntity: \Icap\BlogBundle\Entity\Post::class, mappedBy: 'blog', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'blog', cascade: ['all'])]
     #[ORM\OrderBy(['creationDate' => 'ASC'])]
     protected $posts;
 
     /**
      * @var Member[]
      */
-    #[ORM\OneToMany(targetEntity: \Icap\BlogBundle\Entity\Member::class, mappedBy: 'blog', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: Member::class, mappedBy: 'blog', cascade: ['all'])]
     protected $members;
 
     /**
      * @var BlogOptions
      */
-    #[ORM\OneToOne(targetEntity: \BlogOptions::class, mappedBy: 'blog', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: BlogOptions::class, mappedBy: 'blog', cascade: ['all'])]
     protected $options;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     protected $infos;
 
     public function __construct()

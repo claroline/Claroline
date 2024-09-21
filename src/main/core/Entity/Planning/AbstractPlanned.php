@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Planning;
 
+use BadMethodCallException;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +25,7 @@ abstract class AbstractPlanned
     use Uuid;
 
     #[ORM\JoinColumn(name: 'planned_object_id', onDelete: 'CASCADE', nullable: false)]
-    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Planning\PlannedObject::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: PlannedObject::class, cascade: ['persist', 'remove'])]
     protected ?PlannedObject $plannedObject = null;
 
     public function __construct()
@@ -64,7 +65,7 @@ abstract class AbstractPlanned
             return call_user_func_array([$this->plannedObject, $method], $arguments);
         }
 
-        throw new \BadMethodCallException(sprintf('Undefined method "%s".', $method));
+        throw new BadMethodCallException(sprintf('Undefined method "%s".', $method));
     }
 
     public function getPlannedObject(): PlannedObject

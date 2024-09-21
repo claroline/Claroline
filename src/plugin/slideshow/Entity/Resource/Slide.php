@@ -2,6 +2,7 @@
 
 namespace Claroline\SlideshowBundle\Entity\Resource;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Display\Color;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -20,13 +21,13 @@ class Slide
     use Uuid;
     use Color;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
     /**
      * Order of the slide in the slideshow.
      */
-    #[ORM\Column(name: 'slide_order', type: 'integer')]
+    #[ORM\Column(name: 'slide_order', type: Types::INTEGER)]
     private int $order = 0;
 
     /**
@@ -38,7 +39,7 @@ class Slide
     /**
      * Description of the slide.
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     /**
@@ -47,7 +48,7 @@ class Slide
      *
      */
     #[ORM\JoinColumn(name: 'slideshow_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\SlideshowBundle\Entity\Resource\Slideshow::class, inversedBy: 'slides')]
+    #[ORM\ManyToOne(targetEntity: Slideshow::class, inversedBy: 'slides')]
     private ?Slideshow $slideshow = null;
 
     public function __construct()

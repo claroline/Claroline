@@ -2,6 +2,7 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -35,19 +36,19 @@ class BlogOptions
     /**
      * @var Blog
      */
-    #[ORM\OneToOne(targetEntity: \Blog::class, inversedBy: 'options', cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: Blog::class, inversedBy: 'options', cascade: ['persist'])]
     protected $blog;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean', name: 'authorize_comment')]
+    #[ORM\Column(type: Types::BOOLEAN, name: 'authorize_comment')]
     protected $authorizeComment = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean', name: 'authorize_anonymous_comment')]
+    #[ORM\Column(type: Types::BOOLEAN, name: 'authorize_anonymous_comment')]
     protected $authorizeAnonymousComment = false;
 
     /**
@@ -59,13 +60,13 @@ class BlogOptions
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean', name: 'auto_publish_post')]
+    #[ORM\Column(type: Types::BOOLEAN, name: 'auto_publish_post')]
     protected $autoPublishPost = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean', name: 'auto_publish_comment')]
+    #[ORM\Column(type: Types::BOOLEAN, name: 'auto_publish_comment')]
     protected $autoPublishComment = false;
 
     /**
@@ -77,19 +78,19 @@ class BlogOptions
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean', name: 'display_full_posts')]
+    #[ORM\Column(type: Types::BOOLEAN, name: 'display_full_posts')]
     protected $displayFullPosts = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean', name: 'display_post_view_counter', options: ['default' => 1])]
+    #[ORM\Column(type: Types::BOOLEAN, name: 'display_post_view_counter', options: ['default' => 1])]
     protected $displayPostViewCounter = true;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string', name: 'banner_background_color')]
+    #[ORM\Column(type: Types::STRING, name: 'banner_background_color')]
     protected $bannerBackgroundColor = '#FFFFFF';
 
     /**
@@ -101,19 +102,19 @@ class BlogOptions
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string', name: 'banner_background_image', nullable: true)]
+    #[ORM\Column(type: Types::STRING, name: 'banner_background_image', nullable: true)]
     protected $bannerBackgroundImage;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string', name: 'banner_background_image_position')]
+    #[ORM\Column(type: Types::STRING, name: 'banner_background_image_position')]
     protected $bannerBackgroundImagePosition = 'left top';
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'string', name: 'banner_background_image_repeat')]
+    #[ORM\Column(type: Types::STRING, name: 'banner_background_image_repeat')]
     protected $bannerBackgroundImageRepeat = self::BANNER_NO_REPEAT;
 
     /**
@@ -139,13 +140,13 @@ class BlogOptions
      *
      * Option to display the widget bar on the right
      */
-    #[ORM\Column(type: 'string', name: 'display_list_widget_blog_right', nullable: false, options: ['default' => '01112131415161'])]
+    #[ORM\Column(type: Types::STRING, name: 'display_list_widget_blog_right', nullable: false, options: ['default' => '01112131415161'])]
     protected $listWidgetBlog = '01112131415161';
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean', name: 'tag_top_mode')]
+    #[ORM\Column(type: Types::BOOLEAN, name: 'tag_top_mode')]
     protected $tagTopMode = false;
 
     /**

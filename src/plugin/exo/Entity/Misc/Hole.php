@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
@@ -27,13 +28,13 @@ class Hole
      *
      * @var int
      */
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private $size = 0;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private $selector = false;
 
     /**
@@ -42,11 +43,11 @@ class Hole
      *
      * @var string
      */
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     private $placeholder;
 
     #[ORM\JoinColumn(name: 'interaction_hole_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\ClozeQuestion::class, inversedBy: 'holes')]
+    #[ORM\ManyToOne(targetEntity: ClozeQuestion::class, inversedBy: 'holes')]
     private $interactionHole;
 
     /**
@@ -55,7 +56,7 @@ class Hole
      *
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Keyword::class, mappedBy: 'hole', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Keyword::class, mappedBy: 'hole', cascade: ['all'], orphanRemoval: true)]
     private $keywords;
 
     /**

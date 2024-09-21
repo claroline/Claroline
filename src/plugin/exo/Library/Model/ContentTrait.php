@@ -24,7 +24,7 @@ trait ContentTrait
      * @var ResourceNode
      */
     #[ORM\JoinColumn(name: 'resourceNode_id', referencedColumnName: 'id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
+    #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     private $resourceNode;
 
     /**

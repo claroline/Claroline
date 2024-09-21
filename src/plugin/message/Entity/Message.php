@@ -11,6 +11,8 @@
 
 namespace Claroline\MessageBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -31,43 +33,43 @@ class Message
     #[ORM\Column]
     protected $object;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     protected $content;
 
     /**
      * @var User
      */
     #[ORM\JoinColumn(name: 'sender_id', onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     protected $user;
 
     /**
      *
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
     protected $date;
 
     /**
      * @var UserMessage[]|ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\MessageBundle\Entity\UserMessage::class, mappedBy: 'message')]
+    #[ORM\OneToMany(targetEntity: UserMessage::class, mappedBy: 'message')]
     protected $userMessages;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     #[Gedmo\TreeLeft]
     protected $lft;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     #[Gedmo\TreeLevel]
     protected $lvl;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     #[Gedmo\TreeRight]
     protected $rgt;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     #[Gedmo\TreeRoot]
     protected $root;
 
@@ -77,7 +79,7 @@ class Message
      * @var Message
      */
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\MessageBundle\Entity\Message::class, inversedBy: 'children')]
+    #[ORM\ManyToOne(targetEntity: Message::class, inversedBy: 'children')]
     #[Gedmo\TreeParent]
     protected $parent;
 
@@ -86,7 +88,7 @@ class Message
      *
      * @var Message[]|ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\MessageBundle\Entity\Message::class, mappedBy: 'parent')]
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'parent')]
     #[ORM\OrderBy(['lft' => 'ASC'])]
     protected $children;
 
@@ -99,13 +101,13 @@ class Message
     /**
      * @var string
      */
-    #[ORM\Column(name: 'receiver_string', type: 'text')]
+    #[ORM\Column(name: 'receiver_string', type: Types::TEXT)]
     protected $to;
 
     /**
      * @var array
      */
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     protected $attachments = [];
 
     /**
@@ -169,7 +171,7 @@ class Message
      * NOTE : creation date is already handled by the timestamp listener; this
      *        setter exists mainly for testing purposes.
      */
-    public function setDate(\DateTime $date)
+    public function setDate(DateTime $date)
     {
         $this->date = $date;
     }

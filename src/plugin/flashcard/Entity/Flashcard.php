@@ -2,6 +2,7 @@
 
 namespace Claroline\FlashcardBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,24 +15,24 @@ class Flashcard
     use Id;
     use Uuid;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $question = null;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private string $visibleContent;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private string $visibleContentType;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private string $hiddenContent;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private string $hiddenContentType;
 
     
     #[ORM\JoinColumn(nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \FlashcardDeck::class, inversedBy: 'cards')]
+    #[ORM\ManyToOne(targetEntity: FlashcardDeck::class, inversedBy: 'cards')]
     private FlashcardDeck $deck;
 
     public function __construct()

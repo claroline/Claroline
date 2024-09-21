@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Meta\Order;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Item\Item;
@@ -27,7 +28,7 @@ class StepItem
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Step::class, inversedBy: 'stepQuestions')]
+    #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'stepQuestions')]
     private $step;
 
     /**
@@ -38,7 +39,7 @@ class StepItem
      */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Item\Item::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Item::class, cascade: ['persist'])]
     private $question;
 
     /**
@@ -46,7 +47,7 @@ class StepItem
      *
      * @var bool
      */
-    #[ORM\Column(name: 'mandatory', type: 'boolean', nullable: true)]
+    #[ORM\Column(name: 'mandatory', type: Types::BOOLEAN, nullable: true)]
     private $mandatory = false;
 
     /**

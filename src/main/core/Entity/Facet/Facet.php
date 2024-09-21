@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Icon;
@@ -32,20 +33,20 @@ class Facet
     /**
      * @var bool
      */
-    #[ORM\Column(name: 'isMain', type: 'boolean')]
+    #[ORM\Column(name: 'isMain', type: Types::BOOLEAN)]
     private $main = false;
 
     /**
      * @var bool
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private $forceCreationForm = false;
 
     /**
      *
      * @var ArrayCollection|PanelFacet[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Facet\PanelFacet::class, mappedBy: 'facet', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: PanelFacet::class, mappedBy: 'facet', cascade: ['all'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private $panelFacets;
 

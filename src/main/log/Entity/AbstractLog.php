@@ -11,6 +11,8 @@
 
 namespace Claroline\LogBundle\Entity;
 
+use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,35 +22,35 @@ abstract class AbstractLog
 {
     use Id;
 
-    #[ORM\Column(type: 'datetime')]
-    protected \DateTimeInterface $date;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    protected DateTimeInterface $date;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     protected string $event;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     protected ?string $details = null;
 
     
     #[ORM\JoinColumn(name: 'doer_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $doer = null;
 
-    #[ORM\Column(name: 'doer_ip', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'doer_ip', type: Types::STRING, nullable: true)]
     protected ?string $doerIp = null;
 
-    #[ORM\Column(name: 'doer_country', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'doer_country', type: Types::STRING, nullable: true)]
     protected ?string $doerCountry = null;
 
-    #[ORM\Column(name: 'doer_city', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'doer_city', type: Types::STRING, nullable: true)]
     protected ?string $doerCity = null;
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $dateTime): void
+    public function setDate(DateTimeInterface $dateTime): void
     {
         $this->date = $dateTime;
     }

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Template;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,7 +31,7 @@ class TemplateContent
     /**
      * @var string
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private $content;
 
     /**
@@ -44,7 +45,7 @@ class TemplateContent
      * @var Template
      */
     #[ORM\JoinColumn(name: 'template_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\Template::class, inversedBy: 'contents')]
+    #[ORM\ManyToOne(targetEntity: Template::class, inversedBy: 'contents')]
     private $template;
 
     public function getTitle(): ?string

@@ -11,12 +11,14 @@
 
 namespace Claroline\TagBundle\Entity;
 
+use Claroline\TagBundle\Repository\TaggedObjectRepository;
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_tagbundle_tagged_object')]
 #[ORM\UniqueConstraint(name: 'unique', columns: ['object_id', 'object_class', 'tag_id'])]
-#[ORM\Entity(repositoryClass: \Claroline\TagBundle\Repository\TaggedObjectRepository::class)]
+#[ORM\Entity(repositoryClass: TaggedObjectRepository::class)]
 class TaggedObject
 {
     use Id;
@@ -24,7 +26,7 @@ class TaggedObject
     /**
      * @var string
      */
-    #[ORM\Column(name: 'object_id', type: 'string')]
+    #[ORM\Column(name: 'object_id', type: Types::STRING)]
     private $objectId;
 
     /**
@@ -44,7 +46,7 @@ class TaggedObject
      * @var Tag
      */
     #[ORM\JoinColumn(name: 'tag_id', onDelete: 'CASCADE', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\TagBundle\Entity\Tag::class, inversedBy: 'taggedObjects')]
+    #[ORM\ManyToOne(targetEntity: Tag::class, inversedBy: 'taggedObjects')]
     private $tag;
 
     /**

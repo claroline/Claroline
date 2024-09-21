@@ -11,6 +11,9 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
+use Doctrine\DBAL\Types\Types;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,27 +28,27 @@ class WidgetInstanceConfig
     use Id;
 
     #[ORM\JoinColumn(name: 'widget_instance_id', onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetInstance::class, inversedBy: 'widgetInstanceConfigs', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: WidgetInstance::class, inversedBy: 'widgetInstanceConfigs', cascade: ['persist', 'remove'])]
     private $widgetInstance;
 
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private $user;
 
     #[ORM\JoinColumn(name: 'workspace_id', nullable: true, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
+    #[ORM\ManyToOne(targetEntity: Workspace::class)]
     private $workspace;
 
-    #[ORM\Column(name: 'widget_order', type: 'integer')]
+    #[ORM\Column(name: 'widget_order', type: Types::INTEGER)]
     private $widgetOrder = 0;
 
     #[ORM\Column]
     private $type;
 
-    #[ORM\Column(type: 'boolean', name: 'is_visible')]
+    #[ORM\Column(type: Types::BOOLEAN, name: 'is_visible')]
     private $visible = true;
 
-    #[ORM\Column(type: 'boolean', name: 'is_locked')]
+    #[ORM\Column(type: Types::BOOLEAN, name: 'is_locked')]
     private $locked = false;
 
     public function getWidgetInstance()

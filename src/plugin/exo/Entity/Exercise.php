@@ -2,6 +2,10 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use UJM\ExoBundle\Repository\ExerciseRepository;
+use Doctrine\DBAL\Types\Types;
+use DateTime;
+use DateTimeInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\HasEndPage;
 use Claroline\CoreBundle\Entity\Resource\HasHomePage;
@@ -17,7 +21,7 @@ use UJM\ExoBundle\Library\Options\ShowScoreAt;
 
 
 #[ORM\Table(name: 'ujm_exercise')]
-#[ORM\Entity(repositoryClass: \UJM\ExoBundle\Repository\ExerciseRepository::class)]
+#[ORM\Entity(repositoryClass: ExerciseRepository::class)]
 class Exercise extends AbstractResource
 {
     use HasHomePage;
@@ -31,7 +35,7 @@ class Exercise extends AbstractResource
      *
      * @var string
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private $type = ExerciseType::CUSTOM;
 
     /**
@@ -40,16 +44,16 @@ class Exercise extends AbstractResource
      *
      * @var string
      */
-    #[ORM\Column(name: 'correction_mode', type: 'string')]
+    #[ORM\Column(name: 'correction_mode', type: Types::STRING)]
     private $correctionMode = ShowCorrectionAt::AFTER_END;
 
     /**
      * Date of availability of the corrections.
      *
      *
-     * @var \DateTime
+     * @var DateTime
      */
-    #[ORM\Column(name: 'date_correction', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'date_correction', type: Types::STRING, nullable: true)]
     private $dateCorrection;
 
     /**
@@ -58,25 +62,25 @@ class Exercise extends AbstractResource
      *
      * @var string
      */
-    #[ORM\Column(name: 'mark_mode', type: 'string')]
+    #[ORM\Column(name: 'mark_mode', type: Types::STRING)]
     private $markMode = ShowScoreAt::WITH_CORRECTION;
 
     /**
      * Add a button to stop the Exercise before the end.
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $interruptible = true;
 
     /**
      * Show back button in player.
      */
-    #[ORM\Column(name: 'show_back', type: 'boolean')]
+    #[ORM\Column(name: 'show_back', type: Types::BOOLEAN)]
     private bool $showBack = true;
 
     /**
      * Show an end page when the user has finished the quiz.
      */
-    #[ORM\Column(name: 'show_end_confirm', type: 'boolean')]
+    #[ORM\Column(name: 'show_end_confirm', type: Types::BOOLEAN)]
     private bool $showEndConfirm = true;
 
     /**
@@ -85,13 +89,13 @@ class Exercise extends AbstractResource
      *
      * @var string
      */
-    #[ORM\Column(name: 'intermediate_scores', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'intermediate_scores', type: Types::TEXT, nullable: true)]
     private $intermediateScores = 'none';
 
     /**
      * A message to display when a user has done all its attempts.
      */
-    #[ORM\Column(name: 'attempts_reached_message', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'attempts_reached_message', type: Types::TEXT, nullable: true)]
     private ?string $attemptsReachedMessage = '';
 
     /**
@@ -100,7 +104,7 @@ class Exercise extends AbstractResource
      *  - user : only current user stats displayed.
      *  - all : all participants stats displayed.
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private string $endStats = 'none';
 
     /**
@@ -109,101 +113,101 @@ class Exercise extends AbstractResource
      *  - user : only current user stats displayed.
      *  - all : all participants stats displayed.
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private string $overviewStats = 'none';
 
     /**
      * Show the Exercise meta in the overview of the Exercise.
      */
-    #[ORM\Column(name: 'metadata_visible', type: 'boolean')]
+    #[ORM\Column(name: 'metadata_visible', type: Types::BOOLEAN)]
     private bool $metadataVisible = true;
 
     /**
      * Show stats about User responses in the Correction.
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $statistics = false;
 
     /**
      * Flag indicating that we do not show the entire correction for the exercise
      * (equals hide Awaited answer filed) when displaying instant feedback and exercise correction page.
      */
-    #[ORM\Column(name: 'minimal_correction', type: 'boolean')]
+    #[ORM\Column(name: 'minimal_correction', type: Types::BOOLEAN)]
     private bool $minimalCorrection = false;
 
     /**
      * If true, the users who pass the exercise are anonymized in papers.
      */
-    #[ORM\Column(name: 'anonymous', type: 'boolean', nullable: true)]
+    #[ORM\Column(name: 'anonymous', type: Types::BOOLEAN, nullable: true)]
     private bool $anonymizeAttempts = false;
 
     /**
      * Show feedback flag.
      */
-    #[ORM\Column(name: 'show_feedback', type: 'boolean')]
+    #[ORM\Column(name: 'show_feedback', type: Types::BOOLEAN)]
     private bool $showFeedback = false;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private $scoreRule;
 
     /**
      * Score to obtain to pass the exercise.
      */
-    #[ORM\Column(name: 'success_score', type: 'float', nullable: true)]
+    #[ORM\Column(name: 'success_score', type: Types::FLOAT, nullable: true)]
     private ?float $successScore = 50;
 
     /**
      * Displays step numbering.
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private string $numbering = ExerciseNumbering::NONE;
 
     /**
      * Displays question numbering.
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private string $questionNumbering = ExerciseNumbering::NONE;
 
     /**
      * Displays step titles.
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $showTitles = true;
 
     /**
      * Displays question titles.
      */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $showQuestionTitles = true;
 
     /**
      * Use all papers to compute stats.
      */
-    #[ORM\Column(name: 'all_papers_stats', type: 'boolean', options: ['default' => 1])]
+    #[ORM\Column(name: 'all_papers_stats', type: Types::BOOLEAN, options: ['default' => 1])]
     private bool $allPapersStatistics = true;
 
     /**
      * Sets the mandatory question flag.
      */
-    #[ORM\Column(name: 'mandatory_questions', type: 'boolean')]
+    #[ORM\Column(name: 'mandatory_questions', type: Types::BOOLEAN)]
     private bool $mandatoryQuestions = false;
 
     /**
      * If true, the time to answer the exercise will be limited by the defined duration.
      */
-    #[ORM\Column(name: 'time_limited', type: 'boolean', options: ['default' => 0])]
+    #[ORM\Column(name: 'time_limited', type: Types::BOOLEAN, options: ['default' => 0])]
     private bool $timeLimited = false;
 
-    #[ORM\Column(name: 'progression_displayed', type: 'boolean', options: ['default' => 1])]
+    #[ORM\Column(name: 'progression_displayed', type: Types::BOOLEAN, options: ['default' => 1])]
     private bool $progressionDisplayed = true;
 
-    #[ORM\Column(name: 'answers_editable', type: 'boolean', options: ['default' => 1])]
+    #[ORM\Column(name: 'answers_editable', type: Types::BOOLEAN, options: ['default' => 1])]
     private bool $answersEditable = true;
 
-    #[ORM\Column(name: 'expected_answers', type: 'boolean')]
+    #[ORM\Column(name: 'expected_answers', type: Types::BOOLEAN)]
     private bool $expectedAnswers = true;
 
     /**
@@ -211,7 +215,7 @@ class Exercise extends AbstractResource
      *
      * @var ArrayCollection|Step[]
      */
-    #[ORM\OneToMany(targetEntity: \Step::class, mappedBy: 'exercise', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Step::class, mappedBy: 'exercise', cascade: ['all'], orphanRemoval: true)]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private $steps;
 
@@ -219,7 +223,7 @@ class Exercise extends AbstractResource
     {
         parent::__construct();
 
-        $this->dateCorrection = new \DateTime();
+        $this->dateCorrection = new DateTime();
         $this->steps = new ArrayCollection();
     }
 
@@ -233,12 +237,12 @@ class Exercise extends AbstractResource
         return $this->correctionMode;
     }
 
-    public function setDateCorrection(\DateTimeInterface $dateCorrection = null): void
+    public function setDateCorrection(DateTimeInterface $dateCorrection = null): void
     {
         $this->dateCorrection = $dateCorrection;
     }
 
-    public function getDateCorrection(): ?\DateTimeInterface
+    public function getDateCorrection(): ?DateTimeInterface
     {
         return $this->dateCorrection;
     }

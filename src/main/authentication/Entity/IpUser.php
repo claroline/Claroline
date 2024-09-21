@@ -2,6 +2,7 @@
 
 namespace Claroline\AuthenticationBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Restriction\Locked;
@@ -22,18 +23,18 @@ class IpUser
     use Uuid;
     use Locked;
 
-    #[ORM\Column(type: 'string', nullable: false, unique: true)]
+    #[ORM\Column(type: Types::STRING, nullable: false, unique: true)]
     private ?string $ip = null;
 
     /**
      * If true, the $ip field contains to ips separated by a comma (,) to define the range.
      */
-    #[ORM\Column(name: 'is_range', type: 'boolean')]
+    #[ORM\Column(name: 'is_range', type: Types::BOOLEAN)]
     private bool $range = false;
 
     
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user = null;
 
     public function __construct()

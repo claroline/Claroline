@@ -2,6 +2,9 @@
 
 namespace Icap\WikiBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Icap\WikiBundle\Repository\SectionRepository;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -10,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Table(name: 'icap__wiki_section')]
-#[ORM\Entity(repositoryClass: \Icap\WikiBundle\Repository\SectionRepository::class)]
+#[ORM\Entity(repositoryClass: SectionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\Tree(type: 'nested')]
 class Section
@@ -18,10 +21,10 @@ class Section
     use Id;
     use Uuid;
 
-    #[ORM\Column(type: 'boolean', nullable: false)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     protected $visible = true;
 
-    #[ORM\Column(type: 'datetime', name: 'creation_date')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, name: 'creation_date')]
     #[Gedmo\Timestampable(on: 'create')]
     protected $creationDate;
 
@@ -29,41 +32,41 @@ class Section
      * @var User
      */
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected $author;
 
     #[ORM\JoinColumn(name: 'active_contribution_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\OneToOne(targetEntity: \Icap\WikiBundle\Entity\Contribution::class, cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: Contribution::class, cascade: ['all'])]
     protected $activeContribution;
 
     #[ORM\JoinColumn(name: 'wiki_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Icap\WikiBundle\Entity\Wiki::class)]
+    #[ORM\ManyToOne(targetEntity: Wiki::class)]
     protected $wiki;
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
     protected $deleted = false;
 
-    #[ORM\Column(type: 'datetime', name: 'deletion_date', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, name: 'deletion_date', nullable: true)]
     protected $deletionDate;
 
-    #[ORM\Column(name: 'lft', type: 'integer')]
+    #[ORM\Column(name: 'lft', type: Types::INTEGER)]
     #[Gedmo\TreeLeft]
     private $left;
 
-    #[ORM\Column(name: 'lvl', type: 'integer')]
+    #[ORM\Column(name: 'lvl', type: Types::INTEGER)]
     #[Gedmo\TreeLevel]
     private $level;
 
-    #[ORM\Column(name: 'rgt', type: 'integer')]
+    #[ORM\Column(name: 'rgt', type: Types::INTEGER)]
     #[Gedmo\TreeRight]
     private $right;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     #[Gedmo\TreeRoot]
     private $root;
 
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Icap\WikiBundle\Entity\Section::class)]
+    #[ORM\ManyToOne(targetEntity: Section::class)]
     #[Gedmo\TreeParent]
     protected $parent;
 
@@ -102,7 +105,7 @@ class Section
     /**
      * Returns the resource creation date.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreationDate()
     {
@@ -148,7 +151,7 @@ class Section
     /**
      * Set contribution.
      *
-     * @param \Icap\WikiBundle\Entity\Contribution $contribution
+     * @param Contribution $contribution
      *
      * @return section
      */
@@ -162,7 +165,7 @@ class Section
     /**
      * Get contribution.
      *
-     * @return \Icap\WikiBundle\Entity\Contribution
+     * @return Contribution
      */
     public function getActiveContribution()
     {
@@ -172,7 +175,7 @@ class Section
     /**
      * Set wiki.
      *
-     * @param \Icap\WikiBundle\Entity\Wiki $wiki
+     * @param Wiki $wiki
      *
      * @return section
      */
@@ -186,7 +189,7 @@ class Section
     /**
      * Get wiki.
      *
-     * @return \Icap\WikiBundle\Entity\Wiki
+     * @return Wiki
      */
     public function getWiki()
     {
@@ -216,7 +219,7 @@ class Section
     /**
      * Returns the resource creation date.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDeletionDate()
     {

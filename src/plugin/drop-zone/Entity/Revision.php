@@ -11,6 +11,8 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -25,26 +27,26 @@ class Revision
     use Uuid;
 
     #[ORM\JoinColumn(name: 'drop_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Drop::class, inversedBy: 'revisions')]
+    #[ORM\ManyToOne(targetEntity: Drop::class, inversedBy: 'revisions')]
     protected $drop;
 
     #[ORM\JoinColumn(name: 'creator_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected $creator;
 
-    #[ORM\Column(name: 'creation_date', type: 'datetime', nullable: false)]
+    #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE, nullable: false)]
     protected $creationDate;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\DropZoneBundle\Entity\Document::class, mappedBy: 'revision')]
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'revision')]
     protected $documents;
 
-    #[ORM\OneToMany(targetEntity: \Claroline\DropZoneBundle\Entity\RevisionComment::class, mappedBy: 'revision')]
+    #[ORM\OneToMany(targetEntity: RevisionComment::class, mappedBy: 'revision')]
     protected $comments;
 
     public function __construct()
     {
         $this->refreshUuid();
-        $this->setCreationDate(new \DateTime());
+        $this->setCreationDate(new DateTime());
         $this->documents = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
@@ -76,14 +78,14 @@ class Revision
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreationDate()
     {
         return $this->creationDate;
     }
 
-    public function setCreationDate(\DateTime $creationDate)
+    public function setCreationDate(DateTime $creationDate)
     {
         $this->creationDate = $creationDate;
     }

@@ -11,12 +11,13 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\CoreBundle\Repository\PluginRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_plugin')]
 #[ORM\UniqueConstraint(name: 'plugin_unique_name', columns: ['vendor_name', 'short_name'])]
-#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\PluginRepository::class)]
+#[ORM\Entity(repositoryClass: PluginRepository::class)]
 class Plugin
 {
     use Id;

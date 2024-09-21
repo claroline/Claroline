@@ -11,6 +11,7 @@
 
 namespace Claroline\ForumBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\AbstractMessage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,28 +22,28 @@ use Doctrine\ORM\Mapping as ORM;
 class Message extends AbstractMessage
 {
     
-    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ForumBundle\Entity\Subject::class, inversedBy: 'messages', cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Subject::class, cascade: ['persist'], inversedBy: 'messages')]
     protected ?Subject $subject = null;
 
     
     #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Claroline\ForumBundle\Entity\Message::class, inversedBy: 'children')]
+    #[ORM\ManyToOne(targetEntity: Message::class, inversedBy: 'children')]
     protected ?Message $parent = null;
 
     /**
      * @var Message[]
      */
-    #[ORM\OneToMany(targetEntity: \Claroline\ForumBundle\Entity\Message::class, mappedBy: 'parent')]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Message::class)]
     protected $children;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     protected string $moderation = Forum::VALIDATE_NONE;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected bool $flagged = false;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     protected bool $first = false;
 
     /**

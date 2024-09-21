@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Misc\Keyword;
@@ -16,7 +17,7 @@ class OpenQuestion extends AbstractItem
     /**
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Keyword::class, mappedBy: 'interactionopen', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Keyword::class, mappedBy: 'interactionopen', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $keywords;
 
     /**
@@ -31,7 +32,7 @@ class OpenQuestion extends AbstractItem
      *
      * @var int
      */
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private $maxAnswerLength = 0;
 
     /**
