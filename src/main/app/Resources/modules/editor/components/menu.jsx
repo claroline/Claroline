@@ -4,7 +4,6 @@ import {PropTypes as T} from 'prop-types'
 import {Toolbar} from '#/main/app/action'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import isEmpty from 'lodash/isEmpty'
-import {trans} from '#/main/app/intl'
 
 const EditorMenu = (props) => {
   const commonPages = props.pages.filter(page => page.standard)
@@ -12,12 +11,13 @@ const EditorMenu = (props) => {
   const advancedPages = props.pages.filter(page => page.advanced)
 
   return (
-    <div className="app-editor-menu" role="presentation">
+    <nav className="app-editor-menu" aria-label={props.title}>
       {props.title &&
         <h1 className="app-editor-menu-header">{props.title}</h1>
       }
 
       <Toolbar
+        role="presentation"
         className="nav nav-pills flex-column"
         buttonName="nav-link text-start"
         actions={commonPages.map(page => ({
@@ -32,6 +32,7 @@ const EditorMenu = (props) => {
         <>
           <hr className="app-editor-menu-separator my-2" />
           <Toolbar
+            role="presentation"
             className="nav nav-pills flex-column"
             buttonName="nav-link text-start"
             actions={otherPages.map(page => ({
@@ -48,6 +49,7 @@ const EditorMenu = (props) => {
         <>
           <hr className="app-editor-menu-separator my-2" />
           <Toolbar
+            role="presentation"
             className="nav nav-pills flex-column"
             buttonName="nav-link text-start"
             actions={advancedPages.map(page => ({
@@ -59,7 +61,7 @@ const EditorMenu = (props) => {
           />
         </>
       }
-    </div>
+    </nav>
   )
 }
 

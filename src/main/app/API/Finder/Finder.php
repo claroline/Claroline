@@ -4,6 +4,7 @@ namespace Claroline\AppBundle\API\Finder;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use OutOfBoundsException;
 use Symfony\Component\HttpFoundation\Request;
 
 class Finder implements FinderInterface
@@ -80,6 +81,20 @@ class Finder implements FinderInterface
         $child->setParent($this);
 
         return $this;
+    }
+
+    public function has(string $name): bool
+    {
+        return isset($this->children[$name]);
+    }
+
+    public function get(string $name): FinderInterface
+    {
+        if (isset($this->children[$name])) {
+            return $this->children[$name];
+        }
+
+        throw new OutOfBoundsException(sprintf('Child "%s" does not exist.', $name));
     }
 
     public function addFilters(array $filters): static

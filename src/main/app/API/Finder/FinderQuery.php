@@ -108,6 +108,11 @@ class FinderQuery
         return $this->filters;
     }
 
+    public function hasFilter(string $filterName): bool
+    {
+        return array_key_exists($filterName, $this->filters);
+    }
+
     public function getFilter(string $filterName): mixed
     {
         if (array_key_exists($filterName, $this->filters)) {

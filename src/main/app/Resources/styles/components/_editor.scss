@@ -34,7 +34,7 @@
   color: var(--#{$prefix}editor-menu-color);
   padding: map-get($spacers, 5) map-get($spacers, 3);
 
-  nav {
+  .nav {
     margin-left: auto;
     max-width: 240px;
   }

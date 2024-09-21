@@ -123,7 +123,7 @@ class WorkspaceController extends AbstractCrudController
 
         $workspaces = $this->finder->create(WorkspaceType::class)
             ->addFilters([
-                'model' => false,
+                //'model' => false,
                 'roles' => $this->tokenStorage->getToken()->getRoleNames(),
             ])
             ->sortBy(['name' => 'ASC'])
@@ -146,7 +146,7 @@ class WorkspaceController extends AbstractCrudController
     {
         $finder = $this->finder->create(WorkspaceType::class)
             ->addFilters([
-                'roles' => $this->tokenStorage->getToken()->getRoleNames(),
+                //'roles' => $this->tokenStorage->getToken()->getRoleNames(),
             ])
             ->sortBy(['name' => 'ASC'])
             ->handleRequest($request)
@@ -187,15 +187,23 @@ class WorkspaceController extends AbstractCrudController
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        return new StreamedJsonResponse($this->crud->search(
-            Workspace::class,
-            FinderQuery::fromRequest($request)
-                ->addFilters([
-                    'model' => false,
-                    'administrated' => true,
-                ]),
-            $this->getOptions()['list']
-        ));
+        $workspaces = $this->finder->create(WorkspaceType::class)
+            ->addFilters([
+                //'model' => false,
+                //'roles' => $this->tokenStorage->getToken()->getRoleNames(),
+                //'administrated' => true,
+            ])
+            ->sortBy(['name' => 'ASC'])
+            ->handleRequest($request)
+            ->getResult(function (Workspace $workspace): array {
+                return $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_LIST]);
+            })
+        ;
+
+        return new StreamedJsonResponse([
+            'totalResults' => $workspaces->count(),
+            'data' => $workspaces->getItems(),
+        ]);
     }
 
     /**
@@ -211,17 +219,35 @@ class WorkspaceController extends AbstractCrudController
      *
      * @Route("/list/model", name="list_model", methods={"GET"})
      */
-    public function listModelAction(Request $request): JsonResponse
+    public function listModelAction(Request $request): StreamedJsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        return new JsonResponse($this->crud->list(
+        $workspaces = $this->finder->create(WorkspaceType::class)
+            ->addFilters([
+                'model' => true,
+                /*'roles' => $this->tokenStorage->getToken()->getRoleNames(),
+                'administrated' => true,*/
+            ])
+            ->sortBy(['name' => 'ASC'])
+            ->handleRequest($request)
+            ->getResult(function (Workspace $workspace): array {
+                return $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_LIST]);
+            })
+        ;
+
+        return new StreamedJsonResponse([
+            'totalResults' => $workspaces->count(),
+            'data' => $workspaces->getItems(),
+        ]);
+
+        /*return new JsonResponse($this->crud->list(
             Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
                 'model' => true,
             ])]),
             $this->getOptions()['list']
-        ));
+        ));*/
     }
 
     /**
@@ -237,18 +263,36 @@ class WorkspaceController extends AbstractCrudController
      *
      * @Route("/list/archived", name="list_archive", methods={"GET"})
      */
-    public function listArchivedAction(Request $request): JsonResponse
+    public function listArchivedAction(Request $request): StreamedJsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        return new JsonResponse($this->crud->list(
+        $workspaces = $this->finder->create(WorkspaceType::class)
+            ->addFilters([
+                'archived' => true,
+                /*'roles' => $this->tokenStorage->getToken()->getRoleNames(),
+                'administrated' => true,*/
+            ])
+            ->sortBy(['name' => 'ASC'])
+            ->handleRequest($request)
+            ->getResult(function (Workspace $workspace): array {
+                return $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_LIST]);
+            })
+        ;
+
+        return new StreamedJsonResponse([
+            'totalResults' => $workspaces->count(),
+            'data' => $workspaces->getItems(),
+        ]);
+
+        /*return new JsonResponse($this->crud->list(
             Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
                 'administrated' => true,
                 'archived' => true,
             ])]),
             $this->getOptions()['list']
-        ));
+        ));*/
     }
 
     /**

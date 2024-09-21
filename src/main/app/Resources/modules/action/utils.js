@@ -31,6 +31,7 @@ function createActionDefinition(action) {
       icon: action.confirm.icon || action.icon,
       title: action.confirm.title || action.label,
       question: typeof action.confirm === 'string' ? action.confirm : action.confirm.message,
+      additional: action.confirm.additional,
       dangerous: action.dangerous,
 
       // forward original action to the confirmation modal

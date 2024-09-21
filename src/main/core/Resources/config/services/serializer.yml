@@ -3,11 +3,6 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
-    Claroline\CoreBundle\API\Serializer\ObjectLockSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-
     Claroline\CoreBundle\API\Serializer\MessageSerializer:
         arguments:
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'

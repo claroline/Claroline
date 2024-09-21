@@ -6,9 +6,7 @@ import {CommunityEditor as CommunityEditorComponent} from '#/main/community/tool
 
 const CommunityEditor = connect(
   (state) => ({
-    path: toolSelectors.path(state),
-    contextType: toolSelectors.contextType(state),
-    contextId: toolSelectors.contextId(state)
+    contextType: toolSelectors.contextType(state)
   })
 )(CommunityEditorComponent)
 

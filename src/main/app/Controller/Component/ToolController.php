@@ -108,13 +108,14 @@ class ToolController
 
         // update custom tool configuration if any
         $updatedData = $this->toolProvider->configure($name, $context, $contextSubject, $data);
+        $updatedRights = array_values($orderedTool->getRights()->toArray());
 
         // reopen tool to get fresh data
         return new JsonResponse(array_merge([], $updatedData, [
             'data' => $this->serializer->serialize($orderedTool),
             'rights' => $isManager ? array_map(function (ToolRights $rights) {
                 return $this->serializer->serialize($rights);
-            }, $orderedTool->getRights()->toArray()) : [],
+            }, $updatedRights) : [],
         ]));
     }
 

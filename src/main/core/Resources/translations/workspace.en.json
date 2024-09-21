@@ -2,6 +2,7 @@
   "workspace": "Workspace",
   "workspaces": "Workspaces",
   "new_workspace": "New workspace",
+  "all_workspaces": "All workspaces",
   "managed_workspaces": "Managed workspaces",
   "my_workspaces": "My workspaces",
   "public_workspace": "Public workspace",

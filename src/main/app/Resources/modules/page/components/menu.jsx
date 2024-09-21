@@ -39,7 +39,7 @@ const PageMenu = (props) => {
         <MenuButton />
       }
 
-      {!isEmpty(displayedNav) &&
+      {1 < displayedNav.length &&
         <nav className="page-nav ms-auto">
           <ul className="nav nav-underline flex-nowrap">
             {displayedNav.map((nav) =>
@@ -56,7 +56,7 @@ const PageMenu = (props) => {
 
       {props.actions &&
         <Toolbar
-          className={classes('nav nav-underline flex-nowrap', isEmpty(props.nav) && 'ms-auto')}
+          className={classes('nav nav-underline flex-nowrap', 1 >= displayedNav.length && 'ms-auto')}
           buttonName="nav-link"
           toolbar={props.toolbar}
           tooltip="bottom"

@@ -26,9 +26,7 @@ const CommunityEditor = (props) =>
   />
 
 CommunityEditor.propTypes = {
-  path: T.string.isRequired,
-  contextType: T.string.isRequired,
-  contextId: T.string
+  contextType: T.string.isRequired
 }
 
 export {

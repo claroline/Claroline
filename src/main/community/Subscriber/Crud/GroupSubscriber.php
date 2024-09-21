@@ -101,11 +101,9 @@ class GroupSubscriber implements EventSubscriberInterface
             });
 
             if ('add' === $event->getAction()) {
-                $event = new AddRoleEvent($users, $role);
-                $this->dispatcher->dispatch($event, SecurityEvents::ADD_ROLE);
+                $this->dispatcher->dispatch(new AddRoleEvent($users, $role), SecurityEvents::ADD_ROLE);
             } elseif ('remove' === $event->getAction()) {
-                $event = new RemoveRoleEvent($users, $role);
-                $this->dispatcher->dispatch($event, SecurityEvents::REMOVE_ROLE);
+                $this->dispatcher->dispatch(new RemoveRoleEvent($users, $role), SecurityEvents::REMOVE_ROLE);
             }
         } elseif ($event->getValue() instanceof User) {
             $user = $event->getValue();
@@ -113,11 +111,9 @@ class GroupSubscriber implements EventSubscriberInterface
             foreach ($group->getEntityRoles() as $role) {
                 if (!$user->hasRole($role->getName(), false)) {
                     if ('add' === $event->getAction()) {
-                        $event = new AddRoleEvent([$user], $role);
-                        $this->dispatcher->dispatch($event, SecurityEvents::ADD_ROLE);
+                        $this->dispatcher->dispatch(new AddRoleEvent([$user], $role), SecurityEvents::ADD_ROLE);
                     } elseif ('remove' === $event->getAction()) {
-                        $event = new RemoveRoleEvent([$user], $role);
-                        $this->dispatcher->dispatch($event, SecurityEvents::REMOVE_ROLE);
+                        $this->dispatcher->dispatch(new RemoveRoleEvent([$user], $role), SecurityEvents::REMOVE_ROLE);
                     }
                 }
             }

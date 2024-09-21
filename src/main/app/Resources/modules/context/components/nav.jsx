@@ -5,13 +5,11 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl'
 import {Button} from '#/main/app/action'
 import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {UserAvatar} from '#/main/app/user/components/avatar'
 import {route} from '#/main/core/workspace/routing'
+import {Thumbnail} from '#/main/app/components/thumbnail'
 
 import {MODAL_CONTEXT_SEARCH} from '#/main/app/context/modals/search'
 import {NotificationButton} from '#/main/notification/components/button'
-import {Thumbnail} from '#/main/app/components/thumbnail'
-import {MODAL_WORKSPACE_CREATION} from '#/main/app/contexts/workspace/modals/creation'
 import {PlatformOrganization} from '#/main/app/platform/components/organization'
 
 const ContextNav = (props) => {
@@ -38,12 +36,26 @@ const ContextNav = (props) => {
         tooltip="right"
         target="/desktop"
       >
-        <UserAvatar user={props.currentUser} size="sm" noStatus={true}/>
+        <Thumbnail
+          size="sm"
+          thumbnail={props.currentUser.picture}
+          name={props.currentUser.name}
+          square={true}
+        />
       </Button>
 
       <NotificationButton
         className="app-context-btn"
         tooltip="right"
+      />
+
+      <Button
+        type={MODAL_BUTTON}
+        className="app-context-btn"
+        icon="far fa-fw fa-compass"
+        label={trans('search_and_history')}
+        tooltip="right"
+        modal={[MODAL_CONTEXT_SEARCH]}
       />
 
       <hr className="app-context-separator" />
@@ -65,26 +77,6 @@ const ContextNav = (props) => {
           />
         </Button>
       ))}
-
-      <Button
-        type={MODAL_BUTTON}
-        className="app-context-btn"
-        icon="far fa-fw fa-compass"
-        label={trans('search_and_history')}
-        tooltip="right"
-        modal={[MODAL_CONTEXT_SEARCH]}
-      />
-
-      {props.canCreate &&
-        <Button
-          type={MODAL_BUTTON}
-          className="app-context-btn"
-          icon="fa fa-fw fa-plus"
-          label={trans('add_workspace')}
-          tooltip="right"
-          modal={[MODAL_WORKSPACE_CREATION]}
-        />
-      }
     </section>
   )
 }
@@ -101,8 +93,7 @@ ContextNav.propTypes = {
   })),
   favoriteContexts: T.arrayOf(T.shape({
 
-  })),
-  canCreate: T.bool.isRequired
+  }))
 }
 
 export {

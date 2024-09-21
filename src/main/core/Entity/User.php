@@ -736,6 +736,10 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
             }
         }
 
+        if (isset($this->userOrganizationReferences[0])) {
+            return $this->userOrganizationReferences[0]->getOrganization();
+        }
+
         return null;
     }
 

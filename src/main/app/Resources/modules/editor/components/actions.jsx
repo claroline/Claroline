@@ -26,7 +26,6 @@ const ActionCard = (props) =>
         className={classes('btn', props.dangerous ? 'btn-danger' : 'btn-body')}
         {...props.action}
       />
-
     </div>
   </article>
 

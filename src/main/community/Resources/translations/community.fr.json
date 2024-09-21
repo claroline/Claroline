@@ -30,9 +30,6 @@
   "role_name": "Rôle : %name%",
   "role_loading": "Nous chargeons le rôle...",
   "role_rights_loading": "Nous chargeons les droits du rôle...",
-  "role_analytics_users_help": "Nombre d'utilisateurs actifs ayant ce rôle.",
-  "role_analytics_connections_help": "Nombre de connexions uniques par jour des utilisateurs ayant ce rôle.",
-  "role_analytics_actions_help": "Nombre d'actions effectuées par les utilisateurs ayant ce rôle.",
   "manager_role": "Rôle gestionnaire",
 
   "team": "Equipe",

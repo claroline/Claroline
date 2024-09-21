@@ -10,6 +10,8 @@ import {Form} from '#/main/app/content/form'
 import {FormContent} from '#/main/app/content/form/containers/content'
 
 import {EditorContext} from '#/main/app/editor/context'
+import {Badge} from '#/main/app/components/badge'
+import {Heading} from '#/main/app/components/heading'
 
 const EditorPage = (props) => {
   const editorDef = useContext(EditorContext)
@@ -19,16 +21,20 @@ const EditorPage = (props) => {
       <Form
         className="app-editor-form"
         name={editorDef.name}
+        level={1}
         target={editorDef.target}
         onSave={editorDef.onSave}
         buttons={true}
       >
         <header className="d-flex flex-row align-items-center gap-2 mb-2" role="presentation">
-          <h1 className="h4 m-0">
+          <Heading level={1} displayLevel={4} className="m-0">
             {props.title}
-          </h1>
+
+
+          </Heading>
+
           {props.managerOnly &&
-            <span className="badge text-primary-emphasis bg-primary-subtle">{trans('confidentiality_manager')}</span>
+            <Badge variant="primary" subtle={true}>{trans('confidentiality_manager')}</Badge>
           }
         </header>
 
@@ -38,7 +44,8 @@ const EditorPage = (props) => {
 
         {!isEmpty(props.definition) &&
           <FormContent
-            level={5}
+            level={2}
+            displayLevel={5}
             disabled={props.disabled}
             name={editorDef.name}
             autoFocus={props.autoFocus}

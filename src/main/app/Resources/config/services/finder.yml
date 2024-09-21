@@ -16,7 +16,7 @@ services:
     Claroline\AppBundle\API\Finder\Type\BooleanType:
         tags: [claroline.finder.type]
 
-    Claroline\AppBundle\API\Finder\Type\CallbackType:
+    Claroline\AppBundle\API\Finder\Type\ClosureType:
         tags: [ claroline.finder.type ]
 
     Claroline\AppBundle\API\Finder\Type\ChoiceType:

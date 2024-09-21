@@ -1,7 +1,6 @@
 {
-    "transfer": "Import/Export de données",
-    "import": "Import de données",
+    "import": "Import",
     "import_desc": "Importez vos données dans la plateforme.",
-    "export": "Export de données",
+    "export": "Export",
     "export_desc": "Exportez vos données de la plateforme."
 }

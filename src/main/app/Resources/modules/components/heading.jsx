@@ -8,12 +8,9 @@ const Heading = props  => createElement(`h${props.level}`, Object.assign({},
   {
     className: classes(
       props.className,
+      !props.displayed && 'visually-hidden',
       props.displayLevel && `h${props.displayLevel}`,
-      {
-        'text-start': 'left' === props.align,
-        'text-center': 'center' === props.align,
-        'text-end': 'right' === props.align
-      }
+      props.align && `text-${props.align}`
     )
   }
 ), props.children)
@@ -21,9 +18,14 @@ const Heading = props  => createElement(`h${props.level}`, Object.assign({},
 Heading.propTypes = {
   className: T.string,
   level: T.number.isRequired,
+  displayed: T.bool,
   displayLevel: T.number,
-  align: T.oneOf(['left', 'center', 'right']),
+  align: T.oneOf(['start', 'center', 'end']),
   children: T.node.isRequired
+}
+
+Heading.defaultProps = {
+  displayed: true
 }
 
 export {

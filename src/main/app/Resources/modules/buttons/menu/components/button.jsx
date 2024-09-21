@@ -13,8 +13,6 @@ import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
-// The class is only here because react-bootstrap dropdown uses ref to work and
-// it's not possible on stateless components
 const StandardMenu = forwardRef((props, ref) => {
   const isStandard = typeof props.menu === 'object' && props.menu.items
 

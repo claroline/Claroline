@@ -32,7 +32,7 @@ const Workspaces = (props) => {
           displayed: true,
           primary: true,
           render: (workspace) => (
-            <div className="d-flex flex-direction-row gap-3 align-items-center">
+            <div className="d-flex flex-direction-row gap-3 align-items-center" role="presentation">
               <WorkspaceIcon workspace={workspace} size="xs" />
               {workspace.name}
             </div>
@@ -42,8 +42,7 @@ const Workspaces = (props) => {
           type: 'string',
           label: trans('description'),
           sortable: false,
-          options: {long: true},
-          //displayed: true
+          options: {long: true}
         }, {
           name: 'code',
           type: 'string',
@@ -53,14 +52,16 @@ const Workspaces = (props) => {
           label: trans('creation_date'),
           type: 'date',
           alias: 'createdAt',
-          filterable: false
+          filterable: false,
+          options: {time: true}
         }, {
           name: 'meta.updated',
           label: trans('modification_date'),
           type: 'date',
           alias: 'updatedAt',
           displayed: true,
-          filterable: false
+          filterable: false,
+          options: {time: true}
         }, {
           name: 'meta.creator',
           label: trans('creator'),
@@ -78,12 +79,12 @@ const Workspaces = (props) => {
           type: 'boolean',
           alias: 'hidden',
           displayable: false
-        }, {
+        }, /*{
           name: 'registration.selfRegistration',
           label: trans('public_registration'),
           type: 'boolean',
           alias: 'selfRegistration'
-        }, {
+        }, */{
           name: 'tags',
           type: 'tag',
           label: trans('tags'),

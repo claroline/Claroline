@@ -12,8 +12,7 @@ const ContextNav = connect(
     currentContextPath: selectors.path(state),
     currentUser: securitySelectors.currentUser(state),
     availableContexts: platformSelectors.availableContexts(state),
-    favoriteContexts: platformSelectors.favoriteContexts(state),
-    canCreate: true // FIXME
+    favoriteContexts: platformSelectors.favoriteContexts(state)
   })
 )(ContextNavComponent)
 

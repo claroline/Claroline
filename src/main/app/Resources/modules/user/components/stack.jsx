@@ -17,7 +17,7 @@ UserStack.propTypes = {
     picture: T.string,
     name: T.string.isRequired
   })),
-  size: T.oneOf(['sm', 'md', 'lg'])
+  size: T.oneOf(['xs', 'sm', 'md', 'lg'])
 }
 
 export {

@@ -16,7 +16,7 @@ const CommunityEditorActions = () => {
       actions={[
         {
           title: trans('disable_inactive_users', {}, 'community'),
-          help: trans('Supprimez tous les utilisateurs n\'ayant pas eu d\'activité sur votre plateforme depuis une date choisie.'),
+          help: trans('Désactivez tous les utilisateurs n\'ayant pas eu d\'activité sur votre plateforme depuis une date choisie.'),
           managerOnly: true,
           displayed: toolConstants.TOOL_DESKTOP === contextType,
           dangerous: true,

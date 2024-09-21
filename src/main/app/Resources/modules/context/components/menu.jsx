@@ -110,6 +110,7 @@ class ContextMenu extends Component
           })}
         >
           <ContextNav />
+
           <section className={classes('app-menu', {
             show: this.props.opened
           })}>
@@ -147,7 +148,7 @@ class ContextMenu extends Component
             }
           </section>
         </aside>
-        <div className="app-menu-backdrop" role="presentation" onClick={this.props.close} />
+        <div className="app-menu-backdrop" role="presentation" onClick={this.props.close} aria-hidden={true} />
       </>
     )
   }
