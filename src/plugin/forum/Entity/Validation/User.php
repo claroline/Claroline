@@ -11,55 +11,31 @@
 
 namespace Claroline\ForumBundle\Entity\Validation;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User as ClarolineUser;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_forum_user")
- */
+#[ORM\Table(name: 'claro_forum_user')]
+#[ORM\Entity]
 class User
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    protected $id;
+    use Id;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist", "remove"}
-     * )
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, cascade: ['persist', 'remove'])]
     protected $user;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ForumBundle\Entity\Forum",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ForumBundle\Entity\Forum::class, cascade: ['persist'])]
     protected $forum;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     protected $access = false;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     protected $banned = false;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     protected $notified = false;
 
     public function setUser(ClarolineUser $user)

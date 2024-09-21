@@ -34,11 +34,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Base entity for all resources.
  *
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository")
- * @ORM\Table(name="claro_resource_node")
  * @Gedmo\Tree(type="materializedPath")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'claro_resource_node')]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ResourceNode implements CrudEntityInterface
 {
     // identifiers
@@ -65,165 +65,142 @@ class ResourceNode implements CrudEntityInterface
 
     /**
      * @var string
-     *
-     * @ORM\Column(nullable=true)
      */
+    #[ORM\Column(nullable: true)]
     private $license;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="creation_date", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
+    #[ORM\Column(name: 'creation_date', type: 'datetime')]
     private $creationDate;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="modification_date", type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
+    #[ORM\Column(name: 'modification_date', type: 'datetime')]
     private $modificationDate;
 
     /**
      * @var ResourceType
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType")
-     * @ORM\JoinColumn(name="resource_type_id", onDelete="CASCADE", nullable=false)
      */
+    #[ORM\JoinColumn(name: 'resource_type_id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceType::class)]
     private $resourceType;
 
     /**
      * Display resource icon/evaluation when the resource is rendered.
      *
      * @var bool
-     *
-     * @ORM\Column(type="boolean", options={"default": 1})
      */
+    #[ORM\Column(type: 'boolean', options: ['default' => 1])]
     private $showIcon = true;
 
     /**
      * @var string
      *
      * @Gedmo\TreePathSource
-     * @ORM\Column()
      */
+    #[ORM\Column]
     private $name;
 
     /**
      * @var ResourceNode
      *
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     inversedBy="children"
-     * )
-     * @ORM\JoinColumns({@ORM\JoinColumn(onDelete="CASCADE")})
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class, inversedBy: 'children')]
     protected $parent;
 
     /**
      * @Gedmo\TreeLevel
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @todo this property shouldn't be nullable (is it due to materialized path strategy ?)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected $lvl;
 
     /**
      * @var ArrayCollection|ResourceNode[]
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     mappedBy="parent"
-     * )
-     * @ORM\OrderBy({"index" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class, mappedBy: 'parent')]
+    #[ORM\OrderBy(['index' => 'ASC'])]
     protected $children;
 
     /**
      * @var string
      *
      * @Gedmo\TreePath(separator="`")
-     * @ORM\Column(type="text", nullable=true)
      *
      * @todo remove me
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $path;
 
     /**
      * @var string
      *
      * nullable true because it's a new property and migrations/updaters were needed
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $materializedPath;
 
     /**
      * @var ArrayCollection|ResourceRights[]
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceRights",
-     *     mappedBy="resourceNode",
-     *     orphanRemoval=true
-     * )
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceRights::class, mappedBy: 'resourceNode', orphanRemoval: true)]
     protected $rights;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="value", nullable=true, type="integer")
      */
+    #[ORM\Column(name: 'value', nullable: true, type: 'integer')]
     protected $index;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="mime_type", nullable=true)
      */
+    #[ORM\Column(name: 'mime_type', nullable: true)]
     protected $mimeType;
 
     /**
      * @var string
-     *
-     * @ORM\Column(nullable=true)
      */
+    #[ORM\Column(nullable: true)]
     protected $author;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(type="boolean", options={"default": 1})
      */
+    #[ORM\Column(type: 'boolean', options: ['default' => 1])]
     protected $active = true;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     */
+    #[ORM\Column(type: 'boolean', nullable: false)]
     protected $fullscreen = false;
 
     /**
-     * @ORM\Column(type="json", nullable=true)
-     *
      * @todo split IPS & access code into 2 props.
      */
+    #[ORM\Column(type: 'json', nullable: true)]
     protected $accesses = [];
 
     /**
      * @var int
-     *
-     * @ORM\Column(nullable=false, type="integer", name="views_count", options={"default": 0})
      */
+    #[ORM\Column(nullable: false, type: 'integer', name: 'views_count', options: ['default' => 0])]
     protected $viewsCount = 0;
 
     /**
      * @Gedmo\Slug(fields={"name"})
-     * @ORM\Column(length=128, unique=true)
      *
      * @var string
      */
+    #[ORM\Column(length: 128, unique: true)]
     private $slug;
 
     /**
@@ -663,9 +640,7 @@ class ResourceNode implements CrudEntityInterface
         return $ancestors;
     }
 
-    /**
-     * @ORM\PreFlush
-     */
+    #[ORM\PreFlush]
     public function preFlush(PreFlushEventArgs $args)
     {
         $ancestors = $this->getOldAncestors();

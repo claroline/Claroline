@@ -7,10 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait HasWorkspace
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'workspace_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
     protected ?Workspace $workspace = null;
 
     public function getWorkspace(): ?Workspace

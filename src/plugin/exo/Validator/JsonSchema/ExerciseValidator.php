@@ -41,7 +41,7 @@ class ExerciseValidator extends JsonSchemaValidator
 
         if (isset($exercise['steps'])) {
             // Apply custom validation to step items
-            array_map(function ($step) use (&$errors, $options) {
+            array_map(function ($step) use (&$errors, $options): void {
                 $errors = array_merge($errors, $this->stepValidator->validateAfterSchema($step, $options));
             }, $exercise['steps']);
         }

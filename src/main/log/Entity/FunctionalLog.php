@@ -6,25 +6,19 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro_log_functionnal")
- */
+
+#[ORM\Table(name: 'claro_log_functionnal')]
+#[ORM\Entity]
 class FunctionalLog extends AbstractLog
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     *
-     * @ORM\JoinColumn(name="resource_id", referencedColumnName="id", onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(name: 'resource_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     private ?ResourceNode $resource = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     *
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(name: 'workspace_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
     private ?Workspace $workspace = null;
 
     public function getResource(): ?ResourceNode

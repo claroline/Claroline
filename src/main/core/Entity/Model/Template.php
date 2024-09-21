@@ -11,11 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 trait Template
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
-     * @ORM\JoinColumn(name="template_id", nullable=true, onDelete="SET NULL")
      *
      * @var TemplateEntity
      */
+    #[ORM\JoinColumn(name: 'template_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\Template::class)]
     protected $template;
 
     public function getTemplate(): ?TemplateEntity

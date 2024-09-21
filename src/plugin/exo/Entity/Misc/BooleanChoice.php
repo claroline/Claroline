@@ -8,16 +8,13 @@ use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 
 /**
  * Choice.
- *
- * @ORM\Entity()
- * @ORM\Table(name="ujm_boolean_choice")
  */
+#[ORM\Table(name: 'ujm_boolean_choice')]
+#[ORM\Entity]
 class BooleanChoice extends AbstractChoice implements AnswerPartInterface
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\BooleanQuestion", inversedBy="choices")
-     * @ORM\JoinColumn(name="boolean_question_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'boolean_question_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\BooleanQuestion::class, inversedBy: 'choices')]
     private $question;
 
     /**

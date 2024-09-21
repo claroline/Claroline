@@ -17,11 +17,9 @@ use Claroline\AppBundle\Entity\Meta\Name;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro_template")
- */
+
+#[ORM\Table(name: 'claro_template')]
+#[ORM\Entity]
 class Template
 {
     use Id;
@@ -29,34 +27,28 @@ class Template
     use Uuid;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\TemplateType")
      *
-     * @ORM\JoinColumn(name="claro_template_type", nullable=false, onDelete="CASCADE")
      *
      * @var TemplateType
      */
+    #[ORM\JoinColumn(name: 'claro_template_type', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\TemplateType::class)]
     private $type;
 
     /**
      * System templates can not be edited nor deleted by users.
      * They are managed through DataFixtures.
      *
-     * @ORM\Column(name="is_system", type="boolean")
      *
      * @var bool
      */
+    #[ORM\Column(name: 'is_system', type: 'boolean')]
     private $system = false;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Template\TemplateContent",
-     *     mappedBy="template",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
-     *
      * @var ArrayCollection|TemplateContent[]
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Template\TemplateContent::class, mappedBy: 'template', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $contents;
 
     public function __construct()

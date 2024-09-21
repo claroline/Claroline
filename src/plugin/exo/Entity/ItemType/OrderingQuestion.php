@@ -10,10 +10,9 @@ use UJM\ExoBundle\Library\Options\Direction;
 
 /**
  * An ordering question.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_question_ordering")
  */
+#[ORM\Table(name: 'ujm_question_ordering')]
+#[ORM\Entity]
 class OrderingQuestion extends AbstractItem
 {
     use PenaltyTrait;
@@ -33,30 +32,23 @@ class OrderingQuestion extends AbstractItem
     const MODE_BESIDE = 'beside';
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\OrderingItem",
-     *     mappedBy="question",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
-     * @ORM\OrderBy({"position" = "ASC"})
      *
      * @var OrderingItem[]|ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\OrderingItem::class, mappedBy: 'question', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     private $items;
 
     /**
-     * @ORM\Column(type="string")
-     *
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     private $direction = Direction::VERTICAL;
 
     /**
-     * @ORM\Column(type="string")
-     *
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     private $mode = self::MODE_INSIDE;
 
     /**

@@ -16,158 +16,135 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_scorm_sco_tracking")
- */
+#[ORM\Table(name: 'claro_scorm_sco_tracking')]
+#[ORM\Entity]
 class ScoTracking
 {
     use Id;
     use Uuid;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL", nullable=true)
      *
      * @var User
      */
+    #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\ScormBundle\Entity\Sco")
-     * @ORM\JoinColumn(name="sco_id", onDelete="CASCADE", nullable=false)
      *
      * @var Sco
      */
+    #[ORM\JoinColumn(name: 'sco_id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ScormBundle\Entity\Sco::class)]
     protected $sco;
 
     /**
-     * @ORM\Column(name="score_raw", type="integer", nullable=true)
-     *
      * @var int
      */
+    #[ORM\Column(name: 'score_raw', type: 'integer', nullable: true)]
     protected $scoreRaw;
 
     /**
-     * @ORM\Column(name="score_min", type="integer", nullable=true)
-     *
      * @var int
      */
+    #[ORM\Column(name: 'score_min', type: 'integer', nullable: true)]
     protected $scoreMin;
 
     /**
-     * @ORM\Column(name="score_max", type="integer", nullable=true)
-     *
      * @var int
      */
+    #[ORM\Column(name: 'score_max', type: 'integer', nullable: true)]
     protected $scoreMax;
 
     /**
-     * @ORM\Column(type="float")
-     *
      * @var float
      */
+    #[ORM\Column(type: 'float')]
     protected $progression = 0;
 
     /**
      * For Scorm 2004 only.
-     *
-     * @ORM\Column(name="score_scaled", type="decimal", precision=10, scale=7, nullable=true)
      */
+    #[ORM\Column(name: 'score_scaled', type: 'decimal', precision: 10, scale: 7, nullable: true)]
     protected $scoreScaled;
 
     /**
-     * @ORM\Column(name="lesson_status", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'lesson_status', nullable: true)]
     protected $lessonStatus;
 
     /**
      * For Scorm 2004 only.
-     *
-     * @ORM\Column(name="completion_status", nullable=true)
      */
+    #[ORM\Column(name: 'completion_status', nullable: true)]
     protected $completionStatus;
 
     /**
      * For Scorm 1.2 only.
-     *
-     * @ORM\Column(name="session_time", type="integer", nullable=true)
      */
+    #[ORM\Column(name: 'session_time', type: 'integer', nullable: true)]
     protected $sessionTime;
 
     /**
      * For Scorm 1.2 only.
-     *
-     * @ORM\Column(name="total_time_int", type="integer", nullable=true)
      */
+    #[ORM\Column(name: 'total_time_int', type: 'integer', nullable: true)]
     protected $totalTimeInt;
 
     /**
      * For Scorm 2004 only.
-     *
-     * @ORM\Column(name="total_time_string", nullable=true)
      */
+    #[ORM\Column(name: 'total_time_string', nullable: true)]
     protected $totalTimeString;
 
     /**
      * For Scorm 1.2 only.
-     *
-     * @ORM\Column(nullable=true)
      */
+    #[ORM\Column(nullable: true)]
     protected $entry;
 
     /**
      * For Scorm 1.2 only.
-     *
-     * @ORM\Column(name="suspend_data", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'suspend_data', type: 'text', nullable: true)]
     protected $suspendData;
 
     /**
      * For Scorm 1.2 only.
-     *
-     * @ORM\Column(nullable=true)
      */
+    #[ORM\Column(nullable: true)]
     protected $credit;
 
     /**
      * For Scorm 1.2 only.
-     *
-     * @ORM\Column(name="exit_mode", nullable=true)
      */
+    #[ORM\Column(name: 'exit_mode', nullable: true)]
     protected $exitMode;
 
     /**
      * For Scorm 1.2 only.
-     *
-     * @ORM\Column(name="lesson_location", nullable=true)
      */
+    #[ORM\Column(name: 'lesson_location', nullable: true)]
     protected $lessonLocation;
 
     /**
      * For Scorm 1.2 only.
-     *
-     * @ORM\Column(name="lesson_mode", nullable=true)
      */
+    #[ORM\Column(name: 'lesson_mode', nullable: true)]
     protected $lessonMode;
 
     /**
      * For Scorm 1.2 only.
-     *
-     * @ORM\Column(name="is_locked", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'is_locked', type: 'boolean', nullable: true)]
     protected $isLocked;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     protected $details;
 
-    /**
-     * @ORM\Column(name="latest_date", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'latest_date', type: 'datetime', nullable: true)]
     private $latestDate;
 
     public function __construct()

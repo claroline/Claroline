@@ -11,66 +11,34 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_dropzonebundle_criterion")
- */
+#[ORM\Table(name: 'claro_dropzonebundle_criterion')]
+#[ORM\Entity]
 class Criterion
 {
+    use Id;
     use Uuid;
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    protected $id;
-
-    /**
-     * @ORM\Column(name="instruction", type="text", nullable=false)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'instruction', type: 'text', nullable: false)]
     protected $instruction;
 
     /**
-     * @ORM\ManyToOne(
-     *      targetEntity="Claroline\DropZoneBundle\Entity\Dropzone",
-     *      inversedBy="criteria"
-     * )
-     * @ORM\JoinColumn(name="dropzone_id", nullable=false, onDelete="CASCADE")
      *
      * @var Dropzone
      */
+    #[ORM\JoinColumn(name: 'dropzone_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Dropzone::class, inversedBy: 'criteria')]
     protected $dropzone;
 
-    /**
-     * Criterion constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**

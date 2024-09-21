@@ -5,17 +5,15 @@ namespace Claroline\CursusBundle\Entity\Registration;
 use Claroline\CoreBundle\Entity\Group;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class AbstractGroupRegistration extends AbstractRegistration
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Group")
-     * @ORM\JoinColumn(name="group_id", nullable=false, onDelete="CASCADE")
      *
      * @var Group
      */
+    #[ORM\JoinColumn(name: 'group_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Group::class)]
     protected $group;
 
     public function getGroup(): Group

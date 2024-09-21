@@ -12,11 +12,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro_evaluation_skills_framework")
- */
+
+#[ORM\Table(name: 'claro_evaluation_skills_framework')]
+#[ORM\Entity]
 class SkillsFramework implements CrudEntityInterface
 {
     use Id;
@@ -24,19 +22,14 @@ class SkillsFramework implements CrudEntityInterface
     use Name;
     use Description;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Claroline\EvaluationBundle\Entity\Skill\Skill", mappedBy="skillsFramework", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\OrderBy({"order" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\EvaluationBundle\Entity\Skill\Skill::class, mappedBy: 'skillsFramework', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $skills;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     * @ORM\JoinTable(name="claro_evaluation_skills_frameworks_workspaces",
-     *      joinColumns={@ORM\JoinColumn(name="skills_framework_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="CASCADE")}
-     * )
-     */
+    #[ORM\JoinTable(name: 'claro_evaluation_skills_frameworks_workspaces')]
+    #[ORM\JoinColumn(name: 'skills_framework_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'workspace_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
     private Collection $workspaces;
 
     public function __construct()

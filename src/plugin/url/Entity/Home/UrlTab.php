@@ -8,10 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use HeVinci\UrlBundle\Model\Url;
 use HeVinci\UrlBundle\Model\UrlInterface;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_home_tab_url")
- */
+#[ORM\Table(name: 'claro_home_tab_url')]
+#[ORM\Entity]
 class UrlTab extends AbstractTab implements UrlInterface
 {
     use Id;

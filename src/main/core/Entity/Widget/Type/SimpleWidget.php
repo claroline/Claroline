@@ -8,19 +8,18 @@ use Doctrine\ORM\Mapping as ORM;
  * SimpleWidget.
  *
  * Permits to display a simple HTML content text.
- *
- * @ORM\Entity()
- * @ORM\Table(name="claro_widget_simple")
  */
+#[ORM\Table(name: 'claro_widget_simple')]
+#[ORM\Entity]
 class SimpleWidget extends AbstractWidget
 {
     /**
      * The HTML content of the widget.
      *
-     * @ORM\Column(type="text")
      *
      * @var string
      */
+    #[ORM\Column(type: 'text')]
     private $content;
 
     /**

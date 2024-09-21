@@ -17,41 +17,26 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\CategoryRepository")
- * @ORM\Table(name="claro_clacoformbundle_category")
- */
+#[ORM\Table(name: 'claro_clacoformbundle_category')]
+#[ORM\Entity(repositoryClass: \Claroline\ClacoFormBundle\Repository\CategoryRepository::class)]
 class Category
 {
     use Id;
     use Uuid;
 
-    /**
-     * @ORM\Column(name="category_name")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(name: 'category_name')]
     private ?string $name = null;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\ClacoForm",
-     *     inversedBy="categories"
-     * )
-     * @ORM\JoinColumn(name="claco_form_id", nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'claco_form_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\ClacoForm::class, inversedBy: 'categories')]
     private ?ClacoForm $clacoForm = null;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinTable(name="claro_clacoformbundle_category_manager")
-     */
+    #[ORM\JoinTable(name: 'claro_clacoformbundle_category_manager')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private Collection $managers;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $details = [];
 
     public function __construct()

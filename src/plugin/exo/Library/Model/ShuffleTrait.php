@@ -13,9 +13,8 @@ trait ShuffleTrait
      * Is shuffle enabled ?
      *
      * @var bool
-     *
-     * @ORM\Column(name="shuffle", type="boolean")
      */
+    #[ORM\Column(name: 'shuffle', type: 'boolean')]
     private $shuffle = false;
 
     /**

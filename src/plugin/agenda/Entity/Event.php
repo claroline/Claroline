@@ -17,34 +17,30 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_event")
- */
+#[ORM\Table(name: 'claro_event')]
+#[ORM\Entity]
 class Event extends AbstractPlanned
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace", cascade={"persist"})
-     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Workspace
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class, cascade: ['persist'])]
     private $workspace;
 
     /**
      * Template used to send invitations to Users.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
-     * @ORM\JoinColumn(name="invitation_template_id", nullable=true, onDelete="SET NULL")
      *
      * @var Template
      */
+    #[ORM\JoinColumn(name: 'invitation_template_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\Template::class)]
     private $invitationTemplate;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Claroline\AgendaBundle\Entity\EventInvitation", mappedBy="event")
-     * @ORM\JoinColumn(nullable=true)
-     */
+    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\OneToMany(targetEntity: \Claroline\AgendaBundle\Entity\EventInvitation::class, mappedBy: 'event')]
     private $eventInvitations;
 
     public function __construct()

@@ -14,21 +14,16 @@ namespace Claroline\DropZoneBundle\Entity;
 use Claroline\CoreBundle\Entity\AbstractComment;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_dropzonebundle_drop_comment")
- */
+#[ORM\Table(name: 'claro_dropzonebundle_drop_comment')]
+#[ORM\Entity]
 class DropComment extends AbstractComment
 {
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\DropZoneBundle\Entity\Drop",
-     *     inversedBy="comments"
-     * )
-     * @ORM\JoinColumn(name="drop_id", onDelete="CASCADE")
      *
      * @var Drop
      */
+    #[ORM\JoinColumn(name: 'drop_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Drop::class, inversedBy: 'comments')]
     private $drop;
 
     public function getDrop(): ?Drop

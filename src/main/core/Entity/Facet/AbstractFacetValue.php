@@ -15,19 +15,16 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\MappedSuperclass()
- */
+#[ORM\MappedSuperclass]
 abstract class AbstractFacetValue
 {
     use Id;
     use Uuid;
 
     /**
-     * @ORM\Column(name="field_value", type="json", nullable=true)
-     *
      * @var mixed
      */
+    #[ORM\Column(name: 'field_value', type: 'json', nullable: true)]
     private $value;
 
     public function __construct()

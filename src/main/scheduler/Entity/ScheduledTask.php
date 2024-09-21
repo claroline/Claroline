@@ -19,12 +19,9 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\SchedulerBundle\Repository\ScheduledTaskRepository")
- * @ORM\Table(name="claro_scheduled_task")
- */
+#[ORM\Table(name: 'claro_scheduled_task')]
+#[ORM\Entity(repositoryClass: \Claroline\SchedulerBundle\Repository\ScheduledTaskRepository::class)]
 class ScheduledTask
 {
     use Id;
@@ -61,105 +58,88 @@ class ScheduledTask
      */
     const ERROR = 'error';
 
-    /**
-     * @ORM\Column(name="task_action")
-     * @Assert\NotBlank()
-     *
-     * @var string
-     */
+    #[ORM\Column(name: 'task_action')]
     private $action;
 
-    /**
-     * @ORM\Column(name="execution_type")
-     * @Assert\NotBlank()
-     *
-     * @var string
-     */
+    #[ORM\Column(name: 'execution_type')]
     private $executionType = 'once';
 
     /**
-     * @ORM\Column(name="scheduled_date", type="datetime")
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'scheduled_date', type: 'datetime')]
     private $scheduledDate;
 
     /**
-     * @ORM\Column(name="execution_date", type="datetime", nullable=true)
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'execution_date', type: 'datetime', nullable: true)]
     private $executionDate = null;
 
     /**
      * For recurring execution only, define interval (in days) between each recurring execution.
      *
-     * @ORM\Column(name="execution_interval", type="integer", nullable=true)
      *
      * @var int
      */
+    #[ORM\Column(name: 'execution_interval', type: 'integer', nullable: true)]
     private $executionInterval = null;
 
     /**
      * For recurring execution only, define when we will need to stop replaying the task.
      *
-     * @ORM\Column(name="end_date", type="datetime", nullable=true)
      *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'end_date', type: 'datetime', nullable: true)]
     private $endDate = null;
 
     /**
-     * @ORM\Column(name="execution_status", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'execution_status', nullable: true)]
     private $status = self::PENDING;
 
     /**
      * The UUID of the object which have generated the task (eg. an announcement id, an import/export id).
      *
-     * @ORM\Column(name="parent_id", type="string", nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(name: 'parent_id', type: 'string', nullable: true)]
     private $parentId;
 
-    /**
-     * @ORM\Column(name="task_data", type="json", nullable=true)
-     */
+    #[ORM\Column(name: 'task_data', type: 'json', nullable: true)]
     private $data;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinTable(
-     *     name="claro_scheduled_task_users",
-     *     joinColumns={@ORM\JoinColumn(name="scheduled_task_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
-     * )
      *
      * @var ArrayCollection[]
      *
      * @deprecated
      */
+    #[ORM\JoinTable(name: 'claro_scheduled_task_users')]
+    #[ORM\JoinColumn(name: 'scheduled_task_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private $users;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Group")
-     * @ORM\JoinColumn(name="group_id", nullable=true, onDelete="SET NULL")
      *
      * @var Group
      *
      * @deprecated
      */
+    #[ORM\JoinColumn(name: 'group_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Group::class)]
     private $group;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="SET NULL")
      *
      * @var Workspace
      */
+    #[ORM\JoinColumn(name: 'workspace_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
     private $workspace;
 
     public function __construct()

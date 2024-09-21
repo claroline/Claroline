@@ -9,11 +9,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(name="claro_flashcard_deck")
- */
+
+#[ORM\Table(name: 'claro_flashcard_deck')]
+#[ORM\Entity]
 class FlashcardDeck extends AbstractResource
 {
     use HasHomePage;
@@ -21,39 +19,26 @@ class FlashcardDeck extends AbstractResource
 
     /**
      * @var ArrayCollection|Flashcard[]
-     *
-     * @ORM\OneToMany(targetEntity="Flashcard", mappedBy="deck", cascade={"persist", "remove"}, orphanRemoval=true)
      */
+    #[ORM\OneToMany(targetEntity: \Flashcard::class, mappedBy: 'deck', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $cards;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $draw = 0;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private bool $showProgression = true;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private bool $customButtons = false;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $rightButtonLabel = null;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $wrongButtonLabel = null;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private bool $showLeitnerRules = false;
 
     public function __construct()

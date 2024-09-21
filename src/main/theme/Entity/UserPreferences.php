@@ -5,22 +5,16 @@ namespace Claroline\ThemeBundle\Entity;
 use Claroline\AppBundle\Entity\AbstractUserPreferences;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_theme_user_preferences")
- */
+#[ORM\Table(name: 'claro_theme_user_preferences')]
+#[ORM\Entity]
 class UserPreferences extends AbstractUserPreferences
 {
     use ThemeParameters;
 
-    /**
-     * @ORM\Column(name="theme", nullable=true)
-     */
+    #[ORM\Column(name: 'theme', nullable: true)]
     private ?string $theme = null;
 
-    /**
-     * @ORM\Column(name="list_display", nullable=true)
-     */
+    #[ORM\Column(name: 'list_display', nullable: true)]
     private ?string $listDisplay = null;
 
     public function getTheme(): ?string

@@ -15,11 +15,9 @@ use UJM\ExoBundle\Library\Options\ExerciseType;
 use UJM\ExoBundle\Library\Options\ShowCorrectionAt;
 use UJM\ExoBundle\Library\Options\ShowScoreAt;
 
-/**
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ExerciseRepository")
- *
- * @ORM\Table(name="ujm_exercise")
- */
+
+#[ORM\Table(name: 'ujm_exercise')]
+#[ORM\Entity(repositoryClass: \UJM\ExoBundle\Repository\ExerciseRepository::class)]
 class Exercise extends AbstractResource
 {
     use HasHomePage;
@@ -30,74 +28,70 @@ class Exercise extends AbstractResource
     /**
      * Type of the Exercise.
      *
-     * @ORM\Column(type="string")
      *
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     private $type = ExerciseType::CUSTOM;
 
     /**
      * When corrections are available to the Users ?
      *
-     * @ORM\Column(name="correction_mode", type="string")
      *
      * @var string
      */
+    #[ORM\Column(name: 'correction_mode', type: 'string')]
     private $correctionMode = ShowCorrectionAt::AFTER_END;
 
     /**
      * Date of availability of the corrections.
      *
-     * @ORM\Column(name="date_correction", type="datetime", nullable=true)
      *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'date_correction', type: 'datetime', nullable: true)]
     private $dateCorrection;
 
     /**
      * When marks are available to the Users ?
      *
-     * @ORM\Column(name="mark_mode", type="string")
      *
      * @var string
      */
+    #[ORM\Column(name: 'mark_mode', type: 'string')]
     private $markMode = ShowScoreAt::WITH_CORRECTION;
 
     /**
      * Add a button to stop the Exercise before the end.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     private bool $interruptible = true;
 
     /**
      * Show back button in player.
-     *
-     * @ORM\Column(name="show_back", type="boolean")
      */
+    #[ORM\Column(name: 'show_back', type: 'boolean')]
     private bool $showBack = true;
 
     /**
      * Show an end page when the user has finished the quiz.
-     *
-     * @ORM\Column(name="show_end_confirm", type="boolean")
      */
+    #[ORM\Column(name: 'show_end_confirm', type: 'boolean')]
     private bool $showEndConfirm = true;
 
     /**
      * Show intermediates scores by steps, by tags or not at all on the end page.
      *
-     * @ORM\Column(name="intermediate_scores", type="text", nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(name: 'intermediate_scores', type: 'text', nullable: true)]
     private $intermediateScores = 'none';
 
     /**
      * A message to display when a user has done all its attempts.
-     *
-     * @ORM\Column(name="attempts_reached_message", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'attempts_reached_message', type: 'text', nullable: true)]
     private ?string $attemptsReachedMessage = '';
 
     /**
@@ -105,9 +99,8 @@ class Exercise extends AbstractResource
      *  - none : no stats displayed.
      *  - user : only current user stats displayed.
      *  - all : all participants stats displayed.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private string $endStats = 'none';
 
     /**
@@ -115,132 +108,111 @@ class Exercise extends AbstractResource
      *  - none : no stats displayed.
      *  - user : only current user stats displayed.
      *  - all : all participants stats displayed.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private string $overviewStats = 'none';
 
     /**
      * Show the Exercise meta in the overview of the Exercise.
-     *
-     * @ORM\Column(name="metadata_visible", type="boolean")
      */
+    #[ORM\Column(name: 'metadata_visible', type: 'boolean')]
     private bool $metadataVisible = true;
 
     /**
      * Show stats about User responses in the Correction.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     private bool $statistics = false;
 
     /**
      * Flag indicating that we do not show the entire correction for the exercise
      * (equals hide Awaited answer filed) when displaying instant feedback and exercise correction page.
-     *
-     * @ORM\Column(name="minimal_correction", type="boolean")
      */
+    #[ORM\Column(name: 'minimal_correction', type: 'boolean')]
     private bool $minimalCorrection = false;
 
     /**
      * If true, the users who pass the exercise are anonymized in papers.
-     *
-     * @ORM\Column(name="anonymous", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'anonymous', type: 'boolean', nullable: true)]
     private bool $anonymizeAttempts = false;
 
     /**
      * Show feedback flag.
-     *
-     * @ORM\Column(name="show_feedback", type="boolean")
      */
+    #[ORM\Column(name: 'show_feedback', type: 'boolean')]
     private bool $showFeedback = false;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $scoreRule;
 
     /**
      * Score to obtain to pass the exercise.
-     *
-     * @ORM\Column(name="success_score", type="float", nullable=true)
      */
+    #[ORM\Column(name: 'success_score', type: 'float', nullable: true)]
     private ?float $successScore = 50;
 
     /**
      * Displays step numbering.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private string $numbering = ExerciseNumbering::NONE;
 
     /**
      * Displays question numbering.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private string $questionNumbering = ExerciseNumbering::NONE;
 
     /**
      * Displays step titles.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     private bool $showTitles = true;
 
     /**
      * Displays question titles.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     private bool $showQuestionTitles = true;
 
     /**
      * Use all papers to compute stats.
-     *
-     * @ORM\Column(name="all_papers_stats", type="boolean", options={"default" = 1})
      */
+    #[ORM\Column(name: 'all_papers_stats', type: 'boolean', options: ['default' => 1])]
     private bool $allPapersStatistics = true;
 
     /**
      * Sets the mandatory question flag.
-     *
-     * @ORM\Column(name="mandatory_questions", type="boolean")
      */
+    #[ORM\Column(name: 'mandatory_questions', type: 'boolean')]
     private bool $mandatoryQuestions = false;
 
     /**
      * If true, the time to answer the exercise will be limited by the defined duration.
-     *
-     * @ORM\Column(name="time_limited", type="boolean", options={"default" = 0})
      */
+    #[ORM\Column(name: 'time_limited', type: 'boolean', options: ['default' => 0])]
     private bool $timeLimited = false;
 
-    /**
-     * @ORM\Column(name="progression_displayed", type="boolean", options={"default" = 1})
-     */
+    #[ORM\Column(name: 'progression_displayed', type: 'boolean', options: ['default' => 1])]
     private bool $progressionDisplayed = true;
 
-    /**
-     * @ORM\Column(name="answers_editable", type="boolean", options={"default" = 1})
-     */
+    #[ORM\Column(name: 'answers_editable', type: 'boolean', options: ['default' => 1])]
     private bool $answersEditable = true;
 
-    /**
-     * @ORM\Column(name="expected_answers", type="boolean")
-     */
+    #[ORM\Column(name: 'expected_answers', type: 'boolean')]
     private bool $expectedAnswers = true;
 
     /**
-     * @ORM\OneToMany(targetEntity="Step", mappedBy="exercise", cascade={"all"}, orphanRemoval=true)
      *
-     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var ArrayCollection|Step[]
      */
+    #[ORM\OneToMany(targetEntity: \Step::class, mappedBy: 'exercise', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private $steps;
 
     public function __construct()

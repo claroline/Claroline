@@ -81,7 +81,7 @@ class WikiController
         $isAdmin = $this->checkPermission('EDIT', $resourceNode);
         $sectionTree = $this->sectionManager->getSerializedSectionTree($wiki, $user, $isAdmin);
 
-        return new StreamedResponse(function () use ($wiki, $sectionTree, $isAdmin, $user) {
+        return new StreamedResponse(function () use ($wiki, $sectionTree, $isAdmin, $user): void {
             echo $this->pdfManager->fromHtml(
                 $this->templating->render('@IcapWiki/wiki/pdf.html.twig', [
                     '_resource' => $wiki,

@@ -19,10 +19,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * WidgetInstance entity.
- *
- * @ORM\Entity()
- * @ORM\Table(name="claro_widget_instance")
  */
+#[ORM\Table(name: 'claro_widget_instance')]
+#[ORM\Entity]
 class WidgetInstance
 {
     use Id;
@@ -31,42 +30,37 @@ class WidgetInstance
     /**
      * The widget which is rendered.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\Widget")
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      *
      * @var Widget
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Widget\Widget::class)]
     private $widget;
 
     /**
      * The parent container.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer", inversedBy="instances", cascade={"persist", "remove", "refresh"})
-     * @ORM\JoinColumn(name="container_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @var WidgetContainer
      */
+    #[ORM\JoinColumn(name: 'container_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetContainer::class, inversedBy: 'instances', cascade: ['persist', 'remove', 'refresh'])]
     private $container;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstanceConfig",
-     *     mappedBy="widgetInstance",
-     *     cascade={"persist", "remove"}
-     * )
-     *
      * @var WidgetInstanceConfig[]
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetInstanceConfig::class, mappedBy: 'widgetInstance', cascade: ['persist', 'remove'])]
     private $widgetInstanceConfigs;
 
     /**
      * The data source to fill the widget if any.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\DataSource")
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      *
      * @var DataSource
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\DataSource::class)]
     private $dataSource = null;
 
     /**

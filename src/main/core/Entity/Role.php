@@ -21,13 +21,9 @@ use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\RoleRepository")
- *
- * @ORM\Table(name="claro_role")
- */
+#[ORM\Table(name: 'claro_role')]
+#[ORM\Entity(repositoryClass: \Claroline\CommunityBundle\Repository\RoleRepository::class)]
 class Role implements CrudEntityInterface
 {
     use Id;
@@ -39,49 +35,27 @@ class Role implements CrudEntityInterface
     public const WORKSPACE = 'workspace';
     public const USER = 'user';
 
-    /**
-     * @ORM\Column(unique=true)
-     *
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(unique: true)]
     private ?string $name = null;
 
-    /**
-     * @ORM\Column(name="translation_key")
-     *
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(name: 'translation_key')]
     private ?string $translationKey = null;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     mappedBy="roles",
-     *     fetch="EXTRA_LAZY"
-     * )
-     *
      * @deprecated should be unidirectional.
      */
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\User::class, mappedBy: 'roles', fetch: 'EXTRA_LAZY')]
     private Collection $users;
 
-    /**
-     * @ORM\Column(name="entity_type", type="string", length="10")
-     */
+    #[ORM\Column(name: 'entity_type', type: 'string', length: 10)]
     private string $type = self::PLATFORM;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     inversedBy="roles"
-     * )
-     *
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class, inversedBy: 'roles')]
     private ?Workspace $workspace = null;
 
-    /**
-     * @ORM\Column(name="personal_workspace_creation_enabled", type="boolean")
-     */
+    #[ORM\Column(name: 'personal_workspace_creation_enabled', type: 'boolean')]
     private bool $personalWorkspaceCreationEnabled = false;
 
     public function __construct()

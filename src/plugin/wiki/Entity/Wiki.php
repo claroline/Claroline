@@ -6,42 +6,26 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="icap__wiki")
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Table(name: 'icap__wiki')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Wiki extends AbstractResource
 {
     const OPEN_MODE = 0;
     const MODERATE_MODE = 1;
     const READ_ONLY_MODE = 2;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Icap\WikiBundle\Entity\Section", cascade={"all"})
-     * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'root_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: \Icap\WikiBundle\Entity\Section::class, cascade: ['all'])]
     private $root;
 
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     * mode of wiki
-     * null or 0 : wiki open for edit
-     * 1 : wiki is on moderate mode
-     * 2 : wiki is on read only mode
-     */
+    #[ORM\Column(type: 'smallint', nullable: true)] // mode of wiki
     protected $mode;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     * Display or hide the section numbers in the wiki body
-     */
+    #[ORM\Column(type: 'boolean', nullable: false)] // Display or hide the section numbers in the wiki body
     protected $displaySectionNumbers = false;
 
-    /**
-     * @ORM\Column(type="boolean", name="display_contents", nullable=false, options={"default": true})
-     * Display or hide the section numbers in the wiki body
-     */
+    #[ORM\Column(type: 'boolean', name: 'display_contents', nullable: false, options: ['default' => true])] // Display or hide the section numbers in the wiki body
     protected $displayContents = true;
 
     //Temporary variable used only by onCopy method of WikiListener
@@ -156,9 +140,7 @@ class Wiki extends AbstractResource
         return $this->wikiCreator;
     }
 
-    /**
-     * @ORM\PostPersist
-     */
+    #[ORM\PostPersist]
     public function createRoot(PostPersistEventArgs $event)
     {
         $em = $event->getObjectManager();

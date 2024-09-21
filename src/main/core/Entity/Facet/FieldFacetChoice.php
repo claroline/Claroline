@@ -16,63 +16,48 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(name="claro_field_facet_choice")
- */
+
+#[ORM\Table(name: 'claro_field_facet_choice')]
+#[ORM\Entity]
 class FieldFacetChoice
 {
     use Id;
     use Uuid;
 
     /**
-     * @ORM\Column()
-     *
      * @var string
      */
+    #[ORM\Column]
     private $name;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacet",
-     *     inversedBy="fieldFacetChoices"
-     * )
      *
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var FieldFacet
      */
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacet::class, inversedBy: 'fieldFacetChoices')]
     private $fieldFacet;
 
     /**
-     * @ORM\Column(type="integer")
-     *
      * @var int
      */
+    #[ORM\Column(type: 'integer')]
     protected $position;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetChoice",
-     *     inversedBy="children"
-     * )
      *
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      *
      * @var FieldFacetChoice
      */
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacetChoice::class, inversedBy: 'children')]
     protected $parent;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetChoice",
-     *     mappedBy="parent",
-     *     cascade={"persist", "remove"}
-     * )
-     *
      * @var ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacetChoice::class, mappedBy: 'parent', cascade: ['persist', 'remove'])]
     protected $children;
 
     /**

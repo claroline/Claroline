@@ -15,31 +15,20 @@ use Claroline\CoreBundle\Entity\Facet\AbstractFacetValue;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_clacoformbundle_field_choice_category")
- */
+#[ORM\Table(name: 'claro_clacoformbundle_field_choice_category')]
+#[ORM\Entity]
 class FieldChoiceCategory extends AbstractFacetValue
 {
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\Field",
-     *     inversedBy="fieldChoiceCategories"
-     * )
-     * @ORM\JoinColumn(name="field_id", nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'field_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\Field::class, inversedBy: 'fieldChoiceCategories')]
     protected $field;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\ClacoFormBundle\Entity\Category")
-     * @ORM\JoinColumn(name="category_id", nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'category_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\Category::class)]
     protected $category;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetChoice")
-     * @ORM\JoinColumn(name="field_facet_choice_id", nullable=true, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'field_facet_choice_id', nullable: true, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacetChoice::class)]
     protected $fieldFacetChoice;
 
     public function getType(): string

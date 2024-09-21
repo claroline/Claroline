@@ -6,14 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait HasContext
 {
-    /**
-     * @ORM\Column(name="context_name")
-     */
+    #[ORM\Column(name: 'context_name')]
     private string $contextName;
 
-    /**
-     * @ORM\Column(name="context_id", nullable=true)
-     */
+    #[ORM\Column(name: 'context_id', nullable: true)]
     private ?string $contextId = null;
 
     public function getContextName(): string

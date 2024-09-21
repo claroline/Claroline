@@ -6,19 +6,14 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\MappedSuperclass()
- */
+#[ORM\MappedSuperclass]
 abstract class AbstractUserPreferences
 {
     use Id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     *
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false, unique=true)
-     */
-    private ?User $user = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(unique: true, nullable: false, onDelete: 'CASCADE')]
+    protected ?User $user = null;
 
     public function getUser(): ?User
     {

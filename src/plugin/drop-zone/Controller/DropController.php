@@ -422,7 +422,7 @@ class DropController
 
         $response = new StreamedResponse();
         $response->setCallBack(
-            function () use ($archive) {
+            function () use ($archive): void {
                 readfile($archive);
             }
         );

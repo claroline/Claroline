@@ -6,9 +6,7 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\MappedSuperclass()
- */
+#[ORM\MappedSuperclass]
 abstract class AbstractWidget
 {
     use Id;
@@ -16,11 +14,11 @@ abstract class AbstractWidget
     /**
      * The parent instance.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var WidgetInstance
      */
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetInstance::class, cascade: ['persist'])]
     private $widgetInstance;
 
     /**

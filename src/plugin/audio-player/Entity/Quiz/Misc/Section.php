@@ -2,6 +2,7 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Quiz\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AudioPlayerBundle\Entity\Quiz\ItemType\WaveformQuestion;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,70 +10,37 @@ use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
 use UJM\ExoBundle\Library\Model\ScoreTrait;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_audio_section")
- */
+#[ORM\Table(name: 'claro_audio_section')]
+#[ORM\Entity]
 class Section implements AnswerPartInterface
 {
+    use Id;
+    use Uuid;
     use FeedbackTrait;
     use ScoreTrait;
-    use Uuid;
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
-    /**
-     * @ORM\Column(name="section_start", type="float", nullable=false)
-     */
+    #[ORM\Column(name: 'section_start', type: 'float', nullable: false)]
     private $start;
 
-    /**
-     * @ORM\Column(name="section_end", type="float", nullable=false)
-     */
+    #[ORM\Column(name: 'section_end', type: 'float', nullable: false)]
     private $end;
 
-    /**
-     * @ORM\Column(name="start_tolerance", type="float", nullable=false)
-     */
+    #[ORM\Column(name: 'start_tolerance', type: 'float', nullable: false)]
     private $startTolerance = 0;
 
-    /**
-     * @ORM\Column(name="end_tolerance", type="float", nullable=false)
-     */
+    #[ORM\Column(name: 'end_tolerance', type: 'float', nullable: false)]
     private $endTolerance = 0;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $color;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\AudioPlayerBundle\Entity\Quiz\ItemType\WaveformQuestion",
-     *     inversedBy="sections",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(name="waveform_id", onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'waveform_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\AudioPlayerBundle\Entity\Quiz\ItemType\WaveformQuestion::class, inversedBy: 'sections', cascade: ['persist'])]
     private $waveform;
 
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

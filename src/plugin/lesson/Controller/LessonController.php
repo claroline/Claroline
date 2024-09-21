@@ -65,7 +65,7 @@ class LessonController
 
         $fileName = TextNormalizer::toKey($lesson->getResourceNode()->getName());
 
-        return new StreamedResponse(function () use ($lesson) {
+        return new StreamedResponse(function () use ($lesson): void {
             echo $this->pdfManager->fromHtml(
                 $this->templating->render('@IcapLesson/lesson/open.pdf.twig', [
                     '_resource' => $lesson,

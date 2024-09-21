@@ -14,51 +14,48 @@ trait AttemptParametersTrait
     /**
      * The picking method used to generate new attempts to the quiz.
      *
-     * @ORM\Column(type="string")
      *
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     private $picking = Picking::STANDARD;
 
     /**
-     * @ORM\Column(name="random_order", type="string")
-     *
      * @var string
      */
+    #[ORM\Column(name: 'random_order', type: 'string')]
     private $randomOrder = Recurrence::NEVER;
 
     /**
-     * @ORM\Column(name="random_pick", type="string")
-     *
      * @var string
      */
+    #[ORM\Column(name: 'random_pick', type: 'string')]
     private $randomPick = Recurrence::NEVER;
 
     /**
      * @var int|array
-     *
-     * @ORM\Column(type="text")
      */
+    #[ORM\Column(type: 'text')]
     private $pick = 0;
 
     /**
      * Maximum time (in minutes) allowed.
      * If 0, there is no duration limit.
      *
-     * @ORM\Column(type="integer")
      *
      * @var int
      */
+    #[ORM\Column(type: 'integer')]
     private $duration = 0;
 
     /**
      * Number of attempts allowed.
      * If 0, the user can retry as many times a he wishes.
      *
-     * @ORM\Column(name="max_attempts", type="integer")
      *
      * @var int
      */
+    #[ORM\Column(name: 'max_attempts', type: 'integer')]
     private $maxAttempts = 0;
 
     /**

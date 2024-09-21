@@ -4,17 +4,14 @@ namespace Claroline\TransferBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_transfer_export")
- */
+#[ORM\Table(name: 'claro_transfer_export')]
+#[ORM\Entity]
 class ExportFile extends AbstractTransferFile
 {
     /**
-     * @ORM\Column(type="string", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $url;
 
     public function getUrl(): ?string

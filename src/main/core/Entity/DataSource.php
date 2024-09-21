@@ -12,10 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * Describes a DataSource provided by a plugin.
  *
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\DataSourceRepository")
  *
- * @ORM\Table(name="claro_data_source")
  */
+#[ORM\Table(name: 'claro_data_source')]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\DataSourceRepository::class)]
 class DataSource
 {
     use Id;
@@ -35,27 +35,25 @@ class DataSource
      * The name of the source.
      *
      * @var string
-     *
-     * @ORM\Column(name="source_name")
      */
+    #[ORM\Column(name: 'source_name')]
     private $name;
 
     /**
      * The type of the source.
      *
      * @var string
-     *
-     * @ORM\Column(name="source_type")
      */
+    #[ORM\Column(name: 'source_type')]
     private $type;
 
     /**
      * The context of the source (workspace, desktop).
      *
-     * @ORM\Column(type="json")
      *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     private $context = [
         self::CONTEXT_DESKTOP,
         self::CONTEXT_WORKSPACE,
@@ -66,10 +64,10 @@ class DataSource
     /**
      * A list of tags to group similar sources.
      *
-     * @ORM\Column(type="json")
      *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     private $tags = [];
 
     /**

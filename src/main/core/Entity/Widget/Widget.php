@@ -20,14 +20,10 @@ use Doctrine\ORM\Mapping as ORM;
  * Widget entity.
  *
  * Describes a Widget provided by a plugin.
- *
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Widget\WidgetRepository")
- *
- * @ORM\Table(name="claro_widget", uniqueConstraints={
- *
- *     @ORM\UniqueConstraint(name="widget_plugin_unique", columns={"name", "plugin_id"})
- * })
  */
+#[ORM\Table(name: 'claro_widget')]
+#[ORM\UniqueConstraint(name: 'widget_plugin_unique', columns: ['name', 'plugin_id'])]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Widget\WidgetRepository::class)]
 class Widget
 {
     use Id;
@@ -46,37 +42,37 @@ class Widget
     /**
      * The name of the widget.
      *
-     * @ORM\Column()
      *
      * @var string
      */
+    #[ORM\Column]
     private $name;
 
     /**
      * The class that holds the widget custom configuration if any.
      *
-     * @ORM\Column(nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(nullable: true)]
     private $class;
 
     /**
      * The list of DataSources accepted by the widget.
      *
-     * @ORM\Column(type="json")
      *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     private $sources = [];
 
     /**
      * The rendering context of the widget (workspace, desktop).
      *
-     * @ORM\Column(type="json")
      *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     private $context = [
         self::CONTEXT_DESKTOP,
         self::CONTEXT_WORKSPACE,
@@ -85,19 +81,18 @@ class Widget
     ];
 
     /**
-     * @ORM\Column(name="is_exportable", type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(name: 'is_exportable', type: 'boolean')]
     private $exportable;
 
     /**
      * A list of tags to group similar widgets.
      *
-     * @ORM\Column(type="json")
      *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     private $tags = [];
 
     /**

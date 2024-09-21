@@ -6,9 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait Hidden
 {
-    /**
-     * @ORM\Column(type="boolean", options={"default" = 0})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => 0])]
     protected bool $hidden = false;
 
     /**

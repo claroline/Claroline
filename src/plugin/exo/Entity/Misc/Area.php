@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\GraphicQuestion;
@@ -11,71 +12,50 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
 
 /**
  * Area.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_coords")
  */
+#[ORM\Table(name: 'ujm_coords')]
+#[ORM\Entity]
 class Area implements AnswerPartInterface
 {
+    use Id;
     use FeedbackTrait;
     use ScoreTrait;
     use Uuid;
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column
      */
+    #[ORM\Column]
     private $value;
 
     /**
      * @var string
-     *
-     * @ORM\Column
      */
+    #[ORM\Column]
     private $shape;
 
     /**
      * @var string
-     *
-     * @ORM\Column
      */
+    #[ORM\Column]
     private $color = '000000';
 
     /**
      * @var float
-     *
-     * @ORM\Column(type="float")
      */
+    #[ORM\Column(type: 'float')]
     private $size;
 
     /**
      * @deprecated this needs to be deleted to keep things separated
-     *
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\GraphicQuestion", inversedBy="areas")
-     * @ORM\JoinColumn(name="interaction_graphic_id", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'interaction_graphic_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\GraphicQuestion::class, inversedBy: 'areas')]
     private $interactionGraphic;
 
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

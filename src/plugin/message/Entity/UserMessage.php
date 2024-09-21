@@ -16,62 +16,51 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_user_message")
- */
+#[ORM\Table(name: 'claro_user_message')]
+#[ORM\Entity]
 class UserMessage
 {
     use Id;
     use Uuid;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
-     * )
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var User
      */
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private $user;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\MessageBundle\Entity\Message",
-     *     inversedBy="userMessages"
-     * )
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var Message
      */
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\MessageBundle\Entity\Message::class, inversedBy: 'userMessages')]
     private $message;
 
     /**
-     * @ORM\Column(name="is_removed", type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(name: 'is_removed', type: 'boolean')]
     protected $isRemoved = false;
 
     /**
-     * @ORM\Column(name="is_read", type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(name: 'is_read', type: 'boolean')]
     protected $isRead = false;
 
     /**
-     * @ORM\Column(name="is_sent", type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(name: 'is_sent', type: 'boolean')]
     protected $isSent = false;
 
     /**
-     * @ORM\Column(name="last_open_date", type="datetime", nullable=true)
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'last_open_date', type: 'datetime', nullable: true)]
     protected $lastOpenDate;
 
     /**

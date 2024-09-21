@@ -8,33 +8,27 @@ use UJM\ExoBundle\Entity\Misc\Hole;
 
 /**
  * A Cloze question.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_interaction_hole")
  */
+#[ORM\Table(name: 'ujm_interaction_hole')]
+#[ORM\Entity]
 class ClozeQuestion extends AbstractItem
 {
     /**
      * The HTML text with empty holes.
      *
-     * @ORM\Column(name="htmlWithoutValue", type="text")
      *
      * @var string
      */
+    #[ORM\Column(name: 'htmlWithoutValue', type: 'text')]
     private $text;
 
     /**
      * The list of holes present in the text.
      *
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\Hole",
-     *     mappedBy="interactionHole",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
      *
      * @var Hole[]|ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Hole::class, mappedBy: 'interactionHole', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $holes;
 
     /**

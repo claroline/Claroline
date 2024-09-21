@@ -11,9 +11,8 @@ trait Order
 {
     /**
      * Order of the element.
-     *
-     * @ORM\Column(name="entity_order", type="integer")
      */
+    #[ORM\Column(name: 'entity_order', type: 'integer')]
     protected int $order = 0;
 
     public function getOrder(): int

@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,69 +12,50 @@ use UJM\ExoBundle\Library\Model\ShuffleTrait;
 
 /**
  * Hole.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_hole")
  */
+#[ORM\Table(name: 'ujm_hole')]
+#[ORM\Entity]
 class Hole
 {
+    use Id;
     use Uuid;
     use ShuffleTrait;
 
     /**
-     * The identifier of the hole.
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
      * The display size of the hole input.
      *
-     * @ORM\Column(type="integer")
      *
      * @var int
      */
+    #[ORM\Column(type: 'integer')]
     private $size = 0;
 
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     private $selector = false;
 
     /**
      * The help text to display in the empty hole input.
      *
-     * @ORM\Column(type="string", nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $placeholder;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\ClozeQuestion", inversedBy="holes")
-     * @ORM\JoinColumn(name="interaction_hole_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'interaction_hole_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\ClozeQuestion::class, inversedBy: 'holes')]
     private $interactionHole;
 
     /**
      * The list of keywords attached to the hole.
      *
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\Keyword",
-     *     mappedBy="hole",
-     *     cascade={"all"},
-     *     orphanRemoval=true
-     * )
      *
      * @var ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Keyword::class, mappedBy: 'hole', cascade: ['all'], orphanRemoval: true)]
     private $keywords;
 
     /**
@@ -83,16 +65,6 @@ class Hole
     {
         $this->keywords = new ArrayCollection();
         $this->refreshUuid();
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -210,12 +182,12 @@ class Hole
         $oldKeywords = array_filter($this->keywords->toArray(), function (Keyword $keyword) use ($keywords) {
             return !in_array($keyword, $keywords);
         });
-        array_walk($oldKeywords, function (Keyword $keyword) {
+        array_walk($oldKeywords, function (Keyword $keyword): void {
             $this->removeKeyword($keyword);
         });
 
         // Adds new ones
-        array_walk($keywords, function (Keyword $keyword) {
+        array_walk($keywords, function (Keyword $keyword): void {
             $this->addKeyword($keyword);
         });
     }

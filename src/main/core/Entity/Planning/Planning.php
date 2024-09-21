@@ -7,38 +7,33 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Planning\PlanningRepository")
- * @ORM\Table(name="claro_planning")
- */
+#[ORM\Table(name: 'claro_planning')]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Planning\PlanningRepository::class)]
 class Planning
 {
     use Id;
     use Uuid;
 
     /**
-     * @ORM\Column()
-     *
      * @var string
      */
+    #[ORM\Column]
     private $objectId;
 
     /**
-     * @ORM\Column()
-     *
      * @var string
      */
+    #[ORM\Column]
     private $objectClass;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Planning\PlannedObject")
-     * @ORM\JoinTable(name="claro_planning_planned_object",
-     *      joinColumns={@ORM\JoinColumn(name="planning_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="planned_object_id", referencedColumnName="id", onDelete="CASCADE")}
-     * )
      *
      * @var PlannedObject[]|ArrayCollection
      */
+    #[ORM\JoinTable(name: 'claro_planning_planned_object')]
+    #[ORM\JoinColumn(name: 'planning_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'planned_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Planning\PlannedObject::class)]
     private $plannedObjects;
 
     public function __construct()

@@ -14,19 +14,10 @@ namespace Claroline\CoreBundle\Entity\Tool;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(
- *     name="claro_tool_mask_decoder",
- *     uniqueConstraints={
- *
- *         @ORM\UniqueConstraint(
- *             name="tool_mask_decoder_unique_tool_and_name",
- *             columns={"tool_name", "name"}
- *         )
- *     })
- */
+
+#[ORM\Table(name: 'claro_tool_mask_decoder')]
+#[ORM\UniqueConstraint(name: 'tool_mask_decoder_unique_tool_and_name', columns: ['tool_name', 'name'])]
+#[ORM\Entity]
 class ToolMaskDecoder
 {
     use Id;
@@ -38,19 +29,13 @@ class ToolMaskDecoder
         'administrate' => 4,
     ];
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private int $value;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     protected string $name;
 
-    /**
-     * @ORM\Column(name="tool_name", nullable=false)
-     */
+    #[ORM\Column(name: 'tool_name', nullable: false)]
     protected string $tool;
 
     public function getValue(): int

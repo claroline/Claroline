@@ -14,35 +14,27 @@ namespace Claroline\CoreBundle\Entity\Facet;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Facet\FieldFacetValueRepository")
- * @ORM\Table(name="claro_field_facet_value")
- */
+#[ORM\Table(name: 'claro_field_facet_value')]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Facet\FieldFacetValueRepository::class)]
 class FieldFacetValue extends AbstractFacetValue
 {
     /**
      * Used by profile to retrieve the values of a user to fill its profile.
      * This should be done in another entity. This is not used by claco-form.
      *
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      *
      * @var User
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, cascade: ['persist'])]
     private $user;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacet",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      *
      * @var FieldFacet
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacet::class, cascade: ['persist'])]
     private $fieldFacet;
 
     public function getType(): string

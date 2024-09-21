@@ -22,15 +22,10 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Tool\OrderedToolRepository")
- *
- * @ORM\Table(name="claro_ordered_tool")
- *
- * @DoctrineAssert\UniqueEntity({"tool", "contextName", "contextId"})
- */
+#[ORM\Table(name: 'claro_ordered_tool')]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Tool\OrderedToolRepository::class)]
+#[ORM\UniqueConstraint(name: 'context_unique_tool', columns: ['tool_name', 'context_name', 'context_id'])]
 class OrderedTool implements CrudEntityInterface
 {
     use Id;
@@ -42,31 +37,22 @@ class OrderedTool implements CrudEntityInterface
     use Order;
     use Hidden;
 
-    /**
-     * @ORM\Column(name="tool_name", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'tool_name', type: 'string', nullable: false)]
     private ?string $name;
 
     /**
      * Display tool icon when the tool is rendered.
-     *
-     * @ORM\Column(type="boolean", options={"default": 0})
      */
+    #[ORM\Column(type: 'boolean', options: ['default' => 0])]
     private bool $showIcon = false;
 
     /**
      * Display in fullscreen when the tool is opened.
-     *
-     * @ORM\Column(type="boolean", nullable=false)
      */
+    #[ORM\Column(type: 'boolean', nullable: false)]
     private bool $fullscreen = false;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\ToolRights",
-     *     mappedBy="orderedTool"
-     * )
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Tool\ToolRights::class, mappedBy: 'orderedTool')]
     private Collection $rights;
 
     public function __construct()

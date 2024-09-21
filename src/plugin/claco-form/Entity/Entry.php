@@ -16,13 +16,9 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\EntryRepository")
- *
- * @ORM\Table(name="claro_clacoformbundle_entry")
- */
+#[ORM\Table(name: 'claro_clacoformbundle_entry')]
+#[ORM\Entity(repositoryClass: \Claroline\ClacoFormBundle\Repository\EntryRepository::class)]
 class Entry
 {
     use Id;
@@ -32,106 +28,74 @@ class Entry
     public const PUBLISHED = 1;
     public const UNPUBLISHED = 2;
 
-    /**
-     * @ORM\Column
-     *
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column]
     private ?string $title = null;
 
-    /**
-     * @ORM\Column(name="entry_status", type="integer")
-     */
+    #[ORM\Column(name: 'entry_status', type: 'integer')]
     private int $status = self::PENDING;
 
-    /**
-     * @ORM\Column(name="locked", type="boolean", options={"default" = 0})
-     */
+    #[ORM\Column(name: 'locked', type: 'boolean', options: ['default' => 0])]
     private bool $locked = false;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\ClacoForm",
-     *     inversedBy="categories"
-     * )
-     *
-     * @ORM\JoinColumn(name="claco_form_id", nullable=false, onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(name: 'claco_form_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\ClacoForm::class, inversedBy: 'categories')]
     private ?ClacoForm $clacoForm = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     *
-     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private ?User $user = null;
 
-    /**
-     * @ORM\Column(name="creation_date", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'creation_date', type: 'datetime', nullable: false)]
     private ?\DateTimeInterface $creationDate = null;
 
-    /**
-     * @ORM\Column(name="edition_date", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'edition_date', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $editionDate = null;
 
-    /**
-     * @ORM\Column(name="publication_date", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'publication_date', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $publicationDate = null;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\FieldValue",
-     *     mappedBy="entry",
-     *     cascade={"persist"}
-     * )
      *
-     * @ORM\JoinTable(name="claro_clacoformbundle_entry_value")
      *
      * @var FieldValue[]
      */
+    #[ORM\JoinTable(name: 'claro_clacoformbundle_entry_value')]
+    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\FieldValue::class, mappedBy: 'entry', cascade: ['persist'])]
     private $fieldValues;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\Comment",
-     *     mappedBy="entry"
-     * )
      *
-     * @ORM\OrderBy({"creationDate" = "DESC"})
      *
      * @var Comment[]
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\Comment::class, mappedBy: 'entry')]
+    #[ORM\OrderBy(['creationDate' => 'DESC'])]
     private $comments;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\ClacoFormBundle\Entity\Category")
      *
-     * @ORM\JoinTable(name="claro_clacoformbundle_entry_category")
      *
      * @var Category[]
      */
+    #[ORM\JoinTable(name: 'claro_clacoformbundle_entry_category')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\Category::class)]
     private $categories;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\ClacoFormBundle\Entity\Keyword", cascade={"persist"})
      *
-     * @ORM\JoinTable(name="claro_clacoformbundle_entry_keyword")
      *
      * @var Keyword[]
      */
+    #[ORM\JoinTable(name: 'claro_clacoformbundle_entry_keyword')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\Keyword::class, cascade: ['persist'])]
     private $keywords;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\EntryUser",
-     *     mappedBy="entry"
-     * )
-     *
      * @var EntryUser[]
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\EntryUser::class, mappedBy: 'entry')]
     private $entryUsers;
 
     public function __construct()

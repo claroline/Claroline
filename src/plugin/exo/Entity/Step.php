@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Order;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,56 +14,43 @@ use UJM\ExoBundle\Library\Model\AttemptParametersTrait;
 /**
  * A step represents a group of items (questions or content) inside an exercise.
  * It also have its specific attempt parameters.
- *
- * @ORM\Entity()
- * @ORM\Table(name="ujm_step")
  */
+#[ORM\Table(name: 'ujm_step')]
+#[ORM\Entity]
 class Step
 {
+    use Id;
     use AttemptParametersTrait;
     use Order;
     use Uuid;
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $title;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Exercise", inversedBy="steps")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Exercise::class, inversedBy: 'steps')]
     private $exercise;
 
     /**
      * @var ArrayCollection|StepItem[]
-     *
-     * @ORM\OneToMany(targetEntity="StepItem", mappedBy="step", cascade={"all"}, orphanRemoval=true)
-     * @ORM\OrderBy({"order" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: \StepItem::class, mappedBy: 'step', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private $stepQuestions;
 
     /**
      * @Gedmo\Slug(fields={"title"}, unique=false)
-     * @ORM\Column(length=128)
      */
+    #[ORM\Column(length: 128)]
     private $slug;
 
     /**
@@ -72,14 +60,6 @@ class Step
     {
         $this->refreshUuid();
         $this->stepQuestions = new ArrayCollection();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

@@ -17,147 +17,106 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity()
- *
- * @ORM\Table(
- *     name="claro_message",
- *     indexes={@ORM\Index(name="level_idx", columns={"lvl"}), @ORM\Index(name="root_idx", columns={"root"})}
- * )
- *
  * @Gedmo\Tree(type="nested")
  */
+#[ORM\Table(name: 'claro_message')]
+#[ORM\Index(name: 'level_idx', columns: ['lvl'])]
+#[ORM\Index(name: 'root_idx', columns: ['root'])]
+#[ORM\Entity]
 class Message
 {
     use Id;
     use Uuid;
 
-    /**
-     * @ORM\Column()
-     *
-     * @Assert\NotBlank()
-     *
-     * @var string
-     */
+    #[ORM\Column]
     protected $object;
 
-    /**
-     * @ORM\Column(type="text")
-     *
-     * @Assert\NotBlank()
-     *
-     * @var string
-     */
+    #[ORM\Column(type: 'text')]
     protected $content;
 
     /**
-     * @todo rename the property to "sender"
-     *
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist"}
-     * )
-     *
-     * @ORM\JoinColumn(name="sender_id", onDelete="CASCADE", nullable=true)
-     *
      * @var User
      */
+    #[ORM\JoinColumn(name: 'sender_id', onDelete: 'CASCADE', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, cascade: ['persist'])]
     protected $user;
 
     /**
-     * @ORM\Column(type="datetime")
      *
      * @Gedmo\Timestampable(on="create")
-     *
      * @var \DateTime
      */
+    #[ORM\Column(type: 'datetime')]
     protected $date;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\MessageBundle\Entity\UserMessage",
-     *     mappedBy="message"
-     * )
-     *
      * @var UserMessage[]|ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\MessageBundle\Entity\UserMessage::class, mappedBy: 'message')]
     protected $userMessages;
 
     /**
      * @Gedmo\TreeLeft
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected $lft;
 
     /**
      * @Gedmo\TreeLevel
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected $lvl;
 
     /**
      * @Gedmo\TreeRight
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected $rgt;
 
     /**
      * @Gedmo\TreeRoot
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected $root;
 
     /**
      * @Gedmo\TreeParent
      *
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\MessageBundle\Entity\Message",
-     *     inversedBy="children"
-     * )
      *
-     * @ORM\JoinColumn(onDelete="SET NULL")
      *
      * @var Message
      */
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\MessageBundle\Entity\Message::class, inversedBy: 'children')]
     protected $parent;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\MessageBundle\Entity\Message",
-     *     mappedBy="parent"
-     * )
      *
-     * @ORM\OrderBy({"lft" = "ASC"})
      *
      * @var Message[]|ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\MessageBundle\Entity\Message::class, mappedBy: 'parent')]
+    #[ORM\OrderBy(['lft' => 'ASC'])]
     protected $children;
 
     /**
-     * @ORM\Column(name="sender_username")
-     *
      * @var string
      */
+    #[ORM\Column(name: 'sender_username')]
     protected $senderUsername = 'claroline-connect';
 
     /**
-     * @ORM\Column(name="receiver_string", type="text")
-     *
      * @var string
      */
+    #[ORM\Column(name: 'receiver_string', type: 'text')]
     protected $to;
 
     /**
-     * @ORM\Column(type="json", nullable=true)
-     *
      * @var array
      */
+    #[ORM\Column(type: 'json', nullable: true)]
     protected $attachments = [];
 
     /**

@@ -16,74 +16,54 @@ use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository")
- * @ORM\Table(name="claro_resource_type")
- */
+#[ORM\Table(name: 'claro_resource_type')]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository::class)]
 class ResourceType
 {
     use Id;
 
-    /**
-     * @ORM\Column(unique=true)
-     */
+    #[ORM\Column(unique: true)]
     private $name;
 
     /**
      * The entity class of resources of this type.
      *
      * @var string
-     *
-     * @ORM\Column(length=256)
      */
+    #[ORM\Column(length: 256)]
     private $class;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\MaskDecoder",
-     *     mappedBy="resourceType",
-     *     cascade={"persist"}
-     * )
      *
      * @var ArrayCollection|MaskDecoder[]
-     *
      * @todo : we may remove it after checking it's not used
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\MaskDecoder::class, mappedBy: 'resourceType', cascade: ['persist'])]
     private $maskDecoders;
 
-    /**
-     * @ORM\Column(name="is_exportable", type="boolean")
-     */
+    #[ORM\Column(name: 'is_exportable', type: 'boolean')]
     private $exportable = false;
 
     /**
      * A list of tags to group similar types.
      *
-     * @ORM\Column(type="json")
      *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     private ?array $tags = [];
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Plugin::class)]
     private ?Plugin $plugin = null;
 
-    /**
-     * @ORM\Column(name="is_enabled", type="boolean")
-     */
+    #[ORM\Column(name: 'is_enabled', type: 'boolean')]
     private bool $isEnabled = true;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceRights",
-     *     mappedBy="resourceTypes"
-     * )
-     *
      * @todo find a way to remove it (it's used in some DQL queries)
      */
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceRights::class, mappedBy: 'resourceTypes')]
     protected $rights;
 
     public function __construct()

@@ -13,23 +13,17 @@ namespace Claroline\CursusBundle\Entity\Registration;
 use Claroline\CursusBundle\Entity\Session;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(
- *     name="claro_cursusbundle_course_session_group",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="training_session_unique_group", columns={"session_id", "group_id"})
- *     }
- * )
- */
+#[ORM\Table(name: 'claro_cursusbundle_course_session_group')]
+#[ORM\UniqueConstraint(name: 'training_session_unique_group', columns: ['session_id', 'group_id'])]
+#[ORM\Entity]
 class SessionGroup extends AbstractGroupRegistration
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Session")
-     * @ORM\JoinColumn(name="session_id", nullable=false, onDelete="CASCADE")
      *
      * @var Session
      */
+    #[ORM\JoinColumn(name: 'session_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CursusBundle\Entity\Session::class)]
     private $session;
 
     public function getSession(): Session

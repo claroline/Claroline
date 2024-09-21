@@ -13,11 +13,9 @@ use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\AppBundle\Entity\Meta\UpdatedAt;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(name="claro_example_example")
- */
+
+#[ORM\Table(name: 'claro_example_example')]
+#[ORM\Entity]
 class Example
 {
     use Id;

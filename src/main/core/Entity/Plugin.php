@@ -11,50 +11,21 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\PluginRepository")
- * @ORM\Table(
- *      name="claro_plugin",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="plugin_unique_name", columns={"vendor_name", "short_name"})
- *      }
- * )
- */
+#[ORM\Table(name: 'claro_plugin')]
+#[ORM\UniqueConstraint(name: 'plugin_unique_name', columns: ['vendor_name', 'short_name'])]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\PluginRepository::class)]
 class Plugin
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
 
-    /**
-     * @ORM\Column(name="vendor_name", length=50)
-     * @Assert\NotBlank()
-     * @Assert\Length(max=50)
-     */
+    #[ORM\Column(name: 'vendor_name', length: 50)]
     protected $vendorName;
 
-    /**
-     * @ORM\Column(name="short_name", length=50)
-     * @Assert\NotBlank()
-     * @Assert\Length(max=50)
-     */
+    #[ORM\Column(name: 'short_name', length: 50)]
     protected $bundleName;
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getGeneratedId()
-    {
-        return $this->id;
-    }
 
     public function getBundleFQCN()
     {

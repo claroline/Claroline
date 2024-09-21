@@ -11,21 +11,18 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Resource\ResourceMaskDecoderRepository")
- * @ORM\Table(
- *     name="claro_resource_mask_decoder",
- *     indexes={
- *         @Index(name="value", columns={"value"}),
- *         @Index(name="name", columns={"name"})
- *     }
- * )
- */
+#[ORM\Table(name: 'claro_resource_mask_decoder')]
+#[Index(name: 'value', columns: ['value'])]
+#[Index(name: 'name', columns: ['name'])]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Resource\ResourceMaskDecoderRepository::class)]
 class MaskDecoder
 {
+    use Id;
+
     //this must be coherent with the MaskManager default array
     //@todo: unify this with the MaskManager
     const OPEN = 1;
@@ -35,37 +32,15 @@ class MaskDecoder
     const EDIT = 16;
     const ADMINISTRATE = 32;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     protected $value;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     protected $name;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
-     *     inversedBy="maskDecoders",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(name="resource_type_id", onDelete="CASCADE", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'resource_type_id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceType::class, inversedBy: 'maskDecoders', cascade: ['persist'])]
     protected $resourceType;
-
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * @param $position

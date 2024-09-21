@@ -14,16 +14,12 @@ namespace Claroline\EvaluationBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class AbstractUserEvaluation extends AbstractEvaluation
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     *
-     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(name: 'user_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     protected ?User $user = null;
 
     public function getUser(): ?User

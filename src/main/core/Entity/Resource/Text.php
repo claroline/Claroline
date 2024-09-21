@@ -15,25 +15,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_text")
- */
+#[ORM\Table(name: 'claro_text')]
+#[ORM\Entity]
 class Text extends AbstractResource
 {
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private int $version = 1;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\Revision",
-     *     mappedBy="text",
-     *     cascade={"persist"}
-     * )
-     * @ORM\OrderBy({"version" = "DESC"})
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\Revision::class, mappedBy: 'text', cascade: ['persist'])]
+    #[ORM\OrderBy(['version' => 'DESC'])]
     private Collection $revisions;
 
     public function __construct()

@@ -87,14 +87,14 @@ class ItemValidator extends JsonSchemaValidator
 
         // Validate hints
         if (isset($question['hints'])) {
-            array_map(function ($hint) use (&$errors, $options) {
+            array_map(function ($hint) use (&$errors, $options): void {
                 $errors = array_merge($errors, $this->hintValidator->validateAfterSchema($hint, $options));
             }, $question['hints']);
         }
 
         // Validate objects
         if (isset($question['objects'])) {
-            array_map(function ($object) use (&$errors, $options) {
+            array_map(function ($object) use (&$errors, $options): void {
                 $errors = array_merge($errors, $this->contentValidator->validateAfterSchema($object, $options));
             }, $question['objects']);
         }

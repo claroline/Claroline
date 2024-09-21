@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Item;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Library\Attempt\PenaltyItemInterface;
@@ -10,42 +11,25 @@ use UJM\ExoBundle\Library\Model\PenaltyTrait;
 
 /**
  * Hint.
- *
- * @ORM\Entity()
- * @ORM\Table(name="ujm_hint")
  */
+#[ORM\Table(name: 'ujm_hint')]
+#[ORM\Entity]
 class Hint implements PenaltyItemInterface
 {
+    use Id;
     use ContentTrait;
     use PenaltyTrait;
     use Uuid;
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Item", inversedBy="hints")
-     *
      * @var Item
      */
+    #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: 'hints')]
     private $question;
 
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     public function setQuestion(Item $question)

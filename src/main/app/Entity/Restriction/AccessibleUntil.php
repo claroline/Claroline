@@ -7,10 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 trait AccessibleUntil
 {
     /**
-     * @ORM\Column(name="accessible_until", type="datetime", nullable=true)
-     *
      * @var \DateTimeInterface
      */
+    #[ORM\Column(name: 'accessible_until', type: 'datetime', nullable: true)]
     protected $accessibleUntil;
 
     /**

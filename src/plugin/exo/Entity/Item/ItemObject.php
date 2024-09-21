@@ -2,52 +2,41 @@
 
 namespace UJM\ExoBundle\Entity\Item;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Order;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * A Resource on which the Item is referred.
- *
- * @ORM\Entity()
- * @ORM\Table(name="ujm_object_question")
  */
+#[ORM\Table(name: 'ujm_object_question')]
+#[ORM\Entity]
 class ItemObject
 {
     use Order;
     use Uuid;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    use Id;
 
     /**
      * Owning Item.
      *
      * @var Item
-     *
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Item\Item", inversedBy="objects")
-     * @ORM\JoinColumn(onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Item\Item::class, inversedBy: 'objects')]
     private $question;
 
     /**
      * The mime type of the Item object.
      *
-     * @ORM\Column("mime_type", type="string")
      *
      * @var string
      */
+    #[ORM\Column('mime_type', type: 'string')]
     private $mimeType;
 
-    /**
-     * @ORM\Column(name="object_data", type="text")
-     */
+    #[ORM\Column(name: 'object_data', type: 'text')]
     private $data;
 
     /**
@@ -56,16 +45,6 @@ class ItemObject
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

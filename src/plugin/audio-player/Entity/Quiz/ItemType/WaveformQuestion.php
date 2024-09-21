@@ -10,10 +10,9 @@ use UJM\ExoBundle\Library\Model\PenaltyTrait;
 
 /**
  * A Waveform question.
- *
- * @ORM\Entity
- * @ORM\Table(name="claro_audio_interaction_waveform")
  */
+#[ORM\Table(name: 'claro_audio_interaction_waveform')]
+#[ORM\Entity]
 class WaveformQuestion extends AbstractItem
 {
     /*
@@ -21,29 +20,16 @@ class WaveformQuestion extends AbstractItem
      */
     use PenaltyTrait;
 
-    /**
-     * @ORM\Column(name="url", type="string")
-     */
+    #[ORM\Column(name: 'url', type: 'string')]
     private $url;
 
-    /**
-     * @ORM\Column(name="tolerance", type="float")
-     */
+    #[ORM\Column(name: 'tolerance', type: 'float')]
     private $tolerance = 1;
 
-    /**
-     * @ORM\Column(name="answers_limit", type="integer")
-     */
+    #[ORM\Column(name: 'answers_limit', type: 'integer')]
     private $answersLimit = 0;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\AudioPlayerBundle\Entity\Quiz\Misc\Section",
-     *     mappedBy="waveform",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\AudioPlayerBundle\Entity\Quiz\Misc\Section::class, mappedBy: 'waveform', cascade: ['persist', 'remove'], orphanRemoval: true)]
     protected $sections;
 
     /**

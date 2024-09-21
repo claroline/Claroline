@@ -7,10 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 trait AccessCode
 {
     /**
-     * @ORM\Column(name="access_code", type="string", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'access_code', type: 'string', nullable: true)]
     protected $accessCode;
 
     /**

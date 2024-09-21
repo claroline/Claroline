@@ -10,9 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 trait Description
 {
-    /**
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
+    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     protected ?string $description = null;
 
     public function getDescription(): ?string

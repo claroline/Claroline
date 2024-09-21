@@ -9,87 +9,73 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Table(name="icap__lesson_chapter")
- * @ORM\Entity(repositoryClass="Icap\LessonBundle\Repository\ChapterRepository")
  * @Gedmo\Tree(type="nested")
  */
+#[ORM\Table(name: 'icap__lesson_chapter')]
+#[ORM\Entity(repositoryClass: \Icap\LessonBundle\Repository\ChapterRepository::class)]
 class Chapter
 {
     use Id;
     use Uuid;
     use Poster;
 
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     */
+    #[ORM\Column(type: 'string', nullable: false)]
     private ?string $title;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $text;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $internalNote;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Icap\LessonBundle\Entity\Lesson")
-     *
-     * @ORM\JoinColumn(name="lesson_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(name: 'lesson_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Icap\LessonBundle\Entity\Lesson::class)]
     private ?Lesson $lesson;
 
     /**
      * @Gedmo\Slug(fields={"title"}, unique=true, updatable=false)
-     *
-     * @ORM\Column(length=128, unique=true, nullable=false)
      */
+    #[ORM\Column(length: 128, unique: true, nullable: false)]
     private ?string $slug;
 
     /**
      * @Gedmo\TreeLeft
-     *
-     * @ORM\Column(name="lft", type="integer")
      */
+    #[ORM\Column(name: 'lft', type: 'integer')]
     private ?int $left;
 
     /**
      * @Gedmo\TreeLevel
-     *
-     * @ORM\Column(name="lvl", type="integer")
      */
+    #[ORM\Column(name: 'lvl', type: 'integer')]
     private ?int $level;
 
     /**
      * @Gedmo\TreeRight
-     *
-     * @ORM\Column(name="rgt", type="integer")
      */
+    #[ORM\Column(name: 'rgt', type: 'integer')]
     private ?int $right;
 
     /**
      * @Gedmo\TreeRoot
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $root;
 
     /**
      * @Gedmo\TreeParent
      *
-     * @ORM\ManyToOne(targetEntity="Icap\LessonBundle\Entity\Chapter")
      *
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
      */
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Icap\LessonBundle\Entity\Chapter::class)]
     private ?Chapter $parent = null;
 
     /**
      * Custom numbering of the chapters.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $customNumbering = '';
 
     public function __construct()

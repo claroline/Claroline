@@ -185,7 +185,7 @@ class AnnouncementController
             $content = $this->templateManager->getTemplate('pdf_announcement', $placeholders, '');
         }
 
-        return new StreamedResponse(function () use ($content) {
+        return new StreamedResponse(function () use ($content): void {
             echo $this->pdfManager->fromHtml($content);
         }, 200, [
             'Content-Type' => 'application/pdf',

@@ -189,7 +189,7 @@ class SessionController extends AbstractCrudController
     {
         $this->checkPermission('OPEN', $session, [], true);
 
-        return new StreamedResponse(function () use ($session, $request) {
+        return new StreamedResponse(function () use ($session, $request): void {
             echo $this->pdfManager->fromHtml(
                 $this->manager->generateFromTemplate($session, $request->getLocale())
             );

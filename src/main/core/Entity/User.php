@@ -32,19 +32,12 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\UserRepository")
- *
- * @ORM\Table(
- *     name="claro_user",
- *     indexes={
- *
- *         @ORM\Index(name="disabled_idx", columns={"is_disabled"}),
- *         @ORM\Index(name="is_removed", columns={"is_removed"})
- * })
- */
+
+#[ORM\Table(name: 'claro_user')]
+#[ORM\Index(name: 'disabled_idx', columns: ['is_disabled'])]
+#[ORM\Index(name: 'is_removed', columns: ['is_removed'])]
+#[ORM\Entity(repositoryClass: \Claroline\CommunityBundle\Repository\UserRepository::class)]
 class User extends AbstractRoleSubject implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface, CrudEntityInterface, ContextSubjectInterface
 {
     use Id;
@@ -55,170 +48,100 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     use Disabled;
     use HasGroups;
 
-    /**
-     * @ORM\Column(name="first_name", length=50)
-     *
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(name: 'first_name', length: 50)]
     private ?string $firstName = null;
 
-    /**
-     * @ORM\Column(name="last_name", length=50)
-     *
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(name: 'last_name', length: 50)]
     private ?string $lastName = null;
 
-    /**
-     * @ORM\Column(unique=true)
-     *
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(unique: true)]
     private ?string $username = null;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     private ?string $password = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $locale = null;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     private string $salt;
 
     private ?string $plainPassword = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $phone = null;
 
-    /**
-     * @ORM\Column(unique=true, name="mail")
-     *
-     * @Assert\NotBlank()
-     *
-     * @Assert\Email(mode="strict")
-     */
+    #[ORM\Column(unique: true, name: 'mail')]
     private ?string $email = null;
 
-    /**
-     * @ORM\Column(name="administrative_code", nullable=true)
-     */
+    #[ORM\Column(name: 'administrative_code', nullable: true)]
     private ?string $administrativeCode = null;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Group")
-     *
-     * @ORM\JoinTable(name="claro_user_group")
-     */
+    
+    #[ORM\JoinTable(name: 'claro_user_group')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Group::class)]
     private Collection $groups;
 
-    /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="users",
-     *     fetch="EXTRA_LAZY"
-     * )
-     *
-     * @ORM\JoinTable(name="claro_user_role")
-     */
+    
+    #[ORM\JoinTable(name: 'claro_user_role')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Role::class, inversedBy: 'users', fetch: 'EXTRA_LAZY')]
     protected Collection $roles;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     *
-     * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(name: 'workspace_id', onDelete: 'SET NULL')]
+    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
     private ?Workspace $personalWorkspace = null;
 
     /**
-     * @ORM\Column(name="creation_date", type="datetime")
-     *
      * @Gedmo\Timestampable(on="create")
      */
+    #[ORM\Column(name: 'creation_date', type: 'datetime')]
     private ?\DateTimeInterface $created = null;
 
-    /**
-     * @ORM\Column(name="last_activity", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'last_activity', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $lastActivity = null;
 
-    /**
-     * @ORM\Column(name="initialization_date", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'initialization_date', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $initDate = null;
 
-    /**
-     * @ORM\Column(name="reset_password", nullable=true)
-     */
+    #[ORM\Column(name: 'reset_password', nullable: true)]
     private ?string $resetPasswordHash = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $picture = null;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private bool $hasAcceptedTerms = false;
 
-    /**
-     * @ORM\Column(name="is_removed", type="boolean")
-     */
+    #[ORM\Column(name: 'is_removed', type: 'boolean')]
     private bool $isRemoved = false;
 
     /**
      * A technical user is only creatable from the command line/code, cannot be modified,
      * and is hidden in the searches.
      * This is useful to create a support user in the platform.
-     *
-     * @ORM\Column(type="boolean", options={"default"= 0})
      */
+    #[ORM\Column(type: 'boolean', options: ['default' => 0])]
     private bool $technical = false;
 
-    /**
-     * @ORM\Column(name="is_mail_notified", type="boolean")
-     */
+    #[ORM\Column(name: 'is_mail_notified', type: 'boolean')]
     private bool $mailNotified = true;
 
-    /**
-     * @ORM\Column(name="is_mail_validated", type="boolean")
-     */
+    #[ORM\Column(name: 'is_mail_validated', type: 'boolean')]
     private bool $mailValidated = false;
 
-    /**
-     * @ORM\Column(name="expiration_date", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'expiration_date', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $expirationDate = null;
 
-    /**
-     * @ORM\Column(name="email_validation_hash", nullable=true)
-     */
+    #[ORM\Column(name: 'email_validation_hash', nullable: true)]
     private ?string $emailValidationHash = null;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\UserOrganizationReference",
-     *     mappedBy="user",
-     *     orphanRemoval=true,
-     *     cascade={"persist"},
-     *     fetch="EXTRA_LAZY"
-     *  )
-     *
-     * @ORM\JoinColumn(name="user_id", nullable=false)
-     */
+    
+    #[ORM\JoinColumn(name: 'user_id', nullable: false)]
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Organization\UserOrganizationReference::class, mappedBy: 'user', orphanRemoval: true, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private Collection $userOrganizationReferences;
 
-    /**
-     * @ORM\Column(name="user_status", nullable=true)
-     */
+    #[ORM\Column(name: 'user_status', nullable: true)]
     private ?string $status = null;
 
     public function __construct()

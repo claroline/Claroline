@@ -13,11 +13,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Table(name="icap__blog_post")
- * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\PostRepository")
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Table(name: 'icap__blog_post')]
+#[ORM\Entity(repositoryClass: \Icap\BlogBundle\Repository\PostRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Post extends Statusable
 {
     use Id;
@@ -26,65 +24,51 @@ class Post extends Statusable
     use Thumbnail;
     use Uuid;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $title;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: 'text')]
     private ?string $content;
 
     /**
      * @Gedmo\Slug(fields={"title"}, unique=true, updatable=false)
-     * @ORM\Column(length=128, unique=true)
      */
+    #[ORM\Column(length: 128, unique: true)]
     private ?string $slug;
 
     /**
-     * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
      */
+    #[ORM\Column(type: 'datetime', name: 'creation_date')]
     private ?\DateTimeInterface $creationDate;
 
     /**
-     * @ORM\Column(type="datetime", name="modification_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field={"title", "content"})
      */
+    #[ORM\Column(type: 'datetime', name: 'modification_date', nullable: true)]
     private ?\DateTimeInterface $modificationDate;
 
     /**
-     * @ORM\Column(type="datetime", name="publication_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="status", value="1")
      */
+    #[ORM\Column(type: 'datetime', name: 'publication_date', nullable: true)]
     private ?\DateTimeInterface $publicationDate;
 
-    /**
-     * @ORM\Column(type="integer", options={"default": "0"})
-     */
+    #[ORM\Column(type: 'integer', options: ['default' => '0'])]
     private int $viewCounter = 0;
 
-    /**
-     * @ORM\Column(type="boolean", name="pinned")
-     */
+    #[ORM\Column(type: 'boolean', name: 'pinned')]
     private bool $pinned = false;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"all"})
-     * @ORM\OrderBy({"creationDate" = "DESC"})
-     */
+    #[ORM\OneToMany(targetEntity: \Comment::class, mappedBy: 'post', cascade: ['all'])]
+    #[ORM\OrderBy(['creationDate' => 'DESC'])]
     private Collection $comments;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $author;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Icap\BlogBundle\Entity\Blog", inversedBy="posts")
-     * @ORM\JoinColumn(name="blog_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'blog_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Icap\BlogBundle\Entity\Blog::class, inversedBy: 'posts')]
     private ?Blog $blog;
 
     public function __construct()

@@ -18,11 +18,9 @@ use Claroline\AppBundle\Entity\Restriction\Locked;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro_api_token")
- */
+
+#[ORM\Table(name: 'claro_api_token')]
+#[ORM\Entity]
 class ApiToken
 {
     use Id;
@@ -30,16 +28,12 @@ class ApiToken
     use Locked;
     use Uuid;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     *
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private ?User $user;
 
-    /**
-     * @ORM\Column(type="string", length=36, unique=true)
-     */
+    #[ORM\Column(type: 'string', length: 36, unique: true)]
     private ?string $token;
 
     public function __construct()

@@ -8,38 +8,30 @@ use UJM\ExoBundle\Entity\Misc\Keyword;
 
 /**
  * An Open question.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_interaction_open")
  */
+#[ORM\Table(name: 'ujm_interaction_open')]
+#[ORM\Entity]
 class OpenQuestion extends AbstractItem
 {
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\Keyword",
-     *     mappedBy="interactionopen",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
-     *
      * @var ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Keyword::class, mappedBy: 'interactionopen', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $keywords;
 
     /**
-     * @ORM\Column()
-     *
      * @var string
      */
+    #[ORM\Column]
     private $contentType = 'text';
 
     /**
      * The max allowed length fot answers to this question.
      *
-     * @ORM\Column(type="integer")
      *
      * @var int
      */
+    #[ORM\Column(type: 'integer')]
     private $maxAnswerLength = 0;
 
     /**
@@ -69,12 +61,12 @@ class OpenQuestion extends AbstractItem
         $oldKeywords = array_filter($this->keywords->toArray(), function (Keyword $keyword) use ($keywords) {
             return !in_array($keyword, $keywords);
         });
-        array_walk($oldKeywords, function (Keyword $keyword) {
+        array_walk($oldKeywords, function (Keyword $keyword): void {
             $this->removeKeyword($keyword);
         });
 
         // Adds new ones
-        array_walk($keywords, function (Keyword $keyword) {
+        array_walk($keywords, function (Keyword $keyword): void {
             $this->addKeyword($keyword);
         });
     }

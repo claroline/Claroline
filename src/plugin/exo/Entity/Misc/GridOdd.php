@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\PairQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
@@ -10,54 +11,34 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
 
 /**
  * GridOdd.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_grid_odd")
  */
+#[ORM\Table(name: 'ujm_grid_odd')]
+#[ORM\Entity]
 class GridOdd implements AnswerPartInterface
 {
+    use Id;
     use ScoreTrait;
     use FeedbackTrait;
-    /**
-     * Unique identifier of the odd.
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    private $id;
 
     /**
      * The item which is odd.
      *
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Misc\GridItem")
-     * @ORM\JoinColumn(name="item_id", referencedColumnName="id")
      *
      * @var GridItem
      */
+    #[ORM\JoinColumn(name: 'item_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Misc\GridItem::class)]
     private $item;
 
     /**
      * The parent question.
      *
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\PairQuestion", inversedBy="oddItems")
-     * @ORM\JoinColumn(name="pair_question_id", referencedColumnName="id")
      *
      * @var PairQuestion
      */
+    #[ORM\JoinColumn(name: 'pair_question_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\PairQuestion::class, inversedBy: 'oddItems')]
     private $question;
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Get item.

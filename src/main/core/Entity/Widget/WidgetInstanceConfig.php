@@ -15,61 +15,37 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
- * @ORM\Table(
- *     name="claro_widget_instance_config"
- * )
  *
  * @todo merge with WidgetInstance entity.
  */
+#[ORM\Table(name: 'claro_widget_instance_config')]
+#[ORM\Entity]
 class WidgetInstanceConfig
 {
     use Id;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance",
-     *     inversedBy="widgetInstanceConfigs",
-     *     cascade={"persist", "remove"}
-     * )
-     * @ORM\JoinColumn(name="widget_instance_id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\JoinColumn(name: 'widget_instance_id', onDelete: 'CASCADE', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetInstance::class, inversedBy: 'widgetInstanceConfigs', cascade: ['persist', 'remove'])]
     private $widgetInstance;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
-     * )
-     * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private $user;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
-     * )
-     * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'workspace_id', nullable: true, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
     private $workspace;
 
-    /**
-     * @ORM\Column(name="widget_order", type="integer")
-     */
+    #[ORM\Column(name: 'widget_order', type: 'integer')]
     private $widgetOrder = 0;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     private $type;
 
-    /**
-     * @ORM\Column(type="boolean", name="is_visible")
-     */
+    #[ORM\Column(type: 'boolean', name: 'is_visible')]
     private $visible = true;
 
-    /**
-     * @ORM\Column(type="boolean", name="is_locked")
-     */
+    #[ORM\Column(type: 'boolean', name: 'is_locked')]
     private $locked = false;
 
     public function getWidgetInstance()

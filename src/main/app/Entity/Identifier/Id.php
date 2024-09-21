@@ -8,11 +8,10 @@ trait Id
 {
     /**
      * An auto generated unique identifier.
-     *
-     * @ORM\Id
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected ?int $id = null;
 
     public function getId(): ?int

@@ -6,10 +6,8 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_theme_poster")
- */
+#[ORM\Table(name: 'claro_theme_poster')]
+#[ORM\Entity]
 class Poster
 {
     use Id;

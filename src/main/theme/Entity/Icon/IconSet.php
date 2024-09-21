@@ -21,10 +21,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_icon_set")
- */
+#[ORM\Table(name: 'claro_icon_set')]
+#[ORM\Entity]
 class IconSet
 {
     use Id;
@@ -37,25 +35,19 @@ class IconSet
 
     /**
      * @Gedmo\Slug(fields={"name"}, unique=true, updatable=false, separator="_")
-     * @ORM\Column(unique=true)
      *
      * @deprecated
      */
+    #[ORM\Column(unique: true)]
     private ?string $cname = null;
 
-    /**
-     * @ORM\Column(name="is_default", type="boolean", options={"default"= 0})
-     */
+    #[ORM\Column(name: 'is_default', type: 'boolean', options: ['default' => 0])]
     private bool $default = false;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $type = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="IconItem", mappedBy="iconSet")
-     */
+    #[ORM\OneToMany(targetEntity: \IconItem::class, mappedBy: 'iconSet')]
     private Collection $icons;
 
     public function __construct()

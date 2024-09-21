@@ -5,67 +5,48 @@ namespace Claroline\PeerTubeBundle\Entity;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(name="claro_peertube_video")
- */
+
+#[ORM\Table(name: 'claro_peertube_video')]
+#[ORM\Entity]
 class Video extends AbstractResource
 {
     /**
      * The URL (scheme + host) of the PeerTube server where the video is stored.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private ?string $server = null;
 
     /**
      * The UUID of the video (retrieved from the PeerTube API and required to construct the embedded URL).
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private ?string $originalUuid = null;
 
     /**
      * The short UUID of the video (retrieved from the PeerTube share URL).
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private ?string $shortUuid = null;
 
-    /**
-     * @ORM\Column(name="timecode_start", type="integer", nullable=true)
-     */
+    #[ORM\Column(name: 'timecode_start', type: 'integer', nullable: true)]
     private ?int $timecodeStart = null;
 
-    /**
-     * @ORM\Column(name="timecode_end", type="integer", nullable=true)
-     */
+    #[ORM\Column(name: 'timecode_end', type: 'integer', nullable: true)]
     private ?int $timecodeEnd = null;
 
-    /**
-     * @ORM\Column(name="autoplay", type="boolean", nullable=false)
-     */
+    #[ORM\Column(name: 'autoplay', type: 'boolean', nullable: false)]
     private bool $autoplay = false;
 
-    /**
-     * @ORM\Column(name="looping", type="boolean", nullable=false)
-     */
+    #[ORM\Column(name: 'looping', type: 'boolean', nullable: false)]
     private bool $looping = false;
 
-    /**
-     * @ORM\Column(name="controls", type="boolean", nullable=false)
-     */
+    #[ORM\Column(name: 'controls', type: 'boolean', nullable: false)]
     private bool $controls = true;
 
-    /**
-     * @ORM\Column(name="peertubeLink", type="boolean", nullable=false)
-     */
+    #[ORM\Column(name: 'peertubeLink', type: 'boolean', nullable: false)]
     private bool $peertubeLink = false;
 
-    /**
-     * @ORM\Column(name="resume", type="boolean", nullable=false)
-     */
+    #[ORM\Column(name: 'resume', type: 'boolean', nullable: false)]
     private bool $resume = false;
 
     public function getServer(): ?string

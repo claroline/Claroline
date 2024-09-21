@@ -10,9 +10,7 @@ use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class AbstractTransferFile implements TransferFileInterface
 {
     use Id;
@@ -21,55 +19,47 @@ abstract class AbstractTransferFile implements TransferFileInterface
     use CreatedAt;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $name;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $action;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $status = self::PENDING;
 
     /**
-     * @ORM\Column(name="file_format", type="string")
-     *
      * @var string
      */
+    #[ORM\Column(name: 'file_format', type: 'string')]
     protected $format;
 
     /**
      * Extra data required to process the import/export (eg. parent directory for directory creation).
      *
-     * @ORM\Column(type="json", nullable=true)
      *
      * @var mixed
      */
+    #[ORM\Column(type: 'json', nullable: true)]
     protected $extra;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     *
      * @var \DateTimeInterface
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $executionDate;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
-     * )
-     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Workspace
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
     protected $workspace;
 
     public function __construct()

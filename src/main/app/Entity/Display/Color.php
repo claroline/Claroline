@@ -6,9 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait Color
 {
-    /**
-     * @ORM\Column(name="color", nullable=true)
-     */
+    #[ORM\Column(name: 'color', nullable: true)]
     protected ?string $color = null;
 
     public function getColor(): ?string

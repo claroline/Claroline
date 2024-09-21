@@ -13,50 +13,35 @@ namespace Claroline\CoreBundle\Entity\Resource;
 
 use Claroline\EvaluationBundle\Entity\AbstractUserEvaluation;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * Represents the global evaluation of a User for a ResourceNode.
  * There is only one for a user and a resource.
- *
- * @ORM\Entity
- *
- * @ORM\Table(
- *     name="claro_resource_user_evaluation",
- *     uniqueConstraints={
- *
- *         @ORM\UniqueConstraint(
- *             name="resource_user_evaluation",
- *             columns={"resource_node", "user_id"}
- *         )
- *     }
- * )
- *
- * @DoctrineAssert\UniqueEntity({"resourceNode", "user"})
  */
+#[ORM\Table(name: 'claro_resource_user_evaluation')]
+#[ORM\UniqueConstraint(name: 'resource_user_evaluation', columns: ['resource_node', 'user_id'])]
+#[ORM\Entity]
 class ResourceUserEvaluation extends AbstractUserEvaluation
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      *
-     * @ORM\JoinColumn(name="resource_node", onDelete="CASCADE")
      *
      * @var ResourceNode
      */
+    #[ORM\JoinColumn(name: 'resource_node', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     private $resourceNode;
 
     /**
-     * @ORM\Column(name="nb_attempts", type="integer")
-     *
      * @var int
      */
+    #[ORM\Column(name: 'nb_attempts', type: 'integer')]
     private $nbAttempts = 0;
 
     /**
-     * @ORM\Column(name="nb_openings", type="integer")
-     *
      * @var int
      */
+    #[ORM\Column(name: 'nb_openings', type: 'integer')]
     private $nbOpenings = 0;
 
     public function getResourceNode(): ?ResourceNode

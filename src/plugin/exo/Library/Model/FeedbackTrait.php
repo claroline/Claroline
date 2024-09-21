@@ -13,9 +13,8 @@ trait FeedbackTrait
      * Feedback content.
      *
      * @var string
-     *
-     * @ORM\Column(name="feedback", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'feedback', type: 'text', nullable: true)]
     private $feedback = '';
 
     /**

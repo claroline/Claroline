@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\OrderingQuestion;
@@ -12,39 +13,25 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
 
 /**
  * An ordering question.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_ordering_item")
  */
+#[ORM\Table(name: 'ujm_ordering_item')]
+#[ORM\Entity]
 class OrderingItem implements AnswerPartInterface
 {
+    use Id;
     use ContentTrait;
     use FeedbackTrait;
     use ScoreTrait;
     use Uuid;
 
     /**
-     * Unique identifier of the item.
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
      * @var int
      */
-    private $id;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $position;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\OrderingQuestion", inversedBy="items")
-     * @ORM\JoinColumn(name="ujm_question_ordering_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'ujm_question_ordering_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\OrderingQuestion::class, inversedBy: 'items')]
     private $question;
 
     /**
@@ -53,16 +40,6 @@ class OrderingItem implements AnswerPartInterface
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

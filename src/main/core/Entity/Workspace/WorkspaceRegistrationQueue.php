@@ -15,44 +15,36 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(
- *      name="claro_workspace_registration_queue",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="user_role_unique", columns={"role_id", "user_id"})
- *      }
- * )
- * @DoctrineAssert\UniqueEntity({"role", "user"})
- */
+#[ORM\Table(name: 'claro_workspace_registration_queue')]
+#[ORM\UniqueConstraint(name: 'user_role_unique', columns: ['role_id', 'user_id'])]
+#[ORM\Entity]
 class WorkspaceRegistrationQueue
 {
     use Id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var Role
      */
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
     private $role;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var User
      */
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var Workspace
      */
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
     private $workspace;
 
     /**

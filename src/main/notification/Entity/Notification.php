@@ -9,11 +9,9 @@ use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro_notification")
- */
+
+#[ORM\Table(name: 'claro_notification')]
+#[ORM\Entity]
 class Notification
 {
     use Id;
@@ -21,16 +19,12 @@ class Notification
     use CreatedAt;
     use Thumbnail;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $message = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     *
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private ?User $user = null;
 
     public function __construct()

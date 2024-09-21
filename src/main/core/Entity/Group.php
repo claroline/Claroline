@@ -25,11 +25,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\GroupRepository")
- *
- * @ORM\Table(name="claro_group")
- */
+
+#[ORM\Table(name: 'claro_group')]
+#[ORM\Entity(repositoryClass: \Claroline\CommunityBundle\Repository\GroupRepository::class)]
 class Group extends AbstractRoleSubject implements CrudEntityInterface
 {
     use Id;
@@ -42,16 +40,12 @@ class Group extends AbstractRoleSubject implements CrudEntityInterface
     use HasOrganizations;
     use Code;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role", fetch="EXTRA_LAZY")
-     *
-     * @ORM\JoinTable(name="claro_group_role")
-     */
+    
+    #[ORM\JoinTable(name: 'claro_group_role')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Role::class, fetch: 'EXTRA_LAZY')]
     protected Collection $roles;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", fetch="EXTRA_LAZY")
-     */
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Organization\Organization::class, fetch: 'EXTRA_LAZY')]
     private Collection $organizations;
 
     public function __construct()

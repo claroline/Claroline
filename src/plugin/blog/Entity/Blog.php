@@ -7,40 +7,34 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Table(name="icap__blog")
- * @ORM\Entity()
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'icap__blog')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Blog extends AbstractResource
 {
     /**
      * @var Post[]
-     *
-     * @ORM\OneToMany(targetEntity="Icap\BlogBundle\Entity\Post", mappedBy="blog", cascade={"all"})
-     * @ORM\OrderBy({"creationDate" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: \Icap\BlogBundle\Entity\Post::class, mappedBy: 'blog', cascade: ['all'])]
+    #[ORM\OrderBy(['creationDate' => 'ASC'])]
     protected $posts;
 
     /**
      * @var Member[]
-     *
-     * @ORM\OneToMany(targetEntity="Icap\BlogBundle\Entity\Member", mappedBy="blog", cascade={"all"})
      */
+    #[ORM\OneToMany(targetEntity: \Icap\BlogBundle\Entity\Member::class, mappedBy: 'blog', cascade: ['all'])]
     protected $members;
 
     /**
      * @var BlogOptions
-     *
-     * @ORM\OneToOne(targetEntity="BlogOptions", mappedBy="blog", cascade={"all"})
      */
+    #[ORM\OneToOne(targetEntity: \BlogOptions::class, mappedBy: 'blog', cascade: ['all'])]
     protected $options;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $infos;
 
     public function __construct()
@@ -154,9 +148,7 @@ class Blog extends AbstractResource
         return $this->infos;
     }
 
-    /**
-     * @ORM\PostPersist
-     */
+    #[ORM\PostPersist]
     public function postPersist(PostPersistEventArgs $args)
     {
         if (null === $this->getOptions()) {

@@ -9,9 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Base class used to store additional information about a ResourceAttempt.
  * For example, individual progression for steps in Path or Quiz answers.
- *
- * @ORM\MappedSuperclass
  */
+#[ORM\MappedSuperclass]
 abstract class AbstractAttemptInfo
 {
     use Id;

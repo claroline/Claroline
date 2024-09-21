@@ -15,48 +15,32 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class AbstractLog
 {
     use Id;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: 'datetime')]
     protected \DateTimeInterface $date;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     protected string $event;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: 'text')]
     protected ?string $details = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     *
-     * @ORM\JoinColumn(name="doer_id", referencedColumnName="id", onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(name: 'doer_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     protected ?User $doer = null;
 
-    /**
-     * @ORM\Column(name="doer_ip", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'doer_ip', type: 'string', nullable: true)]
     protected ?string $doerIp = null;
 
-    /**
-     * @ORM\Column(name="doer_country", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'doer_country', type: 'string', nullable: true)]
     protected ?string $doerCountry = null;
 
-    /**
-     * @ORM\Column(name="doer_city", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'doer_city', type: 'string', nullable: true)]
     protected ?string $doerCity = null;
 
     public function getDate(): ?\DateTimeInterface

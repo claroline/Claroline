@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
@@ -10,50 +11,26 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
 
 /**
  * Label.
- *
- * @ORM\Entity()
- * @ORM\Table(name="ujm_association")
  */
+#[ORM\Table(name: 'ujm_association')]
+#[ORM\Entity]
 class Association implements AnswerPartInterface
 {
+    use Id;
     use ScoreTrait;
     use FeedbackTrait;
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\MatchQuestion", inversedBy="associations")
-     * @ORM\JoinColumn(name="match_question_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'match_question_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\MatchQuestion::class, inversedBy: 'associations')]
     private $question;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Misc\Label")
-     * @ORM\JoinColumn(name="label_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'label_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Misc\Label::class)]
     private $label;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Misc\Proposal")
-     * @ORM\JoinColumn(name="proposal_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'proposal_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Misc\Proposal::class)]
     private $proposal;
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Get MatchQuestion.

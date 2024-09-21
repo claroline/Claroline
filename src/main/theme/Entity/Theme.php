@@ -21,11 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Theme.
- *
- * @ORM\Entity(repositoryClass="Claroline\ThemeBundle\Repository\ThemeRepository")
- *
- * @ORM\Table(name="claro_theme")
  */
+#[ORM\Table(name: 'claro_theme')]
+#[ORM\Entity(repositoryClass: \Claroline\ThemeBundle\Repository\ThemeRepository::class)]
 class Theme
 {
     use Id;
@@ -39,24 +37,17 @@ class Theme
 
     /**
      * Is it the default platform theme ?
-     *
-     * @ORM\Column(name="is_default", type="boolean")
      */
+    #[ORM\Column(name: 'is_default', type: 'boolean')]
     private bool $default = false;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $logo = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $primaryColor = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $secondaryColor = null;
 
     public function __construct()

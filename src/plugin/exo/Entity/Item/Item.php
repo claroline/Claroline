@@ -9,11 +9,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 
-/**
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ItemRepository")
- * @ORM\Table(name="ujm_question")
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Table(name: 'ujm_question')]
+#[ORM\Entity(repositoryClass: \UJM\ExoBundle\Repository\ItemRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Item
 {
     use Id;
@@ -22,98 +20,92 @@ class Item
     /**
      * The mime type of the Item type.
      *
-     * @ORM\Column("mime_type", type="string")
      *
      * @var string
      */
+    #[ORM\Column('mime_type', type: 'string')]
     private $mimeType;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $title;
 
     /**
-     * @ORM\Column(name="invite", type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'invite', type: 'text', nullable: true)]
     private $content;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $feedback;
 
     /**
      * The creation date of the question.
      *
-     * @ORM\Column(name="date_create", type="datetime")
      *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'date_create', type: 'datetime')]
     private $dateCreate;
 
     /**
      * The last update date of the question.
      *
-     * @ORM\Column(name="date_modify", type="datetime", nullable=true)
      *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'date_modify', type: 'datetime', nullable: true)]
     private $dateModify;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
     /**
      * The user who have created the question.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="SET NULL")
      *
      * @var User
      */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private $creator;
 
     /**
-     * @ORM\OneToMany(targetEntity="Hint", mappedBy="question", cascade={"remove", "persist"}, orphanRemoval=true)
-     *
      * @var ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \Hint::class, mappedBy: 'question', cascade: ['remove', 'persist'], orphanRemoval: true)]
     private $hints;
 
     /**
-     * @ORM\OneToMany(targetEntity="ItemObject", mappedBy="question", cascade={"remove", "persist"}, orphanRemoval=true)
-     * @ORM\OrderBy({"order"="ASC"})
      *
      * @var ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \ItemObject::class, mappedBy: 'question', cascade: ['remove', 'persist'], orphanRemoval: true)]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private $objects;
 
     /**
      * A list of additional Resources that can help to answer the question.
      *
-     * @ORM\OneToMany(targetEntity="ItemResource", mappedBy="question", cascade={"remove", "persist"}, orphanRemoval=true)
-     * @ORM\OrderBy({"order"="ASC"})
      *
      * @var ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \ItemResource::class, mappedBy: 'question', cascade: ['remove', 'persist'], orphanRemoval: true)]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private $resources;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $scoreRule;
 
     /**
@@ -127,27 +119,26 @@ class Item
     /**
      * Allows other user to edit a question.
      *
-     * @ORM\Column(name="protect_update", type="boolean")
      *
      * @var bool
      */
+    #[ORM\Column(name: 'protect_update', type: 'boolean')]
     private $protectUpdate = false;
 
     /**
      * The is answer mandatory to continue the quiz.
      *
-     * @ORM\Column(name="mandatory", type="boolean")
      *
      * @var bool
      * @deprecated. Moved on StepQuestion.
      */
+    #[ORM\Column(name: 'mandatory', type: 'boolean')]
     private $mandatory = false;
 
     /**
-     * @ORM\Column(name="expected_answers", type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(name: 'expected_answers', type: 'boolean')]
     private $expectedAnswers = true;
 
     /**
@@ -313,9 +304,7 @@ class Item
         return $this->feedback ?: '';
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function updateDateCreate()
     {
         if (empty($this->dateCreate)) {
@@ -331,9 +320,7 @@ class Item
         return $this->dateCreate;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function updateDateModify()
     {
         $this->dateModify = new \DateTime();

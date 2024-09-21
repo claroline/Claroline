@@ -9,10 +9,9 @@ use UJM\ExoBundle\Entity\Misc\Selection;
 
 /**
  * A Selection question.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_interaction_selection")
  */
+#[ORM\Table(name: 'ujm_interaction_selection')]
+#[ORM\Entity]
 class SelectionQuestion extends AbstractItem
 {
     const MODE_HIGHLIGHT = 'highlight';
@@ -22,60 +21,48 @@ class SelectionQuestion extends AbstractItem
     /**
      * The HTML text.
      *
-     * @ORM\Column(name="text", type="text")
      *
      * @var string
      */
+    #[ORM\Column(name: 'text', type: 'text')]
     private $text;
 
     /**
      * The selection question mode.
      *
-     * @ORM\Column(type="string", nullable=false)
      *
      * @var string
      */
+    #[ORM\Column(type: 'string', nullable: false)]
     private $mode = self::MODE_SELECT;
     /**
      * The max amount of tries for find mode.
      *
-     * @ORM\Column(type="integer")
      *
      * @var int
      */
+    #[ORM\Column(type: 'integer')]
     private $tries = 0;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
-     *
      * @var float
      */
+    #[ORM\Column(type: 'float', nullable: true)]
     private $penalty = null;
 
     /**
      * The list of selections present in the text.
      *
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\Selection",
-     *     mappedBy="interactionSelection",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
      *
      * @var Selection[]|ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Selection::class, mappedBy: 'interactionSelection', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $selections;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\Color",
-     *     mappedBy="interactionSelection",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
-     *
      * @var Color[]|ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Color::class, mappedBy: 'interactionSelection', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $colors;
 
     /**

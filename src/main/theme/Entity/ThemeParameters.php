@@ -15,19 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait ThemeParameters
 {
-    /**
-     * @ORM\Column(name="theme_mode", nullable=true)
-     */
+    #[ORM\Column(name: 'theme_mode', nullable: true)]
     private ?string $themeMode = null; // auto (null) | light | dark
-
-    /**
-     * @ORM\Column(name="font_size", nullable=true)
-     */
+    #[ORM\Column(name: 'font_size', nullable: true)]
     private ?string $fontSize = null; // auto (null) | sm (14px) | md (16px) | lg (18px)
-
-    /**
-     * @ORM\Column(name="font_weight", nullable=true)
-     */
+    #[ORM\Column(name: 'font_weight', nullable: true)]
     private ?string $fontWeight = null; // light (300) | normal (400) | medium (500)
 
     public function getThemeMode(): ?string

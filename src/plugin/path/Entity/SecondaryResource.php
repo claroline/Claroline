@@ -9,25 +9,20 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Secondary resources.
- *
- * @ORM\Table("innova_step_secondary_resource")
- * @ORM\Entity
  */
+#[ORM\Table('innova_step_secondary_resource')]
+#[ORM\Entity]
 class SecondaryResource
 {
     use Id;
     use Order;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step", inversedBy="secondaryResources")
-     * @ORM\JoinColumn(name="step_id", onDelete="CASCADE", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'step_id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Innova\PathBundle\Entity\Step::class, inversedBy: 'secondaryResources')]
     private ?Step $step = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(name="resource_id", onDelete="CASCADE", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'resource_id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     private ?ResourceNode $resource = null;
 
     public function getStep(): Step

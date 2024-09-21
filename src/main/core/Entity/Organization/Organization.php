@@ -25,12 +25,9 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid as BaseUuid;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro__organization")
- */
+#[ORM\Table(name: 'claro__organization')]
+#[ORM\Entity]
 class Organization implements CrudEntityInterface
 {
     use Code;
@@ -42,16 +39,10 @@ class Organization implements CrudEntityInterface
     use Poster;
     use Thumbnail;
 
-    /**
-     * @ORM\Column(nullable=true, type="string")
-     *
-     * @Assert\Email()
-     */
+    #[ORM\Column(nullable: true, type: 'string')]
     private ?string $email = null;
 
-    /**
-     * @ORM\Column(name="is_default", type="boolean")
-     */
+    #[ORM\Column(name: 'is_default', type: 'boolean')]
     private bool $default = false;
 
     public function __construct()

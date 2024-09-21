@@ -274,7 +274,7 @@ class DropzoneController
         $response = new StreamedResponse();
         $path = $this->filesDir.DIRECTORY_SEPARATOR.$data['url'];
         $response->setCallBack(
-            function () use ($path) {
+            function () use ($path): void {
                 readfile($path);
             }
         );

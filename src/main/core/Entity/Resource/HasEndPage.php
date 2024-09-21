@@ -9,59 +9,57 @@ trait HasEndPage
     /**
      * Show an end page when the user has finished the quiz.
      *
-     * @ORM\Column(name="show_end_page", type="boolean")
      *
      * @var bool
      */
+    #[ORM\Column(name: 'show_end_page', type: 'boolean')]
     private $showEndPage = false;
 
     /**
      * A message to display at the end of the quiz.
      *
-     * @ORM\Column(name="end_message", type="text", nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(name: 'end_message', type: 'text', nullable: true)]
     private $endMessage = '';
 
     /**
      * Show navigation buttons on the end page.
      *
-     * @ORM\Column(name="end_navigation", type="boolean")
      *
      * @var bool
      */
+    #[ORM\Column(name: 'end_navigation', type: 'boolean')]
     private $endNavigation = false;
 
     /**
-     * @ORM\Column(name="end_back_type", type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'end_back_type', type: 'text', nullable: true)]
     private $endBackType;
 
     /**
-     * @ORM\Column(name="end_back_label", type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'end_back_label', type: 'text', nullable: true)]
     private $endBackLabel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(name="end_back_target_id", nullable=true, onDelete="SET NULL")
      *
      * @var ResourceNode
      */
+    #[ORM\JoinColumn(name: 'end_back_target_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     private $endBackTarget;
 
     /**
      * Show buttons on the end page to download WS certificates (participation and success).
      *
-     * @ORM\Column(name="show_workspace_certificates", type="boolean")
      *
      * @var bool
      */
+    #[ORM\Column(name: 'show_workspace_certificates', type: 'boolean')]
     private $showWorkspaceCertificates = false;
 
     public function getShowEndPage(): bool

@@ -6,9 +6,7 @@ use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\MappedSuperclass()
- */
+#[ORM\MappedSuperclass]
 abstract class AbstractContext
 {
     use Poster;

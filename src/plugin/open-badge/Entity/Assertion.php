@@ -22,44 +22,35 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Represents the obtaining of a BadgeClass by a User.
  *
- * @ORM\Entity(repositoryClass="Claroline\OpenBadgeBundle\Repository\AssertionRepository")
  *
- * @ORM\Table(name="claro__open_badge_assertion")
  */
+#[ORM\Table(name: 'claro__open_badge_assertion')]
+#[ORM\Entity(repositoryClass: \Claroline\OpenBadgeBundle\Repository\AssertionRepository::class)]
 class Assertion
 {
     use Id;
     use Uuid;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     *
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private ?User $recipient = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\BadgeClass")
-     *
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\OpenBadgeBundle\Entity\BadgeClass::class)]
     private ?BadgeClass $badge = null;
 
     /**
-     * @ORM\Column(type="datetime")
-     *
      * @Gedmo\Timestampable(on="create")
      */
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $issuedOn = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Claroline\OpenBadgeBundle\Entity\Evidence", mappedBy="assertion")
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\OpenBadgeBundle\Entity\Evidence::class, mappedBy: 'assertion')]
     private Collection $evidences;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private bool $revoked = false;
 
     public function __construct()

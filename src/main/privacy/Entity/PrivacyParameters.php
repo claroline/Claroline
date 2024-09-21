@@ -6,75 +6,49 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro_privacy_parameters")
- */
+
+#[ORM\Table(name: 'claro_privacy_parameters')]
+#[ORM\Entity]
 class PrivacyParameters
 {
     use Id;
 
-    /**
-     * @ORM\Column(name="country_storage", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'country_storage', type: 'string', nullable: true)]
     private ?string $countryStorage = null;
 
-    /**
-     * @ORM\Column(name="dpo_name", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'dpo_name', type: 'string', nullable: true)]
     private ?string $dpoName = null;
 
-    /**
-     * @ORM\Column(name="dpo_email", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'dpo_email', type: 'string', nullable: true)]
     private ?string $dpoEmail = null;
 
-    /**
-     * @ORM\Column(name="dpo_phone", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'dpo_phone', type: 'string', nullable: true)]
     private ?string $dpoPhone = null;
 
-    /**
-     * @ORM\Column(name="dpo_address_street1", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'dpo_address_street1', type: 'string', nullable: true)]
     protected ?string $dpoAddressStreet1 = null;
 
-    /**
-     * @ORM\Column(name="dpo_address_street2", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'dpo_address_street2', type: 'string', nullable: true)]
     protected ?string $dpoAddressStreet2 = null;
 
-    /**
-     * @ORM\Column(name="dpo_address_postal_code", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'dpo_address_postal_code', type: 'string', nullable: true)]
     protected ?string $dpoAddressPostalCode = null;
 
-    /**
-     * @ORM\Column(name="dpo_address_city", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'dpo_address_city', type: 'string', nullable: true)]
     protected ?string $dpoAddressCity = null;
 
-    /**
-     * @ORM\Column(name="dpo_address_state", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'dpo_address_state', type: 'string', nullable: true)]
     protected ?string $dpoAddressState = null;
 
-    /**
-     * @ORM\Column(name="dpo_address_country", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'dpo_address_country', type: 'string', nullable: true)]
     protected ?string $dpoAddressCountry = null;
 
-    /**
-     * @ORM\Column(name="tos_enabled", type="boolean")
-     */
+    #[ORM\Column(name: 'tos_enabled', type: 'boolean')]
     private bool $tosEnabled = false;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
-     *
-     * @ORM\JoinColumn(name="template_id", nullable=true, onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(name: 'template_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\Template::class)]
     private ?Template $tosTemplate = null;
 
     public function getCountryStorage(): ?string

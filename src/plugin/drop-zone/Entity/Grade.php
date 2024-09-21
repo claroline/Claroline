@@ -11,79 +11,43 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(
- *     name="claro_dropzonebundle_grade",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="unique_grade_for_criterion_and_correction", columns={"criterion_id", "correction_id"})
- *     }
- * )
- */
+#[ORM\Table(name: 'claro_dropzonebundle_grade')]
+#[ORM\UniqueConstraint(name: 'unique_grade_for_criterion_and_correction', columns: ['criterion_id', 'correction_id'])]
+#[ORM\Entity]
 class Grade
 {
+    use Id;
     use Uuid;
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
      * @var int
      */
-    protected $id;
-
-    /**
-     * @ORM\Column(name="grade_value", type="integer", nullable=false)
-     *
-     * @var int
-     */
+    #[ORM\Column(name: 'grade_value', type: 'integer', nullable: false)]
     protected $value = 0;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\DropZoneBundle\Entity\Correction",
-     *     inversedBy="grades"
-     * )
-     * @ORM\JoinColumn(name="correction_id", nullable=false, onDelete="CASCADE")
      *
      * @var Correction
      */
+    #[ORM\JoinColumn(name: 'correction_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Correction::class, inversedBy: 'grades')]
     protected $correction;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\DropZoneBundle\Entity\Criterion")
-     * @ORM\JoinColumn(name="criterion_id", nullable=false, onDelete="CASCADE")
      *
      * @var Criterion
      */
+    #[ORM\JoinColumn(name: 'criterion_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Criterion::class)]
     protected $criterion;
 
-    /**
-     * Grade constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**

@@ -5,51 +5,39 @@ namespace UJM\ExoBundle\Entity\Item;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="ujm_share")
- */
+#[ORM\Table(name: 'ujm_share')]
+#[ORM\Entity]
 class Shared
 {
     /**
      * The user with whom the question is shared.
      *
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(
-     *     name="user_id",
-     *     referencedColumnName="id",
-     *     nullable=false,
-     *     onDelete="CASCADE"
-     * )
      *
      * @var User
      */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private $user;
 
     /**
      * The shared question.
      *
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Item\Item")
-     * @ORM\JoinColumn(
-     *     name="question_id",
-     *     referencedColumnName="id",
-     *     nullable=false,
-     *     onDelete="CASCADE"
-     * )
      *
      * @var Item
      */
+    #[ORM\JoinColumn(name: 'question_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Item\Item::class)]
     private $question;
 
     /**
      * Gives the user the ability to edit and delete the question.
      *
-     * @ORM\Column(type="boolean")
      *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     private $adminRights = false;
 
     /**

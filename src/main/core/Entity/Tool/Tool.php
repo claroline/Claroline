@@ -16,14 +16,10 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(
- *      name="claro_tools",
- *      uniqueConstraints={@ORM\UniqueConstraint(name="tool_plugin_unique",columns={"name", "plugin_id"})}
- * )
- */
+
+#[ORM\Table(name: 'claro_tools')]
+#[ORM\UniqueConstraint(name: 'tool_plugin_unique', columns: ['name', 'plugin_id'])]
+#[ORM\Entity]
 class Tool
 {
     use Id;
@@ -32,16 +28,14 @@ class Tool
 
     /**
      * The name of the tool.
-     *
-     * @ORM\Column()
      */
+    #[ORM\Column]
     private string $name;
 
     /**
      * The icon of the tool (For now, only the name of a FontAwesome icon is allowed).
-     *
-     * @ORM\Column()
      */
+    #[ORM\Column]
     private ?string $class = null;
 
     public function __construct()

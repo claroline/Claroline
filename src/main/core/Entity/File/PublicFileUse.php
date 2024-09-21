@@ -11,55 +11,28 @@
 
 namespace Claroline\CoreBundle\Entity\File;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro_public_file_use")
- */
+
+#[ORM\Table(name: 'claro_public_file_use')]
+#[ORM\Entity]
 class PublicFileUse
 {
-    /**
-     * @ORM\Id
-     *
-     * @ORM\Column(type="integer")
-     *
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\File\PublicFile")
-     *
-     * @ORM\JoinColumn(name="public_file_id", onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'public_file_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\File\PublicFile::class)]
     protected $publicFile;
 
-    /**
-     * @ORM\Column(name="object_uuid")
-     */
+    #[ORM\Column(name: 'object_uuid')]
     protected $objectUuid;
 
-    /**
-     * @ORM\Column(name="object_class")
-     */
+    #[ORM\Column(name: 'object_class')]
     protected $objectClass;
 
-    /**
-     * @ORM\Column(name="object_name", nullable=true)
-     */
+    #[ORM\Column(name: 'object_name', nullable: true)]
     protected $objectName;
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
 
     public function getPublicFile()
     {

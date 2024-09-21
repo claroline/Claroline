@@ -177,7 +177,7 @@ class ClacoFormController
 
         $fileName = TextNormalizer::toKey($entry->getTitle());
 
-        return new StreamedResponse(function () use ($entry, $user) {
+        return new StreamedResponse(function () use ($entry, $user): void {
             echo $this->exportManager->generatePdfForEntry($entry, $user);
         }, 200, [
             'Content-Type' => 'application/pdf',
@@ -361,7 +361,7 @@ class ClacoFormController
         $path = $this->filesDir.DIRECTORY_SEPARATOR.preg_replace('#^\.\.\/files\/#', '', $data['url']); // TODO : files part should not be stored in the DB
 
         $response->setCallBack(
-            function () use ($path) {
+            function () use ($path): void {
                 readfile($path);
             }
         );

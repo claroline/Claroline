@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
@@ -10,50 +11,39 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
 
 /**
  * CellChoice.
- *
- * @ORM\Entity()
- * @ORM\Table(name="ujm_cell_choice")
  */
+#[ORM\Table(name: 'ujm_cell_choice')]
+#[ORM\Entity]
 class CellChoice implements AnswerPartInterface
 {
+    use Id;
     use FeedbackTrait;
     use ScoreTrait;
     use Uuid;
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="response", type="string", length=255)
      */
+    #[ORM\Column(name: 'response', type: 'string', length: 255)]
     private $text;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="caseSensitive", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'caseSensitive', type: 'boolean', nullable: true)]
     private $caseSensitive;
 
     /**
      * @var Cell
-     *
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Misc\Cell", inversedBy="choices")
-     * @ORM\JoinColumn(name="cell_id", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'cell_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Misc\Cell::class, inversedBy: 'choices')]
     private $cell;
 
     /**
      * @var bool
-     * @ORM\Column(name="expected", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'expected', type: 'boolean', nullable: true)]
     private $expected;
 
     /**
@@ -62,16 +52,6 @@ class CellChoice implements AnswerPartInterface
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

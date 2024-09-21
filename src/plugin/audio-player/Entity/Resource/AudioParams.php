@@ -2,54 +2,37 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_audio_params")
- */
+#[ORM\Table(name: 'claro_audio_params')]
+#[ORM\Entity]
 class AudioParams
 {
+    use Id;
     use Uuid;
     use Description;
+
     const MANAGER_TYPE = 'manager';
     const USER_TYPE = 'user';
     const NO_TYPE = 'none';
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(name="node_id", nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'node_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     protected $resourceNode;
 
-    /**
-     * @ORM\Column(name="sections_type")
-     */
+    #[ORM\Column(name: 'sections_type')]
     private $sectionsType = self::MANAGER_TYPE;
 
-    /**
-     * @ORM\Column(name="rate_control", type="boolean")
-     */
+    #[ORM\Column(name: 'rate_control', type: 'boolean')]
     private $rateControl = true;
 
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    public function getId()
-    {
-        return $this->id;
     }
 
     public function getResourceNode()

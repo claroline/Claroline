@@ -20,10 +20,8 @@ use Claroline\AppBundle\Entity\Meta\Order;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_panel_facet")
- */
+#[ORM\Table(name: 'claro_panel_facet')]
+#[ORM\Entity]
 class PanelFacet
 {
     use Id;
@@ -33,34 +31,25 @@ class PanelFacet
     use Icon;
     use Order;
 
-    /**
-     * @ORM\Column(name="help", nullable=true)
-     */
+    #[ORM\Column(name: 'help', nullable: true)]
     private $help;
 
     /**
-     * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Facet\Facet",
-     *      inversedBy="panelFacets"
-     * )
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      *
      * @var Facet
      *
      * @todo : to remove. Only used in profile
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Facet\Facet::class, inversedBy: 'panelFacets')]
     private $facet;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacet",
-     *     mappedBy="panelFacet",
-     *     cascade={"all"}
-     * )
-     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacet::class, mappedBy: 'panelFacet', cascade: ['all'])]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private $fieldsFacet;
 
     public function __construct()

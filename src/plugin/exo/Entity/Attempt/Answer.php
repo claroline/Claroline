@@ -2,107 +2,84 @@
 
 namespace UJM\ExoBundle\Entity\Attempt;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Item\Item;
 
 /**
  * An answer represents a user answer to a question.
- *
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\AnswerRepository")
- * @ORM\Table(name="ujm_response")
  */
+#[ORM\Table(name: 'ujm_response')]
+#[ORM\Entity(repositoryClass: \UJM\ExoBundle\Repository\AnswerRepository::class)]
 class Answer
 {
+    use Id;
     use Uuid;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
      * @var string
-     *
-     * @ORM\Column
      */
+    #[ORM\Column]
     private $ip;
 
     /**
      * The score obtained for this question.
      *
      * @var float
-     *
-     * @ORM\Column(name="mark", type="float", nullable=true)
      */
+    #[ORM\Column(name: 'mark', type: 'float', nullable: true)]
     private $score;
 
     /**
      * A custom feedback sets by a creator.
      *
      * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $feedback = '';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="nb_tries", type="integer")
      */
+    #[ORM\Column(name: 'nb_tries', type: 'integer')]
     private $tries = 0;
 
     /**
      * The answer data formatted in string for DB storage.
      *
      * @var string
-     *
-     * @ORM\Column(name="response", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'response', type: 'text', nullable: true)]
     private $data;
 
     /**
      * The list of hints used to answer the question.
      *
-     * @ORM\Column(name="used_hints", type="simple_array", nullable=true)
      *
      * @var array
      */
+    #[ORM\Column(name: 'used_hints', type: 'simple_array', nullable: true)]
     private $usedHints = [];
 
     /**
      * @var Paper
-     *
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Attempt\Paper", inversedBy="answers")
-     * @ORM\JoinColumn(onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Attempt\Paper::class, inversedBy: 'answers')]
     private $paper;
 
     /**
      * The id of the question that is answered.
      *
      * @var Item
-     *
-     * @ORM\Column(name="question_id", type="string", length=36)
      */
+    #[ORM\Column(name: 'question_id', type: 'string', length: 36)]
     private $questionId;
 
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

@@ -11,9 +11,8 @@ trait PenaltyTrait
 {
     /**
      * @var float
-     *
-     * @ORM\Column(name="penalty", type="float")
      */
+    #[ORM\Column(name: 'penalty', type: 'float')]
     private $penalty = 0;
 
     /**

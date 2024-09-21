@@ -14,33 +14,17 @@ namespace Claroline\CoreBundle\Entity\Workspace;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\EvaluationBundle\Entity\AbstractUserEvaluation;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(
- *     name="claro_workspace_evaluation",
- *     uniqueConstraints={
- *
- *         @ORM\UniqueConstraint(
- *             name="workspace_user_evaluation",
- *             columns={"workspace_id", "user_id"}
- *         )
- *     }
- * )
- *
- * @DoctrineAssert\UniqueEntity({"workspace", "user"})
- */
+#[ORM\Table(name: 'claro_workspace_evaluation')]
+#[ORM\UniqueConstraint(name: 'workspace_user_evaluation', columns: ['workspace_id', 'user_id'])]
+#[ORM\Entity]
 class Evaluation extends AbstractUserEvaluation
 {
     use Uuid;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     *
-     * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(name: 'workspace_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
     private ?Workspace $workspace = null;
 
     public function __construct()

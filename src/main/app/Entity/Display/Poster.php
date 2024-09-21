@@ -6,9 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait Poster
 {
-    /**
-     * @ORM\Column(name="poster", nullable=true)
-     */
+    #[ORM\Column(name: 'poster', nullable: true)]
     protected ?string $poster = null;
 
     public function getPoster(): ?string

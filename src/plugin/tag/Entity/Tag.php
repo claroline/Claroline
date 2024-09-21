@@ -18,12 +18,9 @@ use Claroline\AppBundle\Entity\Meta\Description;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_tagbundle_tag")
- */
+#[ORM\Table(name: 'claro_tagbundle_tag')]
+#[ORM\Entity]
 class Tag
 {
     use Id;
@@ -34,17 +31,14 @@ class Tag
 
     /**
      * The name of the tag.
-     *
-     * @ORM\Column(name="tag_name", unique=true)
-     * @Assert\NotBlank()
      */
+    #[ORM\Column(name: 'tag_name', unique: true)]
     private ?string $name;
 
     /**
      * The list of objects with the tag.
-     *
-     * @ORM\OneToMany(targetEntity="Claroline\TagBundle\Entity\TaggedObject", mappedBy="tag")
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\TagBundle\Entity\TaggedObject::class, mappedBy: 'tag')]
     private Collection $taggedObjects;
 
     public function __construct()

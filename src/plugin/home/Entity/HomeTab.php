@@ -27,11 +27,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro_home_tab")
- */
+
+#[ORM\Table(name: 'claro_home_tab')]
+#[ORM\Entity]
 class HomeTab
 {
     use Id;
@@ -50,49 +48,39 @@ class HomeTab
 
     /**
      * The type of the tab (e.g. Widgets, Url).
-     *
-     * @ORM\Column(nullable=false)
      */
+    #[ORM\Column(nullable: false)]
     private string $type;
 
     /**
      * The class that holds the tab custom configuration if any.
-     *
-     * @ORM\Column(nullable=true)
      */
+    #[ORM\Column(nullable: true)]
     private ?string $class = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $name = null;
 
-    /**
-     * @ORM\Column(nullable=false, type="text")
-     */
+    #[ORM\Column(nullable: false, type: 'text')]
     private string $longTitle = '';
 
     /**
      * Parent tab.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\HomeBundle\Entity\HomeTab", inversedBy="children")
      *
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\HomeBundle\Entity\HomeTab::class, inversedBy: 'children')]
     private ?HomeTab $parent = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Claroline\HomeBundle\Entity\HomeTab", mappedBy="parent", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"order" = "ASC"})
-     */
+    
+    #[ORM\OneToMany(targetEntity: \Claroline\HomeBundle\Entity\HomeTab::class, mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $children;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
-     *
-     * @ORM\JoinTable(name="claro_home_tab_roles")
-     */
+    
+    #[ORM\JoinTable(name: 'claro_home_tab_roles')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
     private Collection $roles;
 
     public function __construct()

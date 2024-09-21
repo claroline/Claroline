@@ -17,30 +17,19 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(
- *     name="claro_cursusbundle_course_session_user",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="training_session_unique_user", columns={"session_id", "user_id"})
- *     }
- * )
- */
+#[ORM\Table(name: 'claro_cursusbundle_course_session_user')]
+#[ORM\UniqueConstraint(name: 'training_session_unique_user', columns: ['session_id', 'user_id'])]
+#[ORM\Entity]
 class SessionUser extends AbstractUserRegistration
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Session")
-     * @ORM\JoinColumn(name="session_id", nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'session_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CursusBundle\Entity\Session::class)]
     private ?Session $session = null;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue", cascade={"persist"}, orphanRemoval=true)
-     * @ORM\JoinTable(name="claro_cursusbundle_session_user_values",
-     *      joinColumns={@ORM\JoinColumn(name="registration_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="value_id", referencedColumnName="id", unique=true, onDelete="CASCADE")}
-     * )
-     */
+    #[ORM\JoinTable(name: 'claro_cursusbundle_session_user_values')]
+    #[ORM\JoinColumn(name: 'registration_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'value_id', referencedColumnName: 'id', unique: true, onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacetValue::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $facetValues;
 
     public function __construct()

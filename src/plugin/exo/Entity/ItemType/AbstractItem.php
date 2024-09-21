@@ -2,38 +2,21 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Item\Item;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class AbstractItem
 {
+    use Id;
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    protected $id;
-
-    /**
-     * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Item\Item")
-     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Item
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: \UJM\ExoBundle\Entity\Item\Item::class)]
     protected $question;
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     final public function setQuestion(Item $question)
     {

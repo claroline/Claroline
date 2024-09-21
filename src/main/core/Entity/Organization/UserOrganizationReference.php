@@ -15,53 +15,34 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(
- *     name="user_organization",
- *     uniqueConstraints={
- *
- *          @ORM\UniqueConstraint(name="organization_unique_user", columns={"user_id", "organization_id"})
- *     }
- * )
- */
+
+#[ORM\Table(name: 'user_organization')]
+#[ORM\UniqueConstraint(name: 'organization_unique_user', columns: ['user_id', 'organization_id'])]
+#[ORM\Entity]
 class UserOrganizationReference
 {
     use Id;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     inversedBy="userOrganizationReferences",
-     *     cascade={"persist"}
-     * )
-     *
-     * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(name: 'user_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, inversedBy: 'userOrganizationReferences', cascade: ['persist'])]
     private User $user;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
-     * )
-     *
-     * @ORM\JoinColumn(name="organization_id", nullable=false, onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(name: 'organization_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Organization\Organization::class)]
     private ?Organization $organization = null;
 
     /**
      * The organization is the main organization of the user.
-     *
-     * @ORM\Column(name="is_main", type="boolean")
      */
+    #[ORM\Column(name: 'is_main', type: 'boolean')]
     private bool $main = false;
 
     /**
      * The user is a manager of the organization.
-     *
-     * @ORM\Column(name="is_manager", type="boolean")
      */
+    #[ORM\Column(name: 'is_manager', type: 'boolean')]
     private bool $manager = false;
 
     public function getUser(): User

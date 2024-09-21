@@ -2,18 +2,17 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Table(name="icap__blog_options")
- * @ORM\Entity()
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'icap__blog_options')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class BlogOptions
 {
+    use Id;
     use Uuid;
 
     const BANNER_NO_REPEAT = 'no-repeat';
@@ -34,104 +33,91 @@ class BlogOptions
     }
 
     /**
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
      * @var Blog
-     *
-     * @ORM\OneToOne(targetEntity="Blog", inversedBy="options", cascade={"persist"})
      */
+    #[ORM\OneToOne(targetEntity: \Blog::class, inversedBy: 'options', cascade: ['persist'])]
     protected $blog;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", name="authorize_comment")
      */
+    #[ORM\Column(type: 'boolean', name: 'authorize_comment')]
     protected $authorizeComment = false;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", name="authorize_anonymous_comment")
      */
+    #[ORM\Column(type: 'boolean', name: 'authorize_anonymous_comment')]
     protected $authorizeAnonymousComment = false;
 
     /**
      * @var int
-     * @ORM\Column(type="smallint", name="post_per_page")
      */
+    #[ORM\Column(type: 'smallint', name: 'post_per_page')]
     protected $postPerPage = 10;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", name="auto_publish_post")
      */
+    #[ORM\Column(type: 'boolean', name: 'auto_publish_post')]
     protected $autoPublishPost = false;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", name="auto_publish_comment")
      */
+    #[ORM\Column(type: 'boolean', name: 'auto_publish_comment')]
     protected $autoPublishComment = false;
 
     /**
      * @var int
-     * @ORM\Column(type="smallint", name="comment_moderation_mode")
      */
+    #[ORM\Column(type: 'smallint', name: 'comment_moderation_mode')]
     protected $commentModerationMode = self::COMMENT_MODERATION_NONE;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", name="display_full_posts")
      */
+    #[ORM\Column(type: 'boolean', name: 'display_full_posts')]
     protected $displayFullPosts = false;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", name="display_post_view_counter", options={"default": 1})
      */
+    #[ORM\Column(type: 'boolean', name: 'display_post_view_counter', options: ['default' => 1])]
     protected $displayPostViewCounter = true;
 
     /**
      * @var string
-     * @ORM\Column(type="string", name="banner_background_color")
      */
+    #[ORM\Column(type: 'string', name: 'banner_background_color')]
     protected $bannerBackgroundColor = '#FFFFFF';
 
     /**
      * @var int
-     * @ORM\Column(type="smallint", name="banner_height")
-     * @Assert\GreaterThanOrEqual(value = 100)
      */
+    #[ORM\Column(type: 'smallint', name: 'banner_height')]
     protected $bannerHeight = 100;
 
     /**
      * @var string
-     * @ORM\Column(type="string", name="banner_background_image", nullable=true)
      */
+    #[ORM\Column(type: 'string', name: 'banner_background_image', nullable: true)]
     protected $bannerBackgroundImage;
 
     /**
      * @var string
-     * @ORM\Column(type="string", name="banner_background_image_position")
      */
+    #[ORM\Column(type: 'string', name: 'banner_background_image_position')]
     protected $bannerBackgroundImagePosition = 'left top';
 
     /**
      * @var string
-     * @ORM\Column(type="string", name="banner_background_image_repeat")
      */
+    #[ORM\Column(type: 'string', name: 'banner_background_image_repeat')]
     protected $bannerBackgroundImageRepeat = self::BANNER_NO_REPEAT;
 
     /**
      * @var UploadedFile
-     *
-     * @Assert\Image()
      */
     protected $file;
 
@@ -144,37 +130,29 @@ class BlogOptions
      * @var int
      *
      * Option for tag cloud rendering (Classic:0 (or null), 3D sphere:1, classic with number of article per tag: 2:1)
-     * @ORM\Column(type="smallint", name="tag_cloud", nullable=true)
      */
+    #[ORM\Column(type: 'smallint', name: 'tag_cloud', nullable: true)]
     protected $tagCloud = null;
 
     /**
      * @var string
      *
      * Option to display the widget bar on the right
-     * @ORM\Column(type="string", name="display_list_widget_blog_right", nullable=false, options={"default" = "01112131415161"})
      */
+    #[ORM\Column(type: 'string', name: 'display_list_widget_blog_right', nullable: false, options: ['default' => '01112131415161'])]
     protected $listWidgetBlog = '01112131415161';
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", name="tag_top_mode")
      */
+    #[ORM\Column(type: 'boolean', name: 'tag_top_mode')]
     protected $tagTopMode = false;
 
     /**
      * @var int
-     * @ORM\Column(type="smallint", name="max_tag", nullable=false, options={"default" = 50})
      */
+    #[ORM\Column(type: 'smallint', name: 'max_tag', nullable: false, options: ['default' => 50])]
     protected $maxTag = 50;
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * @return BlogOptions

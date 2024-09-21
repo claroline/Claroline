@@ -17,15 +17,9 @@ use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(
- *     name="claro_template_type",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="template_unique_type", columns={"entity_name"})
- *     }
- * )
- */
+#[ORM\Table(name: 'claro_template_type')]
+#[ORM\UniqueConstraint(name: 'template_unique_type', columns: ['entity_name'])]
+#[ORM\Entity]
 class TemplateType
 {
     use Id;
@@ -33,32 +27,29 @@ class TemplateType
     use Uuid;
 
     /**
-     * @ORM\Column(name="entity_type", type="string")
-     *
      * @var string
      */
+    #[ORM\Column(name: 'entity_type', type: 'string')]
     private $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Plugin
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Plugin::class)]
     private $plugin;
 
     /**
-     * @ORM\Column(type="json", nullable=true)
-     *
      * @var array
      */
+    #[ORM\Column(type: 'json', nullable: true)]
     private $placeholders = [];
 
     /**
-     * @ORM\Column(name="default_template", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'default_template', nullable: true)]
     private $defaultTemplate;
 
     public function __construct()

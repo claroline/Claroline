@@ -11,17 +11,17 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\DropZoneBundle\Repository\DocumentRepository")
- * @ORM\Table(name="claro_dropzonebundle_document")
- */
+#[ORM\Table(name: 'claro_dropzonebundle_document')]
+#[ORM\Entity(repositoryClass: \Claroline\DropZoneBundle\Repository\DocumentRepository::class)]
 class Document
 {
+    use Id;
     use Uuid;
 
     const DOCUMENT_TYPE_FILE = 'file';
@@ -30,109 +30,69 @@ class Document
     const DOCUMENT_TYPE_RESOURCE = 'resource';
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    protected $id;
-
-    /**
-     * @ORM\ManyToOne(
-     *      targetEntity="Claroline\DropZoneBundle\Entity\Drop",
-     *      inversedBy="documents"
-     * )
-     * @ORM\JoinColumn(name="drop_id", nullable=false, onDelete="CASCADE")
      *
      * @var Drop
      */
+    #[ORM\JoinColumn(name: 'drop_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Drop::class, inversedBy: 'documents')]
     protected $drop;
 
     /**
-     * @ORM\Column(name="document_type", type="text", nullable=false)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'document_type', type: 'text', nullable: false)]
     protected $type;
 
     /**
-     * @ORM\Column(name="file_array", type="json", nullable=true)
-     *
      * @var array
      */
+    #[ORM\Column(name: 'file_array', type: 'json', nullable: true)]
     protected $file;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $url;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(name="resource_id", nullable=true, onDelete="SET NULL")
      *
      * @var ResourceNode
      */
+    #[ORM\JoinColumn(name: 'resource_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     protected $resource;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="SET NULL")
      *
      * @var User
      */
+    #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     protected $user;
 
     /**
-     * @ORM\Column(name="drop_date", type="datetime", nullable=false)
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'drop_date', type: 'datetime', nullable: false)]
     protected $dropDate;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\DropZoneBundle\Entity\Revision",
-     *     inversedBy="documents"
-     * )
-     * @ORM\JoinColumn(name="revision_id", nullable=true, onDelete="SET NULL")
-     */
+    #[ORM\JoinColumn(name: 'revision_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Revision::class, inversedBy: 'documents')]
     protected $revision;
 
-    /**
-     * @ORM\Column(name="is_manager", type="boolean")
-     */
+    #[ORM\Column(name: 'is_manager', type: 'boolean')]
     protected $isManager = false;
 
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**

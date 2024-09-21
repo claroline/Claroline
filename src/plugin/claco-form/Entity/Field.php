@@ -15,49 +15,34 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\FieldRepository")
- * @ORM\Table(
- *     name="claro_clacoformbundle_field",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="field_unique_name", columns={"claco_form_id", "field_facet_id"})
- *     }
- * )
- * @DoctrineAssert\UniqueEntity({"clacoForm", "fieldFacet"})
- */
+#[ORM\Table(name: 'claro_clacoformbundle_field')]
+#[ORM\UniqueConstraint(name: 'field_unique_name', columns: ['claco_form_id', 'field_facet_id'])]
+#[ORM\Entity(repositoryClass: \Claroline\ClacoFormBundle\Repository\FieldRepository::class)]
 class Field
 {
     use Id;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\ClacoForm",
-     *     inversedBy="fields"
-     * )
-     * @ORM\JoinColumn(name="claco_form_id", nullable=false, onDelete="CASCADE")
      *
      * @var ClacoForm
      */
+    #[ORM\JoinColumn(name: 'claco_form_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\ClacoForm::class, inversedBy: 'fields')]
     protected $clacoForm;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacet", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="field_facet_id", onDelete="CASCADE")
      *
      * @var FieldFacet
      */
+    #[ORM\JoinColumn(name: 'field_facet_id', onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacet::class, cascade: ['persist', 'remove'])]
     protected $fieldFacet;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\FieldChoiceCategory",
-     *     mappedBy="field"
-     * )
-     *
      * @var FieldChoiceCategory[]
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\FieldChoiceCategory::class, mappedBy: 'field')]
     protected $fieldChoiceCategories;
 
     public function __construct()

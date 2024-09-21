@@ -19,9 +19,8 @@ class Statusable
 
     /**
      * @var int
-     *
-     * @ORM\Column(type="smallint")
      */
+    #[ORM\Column(type: 'smallint')]
     protected $status = self::STATUS_UNPUBLISHED;
 
     /**

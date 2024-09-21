@@ -6,37 +6,29 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="icap__lesson")
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Table(name: 'icap__lesson')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Lesson extends AbstractResource
 {
-    /**
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
+    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private ?string $description;
 
     /**
      * Show overview to users or directly start the lesson.
-     *
-     * @ORM\Column(name="show_overview", type="boolean", options={"default" = 1})
      */
+    #[ORM\Column(name: 'show_overview', type: 'boolean', options: ['default' => 1])]
     private bool $showOverview = true;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Icap\LessonBundle\Entity\Chapter", cascade={"all"})
-     *
-     * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(name: 'root_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: \Icap\LessonBundle\Entity\Chapter::class, cascade: ['all'])]
     private ?Chapter $root;
 
     /**
      * Numbering of the chapters.
-     *
-     * @ORM\Column
      */
+    #[ORM\Column]
     private string $numbering = 'none';
 
     /**
@@ -82,9 +74,7 @@ class Lesson extends AbstractResource
         $this->numbering = $numbering;
     }
 
-    /**
-     * @ORM\PostPersist
-     */
+    #[ORM\PostPersist]
     public function createRoot(PostPersistEventArgs $event): void
     {
         $em = $event->getObjectManager();

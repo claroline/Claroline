@@ -10,11 +10,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro_evaluation_skill")
- */
+
+#[ORM\Table(name: 'claro_evaluation_skill')]
+#[ORM\Entity]
 class Skill
 {
     use Id;
@@ -22,28 +20,20 @@ class Skill
     use Order;
     use Description;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\EvaluationBundle\Entity\Skill\SkillsFramework", inversedBy="skills")
-     * @ORM\JoinColumn(name="skills_framework_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'skills_framework_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\EvaluationBundle\Entity\Skill\SkillsFramework::class, inversedBy: 'skills')]
     private ?SkillsFramework $skillsFramework = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\EvaluationBundle\Entity\Skill\Skill", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\EvaluationBundle\Entity\Skill\Skill::class, inversedBy: 'children')]
     private ?Skill $parent = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Claroline\EvaluationBundle\Entity\Skill\Skill", mappedBy="parent", cascade={"persist", "remove"})
-     * @ORM\OrderBy({"order" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\EvaluationBundle\Entity\Skill\Skill::class, mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $children;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Claroline\EvaluationBundle\Entity\Skill\Ability", mappedBy="skill", cascade={"persist", "remove"})
-     * @ORM\OrderBy({"order" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\EvaluationBundle\Entity\Skill\Ability::class, mappedBy: 'skill', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $abilities;
 
     public function __construct()

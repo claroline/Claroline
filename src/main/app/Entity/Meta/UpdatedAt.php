@@ -8,9 +8,8 @@ trait UpdatedAt
 {
     /**
      * The last update date of the entity.
-     *
-     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'updatedAt', type: 'datetime', nullable: true)]
     protected ?\DateTimeInterface $updatedAt = null;
 
     /**

@@ -3,17 +3,13 @@
 namespace Claroline\AppBundle\Entity\Identifier;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 trait Code
 {
     /**
      * A unique code for the entity.
-     *
-     * @ORM\Column(unique=true)
-     *
-     * @Assert\NotBlank()
      */
+    #[ORM\Column(unique: true)]
     protected ?string $code = null;
 
     public function getCode(): ?string

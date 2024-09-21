@@ -15,20 +15,18 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class AbstractResource
 {
     use Id;
     use Uuid;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var ResourceNode
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     protected $resourceNode;
 
     /**

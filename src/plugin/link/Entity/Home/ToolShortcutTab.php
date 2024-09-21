@@ -6,17 +6,13 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\HomeBundle\Entity\Type\AbstractTab;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_home_tab_tool_shortcut")
- */
+#[ORM\Table(name: 'claro_home_tab_tool_shortcut')]
+#[ORM\Entity]
 class ToolShortcutTab extends AbstractTab
 {
     use Id;
 
-    /**
-     * @ORM\Column(nullable=false)
-     */
+    #[ORM\Column(nullable: false)]
     private ?string $tool = null;
 
     public static function getType(): string

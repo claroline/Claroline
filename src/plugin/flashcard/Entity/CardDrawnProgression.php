@@ -10,31 +10,25 @@ use Doctrine\ORM\Mapping as ORM;
  * CardDrawnProgression
  * Represents the progression of a Card drawn.
  *
- * @ORM\Table(name="claro_flashcard_drawn_progression")
  *
- * @ORM\Entity()
  */
+#[ORM\Table(name: 'claro_flashcard_drawn_progression')]
+#[ORM\Entity]
 class CardDrawnProgression
 {
     use Id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\FlashcardBundle\Entity\Flashcard")
-     *
-     * @ORM\JoinColumn(name="flashcard_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(name: 'flashcard_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\FlashcardBundle\Entity\Flashcard::class)]
     private Flashcard $flashcard;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceEvaluation")
-     *
-     * @ORM\JoinColumn(name="resource_evaluation_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(name: 'resource_evaluation_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceEvaluation::class)]
     private ResourceEvaluation $resourceEvaluation;
 
-    /**
-     * @ORM\Column(name="success_count", type="integer")
-     */
+    #[ORM\Column(name: 'success_count', type: 'integer')]
     private int $successCount;
 
     public function __construct()

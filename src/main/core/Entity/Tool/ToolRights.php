@@ -15,43 +15,29 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Tool\ToolRightsRepository")
- *
- * @ORM\Table(
- *     name="claro_tool_rights",
- *     uniqueConstraints={
- *
- *         @ORM\UniqueConstraint(
- *             name="tool_rights_unique_ordered_tool_role",
- *             columns={"ordered_tool_id", "role_id"}
- *         )
- *     }
- * )
- */
+
+#[ORM\Table(name: 'claro_tool_rights')]
+#[ORM\UniqueConstraint(name: 'tool_rights_unique_ordered_tool_role', columns: ['ordered_tool_id', 'role_id'])]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Tool\ToolRightsRepository::class)]
 class ToolRights
 {
     use Id;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private int $mask = 0;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
-     *
-     * @ORM\JoinColumn(name="role_id", nullable=false, onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(name: 'role_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
     private Role $role;
 
     /**
      * should be unidirectional imo.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool", inversedBy="rights")
      *
-     * @ORM\JoinColumn(name="ordered_tool_id", nullable=false, onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'ordered_tool_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Tool\OrderedTool::class, inversedBy: 'rights')]
     private ?OrderedTool $orderedTool = null;
 
     public function getMask(): int

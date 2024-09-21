@@ -12,33 +12,28 @@ use Doctrine\ORM\Mapping as ORM;
  * Associates a User to an IP address to automatically log user for requests from this IP.
  * Used with the IpAuthenticator.
  *
- * @ORM\Table(name="claro_ip_user")
  *
- * @ORM\Entity
  */
+#[ORM\Table(name: 'claro_ip_user')]
+#[ORM\Entity]
 class IpUser
 {
     use Id;
     use Uuid;
     use Locked;
 
-    /**
-     * @ORM\Column(type="string", nullable=false, unique=true)
-     */
+    #[ORM\Column(type: 'string', nullable: false, unique: true)]
     private ?string $ip = null;
 
     /**
      * If true, the $ip field contains to ips separated by a comma (,) to define the range.
-     *
-     * @ORM\Column(name="is_range", type="boolean")
      */
+    #[ORM\Column(name: 'is_range', type: 'boolean')]
     private bool $range = false;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     *
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private ?User $user = null;
 
     public function __construct()

@@ -15,49 +15,37 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\FieldValueRepository")
- * @ORM\Table(
- *     name="claro_clacoformbundle_field_value",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="field_unique_name", columns={"entry_id", "field_id"})
- *     }
- * )
- * @DoctrineAssert\UniqueEntity({"entry", "field"})
- */
+#[ORM\Table(name: 'claro_clacoformbundle_field_value')]
+#[ORM\UniqueConstraint(name: 'field_unique_name', columns: ['entry_id', 'field_id'])]
+#[ORM\Entity(repositoryClass: \Claroline\ClacoFormBundle\Repository\FieldValueRepository::class)]
 class FieldValue
 {
     use Id;
     use Uuid;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\Entry",
-     *     inversedBy="fieldValues",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(name="entry_id", onDelete="CASCADE")
      *
      * @var Entry
      */
+    #[ORM\JoinColumn(name: 'entry_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\Entry::class, inversedBy: 'fieldValues', cascade: ['persist'])]
     protected $entry;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\ClacoFormBundle\Entity\Field")
-     * @ORM\JoinColumn(name="field_id", onDelete="CASCADE")
      *
      * @var Field
      */
+    #[ORM\JoinColumn(name: 'field_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\Field::class)]
     protected $field;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue", cascade={"persist"})
-     * @ORM\JoinColumn(name="field_facet_value_id", onDelete="CASCADE")
      *
      * @var FieldFacetValue
      */
+    #[ORM\JoinColumn(name: 'field_facet_value_id', onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Facet\FieldFacetValue::class, cascade: ['persist'])]
     protected $fieldFacetValue;
 
     public function __construct()

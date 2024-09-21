@@ -9,10 +9,9 @@ use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 
 /**
  * Choice.
- *
- * @ORM\Entity()
- * @ORM\Table(name="ujm_choice")
  */
+#[ORM\Table(name: 'ujm_choice')]
+#[ORM\Entity]
 class Choice extends AbstractChoice implements AnswerPartInterface
 {
     use Order;
@@ -20,15 +19,12 @@ class Choice extends AbstractChoice implements AnswerPartInterface
      * The choice is part of the expected answer for the question.
      *
      * @var bool
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     private $expected = false;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\ChoiceQuestion", inversedBy="choices")
-     * @ORM\JoinColumn(name="interaction_qcm_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'interaction_qcm_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\ChoiceQuestion::class, inversedBy: 'choices')]
     private $interactionQCM;
 
     /**

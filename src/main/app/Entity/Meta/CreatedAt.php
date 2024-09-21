@@ -8,9 +8,8 @@ trait CreatedAt
 {
     /**
      * The creation date of the entity.
-     *
-     * @ORM\Column(name="createdAt", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'createdAt', type: 'datetime', nullable: true)]
     protected ?\DateTimeInterface $createdAt = null;
 
     /**

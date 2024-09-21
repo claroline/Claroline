@@ -11,87 +11,42 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_dropzonebundle_revision")
- */
+#[ORM\Table(name: 'claro_dropzonebundle_revision')]
+#[ORM\Entity]
 class Revision
 {
+    use Id;
     use Uuid;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\DropZoneBundle\Entity\Drop",
-     *     inversedBy="revisions"
-     * )
-     * @ORM\JoinColumn(name="drop_id", nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'drop_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Drop::class, inversedBy: 'revisions')]
     protected $drop;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="creator_id", nullable=true, onDelete="SET NULL")
-     */
+    #[ORM\JoinColumn(name: 'creator_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     protected $creator;
 
-    /**
-     * @ORM\Column(name="creation_date", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'creation_date', type: 'datetime', nullable: false)]
     protected $creationDate;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\DropZoneBundle\Entity\Document",
-     *     mappedBy="revision"
-     * )
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\DropZoneBundle\Entity\Document::class, mappedBy: 'revision')]
     protected $documents;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\DropZoneBundle\Entity\RevisionComment",
-     *     mappedBy="revision"
-     * )
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\DropZoneBundle\Entity\RevisionComment::class, mappedBy: 'revision')]
     protected $comments;
 
-    /**
-     * Revision constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
         $this->setCreationDate(new \DateTime());
         $this->documents = new ArrayCollection();
         $this->comments = new ArrayCollection();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**

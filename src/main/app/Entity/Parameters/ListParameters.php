@@ -12,131 +12,114 @@ use Doctrine\ORM\Mapping as ORM;
 trait ListParameters
 {
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     protected $filterable = false;
 
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     protected $sortable = false;
 
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     protected $paginated = true;
 
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     protected $columnsFilterable = false;
 
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     protected $count = false;
 
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     protected $actions = true;
 
     /**
-     * @ORM\Column(nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(nullable: true)]
     protected $sortBy = null;
 
     /**
-     * @ORM\Column(type="json")
-     *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     protected $availableSort = [];
 
     /**
-     * @ORM\Column(type="integer")
-     *
      * @var int
      */
+    #[ORM\Column(type: 'integer')]
     protected $pageSize = 15;
 
     /**
-     * @ORM\Column(type="json")
-     *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     protected $availablePageSizes = [15, 30, 60, 120, -1];
 
     /**
-     * @ORM\Column()
-     *
      * @var string
      */
+    #[ORM\Column]
     protected $display = 'tiles-sm';
 
     /**
-     * @ORM\Column(type="json")
-     *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     protected $availableDisplays = ['tiles-sm'];
 
     /**
-     * @ORM\Column(nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(nullable: true)]
     protected $searchMode = null;
 
     /**
-     * @ORM\Column(type="json")
-     *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     protected $filters = [];
 
     /**
-     * @ORM\Column(type="json")
-     *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     protected $availableFilters = [];
 
     /**
-     * @ORM\Column(type="json")
-     *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     protected $availableColumns = [];
 
     /**
-     * @ORM\Column(type="json")
-     *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     protected $displayedColumns = [];
 
     /**
      * The configuration of the card.
      *
-     * @ORM\Column(type="json")
      *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     protected $card = [];
 
     public function isFilterable(): bool

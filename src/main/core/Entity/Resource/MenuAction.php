@@ -15,70 +15,60 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Resource\ResourceActionRepository")
- * @ORM\Table(name="claro_menu_action")
- */
+#[ORM\Table(name: 'claro_menu_action')]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Resource\ResourceActionRepository::class)]
 class MenuAction
 {
     use Id;
 
     /**
-     * @ORM\Column(nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(nullable: true)]
     private $name;
 
     /**
-     * @ORM\Column(type="string")
-     *
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     private $decoder;
 
     /**
-     * @ORM\Column(name="group_name", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'group_name', nullable: true)]
     private $group;
 
     /**
-     * @ORM\Column(type="json")
-     *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     private $scope = [];
 
     /**
-     * @ORM\Column(type="json")
-     *
      * @var array
      */
+    #[ORM\Column(type: 'json')]
     private $api = [];
 
     /**
-     * @ORM\Column(name="is_default", type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(name: 'is_default', type: 'boolean')]
     private $default = false;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType")
-     * @ORM\JoinColumn(name="resource_type_id", onDelete="SET NULL")
-     */
+    #[ORM\JoinColumn(name: 'resource_type_id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceType::class)]
     private $resourceType;
 
     /**
      * The plugin which have introduced the action.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Plugin
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Plugin::class)]
     private $plugin;
 
     /**

@@ -6,19 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait Url
 {
-    /**
-     * @ORM\Column(name="url", type="text")
-     */
+    #[ORM\Column(name: 'url', type: 'text')]
     private ?string $url;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private ?String $mode = 'redirect';
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: 'float', nullable: true)]
     private ?float $ratio = 56.25;
 
     public function setUrl(string $url): void

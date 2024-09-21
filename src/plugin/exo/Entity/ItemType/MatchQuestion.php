@@ -12,10 +12,9 @@ use UJM\ExoBundle\Library\Model\ShuffleTrait;
 
 /**
  * A Match question.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_interaction_matching")
  */
+#[ORM\Table(name: 'ujm_interaction_matching')]
+#[ORM\Entity]
 class MatchQuestion extends AbstractItem
 {
     use ShuffleTrait;
@@ -25,41 +24,25 @@ class MatchQuestion extends AbstractItem
     use PenaltyTrait;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\Label",
-     *     mappedBy="interactionMatching",
-     *     cascade={"all"},
-     *     orphanRemoval=true
-     * )
-     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Label::class, mappedBy: 'interactionMatching', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private $labels;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\Proposal",
-     *     mappedBy="interactionMatching",
-     *     cascade={"all"},
-     *     orphanRemoval=true
-     * )
-     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Proposal::class, mappedBy: 'interactionMatching', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private $proposals;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\Association",
-     *     mappedBy="question",
-     *     cascade={"all"},
-     *     orphanRemoval=true
-     * )
-     *
      * @var ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Association::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
     private $associations;
 
     /**

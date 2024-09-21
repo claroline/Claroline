@@ -6,49 +6,33 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_bigbluebuttonbundle_recording")
- */
+#[ORM\Table(name: 'claro_bigbluebuttonbundle_recording')]
+#[ORM\Entity]
 class Recording
 {
     use Id;
     use Uuid;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\BigBlueButtonBundle\Entity\BBB", inversedBy="recordings")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\BigBlueButtonBundle\Entity\BBB::class, inversedBy: 'recordings')]
     private ?BBB $meeting = null;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     private ?string $recordId = null;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private ?string $startTime = null;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private ?string $endTime;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     private ?string $status = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private int $participants = 0;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private ?array $medias = [];
 
     public function __construct()

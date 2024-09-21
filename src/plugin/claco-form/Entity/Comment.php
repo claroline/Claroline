@@ -6,13 +6,9 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(name="claro_clacoformbundle_comment")
- */
+#[ORM\Table(name: 'claro_clacoformbundle_comment')]
+#[ORM\Entity]
 class Comment
 {
     use Id;
@@ -22,55 +18,43 @@ class Comment
     public const VALIDATED = 1;
     public const BLOCKED = 2;
 
-    /**
-     * @ORM\Column(type="text")
-     *
-     * @Assert\NotBlank()
-     *
-     * @var string
-     */
+    #[ORM\Column(type: 'text')]
     protected $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      *
-     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL", nullable=true)
      *
      * @var User
      */
+    #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     protected $user;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\Entry",
-     *     inversedBy="comments"
-     * )
      *
-     * @ORM\JoinColumn(name="entry_id", onDelete="CASCADE")
      *
      * @var Entry
      */
+    #[ORM\JoinColumn(name: 'entry_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\Entry::class, inversedBy: 'comments')]
     protected $entry;
 
     /**
-     * @ORM\Column(name="creation_date", type="datetime")
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'creation_date', type: 'datetime')]
     protected $creationDate;
 
     /**
-     * @ORM\Column(name="edition_date", type="datetime", nullable=true)
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'edition_date', type: 'datetime', nullable: true)]
     protected $editionDate;
 
     /**
-     * @ORM\Column(name="comment_status", type="integer")
-     *
      * @var int
      */
+    #[ORM\Column(name: 'comment_status', type: 'integer')]
     protected $status;
 
     /**

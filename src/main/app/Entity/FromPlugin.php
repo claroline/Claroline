@@ -9,10 +9,9 @@ trait FromPlugin
 {
     /**
      * The plugin that have introduced the entity.
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Plugin::class)]
     protected ?Plugin $plugin = null;
 
     public function getPlugin(): ?Plugin

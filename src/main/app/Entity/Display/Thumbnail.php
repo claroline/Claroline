@@ -6,9 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait Thumbnail
 {
-    /**
-     * @ORM\Column(name="thumbnail", nullable=true)
-     */
+    #[ORM\Column(name: 'thumbnail', nullable: true)]
     protected ?string $thumbnail = null;
 
     public function getThumbnail(): ?string

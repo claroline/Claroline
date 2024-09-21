@@ -16,61 +16,41 @@ use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository")
- * @ORM\Table(
- *     name="claro_resource_rights",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(
- *             name="resource_rights_unique_resource_role",
- *             columns={"resourceNode_id", "role_id"}
- *         )
- *     },
- *     indexes={@ORM\Index(name="mask_idx", columns={"mask"})}
- * )
- */
+#[ORM\Table(name: 'claro_resource_rights')]
+#[ORM\Index(name: 'mask_idx', columns: ['mask'])]
+#[ORM\UniqueConstraint(name: 'resource_rights_unique_resource_role', columns: ['resourceNode_id', 'role_id'])]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository::class)]
 class ResourceRights
 {
     use Id;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private $mask = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var Role
      */
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
     private $role;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     inversedBy="rights",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var ResourceNode
      */
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class, inversedBy: 'rights', cascade: ['persist'])]
     private $resourceNode;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
-     *     inversedBy="rights"
-     * )
-     * @ORM\JoinTable(
-     *     name="claro_list_type_creation",
-     *     joinColumns={@ORM\JoinColumn(name="resource_rights_id", onDelete="CASCADE")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="resource_type_id", onDelete="CASCADE")})
-     * )
      *
      * @var ArrayCollection|ResourceType[]
      */
+    #[ORM\JoinTable(name: 'claro_list_type_creation')]
+    #[ORM\JoinColumn(name: 'resource_rights_id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'resource_type_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceType::class, inversedBy: 'rights')]
     private $resourceTypes;
 
     public function __construct()

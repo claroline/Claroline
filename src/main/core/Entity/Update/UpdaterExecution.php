@@ -11,39 +11,28 @@
 
 namespace Claroline\CoreBundle\Entity\Update;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Represents an updater than has been executed.
  * It can be used to avoid executing the same updater more than once.
- *
- * @ORM\Entity(repositoryClass="Claroline\InstallationBundle\Repository\UpdaterExecutionRepository")
- * @ORM\Table(name="claro_update")
  */
+#[ORM\Table(name: 'claro_update')]
+#[ORM\Entity(repositoryClass: \Claroline\InstallationBundle\Repository\UpdaterExecutionRepository::class)]
 class UpdaterExecution
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    use Id;
 
     /**
      * @var string the FQCN of the executed updater
-     *
-     * @ORM\Column(name="updater_class", type="string", unique=true)
      */
+    #[ORM\Column(name: 'updater_class', type: 'string', unique: true)]
     private $updaterClass;
 
     public function __construct(string $updaterClass)
     {
         $this->updaterClass = $updaterClass;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getUpdaterClass(): string

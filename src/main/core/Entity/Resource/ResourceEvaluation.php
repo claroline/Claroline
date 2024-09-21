@@ -18,29 +18,21 @@ use Doctrine\ORM\Mapping as ORM;
  * Represents an attempt of a User to a ResourceNode.
  * There may be several for a user and a resource.
  *
- * @ORM\Entity(repositoryClass="Claroline\EvaluationBundle\Repository\ResourceAttemptRepository")
  *
- * @ORM\Table(name="claro_resource_evaluation")
  */
+#[ORM\Table(name: 'claro_resource_evaluation')]
+#[ORM\Entity(repositoryClass: \Claroline\EvaluationBundle\Repository\ResourceAttemptRepository::class)]
 class ResourceEvaluation extends AbstractEvaluation
 {
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation"
-     * )
-     *
-     * @ORM\JoinColumn(name="resource_user_evaluation", onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(name: 'resource_user_evaluation', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation::class)]
     private ?ResourceUserEvaluation $resourceUserEvaluation;
 
-    /**
-     * @ORM\Column(type="text", name="evaluation_comment", nullable=true)
-     */
+    #[ORM\Column(type: 'text', name: 'evaluation_comment', nullable: true)]
     private ?string $comment = null;
 
-    /**
-     * @ORM\Column(name="more_data", type="json", nullable=true)
-     */
+    #[ORM\Column(name: 'more_data', type: 'json', nullable: true)]
     private ?array $data = [];
 
     public function getResourceUserEvaluation(): ?ResourceUserEvaluation

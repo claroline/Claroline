@@ -15,26 +15,18 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_announcements_send")
- */
+#[ORM\Table(name: 'claro_announcements_send')]
+#[ORM\Entity]
 class AnnouncementSend
 {
     use Id;
     use Uuid;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\AnnouncementBundle\Entity\Announcement"
-     * )
-     * @ORM\JoinColumn(name="announcement_id", nullable=true, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'announcement_id', nullable: true, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\AnnouncementBundle\Entity\Announcement::class)]
     private ?Announcement $announcement = null;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $data = [];
 
     public function __construct()

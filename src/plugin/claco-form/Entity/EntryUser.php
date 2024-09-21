@@ -2,85 +2,50 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\EntryUserRepository")
- * @ORM\Table(
- *     name="claro_clacoformbundle_entry_user",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(
- *             name="clacoform_unique_entry_user",
- *             columns={"entry_id", "user_id"}
- *         )
- *     }
- * )
- */
+#[ORM\Table(name: 'claro_clacoformbundle_entry_user')]
+#[ORM\UniqueConstraint(name: 'clacoform_unique_entry_user', columns: ['entry_id', 'user_id'])]
+#[ORM\Entity(repositoryClass: \Claroline\ClacoFormBundle\Repository\EntryUserRepository::class)]
 class EntryUser
 {
+    use Id;
     use Uuid;
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\Entry",
-     *     inversedBy="entryUsers"
-     * )
-     * @ORM\JoinColumn(name="entry_id", onDelete="CASCADE")
      *
      * @var Entry
      */
+    #[ORM\JoinColumn(name: 'entry_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ClacoFormBundle\Entity\Entry::class, inversedBy: 'entryUsers')]
     protected $entry;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE")
      *
      * @var User
      */
+    #[ORM\JoinColumn(name: 'user_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     protected $user;
 
-    /**
-     * @ORM\Column(name="shared", type="boolean")
-     */
+    #[ORM\Column(name: 'shared', type: 'boolean')]
     protected $shared = false;
 
-    /**
-     * @ORM\Column(name="notify_edition", type="boolean")
-     */
+    #[ORM\Column(name: 'notify_edition', type: 'boolean')]
     protected $notifyEdition = false;
 
-    /**
-     * @ORM\Column(name="notify_comment", type="boolean")
-     */
+    #[ORM\Column(name: 'notify_comment', type: 'boolean')]
     protected $notifyComment = false;
 
-    /**
-     * @ORM\Column(name="notify_vote", type="boolean")
-     */
+    #[ORM\Column(name: 'notify_vote', type: 'boolean')]
     protected $notifyVote = false;
 
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**

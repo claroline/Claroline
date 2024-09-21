@@ -11,45 +11,35 @@ use UJM\ExoBundle\Library\Options\ExerciseNumbering;
 
 /**
  * A choice question.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_interaction_qcm")
  */
+#[ORM\Table(name: 'ujm_interaction_qcm')]
+#[ORM\Entity]
 class ChoiceQuestion extends AbstractItem
 {
     use ShuffleTrait;
     /**
      * Is it a multiple or a unique choice question ?
      *
-     * @ORM\Column(type="boolean")
      *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     private $multiple = false;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\Choice",
-     *     mappedBy="interactionQCM",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
-     * @ORM\OrderBy({"order" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Choice::class, mappedBy: 'interactionQCM', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private $choices;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private $numbering = ExerciseNumbering::NONE;
 
     /**
-     * @ORM\Column(type="string")
-     *
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     private $direction = Direction::VERTICAL;
 
     /**

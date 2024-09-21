@@ -7,53 +7,45 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_audio_resource_section_comment")
- */
+#[ORM\Table(name: 'claro_audio_resource_section_comment')]
+#[ORM\Entity]
 class SectionComment
 {
     use Id;
     use Uuid;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $content;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\AudioPlayerBundle\Entity\Resource\Section",
-     *     inversedBy="comments"
-     * )
-     * @ORM\JoinColumn(name="section_id", onDelete="CASCADE")
      *
      * @var Section
      */
+    #[ORM\JoinColumn(name: 'section_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\AudioPlayerBundle\Entity\Resource\Section::class, inversedBy: 'comments')]
     protected $section;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="SET NULL")
      *
      * @var User
      */
+    #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     protected $user;
 
     /**
-     * @ORM\Column(name="creation_date", type="datetime")
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'creation_date', type: 'datetime')]
     protected $creationDate;
 
     /**
-     * @ORM\Column(name="edition_date", type="datetime", nullable=true)
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'edition_date', type: 'datetime', nullable: true)]
     protected $editionDate;
 
     public function __construct()

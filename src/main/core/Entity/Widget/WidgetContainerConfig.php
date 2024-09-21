@@ -8,10 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * WidgetContainer entity.
- *
- * @ORM\Entity()
- * @ORM\Table(name="claro_widget_container_config")
  */
+#[ORM\Table(name: 'claro_widget_container_config')]
+#[ORM\Entity]
 class WidgetContainerConfig
 {
     use Id;
@@ -20,24 +19,22 @@ class WidgetContainerConfig
     /**
      * The name of the widget.
      *
-     * @ORM\Column(name="widget_name", nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(name: 'widget_name', nullable: true)]
     private $name;
 
     /**
      * Widget name align (left, center, right).
      *
-     * @ORM\Column()
      *
      * @var string
      */
+    #[ORM\Column]
     private $alignName = 'left';
 
-    /**
-     * @ORM\Column(type="boolean", name="is_visible")
-     */
+    #[ORM\Column(type: 'boolean', name: 'is_visible')]
     protected $visible = true;
 
     /**
@@ -50,66 +47,61 @@ class WidgetContainerConfig
      *   The layout has 2 columns, the first one is 2/3 width and the second is 1/3.
      *
      * @var array
-     *
-     * @ORM\Column(type="json", nullable=true)
      */
+    #[ORM\Column(type: 'json', nullable: true)]
     private $layout = [];
 
     /**
      * The color of the text inside the widget.
      *
-     * @ORM\Column(nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(nullable: true)]
     private $color = null;
 
     /**
      * The color of the border of the widget.
      *
-     * @ORM\Column(nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(nullable: true)]
     private $borderColor = null;
 
     /**
      * The type of the background (none, color, image).
      *
-     * @ORM\Column()
      *
      * @var string
      */
+    #[ORM\Column]
     private $backgroundType = 'none';
 
     /**
      * The background data (either the color or the image url).
      *
-     * @ORM\Column(nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(nullable: true)]
     private $background = null;
 
     /**
      * The position of the instance inside its container.
      *
-     * @ORM\Column(name="position", type="integer", nullable=true)
      *
      * @var int
      */
+    #[ORM\Column(name: 'position', type: 'integer', nullable: true)]
     private $position = 0;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer",
-     *     inversedBy="widgetContainerConfigs",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(name="widget_container_id", onDelete="CASCADE", nullable=true)
      *
      * @var WidgetContainer
      */
+    #[ORM\JoinColumn(name: 'widget_container_id', onDelete: 'CASCADE', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetContainer::class, inversedBy: 'widgetContainerConfigs', cascade: ['persist'])]
     protected $widgetContainer;
 
     /**

@@ -19,75 +19,57 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\SessionRepository")
- *
- * @ORM\Table(name="claro_cursusbundle_course_session")
- */
+
+#[ORM\Table(name: 'claro_cursusbundle_course_session')]
+#[ORM\Entity(repositoryClass: \Claroline\CursusBundle\Repository\SessionRepository::class)]
 class Session extends AbstractTraining implements IdentifiableInterface
 {
     public const REGISTRATION_AUTO = 0;
     public const REGISTRATION_MANUAL = 1;
     public const REGISTRATION_PUBLIC = 2;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Course", inversedBy="sessions")
-     *
-     * @ORM\JoinColumn(name="course_id", nullable=false, onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(name: 'course_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CursusBundle\Entity\Course::class, inversedBy: 'sessions')]
     private ?Course $course = null;
 
-    /**
-     * @ORM\Column(name="default_session", type="boolean")
-     */
+    #[ORM\Column(name: 'default_session', type: 'boolean')]
     private bool $defaultSession = false;
 
-    /**
-     * @ORM\Column(name="start_date", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'start_date', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $startDate = null;
 
-    /**
-     * @ORM\Column(name="end_date", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'end_date', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $endDate = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode", orphanRemoval=true)
      *
-     * @ORM\JoinTable(name="claro_cursusbundle_course_session_resources",
-     *      joinColumns={@ORM\JoinColumn(name="resource_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="session_id", referencedColumnName="id", unique=true)}
-     * )
      *
      * @var Collection|ResourceNode[]
      */
+    #[ORM\JoinTable(name: 'claro_cursusbundle_course_session_resources')]
+    #[ORM\JoinColumn(name: 'resource_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'session_id', referencedColumnName: 'id', unique: true)]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class, orphanRemoval: true)]
     private Collection $resources;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Location")
-     *
-     * @ORM\JoinColumn(name="location_id", nullable=true, onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(name: 'location_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Location::class)]
     private ?Location $location = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CursusBundle\Entity\Event", mappedBy="session")
-     *
      * @var Collection|Event[]
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\CursusBundle\Entity\Event::class, mappedBy: 'session')]
     private Collection $events;
 
-    /**
-     * @ORM\Column(name="event_registration_type", type="integer", nullable=false, options={"default" = 0})
-     */
+    #[ORM\Column(name: 'event_registration_type', type: 'integer', nullable: false, options: ['default' => 0])]
     private int $eventRegistrationType = self::REGISTRATION_AUTO;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
-     *
-     * @ORM\JoinColumn(name="invitation_template_id", nullable=true, onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(name: 'invitation_template_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\Template::class)]
     private ?Template $invitationTemplate = null;
 
     /**

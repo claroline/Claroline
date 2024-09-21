@@ -6,9 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait Name
 {
-    /**
-     * @ORM\Column(name="entity_name")
-     */
+    #[ORM\Column(name: 'entity_name')]
     protected ?string $name = null;
 
     public function getName(): ?string

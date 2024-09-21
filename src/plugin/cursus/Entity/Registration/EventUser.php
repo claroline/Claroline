@@ -14,21 +14,13 @@ namespace Claroline\CursusBundle\Entity\Registration;
 use Claroline\CursusBundle\Entity\Event;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\Registration\EventUserRepository")
- * @ORM\Table(
- *     name="claro_cursusbundle_session_event_user",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="training_event_unique_user", columns={"event_id", "user_id"})
- *     }
- * )
- */
+#[ORM\Table(name: 'claro_cursusbundle_session_event_user')]
+#[ORM\UniqueConstraint(name: 'training_event_unique_user', columns: ['event_id', 'user_id'])]
+#[ORM\Entity(repositoryClass: \Claroline\CursusBundle\Repository\Registration\EventUserRepository::class)]
 class EventUser extends AbstractUserRegistration
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Event")
-     * @ORM\JoinColumn(name="event_id", nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'event_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CursusBundle\Entity\Event::class)]
     private ?Event $event = null;
 
     public function getEvent(): Event

@@ -11,141 +11,88 @@
 
 namespace Claroline\ScormBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_scorm_sco")
- */
+#[ORM\Table(name: 'claro_scorm_sco')]
+#[ORM\Entity]
 class Sco
 {
+    use Id;
     use Uuid;
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ScormBundle\Entity\Scorm",
-     *     inversedBy="scos",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(name="scorm_id", onDelete="CASCADE", nullable=false)
      *
      * @var Scorm
      */
+    #[ORM\JoinColumn(name: 'scorm_id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ScormBundle\Entity\Scorm::class, inversedBy: 'scos', cascade: ['persist'])]
     protected $scorm;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ScormBundle\Entity\Sco",
-     *     inversedBy="scoChildren"
-     * )
-     * @ORM\JoinColumn(name="sco_parent_id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\JoinColumn(name: 'sco_parent_id', onDelete: 'CASCADE', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ScormBundle\Entity\Sco::class, inversedBy: 'scoChildren')]
     protected $scoParent;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\ScormBundle\Entity\Sco",
-     *     mappedBy="scoParent"
-     * )
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\ScormBundle\Entity\Sco::class, mappedBy: 'scoParent')]
     protected $scoChildren;
 
-    /**
-     * @ORM\Column(name="entry_url", nullable=true)
-     */
+    #[ORM\Column(name: 'entry_url', nullable: true)]
     protected $entryUrl;
 
-    /**
-     * @ORM\Column(nullable=false)
-     */
+    #[ORM\Column(nullable: false)]
     protected $identifier;
 
-    /**
-     * @ORM\Column(nullable=false)
-     */
+    #[ORM\Column(nullable: false)]
     protected $title;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     */
+    #[ORM\Column(type: 'boolean', nullable: false)]
     protected $visible;
 
-    /**
-     * @ORM\Column(name="sco_parameters", type="text", nullable=true)
-     */
+    #[ORM\Column(name: 'sco_parameters', type: 'text', nullable: true)]
     protected $parameters;
 
-    /**
-     * @ORM\Column(name="launch_data", type="text", nullable=true)
-     */
+    #[ORM\Column(name: 'launch_data', type: 'text', nullable: true)]
     protected $launchData;
 
-    /**
-     * @ORM\Column(name="max_time_allowed", nullable=true)
-     */
+    #[ORM\Column(name: 'max_time_allowed', nullable: true)]
     protected $maxTimeAllowed;
 
-    /**
-     * @ORM\Column(name="time_limit_action", nullable=true)
-     */
+    #[ORM\Column(name: 'time_limit_action', nullable: true)]
     protected $timeLimitAction;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     */
+    #[ORM\Column(type: 'boolean', nullable: false)]
     protected $block;
 
     /**
      * Score to pass for Scorm 1.2.
-     *
-     * @ORM\Column(name="score_int", type="integer", nullable=true)
      */
+    #[ORM\Column(name: 'score_int', type: 'integer', nullable: true)]
     protected $scoreToPassInt;
 
     /**
      * Score to pass for Scorm 2004.
-     *
-     * @ORM\Column(name="score_decimal", type="decimal", precision=10, scale=7, nullable=true)
      */
+    #[ORM\Column(name: 'score_decimal', type: 'decimal', precision: 10, scale: 7, nullable: true)]
     protected $scoreToPassDecimal;
 
     /**
      * For Scorm 2004 only.
-     *
-     * @ORM\Column(name="completion_threshold", type="decimal", precision=10, scale=7, nullable=true)
      */
+    #[ORM\Column(name: 'completion_threshold', type: 'decimal', precision: 10, scale: 7, nullable: true)]
     protected $completionThreshold;
 
     /**
      * For Scorm 1.2 only.
-     *
-     * @ORM\Column(nullable=true)
      */
+    #[ORM\Column(nullable: true)]
     protected $prerequisites;
 
     public function __construct()
     {
         $this->refreshUuid();
         $this->scoChildren = new ArrayCollection();
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**

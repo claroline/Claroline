@@ -6,25 +6,22 @@ use Claroline\CoreBundle\Entity\Planning\AbstractPlanned;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_task")
- */
+#[ORM\Table(name: 'claro_task')]
+#[ORM\Entity]
 class Task extends AbstractPlanned
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace", cascade={"persist"})
-     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Workspace
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class, cascade: ['persist'])]
     private $workspace;
 
     /**
-     * @ORM\Column(name="is_task_done", type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(name: 'is_task_done', type: 'boolean')]
     private $done = false;
 
     public static function getType(): string

@@ -9,10 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Slide.
- *
- * @ORM\Table(name="claro_connection_message_slide")
- * @ORM\Entity()
  */
+#[ORM\Table(name: 'claro_connection_message_slide')]
+#[ORM\Entity]
 class Slide
 {
     use Id;
@@ -20,42 +19,35 @@ class Slide
     use Poster;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $content;
 
     /**
-     * @ORM\Column(nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(nullable: true)]
     private $title;
 
     /**
-     * @ORM\Column(name="slide_order", type="integer")
-     *
      * @var int
      */
+    #[ORM\Column(name: 'slide_order', type: 'integer')]
     private $order;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage",
-     *     inversedBy="slides"
-     * )
-     * @ORM\JoinColumn(name="message_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @var ConnectionMessage
      */
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage::class, inversedBy: 'slides')]
     private $message;
 
     /**
-     * @ORM\Column(name="shortcuts", type="json", nullable=true)
-     *
      * @var array
      */
+    #[ORM\Column(name: 'shortcuts', type: 'json', nullable: true)]
     private $shortcuts = [];
 
     /**

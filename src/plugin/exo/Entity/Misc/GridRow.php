@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\PairQuestion;
@@ -11,52 +12,41 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
 
 /**
  * GridRow.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_grid_row")
  */
+#[ORM\Table(name: 'ujm_grid_row')]
+#[ORM\Entity]
 class GridRow implements AnswerPartInterface
 {
+    use Id;
     use ScoreTrait;
     use FeedbackTrait;
-    /**
-     * Unique identifier of the row.
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    private $id;
 
     /**
      * If set to true the items order in answer must match the order set by the author.
      *
-     * @ORM\Column(type="boolean")
      *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     private $ordered;
 
     /**
      * The list of items in the row.
      *
      * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Misc\GridRowItem", mappedBy="row", cascade={"all"}, orphanRemoval=true)
-     * @ORM\OrderBy({"order" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\GridRowItem::class, mappedBy: 'row', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private $rowItems;
 
     /**
      * The parent question.
      *
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\PairQuestion", inversedBy="rows")
-     * @ORM\JoinColumn(name="pair_question_id", referencedColumnName="id")
      *
      * @var PairQuestion
      */
+    #[ORM\JoinColumn(name: 'pair_question_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\PairQuestion::class, inversedBy: 'rows')]
     private $question;
 
     /**
@@ -65,16 +55,6 @@ class GridRow implements AnswerPartInterface
     public function __construct()
     {
         $this->rowItems = new ArrayCollection();
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

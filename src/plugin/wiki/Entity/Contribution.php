@@ -2,70 +2,46 @@
 
 namespace Icap\WikiBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Entity(repositoryClass="Icap\WikiBundle\Repository\ContributionRepository")
- * @ORM\Table(name="icap__wiki_contribution")
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Table(name: 'icap__wiki_contribution')]
+#[ORM\Entity(repositoryClass: \Icap\WikiBundle\Repository\ContributionRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Contribution
 {
+    use Id;
     use Uuid;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $title;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $text;
 
     /**
-     * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
      */
+    #[ORM\Column(type: 'datetime', name: 'creation_date')]
     protected $creationDate;
 
     /**
      * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     protected $contributor;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Icap\WikiBundle\Entity\Section")
-     * @ORM\JoinColumn(name="section_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'section_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Icap\WikiBundle\Entity\Section::class)]
     protected $section;
 
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

@@ -14,10 +14,8 @@ namespace Claroline\CoreBundle\Entity\Resource;
 use Claroline\AppBundle\Entity\Parameters\ListParameters;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_directory")
- */
+#[ORM\Table(name: 'claro_directory')]
+#[ORM\Entity]
 class Directory extends AbstractResource
 {
     use ListParameters;
@@ -25,10 +23,10 @@ class Directory extends AbstractResource
     /**
      * Is the directory the default upload destination (for tinyMCE and some other things).
      *
-     * @ORM\Column(name="is_upload_destination", type="boolean")
      *
      * @var bool
      */
+    #[ORM\Column(name: 'is_upload_destination', type: 'boolean')]
     private $uploadDestination = false;
 
     /**

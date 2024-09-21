@@ -17,37 +17,25 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro_announcement_aggregate")
- */
+
+#[ORM\Table(name: 'claro_announcement_aggregate')]
+#[ORM\Entity]
 class AnnouncementAggregate extends AbstractResource
 {
     /**
      * The list of announces in the aggregate.
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\AnnouncementBundle\Entity\Announcement",
-     *     mappedBy="aggregate",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\AnnouncementBundle\Entity\Announcement::class, mappedBy: 'aggregate', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $announcements;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
-     *
-     * @ORM\JoinColumn(name="email_template_id", nullable=true, onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(name: 'email_template_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\Template::class)]
     private ?Template $templateEmail = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
-     *
-     * @ORM\JoinColumn(name="pdf_template_id", nullable=true, onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(name: 'pdf_template_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\Template::class)]
     private ?Template $templatePdf = null;
 
     /**

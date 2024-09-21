@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
@@ -10,66 +11,44 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
 
 /**
  * Keyword.
- *
- * @ORM\Entity()
- * @ORM\Table(name="ujm_word_response")
  */
+#[ORM\Table(name: 'ujm_word_response')]
+#[ORM\Entity]
 class Keyword implements AnswerPartInterface
 {
+    use Id;
     use ScoreTrait;
     use FeedbackTrait;
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="response", type="string", length=255)
      */
+    #[ORM\Column(name: 'response', type: 'string', length: 255)]
     private $text;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="caseSensitive", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'caseSensitive', type: 'boolean', nullable: true)]
     private $caseSensitive;
 
     /**
      * @deprecated this relation needs to be removed as it is not needed
      *
      * @var OpenQuestion
-     *
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\OpenQuestion", inversedBy="keywords")
-     * @ORM\JoinColumn(name="interaction_open_id", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'interaction_open_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\OpenQuestion::class, inversedBy: 'keywords')]
     private $interactionopen;
 
     /**
      * @deprecated this relation needs to be removed as it is not needed
      *
      * @var Hole
-     *
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Misc\Hole", inversedBy="keywords")
-     * @ORM\JoinColumn(name="hole_id", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'hole_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Misc\Hole::class, inversedBy: 'keywords')]
     private $hole;
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Get text.

@@ -11,57 +11,41 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class AbstractMessage
 {
+    use Id;
     use Uuid;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\Column(name="content", type="text")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(name: 'content', type: 'text')]
     protected $content;
 
     /**
-     * @ORM\Column(name="created", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
+    #[ORM\Column(name: 'created', type: 'datetime')]
     protected $creationDate;
 
     /**
-     * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
+    #[ORM\Column(type: 'datetime')]
     protected $updated;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
      *
      * @var User
      */
+    #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, cascade: ['persist'])]
     protected $creator;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     protected $author;
 
     public function __construct()
@@ -69,14 +53,6 @@ abstract class AbstractMessage
         $this->creationDate = new \DateTime();
         $this->updated = new \DateTime();
         $this->refreshUuid();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     public function setContent($content)

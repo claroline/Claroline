@@ -14,46 +14,37 @@ namespace Claroline\CoreBundle\Entity\Template;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(
- *     name="claro_template_content",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="template_unique_lang", columns={"template_id", "lang"})
- *     }
- * )
- */
+#[ORM\Table(name: 'claro_template_content')]
+#[ORM\UniqueConstraint(name: 'template_unique_lang', columns: ['template_id', 'lang'])]
+#[ORM\Entity]
 class TemplateContent
 {
     use Id;
 
     /**
-     * @ORM\Column(nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(nullable: true)]
     private $title;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $content;
 
     /**
-     * @ORM\Column()
-     *
      * @var string
      */
+    #[ORM\Column]
     private $lang = 'en';
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template", inversedBy="contents")
-     * @ORM\JoinColumn(name="template_id", nullable=false, onDelete="CASCADE")
      *
      * @var Template
      */
+    #[ORM\JoinColumn(name: 'template_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Template\Template::class, inversedBy: 'contents')]
     private $template;
 
     public function getTitle(): ?string

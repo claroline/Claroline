@@ -9,58 +9,46 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Slideshow.
- *
- * @ORM\Table(name="claro_slideshow")
- * @ORM\Entity()
  */
+#[ORM\Table(name: 'claro_slideshow')]
+#[ORM\Entity]
 class Slideshow extends AbstractResource
 {
     /**
      * Autoplay the slideshow on open.
-     *
-     * @ORM\Column(name="auto_play", type="boolean", options={"default" = 0})
      */
+    #[ORM\Column(name: 'auto_play', type: 'boolean', options: ['default' => 0])]
     private bool $autoPlay = false;
 
     /**
      * Interval between 2 slides (in ms).
-     *
-     * @ORM\Column(name="slide_interval", type="integer")
      */
+    #[ORM\Column(name: 'slide_interval', type: 'integer')]
     private int $interval = 5000;
 
     /**
      * Show overview to users or directly start the slideshow.
-     *
-     * @ORM\Column(name="show_overview", type="boolean", options={"default" = 0})
      */
+    #[ORM\Column(name: 'show_overview', type: 'boolean', options: ['default' => 0])]
     private bool $showOverview = false;
 
     /**
      * Show controls to users.
-     *
-     * @ORM\Column(name="show_controls", type="boolean", options={"default" = 0})
      */
+    #[ORM\Column(name: 'show_controls', type: 'boolean', options: ['default' => 0])]
     private bool $showControls = false;
 
     /**
      * Description of the slideshow to be shown on the overview.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
     /**
      * The list of slides in the slideshow.
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\SlideshowBundle\Entity\Resource\Slide",
-     *     mappedBy="slideshow",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
-     * @ORM\OrderBy({"order" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\SlideshowBundle\Entity\Resource\Slide::class, mappedBy: 'slideshow', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $slides;
 
     public function __construct()

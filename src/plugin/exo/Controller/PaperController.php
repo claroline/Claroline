@@ -115,7 +115,7 @@ class PaperController
     {
         $this->assertHasPermission('MANAGE_PAPERS', $exercise);
 
-        return new StreamedResponse(function () use ($exercise) {
+        return new StreamedResponse(function () use ($exercise): void {
             $this->exerciseManager->exportPapersToCsv($exercise);
         }, 200, [
             'Content-Type' => 'application/force-download',
@@ -135,7 +135,7 @@ class PaperController
             throw new AccessDeniedException();
         }
 
-        $response = new StreamedResponse(function () use ($exercise) {
+        $response = new StreamedResponse(function () use ($exercise): void {
             $data = $this->paperManager->serializeExercisePapers($exercise);
             $handle = fopen('php://output', 'w+');
             fwrite($handle, json_encode($data, JSON_PRETTY_PRINT));
@@ -160,7 +160,7 @@ class PaperController
             throw new AccessDeniedException();
         }
 
-        return new StreamedResponse(function () use ($exercise) {
+        return new StreamedResponse(function () use ($exercise): void {
             $this->exerciseManager->exportResultsToCsv($exercise);
         }, 200, [
             'Content-Type' => 'text/csv; charset=utf-8',

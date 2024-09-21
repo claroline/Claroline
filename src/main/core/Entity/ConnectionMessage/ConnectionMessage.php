@@ -14,10 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ConnectionMessage.
- *
- * @ORM\Table(name="claro_connection_message")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ConnectionMessage\ConnectionMessageRepository")
  */
+#[ORM\Table(name: 'claro_connection_message')]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\ConnectionMessage\ConnectionMessageRepository::class)]
 class ConnectionMessage
 {
     // identifiers
@@ -33,57 +32,49 @@ class ConnectionMessage
     const TYPE_DISCARD = 'discard';
 
     /**
-     * @ORM\Column()
-     *
      * @var string
      */
+    #[ORM\Column]
     private $title;
 
     /**
-     * @ORM\Column(name="message_type")
-     *
      * @var string
      */
+    #[ORM\Column(name: 'message_type')]
     protected $type = self::TYPE_ONCE;
 
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     private $locked = false;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\ConnectionMessage\Slide",
-     *     mappedBy="message",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
-     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var ArrayCollection|Slide[]
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\ConnectionMessage\Slide::class, mappedBy: 'message', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private $slides;
 
     /**
      * List of roles the message is destined to.
      *
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
-     * @ORM\JoinTable(name="claro_connection_message_role")
      *
      * @var ArrayCollection|Role[]
      */
+    #[ORM\JoinTable(name: 'claro_connection_message_role')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
     private $roles;
 
     /**
      * List of users for who the message doesn't have to be displayed anymore.
      *
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinTable(name="claro_connection_message_user")
      *
      * @var ArrayCollection|User[]
      */
+    #[ORM\JoinTable(name: 'claro_connection_message_user')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private $users;
 
     /**

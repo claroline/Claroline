@@ -10,10 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 trait AllowedIps
 {
     /**
-     * @ORM\Column(name="allowed_ips", type="json", nullable=true)
-     *
      * @var string[]
      */
+    #[ORM\Column(name: 'allowed_ips', type: 'json', nullable: true)]
     protected $allowedIps = [];
 
     public function getAllowedIps(): ?array

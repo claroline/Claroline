@@ -10,9 +10,7 @@ use Ramsey\Uuid\Uuid as BaseUuid;
  */
 trait Uuid
 {
-    /**
-     * @ORM\Column("uuid", type="string", length=36, unique=true)
-     */
+    #[ORM\Column('uuid', type: 'string', length: 36, unique: true)]
     protected string $uuid;
 
     /**

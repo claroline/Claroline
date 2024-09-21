@@ -15,33 +15,23 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class AbstractComment
 {
     use Id;
     use Uuid;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: 'text')]
     protected $content;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="SET NULL")
-     */
+    #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     protected $user;
 
-    /**
-     * @ORM\Column(name="creation_date", type="datetime")
-     */
+    #[ORM\Column(name: 'creation_date', type: 'datetime')]
     protected $creationDate;
 
-    /**
-     * @ORM\Column(name="edition_date", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'edition_date', type: 'datetime', nullable: true)]
     protected $editionDate;
 
     public function __construct()

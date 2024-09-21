@@ -356,7 +356,7 @@ class CourseController extends AbstractCrudController
     {
         $this->checkPermission('OPEN', $course, [], true);
 
-        return new StreamedResponse(function () use ($course, $request) {
+        return new StreamedResponse(function () use ($course, $request): void {
             echo $this->pdfManager->fromHtml(
                 $this->manager->generateFromTemplate($course, $request->getLocale())
             );

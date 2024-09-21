@@ -23,11 +23,9 @@ use Claroline\AppBundle\Entity\Meta\UpdatedAt;
 use Claroline\CoreBundle\Entity\Location;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Planning\PlannedObjectRepository")
- *
- * @ORM\Table(name="claro_planned_object")
- */
+
+#[ORM\Table(name: 'claro_planned_object')]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\Planning\PlannedObjectRepository::class)]
 class PlannedObject
 {
     use Id;
@@ -40,44 +38,31 @@ class PlannedObject
     use Poster;
     use Thumbnail;
 
-    /**
-     * @ORM\Column(name="event_type")
-     */
+    #[ORM\Column(name: 'event_type')]
     private ?string $type = null;
 
     /**
      * The FQCN of the AbstractPlanned implementation.
      * It allows us to retrieve the event from the core (used for PlannedObjectVoter).
-     *
-     * @ORM\Column(name="event_class")
      */
+    #[ORM\Column(name: 'event_class')]
     private ?string $class = null;
 
-    /**
-     * @ORM\Column(name="start_date", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'start_date', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $startDate = null;
 
-    /**
-     * @ORM\Column(name="end_date", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'end_date', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $endDate = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $color = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $locationUrl = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Location")
-     *
-     * @ORM\JoinColumn(name="location_id", nullable=true, onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(name: 'location_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Location::class)]
     private ?Location $location = null;
 
     public function __construct()

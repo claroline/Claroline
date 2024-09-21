@@ -6,14 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait EvaluationFeedbacks
 {
-    /**
-     * @ORM\Column(name="success_message", type="text", nullable=true)
-     */
+    #[ORM\Column(name: 'success_message', type: 'text', nullable: true)]
     private ?string $successMessage = null;
 
-    /**
-     * @ORM\Column(name="failure_message", type="text", nullable=true)
-     */
+    #[ORM\Column(name: 'failure_message', type: 'text', nullable: true)]
     private ?string $failureMessage = null;
 
     public function getSuccessMessage(): ?string

@@ -17,18 +17,16 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * A shortcut to access another resource in the platform.
- *
- * @ORM\Entity()
- * @ORM\Table(name="claro_resource_shortcut")
  */
+#[ORM\Table(name: 'claro_resource_shortcut')]
+#[ORM\Entity]
 class Shortcut extends AbstractResource
 {
     /**
      * The targeted resource node.
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     private ?ResourceNode $target = null;
 
     /**

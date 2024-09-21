@@ -14,21 +14,16 @@ namespace Claroline\DropZoneBundle\Entity;
 use Claroline\CoreBundle\Entity\AbstractComment;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_dropzonebundle_revision_comment")
- */
+#[ORM\Table(name: 'claro_dropzonebundle_revision_comment')]
+#[ORM\Entity]
 class RevisionComment extends AbstractComment
 {
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\DropZoneBundle\Entity\Revision",
-     *     inversedBy="comments"
-     * )
-     * @ORM\JoinColumn(name="revision_id", onDelete="CASCADE")
      *
      * @var Revision
      */
+    #[ORM\JoinColumn(name: 'revision_id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Revision::class, inversedBy: 'comments')]
     private $revision;
 
     public function getRevision(): ?Revision

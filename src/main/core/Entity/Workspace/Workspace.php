@@ -38,11 +38,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
- *
- * @ORM\Table(name="claro_workspace", indexes={@ORM\Index(name="name_idx", columns={"entity_name"})})
- */
+
+#[ORM\Table(name: 'claro_workspace')]
+#[ORM\Index(name: 'name_idx', columns: ['entity_name'])]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\WorkspaceRepository::class)]
 class Workspace implements ContextSubjectInterface, CrudEntityInterface
 {
     // identifiers
@@ -71,109 +70,75 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
 
     /**
      * @Gedmo\Slug(fields={"code"})
-     *
-     * @ORM\Column(length=128, unique=true)
      */
+    #[ORM\Column(length: 128, unique: true)]
     private ?string $slug = null;
 
-    /**
-     * @ORM\Column(name="isModel", type="boolean")
-     */
+    #[ORM\Column(name: 'isModel', type: 'boolean')]
     private bool $model = false;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     mappedBy="workspace",
-     *     fetch="EXTRA_LAZY"
-     * )
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Role::class, mappedBy: 'workspace', fetch: 'EXTRA_LAZY')]
     private Collection $roles;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role"
-     * )
-     *
-     * @ORM\JoinColumn(name="default_role_id", onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(name: 'default_role_id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
     private ?Role $defaultRole;
 
     /**
-     * @ORM\Column(name="self_registration", type="boolean")
-     *
      * @deprecated to move in community parameters
      */
+    #[ORM\Column(name: 'self_registration', type: 'boolean')]
     private bool $selfRegistration = false;
 
     /**
-     * @ORM\Column(name="registration_validation", type="boolean")
-     *
      * @deprecated to move in community parameters
      */
+    #[ORM\Column(name: 'registration_validation', type: 'boolean')]
     private bool $registrationValidation = false;
 
     /**
-     * @ORM\Column(name="self_unregistration", type="boolean")
-     *
      * @deprecated to move in community parameters
      */
+    #[ORM\Column(name: 'self_unregistration', type: 'boolean')]
     private bool $selfUnregistration = false;
 
     /**
-     * @ORM\Column(name="max_teams", type="integer", nullable=true)
-     *
      * @deprecated to move in community parameters
      */
+    #[ORM\Column(name: 'max_teams', type: 'integer', nullable: true)]
     private ?int $maxTeams = null;
 
-    /**
-     * @ORM\Column(name="is_personal", type="boolean")
-     */
+    #[ORM\Column(name: 'is_personal', type: 'boolean')]
     private bool $personal = false;
 
-    /**
-     * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions",
-     *     inversedBy="workspace",
-     *     cascade={"persist"}
-     * )
-     *
-     * @ORM\JoinColumn(name="options_id", onDelete="SET NULL", nullable=true)
-     */
+    
+    #[ORM\JoinColumn(name: 'options_id', onDelete: 'SET NULL', nullable: true)]
+    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions::class, inversedBy: 'workspace', cascade: ['persist'])]
     private WorkspaceOptions $options;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $contactEmail = null;
 
     /**
      * The conditions to get a success status for the workspace evaluation.
      * Supported conditions : minimal score, min successful resources, max failed resources.
-     *
-     * @ORM\Column(type="json", nullable=true)
      */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $successCondition = [];
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization")
-     *
-     * @ORM\JoinTable(name="workspace_organization")
-     */
+    
+    #[ORM\JoinTable(name: 'workspace_organization')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Organization\Organization::class)]
     private Collection $organizations;
 
     // not mapped. Used for creation
     private $workspaceModel;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $estimatedDuration = null;
 
-    /**
-     * @ORM\Column(name="score_total", type="float", options={"default" = 100})
-     */
+    #[ORM\Column(name: 'score_total', type: 'float', options: ['default' => 100])]
     private float $scoreTotal = 100;
 
     public function __construct()

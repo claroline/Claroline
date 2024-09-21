@@ -11,59 +11,27 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User as User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\MemberRepository")
- * @ORM\Table(name="icap__blog_member")
- */
+#[ORM\Table(name: 'icap__blog_member')]
+#[ORM\Entity(repositoryClass: \Icap\BlogBundle\Repository\MemberRepository::class)]
 class Member
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    protected $id;
+    use Id;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist"}
-     * )
-     */
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, cascade: ['persist'])]
     protected $user;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Icap\BlogBundle\Entity\Blog",
-     *     inversedBy="members",
-     *     cascade={"persist"}
-     * )
-     */
+    #[ORM\ManyToOne(targetEntity: \Icap\BlogBundle\Entity\Blog::class, inversedBy: 'members', cascade: ['persist'])]
     protected $blog;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     protected $trusted = false;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     protected $banned = false;
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     public function setUser(User $user)
     {

@@ -14,19 +14,17 @@ trait ContentTrait
      * The content data.
      *
      * @var string
-     *
-     * @ORM\Column(name="data", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'data', type: 'text', nullable: true)]
     private $data;
 
     /**
      * A resource node holding the content.
      *
      * @var ResourceNode
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(name="resourceNode_id", referencedColumnName="id", nullable=true)
      */
+    #[ORM\JoinColumn(name: 'resourceNode_id', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     private $resourceNode;
 
     /**

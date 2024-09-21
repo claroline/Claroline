@@ -14,15 +14,11 @@ namespace Valid\WithCustomResources\Entity;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="valid_custom_resource_b")
- */
+#[ORM\Table(name: 'valid_custom_resource_b')]
+#[ORM\Entity]
 class ResourceB extends AbstractResource
 {
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $someField;
 
     public function getSomeField()

@@ -8,53 +8,43 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Table(name="icap__blog_comment")
- * @ORM\Entity()
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Table(name: 'icap__blog_comment')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Comment extends Statusable
 {
     use Id;
     use Uuid;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: 'text')]
     private ?string $message;
 
     /**
      * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime", name="creation_date")
      */
+    #[ORM\Column(type: 'datetime', name: 'creation_date')]
     private ?\DateTimeInterface $creationDate;
 
     /**
-     * @ORM\Column(type="datetime", name="publication_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="status", value="1")
      */
+    #[ORM\Column(type: 'datetime', name: 'publication_date', nullable: true)]
     private ?\DateTimeInterface $publicationDate;
 
     /**
-     * @ORM\Column(type="datetime", name="update_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="message")
      */
+    #[ORM\Column(type: 'datetime', name: 'update_date', nullable: true)]
     private ?\DateTimeInterface $updateDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="SET NULL")
-     */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private ?User $author;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Icap\BlogBundle\Entity\Post", inversedBy="comments")
-     */
+    #[ORM\ManyToOne(targetEntity: \Icap\BlogBundle\Entity\Post::class, inversedBy: 'comments')]
     private ?Post $post;
 
-    /**
-     * @ORM\Column(type="smallint")
-     */
+    #[ORM\Column(type: 'smallint')]
     private int $reported = 0;
 
     public function __construct()

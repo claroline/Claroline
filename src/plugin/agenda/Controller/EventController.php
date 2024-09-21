@@ -89,7 +89,7 @@ class EventController extends AbstractCrudController
     {
         $this->checkPermission('OPEN', $event, [], true);
 
-        return new StreamedResponse(function () use ($event) {
+        return new StreamedResponse(function () use ($event): void {
             echo $this->manager->getICS($event);
         }, 200, [
             'Content-Type' => 'text/calendar',

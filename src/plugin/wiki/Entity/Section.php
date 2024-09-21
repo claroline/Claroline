@@ -2,6 +2,7 @@
 
 namespace Icap\WikiBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Event\PostPersistEventArgs;
@@ -10,91 +11,74 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @Gedmo\Tree(type="nested")
- * @ORM\Table(name="icap__wiki_section")
- * @ORM\Entity(repositoryClass="Icap\WikiBundle\Repository\SectionRepository")
- * @ORM\HasLifecycleCallbacks()
  */
+#[ORM\Table(name: 'icap__wiki_section')]
+#[ORM\Entity(repositoryClass: \Icap\WikiBundle\Repository\SectionRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Section
 {
+    use Id;
     use Uuid;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     */
+    #[ORM\Column(type: 'boolean', nullable: false)]
     protected $visible = true;
 
     /**
-     * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
      */
+    #[ORM\Column(type: 'datetime', name: 'creation_date')]
     protected $creationDate;
 
     /**
      * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="SET NULL")
      */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     protected $author;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Icap\WikiBundle\Entity\Contribution", cascade={"all"})
-     * @ORM\JoinColumn(name="active_contribution_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'active_contribution_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: \Icap\WikiBundle\Entity\Contribution::class, cascade: ['all'])]
     protected $activeContribution;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Icap\WikiBundle\Entity\Wiki")
-     * @ORM\JoinColumn(name="wiki_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'wiki_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Icap\WikiBundle\Entity\Wiki::class)]
     protected $wiki;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     protected $deleted = false;
 
-    /**
-     * @ORM\Column(type="datetime", name="deletion_date", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', name: 'deletion_date', nullable: true)]
     protected $deletionDate;
 
     /**
      * @Gedmo\TreeLeft
-     * @ORM\Column(name="lft", type="integer")
      */
+    #[ORM\Column(name: 'lft', type: 'integer')]
     private $left;
 
     /**
      * @Gedmo\TreeLevel
-     * @ORM\Column(name="lvl", type="integer")
      */
+    #[ORM\Column(name: 'lvl', type: 'integer')]
     private $level;
 
     /**
      * @Gedmo\TreeRight
-     * @ORM\Column(name="rgt", type="integer")
      */
+    #[ORM\Column(name: 'rgt', type: 'integer')]
     private $right;
 
     /**
      * @Gedmo\TreeRoot
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $root;
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="Icap\WikiBundle\Entity\Section")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Icap\WikiBundle\Entity\Section::class)]
     protected $parent;
 
     /**
@@ -107,16 +91,6 @@ class Section
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -423,9 +397,7 @@ class Section
         return 0 === $this->getLevel();
     }
 
-    /**
-     * @ORM\PostPersist
-     */
+    #[ORM\PostPersist]
     public function createActiveContribution(PostPersistEventArgs $event)
     {
         if (null === $this->getActiveContribution()) {

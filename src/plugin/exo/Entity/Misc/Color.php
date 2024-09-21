@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,43 +10,27 @@ use UJM\ExoBundle\Entity\ItemType\SelectionQuestion;
 
 /**
  * Color.
- *
- * @ORM\Entity()
- * @ORM\Table(name="ujm_color")
  */
+#[ORM\Table(name: 'ujm_color')]
+#[ORM\Entity]
 class Color
 {
+    use Id;
     use Uuid;
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
     /**
      * The color code.
      *
      * @var string
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private $colorCode;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\SelectionQuestion", inversedBy="colors")
-     * @ORM\JoinColumn(name="interaction_selection_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'interaction_selection_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\SelectionQuestion::class, inversedBy: 'colors')]
     private $interactionSelection;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\ColorSelection",
-     *     mappedBy="color", cascade={"persist", "remove"}, orphanRemoval=true
-     * )
-     */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\ColorSelection::class, mappedBy: 'color', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $colorSelections;
 
     public function __construct()
@@ -62,14 +47,6 @@ class Color
     public function getColorCode()
     {
         return $this->colorCode;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

@@ -18,35 +18,25 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Name;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_icon_item")
- */
+#[ORM\Table(name: 'claro_icon_item')]
+#[ORM\Entity]
 class IconItem
 {
     use Id;
     use Uuid;
     use Name;
 
-    /**
-     * @ORM\Column(name="mime_type", nullable=true)
-     */
+    #[ORM\Column(name: 'mime_type', nullable: true)]
     private ?string $mimeType = null;
 
-    /**
-     * @ORM\Column(name="relative_url")
-     */
+    #[ORM\Column(name: 'relative_url')]
     private ?string $relativeUrl = null;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private bool $svg = false;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="IconSet", inversedBy="icons", fetch="LAZY")
-     * @ORM\JoinColumn(name="icon_set_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'icon_set_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \IconSet::class, inversedBy: 'icons', fetch: 'LAZY')]
     private ?IconSet $iconSet = null;
 
     public function __construct()

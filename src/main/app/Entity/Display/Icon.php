@@ -6,9 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait Icon
 {
-    /**
-     * @ORM\Column(name="icon", nullable=true)
-     */
+    #[ORM\Column(name: 'icon', nullable: true)]
     protected ?string $icon = null;
 
     public function getIcon(): ?string

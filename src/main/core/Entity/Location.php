@@ -22,13 +22,9 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(name="claro__location")
- */
+#[ORM\Table(name: 'claro__location')]
+#[ORM\Entity]
 class Location implements IdentifiableInterface
 {
     use Id;
@@ -38,23 +34,15 @@ class Location implements IdentifiableInterface
     use Poster;
     use Address;
 
-    /**
-     * @ORM\Column()
-     *
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column]
     private ?string $name = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $phone = null;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization")
-     *
-     * @ORM\JoinTable(name="claro__location_organization")
-     */
+    
+    #[ORM\JoinTable(name: 'claro__location_organization')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Organization\Organization::class)]
     private Collection $organizations;
 
     public function __construct()

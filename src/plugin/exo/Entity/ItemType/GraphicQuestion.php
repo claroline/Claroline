@@ -9,10 +9,9 @@ use UJM\ExoBundle\Entity\Misc\Area;
 
 /**
  * A Graphic question.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_interaction_graphic")
  */
+#[ORM\Table(name: 'ujm_interaction_graphic')]
+#[ORM\Entity]
 class GraphicQuestion extends AbstractItem
 {
     const SHAPE_RECT = 'rect';
@@ -21,25 +20,16 @@ class GraphicQuestion extends AbstractItem
     /**
      * The image of the question.
      *
-     * @ORM\ManyToOne(
-     *     targetEntity="UJM\ExoBundle\Entity\Content\Image",
-     *     cascade={"persist"}
-     * )
      *
      * @var Image
      */
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Content\Image::class, cascade: ['persist'])]
     private $image;
 
     /**
      * @todo remove the mapped by and add a join table
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\Area",
-     *     mappedBy="interactionGraphic",
-     *     cascade={"all"},
-     *     orphanRemoval=true
-     * )
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Area::class, mappedBy: 'interactionGraphic', cascade: ['all'], orphanRemoval: true)]
     private $areas;
 
     /**

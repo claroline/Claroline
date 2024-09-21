@@ -2,61 +2,48 @@
 
 namespace UJM\ExoBundle\Entity\Content;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Image.
- *
- * @ORM\Entity()
- * @ORM\Table(name="ujm_picture")
  */
+#[ORM\Table(name: 'ujm_picture')]
+#[ORM\Entity]
 class Image
 {
+    use Id;
     use Uuid;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
      * @var string
-     *
-     * @ORM\Column(type="string", length=255)
      */
+    #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="url", type="string", length=255)
      */
+    #[ORM\Column(name: 'url', type: 'string', length: 255)]
     private $url;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="type", type="string", length=255)
      */
+    #[ORM\Column(name: 'type', type: 'string', length: 255)]
     private $type;
 
     /**
      * @var int
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     private $width;
 
     /**
      * @var int
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     private $height;
 
     /**
@@ -65,16 +52,6 @@ class Image
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

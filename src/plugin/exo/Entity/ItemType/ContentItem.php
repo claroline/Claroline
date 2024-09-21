@@ -6,15 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * An Audio Content item.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_item_content")
  */
+#[ORM\Table(name: 'ujm_item_content')]
+#[ORM\Entity]
 class ContentItem extends AbstractItem
 {
-    /**
-     * @ORM\Column(name="content_data", type="text")
-     */
+    #[ORM\Column(name: 'content_data', type: 'text')]
     private $data;
 
     /**

@@ -20,51 +20,37 @@ use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro__open_badge_evidence")
- */
+
+#[ORM\Table(name: 'claro__open_badge_evidence')]
+#[ORM\Entity]
 class Evidence
 {
     use Id;
     use Uuid;
     use Description;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     private ?string $name = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Assertion", inversedBy="evidences")
-     *
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\OpenBadgeBundle\Entity\Assertion::class, inversedBy: 'evidences')]
     private ?Assertion $assertion = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation")
-     */
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation::class)]
     private ?ResourceUserEvaluation $resourceEvidence = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Evaluation")
-     */
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Evaluation::class)]
     private ?Evaluation $workspaceEvidence = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Rules\Rule")
-     *
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\OpenBadgeBundle\Entity\Rules\Rule::class)]
     private ?Rule $rule = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     *
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private ?User $user = null;
 
     public function __construct()

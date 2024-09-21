@@ -10,10 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  * UserProgression
  * Represents the progression of a User in a Step.
  *
- * @ORM\Table(name="innova_path_progression")
  *
- * @ORM\Entity()
  */
+#[ORM\Table(name: 'innova_path_progression')]
+#[ORM\Entity]
 class UserProgression
 {
     use Id;
@@ -21,26 +21,25 @@ class UserProgression
     /**
      * Step for which we track the progression.
      *
-     * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step")
      *
-     * @ORM\JoinColumn(name="step_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'step_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Innova\PathBundle\Entity\Step::class)]
     private Step $step;
 
     /**
      * User for which we track the progression.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      *
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private ?User $user = null;
 
     /**
      * Current state of the Step.
-     *
-     * @ORM\Column(name="progression_status", type="string")
      */
+    #[ORM\Column(name: 'progression_status', type: 'string')]
     private string $status = 'seen';
 
     public function getStep(): ?Step

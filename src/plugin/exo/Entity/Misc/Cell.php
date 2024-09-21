@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,103 +12,83 @@ use UJM\ExoBundle\Library\Model\ShuffleTrait;
 
 /**
  * GridItem.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_cell")
  */
+#[ORM\Table(name: 'ujm_cell')]
+#[ORM\Entity]
 class Cell
 {
+    use Id;
     use Uuid;
     use ShuffleTrait;
 
     /**
-     * Unique identifier of the item.
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    private $id;
-
-    /**
      * Data associated to the cell.
      *
-     * @ORM\Column(type="text", nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $data = null;
 
     /**
      * X coordinate of the item in the grid.
      *
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var int
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $coordsX = null;
 
     /**
      * Y coordinate of the item in the grid.
      *
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var int
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $coordsY = null;
 
     /**
      * Font color in the cell.
      *
-     * @ORM\Column(type="string", nullable=false)
      *
      * @var string
      */
+    #[ORM\Column(type: 'string', nullable: false)]
     private $color = '#000';
 
     /**
      * Cell background color.
      *
-     * @ORM\Column(type="string", nullable=false)
      *
      * @var string
      */
+    #[ORM\Column(type: 'string', nullable: false)]
     private $background = '#fff';
 
     /**
      * The list of texts attached to the cell.
      *
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\CellChoice",
-     *     mappedBy="cell",
-     *     cascade={"all"},
-     *     orphanRemoval=true
-     * )
      *
      * @var ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\CellChoice::class, mappedBy: 'cell', cascade: ['all'], orphanRemoval: true)]
     private $choices;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\GridQuestion", inversedBy="cells")
-     * @ORM\JoinColumn(name="question_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'question_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\GridQuestion::class, inversedBy: 'cells')]
     private $question;
 
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     private $selector = false;
 
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     private $input = false;
 
     /**
@@ -117,16 +98,6 @@ class Cell
     {
         $this->refreshUuid();
         $this->choices = new ArrayCollection();
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     public function setQuestion(GridQuestion $question)
@@ -300,12 +271,12 @@ class Cell
         $oldChoices = array_filter($this->choices->toArray(), function (CellChoice $choice) use ($choices) {
             return !in_array($choice, $choices);
         });
-        array_walk($oldChoices, function (CellChoice $choice) {
+        array_walk($oldChoices, function (CellChoice $choice): void {
             $this->removeChoice($choice);
         });
 
         // Adds new ones
-        array_walk($choices, function (CellChoice $choice) {
+        array_walk($choices, function (CellChoice $choice): void {
             $this->addChoice($choice);
         });
     }

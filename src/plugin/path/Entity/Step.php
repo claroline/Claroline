@@ -16,10 +16,9 @@ use Innova\PathBundle\Entity\Path\Path;
 
 /**
  * Step.
- *
- * @ORM\Table("innova_step")
- * @ORM\Entity()
  */
+#[ORM\Table('innova_step')]
+#[ORM\Entity]
 class Step
 {
     use Id;
@@ -28,61 +27,48 @@ class Step
     use Order;
     use Poster;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Step", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Step::class, inversedBy: 'children')]
     private ?Step $parent = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Step", mappedBy="parent", cascade={"persist", "remove"})
-     * @ORM\OrderBy({"order" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: \Step::class, mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $children;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path\Path", inversedBy="steps")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Innova\PathBundle\Entity\Path\Path::class, inversedBy: 'steps')]
     private ?Path $path = null;
 
     /**
      * Title of the step.
-     *
-     * @ORM\Column(name="title", nullable=true)
      */
+    #[ORM\Column(name: 'title', nullable: true)]
     private ?string $title = null;
 
     /**
      * The number of the step (either a number, a literal or a custom label).
-     *
-     * @ORM\Column(nullable=true)
      */
+    #[ORM\Column(nullable: true)]
     private ?string $numbering = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(name="resource_id", nullable=true, onDelete="SET NULL")
-     */
+    #[ORM\JoinColumn(name: 'resource_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     private ?ResourceNode $resource = null;
 
-    /**
-     * @ORM\Column(name="showResourceHeader", type="boolean")
-     */
+    #[ORM\Column(name: 'showResourceHeader', type: 'boolean')]
     private bool $showResourceHeader = false;
 
     /**
      * Secondary resources.
-     *
-     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\SecondaryResource", mappedBy="step", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\OrderBy({"order" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: \Innova\PathBundle\Entity\SecondaryResource::class, mappedBy: 'step', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $secondaryResources;
 
     /**
      * @Gedmo\Slug(fields={"title"}, unique=false, updatable=false)
-     * @ORM\Column(length=128)
      */
+    #[ORM\Column(length: 128)]
     private ?string $slug = null;
 
     public function __construct()

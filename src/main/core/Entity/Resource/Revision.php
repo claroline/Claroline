@@ -15,41 +15,24 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_text_revision")
- */
+#[ORM\Table(name: 'claro_text_revision')]
+#[ORM\Entity]
 class Revision
 {
     use Id;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private int $version = 1;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\Text",
-     *     inversedBy="revisions",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\Text::class, inversedBy: 'revisions', cascade: ['persist'])]
     private ?Text $text;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: 'text')]
     private ?string $content = null;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, cascade: ['persist'])]
     private ?User $user;
 
     public function getVersion(): int

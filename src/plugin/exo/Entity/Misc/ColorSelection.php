@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
@@ -9,41 +10,22 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
 
 /**
  * ColorSelection.
- *
- * @ORM\Entity()
- * @ORM\Table(name="ujm_color_selection")
  */
+#[ORM\Table(name: 'ujm_color_selection')]
+#[ORM\Entity]
 class ColorSelection implements AnswerPartInterface
 {
+    use Id;
     use ScoreTrait;
     use FeedbackTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Selection", inversedBy="colorSelections")
-     * @ORM\JoinColumn(name="selection_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'selection_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Selection::class, inversedBy: 'colorSelections')]
     private $selection;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Color", inversedBy="colorSelections")
-     * @ORM\JoinColumn(name="color_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'color_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Color::class, inversedBy: 'colorSelections')]
     private $color;
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * @return Selection

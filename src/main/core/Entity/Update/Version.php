@@ -11,57 +11,37 @@
 
 namespace Claroline\CoreBundle\Entity\Update;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\VersionRepository")
- * @ORM\Table(
- *     name="claro_version"
- *)
- */
+#[ORM\Table(name: 'claro_version')]
+#[ORM\Entity(repositoryClass: \Claroline\CoreBundle\Repository\VersionRepository::class)]
 class Version
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     protected $commit;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     protected $version;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     protected $branch;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     protected $bundle;
 
-    /**
-     * @ORM\Column(name="is_upgraded", type="boolean")
-     */
+    #[ORM\Column(name: 'is_upgraded', type: 'boolean')]
     protected $isUpgraded = false;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @Gedmo\Timestampable(on="create")
-     *
      * @var \DateTime
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected $date;
 
     public function __construct($version = null, $commit = null, $branch = null, $bundle = null)
@@ -70,11 +50,6 @@ class Version
         $this->commit = $commit;
         $this->branch = $branch;
         $this->bundle = $bundle;
-    }
-
-    public function getId()
-    {
-        return $this->id;
     }
 
     public function setCommit($commit)

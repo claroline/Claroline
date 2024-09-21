@@ -11,35 +11,27 @@ use UJM\ExoBundle\Entity\Exercise;
 
 /**
  * A paper represents a user attempt to a quiz.
- *
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\PaperRepository")
- * @ORM\Table(name="ujm_paper")
  */
+#[ORM\Table(name: 'ujm_paper')]
+#[ORM\Entity(repositoryClass: \UJM\ExoBundle\Repository\PaperRepository::class)]
 class Paper
 {
     use Id;
     use Uuid;
 
-    /**
-     * @ORM\Column(name="num_paper", type="integer")
-     */
+    #[ORM\Column(name: 'num_paper', type: 'integer')]
     private $number = 1;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: 'datetime')]
     private $start;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $end = null;
 
     /**
      * The generated structure (steps and questions) for the attempt.
-     *
-     * @ORM\Column(name="ordre_question", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'ordre_question', type: 'text', nullable: true)]
     private $structure;
 
     /**
@@ -49,37 +41,29 @@ class Paper
      */
     private $decodedStructure = null;
 
-    /**
-     * @ORM\Column(name="interupt", type="boolean", nullable=true)
-     */
+    #[ORM\Column(name: 'interupt', type: 'boolean', nullable: true)]
     private $interrupted = true;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: 'float', nullable: true)]
     private $score = null;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: 'float', nullable: true)]
     private $total = null;
 
     /**
      * Anonymize the user information when showing the paper.
      *
      * @var bool
-     *
-     * @ORM\Column(name="anonymous", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'anonymous', type: 'boolean', nullable: true)]
     private $anonymized = false;
 
     /**
      * A paper is invalidated when the exercise definition has changed.
      *
      * @var bool
-     *
-     * @ORM\Column(name="invalidated", type="boolean")
      */
+    #[ORM\Column(name: 'invalidated', type: 'boolean')]
     private $invalidated = false;
 
     /**
@@ -87,27 +71,24 @@ class Paper
      * If this is the attempt for an anonymous user, this property is `null`.
      *
      * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private $user;
 
     /**
      * @var Exercise
-     *
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Exercise")
-     * @ORM\JoinColumn(onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Exercise::class)]
     private $exercise;
 
     /**
      * The submitted answers for this attempt.
      *
      * @var Answer[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Attempt\Answer", mappedBy="paper", cascade={"all"}, orphanRemoval=true)
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Attempt\Answer::class, mappedBy: 'paper', cascade: ['all'], orphanRemoval: true)]
     private $answers;
 
     /**

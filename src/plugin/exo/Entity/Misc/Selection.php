@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,70 +13,43 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
 
 /**
  * Selection.
- *
- * @ORM\Entity()
- * @ORM\Table(name="ujm_selection")
  */
+#[ORM\Table(name: 'ujm_selection')]
+#[ORM\Entity]
 class Selection implements AnswerPartInterface
 {
+    use Id;
     use FeedbackTrait;
     use ScoreTrait;
     use Uuid;
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
     /**
      * The starting position.
      *
      * @var int
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     private $begin;
 
     /**
      * The ending position.
      *
      * @var int
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     private $end;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\SelectionQuestion", inversedBy="selections")
-     * @ORM\JoinColumn(name="interation_selection_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'interation_selection_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\ItemType\SelectionQuestion::class, inversedBy: 'selections')]
     private $interactionSelection;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\ColorSelection",
-     *     mappedBy="selection",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
-     */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\ColorSelection::class, mappedBy: 'selection', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $colorSelections;
 
     public function __construct()
     {
         $this->refreshUuid();
         $this->colorSelections = new ArrayCollection();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

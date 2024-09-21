@@ -38,7 +38,7 @@ class UserType extends AbstractType
             ->add('disabled', BooleanType::class, ['default' => $options['disabled']])
             //->add('status', TextType::class)
             ->add('organizations', OrganizationType::class, [
-                'joinQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder) {
+                'joinQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
                     $alias = $finder->getAlias();
                     if (!$finder->isRoot()) {
                         $alias = $finder->getParent()->getAlias();

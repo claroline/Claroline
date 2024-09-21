@@ -18,117 +18,92 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_forum_subject")
- */
+#[ORM\Table(name: 'claro_forum_subject')]
+#[ORM\Entity]
 class Subject
 {
     use Id;
     use Uuid;
 
-    /**
-     * @ORM\Column()
-     * @Assert\NotBlank()
-     *
-     * @var string
-     */
+    #[ORM\Column]
     protected $title;
 
     /**
-     * @ORM\Column(name="created", type="datetime")
      * @Gedmo\Timestampable(on="create")
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'created', type: 'datetime')]
     protected $creationDate;
 
     /**
-     * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
+    #[ORM\Column(type: 'datetime')]
     protected $updated;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ForumBundle\Entity\Forum",
-     *     inversedBy="subjects"
-     * )
-     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Forum
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ForumBundle\Entity\Forum::class, inversedBy: 'subjects')]
     protected $forum;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\ForumBundle\Entity\Message",
-     *     mappedBy="subject"
-     * )
-     * @ORM\OrderBy({"id" = "ASC"})
      *
      * @var Message[]|ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\ForumBundle\Entity\Message::class, mappedBy: 'subject')]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     protected $messages;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
      *
      * @var User
      */
+    #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class, cascade: ['persist'])]
     protected $creator;
 
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     protected $sticked = false;
 
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     protected $closed = false;
 
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     protected $flagged = false;
 
     /**
-     * @ORM\Column(type="integer")
-     *
      * @var int
      */
+    #[ORM\Column(type: 'integer')]
     protected $viewCount = 0;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\File\PublicFile"
-     * )
-     * @ORM\JoinColumn(name="poster_id", referencedColumnName="id", onDelete="SET NULL")
      *
      * @var PublicFile
      *
      * @todo only store file URL
      */
+    #[ORM\JoinColumn(name: 'poster_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\File\PublicFile::class)]
     protected $poster;
 
     /**
-     * @ORM\Column(type="string")
-     *
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     protected $moderation = Forum::VALIDATE_NONE;
 
     public function __construct()

@@ -198,7 +198,7 @@ class EventController extends AbstractCrudController
     {
         $this->checkPermission('OPEN', $sessionEvent, [], true);
 
-        return new StreamedResponse(function () use ($sessionEvent, $request) {
+        return new StreamedResponse(function () use ($sessionEvent, $request): void {
             echo $this->pdfManager->fromHtml(
                 $this->manager->generateFromTemplate($sessionEvent, $request->getLocale())
             );
@@ -217,7 +217,7 @@ class EventController extends AbstractCrudController
     {
         $this->checkPermission('OPEN', $sessionEvent, [], true);
 
-        return new StreamedResponse(function () use ($sessionEvent) {
+        return new StreamedResponse(function () use ($sessionEvent): void {
             echo $this->manager->getICS($sessionEvent);
         }, 200, [
             'Content-Type' => 'text/calendar',

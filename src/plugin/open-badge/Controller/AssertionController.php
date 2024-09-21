@@ -122,7 +122,7 @@ class AssertionController extends AbstractCrudController
 
         $fileName = TextNormalizer::toKey($badge->getName().'-'.$user->getFirstName().$user->getLastName());
 
-        return new StreamedResponse(function () use ($assertion) {
+        return new StreamedResponse(function () use ($assertion): void {
             echo $this->pdfManager->fromHtml(
                 $this->manager->generateCertificate($assertion)
             );

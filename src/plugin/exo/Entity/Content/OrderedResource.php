@@ -8,19 +8,17 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Base class to create an ordered list of ResourceNodes in an entity.
- *
- * @ORM\MappedSuperclass()
  */
+#[ORM\MappedSuperclass]
 abstract class OrderedResource
 {
     use Order;
 
     /**
      * Linked ResourceNode.
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     protected $resourceNode;
 
     /**

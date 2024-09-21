@@ -9,10 +9,9 @@ use UJM\ExoBundle\Entity\Item\Item;
 /**
  * A stepItem represents the link between a question and an exercise step.
  * It also stores the position of the question in the step.
- *
- * @ORM\Entity()
- * @ORM\Table(name="ujm_step_question")
  */
+#[ORM\Table(name: 'ujm_step_question')]
+#[ORM\Entity]
 class StepItem
 {
     /*
@@ -23,32 +22,31 @@ class StepItem
     /**
      * The parent step.
      *
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Step", inversedBy="stepQuestions")
-     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Step
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Step::class, inversedBy: 'stepQuestions')]
     private $step;
 
     /**
      * The linked question.
      *
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Item\Item", cascade={"persist"})
-     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Item
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: \UJM\ExoBundle\Entity\Item\Item::class, cascade: ['persist'])]
     private $question;
 
     /**
      * The answer is mandatory to continue the quiz.
      *
      * @var bool
-     *
-     * @ORM\Column(name="mandatory", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'mandatory', type: 'boolean', nullable: true)]
     private $mandatory = false;
 
     /**

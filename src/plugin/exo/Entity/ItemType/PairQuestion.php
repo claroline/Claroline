@@ -12,10 +12,9 @@ use UJM\ExoBundle\Library\Model\ShuffleTrait;
 
 /**
  * A pair question.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_question_pair")
  */
+#[ORM\Table(name: 'ujm_question_pair')]
+#[ORM\Entity]
 class PairQuestion extends AbstractItem
 {
     use ShuffleTrait;
@@ -27,39 +26,25 @@ class PairQuestion extends AbstractItem
     /**
      * List of available items for the question.
      *
-     * @ORM\ManyToMany(targetEntity="UJM\ExoBundle\Entity\Misc\GridItem", cascade={"all"})
-     * @ORM\JoinTable(
-     *     name="ujm_question_pair_items",
-     *     joinColumns={@ORM\JoinColumn(name="question_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="item_id", referencedColumnName="id", unique=true)}
-     * )
      *
      * @var GridItem[]|ArrayCollection
      */
+    #[ORM\JoinTable(name: 'ujm_question_pair_items')]
+    #[ORM\JoinColumn(name: 'question_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'item_id', referencedColumnName: 'id', unique: true)]
+    #[ORM\ManyToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\GridItem::class, cascade: ['all'])]
     private $items;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\GridRow",
-     *     mappedBy="question",
-     *     cascade={"all"},
-     *     orphanRemoval=true
-     * )
-     *
      * @var GridRow[]|ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\GridRow::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
     private $rows;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\GridOdd",
-     *     mappedBy="question",
-     *     cascade={"all"},
-     *     orphanRemoval=true
-     * )
-     *
      * @var GridOdd[]|ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\GridOdd::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
     private $oddItems;
 
     /**

@@ -9,10 +9,9 @@ use UJM\ExoBundle\Library\Model\PenaltyTrait;
 
 /**
  * A grid question.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_question_grid")
  */
+#[ORM\Table(name: 'ujm_question_grid')]
+#[ORM\Entity]
 class GridQuestion extends AbstractItem
 {
     /*
@@ -38,55 +37,55 @@ class GridQuestion extends AbstractItem
     /**
      * List of available cells for the question.
      *
-     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Misc\Cell", mappedBy="question", cascade={"all"}, orphanRemoval=true)
      *
      * @var ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\Cell::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
     private $cells;
 
     /**
      * Sum sub mode ["cell", "row", "col"].
      *
-     * @ORM\Column(type="string")
      *
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     private $sumMode = self::SUM_CELL;
 
     /**
      * Number of rows to draw.
      *
-     * @ORM\Column(name="grid_rows", type="integer")
      *
      * @var int
      */
+    #[ORM\Column(name: 'grid_rows', type: 'integer')]
     private $rows;
 
     /**
      * Number of columns to draw.
      *
-     * @ORM\Column(name="grid_columns", type="integer")
      *
      * @var int
      */
+    #[ORM\Column(name: 'grid_columns', type: 'integer')]
     private $columns;
 
     /**
      * Grid border width.
      *
-     * @ORM\Column(type="integer")
      *
      * @var int
      */
+    #[ORM\Column(type: 'integer')]
     private $borderWidth = 1;
 
     /**
      * Grid border color.
      *
-     * @ORM\Column(type="string")
      *
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     private $borderColor = '#DDDDDD';
 
     /**

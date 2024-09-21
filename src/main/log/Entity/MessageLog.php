@@ -5,18 +5,14 @@ namespace Claroline\LogBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro_log_message")
- */
+
+#[ORM\Table(name: 'claro_log_message')]
+#[ORM\Entity]
 class MessageLog extends AbstractLog
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     *
-     * @ORM\JoinColumn(name="receiver_id", referencedColumnName="id", onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(name: 'receiver_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private ?User $receiver = null;
 
     public function getReceiver(): ?User

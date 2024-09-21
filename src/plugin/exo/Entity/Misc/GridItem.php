@@ -2,47 +2,38 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Library\Model\ContentTrait;
 
 /**
  * GridItem.
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_grid_item")
  */
+#[ORM\Table(name: 'ujm_grid_item')]
+#[ORM\Entity]
 class GridItem
 {
+    use Id;
     use ContentTrait;
     use Uuid;
-    /**
-     * Unique identifier of the item.
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    private $id;
 
     /**
      * X coordinate of the item in the grid.
      *
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var int
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $coordsX = null;
 
     /**
      * Y coordinate of the item in the grid.
      *
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var int
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $coordsY = null;
 
     /**
@@ -51,16 +42,6 @@ class GridItem
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

@@ -20,12 +20,9 @@ use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_announcement")
- */
+#[ORM\Table(name: 'claro_announcement')]
+#[ORM\Entity]
 class Announcement
 {
     use Id;
@@ -35,95 +32,74 @@ class Announcement
     /**
      * The title of the Announcement.
      *
-     * @ORM\Column(nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(nullable: true)]
     private $title;
 
     /**
      * The content of the Announcement.
      *
-     * @ORM\Column(type="text")
-     * @Assert\NotBlank()
-     *
      * @var string
      */
+    #[ORM\Column(type: 'text')]
     private $content;
 
     /**
-     * @ORM\Column(nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(nullable: true)]
     private $announcer;
 
     /**
-     * @ORM\Column(name="creation_date", type="datetime", nullable=false)
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'creation_date', type: 'datetime', nullable: false)]
     private $creationDate;
 
     /**
-     * @ORM\Column(name="publication_date", type="datetime", nullable=true)
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'publication_date', type: 'datetime', nullable: true)]
     private $publicationDate;
 
     /**
-     * @ORM\Column(type="boolean", nullable=false)
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean', nullable: false)]
     private $visible;
 
     /**
-     * @ORM\Column(name="visible_from", type="datetime", nullable=true)
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'visible_from', type: 'datetime', nullable: true)]
     private $visibleFrom;
 
     /**
-     * @ORM\Column(name="visible_until", type="datetime", nullable=true)
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'visible_until', type: 'datetime', nullable: true)]
     private $visibleUntil;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
-     * )
-     * @ORM\JoinColumn(name="creator_id", onDelete="SET NULL")
      *
      * @var User
      */
+    #[ORM\JoinColumn(name: 'creator_id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private $creator;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\AnnouncementBundle\Entity\AnnouncementAggregate",
-     *     inversedBy="announcements"
-     * )
-     * @ORM\JoinColumn(name="aggregate_id", onDelete="CASCADE", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'aggregate_id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\AnnouncementBundle\Entity\AnnouncementAggregate::class, inversedBy: 'announcements')]
     private ?AnnouncementAggregate $aggregate = null;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\SchedulerBundle\Entity\ScheduledTask"
-     * )
-     * @ORM\JoinColumn(name="task_id", nullable=true, onDelete="SET NULL")
-     */
+    #[ORM\JoinColumn(name: 'task_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\SchedulerBundle\Entity\ScheduledTask::class)]
     private $task;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
-     * @ORM\JoinTable(name="claro_announcement_roles")
-     */
+    #[ORM\JoinTable(name: 'claro_announcement_roles')]
+    #[ORM\ManyToMany(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
     private Collection $roles;
 
     public function __construct()

@@ -16,72 +16,51 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\BigBlueButtonBundle\Repository\BBBRepository")
- * @ORM\Table(name="claro_bigbluebuttonbundle_bbb")
- */
+#[ORM\Table(name: 'claro_bigbluebuttonbundle_bbb')]
+#[ORM\Entity(repositoryClass: \Claroline\BigBlueButtonBundle\Repository\BBBRepository::class)]
 class BBB extends AbstractResource
 {
-    /**
-     * @ORM\Column(name="welcome_message", type="text", nullable=true)
-     */
+    #[ORM\Column(name: 'welcome_message', type: 'text', nullable: true)]
     private ?string $welcomeMessage = null;
 
-    /**
-     * @ORM\Column(name="end_message", type="text", nullable=true)
-     */
+    #[ORM\Column(name: 'end_message', type: 'text', nullable: true)]
     private ?string $endMessage = null;
 
-    /**
-     * @ORM\Column(name="new_tab", type="boolean")
-     */
+    #[ORM\Column(name: 'new_tab', type: 'boolean')]
     private bool $newTab = true;
 
-    /**
-     * @ORM\Column(name="moderator_required", type="boolean")
-     */
+    #[ORM\Column(name: 'moderator_required', type: 'boolean')]
     private bool $moderatorRequired = true;
 
-    /**
-     * @ORM\Column(name="record", type="boolean")
-     */
+    #[ORM\Column(name: 'record', type: 'boolean')]
     private bool $record = false;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: 'float', nullable: true)]
     private ?float $ratio = 56.25;
 
-    /**
-     * @ORM\Column(name="activated", type="boolean")
-     */
+    #[ORM\Column(name: 'activated', type: 'boolean')]
     private bool $activated = true;
 
     /**
      * Forces the server on which the room will be running.
-     *
-     * @ORM\Column(nullable=true)
      */
+    #[ORM\Column(nullable: true)]
     private ?string $server = null;
 
     /**
      * Defines on which server the room is currently running.
-     *
-     * @ORM\Column(nullable=true)
      */
+    #[ORM\Column(nullable: true)]
     private ?string $runningOn = null;
 
     /**
      * Allows users to change their username before entering the room.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     private bool $customUsernames = false;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Claroline\BigBlueButtonBundle\Entity\Recording", mappedBy="meeting", orphanRemoval=true)
-     * @ORM\OrderBy({"startTime": "DESC"})
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\BigBlueButtonBundle\Entity\Recording::class, mappedBy: 'meeting', orphanRemoval: true)]
+    #[ORM\OrderBy(['startTime' => 'DESC'])]
     private Collection $recordings;
 
     public function __construct()

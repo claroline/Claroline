@@ -9,27 +9,25 @@ use Doctrine\ORM\Mapping as ORM;
  * ResourceWidget.
  *
  * Permits to embedded a Resource.
- *
- * @ORM\Entity()
- * @ORM\Table(name="claro_widget_resource")
  */
+#[ORM\Table(name: 'claro_widget_resource')]
+#[ORM\Entity]
 class ResourceWidget extends AbstractWidget
 {
     /**
      * Choose the resourceNode to display in widget.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="SET NULL")
      *
      * @var ResourceNode
      */
+    #[ORM\JoinColumn(name: 'node_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     private $resourceNode = null;
 
     /**
      * Choose to display the header of the resource.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     private $showResourceHeader = false;
 
     /**

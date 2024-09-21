@@ -9,10 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * WidgetContainer entity.
- *
- * @ORM\Entity()
- * @ORM\Table(name="claro_widget_container")
  */
+#[ORM\Table(name: 'claro_widget_container')]
+#[ORM\Entity]
 class WidgetContainer
 {
     use Id;
@@ -21,25 +20,16 @@ class WidgetContainer
     /**
      * The list of content instances.
      *
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance",
-     *     mappedBy="container",
-     *     cascade={"persist", "remove", "refresh"}
-     * )
      *
      * @var ArrayCollection|WidgetInstance[]
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetInstance::class, mappedBy: 'container', cascade: ['persist', 'remove', 'refresh'])]
     private $instances;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainerConfig",
-     *     mappedBy="widgetContainer",
-     *     cascade={"persist", "remove"}
-     * )
-     *
      * @var WidgetContainerConfig[]
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Widget\WidgetContainerConfig::class, mappedBy: 'widgetContainer', cascade: ['persist', 'remove'])]
     protected $widgetContainerConfigs;
 
     /**

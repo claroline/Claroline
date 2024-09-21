@@ -8,20 +8,12 @@ use UJM\ExoBundle\Entity\Misc\BooleanChoice;
 
 /**
  * A boolean question (ie true/false - yes/no ...).
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_boolean_question")
  */
+#[ORM\Table(name: 'ujm_boolean_question')]
+#[ORM\Entity]
 class BooleanQuestion extends AbstractItem
 {
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="UJM\ExoBundle\Entity\Misc\BooleanChoice",
-     *     mappedBy="question",
-     *     cascade={"all"},
-     *     orphanRemoval=true
-     * )
-     */
+    #[ORM\OneToMany(targetEntity: \UJM\ExoBundle\Entity\Misc\BooleanChoice::class, mappedBy: 'question', cascade: ['all'], orphanRemoval: true)]
     private $choices;
 
     /**

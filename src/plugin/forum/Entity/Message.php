@@ -15,57 +15,34 @@ use Claroline\CoreBundle\Entity\AbstractMessage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro_forum_message")
- */
+
+#[ORM\Table(name: 'claro_forum_message')]
+#[ORM\Entity]
 class Message extends AbstractMessage
 {
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ForumBundle\Entity\Subject",
-     *     inversedBy="messages",
-     *     cascade={"persist"}
-     * )
-     *
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ForumBundle\Entity\Subject::class, inversedBy: 'messages', cascade: ['persist'])]
     protected ?Subject $subject = null;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ForumBundle\Entity\Message",
-     *     inversedBy="children",
-     * )
-     *
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\ForumBundle\Entity\Message::class, inversedBy: 'children')]
     protected ?Message $parent = null;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\ForumBundle\Entity\Message",
-     *     mappedBy="parent"
-     * )
-     *
      * @var Message[]
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\ForumBundle\Entity\Message::class, mappedBy: 'parent')]
     protected $children;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     protected string $moderation = Forum::VALIDATE_NONE;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     protected bool $flagged = false;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     protected bool $first = false;
 
     /**

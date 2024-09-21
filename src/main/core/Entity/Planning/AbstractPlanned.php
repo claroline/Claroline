@@ -16,18 +16,15 @@ use Ramsey\Uuid\Uuid as BaseUuid;
  *   - Methods of PlannedObject are wrapped in this class to avoid using AbstractPlanned::getPlannedObject()->get*()/AbstractPlanned::getPlannedObject()->set*().
  *   - When serializing a AbstractPlanned object, the custom props of the object and the props of the PlannedObject SHOULD be merged.
  * Implementations SHOULD NOT directly manipulate the PlannedObject.
- *
- * @ORM\MappedSuperclass()
  */
+#[ORM\MappedSuperclass]
 abstract class AbstractPlanned
 {
     use Id;
     use Uuid;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Planning\PlannedObject", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="planned_object_id", onDelete="CASCADE", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'planned_object_id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\OneToOne(targetEntity: \Claroline\CoreBundle\Entity\Planning\PlannedObject::class, cascade: ['persist', 'remove'])]
     protected ?PlannedObject $plannedObject = null;
 
     public function __construct()

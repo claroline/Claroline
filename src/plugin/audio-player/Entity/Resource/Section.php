@@ -11,125 +11,75 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_audio_resource_section")
- */
+#[ORM\Table(name: 'claro_audio_resource_section')]
+#[ORM\Entity]
 class Section
 {
+    use Id;
     use Uuid;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(name="node_id", nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'node_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     protected $resourceNode;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="SET NULL")
-     */
+    #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     protected $user;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $title;
 
-    /**
-     * @ORM\Column(name="section_start", type="float", nullable=false)
-     */
+    #[ORM\Column(name: 'section_start', type: 'float', nullable: false)]
     private $start;
 
-    /**
-     * @ORM\Column(name="section_end", type="float", nullable=false)
-     */
+    #[ORM\Column(name: 'section_end', type: 'float', nullable: false)]
     private $end;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $color;
 
-    /**
-     * @ORM\Column(name="section_type")
-     */
+    #[ORM\Column(name: 'section_type')]
     private $type;
 
-    /**
-     * @ORM\Column(name="show_transcript", type="boolean")
-     */
+    #[ORM\Column(name: 'show_transcript', type: 'boolean')]
     private $showTranscript = false;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transcript;
 
-    /**
-     * @ORM\Column(name="comments_allowed", type="boolean")
-     */
+    #[ORM\Column(name: 'comments_allowed', type: 'boolean')]
     private $commentsAllowed = false;
 
-    /**
-     * @ORM\Column(name="show_help", type="boolean")
-     */
+    #[ORM\Column(name: 'show_help', type: 'boolean')]
     private $showHelp = false;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $help;
 
-    /**
-     * @ORM\Column(name="show_audio", type="boolean")
-     */
+    #[ORM\Column(name: 'show_audio', type: 'boolean')]
     private $showAudio = false;
 
-    /**
-     * @ORM\Column(name="audio_url", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'audio_url', type: 'string', nullable: true)]
     private $audioUrl;
 
-    /**
-     * @ORM\Column(name="audio_description", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'audio_description', type: 'string', nullable: true)]
     private $audioDescription;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\AudioPlayerBundle\Entity\Resource\SectionComment",
-     *     mappedBy="section"
-     * )
-     * @ORM\OrderBy({"creationDate" = "DESC"})
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\AudioPlayerBundle\Entity\Resource\SectionComment::class, mappedBy: 'section')]
+    #[ORM\OrderBy(['creationDate' => 'DESC'])]
     protected $comments;
 
     public function __construct()
     {
         $this->refreshUuid();
         $this->comments = new ArrayCollection();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

@@ -17,73 +17,45 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\ClacoFormRepository")
- *
- * @ORM\Table(name="claro_clacoformbundle_claco_form")
- */
+
+#[ORM\Table(name: 'claro_clacoformbundle_claco_form')]
+#[ORM\Entity(repositoryClass: \Claroline\ClacoFormBundle\Repository\ClacoFormRepository::class)]
 class ClacoForm extends AbstractResource
 {
     // entries list configuration
     use ListParameters;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $template = null;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\Field",
-     *     mappedBy="clacoForm"
-     * )
-     *
      * @var Field[]
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\Field::class, mappedBy: 'clacoForm')]
     private $fields;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\Category",
-     *     mappedBy="clacoForm"
-     * )
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\Category::class, mappedBy: 'clacoForm')]
     private Collection $categories;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\ClacoFormBundle\Entity\Keyword",
-     *     mappedBy="clacoForm",
-     *     orphanRemoval=true
-     * )
-     */
+    #[ORM\OneToMany(targetEntity: \Claroline\ClacoFormBundle\Entity\Keyword::class, mappedBy: 'clacoForm', orphanRemoval: true)]
     private Collection $keywords;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $details = [];
 
     /**
      * Ask for confirmation when a user submit a new entry.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     private bool $showConfirm = false;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $confirmMessage = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $helpMessage = null;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private bool $statistics = false;
 
     public function __construct()

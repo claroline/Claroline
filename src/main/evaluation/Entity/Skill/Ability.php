@@ -8,11 +8,9 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro_evaluation_ability")
- */
+
+#[ORM\Table(name: 'claro_evaluation_ability')]
+#[ORM\Entity]
 class Ability
 {
     use Id;
@@ -20,10 +18,8 @@ class Ability
     use Order;
     use Description;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\EvaluationBundle\Entity\Skill\Skill", inversedBy="abilities")
-     * @ORM\JoinColumn(name="skill_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'skill_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\EvaluationBundle\Entity\Skill\Skill::class, inversedBy: 'abilities')]
     private ?Skill $skill = null;
 
     public function __construct()

@@ -18,13 +18,9 @@ use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\AppBundle\Entity\Meta\Order;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_facet")
- * @DoctrineAssert\UniqueEntity("name")
- */
+#[ORM\Table(name: 'claro_facet')]
+#[ORM\Entity]
 class Facet
 {
     use Id;
@@ -34,29 +30,23 @@ class Facet
     use Icon;
 
     /**
-     * @ORM\Column(name="isMain", type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(name: 'isMain', type: 'boolean')]
     private $main = false;
 
     /**
-     * @ORM\Column(type="boolean")
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean')]
     private $forceCreationForm = false;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacet",
-     *     mappedBy="facet",
-     *     cascade={"all"}
-     * )
-     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var ArrayCollection|PanelFacet[]
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\CoreBundle\Entity\Facet\PanelFacet::class, mappedBy: 'facet', cascade: ['all'])]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private $panelFacets;
 
     public function __construct()

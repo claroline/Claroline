@@ -16,10 +16,8 @@ use Claroline\CoreBundle\Entity\Resource\HasHomePage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="claro_forum")
- */
+#[ORM\Table(name: 'claro_forum')]
+#[ORM\Entity]
 class Forum extends AbstractResource
 {
     use HasHomePage;
@@ -36,56 +34,47 @@ class Forum extends AbstractResource
     const DISPLAY_TILES_SM = 'tiles-sm';
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\ForumBundle\Entity\Subject",
-     *     mappedBy="forum"
-     * )
-     * @ORM\OrderBy({"id" = "ASC"})
      *
      * @var ArrayCollection|Subject[]
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\ForumBundle\Entity\Subject::class, mappedBy: 'forum')]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     protected $subjects;
 
     /**
-     * @ORM\Column(type="string")
-     *
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     protected $validationMode = self::VALIDATE_NONE;
 
     /**
-     * @ORM\Column(type="integer")
-     *
      * @var int
      */
+    #[ORM\Column(type: 'integer')]
     protected $displayMessages = 3;
 
     /**
-     * @ORM\Column(type="string")
-     *
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     protected $dataListOptions = self::DISPLAY_LIST;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     *
      * @var \DateTimeInterface
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $lockDate = null;
 
     /**
-     * @ORM\Column(options={"default"="ASC"})
-     *
      * @var string
      */
+    #[ORM\Column(options: ['default' => 'ASC'])]
     private $messageOrder = 'ASC';
 
     /**
-     * @ORM\Column(type="boolean", options={"default"=false})
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private $expandComments = false;
 
     public function __construct()

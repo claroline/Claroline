@@ -14,46 +14,37 @@ namespace Claroline\TagBundle\Entity;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\TagBundle\Repository\TaggedObjectRepository")
- * @ORM\Table(name="claro_tagbundle_tagged_object", uniqueConstraints={
- *     @ORM\UniqueConstraint(
- *          name="unique",
- *          columns={"object_id", "object_class", "tag_id"}
- *     )
- * })
- */
+#[ORM\Table(name: 'claro_tagbundle_tagged_object')]
+#[ORM\UniqueConstraint(name: 'unique', columns: ['object_id', 'object_class', 'tag_id'])]
+#[ORM\Entity(repositoryClass: \Claroline\TagBundle\Repository\TaggedObjectRepository::class)]
 class TaggedObject
 {
     use Id;
 
     /**
-     * @ORM\Column(name="object_id", type="string")
-     *
      * @var string
      */
+    #[ORM\Column(name: 'object_id', type: 'string')]
     private $objectId;
 
     /**
-     * @ORM\Column(name="object_class")
-     *
      * @var string
      */
+    #[ORM\Column(name: 'object_class')]
     private $objectClass;
 
     /**
-     * @ORM\Column(name="object_name", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'object_name', nullable: true)]
     private $objectName;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\TagBundle\Entity\Tag", inversedBy="taggedObjects")
-     * @ORM\JoinColumn(name="tag_id", onDelete="CASCADE", nullable=false)
      *
      * @var Tag
      */
+    #[ORM\JoinColumn(name: 'tag_id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Claroline\TagBundle\Entity\Tag::class, inversedBy: 'taggedObjects')]
     private $tag;
 
     /**

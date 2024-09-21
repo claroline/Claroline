@@ -58,7 +58,7 @@ class WorkspaceType extends AbstractType
             ->add('creator', CreatorType::class)
             ->add('roles', RoleType::class)
             ->add('administrated', ClosureType::class, [
-                'buildQuery' => function (QueryBuilder $queryBuilder, FinderInterface $finder, array $options) {
+                'buildQuery' => function (QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void {
                     if (in_array(PlatformRoles::ADMIN, $this->tokenStorage->getToken()->getRoleNames())) {
                         return;
                     }

@@ -7,11 +7,9 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Table(name="claro_cursusbundle_presence_status")
- *
- * @ORM\Entity
- */
+
+#[ORM\Table(name: 'claro_cursusbundle_presence_status')]
+#[ORM\Entity]
 class EventPresence
 {
     use Id;
@@ -23,43 +21,36 @@ class EventPresence
     public const ABSENT_UNJUSTIFIED = 'absent_unjustified';
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Event")
      *
-     * @ORM\JoinColumn(name="event_id", nullable=false, onDelete="CASCADE")
      *
      * @var Event
      */
+    #[ORM\JoinColumn(name: 'event_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CursusBundle\Entity\Event::class)]
     private $event;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      *
-     * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
      *
      * @var User
      */
+    #[ORM\JoinColumn(name: 'user_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     private $user;
 
     /**
-     * @ORM\Column(name="presence_status", nullable=false)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'presence_status', nullable: false)]
     private $status = self::UNKNOWN;
 
-    /**
-     * @ORM\Column(name="presence_signature", nullable=true)
-     */
+    #[ORM\Column(name: 'presence_signature', nullable: true)]
     private ?string $signature = null;
 
-    /**
-     * @ORM\Column(name="presence_validation_date", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'presence_validation_date', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $validationDate = null;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $evidences = null;
 
     public function __construct()

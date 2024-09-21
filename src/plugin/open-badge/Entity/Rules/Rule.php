@@ -20,11 +20,9 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="claro__open_badge_rule")
- */
+
+#[ORM\Table(name: 'claro__open_badge_rule')]
+#[ORM\Entity]
 class Rule
 {
     use Id;
@@ -41,49 +39,35 @@ class Rule
     public const IN_GROUP = 'in_group';
     public const IN_ROLE = 'in_role';
 
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     */
+    #[ORM\Column(type: 'string', nullable: false)]
     protected ?string $action = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\BadgeClass", inversedBy="rules")
-     *
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\OpenBadgeBundle\Entity\BadgeClass::class, inversedBy: 'rules')]
     private ?BadgeClass $badge = null;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private array $data = [];
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     *
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Resource\ResourceNode::class)]
     private ?ResourceNode $node = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     *
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
     private ?Workspace $workspace = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
-     *
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Role::class)]
     private ?Role $role = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Group")
-     *
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
+    
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Group::class)]
     private ?Group $group = null;
 
     public function __construct()

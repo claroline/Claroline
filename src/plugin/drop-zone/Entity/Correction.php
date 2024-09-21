@@ -11,161 +11,129 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Claroline\DropZoneBundle\Repository\CorrectionRepository")
- * @ORM\Table(name="claro_dropzonebundle_correction")
- */
+#[ORM\Table(name: 'claro_dropzonebundle_correction')]
+#[ORM\Entity(repositoryClass: \Claroline\DropZoneBundle\Repository\CorrectionRepository::class)]
 class Correction
 {
+    use Id;
     use Uuid;
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    protected $id;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\DropZoneBundle\Entity\Drop",
-     *     inversedBy="corrections"
-     * )
-     * @ORM\JoinColumn(name="drop_id", nullable=false, onDelete="CASCADE")
      *
      * @var Drop
      */
+    #[ORM\JoinColumn(name: 'drop_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\DropZoneBundle\Entity\Drop::class, inversedBy: 'corrections')]
     protected $drop;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="SET NULL")
      *
      * @var User
      */
+    #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\User::class)]
     protected $user;
 
     /**
-     * @ORM\Column(name="score", type="float", nullable=true)
-     *
      * @var float
      */
+    #[ORM\Column(name: 'score', type: 'float', nullable: true)]
     protected $score;
 
     /**
-     * @ORM\Column(name="correction_comment", type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'correction_comment', type: 'text', nullable: true)]
     protected $comment;
 
     /**
-     * @ORM\Column(name="is_valid", type="boolean", nullable=false)
-     *
      * @var bool
      */
+    #[ORM\Column(name: 'is_valid', type: 'boolean', nullable: false)]
     protected $valid = true;
 
     /**
-     * @ORM\Column(name="start_date", type="datetime", nullable=false)
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'start_date', type: 'datetime', nullable: false)]
     protected $startDate;
 
     /**
-     * @ORM\Column(name="last_edition_date", type="datetime", nullable=false)
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'last_edition_date', type: 'datetime', nullable: false)]
     protected $lastEditionDate;
 
     /**
-     * @ORM\Column(name="end_date", type="datetime", nullable=true)
-     *
      * @var \DateTime
      */
+    #[ORM\Column(name: 'end_date', type: 'datetime', nullable: true)]
     protected $endDate;
 
     /**
-     * @ORM\Column(type="boolean", nullable=false)
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean', nullable: false)]
     protected $finished = false;
 
     /**
-     * @ORM\Column(type="boolean", nullable=false)
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean', nullable: false)]
     protected $editable = false;
 
     /**
-     * @ORM\Column(type="boolean", nullable=false)
-     *
      * @var bool
      */
+    #[ORM\Column(type: 'boolean', nullable: false)]
     protected $reported = false;
 
     /**
-     * @ORM\Column(name="reported_comment", type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'reported_comment', type: 'text', nullable: true)]
     protected $reportedComment;
 
     /**
-     * @ORM\Column(name="correction_denied", type="boolean", nullable=false)
-     *
      * @var bool
      */
+    #[ORM\Column(name: 'correction_denied', type: 'boolean', nullable: false)]
     protected $correctionDenied = false;
 
     /**
-     * @ORM\Column(name="correction_denied_comment", type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'correction_denied_comment', type: 'text', nullable: true)]
     protected $correctionDeniedComment;
 
     /**
-     * @ORM\Column(name="team_id", type="integer", nullable=true)
-     *
      * @var int
      */
+    #[ORM\Column(name: 'team_id', type: 'integer', nullable: true)]
     protected $teamId;
 
     /**
-     * @ORM\Column(name="team_uuid", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'team_uuid', nullable: true)]
     protected $teamUuid;
 
     /**
-     * @ORM\Column(name="team_name", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'team_name', nullable: true)]
     protected $teamName;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\DropZoneBundle\Entity\Grade",
-     *     mappedBy="correction",
-     *     cascade={"persist", "remove"}
-     * )
-     *
      * @var Grade
      */
+    #[ORM\OneToMany(targetEntity: \Claroline\DropZoneBundle\Entity\Grade::class, mappedBy: 'correction', cascade: ['persist', 'remove'])]
     protected $grades;
 
     /**
@@ -178,22 +146,6 @@ class Correction
         $currentDate = new \DateTime();
         $this->setStartDate($currentDate);
         $this->setLastEditionDate($currentDate);
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**

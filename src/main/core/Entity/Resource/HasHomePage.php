@@ -9,17 +9,16 @@ trait HasHomePage
     /**
      * Show overview to users or directly start the quiz.
      *
-     * @ORM\Column(name="show_overview", type="boolean")
      *
      * @var bool
      */
+    #[ORM\Column(name: 'show_overview', type: 'boolean')]
     private $showOverview = true;
 
     /**
-     * @ORM\Column(name="description", type="text", nullable=true)
-     *
      * @var string
      */
+    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private $overviewMessage = '';
 
     public function getShowOverview(): bool

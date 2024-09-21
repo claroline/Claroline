@@ -14,22 +14,17 @@ namespace HeVinci\FavouriteBundle\Entity;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="claro_workspace_favourite", uniqueConstraints={
- *     @ORM\UniqueConstraint(columns={"workspace_id", "user_id"})
- * })
- */
+#[ORM\Table(name: 'claro_workspace_favourite')]
+#[ORM\UniqueConstraint(columns: ['workspace_id', 'user_id'])]
+#[ORM\Entity]
 class WorkspaceFavourite extends AbstractFavourite
 {
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
-     * )
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var Workspace
      */
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: \Claroline\CoreBundle\Entity\Workspace\Workspace::class)]
     private $workspace;
 
     /**

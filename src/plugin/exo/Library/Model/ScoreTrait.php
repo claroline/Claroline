@@ -11,9 +11,8 @@ trait ScoreTrait
 {
     /**
      * @var float
-     *
-     * @ORM\Column(name="score", type="float", nullable=true)
      */
+    #[ORM\Column(name: 'score', type: 'float', nullable: true)]
     private $score = 0;
 
     /**

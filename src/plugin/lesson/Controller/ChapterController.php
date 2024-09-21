@@ -164,7 +164,7 @@ class ChapterController
 
         $fileName = TextNormalizer::toKey($lesson->getResourceNode()->getName().'-'.$chapter->getTitle());
 
-        return new StreamedResponse(function () use ($lesson, $chapter) {
+        return new StreamedResponse(function () use ($lesson, $chapter): void {
             echo $this->pdfManager->fromHtml(
                 $this->templating->render('@IcapLesson/lesson/open.pdf.twig', [
                     '_resource' => $lesson,
