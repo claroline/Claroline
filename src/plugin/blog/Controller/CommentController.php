@@ -18,12 +18,11 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("blog/{blogId}/comments", options={"expose"=true})
  *
  * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
- *
  * @todo use CRUD
  */
+#[Route(path: 'blog/{blogId}/comments', options: ['expose' => true])]
 class CommentController
 {
     use PermissionCheckerTrait;
@@ -42,13 +41,12 @@ class CommentController
     /**
      * Get post comments.
      *
-     * @Route("/{postId}", name="apiv2_blog_comment_list", methods={"GET"})
      *
      * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{postId}', name: 'apiv2_blog_comment_list', methods: ['GET'])]
     public function listAction(Request $request, Blog $blog, Post $post, User $user = null)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
@@ -72,10 +70,10 @@ class CommentController
     /**
      * Get reported comments posts.
      *
-     * @Route("/moderation/reported", name="apiv2_blog_comment_reported", methods={"GET"})
      *
      * @return JsonResponse
      */
+    #[Route(path: '/moderation/reported', name: 'apiv2_blog_comment_reported', methods: ['GET'])]
     public function listCommentReportedAction(Request $request, Blog $blog)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
@@ -95,10 +93,10 @@ class CommentController
     /**
      * Get unpublished comments posts.
      *
-     * @Route("/moderation/unpublished", name="apiv2_blog_comment_unpublished", methods={"GET"})
      *
      * @return JsonResponse
      */
+    #[Route(path: '/moderation/unpublished', name: 'apiv2_blog_comment_unpublished', methods: ['GET'])]
     public function listCommentUnpublishedAction(Request $request, Blog $blog)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
@@ -118,13 +116,12 @@ class CommentController
     /**
      * Create a post comment.
      *
-     * @Route("/{postId}/new", name="apiv2_blog_comment_new", methods={"POST"})
      *
      * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{postId}/new', name: 'apiv2_blog_comment_new', methods: ['POST'])]
     public function createCommentAction(Request $request, Blog $blog, Post $post, User $user = null)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
@@ -144,13 +141,12 @@ class CommentController
     /**
      * Update post comment.
      *
-     * @Route("/{commentId}/update", name="apiv2_blog_comment_update", methods={"PUT"})
      *
      * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{commentId}/update', name: 'apiv2_blog_comment_update', methods: ['PUT'])]
     public function updateCommentAction(Request $request, Blog $blog, Comment $comment, User $user = null)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
@@ -171,13 +167,12 @@ class CommentController
     /**
      * Publish post comment.
      *
-     * @Route("/{commentId}/publish", name="apiv2_blog_comment_publish", methods={"PUT"})
      *
      * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{commentId}/publish', name: 'apiv2_blog_comment_publish', methods: ['PUT'])]
     public function publishCommentAction(Blog $blog, Comment $comment, User $user)
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
@@ -189,13 +184,12 @@ class CommentController
     /**
      * Unpublish post comment.
      *
-     * @Route("/{commentId}/unpublish", name="apiv2_blog_comment_unpublish", methods={"PUT"})
      *
      * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{commentId}/unpublish', name: 'apiv2_blog_comment_unpublish', methods: ['PUT'])]
     public function unpublishCommentAction(Blog $blog, Comment $comment, User $user)
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
@@ -207,13 +201,12 @@ class CommentController
     /**
      * Report post comment.
      *
-     * @Route("/{commentId}/report", name="apiv2_blog_comment_report", methods={"PUT"})
      *
      * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{commentId}/report', name: 'apiv2_blog_comment_report', methods: ['PUT'])]
     public function reportCommentAction(Blog $blog, Comment $comment, User $user)
     {
         $comment = $this->commentManager->reportComment($blog, $comment);
@@ -224,13 +217,12 @@ class CommentController
     /**
      * Delete post comment.
      *
-     * @Route("/{commentId}/delete", name="apiv2_blog_comment_delete", methods={"DELETE"})
      *
      * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{commentId}/delete', name: 'apiv2_blog_comment_delete', methods: ['DELETE'])]
     public function deleteCommentAction(Blog $blog, Comment $comment, User $user)
     {
         // original author or admin can edit, anon cant edit

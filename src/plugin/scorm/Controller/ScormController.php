@@ -49,10 +49,9 @@ class ScormController
     }
 
     /**
-     * @Route("/workspace/{workspace}/scorm/archive/upload", name="apiv2_scorm_archive_upload")
-     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
+    #[Route(path: '/workspace/{workspace}/scorm/archive/upload', name: 'apiv2_scorm_archive_upload')]
     public function uploadAction(Workspace $workspace, Request $request): JsonResponse
     {
         $files = $request->files->all();
@@ -72,10 +71,9 @@ class ScormController
     }
 
     /**
-     * @Route("/scorm/{scorm}", name="apiv2_scorm_update", methods={"PUT"})
-     *
      * @EXT\ParamConverter("scorm", class="Claroline\ScormBundle\Entity\Scorm", options={"mapping": {"scorm": "uuid"}})
      */
+    #[Route(path: '/scorm/{scorm}', name: 'apiv2_scorm_update', methods: ['PUT'])]
     public function updateAction(Scorm $scorm, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $scorm->getResourceNode(), [], true);
@@ -86,11 +84,11 @@ class ScormController
     }
 
     /**
-     * @Route("/sco/{sco}/commit", name="apiv2_scormscotracking_update", methods={"PUT"})
      *
      * @EXT\ParamConverter("sco", class="Claroline\ScormBundle\Entity\Sco", options={"mapping": {"sco": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/sco/{sco}/commit', name: 'apiv2_scormscotracking_update', methods: ['PUT'])]
     public function updateTrackingAction(Sco $sco, User $user, Request $request): JsonResponse
     {
         $scorm = $sco->getScorm();
@@ -105,10 +103,9 @@ class ScormController
     }
 
     /**
-     * @Route("/scorm/{scorm}/trackings/list", name="apiv2_scormscotracking_list")
-     *
      * @EXT\ParamConverter("scorm", class="Claroline\ScormBundle\Entity\Scorm", options={"mapping": {"scorm": "uuid"}})
      */
+    #[Route(path: '/scorm/{scorm}/trackings/list', name: 'apiv2_scormscotracking_list')]
     public function listTrackingsAction(Scorm $scorm, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $scorm->getResourceNode(), [], true);
@@ -126,10 +123,9 @@ class ScormController
     }
 
     /**
-     * @Route("/scorm/{scorm}/trackings/export", name="apiv2_scormscotracking_export")
-     *
      * @EXT\ParamConverter("scorm", class="Claroline\ScormBundle\Entity\Scorm", options={"mapping": {"scorm": "uuid"}})
      */
+    #[Route(path: '/scorm/{scorm}/trackings/export', name: 'apiv2_scormscotracking_export')]
     public function exportTrackingsAction(Scorm $scorm): StreamedResponse
     {
         $this->checkPermission('EDIT', $scorm->getResourceNode(), [], true);

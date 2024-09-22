@@ -2,6 +2,7 @@
 
 namespace Claroline\PrivacyBundle\Controller;
 
+use Exception;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -28,11 +29,11 @@ class PrivacyController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
      *
      * @throws InvalidDataException
-     * @throws \Exception
+     * @throws Exception
      */
+    #[Route(path: '/privacy', name: 'apiv2_privacy_update', methods: ['PUT'])]
     public function updateAction(Request $request): JsonResponse
     {
         $this->canOpenAdminTool('privacy');

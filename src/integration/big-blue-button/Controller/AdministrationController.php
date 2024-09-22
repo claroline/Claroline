@@ -27,9 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/bbb")
- */
+#[Route(path: '/bbb')]
 class AdministrationController
 {
     use RequestDecoderTrait;
@@ -44,9 +42,7 @@ class AdministrationController
     ) {
     }
 
-    /**
-     * @Route("/info", name="apiv2_bbb_integration_info")
-     */
+    #[Route(path: '/info', name: 'apiv2_bbb_integration_info')]
     public function getInfoAction(): JsonResponse
     {
         $this->checkAccess();
@@ -69,9 +65,7 @@ class AdministrationController
         ]);
     }
 
-    /**
-     * @Route("/meetings", name="apiv2_bbb_integration_meetings", methods={"GET"})
-     */
+    #[Route(path: '/meetings', name: 'apiv2_bbb_integration_meetings', methods: ['GET'])]
     public function listMeetingsAction(Request $request): JsonResponse
     {
         $this->checkAccess();
@@ -81,9 +75,7 @@ class AdministrationController
         );
     }
 
-    /**
-     * @Route("/meetings/end", name="apiv2_bbb_integration_meetings_end", methods={"PUT"})
-     */
+    #[Route(path: '/meetings/end', name: 'apiv2_bbb_integration_meetings_end', methods: ['PUT'])]
     public function endMeetingsAction(Request $request): JsonResponse
     {
         $this->checkAccess();
@@ -97,9 +89,7 @@ class AdministrationController
         return new JsonResponse(null, 204);
     }
 
-    /**
-     * @Route("/recordings", name="apiv2_bbb_integration_recordings_list", methods={"GET"})
-     */
+    #[Route(path: '/recordings', name: 'apiv2_bbb_integration_recordings_list', methods: ['GET'])]
     public function listRecordingsAction(Request $request): JsonResponse
     {
         $this->checkAccess();
@@ -109,9 +99,7 @@ class AdministrationController
         );
     }
 
-    /**
-     * @Route("/recordings", name="apiv2_bbb_integration_recordings_sync", methods={"POST"})
-     */
+    #[Route(path: '/recordings', name: 'apiv2_bbb_integration_recordings_sync', methods: ['POST'])]
     public function syncRecordingsAction(): JsonResponse
     {
         $this->checkAccess();
@@ -121,9 +109,7 @@ class AdministrationController
         return new JsonResponse(null, 204);
     }
 
-    /**
-     * @Route("/recordings", name="apiv2_bbb_integration_recordings_delete", methods={"DELETE"})
-     */
+    #[Route(path: '/recordings', name: 'apiv2_bbb_integration_recordings_delete', methods: ['DELETE'])]
     public function deleteRecordingsAction(Request $request): JsonResponse
     {
         $this->checkAccess();

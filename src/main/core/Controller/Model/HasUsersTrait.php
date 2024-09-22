@@ -25,7 +25,6 @@ trait HasUsersTrait
     /**
      * List users of the collection.
      *
-     * @Route("/{id}/user", name="list_users", methods={"GET"}, priority=1)
      *
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\User.",
@@ -39,6 +38,7 @@ trait HasUsersTrait
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
+    #[Route(path: '/{id}/user', name: 'list_users', methods: ['GET'], priority: 1)]
     public function listUsersAction(string $id, User $user, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.
@@ -67,7 +67,6 @@ trait HasUsersTrait
     /**
      * Adds users to the collection.
      *
-     * @Route("/{id}/user", name="add_users", methods={"PATCH"}, priority=1)
      *
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\User.",
@@ -80,6 +79,7 @@ trait HasUsersTrait
      *     }
      * )
      */
+    #[Route(path: '/{id}/user', name: 'add_users', methods: ['PATCH'], priority: 1)]
     public function addUsersAction(string $id, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.
@@ -97,7 +97,6 @@ trait HasUsersTrait
     /**
      * Removes users from the collection.
      *
-     * @Route("/{id}/user", name="remove_users", methods={"DELETE"})
      *
      * @ApiDoc(
      *     description="Removes objects of class Claroline\CoreBundle\Entity\User.",
@@ -110,6 +109,7 @@ trait HasUsersTrait
      *     }
      * )
      */
+    #[Route(path: '/{id}/user', name: 'remove_users', methods: ['DELETE'])]
     public function removeUsersAction(string $id, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.

@@ -17,13 +17,13 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/wiki/section/{sectionId}/contribution")
  * @EXT\ParamConverter(
  *     "section",
  *     class="Icap\WikiBundle\Entity\Section",
  *     options={"mapping": {"sectionId": "uuid"}}
  * )
  */
+#[Route(path: '/wiki/section/{sectionId}/contribution')]
 class ContributionController
 {
     use PermissionCheckerTrait;
@@ -53,11 +53,10 @@ class ContributionController
     }
 
     /**
-     * @Route("/history", name="apiv2_wiki_section_contribution_history", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/history', name: 'apiv2_wiki_section_contribution_history', methods: ['GET'])]
     public function listAction(Section $section, User $user, Request $request)
     {
         $this->checkAccess($section, $user);
@@ -74,16 +73,15 @@ class ContributionController
     }
 
     /**
-     * @Route("/{id}", name="apiv2_wiki_section_contribution_get", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter(
      *     "contribution",
      *     class="Icap\WikiBundle\Entity\Contribution",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{id}', name: 'apiv2_wiki_section_contribution_get', methods: ['GET'])]
     public function getAction(Section $section, Contribution $contribution, User $user)
     {
         $this->checkAccess($section, $user);
@@ -92,16 +90,15 @@ class ContributionController
     }
 
     /**
-     * @Route("/{id}", name="apiv2_wiki_section_contribution_set_active", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter(
      *     "contribution",
      *     class="Icap\WikiBundle\Entity\Contribution",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{id}', name: 'apiv2_wiki_section_contribution_set_active', methods: ['PUT'])]
     public function setActiveContributionAction(Section $section, Contribution $contribution, User $user)
     {
         $this->checkAccess($section, $user);
@@ -111,14 +108,13 @@ class ContributionController
     }
 
     /**
-     * @Route("/compare/{id1}/{id2}", name="apiv2_wiki_section_contribution_compare", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @param $id1
      * @param $id2
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/compare/{id1}/{id2}', name: 'apiv2_wiki_section_contribution_compare', methods: ['GET'])]
     public function compareContributionsAction(Section $section, $id1, $id2, User $user)
     {
         $this->checkAccess($section, $user);

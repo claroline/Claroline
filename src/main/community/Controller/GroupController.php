@@ -26,9 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/group", name="apiv2_group_")
- */
+#[Route(path: '/group', name: 'apiv2_group_')]
 class GroupController extends AbstractCrudController
 {
     use HasUsersTrait;
@@ -59,9 +57,7 @@ class GroupController extends AbstractCrudController
         return Group::class;
     }
 
-    /**
-     * @Route("/password/reset", name="password_reset", methods={"PUT"})
-     */
+    #[Route(path: '/password/reset', name: 'password_reset', methods: ['PUT'])]
     public function resetPasswordAction(Request $request): JsonResponse
     {
         /** @var Group[] $groups */

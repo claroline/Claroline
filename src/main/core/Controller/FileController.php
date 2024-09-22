@@ -37,9 +37,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/file")
- */
+#[Route(path: '/file')]
 class FileController
 {
     use PermissionCheckerTrait;
@@ -58,27 +56,22 @@ class FileController
         $this->authorization = $authorization;
     }
 
-    /**
-     * @Route("/stream/{id}", name="claro_file_stream", methods={"GET"})
-     */
+    #[Route(path: '/stream/{id}', name: 'claro_file_stream', methods: ['GET'])]
     public function streamAction(ResourceNode $resourceNode, Request $request): BinaryFileResponse
     {
         return $this->stream($resourceNode, $request);
     }
 
     /**
-     * @Route("/resource/media/{node}", name="claro_file_get_media", methods={"GET"})
-     *
      * @deprecated for retro compatibility with old tinymce embedded resources
      */
+    #[Route(path: '/resource/media/{node}', name: 'claro_file_get_media', methods: ['GET'])]
     public function streamMediaAction(ResourceNode $node, Request $request): BinaryFileResponse
     {
         return $this->stream($node, $request);
     }
 
-    /**
-     * @Route("/tinymce/destinations/{workspace}", name="claro_tinymce_file_destinations", defaults={"workspace"=null}, methods={"GET"})
-     */
+    #[Route(path: '/tinymce/destinations/{workspace}', name: 'claro_tinymce_file_destinations', defaults: ['workspace' => null], methods: ['GET'])]
     public function listTinyMceDestinationsAction(Workspace $workspace = null): JsonResponse
     {
         $data = $this->finder->search(
@@ -97,10 +90,10 @@ class FileController
     /**
      * Creates a resource from uploaded file.
      *
-     * @Route("/tinymce/upload", name="claro_tinymce_file_upload", methods={"POST"})
      *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/tinymce/upload', name: 'claro_tinymce_file_upload', methods: ['POST'])]
     public function uploadTinyMceAction(Request $request, User $user): JsonResponse
     {
         // grab and validate user submission
@@ -162,10 +155,10 @@ class FileController
     /**
      * Saves a file.
      *
-     * @Route("/public/upload", name="upload_public_file", methods={"POST"})
      *
      * @deprecated only used in quiz content items. Use new file upload route instead.
      */
+    #[Route(path: '/public/upload', name: 'upload_public_file', methods: ['POST'])]
     public function fileSaveAction(Request $request): JsonResponse
     {
         $url = null;

@@ -15,9 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/favourite", options={"expose"=true})
- */
+#[Route(path: '/favourite', options: ['expose' => true])]
 class FavouriteController
 {
     use RequestDecoderTrait;
@@ -44,9 +42,9 @@ class FavouriteController
     /**
      * Gets the current user favourites.
      *
-     * @Route("/", name="claro_user_favourites")
      * @EXT\ParamConverter("currentUser", converter="current_user")
      */
+    #[Route(path: '/', name: 'claro_user_favourites')]
     public function listAction(User $currentUser): JsonResponse
     {
         $workspaces = $this->manager->getWorkspaces($currentUser);
@@ -65,9 +63,9 @@ class FavouriteController
     /**
      * Creates or deletes favourite resources.
      *
-     * @Route("/resources/toggle", name="hevinci_favourite_resources_toggle", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user")
      */
+    #[Route(path: '/resources/toggle', name: 'hevinci_favourite_resources_toggle', methods: ['PUT'])]
     public function toggleResourcesAction(User $user, Request $request): JsonResponse
     {
         $nodes = $this->decodeIdsString($request, ResourceNode::class);
@@ -79,9 +77,9 @@ class FavouriteController
     /**
      * Creates or deletes favourite workspaces.
      *
-     * @Route("/workspaces/toggle", name="hevinci_favourite_workspaces_toggle", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/workspaces/toggle', name: 'hevinci_favourite_workspaces_toggle', methods: ['PUT'])]
     public function toggleWorkspacesAction(User $user, Request $request): JsonResponse
     {
         $nodes = $this->decodeIdsString($request, Workspace::class);

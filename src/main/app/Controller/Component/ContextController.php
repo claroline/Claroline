@@ -2,6 +2,7 @@
 
 namespace Claroline\AppBundle\Controller\Component;
 
+use Exception;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
@@ -26,10 +27,9 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Manages the different application contexts (public, desktop, administration, ...).
- *
- * @Route("/context/{context}/{contextId}")
- * @Route("/context/{context}")
  */
+#[Route(path: '/context/{context}/{contextId}')]
+#[Route(path: '/context/{context}')]
 class ContextController
 {
     use RequestDecoderTrait;
@@ -48,16 +48,15 @@ class ContextController
 
     /**
      * Opens a context.
-     *
-     * @Route("", name="claro_context_open", methods={"GET"})
      */
+    #[Route(path: '', name: 'claro_context_open', methods: ['GET'])]
     public function openAction(string $context, string $contextId = null): JsonResponse
     {
         // retrieve the requested context
         try {
             $contextHandler = $this->contextProvider->getContext($context, $contextId);
             $contextSubject = $contextHandler->getObject($contextId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
 
@@ -111,15 +110,14 @@ class ContextController
 
     /**
      * Configures a context.
-     *
-     * @Route("", name="claro_context_configure", methods={"PUT"})
      */
+    #[Route(path: '', name: 'claro_context_configure', methods: ['PUT'])]
     public function configureAction(Request $request, string $context, string $contextId = null): JsonResponse
     {
         // retrieve the requested context
         try {
             $contextHandler = $this->contextProvider->getContext($context, $contextId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
 
@@ -177,9 +175,8 @@ class ContextController
 
     /**
      * Gets the list of available tools (all tools implemented, not only the enabled ones in the context).
-     *
-     * @Route("/tools", name="claro_context_get_available_tools", methods={"GET"})
      */
+    #[Route(path: '/tools', name: 'claro_context_get_available_tools', methods: ['GET'])]
     public function getAvailableToolsAction(string $context, string $contextId = null): JsonResponse
     {
         $contextHandler = $this->contextProvider->getContext($context);

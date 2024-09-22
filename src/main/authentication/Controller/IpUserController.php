@@ -18,9 +18,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/ip_user", name="apiv2_ip_user_")
- */
+#[Route(path: '/ip_user', name: 'apiv2_ip_user_')]
 class IpUserController extends AbstractCrudController
 {
     public function __construct(

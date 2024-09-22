@@ -33,9 +33,7 @@ class AuthenticationParametersController extends AbstractSecurityController
         $this->authorization = $authorization;
     }
 
-    /**
-     * @Route("/authentication", name="apiv2_authentication_parameters_update", methods={"PUT"})
-     */
+    #[Route(path: '/authentication', name: 'apiv2_authentication_parameters_update', methods: ['PUT'])]
     public function updateAction(Request $request): JsonResponse
     {
         $this->canOpenAdminTool('authentication');

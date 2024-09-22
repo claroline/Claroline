@@ -46,9 +46,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/workspace", name="apiv2_workspace_")
- */
+#[Route(path: '/workspace', name: 'apiv2_workspace_')]
 class WorkspaceController extends AbstractCrudController
 {
     use HasGroupsTrait; // to remove : only the list endpoint is used
@@ -88,9 +86,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     *
-     * @Route("/list/public", name="list_public", methods={"GET"})
      */
+    #[Route(path: '/list/public', name: 'list_public', methods: ['GET'])]
     public function listPublicAction(Request $request): JsonResponse
     {
         return new JsonResponse($this->crud->list(
@@ -114,9 +111,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     *
-     * @Route("/list/registered", name="list_registered", methods={"GET"})
      */
+    #[Route(path: '/list/registered', name: 'list_registered', methods: ['GET'])]
     public function listRegisteredAction(Request $request): StreamedJsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
@@ -139,9 +135,7 @@ class WorkspaceController extends AbstractCrudController
         ]);
     }
 
-    /**
-     * @Route("/test", name="test", methods={"GET"})
-     */
+    #[Route(path: '/test', name: 'test', methods: ['GET'])]
     public function testAction(Request $request): StreamedJsonResponse
     {
         $finder = $this->finder->create(WorkspaceType::class)
@@ -180,9 +174,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     *
-     * @Route("/list/administrated", name="list_managed", methods={"GET"})
      */
+    #[Route(path: '/list/administrated', name: 'list_managed', methods: ['GET'])]
     public function listManagedAction(Request $request): StreamedJsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
@@ -216,9 +209,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     *
-     * @Route("/list/model", name="list_model", methods={"GET"})
      */
+    #[Route(path: '/list/model', name: 'list_model', methods: ['GET'])]
     public function listModelAction(Request $request): StreamedJsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
@@ -260,9 +252,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     *
-     * @Route("/list/archived", name="list_archive", methods={"GET"})
      */
+    #[Route(path: '/list/archived', name: 'list_archive', methods: ['GET'])]
     public function listArchivedAction(Request $request): StreamedJsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
@@ -295,9 +286,7 @@ class WorkspaceController extends AbstractCrudController
         ));*/
     }
 
-    /**
-     * @Route("/", name="create", methods={"POST"})
-     */
+    #[Route(path: '/', name: 'create', methods: ['POST'])]
     public function createAction(Request $request): JsonResponse
     {
         $this->checkPermission('CREATE', new Workspace(), [], true);
@@ -317,9 +306,8 @@ class WorkspaceController extends AbstractCrudController
 
     /**
      * Copies a list of workspaces.
-     *
-     * @Route("/copy", name="copy", methods={"PUT"})
      */
+    #[Route(path: '/copy', name: 'copy', methods: ['PUT'])]
     public function copyAction(Request $request): JsonResponse
     {
         $options = [Crud::NO_PERMISSIONS];
@@ -343,9 +331,8 @@ class WorkspaceController extends AbstractCrudController
 
     /**
      * Creates a new Workspace from a Claroline archive.
-     *
-     * @Route("/import", name="import", methods={"POST"})
      */
+    #[Route(path: '/import', name: 'import', methods: ['POST'])]
     public function importAction(Request $request): JsonResponse
     {
         $this->checkPermission('CREATE', new Workspace(), [], true);
@@ -377,10 +364,10 @@ class WorkspaceController extends AbstractCrudController
      *     }
      * )
      *
-     * @Route("/{id}/export", name="export", methods={"GET"})
      *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/export', name: 'export', methods: ['GET'])]
     public function exportAction(Workspace $workspace): BinaryFileResponse
     {
         $this->checkPermission('OPEN', $workspace, [], true);
@@ -402,9 +389,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
      *     }
      * )
-     *
-     * @Route("/archive", name="archive", methods={"PUT"})
      */
+    #[Route(path: '/archive', name: 'archive', methods: ['PUT'])]
     public function archiveBulkAction(Request $request): JsonResponse
     {
         $processed = [];
@@ -433,9 +419,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
      *     }
      * )
-     *
-     * @Route("/unarchive", name="unarchive", methods={"PUT"})
      */
+    #[Route(path: '/unarchive', name: 'unarchive', methods: ['PUT'])]
     public function unarchiveBulkAction(Request $request): JsonResponse
     {
         $processed = [];
@@ -460,10 +445,10 @@ class WorkspaceController extends AbstractCrudController
     /**
      * Submit access code.
      *
-     * @Route("/unlock/{id}", name="apiv2_workspace_unlock", methods={"POST"})
      *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/unlock/{id}', name: 'apiv2_workspace_unlock', methods: ['POST'])]
     public function unlockAction(Workspace $workspace, Request $request): JsonResponse
     {
         $this->restrictionsManager->unlock($workspace, json_decode($request->getContent(), true)['code']);
@@ -472,10 +457,9 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/users", name="list_users", methods={"GET"})
-     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/users', name: 'list_users', methods: ['GET'])]
     public function listUsersAction(Workspace $workspace, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $workspace, [], true);

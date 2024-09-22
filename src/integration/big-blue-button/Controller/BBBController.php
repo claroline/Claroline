@@ -27,9 +27,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/bbb/{id}")
  * @EXT\ParamConverter("bbb", class="Claroline\BigBlueButtonBundle\Entity\BBB", options={"mapping": {"id": "uuid"}})
  */
+#[Route(path: '/bbb/{id}')]
 class BBBController
 {
     use PermissionCheckerTrait;
@@ -45,9 +45,7 @@ class BBBController
         $this->authorization = $authorization;
     }
 
-    /**
-     * @Route("/meeting", name="apiv2_bbb_meeting_create", methods={"POST"})
-     */
+    #[Route(path: '/meeting', name: 'apiv2_bbb_meeting_create', methods: ['POST'])]
     public function createMeetingAction(BBB $bbb): JsonResponse
     {
         $this->checkPermission('OPEN', $bbb->getResourceNode(), [], true);
@@ -62,9 +60,7 @@ class BBBController
         return new JsonResponse(null, 404);
     }
 
-    /**
-     * @Route("/meeting/join/{username}", name="apiv2_bbb_meeting_join")
-     */
+    #[Route(path: '/meeting/join/{username}', name: 'apiv2_bbb_meeting_join')]
     public function joinMeetingAction(BBB $bbb, string $username = null): RedirectResponse
     {
         $this->checkPermission('OPEN', $bbb->getResourceNode(), [], true);
@@ -84,9 +80,7 @@ class BBBController
         );
     }
 
-    /**
-     * @Route("/meeting/end", name="apiv2_bbb_meeting_end", methods={"PUT"})
-     */
+    #[Route(path: '/meeting/end', name: 'apiv2_bbb_meeting_end', methods: ['PUT'])]
     public function endMeetingAction(BBB $bbb): JsonResponse
     {
         $this->checkPermission('ADMINISTRATE', $bbb->getResourceNode(), [], true);
@@ -96,9 +90,7 @@ class BBBController
         return new JsonResponse(null, 204);
     }
 
-    /**
-     * @Route("/meeting/moderators/check", name="apiv2_bbb_meeting_moderators_check", methods={"GET"})
-     */
+    #[Route(path: '/meeting/moderators/check', name: 'apiv2_bbb_meeting_moderators_check', methods: ['GET'])]
     public function meetingModeratorsCheckAction(BBB $bbb): JsonResponse
     {
         $this->checkPermission('OPEN', $bbb->getResourceNode(), [], true);
@@ -108,9 +100,7 @@ class BBBController
         );
     }
 
-    /**
-     * @Route("/recordings", name="apiv2_bbb_meeting_recordings_list", methods={"GET"})
-     */
+    #[Route(path: '/recordings', name: 'apiv2_bbb_meeting_recordings_list', methods: ['GET'])]
     public function listRecordingsAction(BBB $bbb, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $bbb->getResourceNode(), [], true);
@@ -125,9 +115,7 @@ class BBBController
         );
     }
 
-    /**
-     * @Route("/recordings", name="apiv2_bbb_meeting_recording_delete", methods={"DELETE"})
-     */
+    #[Route(path: '/recordings', name: 'apiv2_bbb_meeting_recording_delete', methods: ['DELETE'])]
     public function deleteRecordingsAction(BBB $bbb, Request $request): JsonResponse
     {
         $this->crud->deleteBulk(

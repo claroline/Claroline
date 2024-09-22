@@ -15,9 +15,7 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\DropZoneBundle\Entity\DropComment;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/dropcomment", name="apiv2_dropcomment_")
- */
+#[Route(path: '/dropcomment', name: 'apiv2_dropcomment_')]
 class DropCommentController extends AbstractCrudController
 {
     public static function getName(): string

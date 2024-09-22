@@ -36,9 +36,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * Manages platform resources.
  * ATTENTION. be careful if you change routes order.
- *
- * @Route("/resources")
  */
+#[Route(path: '/resources')]
 class ResourceController
 {
     use RequestDecoderTrait;
@@ -56,10 +55,9 @@ class ResourceController
 
     /**
      * Opens a resource.
-     *
-     * @Route("/load/{id}", name="claro_resource_load", methods={"GET"})
-     * @Route("/load/{id}/embedded/{embedded}", name="claro_resource_load_embedded", methods={"GET"})
      */
+    #[Route(path: '/load/{id}', name: 'claro_resource_load', methods: ['GET'])]
+    #[Route(path: '/load/{id}/embedded/{embedded}', name: 'claro_resource_load_embedded', methods: ['GET'])]
     public function openAction(string $id, int $embedded = 0): JsonResponse
     {
         /** @var ResourceNode $resourceNode */
@@ -96,9 +94,8 @@ class ResourceController
 
     /**
      * Embeds a resource inside a rich text content.
-     *
-     * @Route("/embed/{id}", name="claro_resource_embed")
      */
+    #[Route(path: '/embed/{id}', name: 'claro_resource_embed')]
     public function embedAction(ResourceNode $resourceNode): Response
     {
         return new Response($this->manager->embed($resourceNode));
@@ -107,10 +104,10 @@ class ResourceController
     /**
      * Downloads a list of Resources.
      *
-     * @Route("/download", name="claro_resource_download")
      *
      * @return JsonResponse|BinaryFileResponse
      */
+    #[Route(path: '/download', name: 'claro_resource_download')]
     public function downloadAction(Request $request): Response
     {
         $nodes = $this->decodeIdsString($request, ResourceNode::class);
@@ -142,10 +139,10 @@ class ResourceController
     /**
      * Submit access code.
      *
-     * @Route("/unlock/{id}", name="claro_resource_unlock", methods={"POST"})
      *
      * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/unlock/{id}', name: 'claro_resource_unlock', methods: ['POST'])]
     public function unlockAction(ResourceNode $resourceNode, Request $request): JsonResponse
     {
         $this->restrictionsManager->unlock($resourceNode, json_decode($request->getContent(), true)['code']);
@@ -155,9 +152,8 @@ class ResourceController
 
     /**
      * Executes an action on a collection of resources.
-     *
-     * @Route("/collection/{action}", name="claro_resource_collection_action")
      */
+    #[Route(path: '/collection/{action}', name: 'claro_resource_collection_action')]
     public function executeCollectionAction(string $action, Request $request): JsonResponse
     {
         /** @var ResourceNode[] $resourceNodes */
@@ -196,10 +192,10 @@ class ResourceController
     /**
      * Executes an action on one resource.
      *
-     * @Route("/{action}/{id}", name="claro_resource_action")
      *
      * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{action}/{id}', name: 'claro_resource_action')]
     public function executeAction(string $action, ResourceNode $resourceNode, Request $request): Response
     {
         // check the requested action exists

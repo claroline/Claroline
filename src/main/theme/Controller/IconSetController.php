@@ -22,9 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/icon_set")
- */
+#[Route(path: '/icon_set')]
 class IconSetController
 {
     use PermissionCheckerTrait;
@@ -37,9 +35,7 @@ class IconSetController
         $this->authorization = $authorization;
     }
 
-    /**
-     * @Route("/", name="apiv2_icon_set_create", methods={"POST"})
-     */
+    #[Route(path: '/', name: 'apiv2_icon_set_create', methods: ['POST'])]
     public function createAction(Request $request): JsonResponse
     {
         $this->checkPermission('CREATE', new IconSet(), [], true);
@@ -69,9 +65,7 @@ class IconSetController
         return new JsonResponse($createdSet, 201);
     }
 
-    /**
-     * @Route("/{iconSet}", name="apiv2_icon_set_get", methods={"GET"})
-     */
+    #[Route(path: '/{iconSet}', name: 'apiv2_icon_set_get', methods: ['GET'])]
     public function downloadAction(string $iconSet): BinaryFileResponse
     {
         return new BinaryFileResponse($this->iconSetManager->downloadSet($iconSet), 200, [
@@ -79,9 +73,7 @@ class IconSetController
         ]);
     }
 
-    /**
-     * @Route("/{iconSet}", name="apiv2_icon_set_delete", methods={"DELETE"})
-     */
+    #[Route(path: '/{iconSet}', name: 'apiv2_icon_set_delete', methods: ['DELETE'])]
     public function deleteAction(string $iconSet): JsonResponse
     {
         $existingSets = $this->om->getRepository(IconSet::class)->findBy(['name' => $iconSet]);

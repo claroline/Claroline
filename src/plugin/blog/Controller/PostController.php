@@ -17,12 +17,11 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("blog/{blogId}/posts", options={"expose"=true})
  *
  * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
- *
  * @todo use CRUD
  */
+#[Route(path: 'blog/{blogId}/posts', options: ['expose' => true])]
 class PostController
 {
     use PermissionCheckerTrait;
@@ -48,10 +47,10 @@ class PostController
     /**
      * Get unpublished blog posts.
      *
-     * @Route("/moderation", name="apiv2_blog_post_list_unpublished", methods={"GET"})
      *
      * @return array
      */
+    #[Route(path: '/moderation', name: 'apiv2_blog_post_list_unpublished', methods: ['GET'])]
     public function listUnpublishedAction(Request $request, Blog $blog)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
@@ -75,10 +74,10 @@ class PostController
     /**
      * Get blog posts.
      *
-     * @Route("", name="apiv2_blog_post_list", methods={"GET"})
      *
      * @return array
      */
+    #[Route(path: '', name: 'apiv2_blog_post_list', methods: ['GET'])]
     public function listAction(Request $request, Blog $blog)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
@@ -102,12 +101,11 @@ class PostController
     /**
      * Get blog post.
      *
-     * @Route("/{postId}", name="apiv2_blog_post_get", methods={"GET"})
      *
      * @EXT\ParamConverter("blog", options={"mapping": {"blogId": "uuid"}})
-     *
      * @return array
      */
+    #[Route(path: '/{postId}', name: 'apiv2_blog_post_get', methods: ['GET'])]
     public function getAction(Request $request, Blog $blog, $postId)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
@@ -125,12 +123,11 @@ class PostController
     /**
      * Create blog post.
      *
-     * @Route("/new", name="apiv2_blog_post_new", methods={"POST", "PUT"})
      *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @return array
      */
+    #[Route(path: '/new', name: 'apiv2_blog_post_new', methods: ['POST', 'PUT'])]
     public function createPostAction(Request $request, Blog $blog, User $user)
     {
         if ($this->checkPermission('EDIT', $blog->getResourceNode())
@@ -147,13 +144,12 @@ class PostController
     /**
      * Update blog post.
      *
-     * @Route("/update/{postId}", name="apiv2_blog_post_update", methods={"PUT"})
      *
      * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @return array
      */
+    #[Route(path: '/update/{postId}', name: 'apiv2_blog_post_update', methods: ['PUT'])]
     public function updatePostAction(Request $request, Blog $blog, Post $post, User $user)
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
@@ -167,13 +163,12 @@ class PostController
     /**
      * Delete blog post.
      *
-     * @Route("/delete/{postId}", name="apiv2_blog_post_delete", methods={"DELETE"})
      *
      * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @return array
      */
+    #[Route(path: '/delete/{postId}', name: 'apiv2_blog_post_delete', methods: ['DELETE'])]
     public function deletePostAction(Request $request, Blog $blog, Post $post, User $user)
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
@@ -185,13 +180,12 @@ class PostController
     /**
      * Switch post publication state.
      *
-     * @Route("/publish/{postId}", name="apiv2_blog_post_publish", methods={"PUT"})
      *
      * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @return array
      */
+    #[Route(path: '/publish/{postId}', name: 'apiv2_blog_post_publish', methods: ['PUT'])]
     public function publishPostAction(Request $request, Blog $blog, Post $post, User $user)
     {
         if ($this->checkPermission('EDIT', $blog->getResourceNode())
@@ -207,13 +201,12 @@ class PostController
     /**
      * Pin post.
      *
-     * @Route("/pin/{postId}", name="apiv2_blog_post_pin", methods={"PUT"})
      *
      * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @return array
      */
+    #[Route(path: '/pin/{postId}', name: 'apiv2_blog_post_pin', methods: ['PUT'])]
     public function pinPostAction(Request $request, Blog $blog, Post $post, User $user)
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
@@ -225,9 +218,8 @@ class PostController
 
     /**
      * Get all authors for a given blog.
-     *
-     * @Route("/authors/get", name="apiv2_blog_post_authors", methods={"GET"})
      */
+    #[Route(path: '/authors/get', name: 'apiv2_blog_post_authors', methods: ['GET'])]
     public function getBlogAuthorsAction(Blog $blog)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);

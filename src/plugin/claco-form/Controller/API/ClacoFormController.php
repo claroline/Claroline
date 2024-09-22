@@ -21,9 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/clacoform")
- */
+#[Route(path: '/clacoform')]
 class ClacoFormController
 {
     use PermissionCheckerTrait;
@@ -38,10 +36,9 @@ class ClacoFormController
     }
 
     /**
-     * @Route("/{id}/stats", name="apiv2_clacoform_stats", methods={"GET"})
-     *
      * @EXT\ParamConverter("id", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/stats', name: 'apiv2_clacoform_stats', methods: ['GET'])]
     public function getStatsAction(ClacoForm $clacoForm): JsonResponse
     {
         $this->checkPermission('EDIT', $clacoForm, [], true);
@@ -61,10 +58,9 @@ class ClacoFormController
     }
 
     /**
-     * @Route("/{id}/assign_categories", name="apiv2_clacoform_categories_assign", methods={"PUT"})
-     *
      * @EXT\ParamConverter("category", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/assign_categories', name: 'apiv2_clacoform_categories_assign', methods: ['PUT'])]
     public function reassignCategoriesAction(ClacoForm $clacoForm): JsonResponse
     {
         $this->checkPermission('EDIT', $clacoForm, [], true);

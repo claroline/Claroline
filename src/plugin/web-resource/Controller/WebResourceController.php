@@ -26,17 +26,13 @@ class WebResourceController
     }
 
     /**
-     * @Route(
-     *    "workspace/{workspace}/webResource/file/upload",
-     *    name="apiv2_webresource_file_upload"
-     * )
-     *
      * @EXT\ParamConverter(
      *     "workspace",
      *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     options={"mapping": {"workspace": "uuid"}}
      * )
      */
+    #[Route(path: 'workspace/{workspace}/webResource/file/upload', name: 'apiv2_webresource_file_upload')]
     public function uploadFile(Workspace $workspace, Request $request): JsonResponse
     {
         $files = $request->files->all();

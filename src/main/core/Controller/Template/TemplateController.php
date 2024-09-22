@@ -15,9 +15,7 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/template", name="apiv2_template_")
- */
+#[Route(path: '/template', name: 'apiv2_template_')]
 class TemplateController extends AbstractCrudController
 {
     public static function getName(): string

@@ -22,9 +22,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("resource_file", name="apiv2_resource_file_")
- */
+#[Route(path: 'resource_file', name: 'apiv2_resource_file_')]
 class FileController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -51,9 +49,7 @@ class FileController extends AbstractCrudController
         return 'file';
     }
 
-    /**
-     * @Route("{file}/raw", name="apiv2_resource_file_raw")
-     */
+    #[Route(path: '{file}/raw', name: 'apiv2_resource_file_raw')]
     public function displayRawAction(string $file): Response
     {
         $fileResource = $this->om->getRepository(File::class)->findOneBy(['uuid' => $file]);

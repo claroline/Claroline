@@ -38,9 +38,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/cursus_course", name="apiv2_cursus_course_")
- */
+#[Route(path: '/cursus_course', name: 'apiv2_cursus_course_')]
 class CourseController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -114,9 +112,7 @@ class CourseController extends AbstractCrudController
         return $filters;
     }
 
-    /**
-     * @Route("/public", name="list_public", methods={"GET"})
-     */
+    #[Route(path: '/public', name: 'list_public', methods: ['GET'])]
     public function listPublicAction(Request $request): JsonResponse
     {
         return new JsonResponse($this->crud->list(
@@ -128,9 +124,7 @@ class CourseController extends AbstractCrudController
         ));
     }
 
-    /**
-     * @Route("/list/archived", name="list_archived", methods={"GET"})
-     */
+    #[Route(path: '/list/archived', name: 'list_archived', methods: ['GET'])]
     public function listArchivedAction(Request $request): JsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
@@ -144,9 +138,7 @@ class CourseController extends AbstractCrudController
         ));
     }
 
-    /**
-     * @Route("/list/existing", name="list_existing", methods={"GET"})
-     */
+    #[Route(path: '/list/existing', name: 'list_existing', methods: ['GET'])]
     public function listNoWorkspaceAction(Request $request): JsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
@@ -162,9 +154,7 @@ class CourseController extends AbstractCrudController
         return new JsonResponse($list);
     }
 
-    /**
-     * @Route("/archive", name="archive", methods={"POST"})
-     */
+    #[Route(path: '/archive', name: 'archive', methods: ['POST'])]
     public function archiveAction(Request $request): JsonResponse
     {
         $processed = [];
@@ -192,9 +182,7 @@ class CourseController extends AbstractCrudController
         }, $processed));
     }
 
-    /**
-     * @Route("/restore", name="restore", methods={"POST"})
-     */
+    #[Route(path: '/restore', name: 'restore', methods: ['POST'])]
     public function restoreAction(Request $request): JsonResponse
     {
         $processed = [];
@@ -222,9 +210,7 @@ class CourseController extends AbstractCrudController
         }, $processed));
     }
 
-    /**
-     * @Route("/copy", name="copy", methods={"POST"})
-     */
+    #[Route(path: '/copy', name: 'copy', methods: ['POST'])]
     public function copyAction(Request $request): JsonResponse
     {
         $processed = [];
@@ -263,10 +249,12 @@ class CourseController extends AbstractCrudController
     }
 
     /**
+<<<<<<< HEAD
      * @Route("/{id}/bind", name="bind_workspace", methods={"PATCH"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/bind', name: 'bind_workspace', methods: ['PATCH'])]
     public function bindCourseToWorkspaceAction(Course $course, Request $request): JsonResponse
     {
         $this->om->startFlushSuite();
@@ -291,11 +279,7 @@ class CourseController extends AbstractCrudController
         return new JsonResponse($this->serializer->serialize($course));
     }
 
-    /**
-     * @Route("/{slug}/open", name="open", methods={"GET"})
-     *
-     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"slug": "slug"}})
-     */
+    #[Route(path: '/{slug}/open', name: 'open', methods: ['GET'])]
     public function openAction(Course $course): JsonResponse
     {
         $this->checkPermission('OPEN', $course, [], true);
@@ -348,10 +332,9 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/pdf", name="download_pdf", methods={"GET"})
-     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/pdf', name: 'download_pdf', methods: ['GET'])]
     public function downloadPdfAction(Course $course, Request $request): StreamedResponse
     {
         $this->checkPermission('OPEN', $course, [], true);
@@ -367,10 +350,9 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/sessions", name="list_sessions", methods={"GET"})
-     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/sessions', name: 'list_sessions', methods: ['GET'])]
     public function listSessionsAction(Course $course, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $course, [], true);
@@ -394,10 +376,9 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/users", name="add_pending", methods={"PATCH"})
-     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/users', name: 'add_pending', methods: ['PATCH'])]
     public function addPendingAction(Course $course, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $course, [], true);
@@ -412,10 +393,9 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/move/users", name="move_pending", methods={"PUT"})
-     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/move/users', name: 'move_pending', methods: ['PUT'])]
     public function movePendingAction(Course $course, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $course, [], true);
@@ -446,10 +426,9 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/move/pending", name="move_to_pending", methods={"PUT"})
-     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/move/pending', name: 'move_to_pending', methods: ['PUT'])]
     public function moveToPendingAction(Course $course, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $course, [], true);
@@ -476,11 +455,11 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/self/register", name="self_register", methods={"PUT"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/self/register', name: 'self_register', methods: ['PUT'])]
     public function selfRegisterAction(Course $course, User $user, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $course, [], true);
@@ -499,10 +478,9 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/stats", name="stats", methods={"GET"})
-     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/stats', name: 'stats', methods: ['GET'])]
     public function getStatsAction(Course $course): JsonResponse
     {
         $this->checkPermission('REGISTER', $course, [], true);

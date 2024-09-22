@@ -14,9 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Manages platform plugins.
- *
- * @Route("/plugin", name="apiv2_plugin_")
  */
+#[Route(path: '/plugin', name: 'apiv2_plugin_')]
 class PluginController extends AbstractSecurityController
 {
     public function __construct(
@@ -26,9 +25,7 @@ class PluginController extends AbstractSecurityController
     ) {
     }
 
-    /**
-     * @Route("", name="list", methods={"GET"})
-     */
+    #[Route(path: '', name: 'list', methods: ['GET'])]
     public function listAction(Request $request): JsonResponse
     {
         $this->canOpenAdminTool('parameters');
@@ -38,9 +35,7 @@ class PluginController extends AbstractSecurityController
         );
     }
 
-    /**
-     * @Route("/{id}", name="get", methods={"GET"})
-     */
+    #[Route(path: '/{id}', name: 'get', methods: ['GET'])]
     public function getAction(Plugin $plugin): JsonResponse
     {
         $this->canOpenAdminTool('parameters');
@@ -50,9 +45,7 @@ class PluginController extends AbstractSecurityController
         );
     }
 
-    /**
-     * @Route("/{id}/configure", name="configure", methods={"PUT"})
-     */
+    #[Route(path: '/{id}/configure', name: 'configure', methods: ['PUT'])]
     public function configureAction(Plugin $plugin): JsonResponse
     {
         $this->canOpenAdminTool('parameters');
@@ -62,9 +55,7 @@ class PluginController extends AbstractSecurityController
         );
     }
 
-    /**
-     * @Route("/{id}/enable", name="enable", methods={"PUT"})
-     */
+    #[Route(path: '/{id}/enable', name: 'enable', methods: ['PUT'])]
     public function enableAction(Plugin $plugin): JsonResponse
     {
         $this->canOpenAdminTool('parameters');
@@ -76,9 +67,7 @@ class PluginController extends AbstractSecurityController
         );
     }
 
-    /**
-     * @Route("/{id}/disable", name="disable", methods={"PUT"})
-     */
+    #[Route(path: '/{id}/disable', name: 'disable', methods: ['PUT'])]
     public function disableAction(Plugin $plugin): JsonResponse
     {
         $this->canOpenAdminTool('parameters');

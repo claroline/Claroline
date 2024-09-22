@@ -18,9 +18,7 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/location", name="apiv2_location_")
- */
+#[Route(path: '/location', name: 'apiv2_location_')]
 class LocationController extends AbstractCrudController
 {
     use HasOrganizationsTrait;

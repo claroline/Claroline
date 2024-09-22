@@ -14,9 +14,7 @@ namespace Claroline\ClacoFormBundle\Controller\API;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/clacoformentryuser", name="apiv2_clacoformentryuser_")
- */
+#[Route(path: '/clacoformentryuser', name: 'apiv2_clacoformentryuser_')]
 class EntryUserController extends AbstractCrudController
 {
     public static function getClass(): string

@@ -6,9 +6,7 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ThemeBundle\Entity\Theme;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/theme", name="apiv2_theme_")
- */
+#[Route(path: '/theme', name: 'apiv2_theme_')]
 class ThemeController extends AbstractCrudController
 {
     public static function getName(): string

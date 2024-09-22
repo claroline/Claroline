@@ -27,7 +27,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * Manages announces of an announcement resource.
  *
- * @Route("/announcement/{aggregateId}", options={"expose"=true})
  *
  * @EXT\ParamConverter(
  *      "aggregate",
@@ -35,6 +34,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  *      options={"mapping": {"aggregateId": "uuid"}}
  * )
  */
+#[Route(path: '/announcement/{aggregateId}', options: ['expose' => true])]
 class AnnouncementController
 {
     use RequestDecoderTrait;
@@ -60,9 +60,8 @@ class AnnouncementController
 
     /**
      * Creates a new announcement.
-     *
-     * @Route("/", name="claro_announcement_create", methods={"POST"})
      */
+    #[Route(path: '/', name: 'claro_announcement_create', methods: ['POST'])]
     public function createAction(AnnouncementAggregate $aggregate, Request $request): JsonResponse
     {
         $announcement = new Announcement();
@@ -79,7 +78,6 @@ class AnnouncementController
     /**
      * Updates an existing announcement.
      *
-     * @Route("/{id}", name="claro_announcement_update", methods={"PUT"})
      *
      * @EXT\ParamConverter(
      *      "announcement",
@@ -87,6 +85,7 @@ class AnnouncementController
      *      options={"mapping": {"id": "uuid"}}
      * )
      */
+    #[Route(path: '/{id}', name: 'claro_announcement_update', methods: ['PUT'])]
     public function updateAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request): JsonResponse
     {
         $this->crud->update($announcement, $this->decodeRequest($request), [Options::PERSIST_TAG]);
@@ -99,7 +98,6 @@ class AnnouncementController
     /**
      * Deletes an announcement.
      *
-     * @Route("/{id}", name="claro_announcement_delete", methods={"DELETE"})
      *
      * @EXT\ParamConverter(
      *      "announcement",
@@ -107,6 +105,7 @@ class AnnouncementController
      *      options={"mapping": {"id": "uuid"}}
      * )
      */
+    #[Route(path: '/{id}', name: 'claro_announcement_delete', methods: ['DELETE'])]
     public function deleteAction(AnnouncementAggregate $aggregate, Announcement $announcement): JsonResponse
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
@@ -119,7 +118,6 @@ class AnnouncementController
     /**
      * Sends an announcement (in current implementation, it's sent by email).
      *
-     * @Route("/{id}/validate", name="claro_announcement_validate", methods={"GET"})
      *
      * @EXT\ParamConverter(
      *      "announcement",
@@ -127,6 +125,7 @@ class AnnouncementController
      *      options={"mapping": {"id": "uuid"}}
      * )
      */
+    #[Route(path: '/{id}/validate', name: 'claro_announcement_validate', methods: ['GET'])]
     public function validateSendAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
@@ -157,10 +156,9 @@ class AnnouncementController
     }
 
     /**
-     * @Route("/{id}/pdf", name="claro_announcement_export_pdf", methods={"GET"})
-     *
      * @EXT\ParamConverter("announcement", class="Claroline\AnnouncementBundle\Entity\Announcement", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/pdf', name: 'claro_announcement_export_pdf', methods: ['GET'])]
     public function downloadPdfAction(AnnouncementAggregate $aggregate, Announcement $announcement): StreamedResponse
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);

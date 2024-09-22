@@ -6,9 +6,7 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ExampleBundle\Entity\Example;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/example", name="apiv2_example_")
- */
+#[Route(path: '/example', name: 'apiv2_example_')]
 class ExampleController extends AbstractCrudController
 {
     public static function getName(): string

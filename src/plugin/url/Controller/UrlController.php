@@ -15,9 +15,7 @@ use Claroline\CoreBundle\Manager\Template\PlaceholderManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/url")
- */
+#[Route(path: '/url')]
 class UrlController
 {
     public function __construct(
@@ -25,9 +23,7 @@ class UrlController
     ) {
     }
 
-    /**
-     * @Route("/placeholders", name="apiv2_url_placeholders", methods={"GET"})
-     */
+    #[Route(path: '/placeholders', name: 'apiv2_url_placeholders', methods: ['GET'])]
     public function getPlaceholdersAction(): JsonResponse
     {
         return new JsonResponse(

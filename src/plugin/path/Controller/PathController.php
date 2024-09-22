@@ -25,9 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/path")
- */
+#[Route(path: '/path')]
 class PathController
 {
     use PermissionCheckerTrait;
@@ -59,11 +57,11 @@ class PathController
     /**
      * Update step progression for a user.
      *
-     * @Route("/step/{id}/progression", name="innova_path_progression_update", methods={"PUT"})
      *
      * @EXT\ParamConverter("step", class="Innova\PathBundle\Entity\Step", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/step/{id}/progression', name: 'innova_path_progression_update', methods: ['PUT'])]
     public function updateProgressionAction(Step $step, User $user, Request $request): JsonResponse
     {
         $node = $step->getPath()->getResourceNode();
@@ -84,11 +82,11 @@ class PathController
      * Gets current user progression in the Path.
      * It includes, the Path evaluation, current attempt and evaluations for the embedded resources.
      *
-     * @Route("/{id}/attempt", name="innova_path_user_progression", methods={"GET"})
      *
      * @EXT\ParamConverter("path", class="Innova\PathBundle\Entity\Path\Path", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
+    #[Route(path: '/{id}/attempt', name: 'innova_path_user_progression', methods: ['GET'])]
     public function getUserProgressionAction(Path $path, User $user = null): JsonResponse
     {
         $this->checkPermission('OPEN', $path->getResourceNode(), [], true);
@@ -107,11 +105,11 @@ class PathController
     /**
      * Fetch user progressions for path.
      *
-     * @Route("/{id}/user/{user}/steps/progression/fetch", name="innova_path_user_steps_progression_fetch", methods={"GET"})
      *
      * @EXT\ParamConverter("path", class="Innova\PathBundle\Entity\Path\Path", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      */
+    #[Route(path: '/{id}/user/{user}/steps/progression/fetch', name: 'innova_path_user_steps_progression_fetch', methods: ['GET'])]
     public function userStepsProgressionFetchAction(Path $path, User $user): JsonResponse
     {
         $this->checkPermission('ADMINISTRATE', $path->getResourceNode(), [], true);

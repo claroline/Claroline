@@ -13,9 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/scheduled_task", name="apiv2_scheduled_task_")
- */
+#[Route(path: '/scheduled_task', name: 'apiv2_scheduled_task_')]
 class ScheduledTaskController extends AbstractCrudController
 {
     use HasUsersTrait;
@@ -42,9 +40,8 @@ class ScheduledTaskController extends AbstractCrudController
     /**
      * Manually execute a list of scheduled tasks.
      * If no ids is passed, it will execute all eligible tasks.
-     *
-     * @Route("/execute", name="execute", methods={"POST"})
      */
+    #[Route(path: '/execute', name: 'execute', methods: ['POST'])]
     public function executeAction(Request $request): JsonResponse
     {
         $tasks = $this->decodeIdsString($request, ScheduledTask::class);

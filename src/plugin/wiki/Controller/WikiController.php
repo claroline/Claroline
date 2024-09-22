@@ -2,6 +2,7 @@
 
 namespace Icap\WikiBundle\Controller;
 
+use Exception;
 use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
@@ -18,9 +19,9 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 
 /**
- * @Route("/wiki/{id}")
  * @EXT\ParamConverter("wiki", class="Icap\WikiBundle\Entity\Wiki", options={"mapping": {"id": "uuid"}})
  */
+#[Route(path: '/wiki/{id}')]
 class WikiController
 {
     use PermissionCheckerTrait;
@@ -51,11 +52,10 @@ class WikiController
     }
 
     /**
-     * @Route("/", name="apiv2_wiki_update", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/', name: 'apiv2_wiki_update', methods: ['PUT'])]
     public function updateAction(Wiki $wiki, Request $request)
     {
         $this->checkPermission('EDIT', $wiki->getResourceNode(), [], true);
@@ -64,15 +64,15 @@ class WikiController
             $this->wikiManager->updateWiki($wiki, json_decode($request->getContent(), true));
 
             return new JsonResponse($this->wikiManager->serializeWiki($wiki));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
     /**
-     * @Route("/pdf", name="apiv2_wiki_export_pdf")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
+    #[Route(path: '/pdf', name: 'apiv2_wiki_export_pdf')]
     public function exportPdfAction(Wiki $wiki, User $user = null): StreamedResponse
     {
         $resourceNode = $wiki->getResourceNode();

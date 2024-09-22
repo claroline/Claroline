@@ -40,9 +40,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/cursus_session", name="apiv2_cursus_session_")
- */
+#[Route(path: '/cursus_session', name: 'apiv2_cursus_session_')]
 class SessionController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -111,9 +109,7 @@ class SessionController extends AbstractCrudController
         return $filters;
     }
 
-    /**
-     * @Route("/copy", name="copy", methods={"POST"})
-     */
+    #[Route(path: '/copy', name: 'copy', methods: ['POST'])]
     public function copyAction(Request $request): JsonResponse
     {
         $processed = [];
@@ -141,10 +137,9 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/list/canceled", name="list_canceled", methods={"GET"})
-     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/list/canceled', name: 'list_canceled', methods: ['GET'])]
     public function listCanceledAction(Course $course, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $course, [], true);
@@ -162,9 +157,7 @@ class SessionController extends AbstractCrudController
         );
     }
 
-    /**
-     * @Route("/cancel", name="cancel", methods={"POST"})
-     */
+    #[Route(path: '/cancel', name: 'cancel', methods: ['POST'])]
     public function cancelAction(Request $request): JsonResponse
     {
         $data = $this->decodeRequest($request);
@@ -181,10 +174,9 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/pdf", name="download_pdf", methods={"GET"})
-     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/pdf', name: 'download_pdf', methods: ['GET'])]
     public function downloadPdfAction(Session $session, Request $request): StreamedResponse
     {
         $this->checkPermission('OPEN', $session, [], true);
@@ -200,10 +192,9 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/events", name="list_events")
-     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/events', name: 'list_events')]
     public function listEventsAction(Session $session, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $session, [], true);
@@ -218,10 +209,9 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/users/{type}", name="add_users", methods={"PATCH"})
-     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/users/{type}', name: 'add_users', methods: ['PATCH'])]
     public function addUsersAction(Session $session, string $type, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $session, [], true);
@@ -243,10 +233,9 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/groups/{type}", name="add_groups", methods={"PATCH"})
-     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/groups/{type}', name: 'add_groups', methods: ['PATCH'])]
     public function addGroupsAction(Session $session, string $type, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $session, [], true);
@@ -273,10 +262,9 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/pending", name="add_pending", methods={"PATCH"})
-     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/pending', name: 'add_pending', methods: ['PATCH'])]
     public function addPendingAction(Session $session, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $session, [], true);
@@ -290,11 +278,11 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/self/register", name="self_register", methods={"PUT"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/self/register', name: 'self_register', methods: ['PUT'])]
     public function selfRegisterAction(Session $session, User $user, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $session, [], true);
@@ -315,11 +303,11 @@ class SessionController extends AbstractCrudController
     /**
      * This is the endpoint used by confirmation email.
      *
-     * @Route("/{id}/self/confirm", name="self_confirm", methods={"GET"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/self/confirm', name: 'self_confirm', methods: ['GET'])]
     public function selfConfirmAction(Session $session, User $user): RedirectResponse
     {
         $this->checkPermission('OPEN', $session, [], true);
@@ -335,10 +323,9 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/invite/all", name="invite_all", methods={"PUT"})
-     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/invite/all', name: 'invite_all', methods: ['PUT'])]
     public function inviteAllAction(Session $session): JsonResponse
     {
         $this->checkPermission('REGISTER', $session, [], true);
@@ -349,10 +336,9 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/stats", name="stats", methods={"GET"})
-     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/stats', name: 'stats', methods: ['GET'])]
     public function getStatsAction(Session $session): JsonResponse
     {
         $this->checkPermission('REGISTER', $session, [], true);

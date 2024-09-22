@@ -10,9 +10,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @Route("/planned_object", name="apiv2_planned_object_")
- */
+#[Route(path: '/planned_object', name: 'apiv2_planned_object_')]
 class PlannedObjectController extends AbstractCrudController
 {
     use PermissionCheckerTrait;

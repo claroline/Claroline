@@ -27,9 +27,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/resource_evaluation")
- */
+#[Route(path: '/resource_evaluation')]
 class ResourceUserEvaluationController
 {
     use PermissionCheckerTrait;
@@ -45,10 +43,9 @@ class ResourceUserEvaluationController
     }
 
     /**
-     * @Route("/{nodeId}", name="apiv2_resource_evaluation_list", methods={"GET"})
-     *
      * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"nodeId": "uuid"}})
      */
+    #[Route(path: '/{nodeId}', name: 'apiv2_resource_evaluation_list', methods: ['GET'])]
     public function listAction(ResourceNode $resourceNode, Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -69,10 +66,9 @@ class ResourceUserEvaluationController
     }
 
     /**
-     * @Route("/attempts/{userEvaluationId}", name="apiv2_resource_evaluation_list_attempts", methods={"GET"})
-     *
      * @EXT\ParamConverter("userEvaluation", class="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation", options={"mapping": {"userEvaluationId": "id"}})
      */
+    #[Route(path: '/attempts/{userEvaluationId}', name: 'apiv2_resource_evaluation_list_attempts', methods: ['GET'])]
     public function listAttemptsAction(ResourceUserEvaluation $userEvaluation, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $userEvaluation, [], true);
@@ -85,10 +81,9 @@ class ResourceUserEvaluationController
     }
 
     /**
-     * @Route("/attempts/{userEvaluationId}", name="apiv2_resource_evaluation_give_attempt", methods={"PUT"})
-     *
      * @EXT\ParamConverter("userEvaluation", class="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation", options={"mapping": {"userEvaluationId": "id"}})
      */
+    #[Route(path: '/attempts/{userEvaluationId}', name: 'apiv2_resource_evaluation_give_attempt', methods: ['PUT'])]
     public function giveAnotherAttemptAction(ResourceUserEvaluation $userEvaluation): JsonResponse
     {
         $this->checkPermission('ADMINISTRATE', $userEvaluation, [], true);

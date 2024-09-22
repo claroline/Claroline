@@ -20,9 +20,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("apitoken", name="apiv2_apitoken_")
- */
+#[Route(path: 'apitoken', name: 'apiv2_apitoken_')]
 class ApiTokenController extends AbstractCrudController
 {
     public function __construct(
@@ -57,9 +55,7 @@ class ApiTokenController extends AbstractCrudController
         return [];
     }
 
-    /**
-     * @Route("/list/current", name="list_current", methods={"GET"})
-     */
+    #[Route(path: '/list/current', name: 'list_current', methods: ['GET'])]
     public function getCurrentAction(Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {

@@ -14,9 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/pdf")
- */
+#[Route(path: '/pdf')]
 class EvaluationController
 {
     /** @var AuthorizationCheckerInterface */
@@ -39,13 +37,13 @@ class EvaluationController
     }
 
     /**
-     * @Route("/{id}/progression/{page}/{total}", name="apiv2_pdf_progression_update", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\ParamConverter("pdf", class="Claroline\CoreBundle\Entity\Resource\File", options={"mapping": {"id": "uuid"}})
      *
      * @param int $page
      * @param int $total
      */
+    #[Route(path: '/{id}/progression/{page}/{total}', name: 'apiv2_pdf_progression_update', methods: ['PUT'])]
     public function updateAction(User $user, File $pdf, $page, $total): JsonResponse
     {
         if (!$this->authorization->isGranted('OPEN', new ResourceCollection([$pdf->getResourceNode()]))) {

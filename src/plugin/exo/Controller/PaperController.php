@@ -23,9 +23,9 @@ use UJM\ExoBundle\Manager\ExerciseManager;
  * Paper Controller.
  * Manages the submitted papers to an exercise.
  *
- * @Route("exercises/{exerciseId}/papers")
  * @EXT\ParamConverter("exercise", class="UJM\ExoBundle\Entity\Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
+#[Route(path: 'exercises/{exerciseId}/papers')]
 class PaperController
 {
     use RequestDecoderTrait;
@@ -43,9 +43,9 @@ class PaperController
      * Returns all the papers associated with an exercise.
      * Administrators get the papers of all users, others get only theirs.
      *
-     * @Route("", name="exercise_paper_list", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user")
      */
+    #[Route(path: '', name: 'exercise_paper_list', methods: ['GET'])]
     public function listAction(Exercise $exercise, User $user, Request $request): JsonResponse
     {
         $this->assertHasPermission('OPEN', $exercise);
@@ -75,10 +75,10 @@ class PaperController
      * Also includes the complete definition and solution of each question
      * associated with the exercise.
      *
-     * @Route("/{id}", name="exercise_paper_get", methods={"GET"})
      * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user")
      */
+    #[Route(path: '/{id}', name: 'exercise_paper_get', methods: ['GET'])]
     public function getAction(Exercise $exercise, Paper $paper, User $user): JsonResponse
     {
         $this->assertHasPermission('OPEN', $exercise);
@@ -93,9 +93,8 @@ class PaperController
 
     /**
      * Deletes some papers associated with an exercise.
-     *
-     * @Route("", name="ujm_exercise_delete_papers", methods={"DELETE"})
      */
+    #[Route(path: '', name: 'ujm_exercise_delete_papers', methods: ['DELETE'])]
     public function deleteAction(Exercise $exercise, Request $request): JsonResponse
     {
         $this->assertHasPermission('MANAGE_PAPERS', $exercise);
@@ -108,9 +107,8 @@ class PaperController
 
     /**
      * Exports papers into a CSV file.
-     *
-     * @Route("/export/csv", name="exercise_papers_export", methods={"GET"})
      */
+    #[Route(path: '/export/csv', name: 'exercise_papers_export', methods: ['GET'])]
     public function exportCsvAction(Exercise $exercise): StreamedResponse
     {
         $this->assertHasPermission('MANAGE_PAPERS', $exercise);
@@ -125,9 +123,8 @@ class PaperController
 
     /**
      * Exports papers into a json file.
-     *
-     * @Route("/export/json", name="exercise_papers_export_json", methods={"GET"})
      */
+    #[Route(path: '/export/json', name: 'exercise_papers_export_json', methods: ['GET'])]
     public function exportJsonAction(Exercise $exercise): StreamedResponse
     {
         if (!$this->isAdmin($exercise)) {
@@ -150,9 +147,8 @@ class PaperController
 
     /**
      * Exports papers into a csv file.
-     *
-     * @Route("/export/papers/csv", name="exercise_papers_export_csv", methods={"GET"})
      */
+    #[Route(path: '/export/papers/csv', name: 'exercise_papers_export_csv', methods: ['GET'])]
     public function exportCsvAnswersAction(Exercise $exercise): StreamedResponse
     {
         if (!$this->isAdmin($exercise)) {

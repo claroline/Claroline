@@ -32,9 +32,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/workspace")
- */
+#[Route(path: '/workspace')]
 class RegistrationController
 {
     use RequestDecoderTrait;
@@ -64,14 +62,10 @@ class RegistrationController
      *     }
      * )
      *
-     * @Route(
-     *    "/{id}/user/pending",
-     *    name="apiv2_workspace_list_pending",
-     *    methods={"GET"}
-     * )
      *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/user/pending', name: 'apiv2_workspace_list_pending', methods: ['GET'])]
     public function listPendingAction(Request $request, Workspace $workspace): JsonResponse
     {
         return new JsonResponse($this->crud->list(
@@ -91,14 +85,10 @@ class RegistrationController
      *     }
      * )
      *
-     * @Route(
-     *    "/{id}/registration/validate",
-     *    name="apiv2_workspace_registration_validate",
-     *    methods={"PATCH"}
-     * )
      *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/registration/validate', name: 'apiv2_workspace_registration_validate', methods: ['PATCH'])]
     public function validateRegistrationAction(Request $request, Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
@@ -130,14 +120,10 @@ class RegistrationController
      *     }
      * )
      *
-     * @Route(
-     *    "/{id}/registration/remove",
-     *    name="apiv2_workspace_registration_remove",
-     *    methods={"DELETE"}
-     * )
      *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/registration/remove', name: 'apiv2_workspace_registration_remove', methods: ['DELETE'])]
     public function removeRegistrationAction(Request $request, Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
@@ -167,14 +153,10 @@ class RegistrationController
      *     }
      * )
      *
-     * @Route(
-     *    "/{id}/users/unregister",
-     *    name="apiv2_workspace_unregister_users",
-     *    methods={"DELETE"}
-     * )
      *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/users/unregister', name: 'apiv2_workspace_unregister_users', methods: ['DELETE'])]
     public function unregisterUsersAction(Request $request, Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
@@ -202,14 +184,10 @@ class RegistrationController
      *     }
      * )
      *
-     * @Route(
-     *    "/{id}/groups/unregister",
-     *    name="apiv2_workspace_unregister_groups",
-     *    methods={"DELETE"}
-     * )
      *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/groups/unregister', name: 'apiv2_workspace_unregister_groups', methods: ['DELETE'])]
     public function unregisterGroupsAction(Request $request, Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
@@ -234,10 +212,10 @@ class RegistrationController
      *     }
      * )
      *
-     * @Route("/register/{role}", name="apiv2_workspace_register", methods={"PATCH"}, defaults={"role":""}, requirements={"role": ".+"})
      *
      * @throws InvalidDataException
      */
+    #[Route(path: '/register/{role}', name: 'apiv2_workspace_register', methods: ['PATCH'], defaults: ['role' => ''], requirements: ['role' => '.+'])]
     public function registerAction(string $role, Request $request): JsonResponse
     {
         $data = $this->decodeRequest($request);
@@ -276,9 +254,8 @@ class RegistrationController
      *         {"name": "user", "type": {"string"}, "description": "The user uuid"}
      *     }
      * )
-     *
-     * @Route("/unregister", name="apiv2_workspace_self_unregister", methods={"DELETE"})
      */
+    #[Route(path: '/unregister', name: 'apiv2_workspace_self_unregister', methods: ['DELETE'])]
     public function selfUnregisterAction(Request $request): JsonResponse
     {
         $token = $this->tokenStorage->getToken();
@@ -302,11 +279,6 @@ class RegistrationController
      *     }
      * )
      *
-     * @Route(
-     *     "/{workspace}/register/self",
-     *     name="apiv2_workspace_self_register",
-     *     methods={"PUT"}
-     * )
      *
      * @EXT\ParamConverter(
      *     "workspace",
@@ -315,6 +287,7 @@ class RegistrationController
      * )
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{workspace}/register/self', name: 'apiv2_workspace_self_register', methods: ['PUT'])]
     public function selfRegisterAction(Workspace $workspace, User $currentUser): JsonResponse
     {
         if (!$workspace->getSelfRegistration() || $workspace->isArchived()) {

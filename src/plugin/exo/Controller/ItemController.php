@@ -19,9 +19,8 @@ use UJM\ExoBundle\Manager\Item\ShareManager;
 
 /**
  * Item Controller exposes REST API.
- *
- * @Route("/quiz_questions", name="apiv2_quiz_questions_")
  */
+#[Route(path: '/quiz_questions', name: 'apiv2_quiz_questions_')]
 class ItemController extends AbstractCrudController
 {
     use RequestDecoderTrait;
@@ -47,9 +46,8 @@ class ItemController extends AbstractCrudController
 
     /**
      * Shares a list of questions to users.
-     *
-     * @Route("/share", name="share", methods={"POST"})
      */
+    #[Route(path: '/share', name: 'share', methods: ['POST'])]
     public function shareAction(Request $request): JsonResponse
     {
         $errors = [];

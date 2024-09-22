@@ -23,9 +23,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/community/activity")
- */
+#[Route(path: '/community/activity')]
 class ActivityController
 {
     use PermissionCheckerTrait;
@@ -45,9 +43,7 @@ class ActivityController
         $this->groupRepo = $om->getRepository(Group::class);
     }
 
-    /**
-     * @Route("/count/{contextId}", name="apiv2_community_activity")
-     */
+    #[Route(path: '/count/{contextId}', name: 'apiv2_community_activity')]
     public function openAction(string $contextId = null): JsonResponse
     {
         if (!$this->checkToolAccess('SHOW_ACTIVITY', $contextId)) {
@@ -80,9 +76,7 @@ class ActivityController
         ]);
     }
 
-    /**
-     * @Route("/logs/{contextId}", name="apiv2_community_functional_logs", methods={"GET"})
-     */
+    #[Route(path: '/logs/{contextId}', name: 'apiv2_community_functional_logs', methods: ['GET'])]
     public function functionalLogsAction(Request $request, string $contextId = null): JsonResponse
     {
         if (!$this->checkToolAccess('SHOW_ACTIVITY', $contextId)) {

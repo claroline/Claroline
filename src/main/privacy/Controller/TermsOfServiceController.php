@@ -11,9 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/terms_of_service")
- */
+#[Route(path: '/terms_of_service')]
 class TermsOfServiceController
 {
     public function __construct(
@@ -23,9 +21,7 @@ class TermsOfServiceController
     ) {
     }
 
-    /**
-     * @Route("/", name="apiv2_platform_terms_of_service", methods={"GET"})
-     */
+    #[Route(path: '/', name: 'apiv2_platform_terms_of_service', methods: ['GET'])]
     public function getCurrentAction(Request $request): JsonResponse
     {
         $tos = null;
@@ -37,10 +33,9 @@ class TermsOfServiceController
     }
 
     /**
-     * @Route("/accept", name="apiv2_platform_terms_of_service_accept", methods={"PUT"})
-     *
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
      */
+    #[Route(path: '/accept', name: 'apiv2_platform_terms_of_service_accept', methods: ['PUT'])]
     public function acceptAction(User $currentUser): JsonResponse
     {
         $currentUser->setAcceptedTerms(true);

@@ -13,9 +13,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Exposes API for the sessions of the current user.
- *
- * @Route("/my_sessions")
  */
+#[Route(path: '/my_sessions')]
 class SessionController
 {
     public function __construct(
@@ -27,9 +26,8 @@ class SessionController
 
     /**
      * List the active (in progress and forthcoming) sessions of the current user.
-     *
-     * @Route("/active", name="apiv2_cursus_my_sessions_active", methods={"GET"})
      */
+    #[Route(path: '/active', name: 'apiv2_cursus_my_sessions_active', methods: ['GET'])]
     public function listActiveAction(Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -48,9 +46,8 @@ class SessionController
 
     /**
      * List the ended sessions of the current user.
-     *
-     * @Route("/ended", name="apiv2_cursus_my_sessions_ended", methods={"GET"})
      */
+    #[Route(path: '/ended', name: 'apiv2_cursus_my_sessions_ended', methods: ['GET'])]
     public function listEndedAction(Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -69,9 +66,8 @@ class SessionController
 
     /**
      * List the sessions for which the user is in pending list.
-     *
-     * @Route("/pending", name="apiv2_cursus_my_sessions_pending", methods={"GET"})
      */
+    #[Route(path: '/pending', name: 'apiv2_cursus_my_sessions_pending', methods: ['GET'])]
     public function listPendingAction(Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {

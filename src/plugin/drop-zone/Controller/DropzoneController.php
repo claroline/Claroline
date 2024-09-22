@@ -11,6 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Controller;
 
+use Exception;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CommunityBundle\Entity\Team;
@@ -31,9 +32,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/dropzone", options={"expose"=true})
- */
+#[Route(path: '/dropzone', options: ['expose' => true])]
 class DropzoneController
 {
     use PermissionCheckerTrait;
@@ -51,7 +50,6 @@ class DropzoneController
     }
 
     /**
-     * @Route("/{id}/corrections/fetch", name="claro_dropzone_corrections_fetch", methods={"GET"})
      *
      * @EXT\ParamConverter(
      *     "dropzone",
@@ -60,6 +58,7 @@ class DropzoneController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/corrections/fetch', name: 'claro_dropzone_corrections_fetch', methods: ['GET'])]
     public function correctionsFetchAction(Dropzone $dropzone): JsonResponse
     {
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
@@ -69,7 +68,6 @@ class DropzoneController
     }
 
     /**
-     * @Route("/drop/{id}/correction/save", name="claro_dropzone_correction_save", methods={"POST"})
      *
      * @EXT\ParamConverter(
      *     "drop",
@@ -78,6 +76,7 @@ class DropzoneController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/drop/{id}/correction/save', name: 'claro_dropzone_correction_save', methods: ['POST'])]
     public function correctionSaveAction(Drop $drop, User $user, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
@@ -90,13 +89,12 @@ class DropzoneController
             return new JsonResponse(
                 $this->serializer->serialize($correction)
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
     /**
-     * @Route("/correction/{id}/submit", name="claro_dropzone_correction_submit", methods={"PUT"})
      *
      * @EXT\ParamConverter(
      *     "correction",
@@ -105,6 +103,7 @@ class DropzoneController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/correction/{id}/submit', name: 'claro_dropzone_correction_submit', methods: ['PUT'])]
     public function correctionSubmitAction(Correction $correction, User $user): JsonResponse
     {
         $dropzone = $correction->getDrop()->getDropzone();
@@ -118,16 +117,12 @@ class DropzoneController
             return new JsonResponse(
                 $this->serializer->serialize($correction)
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
     /**
-     * @Route("/correction/{id}/validation/switch",
-     *     name="claro_dropzone_correction_validation_switch",
-     *     methods={"PUT"}
-     * )
      *
      * @EXT\ParamConverter(
      *     "correction",
@@ -136,6 +131,7 @@ class DropzoneController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/correction/{id}/validation/switch', name: 'claro_dropzone_correction_validation_switch', methods: ['PUT'])]
     public function correctionValidationSwitchAction(Correction $correction, User $user): JsonResponse
     {
         $dropzone = $correction->getDrop()->getDropzone();
@@ -149,13 +145,12 @@ class DropzoneController
             return new JsonResponse(
                 $this->serializer->serialize($correction)
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
     /**
-     * @Route("/correction/{id}/delete", name="claro_dropzone_correction_delete", methods={"DELETE"})
      *
      * @EXT\ParamConverter(
      *     "correction",
@@ -164,6 +159,7 @@ class DropzoneController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/correction/{id}/delete', name: 'claro_dropzone_correction_delete', methods: ['DELETE'])]
     public function correctionDeleteAction(Correction $correction, User $user): JsonResponse
     {
         $dropzone = $correction->getDrop()->getDropzone();
@@ -176,13 +172,12 @@ class DropzoneController
             $this->correctionManager->deleteCorrection($correction);
 
             return new JsonResponse($serializedCorrection);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
     /**
-     * @Route("/correction/{id}/deny", name="claro_dropzone_correction_deny", methods={"PUT"})
      *
      * @EXT\ParamConverter(
      *     "correction",
@@ -191,6 +186,7 @@ class DropzoneController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/correction/{id}/deny', name: 'claro_dropzone_correction_deny', methods: ['PUT'])]
     public function correctionDenyAction(Correction $correction, User $user, Request $request): JsonResponse
     {
         $dropzone = $correction->getDrop()->getDropzone();
@@ -206,13 +202,12 @@ class DropzoneController
             return new JsonResponse(
                 $this->serializer->serialize($correction)
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
     /**
-     * @Route("/{id}/peer/drop/fetch", name="claro_dropzone_peer_drop_fetch", methods={"GET"})
      *
      * @EXT\ParamConverter(
      *     "dropzone",
@@ -221,6 +216,7 @@ class DropzoneController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/peer/drop/fetch', name: 'claro_dropzone_peer_drop_fetch', methods: ['GET'])]
     public function peerDropFetchAction(Dropzone $dropzone, User $user): JsonResponse
     {
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -231,7 +227,6 @@ class DropzoneController
     }
 
     /**
-     * @Route("/{id}/team/{teamId}/peer/drop/fetch", name="claro_dropzone_team_peer_drop_fetch", methods={"GET"})
      *
      * @EXT\ParamConverter(
      *     "dropzone",
@@ -245,6 +240,7 @@ class DropzoneController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/team/{teamId}/peer/drop/fetch', name: 'claro_dropzone_team_peer_drop_fetch', methods: ['GET'])]
     public function teamPeerDropFetchAction(Dropzone $dropzone, Team $team, User $user): JsonResponse
     {
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -258,7 +254,6 @@ class DropzoneController
     /**
      * Downloads a document.
      *
-     * @Route("/{document}/download", name="claro_dropzone_document_download", methods={"GET"})
      *
      * @EXT\ParamConverter(
      *     "document",
@@ -266,6 +261,7 @@ class DropzoneController
      *     options={"mapping": {"document": "uuid"}}
      * )
      */
+    #[Route(path: '/{document}/download', name: 'claro_dropzone_document_download', methods: ['GET'])]
     public function downloadAction(Document $document): StreamedResponse
     {
         $this->checkDocumentAccess($document);

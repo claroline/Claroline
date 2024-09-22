@@ -15,9 +15,7 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AudioPlayerBundle\Entity\Resource\Section;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/audio/section", name="apiv2_resource_audio_section_")
- */
+#[Route(path: '/audio/section', name: 'apiv2_resource_audio_section_')]
 class SectionController extends AbstractCrudController
 {
     public function getIgnore(): array

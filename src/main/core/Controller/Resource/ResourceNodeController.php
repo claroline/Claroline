@@ -17,9 +17,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/resource", name="apiv2_resource_")
- */
+#[Route(path: '/resource', name: 'apiv2_resource_')]
 class ResourceNodeController extends AbstractCrudController
 {
     public function __construct(
@@ -49,10 +47,10 @@ class ResourceNodeController extends AbstractCrudController
      * Get the list of rights for a resource node.
      * This may be directly managed by the standard action system (rights edition already is) instead.
      *
-     * @Route("/{id}/rights", name="get_rights")
      *
      * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/rights', name: 'get_rights')]
     public function getRightsAction(ResourceNode $resourceNode): JsonResponse
     {
         // only give access to users which have the right to edit the resource rights
@@ -68,9 +66,7 @@ class ResourceNodeController extends AbstractCrudController
         );
     }
 
-    /**
-     * @Route("/{contextId}/{parent}", name="list", defaults={"contextId"=null, "parent"=null})
-     */
+    #[Route(path: '/{contextId}/{parent}', name: 'list', defaults: ['contextId' => null, 'parent' => null])]
     public function listAction(Request $request, ?string $contextId = null, ?string $parent = null): JsonResponse
     {
         $options = $request->query->all();
@@ -110,10 +106,9 @@ class ResourceNodeController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{workspace}/removed", name="workspace_removed_list")
-     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
+    #[Route(path: '/{workspace}/removed', name: 'workspace_removed_list')]
     public function listRemovedAction(Workspace $workspace, Request $request): JsonResponse
     {
         return new JsonResponse(

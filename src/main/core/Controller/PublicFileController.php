@@ -24,9 +24,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Manages platform uploaded files... sort of.
- *
- * @Route("/public_file", name="apiv2_public_file_")
  */
+#[Route(path: '/public_file', name: 'apiv2_public_file_')]
 class PublicFileController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -53,9 +52,7 @@ class PublicFileController extends AbstractCrudController
         return 'public_file';
     }
 
-    /**
-     * @Route("/upload", name="upload", options={"method_prefix" = false}, methods={"POST"})
-     */
+    #[Route(path: '/upload', name: 'upload', options: ['method_prefix' => false], methods: ['POST'])]
     public function uploadAction(Request $request): JsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
@@ -75,9 +72,7 @@ class PublicFileController extends AbstractCrudController
         return new JsonResponse($objects);
     }
 
-    /**
-     * @Route("/upload/image", name="image_upload", methods={"POST"})
-     */
+    #[Route(path: '/upload/image', name: 'image_upload', methods: ['POST'])]
     public function uploadImageAction(Request $request): JsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);

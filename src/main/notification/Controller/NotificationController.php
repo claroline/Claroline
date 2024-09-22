@@ -11,9 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/notification")
- */
+#[Route(path: '/notification')]
 class NotificationController
 {
     public function __construct(
@@ -26,9 +24,8 @@ class NotificationController
 
     /**
      * Lists all the notifications of the current user.
-     *
-     * @Route("", name="claro_notification_list", methods={"GET"})
      */
+    #[Route(path: '', name: 'claro_notification_list', methods: ['GET'])]
     public function listAction(): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -44,9 +41,7 @@ class NotificationController
         }, $notifications));
     }
 
-    /**
-     * @Route("", name="claro_notification_read", methods={"PUT"})
-     */
+    #[Route(path: '', name: 'claro_notification_read', methods: ['PUT'])]
     public function readAction(Request $request): JsonResponse
     {
         return new JsonResponse();

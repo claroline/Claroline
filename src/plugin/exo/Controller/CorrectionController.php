@@ -17,9 +17,9 @@ use UJM\ExoBundle\Manager\CorrectionManager;
  * Correction API controller permits to a quiz creator to save scores and feedback
  * for answers to questions with manual correction.
  *
- * @Route("/exercises/{exerciseId}/correction")
  * @EXT\ParamConverter("exercise", class="UJM\ExoBundle\Entity\Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
+#[Route(path: '/exercises/{exerciseId}/correction')]
 class CorrectionController
 {
     use RequestDecoderTrait;
@@ -32,9 +32,8 @@ class CorrectionController
 
     /**
      * Lists all questions with `manual` score rule that have answers to correct.
-     *
-     * @Route("", name="exercise_correction_questions", methods={"GET"})
      */
+    #[Route(path: '', name: 'exercise_correction_questions', methods: ['GET'])]
     public function listQuestionsToCorrectAction(Exercise $exercise): JsonResponse
     {
         $toCorrect = $this->isAdmin($exercise) ? $this->correctionManager->getToCorrect($exercise) : [];
@@ -44,9 +43,8 @@ class CorrectionController
 
     /**
      * Saves score & feedback for a bulk of answers.
-     *
-     * @Route("/{questionId}", name="exercise_correction_save", methods={"PUT"})
      */
+    #[Route(path: '/{questionId}', name: 'exercise_correction_save', methods: ['PUT'])]
     public function saveAction(Exercise $exercise, Request $request): JsonResponse
     {
         $this->isAdmin($exercise);

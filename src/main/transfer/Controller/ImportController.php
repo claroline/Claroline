@@ -27,9 +27,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/transfer_import", name="apiv2_transfer_import_")
- */
+#[Route(path: '/transfer_import', name: 'apiv2_transfer_import_')]
 class ImportController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -53,10 +51,9 @@ class ImportController extends AbstractCrudController
     }
 
     /**
-     * @Route("/workspace/{workspaceId}", name="workspace_list", methods={"GET"})
-     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspaceId": "uuid"}})
      */
+    #[Route(path: '/workspace/{workspaceId}', name: 'workspace_list', methods: ['GET'])]
     public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
     {
         $this->checkPermission(ToolPermissions::getPermission('import', 'OPEN'), $workspace, [], true);
@@ -69,10 +66,9 @@ class ImportController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/execute", name="execute", methods={"POST"})
-     *
      * @EXT\ParamConverter("importFile", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/execute', name: 'execute', methods: ['POST'])]
     public function executeAction(ImportFile $importFile): JsonResponse
     {
         $this->checkPermission('EDIT', $importFile, [], true);
@@ -86,10 +82,9 @@ class ImportController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/log", name="log", methods={"GET"})
-     *
      * @EXT\ParamConverter("importFile", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/log', name: 'log', methods: ['GET'])]
     public function logAction(ImportFile $importFile): Response
     {
         $this->checkPermission('OPEN', $importFile, [], true);
@@ -102,9 +97,7 @@ class ImportController extends AbstractCrudController
         return new Response($logs);
     }
 
-    /**
-     * @Route("/sample/{format}/{entity}/{name}/{sample}", name="sample", methods={"GET"})
-     */
+    #[Route(path: '/sample/{format}/{entity}/{name}/{sample}', name: 'sample', methods: ['GET'])]
     public function downloadSampleAction(string $name, string $format, string $entity, string $sample): BinaryFileResponse
     {
         $file = $this->provider->getSamplePath($format, $entity, $name, $sample);

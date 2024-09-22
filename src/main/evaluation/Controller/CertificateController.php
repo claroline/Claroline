@@ -26,9 +26,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/certificate")
- */
+#[Route(path: '/certificate')]
 class CertificateController
 {
     use RequestDecoderTrait;
@@ -42,9 +40,7 @@ class CertificateController
         $this->authorization = $authorization;
     }
 
-    /**
-     * @Route("/", name="apiv2_workspace_download_certificate", methods={"POST"})
-     */
+    #[Route(path: '/', name: 'apiv2_workspace_download_certificate', methods: ['POST'])]
     public function downloadCertificateAction(Request $request): BinaryFileResponse
     {
         $workspaceEvaluationIds = $this->decodeRequest($request);
@@ -62,10 +58,9 @@ class CertificateController
     }
 
     /**
-     * @Route("/{workspace}/all", name="apiv2_workspace_download_all_certificates", methods={"GET"})
-     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
+    #[Route(path: '/{workspace}/all', name: 'apiv2_workspace_download_all_certificates', methods: ['GET'])]
     public function downloadAllCertificatesAction(Workspace $workspace): BinaryFileResponse
     {
         $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy([
@@ -76,11 +71,11 @@ class CertificateController
     }
 
     /**
-     * @Route("/{workspace}/user/{user}", name="apiv2_workspace_download_user_certificate", methods={"GET"})
      *
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
+    #[Route(path: '/{workspace}/user/{user}', name: 'apiv2_workspace_download_user_certificate', methods: ['GET'])]
     public function downloadUserCertificateAction(Workspace $workspace, User $user): BinaryFileResponse
     {
         $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy([
@@ -92,10 +87,9 @@ class CertificateController
     }
 
     /**
-     * @Route("/{evaluation}/generate", name="apiv2_workspace_generate_user_certificate", methods={"GET"})
-     *
      * @EXT\ParamConverter("evaluation", class="Claroline\CoreBundle\Entity\Workspace\Evaluation", options={"mapping": {"evaluation": "uuid"}})
      */
+    #[Route(path: '/{evaluation}/generate', name: 'apiv2_workspace_generate_user_certificate', methods: ['GET'])]
     public function regenerateUserCertificateAction(Evaluation $evaluation): BinaryFileResponse
     {
         $this->checkPermission('OPEN', $evaluation, [], true);
@@ -103,9 +97,7 @@ class CertificateController
         return $this->downloadCertificates($evaluation->getWorkspace(), [$evaluation], true);
     }
 
-    /**
-     * @Route("/regenerate", name="apiv2_workspace_regenerate_certificate", methods={"POST"})
-     */
+    #[Route(path: '/regenerate', name: 'apiv2_workspace_regenerate_certificate', methods: ['POST'])]
     public function regenerateCertificateAction(Request $request): BinaryFileResponse
     {
         $workspaceEvaluationIds = $this->decodeRequest($request);

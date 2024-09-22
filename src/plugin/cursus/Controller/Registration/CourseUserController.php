@@ -15,9 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/training_course_user", name="apiv2_training_course_user_")
- */
+#[Route(path: '/training_course_user', name: 'apiv2_training_course_user_')]
 class CourseUserController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -50,10 +48,10 @@ class CourseUserController extends AbstractCrudController
     /**
      * List pending users of a course.
      *
-     * @Route("/{id}/pending", name="list", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/pending', name: 'list', methods: ['GET'])]
     public function listByCourseAction(Request $request, Course $course): JsonResponse
     {
         $this->checkPermission('REGISTER', $course, [], true);

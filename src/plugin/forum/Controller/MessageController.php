@@ -14,9 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/forum_message", name="apiv2_forum_message_")
- */
+#[Route(path: '/forum_message', name: 'apiv2_forum_message_')]
 class MessageController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -42,10 +40,8 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/comment", name="create_comment", methods={"POST"})
      *
      * @ParamConverter("message", options={"mapping": {"id": "uuid"}})
-     *
      * @ApiDoc(
      *     description="Create a comment in a message",
      *     parameters={
@@ -53,6 +49,7 @@ class MessageController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/{id}/comment', name: 'create_comment', methods: ['POST'])]
     public function createComment(Message $message, Request $request): JsonResponse
     {
         $options = static::getOptions();
@@ -70,10 +67,9 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/forum/{forum}/messages/list/flagged", name="flagged_list", methods={"GET"})
-     *
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
+    #[Route(path: '/forum/{forum}/messages/list/flagged', name: 'flagged_list', methods: ['GET'])]
     public function getFlaggedMessagesAction(Request $request, Forum $forum): JsonResponse
     {
         $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);
@@ -87,10 +83,9 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/forum/{forum}/messages/list/blocked", name="blocked_list", methods={"GET"})
-     *
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
+    #[Route(path: '/forum/{forum}/messages/list/blocked', name: 'blocked_list', methods: ['GET'])]
     public function getBlockedMessagesAction(Request $request, Forum $forum): JsonResponse
     {
         $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);

@@ -10,9 +10,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @Route("/search")
- */
+#[Route(path: '/search')]
 class SearchController
 {
     public function __construct(
@@ -28,9 +26,8 @@ class SearchController
      *   - Workspace : name, code.
      *   - Resource : name.
      *   - User : username, firstName, lastName, email.
-     *
-     * @Route("/{search}", name="claro_search")
      */
+    #[Route(path: '/{search}', name: 'claro_search')]
     public function searchAction(string $search): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {

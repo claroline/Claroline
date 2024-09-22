@@ -6,9 +6,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * @Route("/icon")
- */
+#[Route(path: '/icon')]
 class IconController
 {
     public function __construct(
@@ -16,9 +14,7 @@ class IconController
     ) {
     }
 
-    /**
-     * @Route("/system", name="apiv2_icon_system_list", methods={"GET"})
-     */
+    #[Route(path: '/system', name: 'apiv2_icon_system_list', methods: ['GET'])]
     public function listSystemAction(): JsonResponse
     {
         $metadataPath = $this->projectDir.'/node_modules/@fortawesome/fontawesome-free/metadata/categories.yml';

@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Controller;
 
+use Exception;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -24,10 +25,10 @@ use UJM\ExoBundle\Manager\AttemptManager;
 /**
  * Attempt Controller.
  *
- * @Route("/exercises/{exerciseId}/attempts")
  *
  * @EXT\ParamConverter("exercise", class="UJM\ExoBundle\Entity\Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
+#[Route(path: '/exercises/{exerciseId}/attempts')]
 class AttemptController
 {
     use PermissionCheckerTrait;
@@ -47,10 +48,10 @@ class AttemptController
      * Opens an exercise, creating a new paper or re-using an unfinished one.
      * Also check that max attempts are not reached if needed.
      *
-     * @Route("", name="exercise_attempt_start", methods={"POST"})
      *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
+    #[Route(path: '', name: 'exercise_attempt_start', methods: ['POST'])]
     public function startAction(Exercise $exercise, User $user = null): JsonResponse
     {
         $this->assertHasPermission('OPEN', $exercise);
@@ -73,11 +74,11 @@ class AttemptController
     /**
      * Submits answers to an Exercise.
      *
-     * @Route("/{id}", name="exercise_attempt_submit", methods={"PUT"})
      *
      * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
+    #[Route(path: '/{id}', name: 'exercise_attempt_submit', methods: ['PUT'])]
     public function submitAnswersAction(Paper $paper, Request $request, User $user = null): JsonResponse
     {
         $this->assertHasPermission('OPEN', $paper->getExercise());
@@ -110,11 +111,11 @@ class AttemptController
     /**
      * Flags a paper as finished.
      *
-     * @Route("/{id}/end", name="exercise_attempt_finish", methods={"PUT"})
      *
      * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
+    #[Route(path: '/{id}/end', name: 'exercise_attempt_finish', methods: ['PUT'])]
     public function finishAction(Paper $paper, User $user = null): JsonResponse
     {
         $this->assertHasPermission('OPEN', $paper->getExercise());
@@ -137,11 +138,11 @@ class AttemptController
      * Returns the content of a question hint, and records the fact that it has
      * been consulted within the context of a given paper.
      *
-     * @Route("/{id}/{questionId}/hints/{hintId}", name="exercise_attempt_hint_show", methods={"GET"})
      *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/{questionId}/hints/{hintId}', name: 'exercise_attempt_hint_show', methods: ['GET'])]
     public function useHintAction(Paper $paper, string $questionId, string $hintId, Request $request, User $user = null): JsonResponse
     {
         $this->assertHasPermission('OPEN', $paper->getExercise());
@@ -149,7 +150,7 @@ class AttemptController
 
         try {
             $hint = $this->attemptManager->useHint($paper, $questionId, $hintId, $request->getClientIp());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse([[
                 'path' => '',
                 'message' => $e->getMessage(),
@@ -160,10 +161,9 @@ class AttemptController
     }
 
     /**
-     * @Route("/{id}/attemtps", name="exercise_attempt_give", methods={"PUT"})
-     *
      * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/attemtps', name: 'exercise_attempt_give', methods: ['PUT'])]
     public function giveAttemptAction(Paper $paper): JsonResponse
     {
         $attempt = $this->attemptManager->getAttempt($paper);

@@ -2,6 +2,7 @@
 
 namespace Claroline\ForumBundle\Controller;
 
+use Exception;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -14,9 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/forum_subject", name="apiv2_forum_subject_")
- */
+#[Route(path: '/forum_subject', name: 'apiv2_forum_subject_')]
 class SubjectController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -42,8 +41,6 @@ class SubjectController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/messages", methods={"GET"})
-     * @Route("/forum/{forumId}/subjects/{id}/messages", name="get_message", methods={"GET"})
      *
      * @EXT\ParamConverter("subject", class = "Claroline\ForumBundle\Entity\Subject",  options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forumId": "uuid"}})
@@ -61,10 +58,12 @@ class SubjectController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/{id}/messages', methods: ['GET'])]
+    #[Route(path: '/forum/{forumId}/subjects/{id}/messages', name: 'get_message', methods: ['GET'])]
     public function listMessagesAction(Request $request, Subject $subject, Forum $forum = null): JsonResponse
     {
         if ($forum && ($forum->getId() !== $subject->getForum()->getId())) {
-            throw new \Exception('This subject was not created in the forum.');
+            throw new Exception('This subject was not created in the forum.');
         }
 
         $this->checkPermission('OPEN', $subject, [], true);
@@ -78,10 +77,8 @@ class SubjectController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/message", name="create_message", methods={"POST", "PUT"})
      *
      * @EXT\ParamConverter("subject", class = "Claroline\ForumBundle\Entity\Subject",  options={"mapping": {"id": "uuid"}})
-     *
      * @ApiDoc(
      *     description="Create a message in a subject",
      *     parameters={
@@ -89,6 +86,7 @@ class SubjectController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/{id}/message', name: 'create_message', methods: ['POST', 'PUT'])]
     public function createMessage(Subject $subject, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $subject, [], true);
@@ -107,11 +105,9 @@ class SubjectController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{subject}/message/{message}", name="message_update", methods={"PUT"})
      *
      * @EXT\ParamConverter("message", class = "Claroline\ForumBundle\Entity\Message",  options={"mapping": {"message": "uuid"}})
      * @EXT\ParamConverter("subject", class = "Claroline\ForumBundle\Entity\Subject",  options={"mapping": {"subject": "uuid"}})
-     *
      * @ApiDoc(
      *     description="Udate a message in a subject",
      *     parameters={
@@ -119,6 +115,7 @@ class SubjectController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/{subject}/message/{message}', name: 'message_update', methods: ['PUT'])]
     public function updateMessageAction(Subject $subject, Message $message, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $subject, [], true);
@@ -127,10 +124,9 @@ class SubjectController extends AbstractCrudController
     }
 
     /**
-     * @Route("/forum/{forum}/subjects/list/flagged", name="flagged_list", methods={"GET"})
-     *
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
+    #[Route(path: '/forum/{forum}/subjects/list/flagged', name: 'flagged_list', methods: ['GET'])]
     public function getFlaggedSubjectsAction(Forum $forum, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);
@@ -144,10 +140,9 @@ class SubjectController extends AbstractCrudController
     }
 
     /**
-     * @Route("/forum/{forum}/subjects/list/blocked", name="blocked_list", methods={"GET"})
-     *
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
+    #[Route(path: '/forum/{forum}/subjects/list/blocked', name: 'blocked_list', methods: ['GET'])]
     public function getBlockedSubjectsAction(Forum $forum, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);

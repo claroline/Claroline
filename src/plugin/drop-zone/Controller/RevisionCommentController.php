@@ -15,9 +15,7 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\DropZoneBundle\Entity\RevisionComment;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/revisioncomment", name="apiv2_revisioncomment_")
- */
+#[Route(path: '/revisioncomment', name: 'apiv2_revisioncomment_')]
 class RevisionCommentController extends AbstractCrudController
 {
     public static function getName(): string

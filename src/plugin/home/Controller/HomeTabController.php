@@ -15,9 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/home_tab", name="apiv2_home_tab_")
- */
+#[Route(path: '/home_tab', name: 'apiv2_home_tab_')]
 class HomeTabController extends AbstractCrudController
 {
     use RequestDecoderTrait;
@@ -46,10 +44,9 @@ class HomeTabController extends AbstractCrudController
     }
 
     /**
-     * @Route("/open/{id}", name="open", methods={"GET"})
-     *
      * @EXT\ParamConverter("homeTab", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/open/{id}', name: 'open', methods: ['GET'])]
     public function openAction(HomeTab $homeTab): JsonResponse
     {
         $accessErrors = $this->manager->getRestrictionsErrors($homeTab);
@@ -76,10 +73,10 @@ class HomeTabController extends AbstractCrudController
     /**
      * Submit access code.
      *
-     * @Route("/unlock/{id}", name="unlock", methods={"POST"})
      *
      * @EXT\ParamConverter("homeTab", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/unlock/{id}', name: 'unlock', methods: ['POST'])]
     public function unlockAction(HomeTab $homeTab, Request $request): JsonResponse
     {
         $this->manager->unlock($homeTab, $request);
@@ -87,9 +84,7 @@ class HomeTabController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    /**
-     * @Route("/{context}/{contextId}", name="update", methods={"PUT"})
-     */
+    #[Route(path: '/{context}/{contextId}', name: 'update', methods: ['PUT'])]
     public function updateContextAction(Request $request, string $context, string $contextId = null): JsonResponse
     {
         // grab tabs data

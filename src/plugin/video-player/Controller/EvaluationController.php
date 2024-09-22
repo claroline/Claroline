@@ -13,9 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/video")
- */
+#[Route(path: '/video')]
 class EvaluationController
 {
     use PermissionCheckerTrait;
@@ -29,11 +27,11 @@ class EvaluationController
     }
 
     /**
-     * @Route("/{id}/progression/{currentTime}/{totalTime}", name="apiv2_video_progression_update", methods={"PUT"})
      *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\ParamConverter("video", class="Claroline\CoreBundle\Entity\Resource\File", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/progression/{currentTime}/{totalTime}', name: 'apiv2_video_progression_update', methods: ['PUT'])]
     public function updateAction(User $user, File $video, $currentTime, $totalTime): JsonResponse
     {
         $this->checkPermission('OPEN', $video->getResourceNode(), [], true);

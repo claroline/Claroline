@@ -31,9 +31,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/event", name="apiv2_event_")
- */
+#[Route(path: '/event', name: 'apiv2_event_')]
 class EventController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -81,10 +79,9 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/ics", name="download_ics", methods={"GET"})
-     *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/ics', name: 'download_ics', methods: ['GET'])]
     public function downloadICSAction(Event $event): StreamedResponse
     {
         $this->checkPermission('OPEN', $event, [], true);
@@ -100,10 +97,10 @@ class EventController extends AbstractCrudController
     /**
      * Lists the participants of an event.
      *
-     * @Route("/{id}/participants", name="list_participants", methods={"GET"})
      *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/participants', name: 'list_participants', methods: ['GET'])]
     public function listParticipantsAction(Event $event, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $event, [], true);
@@ -118,10 +115,10 @@ class EventController extends AbstractCrudController
     /**
      * Adds the selected users as event participants.
      *
-     * @Route("/{id}/participants", name="add_participants", methods={"POST"})
      *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/participants', name: 'add_participants', methods: ['POST'])]
     public function addParticipantsAction(Event $event, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $event, [], true);
@@ -145,10 +142,10 @@ class EventController extends AbstractCrudController
     /**
      * Removes selected users from the event participants.
      *
-     * @Route("/{id}/participants", name="remove_participants", methods={"DELETE"})
      *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/participants', name: 'remove_participants', methods: ['DELETE'])]
     public function removeParticipantsAction(Event $event, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $event, [], true);
@@ -169,10 +166,10 @@ class EventController extends AbstractCrudController
     /**
      * Sends invitations to the selected participants.
      *
-     * @Route("/{id}/invitations/send", name="send_invitations", methods={"POST"})
      *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/invitations/send', name: 'send_invitations', methods: ['POST'])]
     public function sendInvitationsAction(Event $event, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $event, [], true);
@@ -186,10 +183,9 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/invitations/{id}/status/{status}", name="change_invitation_status", methods={"GET"})
-     *
      * @EXT\ParamConverter("invitation", options={"mapping": {"id": "id"}})
      */
+    #[Route(path: '/invitations/{id}/status/{status}', name: 'change_invitation_status', methods: ['GET'])]
     public function changeInvitationStatusAction(EventInvitation $invitation, string $status, Request $request): Response
     {
         $canEdit = $this->checkPermission('EDIT', $invitation->getEvent());

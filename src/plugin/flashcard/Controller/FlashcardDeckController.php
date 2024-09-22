@@ -20,9 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/flashcard_deck")
- */
+#[Route(path: '/flashcard_deck')]
 class FlashcardDeckController
 {
     use PermissionCheckerTrait;
@@ -44,9 +42,9 @@ class FlashcardDeckController
     /**
      * Check if deck modification should reset attempts.
      *
-     * @Route("/{id}/check", name="apiv2_flashcard_deck_update_check", methods={"PUT"})
      * @EXT\ParamConverter("card", class="Claroline\FlashcardBundle\Entity\FlashcardDeck", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/check', name: 'apiv2_flashcard_deck_update_check', methods: ['PUT'])]
     public function checkAction(FlashcardDeck $flashcardDeck, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $flashcardDeck);
@@ -62,11 +60,11 @@ class FlashcardDeckController
     /**
      * Update card progression for a user.
      *
-     * @Route("/flashcard/{id}/progression", name="apiv2_flashcard_progression_update", methods={"PUT"})
      *
      * @EXT\ParamConverter("card", class="Claroline\FlashcardBundle\Entity\Flashcard", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/flashcard/{id}/progression', name: 'apiv2_flashcard_progression_update', methods: ['PUT'])]
     public function updateProgressionAction(Flashcard $card, User $user, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $card->getDeck());
@@ -87,11 +85,11 @@ class FlashcardDeckController
     }
 
     /**
-     * @Route("/{id}/attempt", name="apiv2_flashcard_deck_current_attempt", methods={"GET"})
      *
      * @EXT\ParamConverter("deck", class="Claroline\FlashcardBundle\Entity\FlashcardDeck", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/attempt', name: 'apiv2_flashcard_deck_current_attempt', methods: ['GET'])]
     public function getAttemptAction(FlashcardDeck $deck, User $user): JsonResponse
     {
         $this->checkPermission('OPEN', $deck);

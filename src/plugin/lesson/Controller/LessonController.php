@@ -40,9 +40,9 @@ class LessonController
     }
 
     /**
-     * @Route("/lesson/{id}", name="icap_lesson_update", methods={"PUT"})
      * @EXT\ParamConverter("lesson", class="Icap\LessonBundle\Entity\Lesson", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/lesson/{id}', name: 'icap_lesson_update', methods: ['PUT'])]
     public function updateAction(Lesson $lesson, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $lesson->getResourceNode(), [], true);
@@ -56,9 +56,9 @@ class LessonController
     }
 
     /**
-     * @Route("/lesson/{id}/pdf", name="icap_lesson_export_pdf")
      * @EXT\ParamConverter("lesson", class="Icap\LessonBundle\Entity\Lesson", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/lesson/{id}/pdf', name: 'icap_lesson_export_pdf')]
     public function downloadPdfAction(Lesson $lesson): StreamedResponse
     {
         $this->checkPermission('EXPORT', $lesson->getResourceNode(), [], true);

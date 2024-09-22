@@ -33,9 +33,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  * Controller for user self-registration. Access to this functionality requires
  * that the user is anonymous and the self-registration is allowed by the
  * platform configuration.
- *
- * @Route("/user/registration")
  */
+#[Route(path: '/user/registration')]
 class RegistrationController
 {
     use RequestDecoderTrait;
@@ -52,9 +51,7 @@ class RegistrationController
     ) {
     }
 
-    /**
-     * @Route("/", name="apiv2_user_register", methods={"POST"})
-     */
+    #[Route(path: '/', name: 'apiv2_user_register', methods: ['POST'])]
     public function registerAction(Request $request): Response
     {
         $this->checkAccess();
@@ -77,9 +74,8 @@ class RegistrationController
 
     /**
      * Fetches data for self-registration form.
-     *
-     * @Route("/", name="apiv2_user_initialize_registration", methods={"GET"})
      */
+    #[Route(path: '/', name: 'apiv2_user_initialize_registration', methods: ['GET'])]
     public function initializeAction(Request $request): JsonResponse
     {
         $this->checkAccess();

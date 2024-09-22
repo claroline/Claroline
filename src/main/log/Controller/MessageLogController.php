@@ -12,9 +12,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/log/message")
- */
+#[Route(path: '/log/message')]
 class MessageLogController extends AbstractSecurityController
 {
     public function __construct(
@@ -24,9 +22,7 @@ class MessageLogController extends AbstractSecurityController
     ) {
     }
 
-    /**
-     * @Route("", name="apiv2_logs_message", methods={"GET"})
-     */
+    #[Route(path: '', name: 'apiv2_logs_message', methods: ['GET'])]
     public function listAction(Request $request): JsonResponse
     {
         $this->canOpenAdminTool('logs');
@@ -36,9 +32,7 @@ class MessageLogController extends AbstractSecurityController
         );
     }
 
-    /**
-     * @Route("/current", name="apiv2_logs_message_list_current", methods={"GET"})
-     */
+    #[Route(path: '/current', name: 'apiv2_logs_message_list_current', methods: ['GET'])]
     public function listForCurrentUserAction(Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {

@@ -16,10 +16,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/resource/{id}")
- *
  * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
  */
+#[Route(path: '/resource/{id}')]
 class ActivityController
 {
     use PermissionCheckerTrait;
@@ -32,9 +31,7 @@ class ActivityController
         $this->authorization = $authorization;
     }
 
-    /**
-     * @Route("/logs", name="apiv2_resource_functional_logs")
-     */
+    #[Route(path: '/logs', name: 'apiv2_resource_functional_logs')]
     public function functionalLogsAction(ResourceNode $resourceNode, Request $request): JsonResponse
     {
         $this->checkPermission('ADMINISTRATE', $resourceNode, [], true);

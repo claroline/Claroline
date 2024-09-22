@@ -19,9 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/connection_message", name="apiv2_connection_message_")
- */
+#[Route(path: '/connection_message', name: 'apiv2_connection_message_')]
 class ConnectionMessageController extends AbstractCrudController
 {
     public function __construct(
@@ -42,7 +40,6 @@ class ConnectionMessageController extends AbstractCrudController
     /**
      * Discards a message for the next login.
      *
-     * @Route("/{id}/discard", name="discard", methods="PUT")
      *
      * @EXT\ParamConverter(
      *     "message",
@@ -51,6 +48,7 @@ class ConnectionMessageController extends AbstractCrudController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/discard', name: 'discard', methods: 'PUT')]
     public function discardAction(ConnectionMessage $message, User $user): JsonResponse
     {
         $this->manager->discard($message, $user);

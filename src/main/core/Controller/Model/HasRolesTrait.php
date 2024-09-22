@@ -21,8 +21,6 @@ trait HasRolesTrait
     abstract public static function getName(): string;
 
     /**
-     * @Route("/{id}/role", name="list_roles", methods={"GET"}, priority=1)
-     *
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Role.",
      *     queryString={
@@ -34,6 +32,7 @@ trait HasRolesTrait
      *     response={"$list=Claroline\CoreBundle\Entity\Role"}
      * )
      */
+    #[Route(path: '/{id}/role', name: 'list_roles', methods: ['GET'], priority: 1)]
     public function listRolesAction(string $id, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.
@@ -51,8 +50,6 @@ trait HasRolesTrait
     }
 
     /**
-     * @Route("/{id}/role", name="add_roles", methods={"PATCH"}, priority=1)
-     *
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\Role.",
      *     parameters={
@@ -64,6 +61,7 @@ trait HasRolesTrait
      *     }
      * )
      */
+    #[Route(path: '/{id}/role', name: 'add_roles', methods: ['PATCH'], priority: 1)]
     public function addRolesAction(string $id, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.
@@ -79,8 +77,6 @@ trait HasRolesTrait
     }
 
     /**
-     * @Route("/{id}/role", name="remove_roles", methods={"DELETE"}, priority=1)
-     *
      * @ApiDoc(
      *     description="Remove objects of class Claroline\CoreBundle\Entity\Role.",
      *     parameters={
@@ -92,6 +88,7 @@ trait HasRolesTrait
      *     }
      * )
      */
+    #[Route(path: '/{id}/role', name: 'remove_roles', methods: ['DELETE'], priority: 1)]
     public function removeRolesAction(string $id, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.

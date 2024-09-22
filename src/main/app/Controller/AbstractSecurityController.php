@@ -2,6 +2,7 @@
 
 namespace Claroline\AppBundle\Controller;
 
+use LogicException;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Context\AdministrationContext;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -34,7 +35,7 @@ abstract class AbstractSecurityController
             ->findOneBy(['name' => $toolName, 'contextName' => AdministrationContext::getName()]);
 
         if (!$tool) {
-            throw new \LogicException("Annotation error: cannot found admin tool '{$toolName}'");
+            throw new LogicException("Annotation error: cannot found admin tool '{$toolName}'");
         }
 
         $granted = $this->authorization->isGranted('OPEN', $tool);

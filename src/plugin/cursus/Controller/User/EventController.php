@@ -15,9 +15,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Exposes API for the session events of the current user.
- *
- * @Route("/my_events")
  */
+#[Route(path: '/my_events')]
 class EventController
 {
     public function __construct(
@@ -30,10 +29,10 @@ class EventController
     /**
      * List the active (in progress and forthcoming) session events of the current user.
      *
-     * @Route("/{workspace}", name="apiv2_cursus_my_events", methods={"GET"})
      *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
+    #[Route(path: '/{workspace}', name: 'apiv2_cursus_my_events', methods: ['GET'])]
     public function listAction(Request $request, Workspace $workspace = null): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {

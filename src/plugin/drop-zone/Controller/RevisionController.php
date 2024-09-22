@@ -11,6 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Controller;
 
+use Exception;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -25,9 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/droprevision", name="apiv2_droprevision_")
- */
+#[Route(path: '/droprevision', name: 'apiv2_droprevision_')]
 class RevisionController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -57,7 +56,6 @@ class RevisionController extends AbstractCrudController
     /**
      * Submits Drop for revision.
      *
-     * @Route("/drop/{id}/submit/revision", name="submit_for_revision", methods={"PUT"})
      *
      * @EXT\ParamConverter(
      *     "drop",
@@ -66,6 +64,7 @@ class RevisionController extends AbstractCrudController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/drop/{id}/submit/revision', name: 'submit_for_revision', methods: ['PUT'])]
     public function submitForRevisionAction(Drop $drop, User $user): JsonResponse
     {
         $dropzone = $drop->getDropzone();
@@ -79,13 +78,12 @@ class RevisionController extends AbstractCrudController
                 'drop' => $this->serializer->serialize($drop),
                 'revision' => $this->serializer->serialize($revision),
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
     /**
-     * @Route("/{id}/revisions/list", name="dropzone_list", methods={"GET"})
      *
      * @EXT\ParamConverter(
      *     "dropzone",
@@ -94,6 +92,7 @@ class RevisionController extends AbstractCrudController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/revisions/list', name: 'dropzone_list', methods: ['GET'])]
     public function revisionsListAction(Dropzone $dropzone, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
@@ -107,7 +106,6 @@ class RevisionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/drop/{drop}/revisions/list", name="drop_list", methods={"GET"})
      *
      * @EXT\ParamConverter(
      *     "drop",
@@ -116,6 +114,7 @@ class RevisionController extends AbstractCrudController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/drop/{drop}/revisions/list', name: 'drop_list', methods: ['GET'])]
     public function dropRevisionsListAction(Drop $drop, User $user, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
@@ -132,7 +131,6 @@ class RevisionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/revision/drop", name="drop_get", methods={"GET"})
      *
      * @EXT\ParamConverter(
      *     "revision",
@@ -141,6 +139,7 @@ class RevisionController extends AbstractCrudController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/revision/drop', name: 'drop_get', methods: ['GET'])]
     public function dropFromRevisionFetchAction(Revision $revision, User $user): JsonResponse
     {
         $drop = $revision->getDrop();

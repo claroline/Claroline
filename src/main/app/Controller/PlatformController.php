@@ -37,9 +37,8 @@ class PlatformController
 
     /**
      * Renders the Claroline web application.
-     *
-     * @Route("/", name="claro_index")
      */
+    #[Route(path: '/', name: 'claro_index')]
     public function indexAction(Request $request): Response
     {
         $currentUser = null;
@@ -89,9 +88,8 @@ class PlatformController
 
     /**
      * Change locale.
-     *
-     * @Route("/locale/{locale}", name="claroline_locale_change")
      */
+    #[Route(path: '/locale/{locale}', name: 'claroline_locale_change')]
     public function changeLocaleAction(Request $request, string $locale): RedirectResponse
     {
         $user = $this->tokenStorage->getToken()->getUser();

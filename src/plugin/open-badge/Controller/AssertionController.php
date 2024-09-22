@@ -11,6 +11,7 @@
 
 namespace Claroline\OpenBadgeBundle\Controller;
 
+use LogicException;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
@@ -31,9 +32,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/badge_assertion", name="apiv2_badge_assertion_")
- */
+#[Route(path: '/badge_assertion', name: 'apiv2_badge_assertion_')]
 class AssertionController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -63,9 +62,7 @@ class AssertionController extends AbstractCrudController
         return ['create', 'update', 'list', 'deleteBulk'];
     }
 
-    /**
-     * @Route("/current-user/{workspace}", name="current_user_list", methods={"GET"})
-     */
+    #[Route(path: '/current-user/{workspace}', name: 'current_user_list', methods: ['GET'])]
     public function listMyAssertionsAction(Request $request, ?string $workspace = null): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -90,10 +87,9 @@ class AssertionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{assertion}/evidences", name="evidences", methods={"GET"})
-     *
      * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      */
+    #[Route(path: '/{assertion}/evidences', name: 'evidences', methods: ['GET'])]
     public function listEvidencesAction(Request $request, Assertion $assertion): JsonResponse
     {
         $this->checkPermission('OPEN', $assertion, [], true);
@@ -109,10 +105,10 @@ class AssertionController extends AbstractCrudController
     /**
      * Downloads pdf version of assertion.
      *
-     * @Route("/{assertion}/pdf/download", name="pdf_download", methods={"GET"})
      *
      * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      */
+    #[Route(path: '/{assertion}/pdf/download', name: 'pdf_download', methods: ['GET'])]
     public function downloadPdfAction(Assertion $assertion): StreamedResponse
     {
         $this->checkPermission('OPEN', $assertion, [], true);
@@ -151,11 +147,11 @@ class AssertionController extends AbstractCrudController
     /**
      * Transfer badges from one user to another.
      *
-     * @Route("/transfer/{userFrom}/{userTo}/", name="transfer", methods={"POST"})
      *
      * @EXT\ParamConverter("userFrom", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"userFrom": "uuid"}})
      * @EXT\ParamConverter("userTo", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"userTo": "uuid"}})
      */
+    #[Route(path: '/transfer/{userFrom}/{userTo}/', name: 'transfer', methods: ['POST'])]
     public function transferBadgesAction(User $userFrom, User $userTo): JsonResponse
     {
         $this->canAdministrate();
@@ -171,7 +167,7 @@ class AssertionController extends AbstractCrudController
             ->findOneBy(['name' => 'badges', 'contextName' => DesktopContext::getName()]);
 
         if (!$tool) {
-            throw new \LogicException("Annotation error: cannot found tool 'badges'");
+            throw new LogicException("Annotation error: cannot found tool 'badges'");
         }
 
         $granted = $this->authorization->isGranted('ADMINISTRATE', $tool);

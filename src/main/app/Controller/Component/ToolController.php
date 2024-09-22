@@ -11,6 +11,7 @@
 
 namespace Claroline\AppBundle\Controller\Component;
 
+use Exception;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Component\Context\ContextProvider;
@@ -26,9 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/tool")
- */
+#[Route(path: '/tool')]
 class ToolController
 {
     use RequestDecoderTrait;
@@ -45,9 +44,8 @@ class ToolController
 
     /**
      * Opens a tool.
-     *
-     * @Route("/open/{name}/{context}/{contextId}", name="claro_tool_open", methods={"GET"})
      */
+    #[Route(path: '/open/{name}/{context}/{contextId}', name: 'claro_tool_open', methods: ['GET'])]
     public function openAction(string $name, string $context, string $contextId = null): JsonResponse
     {
         try {
@@ -55,7 +53,7 @@ class ToolController
             $contextSubject = $contextHandler->getObject($contextId);
 
             $orderedTool = $this->toolProvider->getTool($name, $context, $contextSubject);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
 
@@ -70,9 +68,7 @@ class ToolController
         ]));
     }
 
-    /**
-     * @Route("/configure/{name}/{context}/{contextId}", name="claro_tool_configure", methods={"PUT"})
-     */
+    #[Route(path: '/configure/{name}/{context}/{contextId}', name: 'claro_tool_configure', methods: ['PUT'])]
     public function configureAction(Request $request, string $name, string $context, string $contextId = null): JsonResponse
     {
         try {
@@ -80,7 +76,7 @@ class ToolController
             $contextSubject = $contextHandler->getObject($contextId);
 
             $orderedTool = $this->toolProvider->getTool($name, $context, $contextHandler->getObject($contextId));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
 
@@ -119,16 +115,14 @@ class ToolController
         ]));
     }
 
-    /**
-     * @Route("/rights/{name}/{context}/{contextId}", name="apiv2_tool_get_rights", methods={"GET"})
-     */
+    #[Route(path: '/rights/{name}/{context}/{contextId}', name: 'apiv2_tool_get_rights', methods: ['GET'])]
     public function getRightsAction(string $name, string $context, string $contextId = null): JsonResponse
     {
         try {
             $contextHandler = $this->contextProvider->getContext($context, $contextId);
 
             $orderedTool = $this->toolProvider->getTool($name, $context, $contextHandler->getObject($contextId));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
 

@@ -2,6 +2,7 @@
 
 namespace Claroline\LogBundle\Controller;
 
+use Exception;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\LogBundle\Entity\OperationalLog;
@@ -12,9 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/log/operational")
- */
+#[Route(path: '/log/operational')]
 class OperationalLogController
 {
     public function __construct(
@@ -24,15 +23,13 @@ class OperationalLogController
     ) {
     }
 
-    /**
-     * @Route("/{context}/{contextId}", name="apiv2_logs_operational", methods={"GET"})
-     */
+    #[Route(path: '/{context}/{contextId}', name: 'apiv2_logs_operational', methods: ['GET'])]
     public function listAction(Request $request, string $context, string $contextId = null): JsonResponse
     {
         try {
             $contextHandler = $this->contextProvider->getContext($context, $contextId);
             $contextSubject = $contextHandler->getObject($contextId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
 

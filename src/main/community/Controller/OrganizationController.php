@@ -27,9 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/organization", name="apiv2_organization_")
- */
+#[Route(path: '/organization', name: 'apiv2_organization_')]
 class OrganizationController extends AbstractCrudController
 {
     use HasGroupsTrait;
@@ -54,9 +52,7 @@ class OrganizationController extends AbstractCrudController
         return Organization::class;
     }
 
-    /**
-     * @Route("/list/recursive", name="list_recursive")
-     */
+    #[Route(path: '/list/recursive', name: 'list_recursive')]
     public function recursiveListAction(Request $request): JsonResponse
     {
         $query = $request->query->all();
@@ -71,10 +67,9 @@ class OrganizationController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/managers", name="list_managers", methods={"GET"})
-     *
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/managers', name: 'list_managers', methods: ['GET'])]
     public function listManagersAction(Organization $organization): JsonResponse
     {
         $this->checkPermission('OPEN', $organization, [], true);
@@ -89,10 +84,10 @@ class OrganizationController extends AbstractCrudController
     /**
      * Adds managers to the collection.
      *
-     * @Route("/{id}/manager", name="add_managers", methods={"PATCH"})
      *
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/manager', name: 'add_managers', methods: ['PATCH'])]
     public function addManagersAction(Organization $organization, Request $request): JsonResponse
     {
         $users = $this->decodeIdsString($request, User::class);
@@ -104,10 +99,10 @@ class OrganizationController extends AbstractCrudController
     /**
      * Removes managers from the collection.
      *
-     * @Route("/{id}/manager", name="remove_managers", methods={"DELETE"})
      *
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/manager', name: 'remove_managers', methods: ['DELETE'])]
     public function removeManagersAction(Organization $organization, Request $request): JsonResponse
     {
         $users = $this->decodeIdsString($request, User::class);

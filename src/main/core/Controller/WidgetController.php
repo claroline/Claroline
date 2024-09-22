@@ -21,9 +21,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Exposes platform widgets.
- *
- * @Route("/widget")
  */
+#[Route(path: '/widget')]
 class WidgetController
 {
     public function __construct(
@@ -35,9 +34,8 @@ class WidgetController
 
     /**
      * Lists available widgets for a given context.
-     *
-     * @Route("/{context}", name="apiv2_widget_available", defaults={"context"=null}, methods={"GET"})
      */
+    #[Route(path: '/{context}', name: 'apiv2_widget_available', defaults: ['context' => null], methods: ['GET'])]
     public function listAction(string $context = null): JsonResponse
     {
         return new JsonResponse([

@@ -11,6 +11,7 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
+use ZipArchive;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -29,9 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/profile")
- */
+#[Route(path: '/profile')]
 class ProfileController
 {
     use PermissionCheckerTrait;
@@ -68,16 +67,15 @@ class ProfileController
     }
 
     /**
-     * @Route("/export", name="apiv2_profile_export", methods={"GET"})
-     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/export', name: 'apiv2_profile_export', methods: ['GET'])]
     public function exportAction(User $user): BinaryFileResponse
     {
         $pathArch = $this->tempManager->generate();
 
-        $archive = new \ZipArchive();
-        $archive->open($pathArch, \ZipArchive::CREATE);
+        $archive = new ZipArchive();
+        $archive->open($pathArch, ZipArchive::CREATE);
 
         // add user json
         $archive->addFromString('user.json', json_encode($this->serializer->serialize($user), JSON_PRETTY_PRINT));
@@ -92,10 +90,9 @@ class ProfileController
     }
 
     /**
-     * @Route("/status/{status}", name="apiv2_user_change_status", methods={"PUT"})
-     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/status/{status}', name: 'apiv2_user_change_status', methods: ['PUT'])]
     public function changeStatusAction(User $user, string $status): JsonResponse
     {
         if ('online' === $status) {
@@ -109,9 +106,7 @@ class ProfileController
         return new JsonResponse($user->getStatus());
     }
 
-    /**
-     * @Route("", name="apiv2_profile_open", methods={"GET"})
-     */
+    #[Route(path: '', name: 'apiv2_profile_open', methods: ['GET'])]
     public function openAction(): JsonResponse
     {
         return new JsonResponse([
@@ -122,9 +117,8 @@ class ProfileController
 
     /**
      * Updates the profile configuration for the current platform.
-     *
-     * @Route("", name="apiv2_profile_configure", methods={"PUT"})
      */
+    #[Route(path: '', name: 'apiv2_profile_configure', methods: ['PUT'])]
     public function configureAction(Request $request): JsonResponse
     {
         $formData = $this->decodeRequest($request);

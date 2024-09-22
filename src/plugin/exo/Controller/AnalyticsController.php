@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Controller;
 
+use stdClass;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -16,9 +17,9 @@ use UJM\ExoBundle\Manager\DocimologyManager;
 use UJM\ExoBundle\Manager\Item\ItemManager;
 
 /**
- * @Route("/exercises/{id}/statistics")
  * @EXT\ParamConverter("exercise", class="UJM\ExoBundle\Entity\Exercise", options={"mapping": {"id": "uuid"}})
  */
+#[Route(path: '/exercises/{id}/statistics')]
 class AnalyticsController
 {
     use PermissionCheckerTrait;
@@ -35,9 +36,8 @@ class AnalyticsController
 
     /**
      * Opens the docimology of a quiz.
-     *
-     * @Route("/docimology", name="exercise_statistics_docimology", methods={"GET"})
      */
+    #[Route(path: '/docimology', name: 'exercise_statistics_docimology', methods: ['GET'])]
     public function getDocimologyAction(Exercise $exercise): JsonResponse
     {
         if (!$exercise->hasStatistics()) {
@@ -53,9 +53,8 @@ class AnalyticsController
 
     /**
      * Gets statistics of chosen answers of an Exercise.
-     *
-     * @Route("/answers", name="exercise_statistics", methods={"GET"})
      */
+    #[Route(path: '/answers', name: 'exercise_statistics', methods: ['GET'])]
     public function getAnswersAction(Exercise $exercise): JsonResponse
     {
         if (!$exercise->hasStatistics()) {
@@ -70,7 +69,7 @@ class AnalyticsController
         foreach ($exercise->getSteps() as $step) {
             foreach ($step->getQuestions() as $question) {
                 $itemStats = $this->itemManager->getStatistics($question, $exercise, $finishedOnly);
-                $statistics[$question->getUuid()] = !empty($itemStats['solutions']) ? $itemStats['solutions'] : new \stdClass();
+                $statistics[$question->getUuid()] = !empty($itemStats['solutions']) ? $itemStats['solutions'] : new stdClass();
             }
         }
 
@@ -78,10 +77,10 @@ class AnalyticsController
     }
 
     /**
-     * @Route("/attempts", name="exercise_statistics_attempts", methods={"GET"})
-     * @Route("/attempts/{userId}", name="exercise_statistics_user_attempts", methods={"GET"})
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"userId": "uuid"}})
      */
+    #[Route(path: '/attempts', name: 'exercise_statistics_attempts', methods: ['GET'])]
+    #[Route(path: '/attempts/{userId}', name: 'exercise_statistics_user_attempts', methods: ['GET'])]
     public function getAttemptsAction(Exercise $exercise, User $user = null): JsonResponse
     {
         $statsAdmin = $this->checkPermission('VIEW_DOCIMOLOGY', $exercise->getResourceNode());

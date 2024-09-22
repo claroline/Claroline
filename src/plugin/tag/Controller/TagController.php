@@ -22,9 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("tag", name="apiv2_tag_")
- */
+#[Route(path: 'tag', name: 'apiv2_tag_')]
 class TagController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -49,10 +47,10 @@ class TagController extends AbstractCrudController
     /**
      * List all objects linked to a Tag.
      *
-     * @Route("/{id}/object", name="list_objects", methods={"GET"})
      *
      * @EXT\ParamConverter("tag", class="Claroline\TagBundle\Entity\Tag", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/object', name: 'list_objects', methods: ['GET'])]
     public function listObjectsAction(Tag $tag, Request $request): JsonResponse
     {
         return new JsonResponse(
@@ -67,10 +65,10 @@ class TagController extends AbstractCrudController
      * Adds a tag to a collection of taggable objects.
      * NB. If the tag does not exist, it will be created if the user has the correct rights.
      *
-     * @Route("/{tag}/object", name="add_objects", methods={"POST"})
      *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{tag}/object', name: 'add_objects', methods: ['POST'])]
     public function addObjectsAction(string $tag, Request $request): JsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
@@ -83,11 +81,11 @@ class TagController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/object", name="remove_objects", methods={"DELETE"})
      *
      * @EXT\ParamConverter("tag", class="Claroline\TagBundle\Entity\Tag", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/object', name: 'remove_objects', methods: ['DELETE'])]
     public function removeObjectsAction(Tag $tag, Request $request): JsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);

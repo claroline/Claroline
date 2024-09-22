@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Platform;
 
+use DateInterval;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -53,9 +54,7 @@ class ParametersController extends AbstractSecurityController
         $this->setAuthorizationChecker($authorization);
     }
 
-    /**
-     * @Route("/parameters", name="apiv2_parameters_update", methods={"PUT"})
-     */
+    #[Route(path: '/parameters', name: 'apiv2_parameters_update', methods: ['PUT'])]
     public function updateAction(Request $request): JsonResponse
     {
         $this->canOpenAdminTool('parameters');
@@ -77,9 +76,7 @@ class ParametersController extends AbstractSecurityController
         return new JsonResponse($parameters);
     }
 
-    /**
-     * @Route("/version", name="apiv2_platform_version", methods={"GET"})
-     */
+    #[Route(path: '/version', name: 'apiv2_platform_version', methods: ['GET'])]
     public function getVersionAction(Request $request): JsonResponse
     {
         return new JsonResponse([
@@ -88,9 +85,7 @@ class ParametersController extends AbstractSecurityController
         ]);
     }
 
-    /**
-     * @Route("/info", name="apiv2_platform_info", methods={"GET"})
-     */
+    #[Route(path: '/info', name: 'apiv2_platform_info', methods: ['GET'])]
     public function getAction(): JsonResponse
     {
         $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
@@ -112,9 +107,8 @@ class ParametersController extends AbstractSecurityController
 
     /**
      * Enables the platform.
-     *
-     * @Route("/enable", name="apiv2_platform_enable", methods={"PUT"})
      */
+    #[Route(path: '/enable', name: 'apiv2_platform_enable', methods: ['PUT'])]
     public function enableAction(): JsonResponse
     {
         $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
@@ -132,9 +126,8 @@ class ParametersController extends AbstractSecurityController
 
     /**
      * Extends the period of availability of the platform.
-     *
-     * @Route("/extend", name="apiv2_platform_extend", methods={"PUT"})
      */
+    #[Route(path: '/extend', name: 'apiv2_platform_extend', methods: ['PUT'])]
     public function extendAction(): JsonResponse
     {
         $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
@@ -146,7 +139,7 @@ class ParametersController extends AbstractSecurityController
             // only do something if there is an end date
             // by default extend for 1 week
             // event listener can override it
-            $event = new ExtendEvent(DateNormalizer::denormalize($dates[1])->add(new \DateInterval('P7D')));
+            $event = new ExtendEvent(DateNormalizer::denormalize($dates[1])->add(new DateInterval('P7D')));
             $this->eventDispatcher->dispatch($event, 'platform.extend');
 
             if ($event->isCanceled()) {
@@ -163,9 +156,7 @@ class ParametersController extends AbstractSecurityController
         return new JsonResponse($newEnd, 204);
     }
 
-    /**
-     * @Route("/disable", name="apiv2_platform_disable", methods={"PUT"})
-     */
+    #[Route(path: '/disable', name: 'apiv2_platform_disable', methods: ['PUT'])]
     public function disableAction(): JsonResponse
     {
         $this->checkPermission(PlatformRoles::ADMIN, null, [], true);

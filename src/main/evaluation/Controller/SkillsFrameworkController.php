@@ -9,9 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/skills_framework", name="apiv2_skills_framework_")
- */
+#[Route(path: '/skills_framework', name: 'apiv2_skills_framework_')]
 class SkillsFrameworkController extends AbstractCrudController
 {
     public static function getName(): string
@@ -25,10 +23,9 @@ class SkillsFrameworkController extends AbstractCrudController
     }
 
     /**
-     * @Route("/copy/{id}", name="copy", methods={"POST"})
-     *
      * @EXT\ParamConverter("workspace", class="Claroline\EvaluationBundle\Entity\Skill\SkillsFramework", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/copy/{id}', name: 'copy', methods: ['POST'])]
     public function copyAction(SkillsFramework $skillsFramework): JsonResponse
     {
         $copy = $this->crud->copy($skillsFramework);
@@ -36,9 +33,7 @@ class SkillsFrameworkController extends AbstractCrudController
         return new JsonResponse($this->serializer->serialize($copy), 201);
     }
 
-    /**
-     * @Route("/import", name="import", methods={"POST"})
-     */
+    #[Route(path: '/import', name: 'import', methods: ['POST'])]
     public function importAction(Request $request): JsonResponse
     {
         return new JsonResponse(null, 201);

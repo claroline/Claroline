@@ -27,9 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/team", name="apiv2_team_")
- */
+#[Route(path: '/team', name: 'apiv2_team_')]
 class TeamController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -52,10 +50,9 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route("/workspace/{id}/teams", name="workspace_list", methods={"GET"})
-     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/workspace/{id}/teams', name: 'workspace_list', methods: ['GET'])]
     public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
     {
         $this->checkToolAccess($workspace, 'open');
@@ -72,11 +69,11 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/users/{role}", name="list_users", methods={"GET"})
      *
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
+    #[Route(path: '/{id}/users/{role}', name: 'list_users', methods: ['GET'])]
     public function listUsersAction(Team $team, string $role, User $user, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $team, [], true);
@@ -100,10 +97,9 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/users/{role}", name="register", methods={"PATCH"})
-     *
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/users/{role}', name: 'register', methods: ['PATCH'])]
     public function registerAction(Team $team, string $role, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $team, [], true);
@@ -138,10 +134,9 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/users/{role}", name="unregister", methods={"DELETE"})
-     *
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/users/{role}', name: 'unregister', methods: ['DELETE'])]
     public function unregisterAction(Team $team, string $role, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $team, [], true);
@@ -158,11 +153,11 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/register", name="self_register", methods={"PUT"})
      *
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/register', name: 'self_register', methods: ['PUT'])]
     public function selfRegisterAction(Team $team, User $user): JsonResponse
     {
         $this->checkPermission('OPEN', $team, [], true);
@@ -188,11 +183,11 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/unregister", name="self_unregister", methods={"DELETE"})
      *
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/unregister', name: 'self_unregister', methods: ['DELETE'])]
     public function selfUnregisterAction(Team $team, User $user): JsonResponse
     {
         $this->checkPermission('OPEN', $team, [], true);
@@ -206,9 +201,7 @@ class TeamController extends AbstractCrudController
         return new JsonResponse(null, 200);
     }
 
-    /**
-     * @Route("/teams/fill", name="fill", methods={"PUT"})
-     */
+    #[Route(path: '/teams/fill', name: 'fill', methods: ['PUT'])]
     public function fillAction(Request $request): JsonResponse
     {
         $teams = parent::decodeIdsString($request, Team::class);
@@ -224,9 +217,7 @@ class TeamController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    /**
-     * @Route("/teams/empty", name="empty", methods={"DELETE"})
-     */
+    #[Route(path: '/teams/empty', name: 'empty', methods: ['DELETE'])]
     public function emptyAction(Request $request): JsonResponse
     {
         $teams = parent::decodeIdsString($request, Team::class);

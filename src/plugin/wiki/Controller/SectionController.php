@@ -17,9 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/wiki")
- */
+#[Route(path: '/wiki')]
 class SectionController
 {
     use PermissionCheckerTrait;
@@ -50,7 +48,6 @@ class SectionController
     }
 
     /**
-     * @Route("/{wikiId}/tree", name="apiv2_wiki_section_tree", methods={"GET"})
      * @EXT\ParamConverter(
      *     "wiki",
      *     class="Icap\WikiBundle\Entity\Wiki",
@@ -59,9 +56,9 @@ class SectionController
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @param User $user
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{wikiId}/tree', name: 'apiv2_wiki_section_tree', methods: ['GET'])]
     public function treeAction(Wiki $wiki, User $user = null)
     {
         $resourceNode = $wiki->getResourceNode();
@@ -75,9 +72,9 @@ class SectionController
     }
 
     /**
-     * @Route("/section/{id}/visible", name="apiv2_wiki_section_set_visibility", methods={"PUT"})
      * @EXT\ParamConverter("section", class="Icap\WikiBundle\Entity\Section", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/section/{id}/visible', name: 'apiv2_wiki_section_set_visibility', methods: ['PUT'])]
     public function setVisibilityAction(Section $section, Request $request): JsonResponse
     {
         $resourceNode = $section->getWiki()->getResourceNode();
@@ -93,16 +90,15 @@ class SectionController
     }
 
     /**
-     * @Route("/section/{id}", name="apiv2_wiki_section_create", methods={"POST"})
      * @EXT\ParamConverter(
      *     "section",
      *     class="Icap\WikiBundle\Entity\Section",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/section/{id}', name: 'apiv2_wiki_section_create', methods: ['POST'])]
     public function createAction(Section $section, User $user, Request $request)
     {
         $wiki = $section->getWiki();
@@ -120,16 +116,15 @@ class SectionController
     }
 
     /**
-     * @Route("/section/{id}", name="apiv2_wiki_section_update", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "section",
      *     class="Icap\WikiBundle\Entity\Section",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/section/{id}', name: 'apiv2_wiki_section_update', methods: ['PUT'])]
     public function updateAction(Section $section, User $user, Request $request)
     {
         $wiki = $section->getWiki();
@@ -147,16 +142,15 @@ class SectionController
     }
 
     /**
-     * @Route("/{wikiId}/section/delete", name="apiv2_wiki_section_delete", methods={"DELETE"})
      * @EXT\ParamConverter(
      *     "wiki",
      *     class="Icap\WikiBundle\Entity\Wiki",
      *     options={"mapping": {"wikiId": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{wikiId}/section/delete', name: 'apiv2_wiki_section_delete', methods: ['DELETE'])]
     public function deleteAction(Wiki $wiki, User $user, Request $request)
     {
         $content = $this->decodeRequest($request);
@@ -174,16 +168,15 @@ class SectionController
     }
 
     /**
-     * @Route("/{wikiId}/section/restore", name="apiv2_wiki_section_restore", methods={"POST"})
      * @EXT\ParamConverter(
      *     "wiki",
      *     class="Icap\WikiBundle\Entity\Wiki",
      *     options={"mapping": {"wikiId": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{wikiId}/section/restore', name: 'apiv2_wiki_section_restore', methods: ['POST'])]
     public function restoreAction(Wiki $wiki, Request $request)
     {
         $resourceNode = $wiki->getResourceNode();
@@ -194,15 +187,14 @@ class SectionController
     }
 
     /**
-     * @Route("/{wikiId}/sections/deleted", name="apiv2_wiki_section_deleted_list", methods={"GET"})
      * @EXT\ParamConverter(
      *     "wiki",
      *     class="Icap\WikiBundle\Entity\Wiki",
      *     options={"mapping": {"wikiId": "uuid"}}
      * )
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{wikiId}/sections/deleted', name: 'apiv2_wiki_section_deleted_list', methods: ['GET'])]
     public function deletedListAction(Wiki $wiki, Request $request)
     {
         $resourceNode = $wiki->getResourceNode();

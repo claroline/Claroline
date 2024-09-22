@@ -18,9 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/training_session_user", name="apiv2_training_session_user_")
- */
+#[Route(path: '/training_session_user', name: 'apiv2_training_session_user_')]
 class SessionUserController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -56,11 +54,11 @@ class SessionUserController extends AbstractCrudController
     /**
      * List registered users to sessions.
      *
-     * @Route("/{id}", name="list", methods={"GET"})
-     * @Route("/{id}/{sessionId}", name="apiv2_training_session_user_list", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}', name: 'list', methods: ['GET'])]
+    #[Route(path: '/{id}/{sessionId}', name: 'apiv2_training_session_user_list', methods: ['GET'])]
     public function listByCourseAction(Request $request, Course $course, string $sessionId = null): JsonResponse
     {
         $this->checkPermission('REGISTER', $course, [], true);
@@ -82,10 +80,10 @@ class SessionUserController extends AbstractCrudController
     /**
      * Move user's registration from a session to another.
      *
-     * @Route("/move/{type}/{targetId}", name="move", methods={"PUT"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"targetId": "uuid"}})
      */
+    #[Route(path: '/move/{type}/{targetId}', name: 'move', methods: ['PUT'])]
     public function moveAction(Session $session, string $type, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $session, [], true);
@@ -111,9 +109,7 @@ class SessionUserController extends AbstractCrudController
         return new JsonResponse();
     }
 
-    /**
-     * @Route("/confirm", name="confirm", methods={"PUT"})
-     */
+    #[Route(path: '/confirm', name: 'confirm', methods: ['PUT'])]
     public function confirmAction(Request $request): JsonResponse
     {
         /** @var SessionUser[] $sessionUsers */
@@ -132,9 +128,7 @@ class SessionUserController extends AbstractCrudController
         }, $sessionUsers));
     }
 
-    /**
-     * @Route("/validate", name="validate", methods={"PUT"})
-     */
+    #[Route(path: '/validate', name: 'validate', methods: ['PUT'])]
     public function validateAction(Request $request): JsonResponse
     {
         /** @var SessionUser[] $sessionUsers */
@@ -153,9 +147,7 @@ class SessionUserController extends AbstractCrudController
         }, $sessionUsers));
     }
 
-    /**
-     * @Route("/invite", name="invite", methods={"PUT"})
-     */
+    #[Route(path: '/invite', name: 'invite', methods: ['PUT'])]
     public function inviteAction(Request $request): JsonResponse
     {
         /** @var SessionUser[] $sessionUsers */

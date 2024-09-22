@@ -34,9 +34,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/user", name="apiv2_user_")
- */
+#[Route(path: '/user', name: 'apiv2_user_')]
 class UserController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -72,9 +70,8 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     *
-     * @Route("/pws", name="pws_create", methods={"POST"})
      */
+    #[Route(path: '/pws', name: 'pws_create', methods: ['POST'])]
     public function createPersonalWorkspaceAction(Request $request): JsonResponse
     {
         /** @var User[] $users */
@@ -103,9 +100,8 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     *
-     * @Route("/pws", name="pws_delete", methods={"DELETE"})
      */
+    #[Route(path: '/pws', name: 'pws_delete', methods: ['DELETE'])]
     public function deletePersonalWorkspaceAction(Request $request): JsonResponse
     {
         /** @var User[] $users */
@@ -135,9 +131,8 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     *
-     * @Route("/enable", name="enable", methods={"PUT"})
      */
+    #[Route(path: '/enable', name: 'enable', methods: ['PUT'])]
     public function enableAction(Request $request): JsonResponse
     {
         /** @var User[] $users */
@@ -166,9 +161,8 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     *
-     * @Route("/disable", name="disable", methods={"PUT"})
      */
+    #[Route(path: '/disable', name: 'disable', methods: ['PUT'])]
     public function disableAction(Request $request): JsonResponse
     {
         /** @var User[] $users */
@@ -190,9 +184,7 @@ class UserController extends AbstractCrudController
         }, $processed));
     }
 
-    /**
-     * @Route("/disable_inactive", name="disable_inactive", methods={"PUT"})
-     */
+    #[Route(path: '/disable_inactive', name: 'disable_inactive', methods: ['PUT'])]
     public function disableInactiveAction(Request $request): JsonResponse
     {
         $tool = $this->toolManager->getOrderedTool('community', DesktopContext::getName());
@@ -215,9 +207,8 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     *
-     * @Route("/password/reset", name="password_reset", methods={"PUT"})
      */
+    #[Route(path: '/password/reset', name: 'password_reset', methods: ['PUT'])]
     public function resetPasswordAction(Request $request): JsonResponse
     {
         /** @var User[] $users */
@@ -276,10 +267,9 @@ class UserController extends AbstractCrudController
     }
 
     /**
-     * @Route("/request-deletion", name="request_account_deletion", methods={"POST"})
-     *
      * @todo : to move in privacy plugin when available.
      */
+    #[Route(path: '/request-deletion', name: 'request_account_deletion', methods: ['POST'])]
     public function requestAccountDeletionAction(): JsonResponse
     {
         $user = $this->tokenStorage->getToken()->getUser();

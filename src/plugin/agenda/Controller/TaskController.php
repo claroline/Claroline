@@ -19,9 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/task", name="apiv2_task_")
- */
+#[Route(path: '/task', name: 'apiv2_task_')]
 class TaskController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -44,9 +42,8 @@ class TaskController extends AbstractCrudController
 
     /**
      * Marks a list of tasks as done.
-     *
-     * @Route("/done", name="mark_done", methods={"PUT"})
      */
+    #[Route(path: '/done', name: 'mark_done', methods: ['PUT'])]
     public function markDoneAction(Request $request): JsonResponse
     {
         /** @var Task[] $tasks */
@@ -67,9 +64,8 @@ class TaskController extends AbstractCrudController
 
     /**
      * Marks a list of tasks as to do.
-     *
-     * @Route("/todo", name="mark_todo", methods={"PUT"})
      */
+    #[Route(path: '/todo', name: 'mark_todo', methods: ['PUT'])]
     public function markTodoAction(Request $request): JsonResponse
     {
         /** @var Task[] $tasks */

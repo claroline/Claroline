@@ -23,7 +23,6 @@ trait HasWorkspacesTrait
     /**
      * List workspaces of the collection.
      *
-     * @Route("/{id}/workspace", name="list_workspaces", methods={"GET"}, priority=1)
      *
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Workspace\Workspace.",
@@ -36,6 +35,7 @@ trait HasWorkspacesTrait
      *     response={"$list=Claroline\CoreBundle\Entity\Workspace\Workspace"}
      * )
      */
+    #[Route(path: '/{id}/workspace', name: 'list_workspaces', methods: ['GET'], priority: 1)]
     public function listWorkspacesAction(string $id, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.
@@ -53,7 +53,6 @@ trait HasWorkspacesTrait
     /**
      * Adds workspaces to the collection.
      *
-     * @Route("/{id}/workspace", name="add_workspaces", methods={"PATCH"}, priority=1)
      *
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\Workspace\Workspace.",
@@ -66,6 +65,7 @@ trait HasWorkspacesTrait
      *     }
      * )
      */
+    #[Route(path: '/{id}/workspace', name: 'add_workspaces', methods: ['PATCH'], priority: 1)]
     public function addWorkspacesAction(string $id, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.
@@ -83,7 +83,6 @@ trait HasWorkspacesTrait
     /**
      * Removes workspaces from the collection.
      *
-     * @Route("/{id}/workspace", name="remove_workspaces", methods={"DELETE"}, priority=1)
      *
      * @ApiDoc(
      *     description="Removes objects of class Claroline\CoreBundle\Entity\Workspace\Workspace.",
@@ -96,6 +95,7 @@ trait HasWorkspacesTrait
      *     }
      * )
      */
+    #[Route(path: '/{id}/workspace', name: 'remove_workspaces', methods: ['DELETE'], priority: 1)]
     public function removeWorkspacesAction(string $id, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.

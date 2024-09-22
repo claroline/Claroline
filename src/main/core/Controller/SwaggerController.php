@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use stdClass;
 use Claroline\AppBundle\API\SchemaProvider;
 use Claroline\AppBundle\Routing\Documentator;
 use Claroline\AppBundle\Routing\Finder;
@@ -18,9 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/swagger")
- */
+#[Route(path: '/swagger')]
 class SwaggerController
 {
     public function __construct(
@@ -31,9 +30,7 @@ class SwaggerController
     ) {
     }
 
-    /**
-     * @Route("", name="apiv2_swagger_get", methods={"GET"})
-     */
+    #[Route(path: '', name: 'apiv2_swagger_get', methods: ['GET'])]
     public function getApiAction(Request $request): JsonResponse
     {
         $swagger = [
@@ -43,7 +40,7 @@ class SwaggerController
 
         $classes = $this->routerFinder->getHandledClasses();
 
-        $data = new \stdClass();
+        $data = new stdClass();
 
         foreach ($classes as $class) {
             $data = (object) array_merge((array) $data, $this->documentator->documentClass($class));

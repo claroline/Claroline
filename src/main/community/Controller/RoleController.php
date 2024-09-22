@@ -23,9 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/role", name="apiv2_role_")
- */
+#[Route(path: '/role', name: 'apiv2_role_')]
 class RoleController extends AbstractCrudController
 {
     use HasUsersTrait;
@@ -52,10 +50,10 @@ class RoleController extends AbstractCrudController
     /**
      * Get a role rights for the given context.
      *
-     * @Route("/{id}/rights/{contextType}/{contextId}", name="rights_list", defaults={"contextId"=null}, methods={"GET"})
      *
      * @EXT\ParamConverter("role", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/rights/{contextType}/{contextId}', name: 'rights_list', defaults: ['contextId' => null], methods: ['GET'])]
     public function listRightsAction(Role $role, string $contextType, string $contextId = null): JsonResponse
     {
         $this->checkPermission('OPEN', $role, [], true);
@@ -73,10 +71,10 @@ class RoleController extends AbstractCrudController
     /**
      * Manages workspace tools accesses for a Role.
      *
-     * @Route("/{id}/rights/{contextType}/{contextId}", name="rights_update", defaults={"contextId"=null}, methods={"PUT"})
      *
      * @EXT\ParamConverter("role", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/rights/{contextType}/{contextId}', name: 'rights_update', defaults: ['contextId' => null], methods: ['PUT'])]
     public function updateRightsAction(Request $request, Role $role, string $contextType, string $contextId = null): JsonResponse
     {
         $this->checkPermission('ADMINISTRATE', $role, [], true);

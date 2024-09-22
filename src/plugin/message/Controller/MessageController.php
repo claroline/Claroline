@@ -25,9 +25,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/message", name="apiv2_message_")
- */
+#[Route(path: '/message', name: 'apiv2_message_')]
 class MessageController extends AbstractCrudController
 {
     public function __construct(
@@ -48,8 +46,6 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/received", name="received", methods={"GET"})
-     *
      * @ApiDoc(
      *     description="Returns the list of received message for the current connected user",
      *     queryString={
@@ -60,6 +56,7 @@ class MessageController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/received', name: 'received', methods: ['GET'])]
     public function getReceivedAction(Request $request): JsonResponse
     {
         return new JsonResponse(
@@ -71,8 +68,6 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/removed", name="removed", methods={"GET"})
-     *
      * @ApiDoc(
      *     description="Returns the list of removed message for the current connected user",
      *     queryString={
@@ -83,6 +78,7 @@ class MessageController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/removed', name: 'removed', methods: ['GET'])]
     public function getRemovedAction(Request $request): JsonResponse
     {
         return new JsonResponse(
@@ -94,8 +90,6 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/sent", name="sent", methods={"GET"})
-     *
      * @ApiDoc(
      *     description="Returns the list of sent message for the current connected user",
      *     queryString={
@@ -106,6 +100,7 @@ class MessageController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/sent', name: 'sent', methods: ['GET'])]
     public function getSentAction(Request $request): JsonResponse
     {
         return new JsonResponse(
@@ -117,8 +112,6 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/softdelete", name="soft_delete", methods={"PUT"})
-     *
      * @ApiDoc(
      *     description="Soft delete an array of messages.",
      *     queryString={
@@ -126,6 +119,7 @@ class MessageController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/softdelete', name: 'soft_delete', methods: ['PUT'])]
     public function softDeleteAction(Request $request): JsonResponse
     {
         $messages = $this->decodeIdsString($request, UserMessage::class);
@@ -142,8 +136,6 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/remove", name="hard_delete", methods={"DELETE"})
-     *
      * @ApiDoc(
      *     description="Hard delete an array of messages.",
      *     queryString={
@@ -151,6 +143,7 @@ class MessageController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/remove', name: 'hard_delete', methods: ['DELETE'])]
     public function hardDeleteAction(Request $request): JsonResponse
     {
         $messages = $this->decodeIdsString($request, UserMessage::class);
@@ -165,8 +158,6 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/restore", name="restore", methods={"PUT"})
-     *
      * @ApiDoc(
      *     description="Restore a list of messages for the current user.",
      *     queryString={
@@ -174,6 +165,7 @@ class MessageController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/restore', name: 'restore', methods: ['PUT'])]
     public function restoreAction(Request $request): JsonResponse
     {
         $messages = $this->decodeIdsString($request, UserMessage::class);
@@ -190,8 +182,6 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/read", name="read", methods={"PUT"})
-     *
      * @ApiDoc(
      *     description="Read an array of message for the current user.",
      *     queryString={
@@ -199,6 +189,7 @@ class MessageController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/read', name: 'read', methods: ['PUT'])]
     public function readAction(Request $request): JsonResponse
     {
         $messages = $this->decodeIdsString($request, UserMessage::class);
@@ -217,8 +208,6 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/unread", name="unread", methods={"PUT"})
-     *
      * @ApiDoc(
      *     description="Unread an array of message for the current user.",
      *     queryString={
@@ -226,6 +215,7 @@ class MessageController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/unread', name: 'unread', methods: ['PUT'])]
     public function unreadAction(Request $request): JsonResponse
     {
         $messages = $this->decodeIdsString($request, UserMessage::class);
@@ -244,7 +234,6 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/root/{id}", name="root", methods={"GET"})
      *
      * @ApiDoc(
      *     description="Get the fist message.",
@@ -252,9 +241,9 @@ class MessageController extends AbstractCrudController
      *          {"name": "id", "type": {"string", "integer"},  "description": "The message id or uuid"}
      *     }
      * )
-     *
      * @param int|string $id
      */
+    #[Route(path: '/root/{id}', name: 'root', methods: ['GET'])]
     public function getRootAction($id): JsonResponse
     {
         $message = $this->crud->get($this->getClass(), $id);

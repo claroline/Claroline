@@ -11,6 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Controller;
 
+use Exception;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -37,10 +38,9 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/dropzone", options={"expose"=true})
- *
  * @todo use crud and move Document management inside its own controller
  */
+#[Route(path: '/dropzone', options: ['expose' => true])]
 class DropController
 {
     use RequestDecoderTrait;
@@ -60,7 +60,6 @@ class DropController
     }
 
     /**
-     * @Route("/drop/{id}", name="claro_dropzone_drop_fetch", methods={"GET"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="Claroline\DropZoneBundle\Entity\Drop",
@@ -68,6 +67,7 @@ class DropController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/drop/{id}', name: 'claro_dropzone_drop_fetch', methods: ['GET'])]
     public function getAction(Drop $drop): JsonResponse
     {
         $dropzone = $drop->getDropzone();
@@ -78,7 +78,6 @@ class DropController
     }
 
     /**
-     * @Route("/{id}/drops/search", name="claro_dropzone_drops_search", methods={"GET"})
      * @EXT\ParamConverter(
      *     "dropzone",
      *     class="Claroline\DropZoneBundle\Entity\Dropzone",
@@ -86,6 +85,7 @@ class DropController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/drops/search', name: 'claro_dropzone_drops_search', methods: ['GET'])]
     public function listAction(Dropzone $dropzone, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
@@ -101,11 +101,11 @@ class DropController
     /**
      * Initializes a Drop for the current User or Team.
      *
-     * @Route("/{id}/drops/{teamId}", name="claro_dropzone_drop_create", defaults={"teamId"=null}, methods={"POST"})
      * @EXT\ParamConverter("dropzone", class="Claroline\DropZoneBundle\Entity\Dropzone", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"teamId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/{id}/drops/{teamId}', name: 'claro_dropzone_drop_create', defaults: ['teamId' => null], methods: ['POST'])]
     public function createAction(Dropzone $dropzone, User $user, Team $team = null): JsonResponse
     {
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -124,7 +124,7 @@ class DropController
             }
 
             return new JsonResponse($this->serializer->serialize($myDrop));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
@@ -132,9 +132,9 @@ class DropController
     /**
      * Delete Drop.
      *
-     * @Route("/{id}/drops", name="claro_dropzone_drop_delete", methods={"DELETE"})
      * @EXT\ParamConverter("dropzone", class="Claroline\DropZoneBundle\Entity\Dropzone", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/drops', name: 'claro_dropzone_drop_delete', methods: ['DELETE'])]
     public function deleteAction(Dropzone $dropzone, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
@@ -155,7 +155,6 @@ class DropController
     /**
      * Submits Drop.
      *
-     * @Route("/drop/{id}/submit", name="claro_dropzone_drop_submit", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="Claroline\DropZoneBundle\Entity\Drop",
@@ -163,6 +162,7 @@ class DropController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/drop/{id}/submit', name: 'claro_dropzone_drop_submit', methods: ['PUT'])]
     public function submitAction(Drop $drop, User $user): JsonResponse
     {
         $dropzone = $drop->getDropzone();
@@ -175,7 +175,7 @@ class DropController
             $this->evaluationManager->updateDropProgression($dropzone, $drop, $progression);
 
             return new JsonResponse($this->serializer->serialize($drop));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
@@ -183,7 +183,6 @@ class DropController
     /**
      * Cancels Drop submission.
      *
-     * @Route("/drop/{id}/submission/cancel", name="claro_dropzone_drop_submission_cancel", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="Claroline\DropZoneBundle\Entity\Drop",
@@ -191,6 +190,7 @@ class DropController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/drop/{id}/submission/cancel', name: 'claro_dropzone_drop_submission_cancel', methods: ['PUT'])]
     public function cancelAction(Drop $drop): JsonResponse
     {
         $dropzone = $drop->getDropzone();
@@ -200,7 +200,7 @@ class DropController
             $this->manager->cancelDropSubmission($drop);
 
             return new JsonResponse($this->serializer->serialize($drop));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
@@ -208,10 +208,10 @@ class DropController
     /**
      * Adds a Document to a Drop.
      *
-     * @Route("/drop/{id}/type/{type}", name="claro_dropzone_documents_add", methods={"POST"})
      * @EXT\ParamConverter("drop", class="Claroline\DropZoneBundle\Entity\Drop", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/drop/{id}/type/{type}', name: 'claro_dropzone_documents_add', methods: ['POST'])]
     public function addDocumentAction(Drop $drop, string $type, User $user, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
@@ -242,7 +242,7 @@ class DropController
             }
 
             return new JsonResponse($documents);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
@@ -250,7 +250,6 @@ class DropController
     /**
      * Deletes a Document.
      *
-     * @Route("/document/{id}", name="claro_dropzone_document_delete", methods={"DELETE"})
      * @EXT\ParamConverter(
      *     "document",
      *     class="Claroline\DropZoneBundle\Entity\Document",
@@ -258,6 +257,7 @@ class DropController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/document/{id}', name: 'claro_dropzone_document_delete', methods: ['DELETE'])]
     public function deleteDocumentAction(Document $document, User $user): JsonResponse
     {
         $drop = $document->getDrop();
@@ -270,7 +270,7 @@ class DropController
             $this->documentManager->deleteDocument($document);
 
             return new JsonResponse($documentId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
@@ -278,11 +278,6 @@ class DropController
     /**
      * Adds a manager Document to a Drop.
      *
-     * @Route(
-     *     "/drop/{id}/revision/{revision}/type/{type}/manager",
-     *     name="claro_dropzone_manager_documents_add",
-     *     methods={"POST"}
-     * )
      * @EXT\ParamConverter(
      *     "drop",
      *     class="Claroline\DropZoneBundle\Entity\Drop",
@@ -294,9 +289,9 @@ class DropController
      *     options={"mapping": {"revision": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
      * @param int $type
      */
+    #[Route(path: '/drop/{id}/revision/{revision}/type/{type}/manager', name: 'claro_dropzone_manager_documents_add', methods: ['POST'])]
     public function addManagerDocumentAction(Drop $drop, Revision $revision, $type, User $user, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
@@ -323,7 +318,7 @@ class DropController
             }
 
             return new JsonResponse($documents);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
@@ -331,7 +326,6 @@ class DropController
     /**
      * Deletes a manager Document.
      *
-     * @Route("/document/{id}/manager", name="claro_dropzone_manager_document_delete", methods={"DELETE"})
      * @EXT\ParamConverter(
      *     "document",
      *     class="Claroline\DropZoneBundle\Entity\Document",
@@ -339,6 +333,7 @@ class DropController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/document/{id}/manager', name: 'claro_dropzone_manager_document_delete', methods: ['DELETE'])]
     public function deleteManagerDocumentAction(Document $document): JsonResponse
     {
         $drop = $document->getDrop();
@@ -350,7 +345,7 @@ class DropController
             $this->documentManager->deleteDocument($document);
 
             return new JsonResponse($documentId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
@@ -358,7 +353,6 @@ class DropController
     /**
      * Unlocks Drop.
      *
-     * @Route("/drop/{id}/unlock", name="claro_dropzone_drop_unlock", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="Claroline\DropZoneBundle\Entity\Drop",
@@ -366,6 +360,7 @@ class DropController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/drop/{id}/unlock', name: 'claro_dropzone_drop_unlock', methods: ['PUT'])]
     public function dropUnlockAction(Drop $drop): JsonResponse
     {
         $dropzone = $drop->getDropzone();
@@ -375,7 +370,7 @@ class DropController
             $this->manager->unlockDrop($drop);
 
             return new JsonResponse($this->serializer->serialize($drop));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
@@ -383,7 +378,6 @@ class DropController
     /**
      * Unlocks Drop user.
      *
-     * @Route("/drop/{id}/unlock/user", name="claro_dropzone_drop_unlock_user", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="Claroline\DropZoneBundle\Entity\Drop",
@@ -391,6 +385,7 @@ class DropController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/drop/{id}/unlock/user', name: 'claro_dropzone_drop_unlock_user', methods: ['PUT'])]
     public function dropUserUnlockAction(Drop $drop): JsonResponse
     {
         $dropzone = $drop->getDropzone();
@@ -400,16 +395,15 @@ class DropController
             $this->manager->unlockDropUser($drop);
 
             return new JsonResponse($this->serializer->serialize($drop));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
     /**
      * Downloads drops documents into a ZIP archive.
-     *
-     * @Route("/drops/download", name="claro_dropzone_drops_download", methods={"GET"})
      */
+    #[Route(path: '/drops/download', name: 'claro_dropzone_drops_download', methods: ['GET'])]
     public function downloadAction(Request $request): StreamedResponse
     {
         $drops = $this->decodeIdsString($request, Drop::class);
@@ -436,11 +430,10 @@ class DropController
     }
 
     /**
-     * @Route("/{id}/drops/csv", name="claro_dropzone_drops_csv", methods={"GET"})
      * @EXT\ParamConverter("dropzone", class="Claroline\DropZoneBundle\Entity\Dropzone", options={"mapping": {"id": "uuid"}})
-     *
      * @deprecated use Transfer export for this
      */
+    #[Route(path: '/{id}/drops/csv', name: 'claro_dropzone_drops_csv', methods: ['GET'])]
     public function exportCsvAction(Dropzone $dropzone): StreamedResponse
     {
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);

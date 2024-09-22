@@ -11,6 +11,7 @@
 
 namespace Claroline\OpenBadgeBundle\Controller;
 
+use Exception;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
@@ -28,9 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/badge", name="apiv2_badge_")
- */
+#[Route(path: '/badge', name: 'apiv2_badge_')]
 class BadgeClassController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -54,9 +53,7 @@ class BadgeClassController extends AbstractCrudController
         return BadgeClass::class;
     }
 
-    /**
-     * @Route("/enable", name="enable", methods={"PUT"})
-     */
+    #[Route(path: '/enable', name: 'enable', methods: ['PUT'])]
     public function enableAction(Request $request): JsonResponse
     {
         $badges = $this->decodeIdsString($request, BadgeClass::class);
@@ -64,7 +61,7 @@ class BadgeClassController extends AbstractCrudController
         foreach ($badges as $badge) {
             try {
                 $this->crud->replace($badge, 'enabled', true);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // do not break the whole process if user has no right on one of the badges
             }
         }
@@ -76,9 +73,7 @@ class BadgeClassController extends AbstractCrudController
         );
     }
 
-    /**
-     * @Route("/disable", name="disable", methods={"PUT"})
-     */
+    #[Route(path: '/disable', name: 'disable', methods: ['PUT'])]
     public function disableAction(Request $request): JsonResponse
     {
         $badges = $this->decodeIdsString($request, BadgeClass::class);
@@ -86,7 +81,7 @@ class BadgeClassController extends AbstractCrudController
         foreach ($badges as $badge) {
             try {
                 $this->crud->replace($badge, 'enabled', false);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // do not break the whole process if user has no right on one of the badges
             }
         }
@@ -99,10 +94,9 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @Route("/workspace/{workspace}", name="workspace_list", methods={"GET"})
-     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
+    #[Route(path: '/workspace/{workspace}', name: 'workspace_list', methods: ['GET'])]
     public function listByWorkspaceAction(Request $request, Workspace $workspace): JsonResponse
     {
         return new JsonResponse(
@@ -114,10 +108,9 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{badge}/users", name="list_assertions", methods={"GET"})
-     *
      * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
      */
+    #[Route(path: '/{badge}/users', name: 'list_assertions', methods: ['GET'])]
     public function listUsersAction(Request $request, BadgeClass $badge): JsonResponse
     {
         if ($badge->getHideRecipients()) {
@@ -135,10 +128,9 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{badge}/users/add", name="add_users", methods={"PATCH"})
-     *
      * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
      */
+    #[Route(path: '/{badge}/users/add', name: 'add_users', methods: ['PATCH'])]
     public function addUsersAction(BadgeClass $badge, Request $request): JsonResponse
     {
         $this->checkPermission('GRANT', $badge, [], true);
@@ -155,10 +147,9 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{badge}/users/remove", name="remove_users", methods={"DELETE"})
-     *
      * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
      */
+    #[Route(path: '/{badge}/users/remove', name: 'remove_users', methods: ['DELETE'])]
     public function removeUsersAction(BadgeClass $badge, Request $request): JsonResponse
     {
         $this->checkPermission('GRANT', $badge, [], true);
@@ -177,10 +168,10 @@ class BadgeClassController extends AbstractCrudController
     /**
      * Searches for users which meet the badge rules and grant them the badge.
      *
-     * @Route("/{badge}/users/recalculate", name="recalculate", methods={"POST"})
      *
      * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
      */
+    #[Route(path: '/{badge}/users/recalculate', name: 'recalculate', methods: ['POST'])]
     public function recalculateAction(BadgeClass $badge): JsonResponse
     {
         $this->checkPermission('GRANT', $badge, [], true);

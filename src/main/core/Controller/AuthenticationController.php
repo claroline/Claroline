@@ -49,9 +49,8 @@ class AuthenticationController
     /**
      * Activate and log in a user using the validation hash sent to him.
      * ATTENTION : This is used to generate the validation URL sent by email. The URL must not change overtime.
-     *
-     * @Route("/user/registration/activate/{hash}", name="claro_security_activate_user")
      */
+    #[Route(path: '/user/registration/activate/{hash}', name: 'claro_security_activate_user')]
     public function activateUserAction(string $hash, Request $request): Response
     {
         if (!empty($hash)) {
@@ -70,9 +69,8 @@ class AuthenticationController
 
     /**
      * Resets a user password and email the user to let him choose a new one.
-     *
-     * @Route("/sendmail", name="claro_security_send_token", methods={"POST"})
      */
+    #[Route(path: '/sendmail', name: 'claro_security_send_token', methods: ['POST'])]
     public function sendForgotPasswordAction(Request $request): JsonResponse
     {
         $data = $this->decodeRequest($request);
@@ -97,9 +95,7 @@ class AuthenticationController
         ], 500);
     }
 
-    /**
-     * @Route("/validatepassword", name="claro_security_new_password", methods={"POST"})
-     */
+    #[Route(path: '/validatepassword', name: 'claro_security_new_password', methods: ['POST'])]
     public function newPasswordAction(Request $request): JsonResponse
     {
         $data = $this->decodeRequest($request);
@@ -133,9 +129,7 @@ class AuthenticationController
         return new JsonResponse(null, 201);
     }
 
-    /**
-     * @Route("/validate/email/{hash}", name="claro_security_validate_email", methods={"GET"})
-     */
+    #[Route(path: '/validate/email/{hash}', name: 'claro_security_validate_email', methods: ['GET'])]
     public function validateEmailAction(string $hash): RedirectResponse
     {
         if (!empty($hash)) {
@@ -153,10 +147,9 @@ class AuthenticationController
     }
 
     /**
-     * @Route("/send/email/validation", name="claro_security_validate_email_send", options={"expose"=true})
-     *
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
      */
+    #[Route(path: '/send/email/validation', name: 'claro_security_validate_email_send', options: ['expose' => true])]
     public function sendEmailValidationAction(User $currentUser): JsonResponse
     {
         $this->mailManager->sendValidateEmail($currentUser);

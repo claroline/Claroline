@@ -26,7 +26,6 @@ trait HasGroupsTrait
     /**
      * List groups of the collection.
      *
-     * @Route("/{id}/group", name="list_groups", methods={"GET"}, priority=1)
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Group.",
      *     queryString={
@@ -39,6 +38,7 @@ trait HasGroupsTrait
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
+    #[Route(path: '/{id}/group', name: 'list_groups', methods: ['GET'], priority: 1)]
     public function listGroupsAction(string $id, User $user, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.
@@ -67,7 +67,6 @@ trait HasGroupsTrait
     /**
      * Adds groups to the collection.
      *
-     * @Route("/{id}/group", name="add_groups", methods={"PATCH"}, priority=1)
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\Group.",
      *     parameters={
@@ -79,6 +78,7 @@ trait HasGroupsTrait
      *     }
      * )
      */
+    #[Route(path: '/{id}/group', name: 'add_groups', methods: ['PATCH'], priority: 1)]
     public function addGroupsAction(string $id, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.
@@ -96,7 +96,6 @@ trait HasGroupsTrait
     /**
      * Removes groups from the collection.
      *
-     * @Route("/{id}/group", name="remove_groups", methods={"DELETE"}, priority=1)
      * @ApiDoc(
      *     description="Removes objects of class Claroline\CoreBundle\Entity\Group.",
      *     parameters={
@@ -108,6 +107,7 @@ trait HasGroupsTrait
      *     }
      * )
      */
+    #[Route(path: '/{id}/group', name: 'remove_groups', methods: ['DELETE'], priority: 1)]
     public function removeGroupsAction(string $id, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.

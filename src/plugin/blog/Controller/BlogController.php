@@ -21,10 +21,9 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 
 /**
- * @Route("blog/{blogId}", options={"expose"=true})
- *
  * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
  */
+#[Route(path: 'blog/{blogId}', options: ['expose' => true])]
 class BlogController
 {
     use PermissionCheckerTrait;
@@ -54,9 +53,8 @@ class BlogController
 
     /**
      * Get blog options.
-     *
-     * @Route("/options", name="apiv2_blog_options", methods={"GET"})
      */
+    #[Route(path: '/options', name: 'apiv2_blog_options', methods: ['GET'])]
     public function getOptionsAction(Blog $blog): JsonResponse
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
@@ -66,9 +64,8 @@ class BlogController
 
     /**
      * Update blog options.
-     *
-     * @Route("/options", name="apiv2_blog_options_update", methods={"PUT"})
      */
+    #[Route(path: '/options', name: 'apiv2_blog_options_update', methods: ['PUT'])]
     public function updateOptionsAction(Request $request, Blog $blog): JsonResponse
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
@@ -80,9 +77,8 @@ class BlogController
 
     /**
      * Get tag cloud, tags used in blog posts.
-     *
-     * @Route("/tags", name="apiv2_blog_tags", methods={"GET"})
      */
+    #[Route(path: '/tags', name: 'apiv2_blog_tags', methods: ['GET'])]
     public function getTagsAction(Blog $blog): JsonResponse
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
@@ -107,9 +103,7 @@ class BlogController
         return new JsonResponse($this->blogManager->getTags($blog, $postsData));
     }
 
-    /**
-     * @Route("/rss", name="icap_blog_rss", methods={"GET"})
-     */
+    #[Route(path: '/rss', name: 'icap_blog_rss', methods: ['GET'])]
     public function rssAction(Blog $blog, Request $request): Response
     {
         $node = $blog->getResourceNode();
@@ -167,9 +161,7 @@ class BlogController
         ]);
     }
 
-    /**
-     * @Route("/pdf", name="icap_blog_pdf", methods={"GET"})
-     */
+    #[Route(path: '/pdf', name: 'icap_blog_pdf', methods: ['GET'])]
     public function viewPdfAction(Blog $blog): StreamedResponse
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);

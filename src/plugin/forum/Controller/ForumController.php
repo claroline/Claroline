@@ -16,9 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/forum", name="apiv2_forum_")
- */
+#[Route(path: '/forum', name: 'apiv2_forum_')]
 class ForumController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -41,10 +39,8 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/subjects", name="list_subjects", methods={"GET"})
      *
      * @EXT\ParamConverter("forum", options={"mapping": {"id": "uuid"}})
-     *
      * @ApiDoc(
      *     description="Get the subjects of a forum",
      *     queryString={
@@ -58,6 +54,7 @@ class ForumController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/{id}/subjects', name: 'list_subjects', methods: ['GET'])]
     public function listSubjectsAction(Forum $forum, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);
@@ -71,10 +68,9 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/messages", name="list_messages", methods={"GET"})
-     *
      * @EXT\ParamConverter("forum", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/messages', name: 'list_messages', methods: ['GET'])]
     public function listMessagesAction(Forum $forum, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);
@@ -88,10 +84,8 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/subject", name="create_subject", methods={"POST", "PUT"})
      *
      * @EXT\ParamConverter("forum", options={"mapping": {"id": "uuid"}})
-     *
      * @ApiDoc(
      *     description="Create a subject in a forum",
      *     parameters={
@@ -99,6 +93,7 @@ class ForumController extends AbstractCrudController
      *     }
      * )
      */
+    #[Route(path: '/{id}/subject', name: 'create_subject', methods: ['POST', 'PUT'])]
     public function createSubjectAction(Forum $forum, Request $request): JsonResponse
     {
         $subject = new Subject();
@@ -114,11 +109,11 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/unlock/{user}/forum/{forum}", name="unlock_user", methods={"PATCH"})
      *
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
+    #[Route(path: '/unlock/{user}/forum/{forum}', name: 'unlock_user', methods: ['PATCH'])]
     public function unlockAction(User $user, Forum $forum): JsonResponse
     {
         $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);
@@ -156,11 +151,11 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/lock/{user}/forum/{forum}", name="lock_user", methods={"PATCH"})
      *
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
+    #[Route(path: '/lock/{user}/forum/{forum}', name: 'lock_user', methods: ['PATCH'])]
     public function lockAction(User $user, Forum $forum): JsonResponse
     {
         $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);
@@ -175,11 +170,11 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/ban/{user}/forum/{forum}", name="ban", methods={"PATCH"})
      *
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
+    #[Route(path: '/ban/{user}/forum/{forum}', name: 'ban', methods: ['PATCH'])]
     public function banAction(User $user, Forum $forum): JsonResponse
     {
         $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);
@@ -194,11 +189,11 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/unban/{user}/forum/{forum}", name="unban", methods={"PATCH"})
      *
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
+    #[Route(path: '/unban/{user}/forum/{forum}', name: 'unban', methods: ['PATCH'])]
     public function unbanAction(User $user, Forum $forum): JsonResponse
     {
         $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);
@@ -212,11 +207,11 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/notify/{user}/forum/{forum}", name="notify", methods={"PATCH"})
      *
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
+    #[Route(path: '/notify/{user}/forum/{forum}', name: 'notify', methods: ['PATCH'])]
     public function notifyAction(User $user, Forum $forum): JsonResponse
     {
         $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);
@@ -230,11 +225,11 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/unnotify/{user}/forum/{forum}", name="unnotifiy", methods={"PATCH"})
      *
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
+    #[Route(path: '/unnotify/{user}/forum/{forum}', name: 'unnotifiy', methods: ['PATCH'])]
     public function unnotifyAction(User $user, Forum $forum): JsonResponse
     {
         $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);

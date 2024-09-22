@@ -13,9 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/youtube_video")
- */
+#[Route(path: '/youtube_video')]
 class VideoController
 {
     use PermissionCheckerTrait;
@@ -29,11 +27,11 @@ class VideoController
     }
 
     /**
-     * @Route("/{id}/progression/{currentTime}/{totalTime}", name="apiv2_youtube_video_progression_update", methods={"PUT"})
      *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\ParamConverter("video", class="Claroline\YouTubeBundle\Entity\Video", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/progression/{currentTime}/{totalTime}', name: 'apiv2_youtube_video_progression_update', methods: ['PUT'])]
     public function updateProgressionAction(User $user, Video $video, $currentTime, $totalTime): JsonResponse
     {
         $this->checkPermission('OPEN', $video->getResourceNode(), [], true);

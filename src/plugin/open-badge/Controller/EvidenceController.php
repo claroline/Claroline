@@ -22,9 +22,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/badge_evidence", name="apiv2_badge_evidence_")
- */
+#[Route(path: '/badge_evidence', name: 'apiv2_badge_evidence_')]
 class EvidenceController extends AbstractCrudController
 {
     public function __construct(
@@ -49,10 +47,9 @@ class EvidenceController extends AbstractCrudController
     }
 
     /**
-     * @Route("/assertion/{assertion}", name="create_at", methods={"POST"})
-     *
      * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      */
+    #[Route(path: '/assertion/{assertion}', name: 'create_at', methods: ['POST'])]
     public function createAtAction(Request $request, Assertion $assertion): JsonResponse
     {
         $object = $this->crud->create($this->getClass(), $this->decodeRequest($request));

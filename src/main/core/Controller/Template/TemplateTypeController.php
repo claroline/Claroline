@@ -23,9 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/template_type")
- */
+#[Route(path: '/template_type')]
 class TemplateTypeController
 {
     use PermissionCheckerTrait;
@@ -39,9 +37,7 @@ class TemplateTypeController
         $this->authorization = $authorization;
     }
 
-    /**
-     * @Route("/{type}", name="apiv2_template_type_list", methods={"GET"})
-     */
+    #[Route(path: '/{type}', name: 'apiv2_template_type_list', methods: ['GET'])]
     public function listAction(Request $request, string $type = null): JsonResponse
     {
         $query = $request->query->all();
@@ -57,9 +53,9 @@ class TemplateTypeController
     }
 
     /**
-     * @Route("/{id}/open", name="apiv2_template_type_open", methods={"GET"})
      * @EXT\ParamConverter("templateType", class="Claroline\CoreBundle\Entity\Template\TemplateType", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/open', name: 'apiv2_template_type_open', methods: ['GET'])]
     public function openAction(TemplateType $templateType): JsonResponse
     {
         $this->checkPermission('OPEN', $templateType, [], true);
@@ -76,9 +72,9 @@ class TemplateTypeController
     }
 
     /**
-     * @Route("/{id}/templates", name="apiv2_template_type_templates")
      * @EXT\ParamConverter("templateType", class="Claroline\CoreBundle\Entity\Template\TemplateType", options={"mapping": {"id": "uuid"}})
      */
+    #[Route(path: '/{id}/templates', name: 'apiv2_template_type_templates')]
     public function listTemplatesAction(TemplateType $templateType, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $templateType, [], true);

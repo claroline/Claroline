@@ -21,9 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/clacoformkeyword", name="apiv2_clacoformkeyword_")
- */
+#[Route(path: '/clacoformkeyword', name: 'apiv2_clacoformkeyword_')]
 class KeywordController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -50,10 +48,9 @@ class KeywordController extends AbstractCrudController
     }
 
     /**
-     * @Route("/clacoform/{clacoForm}/keywords/list", name="list")
-     *
      * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
+    #[Route(path: '/clacoform/{clacoForm}/keywords/list', name: 'list')]
     public function listByResourceAction(ClacoForm $clacoForm, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
@@ -72,10 +69,10 @@ class KeywordController extends AbstractCrudController
     /**
      * Returns the keyword.
      *
-     * @Route("/{clacoForm}/keyword/{value}/excluding/uuid/{uuid}", name="check_unique", defaults={"uuid"=null})
      *
      * @EXT\ParamConverter( "clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
+    #[Route(path: '/{clacoForm}/keyword/{value}/excluding/uuid/{uuid}', name: 'check_unique', defaults: ['uuid' => null])]
     public function getKeywordByNameExcludingUuidAction(ClacoForm $clacoForm, $value, string $uuid = null): JsonResponse
     {
         $this->checkPermission('EDIT', $clacoForm->getResourceNode(), [], true);

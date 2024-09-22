@@ -13,9 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @Route("/appearance/preferences")
- */
+#[Route(path: '/appearance/preferences')]
 class UserPreferencesController
 {
     use PermissionCheckerTrait;
@@ -30,9 +28,7 @@ class UserPreferencesController
         $this->authorization = $authorization;
     }
 
-    /**
-     * @Route("", name="apiv2_theme_preference_update", methods={"PUT"})
-     */
+    #[Route(path: '', name: 'apiv2_theme_preference_update', methods: ['PUT'])]
     public function updateAction(Request $request): JsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);

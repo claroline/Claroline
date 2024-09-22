@@ -26,9 +26,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/workspace/{workspace}/role")
  * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
  */
+#[Route(path: '/workspace/{workspace}/role')]
 class RoleController
 {
     use PermissionCheckerTrait;
@@ -56,8 +56,8 @@ class RoleController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
-     * @Route("/configurable", name="apiv2_workspace_list_roles_configurable", methods={"GET"})
      */
+    #[Route(path: '/configurable', name: 'apiv2_workspace_list_roles_configurable', methods: ['GET'])]
     public function listConfigurableAction(Workspace $workspace, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $workspace, [], true);
