@@ -41,7 +41,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
             $course = $courses[0];
             $defaultSession = null;
 
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
             if ($user instanceof User) {
                 if ($this->om->getRepository(Course::class)->isFullyRegistered($course, $user)) {
                     return;
@@ -49,7 +49,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
             }
 
             // search for sessions in which the current user is registered
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
             $registrations = [];
             if ($user instanceof User) {
                 $registrations = $this->courseManager->getRegistrations($course, $user);

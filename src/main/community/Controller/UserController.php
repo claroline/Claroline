@@ -29,7 +29,7 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -247,7 +247,7 @@ class UserController extends AbstractCrudController
         }
 
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
 
             if ($user instanceof User) {
                 // only shows users of the same organizations
@@ -272,7 +272,7 @@ class UserController extends AbstractCrudController
     #[Route(path: '/request-deletion', name: 'request_account_deletion', methods: ['POST'])]
     public function requestAccountDeletionAction(): JsonResponse
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         $this->mailManager->sendRequestToDPO($user);
 
         return new JsonResponse(null, 204);

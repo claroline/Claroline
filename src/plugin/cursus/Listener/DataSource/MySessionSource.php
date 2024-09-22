@@ -30,7 +30,7 @@ class MySessionSource
         $options = $event->getOptions();
 
         /** @var User|string $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         $options['hiddenFilters']['user'] = $user instanceof User ? $user->getUuid() : null;
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext() && (empty($options['filters'] || empty($options['filters']['workspace'])))) {

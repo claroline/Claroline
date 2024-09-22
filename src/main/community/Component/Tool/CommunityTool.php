@@ -68,8 +68,8 @@ class CommunityTool extends AbstractTool
     public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array
     {
         $userTeams = [];
-        if ($this->tokenStorage->getToken()->getUser() instanceof User && $context === WorkspaceContext::getName()) {
-            $userTeams = $this->teamManager->getTeamsByUserAndWorkspace($this->tokenStorage->getToken()->getUser(), $contextSubject);
+        if ($this->tokenStorage->getToken()?->getUser() instanceof User && $context === WorkspaceContext::getName()) {
+            $userTeams = $this->teamManager->getTeamsByUserAndWorkspace($this->tokenStorage->getToken()?->getUser(), $contextSubject);
         }
 
         return [

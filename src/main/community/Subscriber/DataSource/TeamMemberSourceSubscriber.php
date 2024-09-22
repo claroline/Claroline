@@ -35,7 +35,7 @@ class TeamMemberSourceSubscriber implements EventSubscriberInterface
 
     public function getData(GetDataEvent $event): void
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         if (!$user instanceof User) {
             throw new AccessDeniedException();

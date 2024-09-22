@@ -51,7 +51,7 @@ class UserSourceSubscriber implements EventSubscriberInterface
             // only shows users of the same organizations
             $options['hiddenFilters']['organizations'] = [];
 
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
             if ($user instanceof User) {
                 $options['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
                     return $organization->getUuid();

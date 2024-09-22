@@ -1,17 +1,12 @@
 security:
-    enable_authenticator_manager: false
-
     providers:
         user_db:
             entity: { class: Claroline\CoreBundle\Entity\User }
 
-    encoders:
-        legacy:
-            algorithm: sha512
-
-        Claroline\CoreBundle\Entity\User:
-            algorithm: native # Uses password_hash() with bcrypt/sodium (depends on the platform)
-            migrate_from: legacy # Enables seamless password upgrades from sha512 to modern hash algo
+    password_hashers:
+        # Use native password hasher, which auto-selects and migrates the best
+        # possible hashing algorithm (which currently is "bcrypt")
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
     firewalls:
         dev:
@@ -22,23 +17,18 @@ security:
             # share the same context for all our firewalls to be able to retrieve the user session when we switch between firewalls
             context: claroline
             pattern: ^/
-            anonymous: ~
             logout:
                 path:   /logout
                 target: /
-                handlers:
-                    - Claroline\AuthenticationBundle\Security\Logout\LogoutHandler
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH, parameter: _switch }
             user_checker: Claroline\CoreBundle\Security\UserChecker
 
-            #login_throttling:
-            #    max_attempts: 5 # per minute
+            login_throttling:
+                max_attempts: 3
 
-            guard:
-                authenticators:
-                    - 'Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator'
-                    - 'Claroline\AuthenticationBundle\Security\Authentication\Guard\ApiTokenAuthenticator'
-                entry_point: 'Claroline\AuthenticationBundle\Security\Authentication\Guard\ApiTokenAuthenticator'
+            custom_authenticators:
+                - Claroline\AuthenticationBundle\Security\Authentication\IpAuthenticator
+                - Claroline\AuthenticationBundle\Security\Authentication\ApiTokenAuthenticator
 
             # Allows JSON authentication
             json_login:

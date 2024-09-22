@@ -41,23 +41,18 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        return $this->loadUserByUsername($identifier);
-    }
-
-    public function loadUserByUsername($username): UserInterface
-    {
         $query = $this->getEntityManager()
             ->createQuery('
                 SELECT u FROM Claroline\CoreBundle\Entity\User u
                 WHERE u.username LIKE :username
                 OR u.email LIKE :username
             ')
-            ->setParameter('username', $username);
+            ->setParameter('username', $identifier);
 
         try {
             $user = $query->getSingleResult();
         } catch (NoResultException $e) {
-            throw new UserNotFoundException(sprintf('Unable to find an active user identified by "%s".', $username));
+            throw new UserNotFoundException(sprintf('Unable to find an active user identified by "%s".', $identifier));
         }
 
         return $user;
@@ -72,29 +67,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
         $em->flush();
     }
 
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): User
     {
-        $class = get_class($user);
-
-        if (!$this->supportsClass($class)) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
-        }
-
-        $dql = '
-            SELECT u, ur, g, gr, uo, o 
-            FROM Claroline\CoreBundle\Entity\User u
-            LEFT JOIN u.userOrganizationReferences AS uo
-            LEFT JOIN uo.organization AS o
-            LEFT JOIN u.roles AS ur
-            LEFT JOIN u.groups AS g
-            LEFT JOIN g.roles AS gr
-            WHERE u.id = :id
-        ';
-        $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('id', $user->getId());
-        $user = $query->getSingleResult();
-
-        return $user;
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT u, ur, g, gr, uo, o 
+                FROM Claroline\CoreBundle\Entity\User u
+                LEFT JOIN u.userOrganizationReferences AS uo
+                LEFT JOIN uo.organization AS o
+                LEFT JOIN u.roles AS ur
+                LEFT JOIN u.groups AS g
+                LEFT JOIN g.roles AS gr
+                WHERE u.id = :id
+            ')
+            ->setParameter('id', $user->getId())
+            ->getSingleResult();
     }
 
     public function supportsClass($class): bool

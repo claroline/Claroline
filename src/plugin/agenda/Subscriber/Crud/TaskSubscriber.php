@@ -20,7 +20,7 @@ class TaskSubscriber extends AbstractPlannedSubscriber
 
         /** @var Task $object */
         $object = $event->getObject();
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         if (!empty($object->getWorkspace())) {
             // add event to workspace planning

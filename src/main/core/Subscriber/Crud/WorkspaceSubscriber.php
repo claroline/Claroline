@@ -200,7 +200,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         $workspace->setUpdatedAt(new \DateTime());
 
         // set the creator
-        $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
+        $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()?->getUser() : null;
         if ($user instanceof User) {
             $workspace->setCreator($user);
 

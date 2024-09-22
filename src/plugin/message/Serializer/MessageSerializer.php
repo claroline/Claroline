@@ -153,7 +153,7 @@ class MessageSerializer
 
     private function getUserMessage(Message $message): ?UserMessage
     {
-        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $currentUser = $this->tokenStorage->getToken()?->getUser();
 
         $userMessage = null;
         if ($currentUser instanceof User) {

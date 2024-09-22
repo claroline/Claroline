@@ -13,7 +13,7 @@ namespace Claroline\AuthenticationBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Entity\IpUser;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -45,7 +45,7 @@ class IpUserController extends AbstractCrudController
 
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             return [
-                'user' => $this->tokenStorage->getToken()->getUser()->getuuid(),
+                'user' => $this->tokenStorage->getToken()?->getUser()->getuuid(),
             ];
         }
 

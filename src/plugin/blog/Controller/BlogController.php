@@ -10,19 +10,16 @@ use Icap\BlogBundle\Manager\BlogManager;
 use Icap\BlogBundle\Manager\PostManager;
 use Icap\BlogBundle\Serializer\BlogOptionsSerializer;
 use Icap\BlogBundle\Serializer\BlogSerializer;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 
-/**
- * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
- */
 #[Route(path: 'blog/{blogId}', options: ['expose' => true])]
 class BlogController
 {
@@ -55,7 +52,7 @@ class BlogController
      * Get blog options.
      */
     #[Route(path: '/options', name: 'apiv2_blog_options', methods: ['GET'])]
-    public function getOptionsAction(Blog $blog): JsonResponse
+    public function getOptionsAction(#[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog): JsonResponse
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
 
@@ -66,7 +63,7 @@ class BlogController
      * Update blog options.
      */
     #[Route(path: '/options', name: 'apiv2_blog_options_update', methods: ['PUT'])]
-    public function updateOptionsAction(Request $request, Blog $blog): JsonResponse
+    public function updateOptionsAction(Request $request, #[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog): JsonResponse
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
         $data = json_decode($request->getContent(), true);
@@ -79,7 +76,7 @@ class BlogController
      * Get tag cloud, tags used in blog posts.
      */
     #[Route(path: '/tags', name: 'apiv2_blog_tags', methods: ['GET'])]
-    public function getTagsAction(Blog $blog): JsonResponse
+    public function getTagsAction(#[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog): JsonResponse
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
 
@@ -104,7 +101,7 @@ class BlogController
     }
 
     #[Route(path: '/rss', name: 'icap_blog_rss', methods: ['GET'])]
-    public function rssAction(Blog $blog, Request $request): Response
+    public function rssAction(#[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog, Request $request): Response
     {
         $node = $blog->getResourceNode();
         $workspace = $node->getWorkspace();
@@ -162,7 +159,7 @@ class BlogController
     }
 
     #[Route(path: '/pdf', name: 'icap_blog_pdf', methods: ['GET'])]
-    public function viewPdfAction(Blog $blog): StreamedResponse
+    public function viewPdfAction(#[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog): StreamedResponse
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
 

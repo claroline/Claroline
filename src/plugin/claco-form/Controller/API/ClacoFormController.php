@@ -16,9 +16,8 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Manager\CategoryManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: '/clacoform')]
@@ -35,9 +34,6 @@ class ClacoFormController
         $this->authorization = $authorization;
     }
 
-    /**
-     * @EXT\ParamConverter("id", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/stats', name: 'apiv2_clacoform_stats', methods: ['GET'])]
     public function getStatsAction(ClacoForm $clacoForm): JsonResponse
     {
@@ -57,9 +53,6 @@ class ClacoFormController
         ]);
     }
 
-    /**
-     * @EXT\ParamConverter("category", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/assign_categories', name: 'apiv2_clacoform_categories_assign', methods: ['PUT'])]
     public function reassignCategoriesAction(ClacoForm $clacoForm): JsonResponse
     {

@@ -1,6 +1,6 @@
 services:
     Claroline\ForumBundle\Messenger\NotifyUsersOnMessageCreatedHandler:
-        tags: [ messenger.message_handler ]
+        tags: [messenger.message_handler]
         arguments:
             - '@event_dispatcher'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'

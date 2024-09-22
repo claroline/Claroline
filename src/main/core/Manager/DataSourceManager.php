@@ -72,8 +72,8 @@ class DataSourceManager
     public function load(string $type, string $context, ?string $contextId = null, array $options = null): mixed
     {
         $user = null;
-        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
-            $user = $this->tokenStorage->getToken()->getUser();
+        if ($this->tokenStorage->getToken()?->getUser() instanceof User) {
+            $user = $this->tokenStorage->getToken()?->getUser();
         }
 
         $workspace = null;

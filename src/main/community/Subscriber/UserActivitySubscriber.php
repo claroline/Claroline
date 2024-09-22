@@ -34,7 +34,7 @@ class UserActivitySubscriber implements EventSubscriberInterface
 
     public function setLastActivityDate()
     {
-        $currentUser = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
+        $currentUser = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()?->getUser() : null;
         if ($currentUser instanceof User) {
             $now = new \DateTime();
             // We update the user last activity only if there is no activity in the last 30 seconds

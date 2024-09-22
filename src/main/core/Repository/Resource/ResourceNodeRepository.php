@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Repository\Resource;
 use Claroline\AppBundle\Repository\UniqueValueFinder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\DBAL\LockMode;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 
 class ResourceNodeRepository extends MaterializedPathRepository
@@ -54,7 +55,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
      *
      * @deprecated there are other methods to do it (see ObjectManager). Do not override base find().
      */
-    public function find($id, $lockMode = null, $lockVersion = null)
+    public function find(mixed $id, LockMode|int|null $lockMode = null, int|null $lockVersion = null): object|null
     {
         $qb = $this->createQueryBuilder('n');
 

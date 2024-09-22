@@ -45,7 +45,7 @@ class VideoSubscriber extends ResourceComponent implements EvaluatedResourceInte
     /** @param Video $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         return [
             'resource' => $this->serializer->serialize($resource),

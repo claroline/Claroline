@@ -7,12 +7,13 @@ use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Claroline\OpenBadgeBundle\Manager\AssertionManager;
 use Claroline\OpenBadgeBundle\Manager\RuleManager;
 use Claroline\OpenBadgeBundle\Messenger\Message\GrantBadge;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
  * Searches users who meet the Badge rules and grant them the badge.
  */
-class GrantBadgeHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GrantBadgeHandler
 {
     public function __construct(
         private readonly ObjectManager $om,

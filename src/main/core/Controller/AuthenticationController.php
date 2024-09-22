@@ -20,14 +20,14 @@ use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\ValidateEmailEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\UserManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 /**
  * move in AuthenticationBundle.
@@ -146,13 +146,13 @@ class AuthenticationController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
-     */
     #[Route(path: '/send/email/validation', name: 'claro_security_validate_email_send', options: ['expose' => true])]
-    public function sendEmailValidationAction(User $currentUser): JsonResponse
-    {
-        $this->mailManager->sendValidateEmail($currentUser);
+    public function sendEmailValidationAction(
+        #[CurrentUser] ?User $user
+    ): JsonResponse {
+        if (null !== $user) {
+            $this->mailManager->sendValidateEmail($user);
+        }
 
         return new JsonResponse(null, 204);
     }

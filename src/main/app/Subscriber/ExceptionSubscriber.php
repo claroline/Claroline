@@ -35,7 +35,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
     {
         $user = null;
         if ($this->tokenStorage->getToken()) {
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
         }
 
         $exception = $event->getThrowable();

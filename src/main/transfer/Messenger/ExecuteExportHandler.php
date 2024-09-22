@@ -15,9 +15,10 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\TransferBundle\Entity\ExportFile;
 use Claroline\TransferBundle\Manager\ExportManager;
 use Claroline\TransferBundle\Messenger\Message\ExecuteExport;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class ExecuteExportHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class ExecuteExportHandler
 {
     public function __construct(
         private readonly ObjectManager $om,

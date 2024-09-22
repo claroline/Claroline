@@ -22,13 +22,8 @@ class WorkspaceOptions
 {
     use Id;
 
-    /**
-     *
-     *
-     * @var Workspace
-     */
-    #[ORM\JoinColumn(name: 'workspace_id', onDelete: 'CASCADE')]
-    #[ORM\OneToOne(mappedBy: 'options', targetEntity: Workspace::class, cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: Workspace::class, inversedBy: 'options')]
+    #[ORM\JoinColumn(name: 'workspace_id', nullable: true, onDelete: 'CASCADE')]
     private ?Workspace $workspace = null;
 
     /**

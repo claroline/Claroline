@@ -6,15 +6,13 @@ use Claroline\AppBundle\Annotations\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 trait GetAction
 {
     use CrudAction;
 
     /**
-     * @Route("/{field}/{id}", name="get", defaults={"field"="id"}, requirements={"id"=".+"}, methods={"GET", "HEAD"})
-     *
      * @ApiDoc(
      *     description="Finds an object class $class.",
      *     parameters={
@@ -24,6 +22,7 @@ trait GetAction
      *     response={"$object"}
      * )
      */
+    #[Route(path: '/{field}/{id}', name: 'get', requirements: ['id' => '.+'], defaults: ['field' => 'id'], methods: ['GET', 'HEAD'])]
     public function getAction(Request $request, string $field, string $id): JsonResponse
     {
         if (Request::METHOD_HEAD === $request->getMethod()) {

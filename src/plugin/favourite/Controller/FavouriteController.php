@@ -10,10 +10,10 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use HeVinci\FavouriteBundle\Manager\FavouriteManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/favourite', options: ['expose' => true])]
 class FavouriteController
@@ -41,12 +41,17 @@ class FavouriteController
 
     /**
      * Gets the current user favourites.
-     *
-     * @EXT\ParamConverter("currentUser", converter="current_user")
      */
     #[Route(path: '/', name: 'claro_user_favourites')]
-    public function listAction(User $currentUser): JsonResponse
+    public function listAction(#[CurrentUser] ?User $currentUser): JsonResponse
     {
+        if (null == $currentUser) {
+            return new JsonResponse([
+                'workspaces' => [],
+                'resources' => []
+            ]);
+        }
+
         $workspaces = $this->manager->getWorkspaces($currentUser);
         $resources = $this->manager->getResources($currentUser);
 
@@ -62,28 +67,28 @@ class FavouriteController
 
     /**
      * Creates or deletes favourite resources.
-     *
-     * @EXT\ParamConverter("user", converter="current_user")
      */
     #[Route(path: '/resources/toggle', name: 'hevinci_favourite_resources_toggle', methods: ['PUT'])]
-    public function toggleResourcesAction(User $user, Request $request): JsonResponse
+    public function toggleResourcesAction(#[CurrentUser] ?User $user, Request $request): JsonResponse
     {
-        $nodes = $this->decodeIdsString($request, ResourceNode::class);
-        $this->manager->toggleResourceFavourites($user, $nodes);
+        if (null !== $user) {
+            $nodes = $this->decodeIdsString($request, ResourceNode::class);
+            $this->manager->toggleResourceFavourites($user, $nodes);
+        }
 
         return new JsonResponse(null, 204);
     }
 
     /**
      * Creates or deletes favourite workspaces.
-     *
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     #[Route(path: '/workspaces/toggle', name: 'hevinci_favourite_workspaces_toggle', methods: ['PUT'])]
-    public function toggleWorkspacesAction(User $user, Request $request): JsonResponse
+    public function toggleWorkspacesAction(#[CurrentUser] ?User $user, Request $request): JsonResponse
     {
-        $nodes = $this->decodeIdsString($request, Workspace::class);
-        $this->manager->toggleWorkspaceFavourites($user, $nodes);
+        if (null !== $user) {
+            $nodes = $this->decodeIdsString($request, Workspace::class);
+            $this->manager->toggleWorkspaceFavourites($user, $nodes);
+        }
 
         return new JsonResponse(null, 204);
     }

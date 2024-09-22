@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ThemeBundle\Entity\UserPreferences;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -35,8 +35,8 @@ class UserPreferencesController
 
         $data = $this->decodeRequest($request);
 
-        $usersPreferences = $this->om->getRepository(UserPreferences::class)->findOneBy(['user' => $this->tokenStorage->getToken()->getUser()]) ?? new UserPreferences();
-        $usersPreferences->setUser($this->tokenStorage->getToken()->getUser());
+        $usersPreferences = $this->om->getRepository(UserPreferences::class)->findOneBy(['user' => $this->tokenStorage->getToken()?->getUser()]) ?? new UserPreferences();
+        $usersPreferences->setUser($this->tokenStorage->getToken()?->getUser());
         $this->serializer->deserialize($data, $usersPreferences);
 
         $this->om->persist($usersPreferences);

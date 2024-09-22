@@ -52,8 +52,8 @@ class PlaceholderManager
 
         /** @var User|null $currentUser */
         $currentUser = null;
-        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
-            $currentUser = $this->tokenStorage->getToken()->getUser();
+        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()?->getUser() instanceof User) {
+            $currentUser = $this->tokenStorage->getToken()?->getUser();
         }
 
         $placeholders = [

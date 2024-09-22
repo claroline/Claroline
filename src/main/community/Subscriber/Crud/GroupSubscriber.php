@@ -44,7 +44,7 @@ class GroupSubscriber implements EventSubscriberInterface
     {
         /** @var Group $group */
         $group = $event->getObject();
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         if ($user instanceof User) {
             $group->addOrganization($user->getMainOrganization());

@@ -41,7 +41,7 @@ class ExportFileSubscriber implements EventSubscriberInterface
         /** @var ExportFile $object */
         $object = $event->getObject();
 
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if ($user instanceof User && empty($object->getCreator())) {
             $object->setCreator($user);
         }

@@ -65,7 +65,7 @@ class WorkspaceType extends AbstractType
 
                     if ($finder->getFilterValue()) {
                         $queryBuilder->andWhere("({$finder->getParent()->getQueryPath()}.creator = :creatorCurrentUser)");
-                        $queryBuilder->setParameter('creatorCurrentUser', $this->tokenStorage->getToken()->getUser());
+                        $queryBuilder->setParameter('creatorCurrentUser', $this->tokenStorage->getToken()?->getUser());
 
                         /*$queryBuilder->andWhere("({$finder->getParent()->getQueryPath()}.organizations IN (:administratedOrganizations))");
                         $queryBuilder->setParameter('administratedOrganizations', []);*/

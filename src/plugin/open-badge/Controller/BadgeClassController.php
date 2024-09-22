@@ -11,6 +11,7 @@
 
 namespace Claroline\OpenBadgeBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Exception;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -22,10 +23,9 @@ use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Claroline\OpenBadgeBundle\Manager\AssertionManager;
 use Claroline\OpenBadgeBundle\Manager\BadgeManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -93,11 +93,9 @@ class BadgeClassController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     */
     #[Route(path: '/workspace/{workspace}', name: 'workspace_list', methods: ['GET'])]
-    public function listByWorkspaceAction(Request $request, Workspace $workspace): JsonResponse
+    public function listByWorkspaceAction(Request $request, #[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
+    Workspace $workspace): JsonResponse
     {
         return new JsonResponse(
             $this->crud->list(BadgeClass::class, array_merge(
@@ -107,11 +105,9 @@ class BadgeClassController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
-     */
     #[Route(path: '/{badge}/users', name: 'list_assertions', methods: ['GET'])]
-    public function listUsersAction(Request $request, BadgeClass $badge): JsonResponse
+    public function listUsersAction(Request $request, #[MapEntity(class: 'Claroline\OpenBadgeBundle\Entity\BadgeClass', mapping: ['badge' => 'uuid'])]
+    BadgeClass $badge): JsonResponse
     {
         if ($badge->getHideRecipients()) {
             $this->checkPermission('GRANT', $badge, [], true);
@@ -127,11 +123,9 @@ class BadgeClassController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
-     */
     #[Route(path: '/{badge}/users/add', name: 'add_users', methods: ['PATCH'])]
-    public function addUsersAction(BadgeClass $badge, Request $request): JsonResponse
+    public function addUsersAction(#[MapEntity(class: 'Claroline\OpenBadgeBundle\Entity\BadgeClass', mapping: ['badge' => 'uuid'])]
+    BadgeClass $badge, Request $request): JsonResponse
     {
         $this->checkPermission('GRANT', $badge, [], true);
 
@@ -146,11 +140,9 @@ class BadgeClassController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
-     */
     #[Route(path: '/{badge}/users/remove', name: 'remove_users', methods: ['DELETE'])]
-    public function removeUsersAction(BadgeClass $badge, Request $request): JsonResponse
+    public function removeUsersAction(#[MapEntity(class: 'Claroline\OpenBadgeBundle\Entity\BadgeClass', mapping: ['badge' => 'uuid'])]
+    BadgeClass $badge, Request $request): JsonResponse
     {
         $this->checkPermission('GRANT', $badge, [], true);
 
@@ -168,11 +160,10 @@ class BadgeClassController extends AbstractCrudController
     /**
      * Searches for users which meet the badge rules and grant them the badge.
      *
-     *
-     * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
      */
     #[Route(path: '/{badge}/users/recalculate', name: 'recalculate', methods: ['POST'])]
-    public function recalculateAction(BadgeClass $badge): JsonResponse
+    public function recalculateAction(#[MapEntity(class: 'Claroline\OpenBadgeBundle\Entity\BadgeClass', mapping: ['badge' => 'uuid'])]
+    BadgeClass $badge): JsonResponse
     {
         $this->checkPermission('GRANT', $badge, [], true);
 
@@ -189,7 +180,7 @@ class BadgeClassController extends AbstractCrudController
     protected function getDefaultHiddenFilters(): array
     {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
 
             if ($user instanceof User) {
                 return [

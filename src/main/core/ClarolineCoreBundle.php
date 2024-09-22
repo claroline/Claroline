@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle;
 
-use Claroline\CoreBundle\DependencyInjection\Compiler\AnonymousAuthenticationPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\GeoipPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\MailingConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\MessengerConfigPass;
@@ -27,7 +26,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle
         parent::build($container);
 
         $container->addCompilerPass(new PlatformConfigPass());
-        $container->addCompilerPass(new AnonymousAuthenticationPass());
         $container->addCompilerPass(new MailingConfigPass());
         $container->addCompilerPass(new SessionConfigPass());
         $container->addCompilerPass(new MessengerConfigPass());

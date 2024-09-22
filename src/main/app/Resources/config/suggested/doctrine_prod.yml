@@ -31,7 +31,13 @@ doctrine:
                     engine: InnoDB
 
     orm:
-        auto_generate_proxy_classes: "%kernel.debug%"
+        auto_generate_proxy_classes: '%kernel.debug%'
+        enable_lazy_ghost_objects: true
+        report_fields_where_declared: true
+        auto_mapping: true
+        validate_xml_mapping: true
+        proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+
         metadata_cache_driver:
             type: pool
             pool: doctrine.system_cache_pool
@@ -41,6 +47,5 @@ doctrine:
         result_cache_driver:
             type: pool
             pool: doctrine.result_cache_pool
-        auto_mapping: true
-        mappings:
-            StofDoctrineExtensionsBundle: false
+        #mappings:
+        #    StofDoctrineExtensionsBundle: false

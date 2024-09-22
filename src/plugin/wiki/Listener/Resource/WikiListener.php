@@ -38,7 +38,7 @@ class WikiListener extends ResourceComponent
     {
         $sectionTree = $this->sectionManager->getSerializedSectionTree(
             $resource,
-            $this->tokenStorage->getToken()->getUser() instanceof User ? $this->tokenStorage->getToken()->getUser() : null,
+            $this->tokenStorage->getToken()?->getUser() instanceof User ? $this->tokenStorage->getToken()?->getUser() : null,
             $this->authorization->isGranted('EDIT', $resource->getResourceNode())
         );
 
@@ -54,7 +54,7 @@ class WikiListener extends ResourceComponent
      */
     public function copy(AbstractResource $original, AbstractResource $copy): void
     {
-        $this->wikiManager->copyWiki($original, $copy, $this->tokenStorage->getToken()->getUser());
+        $this->wikiManager->copyWiki($original, $copy, $this->tokenStorage->getToken()?->getUser());
     }
 
     /** @var Wiki $resource */

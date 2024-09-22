@@ -40,14 +40,14 @@ class ProgressionTool extends AbstractTool
 
     public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if (!$user instanceof User) {
             return [];
         }
 
         $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
             'workspace' => $contextSubject,
-            'user' => $this->tokenStorage->getToken()->getUser(),
+            'user' => $this->tokenStorage->getToken()?->getUser(),
         ]);
 
         if (empty($workspaceEvaluation)) {

@@ -2,55 +2,41 @@
 
 namespace Claroline\PdfPlayerBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\PdfPlayerBundle\Manager\EvaluationManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/pdf')]
 class EvaluationController
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    /** @var SerializerProvider */
-    private $serializer;
-
-    /** @var EvaluationManager */
-    private $evaluationManager;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        SerializerProvider $serializer,
-        EvaluationManager $evaluationManager
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly SerializerProvider $serializer,
+        private readonly EvaluationManager $evaluationManager
     ) {
-        $this->authorization = $authorization;
-        $this->serializer = $serializer;
-        $this->evaluationManager = $evaluationManager;
     }
 
-    /**
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @EXT\ParamConverter("pdf", class="Claroline\CoreBundle\Entity\Resource\File", options={"mapping": {"id": "uuid"}})
-     *
-     * @param int $page
-     * @param int $total
-     */
     #[Route(path: '/{id}/progression/{page}/{total}', name: 'apiv2_pdf_progression_update', methods: ['PUT'])]
-    public function updateAction(User $user, File $pdf, $page, $total): JsonResponse
+    public function updateAction(#[CurrentUser] ?User $user, #[MapEntity(class: 'Claroline\CoreBundle\Entity\Resource\File', mapping: ['id' => 'uuid'])]
+    File $pdf, int $page, int $total): JsonResponse
     {
-        if (!$this->authorization->isGranted('OPEN', new ResourceCollection([$pdf->getResourceNode()]))) {
+        if (null === $user) {
+            return new JsonResponse(null, 204);
+        }
+
+        if (!$this->authorization->isGranted('OPEN', $pdf->getResourceNode())) {
             throw new AccessDeniedException('Operation "OPEN" cannot be done on object'.get_class($pdf->getResourceNode()));
         }
 
-        $this->evaluationManager->update($pdf->getResourceNode(), $user, intval($page), intval($total));
+        $this->evaluationManager->update($pdf->getResourceNode(), $user, $page, $total);
 
         $resourceUserEvaluation = $this->evaluationManager->getResourceUserEvaluation($pdf->getResourceNode(), $user);
 

@@ -8,16 +8,13 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Claroline\LogBundle\Entity\FunctionalLog;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
- */
 #[Route(path: '/resource/{id}')]
 class ActivityController
 {
@@ -32,8 +29,11 @@ class ActivityController
     }
 
     #[Route(path: '/logs', name: 'apiv2_resource_functional_logs')]
-    public function functionalLogsAction(ResourceNode $resourceNode, Request $request): JsonResponse
-    {
+    public function functionalLogsAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        ResourceNode $resourceNode,
+        Request $request
+    ): JsonResponse {
         $this->checkPermission('ADMINISTRATE', $resourceNode, [], true);
 
         $hiddenFilters = [
@@ -41,7 +41,7 @@ class ActivityController
         ];
 
         if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
 
             $organizations = array_map(function (Organization $organization) {
                 return $organization->getUuid();

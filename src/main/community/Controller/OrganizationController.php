@@ -11,6 +11,7 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
@@ -20,10 +21,9 @@ use Claroline\CoreBundle\Controller\Model\HasWorkspacesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -66,12 +66,11 @@ class OrganizationController extends AbstractCrudController
         );
     }
 
-    /**
-     * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/managers', name: 'list_managers', methods: ['GET'])]
-    public function listManagersAction(Organization $organization): JsonResponse
-    {
+    public function listManagersAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Organization $organization
+    ): JsonResponse {
         $this->checkPermission('OPEN', $organization, [], true);
 
         return new JsonResponse(
@@ -83,13 +82,13 @@ class OrganizationController extends AbstractCrudController
 
     /**
      * Adds managers to the collection.
-     *
-     *
-     * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/manager', name: 'add_managers', methods: ['PATCH'])]
-    public function addManagersAction(Organization $organization, Request $request): JsonResponse
-    {
+    public function addManagersAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Organization $organization,
+        Request $request
+    ): JsonResponse {
         $users = $this->decodeIdsString($request, User::class);
         $this->crud->patch($organization, 'manager', Crud::COLLECTION_ADD, $users);
 
@@ -98,13 +97,13 @@ class OrganizationController extends AbstractCrudController
 
     /**
      * Removes managers from the collection.
-     *
-     *
-     * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/manager', name: 'remove_managers', methods: ['DELETE'])]
-    public function removeManagersAction(Organization $organization, Request $request): JsonResponse
-    {
+    public function removeManagersAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Organization $organization,
+        Request $request
+    ): JsonResponse {
         $users = $this->decodeIdsString($request, User::class);
         $this->crud->patch($organization, 'manager', Crud::COLLECTION_REMOVE, $users);
 
@@ -114,7 +113,7 @@ class OrganizationController extends AbstractCrudController
     protected function getDefaultHiddenFilters(): array
     {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
             if ($user instanceof User) {
                 // show user organizations
                 return [

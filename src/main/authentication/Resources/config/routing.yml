@@ -9,6 +9,6 @@ claro_security_logout:
 # API
 claro_authentication:
     resource: "@ClarolineAuthenticationBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

@@ -4,10 +4,10 @@ namespace UJM\ExoBundle\Controller;
 
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Exercise;
@@ -16,8 +16,6 @@ use UJM\ExoBundle\Manager\CorrectionManager;
 /**
  * Correction API controller permits to a quiz creator to save scores and feedback
  * for answers to questions with manual correction.
- *
- * @EXT\ParamConverter("exercise", class="UJM\ExoBundle\Entity\Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
 #[Route(path: '/exercises/{exerciseId}/correction')]
 class CorrectionController
@@ -34,7 +32,7 @@ class CorrectionController
      * Lists all questions with `manual` score rule that have answers to correct.
      */
     #[Route(path: '', name: 'exercise_correction_questions', methods: ['GET'])]
-    public function listQuestionsToCorrectAction(Exercise $exercise): JsonResponse
+    public function listQuestionsToCorrectAction(#[MapEntity(mapping: ['exerciseId' => 'uuid'])] Exercise $exercise): JsonResponse
     {
         $toCorrect = $this->isAdmin($exercise) ? $this->correctionManager->getToCorrect($exercise) : [];
 
@@ -45,7 +43,7 @@ class CorrectionController
      * Saves score & feedback for a bulk of answers.
      */
     #[Route(path: '/{questionId}', name: 'exercise_correction_save', methods: ['PUT'])]
-    public function saveAction(Exercise $exercise, Request $request): JsonResponse
+    public function saveAction(#[MapEntity(mapping: ['exerciseId' => 'uuid'])] Exercise $exercise, Request $request): JsonResponse
     {
         $this->isAdmin($exercise);
 

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Workspace;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
@@ -24,13 +25,13 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/workspace')]
 class RegistrationController
@@ -62,11 +63,10 @@ class RegistrationController
      *     }
      * )
      *
-     *
-     * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/user/pending', name: 'apiv2_workspace_list_pending', methods: ['GET'])]
-    public function listPendingAction(Request $request, Workspace $workspace): JsonResponse
+    public function listPendingAction(Request $request, #[MapEntity(mapping: ['id' => 'uuid'])]
+    Workspace $workspace): JsonResponse
     {
         return new JsonResponse($this->crud->list(
             WorkspaceRegistrationQueue::class,
@@ -85,11 +85,10 @@ class RegistrationController
      *     }
      * )
      *
-     *
-     * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/registration/validate', name: 'apiv2_workspace_registration_validate', methods: ['PATCH'])]
-    public function validateRegistrationAction(Request $request, Workspace $workspace): JsonResponse
+    public function validateRegistrationAction(Request $request, #[MapEntity(mapping: ['id' => 'uuid'])]
+    Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
         $users = $this->om->getRepository(User::class)->findBy(['uuid' => $query['ids']]);
@@ -120,11 +119,10 @@ class RegistrationController
      *     }
      * )
      *
-     *
-     * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/registration/remove', name: 'apiv2_workspace_registration_remove', methods: ['DELETE'])]
-    public function removeRegistrationAction(Request $request, Workspace $workspace): JsonResponse
+    public function removeRegistrationAction(Request $request, #[MapEntity(mapping: ['id' => 'uuid'])]
+    Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
         $users = $this->om->getRepository(User::class)->findBy(['uuid' => $query['ids']]);
@@ -153,11 +151,10 @@ class RegistrationController
      *     }
      * )
      *
-     *
-     * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/users/unregister', name: 'apiv2_workspace_unregister_users', methods: ['DELETE'])]
-    public function unregisterUsersAction(Request $request, Workspace $workspace): JsonResponse
+    public function unregisterUsersAction(Request $request, #[MapEntity(mapping: ['id' => 'uuid'])]
+    Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
         $users = $this->om->getRepository(User::class)->findBy(['uuid' => $query['ids']]);
@@ -184,11 +181,10 @@ class RegistrationController
      *     }
      * )
      *
-     *
-     * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/groups/unregister', name: 'apiv2_workspace_unregister_groups', methods: ['DELETE'])]
-    public function unregisterGroupsAction(Request $request, Workspace $workspace): JsonResponse
+    public function unregisterGroupsAction(Request $request, #[MapEntity(mapping: ['id' => 'uuid'])]
+    Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
         $groups = $this->om->getRepository(Group::class)->findBy(['uuid' => $query['ids']]);
@@ -279,18 +275,12 @@ class RegistrationController
      *     }
      * )
      *
-     *
-     * @EXT\ParamConverter(
-     *     "workspace",
-     *     class = "Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     options={"mapping": {"workspace": "uuid"}}
-     * )
-     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
      */
     #[Route(path: '/{workspace}/register/self', name: 'apiv2_workspace_self_register', methods: ['PUT'])]
-    public function selfRegisterAction(Workspace $workspace, User $currentUser): JsonResponse
+    public function selfRegisterAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
+    Workspace $workspace, #[CurrentUser] ?User $currentUser): JsonResponse
     {
-        if (!$workspace->getSelfRegistration() || $workspace->isArchived()) {
+        if (null === $currentUser || !$workspace->getSelfRegistration() || $workspace->isArchived()) {
             throw new AccessDeniedException();
         }
 

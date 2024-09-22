@@ -16,13 +16,13 @@ interface ContextInterface extends ComponentInterface
 
     public function isAvailable(): bool;
 
-    public function isManager(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool;
+    public function isManager(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool;
 
-    public function isImpersonated(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool;
+    public function isImpersonated(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool;
 
-    public function getRoles(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array;
+    public function getRoles(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array;
 
-    public function getAccessErrors(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array;
+    public function getAccessErrors(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array;
 
     /**
      * Get additional data required by the context (ex. current user evaluation).

@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -31,7 +32,7 @@ class RegisteredSource
         $options = $event->getOptions();
 
         $options['hiddenFilters']['model'] = false;
-        $options['hiddenFilters']['roles'] = $this->tokenStorage->getToken()->getRoleNames();
+        $options['hiddenFilters']['roles'] = $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
 
         $event->setData(
             $this->finder->search(Workspace::class, $options, [SerializerInterface::SERIALIZE_LIST])

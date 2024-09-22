@@ -38,7 +38,7 @@ class AgendaTool extends AbstractTool
 
     public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         if (DesktopContext::getName() === $context) {
             // It would be better to directly handle it in the ui TOOL_LOAD action,

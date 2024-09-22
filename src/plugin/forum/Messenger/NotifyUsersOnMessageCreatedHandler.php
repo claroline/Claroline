@@ -19,9 +19,10 @@ use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class NotifyUsersOnMessageCreatedHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class NotifyUsersOnMessageCreatedHandler
 {
     public function __construct(
         private readonly EventDispatcherInterface $dispatcher,

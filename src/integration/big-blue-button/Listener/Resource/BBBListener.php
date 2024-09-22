@@ -62,8 +62,8 @@ class BBBListener extends ResourceComponent implements EvaluatedResourceInterfac
         }
 
         $userEvaluation = null;
-        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
-            $attempt = $this->evaluationManager->update($resource->getResourceNode(), $this->tokenStorage->getToken()->getUser());
+        if ($this->tokenStorage->getToken()?->getUser() instanceof User) {
+            $attempt = $this->evaluationManager->update($resource->getResourceNode(), $this->tokenStorage->getToken()?->getUser());
             $userEvaluation = $attempt->getResourceUserEvaluation();
         }
 

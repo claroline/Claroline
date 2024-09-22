@@ -7,7 +7,7 @@ use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\LogBundle\Entity\SecurityLog;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -39,7 +39,7 @@ class SecurityLogController extends AbstractSecurityController
             throw new AccessDeniedException();
         }
 
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $query = $request->query->all();
         $query['hiddenFilters'] = [

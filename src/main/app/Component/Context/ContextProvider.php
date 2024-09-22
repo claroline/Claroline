@@ -46,7 +46,7 @@ class ContextProvider extends AbstractComponentProvider
 
     public function getFavoriteContexts(): array
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if ($user instanceof User) {
             $workspaces = $this->om
                 ->getRepository(WorkspaceFavourite::class)

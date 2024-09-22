@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Component\Context\AdministrationContext;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AdminToolSource
@@ -20,8 +21,8 @@ class AdminToolSource
     {
         $options = $event->getOptions();
 
-        if (!in_array('ROLE_ADMIN', $this->tokenStorage->getToken()->getRoleNames())) {
-            $options['hiddenFilters']['roles'] = $this->tokenStorage->getToken()->getRoleNames();
+        if (!in_array(PlatformRoles::ADMIN, $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS])) {
+            $options['hiddenFilters']['roles'] = $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
         }
 
         $options['hiddenFilters']['context'] = AdministrationContext::getName();

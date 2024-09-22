@@ -2,6 +2,7 @@
 
 namespace Icap\LessonBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -12,18 +13,16 @@ use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Manager\ChapterManager;
 use Icap\LessonBundle\Repository\ChapterRepository;
 use Icap\LessonBundle\Serializer\ChapterSerializer;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 
 /**
  *
- * @EXT\ParamConverter("lesson", class="Icap\LessonBundle\Entity\Lesson", options={"mapping": {"lessonId": "uuid"}})
  * @todo refactor using AbstractCrudController
  */
 #[Route(path: '/lesson/{lessonId}/chapters')]
@@ -55,7 +54,7 @@ class ChapterController
     }
 
     #[Route(path: '/', name: 'apiv2_lesson_chapter_list', methods: ['GET'])]
-    public function searchAction(Lesson $lesson, Request $request): JsonResponse
+    public function searchAction(#[MapEntity(mapping: ['lessonId' => 'uuid'])] Lesson $lesson, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $lesson->getResourceNode(), [], true);
 
@@ -73,7 +72,7 @@ class ChapterController
      * Get chapter by its slug.
      */
     #[Route(path: '/{slug}', name: 'apiv2_lesson_chapter_get', methods: ['GET'])]
-    public function getAction(Lesson $lesson, $slug): JsonResponse
+    public function getAction(#[MapEntity(mapping: ['lessonId' => 'uuid'])] Lesson $lesson, string $slug): JsonResponse
     {
         $this->checkPermission('OPEN', $lesson->getResourceNode(), [], true);
 
@@ -91,11 +90,10 @@ class ChapterController
     /**
      * Create new chapter.
      *
-     *
-     * @EXT\ParamConverter("parent", class="Icap\LessonBundle\Entity\Chapter", options={"mapping": {"slug": "slug"}})
      */
     #[Route(path: '/{slug}', name: 'apiv2_lesson_chapter_create', methods: ['POST'])]
-    public function createAction(Request $request, Lesson $lesson, Chapter $parent): JsonResponse
+    public function createAction(Request $request, #[MapEntity(mapping: ['lessonId' => 'uuid'])] Lesson $lesson, #[MapEntity(mapping: ['slug' => 'slug'])]
+    Chapter $parent): JsonResponse
     {
         $this->checkPermission('EDIT', $lesson->getResourceNode(), [], true);
 
@@ -108,11 +106,10 @@ class ChapterController
     /**
      * Update existing chapter.
      *
-     *
-     * @EXT\ParamConverter("chapter", class="Icap\LessonBundle\Entity\Chapter", options={"mapping": {"slug": "slug"}})
      */
     #[Route(path: '/{slug}', name: 'apiv2_lesson_chapter_update', methods: ['PUT'])]
-    public function editAction(Request $request, Lesson $lesson, Chapter $chapter): JsonResponse
+    public function editAction(Request $request, #[MapEntity(mapping: ['lessonId' => 'uuid'])] Lesson $lesson, #[MapEntity(mapping: ['slug' => 'slug'])]
+    Chapter $chapter): JsonResponse
     {
         $this->checkPermission('EDIT', $lesson->getResourceNode(), [], true);
 
@@ -125,11 +122,10 @@ class ChapterController
     /**
      * Delete existing chapter.
      *
-     *
-     * @EXT\ParamConverter("chapter", class="Icap\LessonBundle\Entity\Chapter", options={"mapping": {"slug": "slug"}})
      */
     #[Route(path: '/{slug}', name: 'apiv2_lesson_chapter_delete', methods: ['DELETE'])]
-    public function deleteAction(Request $request, Lesson $lesson, Chapter $chapter): JsonResponse
+    public function deleteAction(Request $request, #[MapEntity(mapping: ['lessonId' => 'uuid'])] Lesson $lesson, #[MapEntity(mapping: ['slug' => 'slug'])]
+    Chapter $chapter): JsonResponse
     {
         $previousChapter = $this->chapterRepository->getPreviousChapter($chapter);
         $previousSlug = $previousChapter ? $previousChapter->getSlug() : null;
@@ -147,12 +143,11 @@ class ChapterController
         ]);
     }
 
-    /**
-     * @EXT\ParamConverter("chapter", class="Icap\LessonBundle\Entity\Chapter", options={"mapping": {"chapter": "uuid"}})
-     */
     #[Route(path: '/{chapter}/pdf', name: 'icap_lesson_chapter_export_pdf')]
-    public function downloadPdfAction(Chapter $chapter): StreamedResponse
-    {
+    public function downloadPdfAction(
+        #[MapEntity(mapping: ['chapter' => 'uuid'])]
+        Chapter $chapter
+    ): StreamedResponse {
         $lesson = $chapter->getLesson();
 
         $this->checkPermission('EXPORT', $lesson->getResourceNode(), [], true);

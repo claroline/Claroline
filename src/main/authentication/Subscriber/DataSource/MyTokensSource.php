@@ -31,7 +31,7 @@ class MyTokensSource implements EventSubscriberInterface
     {
         $options = $event->getOptions();
 
-        $options['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
+        $options['hiddenFilters']['user'] = $this->tokenStorage->getToken()?->getUser()->getUuid();
 
         $event->setData(
             $this->finder->search(ApiToken::class, $options, [Options::SERIALIZE_LIST])

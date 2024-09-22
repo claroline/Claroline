@@ -27,7 +27,7 @@ class ApiTokenSubscriber implements EventSubscriberInterface
         /** @var ApiToken $apiToken */
         $apiToken = $event->getObject();
         if (empty($apiToken->getUser())) {
-            $apiToken->setUser($this->tokenStorage->getToken()->getUser());
+            $apiToken->setUser($this->tokenStorage->getToken()?->getUser());
         }
     }
 }

@@ -1,6 +1,6 @@
 claro_scorm:
     resource: "@ClarolineScormBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true
 

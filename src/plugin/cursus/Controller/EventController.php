@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\PdfManager;
@@ -26,14 +27,14 @@ use Claroline\CursusBundle\Entity\Registration\EventGroup;
 use Claroline\CursusBundle\Entity\Registration\EventUser;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Manager\EventManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route(path: '/cursus_event', name: 'apiv2_cursus_event_')]
@@ -70,7 +71,7 @@ class EventController extends AbstractCrudController
     protected function getDefaultHiddenFilters(): array
     {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
             if ($user instanceof User) {
                 $organizations = $user->getOrganizations();
             } else {
@@ -114,11 +115,9 @@ class EventController extends AbstractCrudController
         }, $processed));
     }
 
-    /**
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     */
     #[Route(path: '/{workspace}', name: 'list', methods: ['GET'])]
-    public function listAction(Request $request, $class = Event::class, Workspace $workspace = null): JsonResponse
+    public function listAction(Request $request, $class = Event::class, #[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
+    Workspace $workspace = null): JsonResponse
     {
         $options = static::getOptions();
 
@@ -133,11 +132,9 @@ class EventController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     */
     #[Route(path: '/public/{workspace}', name: 'public', methods: ['GET'])]
-    public function listPublicAction(Request $request, Workspace $workspace = null): JsonResponse
+    public function listPublicAction(Request $request, #[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
+    Workspace $workspace = null): JsonResponse
     {
         $options = static::getOptions();
 
@@ -153,15 +150,13 @@ class EventController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/open', name: 'open', methods: ['GET'])]
-    public function openAction(Event $sessionEvent): JsonResponse
+    public function openAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Event', mapping: ['id' => 'uuid'])]
+    Event $sessionEvent): JsonResponse
     {
         $this->checkPermission('OPEN', $sessionEvent, [], true);
 
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         $registration = [];
         if ($user instanceof User) {
             $registration = [
@@ -182,11 +177,9 @@ class EventController extends AbstractCrudController
         ]);
     }
 
-    /**
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/pdf', name: 'download_pdf', methods: ['GET'])]
-    public function downloadPdfAction(Event $sessionEvent, Request $request): StreamedResponse
+    public function downloadPdfAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Event', mapping: ['id' => 'uuid'])]
+    Event $sessionEvent, Request $request): StreamedResponse
     {
         $this->checkPermission('OPEN', $sessionEvent, [], true);
 
@@ -200,11 +193,9 @@ class EventController extends AbstractCrudController
         ]);
     }
 
-    /**
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/ics', name: 'download_ics', methods: ['GET'])]
-    public function downloadICSAction(Event $sessionEvent): StreamedResponse
+    public function downloadICSAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Event', mapping: ['id' => 'uuid'])]
+    Event $sessionEvent): StreamedResponse
     {
         $this->checkPermission('OPEN', $sessionEvent, [], true);
 
@@ -216,13 +207,10 @@ class EventController extends AbstractCrudController
         ]);
     }
 
-    /**
-     *
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
+    
     #[Route(path: '/{id}/self/register', name: 'self_register', methods: ['PUT'])]
-    public function selfRegisterAction(Event $sessionEvent, User $user): JsonResponse
+    public function selfRegisterAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Event', mapping: ['id' => 'uuid'])]
+    Event $sessionEvent, #[CurrentUser] ?User $user): JsonResponse
     {
         $this->checkPermission('OPEN', $sessionEvent, [], true);
 
@@ -234,11 +222,9 @@ class EventController extends AbstractCrudController
         return new JsonResponse($this->serializer->serialize($eventUsers));
     }
 
-    /**
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/invite/all', name: 'invite_all', methods: ['PUT'])]
-    public function inviteAllAction(Event $sessionEvent): JsonResponse
+    public function inviteAllAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Event', mapping: ['id' => 'uuid'])]
+    Event $sessionEvent): JsonResponse
     {
         $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
@@ -247,11 +233,9 @@ class EventController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    /**
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/users/{type}', name: 'list_users', methods: ['GET'])]
-    public function listUsersAction(Event $sessionEvent, string $type, Request $request): JsonResponse
+    public function listUsersAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Event', mapping: ['id' => 'uuid'])]
+    Event $sessionEvent, string $type, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $sessionEvent, [], true);
 
@@ -266,7 +250,7 @@ class EventController extends AbstractCrudController
         // only list participants of the same organization
         if (EventUser::LEARNER === $type && !$this->authorization->isGranted('ROLE_ADMIN')) {
             /** @var User $user */
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
 
             // filter by organizations
             if ($user instanceof User) {
@@ -285,11 +269,9 @@ class EventController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/users/{type}', name: 'add_users', methods: ['PATCH'])]
-    public function addUsersAction(Event $sessionEvent, string $type, Request $request): JsonResponse
+    public function addUsersAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Event', mapping: ['id' => 'uuid'])]
+    Event $sessionEvent, string $type, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
@@ -309,11 +291,9 @@ class EventController extends AbstractCrudController
         }, $sessionEventUsers));
     }
 
-    /**
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/users/{type}', name: 'remove_users', methods: ['DELETE'])]
-    public function removeUsersAction(Event $sessionEvent, Request $request): JsonResponse
+    public function removeUsersAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Event', mapping: ['id' => 'uuid'])]
+    Event $sessionEvent, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
@@ -323,11 +303,9 @@ class EventController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    /**
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/invite/users', name: 'invite_users', methods: ['PUT'])]
-    public function inviteUsersAction(Event $sessionEvent, Request $request): JsonResponse
+    public function inviteUsersAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Event', mapping: ['id' => 'uuid'])]
+    Event $sessionEvent, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
@@ -339,11 +317,9 @@ class EventController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    /**
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/groups/{type}', name: 'list_groups', methods: ['GET'])]
-    public function listGroupsAction(Event $sessionEvent, string $type, Request $request): JsonResponse
+    public function listGroupsAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Event', mapping: ['id' => 'uuid'])]
+    Event $sessionEvent, string $type, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $sessionEvent, [], true);
 
@@ -359,11 +335,9 @@ class EventController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/groups/{type}', name: 'add_groups', methods: ['PATCH'])]
-    public function addGroupsAction(Event $sessionEvent, string $type, Request $request): JsonResponse
+    public function addGroupsAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Event', mapping: ['id' => 'uuid'])]
+    Event $sessionEvent, string $type, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
@@ -387,11 +361,9 @@ class EventController extends AbstractCrudController
         }, $sessionGroups));
     }
 
-    /**
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/groups/{type}', name: 'remove_groups', methods: ['DELETE'])]
-    public function removeGroupsAction(Event $sessionEvent, Request $request): JsonResponse
+    public function removeGroupsAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Event', mapping: ['id' => 'uuid'])]
+    Event $sessionEvent, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
@@ -401,11 +373,9 @@ class EventController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    /**
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/invite/groups', name: 'invite_groups', methods: ['PUT'])]
-    public function inviteGroupsAction(Event $sessionEvent, Request $request): JsonResponse
+    public function inviteGroupsAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Session', mapping: ['id' => 'uuid'])]
+    Event $sessionEvent, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $sessionEvent, [], true);
 

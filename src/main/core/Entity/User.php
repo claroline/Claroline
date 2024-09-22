@@ -150,7 +150,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      * @var Collection<int, UserOrganizationReference>
      */
     #[ORM\JoinColumn(name: 'user_id', nullable: false)]
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserOrganizationReference::class, cascade: ['persist'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: UserOrganizationReference::class, mappedBy: 'user', cascade: ['persist'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $userOrganizationReferences;
 
     #[ORM\Column(name: 'user_status', nullable: true)]

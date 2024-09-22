@@ -11,6 +11,7 @@
 
 namespace Claroline\AgendaBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AgendaBundle\Entity\EventInvitation;
 use Claroline\AgendaBundle\Manager\EventManager;
@@ -19,14 +20,13 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -67,7 +67,7 @@ class EventController extends AbstractCrudController
 
         if (!isset($query['filters']['workspaces'])) {
             /** @var User $user */
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
             if ($user instanceof User) {
                 $hiddenFilters['user'] = $user->getUuid();
             } else {
@@ -78,11 +78,9 @@ class EventController extends AbstractCrudController
         return $hiddenFilters;
     }
 
-    /**
-     * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/ics', name: 'download_ics', methods: ['GET'])]
-    public function downloadICSAction(Event $event): StreamedResponse
+    public function downloadICSAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Event $event): StreamedResponse
     {
         $this->checkPermission('OPEN', $event, [], true);
 
@@ -97,11 +95,10 @@ class EventController extends AbstractCrudController
     /**
      * Lists the participants of an event.
      *
-     *
-     * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/participants', name: 'list_participants', methods: ['GET'])]
-    public function listParticipantsAction(Event $event, Request $request): JsonResponse
+    public function listParticipantsAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Event $event, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $event, [], true);
 
@@ -115,11 +112,10 @@ class EventController extends AbstractCrudController
     /**
      * Adds the selected users as event participants.
      *
-     *
-     * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/participants', name: 'add_participants', methods: ['POST'])]
-    public function addParticipantsAction(Event $event, Request $request): JsonResponse
+    public function addParticipantsAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Event $event, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $event, [], true);
 
@@ -142,11 +138,10 @@ class EventController extends AbstractCrudController
     /**
      * Removes selected users from the event participants.
      *
-     *
-     * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/participants', name: 'remove_participants', methods: ['DELETE'])]
-    public function removeParticipantsAction(Event $event, Request $request): JsonResponse
+    public function removeParticipantsAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Event $event, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $event, [], true);
 
@@ -166,11 +161,10 @@ class EventController extends AbstractCrudController
     /**
      * Sends invitations to the selected participants.
      *
-     *
-     * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/invitations/send', name: 'send_invitations', methods: ['POST'])]
-    public function sendInvitationsAction(Event $event, Request $request): JsonResponse
+    public function sendInvitationsAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Event $event, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $event, [], true);
 
@@ -182,15 +176,13 @@ class EventController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    /**
-     * @EXT\ParamConverter("invitation", options={"mapping": {"id": "id"}})
-     */
     #[Route(path: '/invitations/{id}/status/{status}', name: 'change_invitation_status', methods: ['GET'])]
-    public function changeInvitationStatusAction(EventInvitation $invitation, string $status, Request $request): Response
+    public function changeInvitationStatusAction(#[MapEntity(mapping: ['id' => 'id'])]
+    EventInvitation $invitation, string $status, Request $request): Response
     {
         $canEdit = $this->checkPermission('EDIT', $invitation->getEvent());
 
-        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $currentUser = $this->tokenStorage->getToken()?->getUser();
         if (!$canEdit || !$currentUser instanceof User || $currentUser->getUuid() !== $invitation->getUser()->getUuid()) {
             // only an admin or the invited user can update the status
             throw new AccessDeniedException('You cannot change the status of this invitation.');

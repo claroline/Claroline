@@ -11,6 +11,7 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use ZipArchive;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
@@ -23,11 +24,10 @@ use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: '/profile')]
@@ -61,17 +61,16 @@ class ProfileController
         $this->profileSerializer = $profileSerializer;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'profile';
     }
 
-    /**
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
     #[Route(path: '/export', name: 'apiv2_profile_export', methods: ['GET'])]
-    public function exportAction(User $user): BinaryFileResponse
+    public function exportAction(#[CurrentUser] User $user): BinaryFileResponse
     {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         $pathArch = $this->tempManager->generate();
 
         $archive = new ZipArchive();
@@ -89,12 +88,11 @@ class ProfileController
         ]);
     }
 
-    /**
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
     #[Route(path: '/status/{status}', name: 'apiv2_user_change_status', methods: ['PUT'])]
-    public function changeStatusAction(User $user, string $status): JsonResponse
+    public function changeStatusAction(#[CurrentUser] ?User $user, string $status): JsonResponse
     {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         if ('online' === $status) {
             $status = null;
         }
@@ -121,6 +119,8 @@ class ProfileController
     #[Route(path: '', name: 'apiv2_profile_configure', methods: ['PUT'])]
     public function configureAction(Request $request): JsonResponse
     {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         $formData = $this->decodeRequest($request);
 
         // dump current profile configuration (to know what to remove later)

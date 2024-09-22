@@ -4,7 +4,7 @@ namespace Claroline\ThemeBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ThemeBundle\Entity\ColorCollection;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/color_collection', name: 'apiv2_color_collection_')]
 class ColorCollectionController extends AbstractCrudController

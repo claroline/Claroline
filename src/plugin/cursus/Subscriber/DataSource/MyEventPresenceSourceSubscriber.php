@@ -34,7 +34,7 @@ class MyEventPresenceSourceSubscriber implements EventSubscriberInterface
     public function getData(GetDataEvent $event): void
     {
         $options = $event->getOptions();
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         if ($user instanceof User) {
             $options['hiddenFilters']['user'] = $user->getUuid();

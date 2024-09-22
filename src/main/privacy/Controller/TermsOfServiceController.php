@@ -6,10 +6,10 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\PrivacyBundle\Manager\PrivacyManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/terms_of_service')]
 class TermsOfServiceController
@@ -32,12 +32,13 @@ class TermsOfServiceController
         return new JsonResponse($tos);
     }
 
-    /**
-     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
-     */
     #[Route(path: '/accept', name: 'apiv2_platform_terms_of_service_accept', methods: ['PUT'])]
-    public function acceptAction(User $currentUser): JsonResponse
+    public function acceptAction(#[CurrentUser] ?User $currentUser): JsonResponse
     {
+        if (null === $currentUser) {
+            return new JsonResponse(null, 204);
+        }
+
         $currentUser->setAcceptedTerms(true);
 
         $this->om->persist($currentUser);

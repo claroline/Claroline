@@ -6,22 +6,10 @@ services:
     claroline.installation.fixture_loader:
         class: Claroline\InstallationBundle\Fixtures\FixtureLoader
         arguments:
-            - '@claroline.installation.fixture_loader.locator'
+            - '@service_container'
             - '@claroline.doctrine_fixture_executor'
         calls:
             - setLogger: ['@logger']
-
-    claroline.symfony_fixture_loader:
-        shared: false
-        class: Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader
-        arguments:
-            - '@service_container'
-
-    claroline.installation.fixture_loader.locator:
-        class: Symfony\Component\DependencyInjection\ServiceLocator
-        arguments:
-            - { claroline.symfony_fixture_loader: '@claroline.symfony_fixture_loader' }
-        tags: ['container.service_locator']
 
     claroline.doctrine_fixture_executor:
         class: Doctrine\Common\DataFixtures\Executor\ORMExecutor

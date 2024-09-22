@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -36,7 +37,7 @@ class BadgeClassFinder extends AbstractFinder
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $workspaceJoin = false;
 
@@ -66,7 +67,7 @@ class BadgeClassFinder extends AbstractFinder
                     break;
 
                 case 'assignable':
-                    if (!in_array('ROLE_ADMIN', $this->tokenStorage->getToken()->getRoleNames())) {
+                    if (!in_array('ROLE_ADMIN', $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS])) {
                         $grantDecoder = $this->toolMaskDecoderManager->getMaskDecoderByToolAndName(
                             'badges',
                             'grant'
@@ -108,7 +109,7 @@ class BadgeClassFinder extends AbstractFinder
                             )
                         ))
                             ->setParameter(':grantMask', $grantDecoder->getValue())
-                            ->setParameter(':userRoles', $this->tokenStorage->getToken()->getRoleNames())
+                            ->setParameter(':userRoles', $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS])
                         ;
                     }
 

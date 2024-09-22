@@ -16,6 +16,7 @@ use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -50,7 +51,7 @@ class AssertionFinder extends AbstractFinder
         }
 
         /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
@@ -136,7 +137,7 @@ class AssertionFinder extends AbstractFinder
                         )
                     ))
                         ->setParameter(':grantMask', $grantDecoder->getValue())
-                        ->setParameter(':userRoles', $this->tokenStorage->getToken()->getRoleNames())
+                        ->setParameter(':userRoles', $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS])
                     ;
 
                     break;

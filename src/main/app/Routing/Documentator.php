@@ -6,7 +6,7 @@ use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\FinderException;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SchemaProvider;
-use Doctrine\Common\Annotations\Reader;
+//use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\Routing\Route;
 
 class Documentator
@@ -14,7 +14,7 @@ class Documentator
     public function __construct(
         private readonly FinderProvider $finder,
         private readonly SchemaProvider $schema,
-        private readonly Reader $reader,
+        #private readonly Reader $reader,
         private readonly Finder $router
     ) {
     }

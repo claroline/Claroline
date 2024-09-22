@@ -1,6 +1,6 @@
 # JSON API
 claro_pdf:
     resource: "@ClarolinePdfPlayerBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

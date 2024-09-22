@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Security\PlatformRoles;
 use Claroline\LogBundle\Entity\FunctionalLog;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -63,7 +63,7 @@ class ActivityController
 
         $organizations = [];
         if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
 
             $organizations = $user->getOrganizations()->toArray();
         }
@@ -114,7 +114,7 @@ class ActivityController
         }
 
         if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
 
             $organizations = array_map(function (Organization $organization) {
                 return $organization->getUuid();

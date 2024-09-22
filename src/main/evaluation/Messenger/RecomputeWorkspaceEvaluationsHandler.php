@@ -7,12 +7,13 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\RecomputeWorkspaceEvaluations;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
  * Recompute WorkspaceEvaluations for a Workspace and a list of Users.
  */
-class RecomputeWorkspaceEvaluationsHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class RecomputeWorkspaceEvaluationsHandler
 {
     public function __construct(
         private readonly ObjectManager $om,

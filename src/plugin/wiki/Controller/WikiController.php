@@ -10,53 +10,31 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Manager\SectionManager;
 use Icap\WikiBundle\Manager\WikiManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 
-/**
- * @EXT\ParamConverter("wiki", class="Icap\WikiBundle\Entity\Wiki", options={"mapping": {"id": "uuid"}})
- */
 #[Route(path: '/wiki/{id}')]
 class WikiController
 {
     use PermissionCheckerTrait;
 
-    /** @var Environment */
-    private $templating;
-
-    /** @var WikiManager */
-    private $wikiManager;
-
-    /** @var SectionManager */
-    private $sectionManager;
-    /** @var PdfManager */
-    private $pdfManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        Environment $templating,
-        WikiManager $wikiManager,
-        SectionManager $sectionManager,
-        PdfManager $pdfManager
+        private readonly Environment $templating,
+        private readonly WikiManager $wikiManager,
+        private readonly SectionManager $sectionManager,
+        private readonly PdfManager $pdfManager
     ) {
         $this->authorization = $authorization;
-        $this->templating = $templating;
-        $this->wikiManager = $wikiManager;
-        $this->sectionManager = $sectionManager;
-        $this->pdfManager = $pdfManager;
     }
 
-    /**
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     * @return JsonResponse
-     */
     #[Route(path: '/', name: 'apiv2_wiki_update', methods: ['PUT'])]
-    public function updateAction(Wiki $wiki, Request $request)
+    public function updateAction(#[MapEntity(mapping: ['id' => 'uuid'])] Wiki $wiki, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $wiki->getResourceNode(), [], true);
 
@@ -69,11 +47,8 @@ class WikiController
         }
     }
 
-    /**
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     */
     #[Route(path: '/pdf', name: 'apiv2_wiki_export_pdf')]
-    public function exportPdfAction(Wiki $wiki, User $user = null): StreamedResponse
+    public function exportPdfAction(#[MapEntity(mapping: ['id' => 'uuid'])] Wiki $wiki, User $user = null): StreamedResponse
     {
         $resourceNode = $wiki->getResourceNode();
         $this->checkPermission('EXPORT', $resourceNode, [], true);

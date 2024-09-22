@@ -8,12 +8,13 @@ use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Claroline\OpenBadgeBundle\Manager\AssertionManager;
 use Claroline\OpenBadgeBundle\Manager\RuleManager;
 use Claroline\OpenBadgeBundle\Messenger\Message\GrantRule;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
  * Creates an evidence when a user meet a Badge rule and checks if the user is granted the badge.
  */
-class GrantRuleHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GrantRuleHandler
 {
     public function __construct(
         private readonly ObjectManager $om,

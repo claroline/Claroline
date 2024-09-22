@@ -11,6 +11,7 @@
 
 namespace Claroline\EvaluationBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
@@ -19,10 +20,9 @@ use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -42,11 +42,9 @@ class ResourceUserEvaluationController
         $this->authorization = $authorization;
     }
 
-    /**
-     * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"nodeId": "uuid"}})
-     */
     #[Route(path: '/{nodeId}', name: 'apiv2_resource_evaluation_list', methods: ['GET'])]
-    public function listAction(ResourceNode $resourceNode, Request $request): JsonResponse
+    public function listAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Resource\ResourceNode', mapping: ['nodeId' => 'uuid'])]
+    ResourceNode $resourceNode, Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
@@ -56,7 +54,7 @@ class ResourceUserEvaluationController
         if (!$this->checkPermission('ADMINISTRATE', $resourceNode)) {
             // only display evaluation of the current user
             /** @var User $user */
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
             $filters['user'] = $user->getUuid();
         }
 
@@ -65,11 +63,9 @@ class ResourceUserEvaluationController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("userEvaluation", class="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation", options={"mapping": {"userEvaluationId": "id"}})
-     */
     #[Route(path: '/attempts/{userEvaluationId}', name: 'apiv2_resource_evaluation_list_attempts', methods: ['GET'])]
-    public function listAttemptsAction(ResourceUserEvaluation $userEvaluation, Request $request): JsonResponse
+    public function listAttemptsAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation', mapping: ['userEvaluationId' => 'id'])]
+    ResourceUserEvaluation $userEvaluation, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $userEvaluation, [], true);
 
@@ -80,11 +76,9 @@ class ResourceUserEvaluationController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("userEvaluation", class="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation", options={"mapping": {"userEvaluationId": "id"}})
-     */
     #[Route(path: '/attempts/{userEvaluationId}', name: 'apiv2_resource_evaluation_give_attempt', methods: ['PUT'])]
-    public function giveAnotherAttemptAction(ResourceUserEvaluation $userEvaluation): JsonResponse
+    public function giveAnotherAttemptAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation', mapping: ['userEvaluationId' => 'id'])]
+    ResourceUserEvaluation $userEvaluation): JsonResponse
     {
         $this->checkPermission('ADMINISTRATE', $userEvaluation, [], true);
 

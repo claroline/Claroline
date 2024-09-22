@@ -19,15 +19,12 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
- */
 #[Route(path: '/workspace/{workspace}/role')]
 class RoleController
 {
@@ -58,8 +55,11 @@ class RoleController
      * )
      */
     #[Route(path: '/configurable', name: 'apiv2_workspace_list_roles_configurable', methods: ['GET'])]
-    public function listConfigurableAction(Workspace $workspace, Request $request): JsonResponse
-    {
+    public function listConfigurableAction(
+        #[MapEntity(mapping: ['workspace' => 'uuid'])]
+        Workspace $workspace,
+        Request $request
+    ): JsonResponse {
         $this->checkPermission('OPEN', $workspace, [], true);
 
         return new JsonResponse(

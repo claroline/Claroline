@@ -14,10 +14,11 @@ namespace Claroline\CoreBundle\Messenger;
 use Claroline\AppBundle\API\Crud;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Messenger\Message\CreateWorkspace;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class CreateWorkspaceHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class CreateWorkspaceHandler
 {
     public function __construct(
         private readonly Crud $crud

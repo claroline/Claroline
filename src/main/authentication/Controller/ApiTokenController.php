@@ -15,7 +15,7 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Entity\ApiToken;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -48,7 +48,7 @@ class ApiTokenController extends AbstractCrudController
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             // only list tokens of the current token for non admins
             return [
-                'user' => $this->tokenStorage->getToken()->getUser()->getUuid(),
+                'user' => $this->tokenStorage->getToken()?->getUser()->getUuid(),
             ];
         }
 
@@ -66,7 +66,7 @@ class ApiTokenController extends AbstractCrudController
 
         $query = $request->query->all();
         $query['hiddenFilters'] = [
-            'user' => $this->tokenStorage->getToken()->getUser()->getUuid(),
+            'user' => $this->tokenStorage->getToken()?->getUser()->getUuid(),
         ];
 
         return new JsonResponse($this->crud->list(

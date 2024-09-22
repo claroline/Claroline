@@ -11,15 +11,15 @@
 
 namespace Claroline\TagBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Manager\TagManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: 'tag', name: 'apiv2_tag_')]
@@ -47,11 +47,10 @@ class TagController extends AbstractCrudController
     /**
      * List all objects linked to a Tag.
      *
-     *
-     * @EXT\ParamConverter("tag", class="Claroline\TagBundle\Entity\Tag", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/object', name: 'list_objects', methods: ['GET'])]
-    public function listObjectsAction(Tag $tag, Request $request): JsonResponse
+    public function listObjectsAction(#[MapEntity(class: 'Claroline\TagBundle\Entity\Tag', mapping: ['id' => 'uuid'])]
+    Tag $tag, Request $request): JsonResponse
     {
         return new JsonResponse(
             $this->crud->list(TaggedObject::class, array_merge(
@@ -65,8 +64,6 @@ class TagController extends AbstractCrudController
      * Adds a tag to a collection of taggable objects.
      * NB. If the tag does not exist, it will be created if the user has the correct rights.
      *
-     *
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     #[Route(path: '/{tag}/object', name: 'add_objects', methods: ['POST'])]
     public function addObjectsAction(string $tag, Request $request): JsonResponse
@@ -80,13 +77,10 @@ class TagController extends AbstractCrudController
         );
     }
 
-    /**
-     *
-     * @EXT\ParamConverter("tag", class="Claroline\TagBundle\Entity\Tag", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
+    
     #[Route(path: '/{id}/object', name: 'remove_objects', methods: ['DELETE'])]
-    public function removeObjectsAction(Tag $tag, Request $request): JsonResponse
+    public function removeObjectsAction(#[MapEntity(class: 'Claroline\TagBundle\Entity\Tag', mapping: ['id' => 'uuid'])]
+    Tag $tag, Request $request): JsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 

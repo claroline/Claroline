@@ -11,16 +11,16 @@
 
 namespace Claroline\ClacoFormBundle\Controller\API;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: '/clacoform_entry', name: 'apiv2_clacoformentry_')]
@@ -51,11 +51,9 @@ class EntryController extends AbstractCrudController
         return 'clacoform_entry';
     }
 
-    /**
-     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
-     */
     #[Route(path: '/clacoform/{clacoForm}/entries/list', name: 'claroform_list', methods: ['GET'])]
-    public function entriesListAction(ClacoForm $clacoForm, Request $request): JsonResponse
+    public function entriesListAction(#[MapEntity(class: 'Claroline\ClacoFormBundle\Entity\ClacoForm', mapping: ['clacoForm' => 'uuid'])]
+    ClacoForm $clacoForm, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
 
@@ -92,11 +90,9 @@ class EntryController extends AbstractCrudController
         return new JsonResponse($data, 200);
     }
 
-    /**
-     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
-     */
     #[Route(path: '/clacoform/{clacoForm}/file/upload', name: 'file_upload')]
-    public function uploadAction(ClacoForm $clacoForm, Request $request): JsonResponse
+    public function uploadAction(#[MapEntity(class: 'Claroline\ClacoFormBundle\Entity\ClacoForm', mapping: ['clacoForm' => 'uuid'])]
+    ClacoForm $clacoForm, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
 
@@ -113,11 +109,10 @@ class EntryController extends AbstractCrudController
     /**
      * Returns id of a random entry.
      *
-     *
-     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
     #[Route(path: '/{clacoForm}/random', name: 'random')]
-    public function randomAction(ClacoForm $clacoForm): JsonResponse
+    public function randomAction(#[MapEntity(class: 'Claroline\ClacoFormBundle\Entity\ClacoForm', mapping: ['clacoForm' => 'uuid'])]
+    ClacoForm $clacoForm): JsonResponse
     {
         $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
 
@@ -129,11 +124,10 @@ class EntryController extends AbstractCrudController
     /**
      * Changes status of an entry.
      *
-     *
-     * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      */
     #[Route(path: '/entry/{entry}/status/change', name: 'change_status')]
-    public function changeStatusAction(Entry $entry): JsonResponse
+    public function changeStatusAction(#[MapEntity(class: 'Claroline\ClacoFormBundle\Entity\Entry', mapping: ['entry' => 'uuid'])]
+    Entry $entry): JsonResponse
     {
         $clacoForm = $entry->getClacoForm();
 

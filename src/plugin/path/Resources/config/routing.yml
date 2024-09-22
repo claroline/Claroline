@@ -1,5 +1,5 @@
 innova_path:
     resource: "@InnovaPathBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

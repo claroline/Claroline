@@ -10,7 +10,7 @@ use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Claroline\SchedulerBundle\Manager\ScheduledTaskManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: '/scheduled_task', name: 'apiv2_scheduled_task_')]

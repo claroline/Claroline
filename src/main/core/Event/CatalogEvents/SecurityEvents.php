@@ -10,11 +10,6 @@ final class SecurityEvents
     public const USER_LOGIN = 'security.user_login';
 
     /**
-     * @Event("Claroline\CoreBundle\Event\Security\UserLogoutEvent")
-     */
-    public const USER_LOGOUT = 'security.user_logout';
-
-    /**
      * @Event("Claroline\CoreBundle\Event\Security\UserEnableEvent")
      */
     public const USER_ENABLE = 'security.user_enable';

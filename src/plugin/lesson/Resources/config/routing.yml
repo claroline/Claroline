@@ -1,5 +1,5 @@
 icap_lesson:
     resource: "@IcapLessonBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

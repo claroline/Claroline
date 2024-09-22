@@ -1,19 +1,19 @@
 services:
-    _defaults:
-        tags: [ messenger.message_handler ]
-
     Claroline\EvaluationBundle\Messenger\InitializeWorkspaceEvaluationsHandler:
+        tags: [messenger.message_handler]
         arguments:
             - '@messenger.default_bus'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
 
     Claroline\EvaluationBundle\Messenger\UpdateResourceEvaluationsHandler:
+        tags: [messenger.message_handler]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
 
     Claroline\EvaluationBundle\Messenger\RecomputeWorkspaceEvaluationsHandler:
+        tags: [messenger.message_handler]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'

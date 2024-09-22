@@ -128,7 +128,7 @@ class TeamSubscriber implements EventSubscriberInterface
                 $creatableResources = isset($data['creatableResources']) ? $data['creatableResources'] : [];
                 $directory = $this->manager->createTeamDirectory(
                     $team,
-                    $this->tokenStorage->getToken()->getUser(),
+                    $this->tokenStorage->getToken()?->getUser(),
                     $defaultResource,
                     $creatableResources
                 );

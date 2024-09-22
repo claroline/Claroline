@@ -54,7 +54,7 @@ class ScormListener extends ResourceComponent implements DownloadableResourceInt
         $tracking = [];
 
         /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if ($user instanceof User) {
             // retrieve user progression
             $evaluation = $this->serializer->serialize(

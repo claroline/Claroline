@@ -66,7 +66,7 @@ class WorkspaceFinder extends AbstractFinder
                         ));
 
                         /** @var User $currentUser */
-                        $currentUser = $this->tokenStorage->getToken()->getUser();
+                        $currentUser = $this->tokenStorage->getToken()?->getUser();
 
                         $qb->setParameter('uaId', $currentUser instanceof User ? $currentUser->getId() : null);
                         $qb->setParameter('cId', $currentUser instanceof User ? $currentUser->getId() : null);

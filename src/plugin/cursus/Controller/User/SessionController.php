@@ -6,7 +6,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CursusBundle\Entity\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -36,7 +36,7 @@ class SessionController
 
         $params = $request->query->all();
         $params['hiddenFilters'] = [];
-        $params['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
+        $params['hiddenFilters']['user'] = $this->tokenStorage->getToken()?->getUser()->getUuid();
         $params['hiddenFilters']['terminated'] = false;
 
         return new JsonResponse(
@@ -56,7 +56,7 @@ class SessionController
 
         $params = $request->query->all();
         $params['hiddenFilters'] = [];
-        $params['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
+        $params['hiddenFilters']['user'] = $this->tokenStorage->getToken()?->getUser()->getUuid();
         $params['hiddenFilters']['terminated'] = true;
 
         return new JsonResponse(
@@ -76,7 +76,7 @@ class SessionController
 
         $params = $request->query->all();
         $params['hiddenFilters'] = [];
-        $params['hiddenFilters']['userPending'] = $this->tokenStorage->getToken()->getUser()->getUuid();
+        $params['hiddenFilters']['userPending'] = $this->tokenStorage->getToken()?->getUser()->getUuid();
 
         return new JsonResponse(
             $this->finder->search(Session::class, $params)

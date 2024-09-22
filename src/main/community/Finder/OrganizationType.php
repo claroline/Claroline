@@ -40,8 +40,8 @@ class OrganizationType extends AbstractType
     public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
     {
         $organizations = [];
-        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
-            $user = $this->tokenStorage->getToken()->getUser();
+        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()?->getUser() instanceof User) {
+            $user = $this->tokenStorage->getToken()?->getUser();
             $organizations = [$user->getMainOrganization()];
             /*if (!in_array(PlatformRoles::ADMIN, $this->tokenStorage->getToken()->getRoleNames())) {
                 $organizations = $user->getOrganizations();

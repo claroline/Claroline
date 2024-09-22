@@ -53,7 +53,7 @@ class SessionSubscriber implements EventSubscriberInterface
     public function preCreate(CreateEvent $event): void
     {
         /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         /** @var Session $session */
         $session = $event->getObject();

@@ -50,7 +50,7 @@ class ImportManager
         $this->om->flush();
 
         // request import execution
-        $this->messageBus->dispatch(new ExecuteImport($importFile->getId()), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]);
+        $this->messageBus->dispatch(new ExecuteImport($importFile->getId()), [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]);
     }
 
     public function import(ImportFile $importFile): string

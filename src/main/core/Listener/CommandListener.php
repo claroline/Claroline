@@ -38,7 +38,9 @@ class CommandListener
             $user = null;
         }
 
-        $this->authenticator->createAdminToken($user);
+        if ($user) {
+            $this->authenticator->createAdminToken($user);
+        }
     }
 
     /**

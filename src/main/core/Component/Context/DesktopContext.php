@@ -40,22 +40,22 @@ class DesktopContext extends AbstractContext
         return !empty($this->securityManager->getCurrentUser());
     }
 
-    public function getAccessErrors(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
+    public function getAccessErrors(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
     {
         return [];
     }
 
-    public function isImpersonated(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
+    public function isImpersonated(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
     {
         return $this->securityManager->isImpersonated();
     }
 
-    public function isManager(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
+    public function isManager(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
     {
         return $this->securityManager->isAdmin();
     }
 
-    public function getRoles(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
+    public function getRoles(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
     {
         $currentUser = $this->securityManager->getCurrentUser();
         if (empty($currentUser)) {

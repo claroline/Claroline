@@ -61,7 +61,7 @@ class QuestionFinder extends AbstractFinder
             $qb->andWhere('(obj.creator = :user OR s.user = :user)');
         }
 
-        $qb->setParameter('user', $this->tokenStorage->getToken()->getUser());
+        $qb->setParameter('user', $this->tokenStorage->getToken()?->getUser());
 
         // process other filters
         foreach ($searches as $filterName => $filterValue) {

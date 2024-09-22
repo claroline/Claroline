@@ -1,5 +1,5 @@
 claro_youtube_video:
     resource: "@ClarolineYouTubeBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

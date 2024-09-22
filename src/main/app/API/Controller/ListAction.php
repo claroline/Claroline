@@ -5,7 +5,7 @@ namespace Claroline\AppBundle\API\Controller;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 trait ListAction
 {
@@ -14,8 +14,6 @@ trait ListAction
     abstract protected function getDefaultHiddenFilters(): array;
 
     /**
-     * @Route("/", name="list", methods={"GET"})
-     *
      * @ApiDoc(
      *     description="List the objects of class $class.",
      *     queryString={
@@ -27,6 +25,7 @@ trait ListAction
      *     response={"$list"}
      * )
      */
+    #[Route(path: '/', name: 'list', methods: ['GET'])]
     public function listAction(Request $request): JsonResponse
     {
         $options = static::getOptions();

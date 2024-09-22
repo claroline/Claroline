@@ -53,8 +53,8 @@ trait LogComponentTrait
 
     protected function getCurrentUser(): ?User
     {
-        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
-            return $this->tokenStorage->getToken()->getUser();
+        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()?->getUser() instanceof User) {
+            return $this->tokenStorage->getToken()?->getUser();
         }
 
         return null;

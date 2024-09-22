@@ -41,7 +41,7 @@ class ResourceListener
     public function load(LoadResourceEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         // Increment view count if viewer is not creator of the resource
         if (!($user instanceof User) || $user !== $resourceNode->getCreator()) {
@@ -213,7 +213,7 @@ class ResourceListener
             $this->manager->getById($data['destination']['autoId']) :
             null;
         /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         if (!empty($parent) && $user instanceof User) {
             $newNode = $this->crud->copy($resourceNode, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $parent]);

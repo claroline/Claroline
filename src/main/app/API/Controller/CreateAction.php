@@ -5,7 +5,7 @@ namespace Claroline\AppBundle\API\Controller;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 trait CreateAction
 {
@@ -14,8 +14,6 @@ trait CreateAction
     abstract protected function decodeRequest(Request $request): mixed;
 
     /**
-     * @Route("/", name="create", methods={"POST"})
-     *
      * @ApiDoc(
      *     description="Create an object class $class.",
      *     body={
@@ -24,6 +22,7 @@ trait CreateAction
      *     response={"$object"}
      * )
      */
+    #[Route(path: '/', name: 'create', methods: ['POST'])]
     public function createAction(Request $request): JsonResponse
     {
         $options = static::getOptions();

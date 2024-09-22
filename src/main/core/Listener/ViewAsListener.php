@@ -65,9 +65,9 @@ class ViewAsListener
                         if (PlatformRoles::ANONYMOUS === $viewAs) {
                             $this->authenticator->createAnonymousToken();
                         } else {
-                            $this->authenticator->createToken($this->tokenStorage->getToken()->getUser(), [PlatformRoles::USER, $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']);
+                            $this->authenticator->createToken($this->tokenStorage->getToken()?->getUser(), [PlatformRoles::USER, $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']);
 
-                            $event = new ViewAsEvent($this->tokenStorage->getToken()->getUser(), $viewAs);
+                            $event = new ViewAsEvent($this->tokenStorage->getToken()?->getUser(), $viewAs);
                             $this->eventDispatcher->dispatch($event, SecurityEvents::VIEW_AS);
                         }
                     } else {

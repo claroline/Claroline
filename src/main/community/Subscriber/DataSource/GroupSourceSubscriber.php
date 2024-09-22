@@ -60,7 +60,7 @@ class GroupSourceSubscriber implements EventSubscriberInterface
 
     private function getOrganizations(): array
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if ($user instanceof User) {
             return array_map(function (Organization $organization) {
                 return $organization->getUuid();

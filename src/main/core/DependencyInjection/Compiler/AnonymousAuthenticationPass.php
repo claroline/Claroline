@@ -19,7 +19,7 @@ class AnonymousAuthenticationPass implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         // replace standard symfony listener in order to populate AnonymousToken with a role `ROLE_ANONYMOUS`
-        $definition = $container->findDefinition('security.authentication.listener.anonymous');
-        $definition->setClass('Claroline\CoreBundle\Listener\AnonymousAuthenticationListener');
+        //$definition = $container->findDefinition('security.authentication.listener.anonymous');
+        //$definition->setClass('Claroline\CoreBundle\Listener\AnonymousAuthenticationListener');
     }
 }

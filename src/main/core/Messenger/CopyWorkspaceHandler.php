@@ -15,10 +15,11 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Messenger\Message\CopyWorkspace;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class CopyWorkspaceHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class CopyWorkspaceHandler
 {
     public function __construct(
         private readonly ObjectManager $om,

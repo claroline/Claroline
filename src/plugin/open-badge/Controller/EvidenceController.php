@@ -11,13 +11,13 @@
 
 namespace Claroline\OpenBadgeBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -46,11 +46,9 @@ class EvidenceController extends AbstractCrudController
         return ['get', 'create', 'update', 'list'];
     }
 
-    /**
-     * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
-     */
     #[Route(path: '/assertion/{assertion}', name: 'create_at', methods: ['POST'])]
-    public function createAtAction(Request $request, Assertion $assertion): JsonResponse
+    public function createAtAction(Request $request, #[MapEntity(class: 'Claroline\OpenBadgeBundle\Entity\Assertion', mapping: ['assertion' => 'uuid'])]
+    Assertion $assertion): JsonResponse
     {
         $object = $this->crud->create($this->getClass(), $this->decodeRequest($request));
         $object->setAssertion($assertion);
@@ -73,7 +71,7 @@ class EvidenceController extends AbstractCrudController
 
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             return [
-                'recipient' => $this->tokenStorage->getToken()->getUser()->getUuid(),
+                'recipient' => $this->tokenStorage->getToken()?->getUser()->getUuid(),
             ];
         }
 

@@ -1,6 +1,6 @@
 # JSON API
 claro_home:
   resource: "@ClarolineHomeBundle/Controller/"
-  type: annotation
+  type: attribute
   options:
     expose: true

@@ -10,6 +10,7 @@
 
 namespace Claroline\ScormBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -24,12 +25,12 @@ use Claroline\ScormBundle\Entity\ScoTracking;
 use Claroline\ScormBundle\Exception\InvalidScormArchiveException;
 use Claroline\ScormBundle\Manager\EvaluationManager;
 use Claroline\ScormBundle\Manager\ScormManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ScormController
@@ -48,11 +49,9 @@ class ScormController
         $this->authorization = $authorization;
     }
 
-    /**
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     */
     #[Route(path: '/workspace/{workspace}/scorm/archive/upload', name: 'apiv2_scorm_archive_upload')]
-    public function uploadAction(Workspace $workspace, Request $request): JsonResponse
+    public function uploadAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
+    Workspace $workspace, Request $request): JsonResponse
     {
         $files = $request->files->all();
 
@@ -70,11 +69,9 @@ class ScormController
         return new JsonResponse($data, 200);
     }
 
-    /**
-     * @EXT\ParamConverter("scorm", class="Claroline\ScormBundle\Entity\Scorm", options={"mapping": {"scorm": "uuid"}})
-     */
     #[Route(path: '/scorm/{scorm}', name: 'apiv2_scorm_update', methods: ['PUT'])]
-    public function updateAction(Scorm $scorm, Request $request): JsonResponse
+    public function updateAction(#[MapEntity(class: 'Claroline\ScormBundle\Entity\Scorm', mapping: ['scorm' => 'uuid'])]
+    Scorm $scorm, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $scorm->getResourceNode(), [], true);
 
@@ -83,14 +80,15 @@ class ScormController
         );
     }
 
-    /**
-     *
-     * @EXT\ParamConverter("sco", class="Claroline\ScormBundle\Entity\Sco", options={"mapping": {"sco": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
+    
     #[Route(path: '/sco/{sco}/commit', name: 'apiv2_scormscotracking_update', methods: ['PUT'])]
-    public function updateTrackingAction(Sco $sco, User $user, Request $request): JsonResponse
+    public function updateTrackingAction(#[MapEntity(class: 'Claroline\ScormBundle\Entity\Sco', mapping: ['sco' => 'uuid'])]
+    Sco $sco, #[CurrentUser] ?User $user, Request $request): JsonResponse
     {
+        if (null === $user) {
+            return new JsonResponse(null, 204);
+        }
+
         $scorm = $sco->getScorm();
         $this->checkPermission('OPEN', $scorm->getResourceNode(), [], true);
 
@@ -102,11 +100,9 @@ class ScormController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("scorm", class="Claroline\ScormBundle\Entity\Scorm", options={"mapping": {"scorm": "uuid"}})
-     */
     #[Route(path: '/scorm/{scorm}/trackings/list', name: 'apiv2_scormscotracking_list')]
-    public function listTrackingsAction(Scorm $scorm, Request $request): JsonResponse
+    public function listTrackingsAction(#[MapEntity(class: 'Claroline\ScormBundle\Entity\Scorm', mapping: ['scorm' => 'uuid'])]
+    Scorm $scorm, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $scorm->getResourceNode(), [], true);
 
@@ -122,11 +118,9 @@ class ScormController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("scorm", class="Claroline\ScormBundle\Entity\Scorm", options={"mapping": {"scorm": "uuid"}})
-     */
     #[Route(path: '/scorm/{scorm}/trackings/export', name: 'apiv2_scormscotracking_export')]
-    public function exportTrackingsAction(Scorm $scorm): StreamedResponse
+    public function exportTrackingsAction(#[MapEntity(class: 'Claroline\ScormBundle\Entity\Scorm', mapping: ['scorm' => 'uuid'])]
+    Scorm $scorm): StreamedResponse
     {
         $this->checkPermission('EDIT', $scorm->getResourceNode(), [], true);
 

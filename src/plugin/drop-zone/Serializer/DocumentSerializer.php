@@ -79,7 +79,7 @@ class DocumentSerializer
             /** @var Drop $drop */
             $drop = $this->dropRepo->findOneBy(['uuid' => $data['drop']]);
             $document->setDrop($drop);
-            $currentUser = $this->tokenStorage->getToken()->getUser();
+            $currentUser = $this->tokenStorage->getToken()?->getUser();
 
             if ($currentUser instanceof User) {
                 $document->setUser($currentUser);

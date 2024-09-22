@@ -6,10 +6,10 @@ use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 /**
  * Manages a users collection on an entity.
@@ -36,10 +36,9 @@ trait HasUsersTrait
      *     },
      *     response={"$list=Claroline\CoreBundle\Entity\User"}
      * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
     #[Route(path: '/{id}/user', name: 'list_users', methods: ['GET'], priority: 1)]
-    public function listUsersAction(string $id, User $user, Request $request): JsonResponse
+    public function listUsersAction(string $id, #[CurrentUser] ?User $user, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.
 

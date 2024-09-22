@@ -50,7 +50,7 @@ class TextSerializer
             $text->refreshUuid();
         }
 
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if (isset($data['raw'])) {
             $revision = new Revision();
             $revision->setContent($data['raw']);

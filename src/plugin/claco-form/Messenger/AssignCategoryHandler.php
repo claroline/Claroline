@@ -7,12 +7,13 @@ use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Manager\CategoryManager;
 use Claroline\ClacoFormBundle\Messenger\Message\AssignCategory;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
  * Assign a Category to all the eligible ClacoForm entries.
  */
-class AssignCategoryHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class AssignCategoryHandler
 {
     public function __construct(
         private readonly ObjectManager $om,

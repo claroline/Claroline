@@ -3,18 +3,22 @@ framework:
     router:
         utf8: true
     form: false
+    csrf_protection: false
     default_locale: en
+
     session:
-        name: claroline
+        #name: claroline
         handler_id: "claroline.session_handler.file" # Overridden by SessionConfigPass
         cookie_httponly: true
         cookie_secure: auto
         cookie_samesite: "%claroline.session_cookie_samesite%"
+
     cache:
         pools:
             doctrine.result_cache_pool:
                 adapter: cache.app
             doctrine.system_cache_pool:
                 adapter: cache.system
+
     php_errors:
         log: true

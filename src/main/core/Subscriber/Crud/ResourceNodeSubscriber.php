@@ -61,7 +61,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         $resourceNode->setCode($resourceNodeCode);
 
         // set the creator of the resource
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if ($user instanceof User) {
             $resourceNode->setCreator($user);
         }
@@ -167,7 +167,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         $newNode->setCode($resourceNodeCode);
 
         // set the creator of the copy
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if ($user instanceof User) {
             $newNode->setCreator($user);
         }

@@ -31,6 +31,7 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Messenger\Message\SendMessage;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -745,7 +746,7 @@ class ClacoFormManager
     {
         $clacoForm = $entry->getClacoForm();
         /** @var User|string $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         $isAnon = !$user instanceof User;
         $canOpen = $this->hasRight($clacoForm, 'OPEN');
         $canEdit = $this->hasRight($clacoForm, 'EDIT');
@@ -764,7 +765,7 @@ class ClacoFormManager
     public function hasEntryModerationRight(Entry $entry): bool
     {
         /** @var User|string $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         $clacoForm = $entry->getClacoForm();
         $canOpen = $this->hasRight($clacoForm, 'OPEN');
         $canEdit = $this->hasRight($clacoForm, 'EDIT');
@@ -795,8 +796,9 @@ class ClacoFormManager
         }
 
         $commentsRoles = $clacoForm->getCommentsRoles();
+        $tokenRoles = $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
         foreach ($commentsRoles as $commentsRole) {
-            if (in_array($commentsRole, $this->tokenStorage->getToken()->getRoleNames())) {
+            if (in_array($commentsRole, $tokenRoles)) {
                 return;
             }
         }
@@ -804,7 +806,7 @@ class ClacoFormManager
 
     public function checkCommentEditionRight(Comment $comment): void
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         $entry = $comment->getEntry();
         $clacoForm = $entry->getClacoForm();
 
@@ -834,7 +836,7 @@ class ClacoFormManager
     private function hasEntryOwnership(Entry $entry): bool
     {
         /** @var User|string $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         $isAnon = !$user instanceof User;
         $isOwner = !empty($entry->getUser()) && !$isAnon && $entry->getUser()->getId() === $user->getId();
         $isShared = $isAnon ? false : $this->isEntryShared($entry, $user);
@@ -855,8 +857,9 @@ class ClacoFormManager
 
         if ($clacoForm->getDisplayComments()) {
             $commentsDisplayRoles = $clacoForm->getCommentsDisplayRoles();
+            $tokenRoles = $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
             foreach ($commentsDisplayRoles as $commentsDisplayRole) {
-                if (in_array($commentsDisplayRole, $this->tokenStorage->getToken()->getRoleNames())) {
+                if (in_array($commentsDisplayRole, $tokenRoles)) {
                     $canViewComments = true;
                     break;
                 }

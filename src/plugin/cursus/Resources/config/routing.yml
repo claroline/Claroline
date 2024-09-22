@@ -1,6 +1,6 @@
 # JSON API
 claro_training:
     resource: "@ClarolineCursusBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

@@ -5,8 +5,10 @@ namespace Claroline\CoreBundle\Component\Context;
 use Claroline\AppBundle\Component\Context\AbstractContext;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Manager\SecurityManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -16,7 +18,8 @@ class PublicContext extends AbstractContext
 {
     public function __construct(
         private readonly SecurityManager $securityManager,
-        private readonly PlatformConfigurationHandler $config
+        private readonly PlatformConfigurationHandler $config,
+        private readonly ObjectManager $om
     ) {
     }
 
@@ -41,31 +44,30 @@ class PublicContext extends AbstractContext
             && (empty($this->securityManager->getCurrentUser()) || $this->securityManager->isAdmin());
     }
 
-    public function getAccessErrors(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
+    public function getAccessErrors(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
     {
         return [];
     }
 
-    public function isImpersonated(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
+    public function isImpersonated(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
     {
         return $this->securityManager->isImpersonated();
     }
 
-    public function isManager(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
+    public function isManager(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
     {
         return $this->securityManager->isAdmin();
     }
 
-    public function getRoles(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
+    public function getRoles(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
     {
-        $currentUser = $this->securityManager->getCurrentUser();
-        if (empty($currentUser)) {
-            return [];
+        $anonymousRole = $this->om->getRepository(Role::class)->findOneBy(['name' => PlatformRoles::ANONYMOUS]);
+
+        if ($anonymousRole) {
+            return [$anonymousRole];
         }
 
-        return array_filter($currentUser->getEntityRoles(), function (Role $role) {
-            return Role::PLATFORM === $role->getType();
-        });
+        return [];
     }
 
     public function getAdditionalData(?ContextSubjectInterface $contextSubject): array

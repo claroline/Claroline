@@ -12,9 +12,10 @@ use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class SendAnnouncementHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class SendAnnouncementHandler
 {
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher,

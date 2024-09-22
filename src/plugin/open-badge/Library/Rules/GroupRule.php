@@ -36,7 +36,7 @@ class GroupRule extends AbstractRule
         $now = new \DateTime();
 
         return $this->translator->trans('evidence_narrative_add_group', [
-            '%doer%' => $this->tokenStorage->getToken()->getUser()->getUsername(),
+            '%doer%' => $this->tokenStorage->getToken()?->getUser()->getUsername(),
             '%date%' => $now->format('Y-m-d H:i:s'),
         ], 'badge');
     }

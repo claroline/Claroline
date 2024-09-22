@@ -2,6 +2,7 @@
 
 namespace Icap\BlogBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
@@ -10,16 +11,15 @@ use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Manager\CommentManager;
 use Icap\BlogBundle\Serializer\CommentSerializer;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 /**
  *
- * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
  * @todo use CRUD
  */
 #[Route(path: 'blog/{blogId}/comments', options: ['expose' => true])]
@@ -42,12 +42,11 @@ class CommentController
      * Get post comments.
      *
      *
-     * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @return JsonResponse
      */
     #[Route(path: '/{postId}', name: 'apiv2_blog_comment_list', methods: ['GET'])]
-    public function listAction(Request $request, Blog $blog, Post $post, User $user = null)
+    public function listAction(Request $request, #[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog, #[MapEntity(class: 'Icap\BlogBundle\Entity\Post', mapping: ['postId' => 'uuid'])]
+    Post $post, #[CurrentUser] ?User $user = null)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
 
@@ -74,7 +73,7 @@ class CommentController
      * @return JsonResponse
      */
     #[Route(path: '/moderation/reported', name: 'apiv2_blog_comment_reported', methods: ['GET'])]
-    public function listCommentReportedAction(Request $request, Blog $blog)
+    public function listCommentReportedAction(Request $request, #[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
         if ($this->checkPermission('MODERATE', $blog->getResourceNode())
@@ -97,7 +96,7 @@ class CommentController
      * @return JsonResponse
      */
     #[Route(path: '/moderation/unpublished', name: 'apiv2_blog_comment_unpublished', methods: ['GET'])]
-    public function listCommentUnpublishedAction(Request $request, Blog $blog)
+    public function listCommentUnpublishedAction(Request $request, #[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
         if ($this->checkPermission('MODERATE', $blog->getResourceNode())
@@ -117,12 +116,11 @@ class CommentController
      * Create a post comment.
      *
      *
-     * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @return JsonResponse
      */
     #[Route(path: '/{postId}/new', name: 'apiv2_blog_comment_new', methods: ['POST'])]
-    public function createCommentAction(Request $request, Blog $blog, Post $post, User $user = null)
+    public function createCommentAction(Request $request, #[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog, #[MapEntity(class: 'Icap\BlogBundle\Entity\Post', mapping: ['postId' => 'uuid'])]
+    Post $post, #[CurrentUser] ?User $user = null)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
         if ($blog->isCommentsAuthorized() && ($blog->isAuthorizeAnonymousComment() || null !== $user)) {
@@ -142,12 +140,11 @@ class CommentController
      * Update post comment.
      *
      *
-     * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @return JsonResponse
      */
     #[Route(path: '/{commentId}/update', name: 'apiv2_blog_comment_update', methods: ['PUT'])]
-    public function updateCommentAction(Request $request, Blog $blog, Comment $comment, User $user = null)
+    public function updateCommentAction(Request $request, #[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog, #[MapEntity(class: 'Icap\BlogBundle\Entity\Comment', mapping: ['commentId' => 'uuid'])]
+    Comment $comment, #[CurrentUser] ?User $user = null)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
         // original author or admin can edit, anon cant edit
@@ -168,12 +165,11 @@ class CommentController
      * Publish post comment.
      *
      *
-     * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @return JsonResponse
      */
     #[Route(path: '/{commentId}/publish', name: 'apiv2_blog_comment_publish', methods: ['PUT'])]
-    public function publishCommentAction(Blog $blog, Comment $comment, User $user)
+    public function publishCommentAction(#[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog, #[MapEntity(class: 'Icap\BlogBundle\Entity\Comment', mapping: ['commentId' => 'uuid'])]
+    Comment $comment)
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
         $comment = $this->commentManager->publishComment($blog, $comment);
@@ -185,12 +181,11 @@ class CommentController
      * Unpublish post comment.
      *
      *
-     * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @return JsonResponse
      */
     #[Route(path: '/{commentId}/unpublish', name: 'apiv2_blog_comment_unpublish', methods: ['PUT'])]
-    public function unpublishCommentAction(Blog $blog, Comment $comment, User $user)
+    public function unpublishCommentAction(#[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog, #[MapEntity(class: 'Icap\BlogBundle\Entity\Comment', mapping: ['commentId' => 'uuid'])]
+    Comment $comment)
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
         $comment = $this->commentManager->unpublishComment($blog, $comment);
@@ -202,12 +197,11 @@ class CommentController
      * Report post comment.
      *
      *
-     * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @return JsonResponse
      */
     #[Route(path: '/{commentId}/report', name: 'apiv2_blog_comment_report', methods: ['PUT'])]
-    public function reportCommentAction(Blog $blog, Comment $comment, User $user)
+    public function reportCommentAction(#[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog, #[MapEntity(class: 'Icap\BlogBundle\Entity\Comment', mapping: ['commentId' => 'uuid'])]
+    Comment $comment)
     {
         $comment = $this->commentManager->reportComment($blog, $comment);
 
@@ -218,12 +212,11 @@ class CommentController
      * Delete post comment.
      *
      *
-     * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @return JsonResponse
      */
     #[Route(path: '/{commentId}/delete', name: 'apiv2_blog_comment_delete', methods: ['DELETE'])]
-    public function deleteCommentAction(Blog $blog, Comment $comment, User $user)
+    public function deleteCommentAction(#[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog, #[MapEntity(class: 'Icap\BlogBundle\Entity\Comment', mapping: ['commentId' => 'uuid'])]
+    Comment $comment, #[CurrentUser] ?User $user)
     {
         // original author or admin can edit, anon cant edit
         if ($blog->isCommentsAuthorized() && $this->isLoggedIn($user)) {
@@ -246,9 +239,9 @@ class CommentController
      *
      * @return bool
      */
-    private function isLoggedIn(User $user)
+    private function isLoggedIn(?User $user)
     {
-        return is_string($user) ? false : true;
+        return null === $user ? false : true;
     }
 
     /**

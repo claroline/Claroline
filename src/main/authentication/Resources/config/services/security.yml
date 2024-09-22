@@ -7,14 +7,10 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Listener\AuthenticationSuccessListener'
 
-    Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator:
+    Claroline\AuthenticationBundle\Security\Authentication\IpAuthenticator:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
-    Claroline\AuthenticationBundle\Security\Authentication\Guard\ApiTokenAuthenticator:
+    Claroline\AuthenticationBundle\Security\Authentication\ApiTokenAuthenticator:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    Claroline\AuthenticationBundle\Security\Logout\LogoutHandler:
-        arguments:
-            - '@event_dispatcher'

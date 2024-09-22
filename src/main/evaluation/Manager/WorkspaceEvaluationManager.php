@@ -53,7 +53,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             $this->messageBus->dispatch(
                 new RecomputeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
                     return $user->getId();
-                }, $users)), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]
+                }, $users)), [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]
             );
         }
     }
@@ -68,7 +68,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             $this->messageBus->dispatch(
                 new InitializeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
                     return $user->getId();
-                }, $users)), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]
+                }, $users)), [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]
             );
         }
     }

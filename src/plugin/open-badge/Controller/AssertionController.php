@@ -11,6 +11,7 @@
 
 namespace Claroline\OpenBadgeBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use LogicException;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Manager\PdfManager;
@@ -23,11 +24,10 @@ use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Manager\AssertionManager;
 use Claroline\OpenBadgeBundle\Manager\BadgeManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -69,7 +69,7 @@ class AssertionController extends AbstractCrudController
             throw new AccessDeniedException();
         }
 
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $filters = [
             'recipient' => $user->getUuid(),
@@ -86,11 +86,9 @@ class AssertionController extends AbstractCrudController
         return new JsonResponse($assertions);
     }
 
-    /**
-     * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
-     */
     #[Route(path: '/{assertion}/evidences', name: 'evidences', methods: ['GET'])]
-    public function listEvidencesAction(Request $request, Assertion $assertion): JsonResponse
+    public function listEvidencesAction(Request $request, #[MapEntity(class: 'Claroline\OpenBadgeBundle\Entity\Assertion', mapping: ['assertion' => 'uuid'])]
+    Assertion $assertion): JsonResponse
     {
         $this->checkPermission('OPEN', $assertion, [], true);
 
@@ -105,11 +103,10 @@ class AssertionController extends AbstractCrudController
     /**
      * Downloads pdf version of assertion.
      *
-     *
-     * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      */
     #[Route(path: '/{assertion}/pdf/download', name: 'pdf_download', methods: ['GET'])]
-    public function downloadPdfAction(Assertion $assertion): StreamedResponse
+    public function downloadPdfAction(#[MapEntity(class: 'Claroline\OpenBadgeBundle\Entity\Assertion', mapping: ['assertion' => 'uuid'])]
+    Assertion $assertion): StreamedResponse
     {
         $this->checkPermission('OPEN', $assertion, [], true);
 
@@ -147,12 +144,11 @@ class AssertionController extends AbstractCrudController
     /**
      * Transfer badges from one user to another.
      *
-     *
-     * @EXT\ParamConverter("userFrom", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"userFrom": "uuid"}})
-     * @EXT\ParamConverter("userTo", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"userTo": "uuid"}})
      */
     #[Route(path: '/transfer/{userFrom}/{userTo}/', name: 'transfer', methods: ['POST'])]
-    public function transferBadgesAction(User $userFrom, User $userTo): JsonResponse
+    public function transferBadgesAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\User', mapping: ['userFrom' => 'uuid'])]
+    User $userFrom, #[MapEntity(class: 'Claroline\CoreBundle\Entity\User', mapping: ['userTo' => 'uuid'])]
+    User $userTo): JsonResponse
     {
         $this->canAdministrate();
 

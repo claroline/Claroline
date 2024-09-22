@@ -70,8 +70,8 @@ class AppearanceTool extends AbstractTool
         }
 
         $currentUser = null;
-        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
-            $currentUser = $this->tokenStorage->getToken()->getUser();
+        if ($this->tokenStorage->getToken()?->getUser() instanceof User) {
+            $currentUser = $this->tokenStorage->getToken()?->getUser();
         }
 
         return [

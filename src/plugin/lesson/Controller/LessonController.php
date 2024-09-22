@@ -2,6 +2,7 @@
 
 namespace Icap\LessonBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -12,11 +13,10 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Repository\ChapterRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 
@@ -39,11 +39,9 @@ class LessonController
         $this->chapterRepo = $this->om->getRepository(Chapter::class);
     }
 
-    /**
-     * @EXT\ParamConverter("lesson", class="Icap\LessonBundle\Entity\Lesson", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/lesson/{id}', name: 'icap_lesson_update', methods: ['PUT'])]
-    public function updateAction(Lesson $lesson, Request $request): JsonResponse
+    public function updateAction(#[MapEntity(class: 'Icap\LessonBundle\Entity\Lesson', mapping: ['id' => 'uuid'])]
+    Lesson $lesson, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $lesson->getResourceNode(), [], true);
 
@@ -55,11 +53,9 @@ class LessonController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("lesson", class="Icap\LessonBundle\Entity\Lesson", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/lesson/{id}/pdf', name: 'icap_lesson_export_pdf')]
-    public function downloadPdfAction(Lesson $lesson): StreamedResponse
+    public function downloadPdfAction(#[MapEntity(class: 'Icap\LessonBundle\Entity\Lesson', mapping: ['id' => 'uuid'])]
+    Lesson $lesson): StreamedResponse
     {
         $this->checkPermission('EXPORT', $lesson->getResourceNode(), [], true);
 

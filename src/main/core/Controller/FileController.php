@@ -26,16 +26,17 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/file')]
 class FileController
@@ -74,11 +75,13 @@ class FileController
     #[Route(path: '/tinymce/destinations/{workspace}', name: 'claro_tinymce_file_destinations', defaults: ['workspace' => null], methods: ['GET'])]
     public function listTinyMceDestinationsAction(Workspace $workspace = null): JsonResponse
     {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         $data = $this->finder->search(
             ResourceNode::class, [
                 'filters' => [
                     'meta.uploadDestination' => true,
-                    'roles' => $this->tokenStorage->getToken()->getRoleNames(),
+                    'roles' => $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS],
                 ],
             ],
             [Options::SERIALIZE_MINIMAL]
@@ -90,12 +93,12 @@ class FileController
     /**
      * Creates a resource from uploaded file.
      *
-     *
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     #[Route(path: '/tinymce/upload', name: 'claro_tinymce_file_upload', methods: ['POST'])]
-    public function uploadTinyMceAction(Request $request, User $user): JsonResponse
+    public function uploadTinyMceAction(Request $request, #[CurrentUser] ?User $user): JsonResponse
     {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         // grab and validate user submission
         $content = $this->decodeRequest($request);
         if (empty($content) || empty($content['file']) || empty($content['parent'])) {

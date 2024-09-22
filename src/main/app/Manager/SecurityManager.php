@@ -19,7 +19,7 @@ class SecurityManager
 
     public function getCurrentUser(): ?User
     {
-        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $currentUser = $this->tokenStorage->getToken()?->getUser();
         if ($currentUser instanceof User) {
             return $currentUser;
         }
@@ -46,6 +46,6 @@ class SecurityManager
 
     public function isAdmin(): bool
     {
-        return in_array(PlatformRoles::ADMIN, $this->tokenStorage->getToken()->getRoleNames());
+        return in_array(PlatformRoles::ADMIN, $this->tokenStorage->getToken()?->getRoleNames() ?? []);
     }
 }

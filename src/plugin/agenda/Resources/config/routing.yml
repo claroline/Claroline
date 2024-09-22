@@ -1,5 +1,5 @@
 claro_event:
     resource: "@ClarolineAgendaBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

@@ -114,7 +114,7 @@ class RoleFinder extends AbstractFinder
                     if (!$isAdmin && $this->tokenStorage->getToken()) {
                         $qb->join('obj.users', 'cu');
                         $qb->andWhere('cu.id = :currentUserId');
-                        $qb->setParameter('currentUserId', $this->tokenStorage->getToken()->getUser()->getId());
+                        $qb->setParameter('currentUserId', $this->tokenStorage->getToken()?->getUser()->getId());
                     }
                     break;
                 default:

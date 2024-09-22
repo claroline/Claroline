@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -181,7 +182,7 @@ class RightsManager
 
     public function getCurrentPermissionArray(ResourceNode $resourceNode): array
     {
-        $roleNames = $this->tokenStorage->getToken()->getRoleNames();
+        $roleNames = $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
 
         $creatable = [];
         if ($this->isManager($resourceNode)) {

@@ -1,5 +1,5 @@
 claro_transfer:
     resource: "@ClarolineTransferBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

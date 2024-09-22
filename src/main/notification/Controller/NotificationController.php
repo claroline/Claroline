@@ -7,7 +7,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\NotificationBundle\Entity\Notification;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -32,7 +32,7 @@ class NotificationController
             return new JsonResponse(null, 204);
         }
 
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $notifications = $this->om->getRepository(Notification::class)->findBy(['user' => $user], ['createdAt' => 'DESC']);
 

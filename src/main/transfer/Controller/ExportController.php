@@ -11,6 +11,7 @@
 
 namespace Claroline\TransferBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -19,11 +20,10 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Security\ToolPermissions;
 use Claroline\TransferBundle\Entity\ExportFile;
 use Claroline\TransferBundle\Manager\ExportManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: '/transfer_export', name: 'apiv2_transfer_export_')]
@@ -49,11 +49,9 @@ class ExportController extends AbstractCrudController
         return ExportFile::class;
     }
 
-    /**
-     * @EXT\ParamConverter("workspace", options={"mapping": {"workspaceId": "uuid"}})
-     */
     #[Route(path: '/workspace/{workspaceId}', name: 'workspace_list', methods: ['GET'])]
-    public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
+    public function listByWorkspaceAction(#[MapEntity(mapping: ['workspaceId' => 'uuid'])]
+    Workspace $workspace, Request $request): JsonResponse
     {
         $this->checkPermission(ToolPermissions::getPermission('export', 'OPEN'), $workspace, [], true);
 
@@ -64,11 +62,9 @@ class ExportController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("exportFile", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/execute', name: 'execute', methods: ['POST'])]
-    public function executeAction(ExportFile $exportFile): JsonResponse
+    public function executeAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    ExportFile $exportFile): JsonResponse
     {
         $this->checkPermission('REFRESH', $exportFile, [], true);
 
@@ -80,11 +76,9 @@ class ExportController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("exportFile", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/download', name: 'download', methods: ['GET'])]
-    public function downloadAction(ExportFile $exportFile): BinaryFileResponse
+    public function downloadAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    ExportFile $exportFile): BinaryFileResponse
     {
         $this->checkPermission('OPEN', $exportFile, [], true);
 

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Workspace;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Finder\FinderFactory;
@@ -36,13 +37,12 @@ use Claroline\CoreBundle\Messenger\Message\CreateWorkspace;
 use Claroline\CoreBundle\Messenger\Message\ImportWorkspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -296,7 +296,7 @@ class WorkspaceController extends AbstractCrudController
         $this->messageBus->dispatch(new CreateWorkspace(
             $this->decodeRequest($request),
             $options['create'] ?? []
-        ), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]);
+        ), [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]);
 
         return new JsonResponse(
             null,
@@ -322,7 +322,7 @@ class WorkspaceController extends AbstractCrudController
                 $this->messageBus->dispatch(new CopyWorkspace(
                     $workspace->getId(),
                     $options
-                ), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]);
+                ), [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]);
             }
         }
 
@@ -349,7 +349,7 @@ class WorkspaceController extends AbstractCrudController
             $tempPath,
             !empty($request->request->get('name')) ? $request->request->get('name') : null,
             !empty($request->request->get('code')) ? $request->request->get('code') : null
-        ), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]);
+        ), [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]);
 
         return new JsonResponse(null, 204);
     }
@@ -364,11 +364,10 @@ class WorkspaceController extends AbstractCrudController
      *     }
      * )
      *
-     *
-     * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/export', name: 'export', methods: ['GET'])]
-    public function exportAction(Workspace $workspace): BinaryFileResponse
+    public function exportAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Workspace $workspace): BinaryFileResponse
     {
         $this->checkPermission('OPEN', $workspace, [], true);
 
@@ -445,22 +444,19 @@ class WorkspaceController extends AbstractCrudController
     /**
      * Submit access code.
      *
-     *
-     * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/unlock/{id}', name: 'apiv2_workspace_unlock', methods: ['POST'])]
-    public function unlockAction(Workspace $workspace, Request $request): JsonResponse
+    public function unlockAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Workspace $workspace, Request $request): JsonResponse
     {
         $this->restrictionsManager->unlock($workspace, json_decode($request->getContent(), true)['code']);
 
         return new JsonResponse(null, 204);
     }
 
-    /**
-     * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/users', name: 'list_users', methods: ['GET'])]
-    public function listUsersAction(Workspace $workspace, Request $request): JsonResponse
+    public function listUsersAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Workspace $workspace, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $workspace, [], true);
 
@@ -474,7 +470,7 @@ class WorkspaceController extends AbstractCrudController
         if (!$this->checkPermission('ROLE_ADMIN')) {
             $hiddenFilters['organizations'] = [];
 
-            $currentUser = $this->tokenStorage->getToken()->getUser();
+            $currentUser = $this->tokenStorage->getToken()?->getUser();
             if ($currentUser instanceof User) {
                 // only list users for the current user organizations
                 $hiddenFilters['organizations'] = array_map(function (Organization $organization) {
@@ -493,7 +489,7 @@ class WorkspaceController extends AbstractCrudController
     protected function getDefaultHiddenFilters(): array
     {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
             if ($user instanceof User) {
                 return [
                     'organizations' => array_map(function (Organization $organization) {

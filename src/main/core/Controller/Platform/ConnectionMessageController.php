@@ -11,13 +11,14 @@
 
 namespace Claroline\CoreBundle\Controller\Platform;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ConnectionMessageManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/connection_message', name: 'apiv2_connection_message_')]
 class ConnectionMessageController extends AbstractCrudController
@@ -39,18 +40,15 @@ class ConnectionMessageController extends AbstractCrudController
 
     /**
      * Discards a message for the next login.
-     *
-     *
-     * @EXT\ParamConverter(
-     *     "message",
-     *     class="Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     #[Route(path: '/{id}/discard', name: 'discard', methods: 'PUT')]
-    public function discardAction(ConnectionMessage $message, User $user): JsonResponse
+    public function discardAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage', mapping: ['id' => 'uuid'])]
+    ConnectionMessage $message, #[CurrentUser] ?User $user): JsonResponse
     {
+        if (null === $user) {
+            return new JsonResponse(null, 204);
+        }
+
         $this->manager->discard($message, $user);
 
         return new JsonResponse(null, 204);

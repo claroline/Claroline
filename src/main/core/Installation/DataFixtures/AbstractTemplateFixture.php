@@ -20,11 +20,10 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Environment;
 
-abstract class AbstractTemplateFixture extends AbstractFixture implements PostInstallInterface, PostUpdateInterface, ContainerAwareInterface, LoggerAwareInterface
+abstract class AbstractTemplateFixture extends AbstractFixture implements PostInstallInterface, PostUpdateInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 

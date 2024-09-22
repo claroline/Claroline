@@ -41,7 +41,7 @@ class ResourceAttemptSource implements EventSubscriberInterface
     public function getData(GetDataEvent $event)
     {
         /** @var User $currentUser */
-        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $currentUser = $this->tokenStorage->getToken()?->getUser();
 
         $options = $event->getOptions();
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {

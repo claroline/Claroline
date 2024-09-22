@@ -2,9 +2,9 @@
 
 namespace Claroline\AuthenticationBundle\Component\Log\Security;
 
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\UserLogoutEvent;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\LogBundle\Component\Log\AbstractSecurityLog;
+use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 class LogUserLogout extends AbstractSecurityLog
 {
@@ -16,17 +16,21 @@ class LogUserLogout extends AbstractSecurityLog
     public static function getSubscribedEvents(): array
     {
         return [
-            SecurityEvents::USER_LOGOUT => ['logUserLogout', 10],
+            LogoutEvent::class => ['logUserLogout', 10],
         ];
     }
 
-    public function logUserLogout(UserLogoutEvent $loginEvent): void
+    public function logUserLogout(LogoutEvent $event): void
     {
+        if (!$event->getToken()?->getUser() instanceof User) {
+            return;
+        }
+
         $this->log(
             $this->getTranslator()->trans('authentication.user_logout_message', [
-                '%user%' => $loginEvent->getUser(),
+                '%user%' => $event->getToken()?->getUser(),
             ], 'log'),
-            $loginEvent->getUser()
+            $event->getToken()?->getUser()
         );
     }
 }

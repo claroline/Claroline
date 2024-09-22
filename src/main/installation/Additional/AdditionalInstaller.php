@@ -18,13 +18,11 @@ use Claroline\InstallationBundle\Updater\NonReplayableUpdaterInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-abstract class AdditionalInstaller implements AdditionalInstallerInterface, ContainerAwareInterface, LoggerAwareInterface
+abstract class AdditionalInstaller implements AdditionalInstallerInterface, LoggerAwareInterface
 {
-    use ContainerAwareTrait;
     use LoggerAwareTrait;
+    protected ?ContainerInterface $container;
 
     /**
      * Whether updaters should be executed even if they have been already.
@@ -39,6 +37,11 @@ abstract class AdditionalInstaller implements AdditionalInstallerInterface, Cont
     public function __construct(ContainerInterface $updaterLocator = null)
     {
         $this->updaterLocator = $updaterLocator;
+    }
+
+    public function setContainer(ContainerInterface $container): void
+    {
+        $this->container = $container;
     }
 
     public function setShouldReplayUpdaters(bool $shouldReplayUpdaters): void

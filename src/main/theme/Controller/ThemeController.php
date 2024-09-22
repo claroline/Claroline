@@ -4,7 +4,7 @@ namespace Claroline\ThemeBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ThemeBundle\Entity\Theme;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/theme', name: 'apiv2_theme_')]
 class ThemeController extends AbstractCrudController

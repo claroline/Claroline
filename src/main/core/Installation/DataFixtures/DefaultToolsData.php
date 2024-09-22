@@ -20,10 +20,9 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\InstallationBundle\Fixtures\PostInstallInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class DefaultToolsData extends AbstractFixture implements PostInstallInterface, ContainerAwareInterface
+class DefaultToolsData extends AbstractFixture implements PostInstallInterface
 {
     private ContextProvider $contextProvider;
 

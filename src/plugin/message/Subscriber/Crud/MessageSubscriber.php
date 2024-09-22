@@ -30,7 +30,7 @@ class MessageSubscriber implements EventSubscriberInterface
     {
         /** @var Message $message */
         $message = $event->getObject();
-        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $currentUser = $this->tokenStorage->getToken()?->getUser();
 
         if ($currentUser instanceof User) {
             $message->setSender($currentUser);

@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Exception;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
@@ -11,23 +12,17 @@ use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Manager\AttemptManager;
 
-/**
- * Attempt Controller.
- *
- *
- * @EXT\ParamConverter("exercise", class="UJM\ExoBundle\Entity\Exercise", options={"mapping": {"exerciseId": "uuid"}})
- */
 #[Route(path: '/exercises/{exerciseId}/attempts')]
 class AttemptController
 {
@@ -48,11 +43,9 @@ class AttemptController
      * Opens an exercise, creating a new paper or re-using an unfinished one.
      * Also check that max attempts are not reached if needed.
      *
-     *
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
     #[Route(path: '', name: 'exercise_attempt_start', methods: ['POST'])]
-    public function startAction(Exercise $exercise, User $user = null): JsonResponse
+    public function startAction(#[MapEntity(mapping: ['exerciseId' => 'uuid'])] Exercise $exercise, #[CurrentUser] ?User $user = null): JsonResponse
     {
         $this->assertHasPermission('OPEN', $exercise);
 
@@ -74,13 +67,14 @@ class AttemptController
     /**
      * Submits answers to an Exercise.
      *
-     *
-     * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
     #[Route(path: '/{id}', name: 'exercise_attempt_submit', methods: ['PUT'])]
-    public function submitAnswersAction(Paper $paper, Request $request, User $user = null): JsonResponse
-    {
+    public function submitAnswersAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Paper $paper,
+        Request $request,
+        #[CurrentUser] ?User $user = null
+    ): JsonResponse {
         $this->assertHasPermission('OPEN', $paper->getExercise());
         $this->assertHasPaperAccess($paper, $user);
 
@@ -111,13 +105,13 @@ class AttemptController
     /**
      * Flags a paper as finished.
      *
-     *
-     * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
     #[Route(path: '/{id}/end', name: 'exercise_attempt_finish', methods: ['PUT'])]
-    public function finishAction(Paper $paper, User $user = null): JsonResponse
-    {
+    public function finishAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Paper $paper,
+        #[CurrentUser] ?User $user = null
+    ): JsonResponse {
         $this->assertHasPermission('OPEN', $paper->getExercise());
         $this->assertHasPaperAccess($paper, $user);
 
@@ -138,13 +132,16 @@ class AttemptController
      * Returns the content of a question hint, and records the fact that it has
      * been consulted within the context of a given paper.
      *
-     *
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/{questionId}/hints/{hintId}', name: 'exercise_attempt_hint_show', methods: ['GET'])]
-    public function useHintAction(Paper $paper, string $questionId, string $hintId, Request $request, User $user = null): JsonResponse
-    {
+    public function useHintAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Paper $paper,
+        string $questionId,
+        string $hintId,
+        Request $request,
+        #[CurrentUser] ?User $user = null
+    ): JsonResponse {
         $this->assertHasPermission('OPEN', $paper->getExercise());
         $this->assertHasPaperAccess($paper, $user);
 
@@ -160,12 +157,11 @@ class AttemptController
         return new JsonResponse($hint);
     }
 
-    /**
-     * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/attemtps', name: 'exercise_attempt_give', methods: ['PUT'])]
-    public function giveAttemptAction(Paper $paper): JsonResponse
-    {
+    public function giveAttemptAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Paper $paper
+    ): JsonResponse {
         $attempt = $this->attemptManager->getAttempt($paper);
 
         if ($attempt) {

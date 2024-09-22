@@ -1,5 +1,5 @@
 claro_peertube_video:
     resource: "@ClarolinePeerTubeBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

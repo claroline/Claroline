@@ -16,6 +16,7 @@ services:
         arguments:
             - '@Claroline\AppBundle\Manager\SecurityManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Component\Context\DesktopContext:
         parent: Claroline\AppBundle\Component\Context\AbstractContext
@@ -36,3 +37,4 @@ services:
         arguments:
             - '@Claroline\AppBundle\Manager\SecurityManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

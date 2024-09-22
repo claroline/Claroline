@@ -14,10 +14,9 @@ namespace Claroline\AudioPlayerBundle\Controller;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AudioPlayerBundle\Entity\Resource\SectionComment;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/audio/comment', name: 'apiv2_resource_audio_comment_')]
 class SectionCommentController extends AbstractCrudController
@@ -37,9 +36,6 @@ class SectionCommentController extends AbstractCrudController
         return ['list', 'get'];
     }
 
-    /**
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
     #[Route(path: '/{resourceNode}/list/{type}', name: 'list')]
     public function listByResourceAction(ResourceNode $resourceNode, string $type, Request $request): JsonResponse
     {

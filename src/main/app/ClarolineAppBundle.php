@@ -15,7 +15,6 @@ use Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use FOS\JsRoutingBundle\FOSJsRoutingBundle;
-use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -43,7 +42,6 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
             new FOSJsRoutingBundle(),
             new TwigBundle(),
             new StofDoctrineExtensionsBundle(),
-            new SensioFrameworkExtraBundle(),
             new BazingaJsTranslationBundle(),
         ];
     }
@@ -57,7 +55,6 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
             'twig' => false,
             'bazinga_js_translation' => false,
             'stof_doctrine_extensions' => false,
-            'sensio_framework_extra' => false,
 
             // one configuration file for every standard environment (prod, dev, test)
             'framework' => true,

@@ -1,6 +1,6 @@
 # JSON API
 claroline_audio_player_bundle_api:
     resource: "@ClarolineAudioPlayerBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

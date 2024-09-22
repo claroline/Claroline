@@ -1,5 +1,5 @@
 claro_quiz:
     resource: "@UJMExoBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

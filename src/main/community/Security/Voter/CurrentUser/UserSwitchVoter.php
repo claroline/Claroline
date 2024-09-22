@@ -12,9 +12,9 @@
 namespace Claroline\CommunityBundle\Security\Voter\CurrentUser;
 
 use Claroline\CoreBundle\Entity\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * This voter checks if the current user is allowed to usurp another user's account.

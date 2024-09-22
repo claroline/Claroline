@@ -1,5 +1,5 @@
 claro_privacy:
     resource: "@ClarolinePrivacyBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

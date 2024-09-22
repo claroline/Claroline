@@ -1,5 +1,5 @@
 claro_badge:
     resource: "@ClarolineOpenBadgeBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

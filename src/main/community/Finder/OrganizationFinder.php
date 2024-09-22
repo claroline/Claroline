@@ -66,7 +66,7 @@ class OrganizationFinder extends AbstractFinder
                     $qb->leftJoin('obj.userOrganizationReferences', 'ur2');
                     $qb->leftJoin('ur2.user', 'u2');
                     $qb->andWhere('ur2.user = (:currentUserId)');
-                    $qb->setParameter('currentUserId', $this->tokenStorage->getToken()->getUser() ? $this->tokenStorage->getToken()->getUser()->getId() : null);
+                    $qb->setParameter('currentUserId', $this->tokenStorage->getToken()?->getUser() ? $this->tokenStorage->getToken()?->getUser()->getId() : null);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);

@@ -1,5 +1,5 @@
 claro_notification:
     resource: "@ClarolineNotificationBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

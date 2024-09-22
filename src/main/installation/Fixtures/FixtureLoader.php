@@ -12,6 +12,7 @@
 namespace Claroline\InstallationBundle\Fixtures;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -24,13 +25,15 @@ class FixtureLoader implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    private $container;
-    private $executor;
+    private ContainerInterface $container;
+    private ORMExecutor $executor;
+    private Loader $loader;
 
     public function __construct(ContainerInterface $container, ORMExecutor $executor)
     {
         $this->container = $container;
         $this->executor = $executor;
+        $this->loader = new Loader();
     }
 
     /**
@@ -42,10 +45,10 @@ class FixtureLoader implements LoggerAwareInterface
     {
         // we must get a fresh instance of the loader (scope = prototype)
         // to avoid re-executing previously loaded fixtures
-        $loader = $this->container->get('claroline.symfony_fixture_loader');
-        $loader->loadFromDirectory("{$bundle->getPath()}/Installation/DataFixtures");
+        //$loader = $this->container->get('claroline.symfony_fixture_loader');
+        $this->loader->loadFromDirectory("{$bundle->getPath()}/Installation/DataFixtures");
 
-        $fixtures = $loader->getFixtures();
+        $fixtures = $this->loader->getFixtures();
 
         $toLoad = [];
         foreach ($fixtures as $fixture) {
@@ -54,6 +57,10 @@ class FixtureLoader implements LoggerAwareInterface
 
                 if (method_exists($fixture, 'setLogger')) {
                     $fixture->setLogger($this->logger);
+                }
+
+                if (method_exists($fixture, 'setContainer')) {
+                    $fixture->setContainer($this->container);
                 }
 
                 $toLoad[] = $fixture;

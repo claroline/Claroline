@@ -18,9 +18,10 @@ use Claroline\LogBundle\Messenger\Message\CreateMessageLog;
 use Claroline\LogBundle\Messenger\Message\CreateOperationalLog;
 use Claroline\LogBundle\Messenger\Message\CreateSecurityLog;
 use Claroline\LogBundle\Messenger\Message\SubmitLogs;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class SubmitLogsHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class SubmitLogsHandler
 {
     public function __construct(
         private readonly ObjectManager $om,

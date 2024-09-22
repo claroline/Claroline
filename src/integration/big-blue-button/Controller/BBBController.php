@@ -18,18 +18,15 @@ use Claroline\BigBlueButtonBundle\Entity\Recording;
 use Claroline\BigBlueButtonBundle\Manager\BBBManager;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @EXT\ParamConverter("bbb", class="Claroline\BigBlueButtonBundle\Entity\BBB", options={"mapping": {"id": "uuid"}})
- */
 #[Route(path: '/bbb/{id}')]
+#[EXT\ParamConverter('bbb', class: 'Claroline\BigBlueButtonBundle\Entity\BBB', options: ['mapping' => ['id' => 'uuid']])]
 class BBBController
 {
     use PermissionCheckerTrait;

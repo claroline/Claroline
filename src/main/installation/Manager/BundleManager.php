@@ -24,7 +24,6 @@ use Claroline\MigrationBundle\Manager\Manager;
 use Claroline\MigrationBundle\Migrator\Migrator;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -182,7 +181,7 @@ class BundleManager implements LoggerAwareInterface
                 $installer->setLogger($this->logger);
             }
 
-            if ($installer instanceof ContainerAwareInterface) {
+            if (method_exists($installer, 'setContainer')) {
                 $installer->setContainer($this->container);
             }
 

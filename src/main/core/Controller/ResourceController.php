@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Security\PlatformRoles;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -22,13 +24,12 @@ use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -67,7 +68,7 @@ class ResourceController
         }
 
         // gets the current user roles to check access restrictions
-        $userRoles = $this->tokenStorage->getToken()->getRoleNames();
+        $userRoles = $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
         $accessErrors = $this->restrictionsManager->getErrors($resourceNode, $userRoles);
         $isManager = $this->manager->isManager($resourceNode);
 
@@ -139,11 +140,10 @@ class ResourceController
     /**
      * Submit access code.
      *
-     *
-     * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/unlock/{id}', name: 'claro_resource_unlock', methods: ['POST'])]
-    public function unlockAction(ResourceNode $resourceNode, Request $request): JsonResponse
+    public function unlockAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    ResourceNode $resourceNode, Request $request): JsonResponse
     {
         $this->restrictionsManager->unlock($resourceNode, json_decode($request->getContent(), true)['code']);
 
@@ -192,11 +192,10 @@ class ResourceController
     /**
      * Executes an action on one resource.
      *
-     *
-     * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{action}/{id}', name: 'claro_resource_action')]
-    public function executeAction(string $action, ResourceNode $resourceNode, Request $request): Response
+    public function executeAction(string $action, #[MapEntity(mapping: ['id' => 'uuid'])]
+    ResourceNode $resourceNode, Request $request): Response
     {
         // check the requested action exists
         if (!$this->actionManager->support($resourceNode, $action, $request->getMethod())) {

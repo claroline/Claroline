@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Entity\Planning\PlannedObject;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 #[Route(path: '/planned_object', name: 'apiv2_planned_object_')]
@@ -47,7 +47,7 @@ class PlannedObjectController extends AbstractCrudController
 
         if (!isset($query['filters']['workspaces'])) {
             /** @var User $user */
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
             if ($user instanceof User) {
                 $hiddenFilters['user'] = $user->getUuid();
             } else {

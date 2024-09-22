@@ -1,6 +1,6 @@
 services:
     Claroline\AgendaBundle\Messenger\SendEventInvitationHandler:
-        tags: [ messenger.message_handler ]
+        tags: [messenger.message_handler]
         arguments:
             - '@event_dispatcher'
             - '@router'

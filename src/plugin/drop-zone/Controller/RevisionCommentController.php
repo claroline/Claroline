@@ -13,7 +13,7 @@ namespace Claroline\DropZoneBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\DropZoneBundle\Entity\RevisionComment;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/revisioncomment', name: 'apiv2_revisioncomment_')]
 class RevisionCommentController extends AbstractCrudController

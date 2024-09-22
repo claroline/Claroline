@@ -7,10 +7,10 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 /**
  * Manages a groups collection on an entity.
@@ -36,10 +36,9 @@ trait HasGroupsTrait
      *     },
      *     response={"$list=Claroline\CoreBundle\Entity\Group"}
      * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
     #[Route(path: '/{id}/group', name: 'list_groups', methods: ['GET'], priority: 1)]
-    public function listGroupsAction(string $id, User $user, Request $request): JsonResponse
+    public function listGroupsAction(string $id, #[CurrentUser] ?User $user, Request $request): JsonResponse
     {
         // no need to secure entrypoint, the CRUD will do it for us.
 
@@ -54,7 +53,7 @@ trait HasGroupsTrait
             // only list groups for the current user organizations
             $hiddenFilters['organizations'] = array_map(function (Organization $organization) {
                 return $organization->getUuid();
-            }, $user->getOrganizations());
+            }, $user ? $user->getOrganizations() : []);
         }
 
         return new JsonResponse(

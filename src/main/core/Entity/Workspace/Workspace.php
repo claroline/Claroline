@@ -81,7 +81,7 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
     /**
      * @var Collection<int, Role>
      */
-    #[ORM\OneToMany(mappedBy: 'workspace', targetEntity: Role::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: Role::class, mappedBy: 'workspace', fetch: 'EXTRA_LAZY')]
     private Collection $roles;
 
     
@@ -116,9 +116,8 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
     #[ORM\Column(name: 'is_personal', type: Types::BOOLEAN)]
     private bool $personal = false;
 
-    
-    #[ORM\JoinColumn(name: 'options_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\OneToOne(inversedBy: 'workspace', targetEntity: WorkspaceOptions::class, cascade: ['persist'])]
+
+    #[ORM\OneToOne(targetEntity: WorkspaceOptions::class, mappedBy: 'workspace', cascade: ['persist'])]
     private WorkspaceOptions $options;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]

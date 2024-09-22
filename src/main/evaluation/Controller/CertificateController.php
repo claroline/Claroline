@@ -11,6 +11,7 @@
 
 namespace Claroline\EvaluationBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
@@ -19,11 +20,10 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\EvaluationBundle\Manager\CertificateManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: '/certificate')]
@@ -57,11 +57,9 @@ class CertificateController
         throw new NotFoundHttpException('No workspace evaluation found.');
     }
 
-    /**
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     */
     #[Route(path: '/{workspace}/all', name: 'apiv2_workspace_download_all_certificates', methods: ['GET'])]
-    public function downloadAllCertificatesAction(Workspace $workspace): BinaryFileResponse
+    public function downloadAllCertificatesAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
+    Workspace $workspace): BinaryFileResponse
     {
         $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy([
             'workspace' => $workspace,
@@ -70,13 +68,11 @@ class CertificateController
         return $this->downloadCertificates($workspace, $workspaceEvaluations);
     }
 
-    /**
-     *
-     * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     */
+    
     #[Route(path: '/{workspace}/user/{user}', name: 'apiv2_workspace_download_user_certificate', methods: ['GET'])]
-    public function downloadUserCertificateAction(Workspace $workspace, User $user): BinaryFileResponse
+    public function downloadUserCertificateAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
+    Workspace $workspace, #[MapEntity(class: 'Claroline\CoreBundle\Entity\User', mapping: ['user' => 'uuid'])]
+    User $user): BinaryFileResponse
     {
         $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy([
             'workspace' => $workspace,
@@ -86,11 +82,9 @@ class CertificateController
         return $this->downloadCertificates($workspace, $workspaceEvaluations);
     }
 
-    /**
-     * @EXT\ParamConverter("evaluation", class="Claroline\CoreBundle\Entity\Workspace\Evaluation", options={"mapping": {"evaluation": "uuid"}})
-     */
     #[Route(path: '/{evaluation}/generate', name: 'apiv2_workspace_generate_user_certificate', methods: ['GET'])]
-    public function regenerateUserCertificateAction(Evaluation $evaluation): BinaryFileResponse
+    public function regenerateUserCertificateAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Evaluation', mapping: ['evaluation' => 'uuid'])]
+    Evaluation $evaluation): BinaryFileResponse
     {
         $this->checkPermission('OPEN', $evaluation, [], true);
 

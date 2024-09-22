@@ -2,6 +2,7 @@
 
 namespace Icap\WikiBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -10,12 +11,12 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Manager\SectionManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/wiki')]
 class SectionController
@@ -48,18 +49,12 @@ class SectionController
     }
 
     /**
-     * @EXT\ParamConverter(
-     *     "wiki",
-     *     class="Icap\WikiBundle\Entity\Wiki",
-     *     options={"mapping": {"wikiId": "uuid"}}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
      * @param User $user
      * @return JsonResponse
      */
     #[Route(path: '/{wikiId}/tree', name: 'apiv2_wiki_section_tree', methods: ['GET'])]
-    public function treeAction(Wiki $wiki, User $user = null)
+    public function treeAction(#[MapEntity(class: 'Icap\WikiBundle\Entity\Wiki', mapping: ['wikiId' => 'uuid'])]
+    Wiki $wiki, #[CurrentUser] ?User $user = null)
     {
         $resourceNode = $wiki->getResourceNode();
         $this->checkPermission('OPEN', $resourceNode, [], true);
@@ -71,11 +66,9 @@ class SectionController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("section", class="Icap\WikiBundle\Entity\Section", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/section/{id}/visible', name: 'apiv2_wiki_section_set_visibility', methods: ['PUT'])]
-    public function setVisibilityAction(Section $section, Request $request): JsonResponse
+    public function setVisibilityAction(#[MapEntity(class: 'Icap\WikiBundle\Entity\Section', mapping: ['id' => 'uuid'])]
+    Section $section, Request $request): JsonResponse
     {
         $resourceNode = $section->getWiki()->getResourceNode();
         $this->checkPermission('EDIT', $resourceNode, [], true);
@@ -90,16 +83,11 @@ class SectionController
     }
 
     /**
-     * @EXT\ParamConverter(
-     *     "section",
-     *     class="Icap\WikiBundle\Entity\Section",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @return JsonResponse
      */
     #[Route(path: '/section/{id}', name: 'apiv2_wiki_section_create', methods: ['POST'])]
-    public function createAction(Section $section, User $user, Request $request)
+    public function createAction(#[MapEntity(class: 'Icap\WikiBundle\Entity\Section', mapping: ['id' => 'uuid'])]
+    Section $section, #[CurrentUser] ?User $user, Request $request)
     {
         $wiki = $section->getWiki();
         $resourceNode = $wiki->getResourceNode();
@@ -116,16 +104,11 @@ class SectionController
     }
 
     /**
-     * @EXT\ParamConverter(
-     *     "section",
-     *     class="Icap\WikiBundle\Entity\Section",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @return JsonResponse
      */
     #[Route(path: '/section/{id}', name: 'apiv2_wiki_section_update', methods: ['PUT'])]
-    public function updateAction(Section $section, User $user, Request $request)
+    public function updateAction(#[MapEntity(class: 'Icap\WikiBundle\Entity\Section', mapping: ['id' => 'uuid'])]
+    Section $section, #[CurrentUser] ?User $user, Request $request)
     {
         $wiki = $section->getWiki();
         $resourceNode = $wiki->getResourceNode();
@@ -142,16 +125,11 @@ class SectionController
     }
 
     /**
-     * @EXT\ParamConverter(
-     *     "wiki",
-     *     class="Icap\WikiBundle\Entity\Wiki",
-     *     options={"mapping": {"wikiId": "uuid"}}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @return JsonResponse
      */
     #[Route(path: '/{wikiId}/section/delete', name: 'apiv2_wiki_section_delete', methods: ['DELETE'])]
-    public function deleteAction(Wiki $wiki, User $user, Request $request)
+    public function deleteAction(#[MapEntity(class: 'Icap\WikiBundle\Entity\Wiki', mapping: ['wikiId' => 'uuid'])]
+    Wiki $wiki, #[CurrentUser] ?User $user, Request $request)
     {
         $content = $this->decodeRequest($request);
 
@@ -168,16 +146,11 @@ class SectionController
     }
 
     /**
-     * @EXT\ParamConverter(
-     *     "wiki",
-     *     class="Icap\WikiBundle\Entity\Wiki",
-     *     options={"mapping": {"wikiId": "uuid"}}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @return JsonResponse
      */
     #[Route(path: '/{wikiId}/section/restore', name: 'apiv2_wiki_section_restore', methods: ['POST'])]
-    public function restoreAction(Wiki $wiki, Request $request)
+    public function restoreAction(#[MapEntity(class: 'Icap\WikiBundle\Entity\Wiki', mapping: ['wikiId' => 'uuid'])]
+    Wiki $wiki, Request $request)
     {
         $resourceNode = $wiki->getResourceNode();
         $this->checkPermission('EDIT', $resourceNode, [], true);
@@ -187,15 +160,11 @@ class SectionController
     }
 
     /**
-     * @EXT\ParamConverter(
-     *     "wiki",
-     *     class="Icap\WikiBundle\Entity\Wiki",
-     *     options={"mapping": {"wikiId": "uuid"}}
-     * )
      * @return JsonResponse
      */
     #[Route(path: '/{wikiId}/sections/deleted', name: 'apiv2_wiki_section_deleted_list', methods: ['GET'])]
-    public function deletedListAction(Wiki $wiki, Request $request)
+    public function deletedListAction(#[MapEntity(class: 'Icap\WikiBundle\Entity\Wiki', mapping: ['wikiId' => 'uuid'])]
+    Wiki $wiki, Request $request)
     {
         $resourceNode = $wiki->getResourceNode();
         $this->checkPermission('EDIT', $resourceNode, [], true);

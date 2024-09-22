@@ -12,7 +12,6 @@
 namespace Claroline\DropZoneBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\DropZoneBundle\Entity\RevisionComment;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -52,13 +51,12 @@ class RevisionCommentVoter extends AbstractVoter
         return $this->isGranted(self::EDIT, $resourceNode);
     }
 
-    private function isOwner(TokenInterface $token, RevisionComment $comment): bool
+    private function isOwner(?TokenInterface $token, RevisionComment $comment): bool
     {
         $isOwner = false;
-        /** @var User|string $user */
-        $user = $token->getUser();
+        $user = $token?->getUser();
 
-        if ('anon.' !== $user) {
+        if ($user) {
             $drop = $comment->getRevision()->getDrop();
             $dropUsers = $drop->getUsers();
 

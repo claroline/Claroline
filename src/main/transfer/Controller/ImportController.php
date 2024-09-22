@@ -11,6 +11,7 @@
 
 namespace Claroline\TransferBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -18,13 +19,12 @@ use Claroline\CoreBundle\Security\ToolPermissions;
 use Claroline\TransferBundle\Entity\ImportFile;
 use Claroline\TransferBundle\Manager\ImportManager;
 use Claroline\TransferBundle\Transfer\ImportProvider;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: '/transfer_import', name: 'apiv2_transfer_import_')]
@@ -50,11 +50,9 @@ class ImportController extends AbstractCrudController
         return ImportFile::class;
     }
 
-    /**
-     * @EXT\ParamConverter("workspace", options={"mapping": {"workspaceId": "uuid"}})
-     */
     #[Route(path: '/workspace/{workspaceId}', name: 'workspace_list', methods: ['GET'])]
-    public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
+    public function listByWorkspaceAction(#[MapEntity(mapping: ['workspaceId' => 'uuid'])]
+    Workspace $workspace, Request $request): JsonResponse
     {
         $this->checkPermission(ToolPermissions::getPermission('import', 'OPEN'), $workspace, [], true);
 
@@ -65,11 +63,9 @@ class ImportController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("importFile", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/execute', name: 'execute', methods: ['POST'])]
-    public function executeAction(ImportFile $importFile): JsonResponse
+    public function executeAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    ImportFile $importFile): JsonResponse
     {
         $this->checkPermission('EDIT', $importFile, [], true);
 
@@ -81,11 +77,9 @@ class ImportController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("importFile", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/log', name: 'log', methods: ['GET'])]
-    public function logAction(ImportFile $importFile): Response
+    public function logAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    ImportFile $importFile): Response
     {
         $this->checkPermission('OPEN', $importFile, [], true);
 

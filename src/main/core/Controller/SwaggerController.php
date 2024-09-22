@@ -17,7 +17,7 @@ use Claroline\AppBundle\Routing\Documentator;
 use Claroline\AppBundle\Routing\Finder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/swagger')]
 class SwaggerController

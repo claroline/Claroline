@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Controller\Resource;
 
+use Claroline\CoreBundle\Security\PlatformRoles;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -9,10 +11,9 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -47,11 +48,10 @@ class ResourceNodeController extends AbstractCrudController
      * Get the list of rights for a resource node.
      * This may be directly managed by the standard action system (rights edition already is) instead.
      *
-     *
-     * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/rights', name: 'get_rights')]
-    public function getRightsAction(ResourceNode $resourceNode): JsonResponse
+    public function getRightsAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Resource\ResourceNode', mapping: ['id' => 'uuid'])]
+    ResourceNode $resourceNode): JsonResponse
     {
         // only give access to users which have the right to edit the resource rights
         $rightsAction = $this->actionManager->get($resourceNode, 'rights');
@@ -95,7 +95,7 @@ class ResourceNodeController extends AbstractCrudController
         $options['hiddenFilters']['active'] = true;
         $options['hiddenFilters']['resourceTypeEnabled'] = true;
 
-        $roles = $this->token->getToken()->getRoleNames();
+        $roles = $this->token->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
         if (!in_array('ROLE_ADMIN', $roles) || empty($options['hiddenFilters']['parent'])) {
             $options['hiddenFilters']['roles'] = $roles;
         }
@@ -105,11 +105,9 @@ class ResourceNodeController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     */
     #[Route(path: '/{workspace}/removed', name: 'workspace_removed_list')]
-    public function listRemovedAction(Workspace $workspace, Request $request): JsonResponse
+    public function listRemovedAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
+    Workspace $workspace, Request $request): JsonResponse
     {
         return new JsonResponse(
             $this->crud->list(ResourceNode::class,

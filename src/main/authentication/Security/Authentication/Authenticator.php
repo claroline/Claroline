@@ -42,7 +42,7 @@ class Authenticator
      */
     public function isAuthenticatedUser(User $user): bool
     {
-        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $currentUser = $this->tokenStorage->getToken()?->getUser();
         if ($currentUser instanceof User && $currentUser->getId() === $user->getId()) {
             return true;
         }
@@ -69,9 +69,9 @@ class Authenticator
     public function createAdminToken(User $user = null): TokenInterface
     {
         if (!empty($user)) {
-            $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', [PlatformRoles::ADMIN]);
+            $token = new UsernamePasswordToken($user,'main', [PlatformRoles::ADMIN]);
         } else {
-            $token = new UsernamePasswordToken('admin', '', 'main', [PlatformRoles::ADMIN]);
+            $token = new UsernamePasswordToken(null, 'main', [PlatformRoles::ADMIN]);
         }
 
         $this->tokenStorage->setToken($token);
@@ -81,7 +81,7 @@ class Authenticator
 
     public function createToken(UserInterface $user, array $customRoles = []): TokenInterface
     {
-        $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', !empty($customRoles) ? $customRoles : $user->getRoles());
+        $token = new UsernamePasswordToken($user, $user->getPassword(), !empty($customRoles) ? $customRoles : $user->getRoles());
         $this->tokenStorage->setToken($token);
 
         return $token;

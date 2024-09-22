@@ -17,10 +17,9 @@ use Claroline\InstallationBundle\Fixtures\PreInstallInterface;
 use Claroline\InstallationBundle\Fixtures\PreUpdateInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class PlatformRolesData extends AbstractFixture implements PreInstallInterface, PreUpdateInterface, ContainerAwareInterface
+class PlatformRolesData extends AbstractFixture implements PreInstallInterface, PreUpdateInterface
 {
     private RoleManager $roleManager;
 

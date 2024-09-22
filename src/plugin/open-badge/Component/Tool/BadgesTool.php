@@ -49,7 +49,7 @@ class BadgesTool extends AbstractTool
 
     public function getStatus(string $context, ContextSubjectInterface $contextSubject = null): ?int
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if ($user instanceof User) {
             return $this->om->getRepository(Assertion::class)->countUserBadges($user, $contextSubject);
         }

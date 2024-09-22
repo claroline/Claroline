@@ -1,5 +1,5 @@
 claro_url:
     resource: "@HeVinciUrlBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

@@ -35,7 +35,7 @@ class ExampleSubscriber implements EventSubscriberInterface
     {
         /** @var Example $example */
         $example = $event->getObject();
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         if ($user instanceof User) {
             $example->setCreator($user);

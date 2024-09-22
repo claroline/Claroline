@@ -33,7 +33,7 @@ class MyResourceEvaluationSource implements EventSubscriberInterface
 
     public function getData(GetDataEvent $event): void
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $options = $event->getOptions();
 

@@ -1,21 +1,22 @@
 services:
-    _defaults:
-        tags: [messenger.message_handler]
-
     Claroline\CoreBundle\Messenger\ImportWorkspaceHandler:
+        tags: [messenger.message_handler]
         arguments:
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
     Claroline\CoreBundle\Messenger\CreateWorkspaceHandler:
+        tags: [messenger.message_handler]
         arguments:
             - '@Claroline\AppBundle\API\Crud'
 
     Claroline\CoreBundle\Messenger\CopyWorkspaceHandler:
+        tags: [messenger.message_handler]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
 
     Claroline\CoreBundle\Messenger\SendMessageHandler:
+        tags: [messenger.message_handler]
         arguments:
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'

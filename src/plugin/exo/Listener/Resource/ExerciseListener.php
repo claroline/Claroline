@@ -48,7 +48,7 @@ class ExerciseListener extends ResourceComponent implements EvaluatedResourceInt
     /** @var Exercise $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
-        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $currentUser = $this->tokenStorage->getToken()?->getUser();
 
         $canEdit = $this->authorization->isGranted('EDIT', $resource->getResourceNode());
 

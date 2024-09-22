@@ -6,7 +6,7 @@ use Claroline\AppBundle\Annotations\ApiDoc;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 trait UpdateAction
 {
@@ -16,20 +16,7 @@ trait UpdateAction
 
     abstract protected function decodeRequest(Request $request): mixed;
 
-    /**
-     * @Route("/{id}", name="update", requirements={"id"=".+"}, methods={"PUT"})
-     *
-     * @ApiDoc(
-     *     description="Update an object class $class.",
-     *     body={
-     *         "schema":"$schema"
-     *     },
-     *     parameters={
-     *          {"name": "id", "type": {"string"}, "description": "The object uuid"}
-     *     },
-     *     response={"$object"}
-     * )
-     */
+    #[Route(path: '/{id}', name: 'update', methods: ['PUT'])]
     public function updateAction(string $id, Request $request): JsonResponse
     {
         $data = $this->decodeRequest($request);

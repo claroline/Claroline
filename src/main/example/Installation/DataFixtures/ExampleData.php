@@ -19,11 +19,10 @@ use Claroline\InstallationBundle\Fixtures\PreInstallInterface;
 use Claroline\InstallationBundle\Fixtures\PreUpdateInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 
-class ExampleData extends AbstractFixture implements PreInstallInterface, PreUpdateInterface, ContainerAwareInterface
+class ExampleData extends AbstractFixture implements PreInstallInterface, PreUpdateInterface
 {
     private TempFileManager $tempManager;
     private FileManager $fileManager;

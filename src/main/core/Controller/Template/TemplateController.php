@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Controller\Template;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Template\Template;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/template', name: 'apiv2_template_')]
 class TemplateController extends AbstractCrudController

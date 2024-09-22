@@ -49,8 +49,8 @@ class RoleType extends AbstractType
         }
 
         // if not admin, only return the roles of the current user
-        $isAdmin = $this->tokenStorage->getToken() && in_array(PlatformRoles::ADMIN, $this->tokenStorage->getToken()->getRoleNames());
-        $tokenRoles = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getRoleNames() : [];
+        $tokenRoles = $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
+        $isAdmin = $this->tokenStorage->getToken() && in_array(PlatformRoles::ADMIN, $tokenRoles);
 
         if (!empty($roles)) {
             $roleNames = $isAdmin ? $roles : array_intersect($roles, $tokenRoles);

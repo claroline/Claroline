@@ -24,7 +24,7 @@ class UserFilter implements FinderFilterInterface
             $qb->andWhere("{$alias}.isRemoved = FALSE");
         }
 
-        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $currentUser = $this->tokenStorage->getToken()?->getUser();
         if (!$currentUser instanceof User || !$currentUser->isTechnical()) {
             $qb->andWhere("({$alias}.id IS NULL OR {$alias}.technical = false)");
         }

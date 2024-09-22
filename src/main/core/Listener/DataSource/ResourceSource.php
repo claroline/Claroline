@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ResourceSource
@@ -58,7 +59,7 @@ class ResourceSource
 
         $roles = DataSource::CONTEXT_HOME === $event->getContext() ?
             ['ROLE_ANONYMOUS'] :
-            $this->tokenStorage->getToken()->getRoleNames();
+            $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
 
         if (!in_array('ROLE_ADMIN', $roles)) {
             $options['hiddenFilters']['roles'] = $roles;

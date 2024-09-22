@@ -51,7 +51,7 @@ class ForumListener extends ResourceComponent
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
         /** @var User|string $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $validationUser = null;
         if ($user instanceof User) {
@@ -59,10 +59,10 @@ class ForumListener extends ResourceComponent
         }
 
         $myMessages = 0;
-        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
+        if ($this->tokenStorage->getToken()?->getUser() instanceof User) {
             $myMessages = $this->finder->fetch(Message::class, [
                 'forum' => $resource->getUuid(),
-                'creator' => $this->tokenStorage->getToken()->getUser()->getUuid(),
+                'creator' => $this->tokenStorage->getToken()?->getUser()->getUuid(),
             ], null, 0, 0, true);
         }
 

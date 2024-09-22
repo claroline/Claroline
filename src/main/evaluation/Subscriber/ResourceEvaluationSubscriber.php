@@ -63,7 +63,7 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
 
                 $this->messageBus->dispatch(
                     new UpdateResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_TODO),
-                    [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]
+                    [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]
                 );
             }
         }
@@ -85,12 +85,12 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
                 if ($resourceNode->isRequired()) {
                     $this->messageBus->dispatch(
                         new UpdateResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_TODO),
-                        [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]
+                        [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]
                     );
                 } else {
                     $this->messageBus->dispatch(
                         new UpdateResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_NOT_ATTEMPTED, false),
-                        [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]
+                        [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]
                     );
                 }
             }
@@ -100,10 +100,10 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
     public function open(LoadResourceEvent $event): void
     {
         // Update current user evaluation
-        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
+        if ($this->tokenStorage->getToken()?->getUser() instanceof User) {
             $this->manager->updateUserEvaluation(
                 $event->getResourceNode(),
-                $this->tokenStorage->getToken()->getUser(),
+                $this->tokenStorage->getToken()?->getUser(),
                 ['status' => AbstractEvaluation::STATUS_OPENED]
             );
         }

@@ -32,7 +32,7 @@ class ResourceAudioListener
     public function onResourceAudioLoad(LoadFileEvent $event): void
     {
         /** @var User|string $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $resourceNode = $event->getResource()->getResourceNode();
         $audioParams = $this->manager->getAudioParams($resourceNode);

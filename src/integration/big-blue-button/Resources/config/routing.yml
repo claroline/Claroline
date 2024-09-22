@@ -1,6 +1,6 @@
 # JSON API
 claroline_big_blue_button:
     resource: "@ClarolineBigBlueButtonBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

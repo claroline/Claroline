@@ -11,16 +11,16 @@
 
 namespace Claroline\CoreBundle\Controller\Template;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: '/template_type')]
@@ -52,11 +52,9 @@ class TemplateTypeController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("templateType", class="Claroline\CoreBundle\Entity\Template\TemplateType", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/open', name: 'apiv2_template_type_open', methods: ['GET'])]
-    public function openAction(TemplateType $templateType): JsonResponse
+    public function openAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Template\TemplateType', mapping: ['id' => 'uuid'])]
+    TemplateType $templateType): JsonResponse
     {
         $this->checkPermission('OPEN', $templateType, [], true);
 
@@ -71,11 +69,9 @@ class TemplateTypeController
         ]);
     }
 
-    /**
-     * @EXT\ParamConverter("templateType", class="Claroline\CoreBundle\Entity\Template\TemplateType", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/templates', name: 'apiv2_template_type_templates')]
-    public function listTemplatesAction(TemplateType $templateType, Request $request): JsonResponse
+    public function listTemplatesAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Template\TemplateType', mapping: ['id' => 'uuid'])]
+    TemplateType $templateType, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $templateType, [], true);
 

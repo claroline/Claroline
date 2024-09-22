@@ -1,5 +1,5 @@
 claro_core_api:
     resource: "@ClarolineCoreBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

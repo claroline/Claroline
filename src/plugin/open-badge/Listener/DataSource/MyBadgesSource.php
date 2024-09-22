@@ -19,7 +19,7 @@ class MyBadgesSource
 
     public function getData(GetDataEvent $event): void
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $badges = [];
         if ($user instanceof User) {

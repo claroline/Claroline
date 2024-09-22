@@ -7,24 +7,18 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\UpdateResourceEvaluations;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class UpdateResourceEvaluationsHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class UpdateResourceEvaluationsHandler
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var ResourceEvaluationManager */
-    private $resourceEvaluationManager;
-
     public function __construct(
-        ObjectManager $om,
-        ResourceEvaluationManager $resourceEvaluationManager
+        private readonly ObjectManager $om,
+        private readonly ResourceEvaluationManager $resourceEvaluationManager
     ) {
-        $this->om = $om;
-        $this->resourceEvaluationManager = $resourceEvaluationManager;
     }
 
-    public function __invoke(UpdateResourceEvaluations $initMessage)
+    public function __invoke(UpdateResourceEvaluations $initMessage): void
     {
         $resourceNode = $this->om->getRepository(ResourceNode::class)->find($initMessage->getResourceNodeId());
         if (empty($resourceNode)) {

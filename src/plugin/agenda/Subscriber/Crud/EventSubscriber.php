@@ -20,7 +20,7 @@ class EventSubscriber extends AbstractPlannedSubscriber
 
         /** @var Event $object */
         $object = $event->getObject();
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         if (!empty($object->getWorkspace())) {
             // add event to workspace planning

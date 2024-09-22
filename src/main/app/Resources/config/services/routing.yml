@@ -7,5 +7,5 @@ services:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\SchemaProvider'
-            - '@annotation_reader'
+            #- '@annotation_reader'
             - '@Claroline\AppBundle\Routing\Finder'

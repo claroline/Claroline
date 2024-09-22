@@ -1,6 +1,6 @@
 # JSON API
 claro_dropzone:
     resource: "@ClarolineDropZoneBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

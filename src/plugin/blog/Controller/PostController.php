@@ -2,25 +2,21 @@
 
 namespace Icap\BlogBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Manager\PostManager;
 use Icap\BlogBundle\Serializer\PostSerializer;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-/**
- *
- * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
- * @todo use CRUD
- */
 #[Route(path: 'blog/{blogId}/posts', options: ['expose' => true])]
 class PostController
 {
@@ -39,19 +35,16 @@ class PostController
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return 'post';
     }
 
     /**
      * Get unpublished blog posts.
-     *
-     *
-     * @return array
      */
     #[Route(path: '/moderation', name: 'apiv2_blog_post_list_unpublished', methods: ['GET'])]
-    public function listUnpublishedAction(Request $request, Blog $blog)
+    public function listUnpublishedAction(Request $request, #[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog): JsonResponse
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
         if ($this->checkPermission('MODERATE', $blog->getResourceNode())
@@ -73,12 +66,9 @@ class PostController
 
     /**
      * Get blog posts.
-     *
-     *
-     * @return array
      */
     #[Route(path: '', name: 'apiv2_blog_post_list', methods: ['GET'])]
-    public function listAction(Request $request, Blog $blog)
+    public function listAction(Request $request, #[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog): JsonResponse
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
 
@@ -100,14 +90,13 @@ class PostController
 
     /**
      * Get blog post.
-     *
-     *
-     * @EXT\ParamConverter("blog", options={"mapping": {"blogId": "uuid"}})
-     * @return array
      */
     #[Route(path: '/{postId}', name: 'apiv2_blog_post_get', methods: ['GET'])]
-    public function getAction(Request $request, Blog $blog, $postId)
-    {
+    public function getAction(
+        #[MapEntity(mapping: ['blogId' => 'uuid'])]
+        Blog $blog,
+        $postId
+    ): JsonResponse {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
         $post = $this->postManager->getPostByIdOrSlug($blog, $postId);
 
@@ -122,13 +111,9 @@ class PostController
 
     /**
      * Create blog post.
-     *
-     *
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @return array
      */
     #[Route(path: '/new', name: 'apiv2_blog_post_new', methods: ['POST', 'PUT'])]
-    public function createPostAction(Request $request, Blog $blog, User $user)
+    public function createPostAction(Request $request, #[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog, #[CurrentUser] ?User $user): JsonResponse
     {
         if ($this->checkPermission('EDIT', $blog->getResourceNode())
             || $this->checkPermission('POST', $blog->getResourceNode())) {
@@ -143,14 +128,10 @@ class PostController
 
     /**
      * Update blog post.
-     *
-     *
-     * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @return array
      */
     #[Route(path: '/update/{postId}', name: 'apiv2_blog_post_update', methods: ['PUT'])]
-    public function updatePostAction(Request $request, Blog $blog, Post $post, User $user)
+    public function updatePostAction(Request $request, #[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog, #[MapEntity(class: 'Icap\BlogBundle\Entity\Post', mapping: ['postId' => 'uuid'])]
+    Post $post, #[CurrentUser] ?User $user): JsonResponse
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
 
@@ -162,14 +143,10 @@ class PostController
 
     /**
      * Delete blog post.
-     *
-     *
-     * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @return array
      */
     #[Route(path: '/delete/{postId}', name: 'apiv2_blog_post_delete', methods: ['DELETE'])]
-    public function deletePostAction(Request $request, Blog $blog, Post $post, User $user)
+    public function deletePostAction(#[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog, #[MapEntity(class: 'Icap\BlogBundle\Entity\Post', mapping: ['postId' => 'uuid'])]
+    Post $post, #[CurrentUser] ?User $user): JsonResponse
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
         $this->postManager->deletePost($blog, $post, $user);
@@ -179,14 +156,10 @@ class PostController
 
     /**
      * Switch post publication state.
-     *
-     *
-     * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @return array
      */
     #[Route(path: '/publish/{postId}', name: 'apiv2_blog_post_publish', methods: ['PUT'])]
-    public function publishPostAction(Request $request, Blog $blog, Post $post, User $user)
+    public function publishPostAction(#[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog, #[MapEntity(class: 'Icap\BlogBundle\Entity\Post', mapping: ['postId' => 'uuid'])]
+    Post $post): JsonResponse
     {
         if ($this->checkPermission('EDIT', $blog->getResourceNode())
             || $this->checkPermission('MODERATE', $blog->getResourceNode())) {
@@ -200,14 +173,10 @@ class PostController
 
     /**
      * Pin post.
-     *
-     *
-     * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @return array
      */
     #[Route(path: '/pin/{postId}', name: 'apiv2_blog_post_pin', methods: ['PUT'])]
-    public function pinPostAction(Request $request, Blog $blog, Post $post, User $user)
+    public function pinPostAction(#[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog, #[MapEntity(class: 'Icap\BlogBundle\Entity\Post', mapping: ['postId' => 'uuid'])]
+    Post $post): JsonResponse
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
 
@@ -220,10 +189,10 @@ class PostController
      * Get all authors for a given blog.
      */
     #[Route(path: '/authors/get', name: 'apiv2_blog_post_authors', methods: ['GET'])]
-    public function getBlogAuthorsAction(Blog $blog)
+    public function getBlogAuthorsAction(#[MapEntity(mapping: ['blogId' => 'uuid'])] Blog $blog): JsonResponse
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
 
-        return $this->postManager->getAuthors($blog);
+        return new JsonResponse($this->postManager->getAuthors($blog));
     }
 }

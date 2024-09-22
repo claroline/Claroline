@@ -2,6 +2,7 @@
 
 namespace Claroline\CursusBundle\Controller\Registration;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
@@ -11,10 +12,9 @@ use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Manager\SessionManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -54,12 +54,11 @@ class SessionGroupController extends AbstractCrudController
     /**
      * List registered groups to sessions.
      *
-     *
-     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}', name: 'list', methods: ['GET'])]
     #[Route(path: '/{id}/{sessionId}', name: 'list', methods: ['GET'])]
-    public function listByCourseAction(Request $request, Course $course, string $sessionId = null): JsonResponse
+    public function listByCourseAction(Request $request, #[MapEntity(class: 'Claroline\CursusBundle\Entity\Course', mapping: ['id' => 'uuid'])]
+    Course $course, string $sessionId = null): JsonResponse
     {
         $this->checkPermission('REGISTER', $course, [], true);
 
@@ -80,11 +79,10 @@ class SessionGroupController extends AbstractCrudController
     /**
      * Move user's registration from a session to another.
      *
-     *
-     * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"targetId": "uuid"}})
      */
     #[Route(path: '/move/{type}/{targetId}', name: 'move', methods: ['PUT'])]
-    public function moveAction(Session $session, string $type, Request $request): JsonResponse
+    public function moveAction(#[MapEntity(class: 'Claroline\CursusBundle\Entity\Session', mapping: ['targetId' => 'uuid'])]
+    Session $session, string $type, Request $request): JsonResponse
     {
         $this->checkPermission('REGISTER', $session, [], true);
 
@@ -135,7 +133,7 @@ class SessionGroupController extends AbstractCrudController
         // only list participants of the same organization
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             /** @var User $user */
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
 
             // filter by organizations
             $organizations = [];

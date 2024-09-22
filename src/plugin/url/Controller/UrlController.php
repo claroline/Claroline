@@ -13,7 +13,7 @@ namespace HeVinci\UrlBundle\Controller;
 
 use Claroline\CoreBundle\Manager\Template\PlaceholderManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/url')]
 class UrlController

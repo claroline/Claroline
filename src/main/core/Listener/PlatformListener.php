@@ -115,7 +115,7 @@ class PlatformListener
         }
 
         $roles = $this->config->getParameter('changelogMessage.roles');
-        if (empty(array_intersect($this->tokenStorage->getToken()->getRoleNames(), $roles))) {
+        if (empty(array_intersect($this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS], $roles))) {
             return [];
         }
 
@@ -131,7 +131,7 @@ class PlatformListener
             return [];
         }
 
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $locale = $this->localeManager->getLocale($user);
         $content = $this->versionManager->getChangelogs($locale).'<br/><br/>';

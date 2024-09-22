@@ -73,7 +73,7 @@ class ServerManager
 
         $server = $this->getServer($serverName);
         if ($server) {
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
 
             $checksum = sha1("getMeetings${server['token']}");
             $url = "${server['url']}/bigbluebutton/api/getMeetings?checksum=$checksum";

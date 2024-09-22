@@ -17,9 +17,10 @@ use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Messenger\Message\SendMessage;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class SendMessageHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class SendMessageHandler
 {
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher,

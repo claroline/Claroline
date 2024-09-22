@@ -46,7 +46,7 @@ class ResourceWidgetSerializer
     public function serialize(ResourceWidget $widget, array $options = []): array
     {
         /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         $resourceNode = null;
 
         $dataSource = $widget->getWidgetInstance()->getDataSource();

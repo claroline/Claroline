@@ -3,17 +3,17 @@ bazinga_js_translation:
     resource: "@BazingaJsTranslationBundle/Resources/config/routing/routing.yml"
 
 fos_js_routing:
-    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing-sf4.xml"
 
 # App routes
 claro_app:
     resource: "@ClarolineAppBundle/Controller/PlatformController.php"
-    type: annotation
+    type: attribute
     options: { expose: true }
 
 # Components routes
 claro_component:
     resource: "@ClarolineAppBundle/Controller/Component/"
-    type: annotation
+    type: attribute
     options:
         expose: true

@@ -17,9 +17,10 @@ use Claroline\SchedulerBundle\Event\ExecuteScheduledTaskEvent;
 use Claroline\SchedulerBundle\Manager\ScheduledTaskManager;
 use Claroline\SchedulerBundle\Messenger\Message\ExecuteScheduledTask;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class ExecuteScheduledTaskHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class ExecuteScheduledTaskHandler
 {
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher,

@@ -11,16 +11,16 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: '/role', name: 'apiv2_role_')]
@@ -50,11 +50,10 @@ class RoleController extends AbstractCrudController
     /**
      * Get a role rights for the given context.
      *
-     *
-     * @EXT\ParamConverter("role", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/rights/{contextType}/{contextId}', name: 'rights_list', defaults: ['contextId' => null], methods: ['GET'])]
-    public function listRightsAction(Role $role, string $contextType, string $contextId = null): JsonResponse
+    public function listRightsAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Role $role, string $contextType, string $contextId = null): JsonResponse
     {
         $this->checkPermission('OPEN', $role, [], true);
 
@@ -71,11 +70,10 @@ class RoleController extends AbstractCrudController
     /**
      * Manages workspace tools accesses for a Role.
      *
-     *
-     * @EXT\ParamConverter("role", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/rights/{contextType}/{contextId}', name: 'rights_update', defaults: ['contextId' => null], methods: ['PUT'])]
-    public function updateRightsAction(Request $request, Role $role, string $contextType, string $contextId = null): JsonResponse
+    public function updateRightsAction(Request $request, #[MapEntity(mapping: ['id' => 'uuid'])]
+    Role $role, string $contextType, string $contextId = null): JsonResponse
     {
         $this->checkPermission('ADMINISTRATE', $role, [], true);
 

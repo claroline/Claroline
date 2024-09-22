@@ -2,6 +2,7 @@
 
 namespace Claroline\AnnouncementBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
@@ -17,22 +18,14 @@ use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Manages announces of an announcement resource.
- *
- *
- * @EXT\ParamConverter(
- *      "aggregate",
- *      class="Claroline\AnnouncementBundle\Entity\AnnouncementAggregate",
- *      options={"mapping": {"aggregateId": "uuid"}}
- * )
  */
 #[Route(path: '/announcement/{aggregateId}', options: ['expose' => true])]
 class AnnouncementController
@@ -62,7 +55,7 @@ class AnnouncementController
      * Creates a new announcement.
      */
     #[Route(path: '/', name: 'claro_announcement_create', methods: ['POST'])]
-    public function createAction(AnnouncementAggregate $aggregate, Request $request): JsonResponse
+    public function createAction(#[MapEntity(mapping: ['aggregateId' => 'uuid'])] AnnouncementAggregate $aggregate, Request $request): JsonResponse
     {
         $announcement = new Announcement();
         $announcement->setAggregate($aggregate);
@@ -78,15 +71,9 @@ class AnnouncementController
     /**
      * Updates an existing announcement.
      *
-     *
-     * @EXT\ParamConverter(
-     *      "announcement",
-     *      class="Claroline\AnnouncementBundle\Entity\Announcement",
-     *      options={"mapping": {"id": "uuid"}}
-     * )
      */
     #[Route(path: '/{id}', name: 'claro_announcement_update', methods: ['PUT'])]
-    public function updateAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request): JsonResponse
+    public function updateAction(#[MapEntity(mapping: ['id' => 'uuid'])] Announcement $announcement, Request $request): JsonResponse
     {
         $this->crud->update($announcement, $this->decodeRequest($request), [Options::PERSIST_TAG]);
 
@@ -98,16 +85,14 @@ class AnnouncementController
     /**
      * Deletes an announcement.
      *
-     *
-     * @EXT\ParamConverter(
-     *      "announcement",
-     *      class="Claroline\AnnouncementBundle\Entity\Announcement",
-     *      options={"mapping": {"id": "uuid"}}
-     * )
      */
     #[Route(path: '/{id}', name: 'claro_announcement_delete', methods: ['DELETE'])]
-    public function deleteAction(AnnouncementAggregate $aggregate, Announcement $announcement): JsonResponse
-    {
+    public function deleteAction(
+        #[MapEntity(mapping: ['aggregateId' => 'uuid'])]
+        AnnouncementAggregate $aggregate,
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Announcement $announcement
+    ): JsonResponse {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
 
         $this->crud->delete($announcement);
@@ -118,16 +103,14 @@ class AnnouncementController
     /**
      * Sends an announcement (in current implementation, it's sent by email).
      *
-     *
-     * @EXT\ParamConverter(
-     *      "announcement",
-     *      class="Claroline\AnnouncementBundle\Entity\Announcement",
-     *      options={"mapping": {"id": "uuid"}}
-     * )
      */
     #[Route(path: '/{id}/validate', name: 'claro_announcement_validate', methods: ['GET'])]
-    public function validateSendAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request): JsonResponse
-    {
+    public function validateSendAction(
+        #[MapEntity(mapping: ['aggregateId' => 'uuid'])]
+        AnnouncementAggregate $aggregate,
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Announcement $announcement, Request $request
+    ): JsonResponse {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
         $ids = isset($request->query->all()['filters']) ? $request->query->all()['filters']['roles'] : [];
 
@@ -155,12 +138,13 @@ class AnnouncementController
         return new JsonResponse($this->crud->list(User::class, $parameters, [Options::SERIALIZE_MINIMAL]));
     }
 
-    /**
-     * @EXT\ParamConverter("announcement", class="Claroline\AnnouncementBundle\Entity\Announcement", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/pdf', name: 'claro_announcement_export_pdf', methods: ['GET'])]
-    public function downloadPdfAction(AnnouncementAggregate $aggregate, Announcement $announcement): StreamedResponse
-    {
+    public function downloadPdfAction(
+        #[MapEntity(mapping: ['aggregateId' => 'uuid'])]
+        AnnouncementAggregate $aggregate,
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Announcement $announcement
+    ): StreamedResponse {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
 
         $fileName = TextNormalizer::toKey($aggregate->getResourceNode()->getName());

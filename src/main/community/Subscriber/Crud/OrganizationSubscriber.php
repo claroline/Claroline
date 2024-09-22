@@ -34,7 +34,7 @@ class OrganizationSubscriber implements EventSubscriberInterface
     public function preCreate(CreateEvent $event): void
     {
         $organization = $event->getObject();
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         if ($user instanceof User) {
             $organization->addManager($user);

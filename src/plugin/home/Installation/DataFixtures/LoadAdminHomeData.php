@@ -18,7 +18,6 @@ use Claroline\HomeBundle\Entity\Type\WidgetsTab;
 use Claroline\InstallationBundle\Fixtures\PostInstallInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -26,7 +25,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Create a default tab in administration Home and
  * add a widget to display the list of available tools.
  */
-class LoadAdminHomeData extends AbstractFixture implements PostInstallInterface, ContainerAwareInterface
+class LoadAdminHomeData extends AbstractFixture implements PostInstallInterface
 {
     private TranslatorInterface $translator;
     private SerializerProvider $serializer;

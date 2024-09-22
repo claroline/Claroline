@@ -1,5 +1,5 @@
 claro_evaluation:
     resource: "@ClarolineEvaluationBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

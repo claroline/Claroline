@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Manager\DataSourceManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Exposes platform widgets.

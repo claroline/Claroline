@@ -44,7 +44,7 @@ class AnnouncementSubscriber implements EventSubscriberInterface
         $announcement->setUpdatedAt(new \DateTime());*/
 
         if (empty($announcement->getCreator())) {
-            $currentUser = $this->tokenStorage->getToken()->getUser();
+            $currentUser = $this->tokenStorage->getToken()?->getUser();
             if ($currentUser instanceof User) {
                 // only get authenticated user
                 $announcement->setCreator($currentUser);

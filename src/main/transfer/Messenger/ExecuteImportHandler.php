@@ -16,23 +16,19 @@ use Claroline\TransferBundle\Entity\ImportFile;
 use Claroline\TransferBundle\Entity\TransferFileInterface;
 use Claroline\TransferBundle\Manager\ImportManager;
 use Claroline\TransferBundle\Messenger\Message\ExecuteImport;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class ExecuteImportHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class ExecuteImportHandler
 {
-    private ObjectManager $om;
-    private ImportManager $importManager;
-
     public function __construct(
-        ObjectManager $om,
-        ImportManager $importManager
+        private readonly ObjectManager $om,
+        private readonly ImportManager $importManager
     ) {
-        $this->om = $om;
-        $this->importManager = $importManager;
     }
 
-    public function __invoke(ExecuteImport $importMessage)
+    public function __invoke(ExecuteImport $importMessage): void
     {
         $importFile = $this->om->getRepository(ImportFile::class)->find($importMessage->getImportId());
         if (empty($importFile) || empty($importFile->getFile())) {

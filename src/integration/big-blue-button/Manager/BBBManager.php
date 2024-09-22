@@ -38,9 +38,9 @@ class BBBManager
     public function getMeetingUrl(BBB $bbb, bool $moderator = false, string $username = null): string
     {
         $user = null;
-        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
+        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()?->getUser() instanceof User) {
             /** @var User $user */
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()?->getUser();
         }
 
         $meetingId = $bbb->getUuid();

@@ -10,14 +10,15 @@ use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Send an invitation to an event to a user.
  */
-class SendEventInvitationHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class SendEventInvitationHandler
 {
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher,

@@ -35,7 +35,7 @@ class PdfListener
     {
         /** @var File $pdf */
         $pdf = $event->getResource();
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $event->setData([
             'userEvaluation' => $user instanceof User ? $this->serializer->serialize(

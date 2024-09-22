@@ -29,7 +29,7 @@ class MyFavouritesSource
 
     public function getData(GetDataEvent $event)
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $badges = [];
         if ($user instanceof User) {

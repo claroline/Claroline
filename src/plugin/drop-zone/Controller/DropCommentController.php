@@ -13,7 +13,7 @@ namespace Claroline\DropZoneBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\DropZoneBundle\Entity\DropComment;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/dropcomment', name: 'apiv2_dropcomment_')]
 class DropCommentController extends AbstractCrudController

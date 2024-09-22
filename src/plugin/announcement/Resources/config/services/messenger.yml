@@ -1,6 +1,6 @@
 services:
     Claroline\AnnouncementBundle\Messenger\SendAnnouncementHandler:
-        tags: [ messenger.message_handler ]
+        tags: [messenger.message_handler]
         arguments:
             - '@event_dispatcher'
             - '@Claroline\CoreBundle\Library\RoutingHelper'

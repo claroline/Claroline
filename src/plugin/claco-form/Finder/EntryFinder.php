@@ -43,7 +43,7 @@ class EntryFinder extends AbstractFinder
         $clacoFormRepo = $this->om->getRepository(ClacoForm::class);
 
         // TODO : rights should not be checked here
-        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $currentUser = $this->tokenStorage->getToken()?->getUser();
 
         $isAnon = !$currentUser instanceof User;
         $canEdit = false;

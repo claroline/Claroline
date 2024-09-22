@@ -60,7 +60,7 @@ class WorkspaceContext extends AbstractContext
         return true;
     }
 
-    public function isManager(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
+    public function isManager(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
     {
         /** @var Workspace $workspace */
         $workspace = $contextSubject;
@@ -68,7 +68,7 @@ class WorkspaceContext extends AbstractContext
         return $this->manager->isManager($workspace, $token);
     }
 
-    public function getAccessErrors(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
+    public function getAccessErrors(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
     {
         /** @var Workspace $workspace */
         $workspace = $contextSubject;
@@ -76,12 +76,12 @@ class WorkspaceContext extends AbstractContext
         return $this->restrictionsManager->getErrors($workspace, $token->getUser() instanceof User ? $token->getUser() : null);
     }
 
-    public function isImpersonated(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
+    public function isImpersonated(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
     {
         return $this->manager->isImpersonated($token);
     }
 
-    public function getRoles(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
+    public function getRoles(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
     {
         /** @var Workspace $workspace */
         $workspace = $contextSubject;
@@ -93,7 +93,7 @@ class WorkspaceContext extends AbstractContext
     {
         /** @var Workspace $workspace */
         $workspace = $contextSubject;
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $userEvaluation = null;
         if ($user instanceof User) {

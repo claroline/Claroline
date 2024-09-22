@@ -11,14 +11,14 @@
 
 namespace Claroline\ClacoFormBundle\Controller\API;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: '/clacoformkeyword', name: 'apiv2_clacoformkeyword_')]
@@ -47,11 +47,9 @@ class KeywordController extends AbstractCrudController
         return 'clacoformkeyword';
     }
 
-    /**
-     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
-     */
     #[Route(path: '/clacoform/{clacoForm}/keywords/list', name: 'list')]
-    public function listByResourceAction(ClacoForm $clacoForm, Request $request): JsonResponse
+    public function listByResourceAction(#[MapEntity(class: 'Claroline\ClacoFormBundle\Entity\ClacoForm', mapping: ['clacoForm' => 'uuid'])]
+    ClacoForm $clacoForm, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
 
@@ -69,11 +67,10 @@ class KeywordController extends AbstractCrudController
     /**
      * Returns the keyword.
      *
-     *
-     * @EXT\ParamConverter( "clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
     #[Route(path: '/{clacoForm}/keyword/{value}/excluding/uuid/{uuid}', name: 'check_unique', defaults: ['uuid' => null])]
-    public function getKeywordByNameExcludingUuidAction(ClacoForm $clacoForm, $value, string $uuid = null): JsonResponse
+    public function getKeywordByNameExcludingUuidAction(#[MapEntity(class: 'Claroline\ClacoFormBundle\Entity\ClacoForm', mapping: ['clacoForm' => 'uuid'])]
+    ClacoForm $clacoForm, $value, string $uuid = null): JsonResponse
     {
         $this->checkPermission('EDIT', $clacoForm->getResourceNode(), [], true);
 

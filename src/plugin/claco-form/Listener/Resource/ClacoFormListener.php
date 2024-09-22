@@ -50,7 +50,7 @@ class ClacoFormListener extends ResourceComponent
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
         /** @var User|string $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         $isAnon = !$user instanceof User;
         $myEntries = $isAnon ? [] : $this->clacoFormManager->getUserEntries($resource, $user);
         $canGeneratePdf = !$isAnon;

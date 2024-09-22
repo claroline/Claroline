@@ -1,6 +1,6 @@
 {
   "Bad credentials.": "Votre identifiant ou votre mot de passe est incorrect.",
-
+  "The presented password is invalid.": "Votre identifiant ou votre mot de passe est incorrect.",
   "password_strength.very_weak": "Très faible",
   "password_strength.weak": "Faible",
   "password_strength.medium": "Moyen",
@@ -27,7 +27,7 @@
   "security.remove_role": "Suppression d'un rôle",
   "security.remove_role.desc": "Le Rôle role vient d'être retiré de l'utilisateur username.",
   "security.user_login": "Connexion utilisateur",
-  "security.user_logout": "Deconnexion utilisateur",
+  "security.user_logout": "Déconnexion utilisateur",
   "security.user_enable": "Activation utilisateur",
   "security.user_disable": "Désactivation utilisateur",
   "security.forgot_password": "Mot de passe oublié",

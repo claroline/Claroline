@@ -15,10 +15,11 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Messenger\Message\ImportWorkspace;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class ImportWorkspaceHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class ImportWorkspaceHandler
 {
     public function __construct(
         private readonly WorkspaceManager $manager

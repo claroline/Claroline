@@ -54,7 +54,7 @@ class PathSubscriber extends ResourceComponent implements EvaluatedResourceInter
     /** @var Path $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $evaluation = null;
         $resourceEvaluations = [];
@@ -155,7 +155,7 @@ class PathSubscriber extends ResourceComponent implements EvaluatedResourceInter
     private function createResourcesCopyDirectory(ResourceNode $destination, string $pathName): AbstractResource
     {
         /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $resourcesDir = new Directory();
         $resourcesDir->setName($pathName.' ('.$this->translator->trans('resources', [], 'platform').')');
@@ -198,7 +198,7 @@ class PathSubscriber extends ResourceComponent implements EvaluatedResourceInter
     private function copyResource(ResourceNode $resourceNode, ResourceNode $destination, array $copiedResources): array
     {
         /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         if (!isset($copiedResources[$resourceNode->getUuid()])) {
             // resource not already copied, create a new copy

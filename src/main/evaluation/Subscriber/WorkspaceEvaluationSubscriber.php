@@ -75,7 +75,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
         }
 
         // Update current user evaluation
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if ($user instanceof User) {
             $this->manager->updateUserEvaluation(
                 $event->getContextSubject(),
@@ -92,7 +92,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     {
         $role = $event->getRole();
 
-        if (!$this->tokenStorage->getToken()->getUser() instanceof User) {
+        if (!$this->tokenStorage->getToken()?->getUser() instanceof User) {
             return;
         }
 
@@ -104,7 +104,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
             $this->messageBus->dispatch(
                 new InitializeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
                     return $user->getId();
-                }, $event->getUsers())), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]
+                }, $event->getUsers())), [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]
             );
         }
     }

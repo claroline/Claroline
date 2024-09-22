@@ -11,6 +11,7 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CommunityBundle\Entity\Team;
@@ -20,12 +21,12 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Security\ToolPermissions;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/team', name: 'apiv2_team_')]
 class TeamController extends AbstractCrudController
@@ -49,12 +50,12 @@ class TeamController extends AbstractCrudController
         return 'team';
     }
 
-    /**
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/workspace/{id}/teams', name: 'workspace_list', methods: ['GET'])]
-    public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
-    {
+    public function listByWorkspaceAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Workspace $workspace,
+        Request $request
+    ): JsonResponse {
         $this->checkToolAccess($workspace, 'open');
         $params = $request->query->all();
 
@@ -68,13 +69,10 @@ class TeamController extends AbstractCrudController
         );
     }
 
-    /**
-     *
-     * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     */
+    
     #[Route(path: '/{id}/users/{role}', name: 'list_users', methods: ['GET'])]
-    public function listUsersAction(Team $team, string $role, User $user, Request $request): JsonResponse
+    public function listUsersAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Team $team, string $role, #[CurrentUser] ?User $user, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $team, [], true);
 
@@ -96,11 +94,9 @@ class TeamController extends AbstractCrudController
         );
     }
 
-    /**
-     * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/users/{role}', name: 'register', methods: ['PATCH'])]
-    public function registerAction(Team $team, string $role, Request $request): JsonResponse
+    public function registerAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Team $team, string $role, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $team, [], true);
 
@@ -133,11 +129,9 @@ class TeamController extends AbstractCrudController
         return new JsonResponse(null, 200);
     }
 
-    /**
-     * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
-     */
     #[Route(path: '/{id}/users/{role}', name: 'unregister', methods: ['DELETE'])]
-    public function unregisterAction(Team $team, string $role, Request $request): JsonResponse
+    public function unregisterAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Team $team, string $role, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $team, [], true);
 
@@ -152,13 +146,10 @@ class TeamController extends AbstractCrudController
         return new JsonResponse(null, 200);
     }
 
-    /**
-     *
-     * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
+    
     #[Route(path: '/{id}/register', name: 'self_register', methods: ['PUT'])]
-    public function selfRegisterAction(Team $team, User $user): JsonResponse
+    public function selfRegisterAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Team $team, #[CurrentUser] ?User $user): JsonResponse
     {
         $this->checkPermission('OPEN', $team, [], true);
 
@@ -182,13 +173,10 @@ class TeamController extends AbstractCrudController
         return new JsonResponse(null, 200);
     }
 
-    /**
-     *
-     * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
+    
     #[Route(path: '/{id}/unregister', name: 'self_unregister', methods: ['DELETE'])]
-    public function selfUnregisterAction(Team $team, User $user): JsonResponse
+    public function selfUnregisterAction(#[MapEntity(mapping: ['id' => 'uuid'])]
+    Team $team, #[CurrentUser] ?User $user): JsonResponse
     {
         $this->checkPermission('OPEN', $team, [], true);
 

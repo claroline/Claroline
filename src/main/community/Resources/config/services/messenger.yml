@@ -1,8 +1,6 @@
 services:
-    _defaults:
-        tags: [messenger.message_handler]
-
     Claroline\CommunityBundle\Messenger\DisableInactiveUsersHandler:
+        tags: [messenger.message_handler]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\UserManager'

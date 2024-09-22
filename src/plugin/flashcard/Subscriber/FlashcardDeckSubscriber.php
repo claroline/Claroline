@@ -38,7 +38,7 @@ class FlashcardDeckSubscriber extends ResourceComponent implements EvaluatedReso
     /** @var FlashcardDeck $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $evaluation = null;
         $attempt = null;

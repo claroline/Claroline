@@ -39,7 +39,7 @@ class DropzoneListener extends ResourceComponent implements EvaluatedResourceInt
     /** @var Dropzone $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if (!$user instanceof User) {
             $user = null;
         }

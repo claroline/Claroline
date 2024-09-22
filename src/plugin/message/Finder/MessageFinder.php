@@ -34,8 +34,8 @@ class MessageFinder extends AbstractFinder
         $qb->join('obj.userMessages', 'um');
         $qb->leftJoin('um.user', 'currentUser');
 
-        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
-            $userId = $this->tokenStorage->getToken()->getUser()->getId();
+        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()?->getUser() instanceof User) {
+            $userId = $this->tokenStorage->getToken()?->getUser()->getId();
             $qb->andWhere('currentUser.id = :userId');
             $qb->setParameter('userId', $userId);
         }

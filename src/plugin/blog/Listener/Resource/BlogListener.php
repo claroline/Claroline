@@ -97,7 +97,7 @@ class BlogListener extends ResourceComponent
             }
 
             $post->setBlog($resource);
-            $post->setCreator($this->tokenStorage->getToken()->getUser());
+            $post->setCreator($this->tokenStorage->getToken()?->getUser());
 
             foreach ($postData['comments'] as $commentData) {
                 /** @var Comment $comment */

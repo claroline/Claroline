@@ -15,24 +15,18 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Messenger\Message\DisableInactiveUsers;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\UserManager;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class DisableInactiveUsersHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class DisableInactiveUsersHandler
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var UserManager */
-    private $manager;
-
     public function __construct(
-        ObjectManager $om,
-        UserManager $manager
+        private readonly ObjectManager $om,
+        private readonly UserManager $manager
     ) {
-        $this->om = $om;
-        $this->manager = $manager;
     }
 
-    public function __invoke(DisableInactiveUsers $message)
+    public function __invoke(DisableInactiveUsers $message): void
     {
         $users = $this->om->getRepository(User::class)->findInactiveSince($message->getLastActivity());
 

@@ -14,7 +14,7 @@ use Claroline\CoreBundle\Manager\LocaleManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
 
@@ -42,8 +42,8 @@ class PlatformController
     public function indexAction(Request $request): Response
     {
         $currentUser = null;
-        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
-            $currentUser = $this->tokenStorage->getToken()->getUser();
+        if ($this->tokenStorage->getToken()?->getUser() instanceof User) {
+            $currentUser = $this->tokenStorage->getToken()?->getUser();
         }
 
         $userPreferences = $this->clientManager->getUserPreferences($currentUser);
@@ -92,7 +92,7 @@ class PlatformController
     #[Route(path: '/locale/{locale}', name: 'claroline_locale_change')]
     public function changeLocaleAction(Request $request, string $locale): RedirectResponse
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if ($user instanceof User) {
             $this->localeManager->setUserLocale($locale);
         }

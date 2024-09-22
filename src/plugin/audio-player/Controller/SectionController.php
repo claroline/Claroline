@@ -13,7 +13,7 @@ namespace Claroline\AudioPlayerBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AudioPlayerBundle\Entity\Resource\Section;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/audio/section', name: 'apiv2_resource_audio_section_')]
 class SectionController extends AbstractCrudController

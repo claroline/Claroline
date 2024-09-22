@@ -1,5 +1,5 @@
 claro_scheduler:
     resource: "@ClarolineSchedulerBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

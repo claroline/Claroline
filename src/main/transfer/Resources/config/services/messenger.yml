@@ -1,12 +1,12 @@
 services:
     Claroline\TransferBundle\Messenger\ExecuteExportHandler:
-        tags: [ messenger.message_handler ]
+        tags: [messenger.message_handler]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\TransferBundle\Manager\ExportManager'
 
     Claroline\TransferBundle\Messenger\ExecuteImportHandler:
-        tags: [ messenger.message_handler ]
+        tags: [messenger.message_handler]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\TransferBundle\Manager\ImportManager'

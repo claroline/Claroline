@@ -1,5 +1,5 @@
 claro_flashcard:
     resource: "@ClarolineFlashcardBundle/Controller/"
-    type: annotation
+    type: attribute
     options:
         expose: true

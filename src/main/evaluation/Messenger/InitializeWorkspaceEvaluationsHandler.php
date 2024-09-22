@@ -9,29 +9,20 @@ use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\InitializeWorkspaceEvaluations;
 use Claroline\EvaluationBundle\Messenger\Message\UpdateResourceEvaluations;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class InitializeWorkspaceEvaluationsHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class InitializeWorkspaceEvaluationsHandler
 {
-    /** @var MessageBusInterface */
-    private $messageBus;
-    /** @var ObjectManager */
-    private $om;
-    /** @var WorkspaceEvaluationManager */
-    private $evaluationManager;
-
     public function __construct(
-        MessageBusInterface $messageBus,
-        ObjectManager $om,
-        WorkspaceEvaluationManager $evaluationManager
+        private readonly MessageBusInterface $messageBus,
+        private readonly ObjectManager $om,
+        private readonly WorkspaceEvaluationManager $evaluationManager
     ) {
-        $this->messageBus = $messageBus;
-        $this->om = $om;
-        $this->evaluationManager = $evaluationManager;
     }
 
-    public function __invoke(InitializeWorkspaceEvaluations $initMessage)
+    public function __invoke(InitializeWorkspaceEvaluations $initMessage): void
     {
         $workspace = $this->om->getRepository(Workspace::class)->find($initMessage->getWorkspaceId());
         if (empty($workspace)) {

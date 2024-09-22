@@ -23,7 +23,7 @@ class VideoListener
     {
         /** @var File $resource */
         $video = $event->getResource();
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $event->setData(array_merge([
             'userEvaluation' => $user instanceof User ? $this->serializer->serialize(

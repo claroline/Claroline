@@ -14,6 +14,7 @@ namespace Icap\BlogBundle\Listener\DataSource;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -41,7 +42,7 @@ class BlogPostsSource
             $options['hiddenFilters']['roles'] = ['ROLE_ANONYMOUS'];
         } else {
             // filter by current user roles
-            $options['hiddenFilters']['roles'] = $this->tokenStorage->getToken()->getRoleNames();
+            $options['hiddenFilters']['roles'] = $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
         }
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {

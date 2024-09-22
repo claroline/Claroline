@@ -2,16 +2,17 @@
 
 namespace Claroline\VideoPlayerBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\VideoPlayerBundle\Manager\EvaluationManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/video')]
 class EvaluationController
@@ -26,14 +27,15 @@ class EvaluationController
         $this->authorization = $authorization;
     }
 
-    /**
-     *
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @EXT\ParamConverter("video", class="Claroline\CoreBundle\Entity\Resource\File", options={"mapping": {"id": "uuid"}})
-     */
+    
     #[Route(path: '/{id}/progression/{currentTime}/{totalTime}', name: 'apiv2_video_progression_update', methods: ['PUT'])]
-    public function updateAction(User $user, File $video, $currentTime, $totalTime): JsonResponse
+    public function updateAction(#[CurrentUser] ?User $user, #[MapEntity(class: 'Claroline\CoreBundle\Entity\Resource\File', mapping: ['id' => 'uuid'])]
+    File $video, $currentTime, $totalTime): JsonResponse
     {
+        if (null === $user) {
+            return new JsonResponse(null, 204);
+        }
+
         $this->checkPermission('OPEN', $video->getResourceNode(), [], true);
 
         $this->evaluationManager->update($video->getResourceNode(), $user, floatval($currentTime), floatval($totalTime));

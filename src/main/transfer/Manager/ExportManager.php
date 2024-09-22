@@ -37,7 +37,7 @@ class ExportManager
         $this->om->flush();
 
         // request export execution
-        $this->messageBus->dispatch(new ExecuteExport($exportFile->getId()), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]);
+        $this->messageBus->dispatch(new ExecuteExport($exportFile->getId()), [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]);
     }
 
     public function export(ExportFile $exportFile): string

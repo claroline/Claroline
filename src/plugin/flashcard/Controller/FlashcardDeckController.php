@@ -2,6 +2,7 @@
 
 namespace Claroline\FlashcardBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -14,11 +15,11 @@ use Claroline\FlashcardBundle\Entity\Flashcard;
 use Claroline\FlashcardBundle\Entity\FlashcardDeck;
 use Claroline\FlashcardBundle\Manager\EvaluationManager;
 use Claroline\FlashcardBundle\Manager\FlashcardManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/flashcard_deck')]
 class FlashcardDeckController
@@ -41,8 +42,6 @@ class FlashcardDeckController
 
     /**
      * Check if deck modification should reset attempts.
-     *
-     * @EXT\ParamConverter("card", class="Claroline\FlashcardBundle\Entity\FlashcardDeck", options={"mapping": {"id": "uuid"}})
      */
     #[Route(path: '/{id}/check', name: 'apiv2_flashcard_deck_update_check', methods: ['PUT'])]
     public function checkAction(FlashcardDeck $flashcardDeck, Request $request): JsonResponse
@@ -60,13 +59,15 @@ class FlashcardDeckController
     /**
      * Update card progression for a user.
      *
-     *
-     * @EXT\ParamConverter("card", class="Claroline\FlashcardBundle\Entity\Flashcard", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     #[Route(path: '/flashcard/{id}/progression', name: 'apiv2_flashcard_progression_update', methods: ['PUT'])]
-    public function updateProgressionAction(Flashcard $card, User $user, Request $request): JsonResponse
+    public function updateProgressionAction(#[MapEntity(class: 'Claroline\FlashcardBundle\Entity\Flashcard', mapping: ['id' => 'uuid'])]
+    Flashcard $card, #[CurrentUser] ?User $user, Request $request): JsonResponse
     {
+        if (null === $user) {
+            return new JsonResponse(null, 204);
+        }
+
         $this->checkPermission('OPEN', $card->getDeck());
 
         $deck = $card->getDeck();
@@ -84,14 +85,15 @@ class FlashcardDeckController
         ]);
     }
 
-    /**
-     *
-     * @EXT\ParamConverter("deck", class="Claroline\FlashcardBundle\Entity\FlashcardDeck", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
+    
     #[Route(path: '/{id}/attempt', name: 'apiv2_flashcard_deck_current_attempt', methods: ['GET'])]
-    public function getAttemptAction(FlashcardDeck $deck, User $user): JsonResponse
+    public function getAttemptAction(#[MapEntity(class: 'Claroline\FlashcardBundle\Entity\FlashcardDeck', mapping: ['id' => 'uuid'])]
+    FlashcardDeck $deck, #[CurrentUser] ?User $user): JsonResponse
     {
+        if (null === $user) {
+            return new JsonResponse(null, 204);
+        }
+
         $this->checkPermission('OPEN', $deck);
 
         $attempt = $this->resourceEvalRepo->findOneInProgress($deck->getResourceNode(), $user);
