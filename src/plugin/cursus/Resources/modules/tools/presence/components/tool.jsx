@@ -6,8 +6,8 @@ import {Tool} from '#/main/core/tool'
 import {withReducer} from '#/main/app/store/reducer'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
-import {EventPresence} from '#/plugin/cursus/tools/presence/components/event'
-import {SignPresence} from '#/plugin/cursus/tools/presence/components/signing'
+import {EventPresence} from '#/plugin/cursus/presence/components/event'
+import {SignPresence} from '#/plugin/cursus/presence/components/signing'
 import {actions, reducer, selectors} from '#/plugin/cursus/tools/presence/store'
 
 const PresenceToolComponent = (props) =>
@@ -17,11 +17,15 @@ const PresenceToolComponent = (props) =>
       {
         path: '/:code',
         onEnter: (params) => props.getEventByCode(params.code),
-        component: SignPresence
+        render: () => (
+          <SignPresence path={props.path}/>
+        )
       }, {
         path: '/',
         onEnter: () => props.resetEvent(),
-        component: EventPresence
+        render: () => (
+          <EventPresence path={props.path}/>
+        )
       }
     ]}
   />
