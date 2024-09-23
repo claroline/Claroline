@@ -36,7 +36,6 @@ const EmptyCourse = (props) =>
       </p>
       <CreationType {...props} />
     </ContentSizing>
-
   </ToolPage>
 
 EmptyCourse.propTypes = {

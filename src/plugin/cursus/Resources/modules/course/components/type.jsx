@@ -119,8 +119,25 @@ const CreationType = (props) => {
           description: trans('create_mode_existing_desc', {}, 'cursus'),
           displayed: props.contextType === 'workspace',
           action: {
-            type: CALLBACK_BUTTON,
-            callback: () => true
+            type: MODAL_BUTTON,
+            modal: [MODAL_TRAINING_COURSES, {
+              url: ['apiv2_cursus_course_list_existing'],
+              selectAction: (selected) => ({
+                type: ASYNC_BUTTON,
+                label: trans('bind', {}, 'actions'),
+                request: {
+                  url: url(['apiv2_cursus_course_bind_workspace']),
+                  request: {
+                    method: 'PATCH',
+                    body: JSON.stringify({
+                      ids: selected.map(course => course.id),
+                      workspace: props.contextId
+                    })
+                  },
+                  success: () => history.push(props.path)
+                }
+              })
+            }]
           },
           group: trans('create_mode_group_existing', {}, 'cursus')
         }

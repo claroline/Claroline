@@ -14,6 +14,8 @@
   "archive_training_confirm_title": "{1} Archive a training | [2,Inf[ Archive multiple trainings",
   "archive_training_confirm_message": "{1} Are you sure you want to archive this training? | [2,Inf[ Are you sure you want to archive these %count% trainings?",
 
+  "bind": "Bind",
+
   "restore_training": "Restore training",
   "restore_training_help": "Restore the training in the list of active trainings.",
 

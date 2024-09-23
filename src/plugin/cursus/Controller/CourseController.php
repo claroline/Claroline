@@ -145,6 +145,28 @@ class CourseController extends AbstractCrudController
     }
 
     /**
+     * @Route("/list/existing", name="list_existing", methods={"GET"})
+     */
+    public function listExistingAction(Request $request): JsonResponse
+    {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
+        $filters = array_merge($request->query->all(), [
+            'hiddenFilters' => $this->getDefaultHiddenFilters(),
+        ]);
+
+        $list = $this->crud->list(Course::class, $filters, $this->getOptions()['list']);
+
+        $list['data'] = array_filter($list['data'], function (array $course) {
+            return is_null($course['workspace']);
+        });
+
+        sort($list['data']);
+
+        return new JsonResponse($list);
+    }
+
+    /**
      * @Route("/archive", name="archive", methods={"POST"})
      */
     public function archiveAction(Request $request): JsonResponse
@@ -234,6 +256,43 @@ class CourseController extends AbstractCrudController
                     $copy->setWorkspace($workspace);
                 }
                 $processed[] = $copy;
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (Course $course) {
+            return $this->serializer->serialize($course);
+        }, $processed));
+    }
+
+    /**
+     * @Route("/bind", name="bind_workspace", methods={"PATCH"})
+     */
+    public function bindCourseToWorkspaceAction(Request $request): JsonResponse
+    {
+        $processed = [];
+
+        $this->om->startFlushSuite();
+
+        $data = $this->decodeRequest($request);
+
+        $workspaceData = $data['workspace'] ?? null;
+        $workspace = null;
+
+        if ($workspaceData) {
+            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['workspace']['id']]);
+        }
+
+        /** @var Course[] $courses */
+        $courses = $this->om->getRepository(Course::class)->findBy([
+            'uuid' => $data['ids'],
+        ]);
+
+        foreach ($courses as $course) {
+            if ($this->authorization->isGranted('ADMINISTRATE', $course)) {
+                $course->setWorkspace($workspace);
+                $processed[] = $course;
             }
         }
 
