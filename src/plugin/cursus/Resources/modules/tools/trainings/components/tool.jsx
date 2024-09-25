@@ -8,6 +8,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {EventMain} from '#/plugin/cursus/tools/trainings/event/containers/main'
 import {CatalogMain} from '#/plugin/cursus/tools/trainings/catalog/containers/main'
 import {SessionMain} from '#/plugin/cursus/tools/trainings/session/containers/main'
+import {PresenceMain} from '#/plugin/cursus/tools/trainings/presence/containers/main'
 import {TrainingsEditor} from '#/plugin/cursus/tools/trainings/editor/containers/main'
 
 const TrainingsTool = (props) =>
@@ -42,6 +43,12 @@ const TrainingsTool = (props) =>
         label: trans('my_events', {}, 'cursus'),
         target: props.path + '/events/registered',
         displayed: props.authenticated
+      }, {
+        name: 'presence',
+        type: LINK_BUTTON,
+        label: trans('presences', {}, 'cursus'),
+        target: props.path + '/presence',
+        displayed: props.authenticated
       }
     ]}
     redirect={[
@@ -58,6 +65,9 @@ const TrainingsTool = (props) =>
       }, {
         path: '/events',
         component: EventMain
+      }, {
+        path: '/presence',
+        component: PresenceMain
       }
     ]}
     editor={TrainingsEditor}
