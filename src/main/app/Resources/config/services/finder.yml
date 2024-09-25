@@ -45,6 +45,9 @@ services:
         arguments:
             - '@security.authorization_checker'
 
+    Claroline\AppBundle\API\Finder\Type\RelatedEntityType:
+        tags: [claroline.finder.type]
+
     Claroline\AppBundle\API\Finder\Type\TextType:
         tags: [claroline.finder.type]
 

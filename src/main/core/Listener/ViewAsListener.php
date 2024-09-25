@@ -60,16 +60,12 @@ class ViewAsListener
 
                 if (!$this->authorization->isGranted('ROLE_USURPATE_WORKSPACE_ROLE')) {
                     // we are not already usurping a workspace role
-                    if (in_array($viewAs, [PlatformRoles::USER, PlatformRoles::ANONYMOUS]) || $this->authorization->isGranted('ADMINISTRATE', $role->getWorkspace())) {
+                    if ($this->authorization->isGranted('ADMINISTRATE', $role->getWorkspace())) {
                         // we have the right to usurp one the workspace role
-                        if (PlatformRoles::ANONYMOUS === $viewAs) {
-                            $this->authenticator->createAnonymousToken();
-                        } else {
-                            $this->authenticator->createToken($this->tokenStorage->getToken()?->getUser(), [PlatformRoles::USER, $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']);
+                        $this->authenticator->createToken($this->tokenStorage->getToken()?->getUser(), [PlatformRoles::USER, $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']);
 
-                            $event = new ViewAsEvent($this->tokenStorage->getToken()?->getUser(), $viewAs);
-                            $this->eventDispatcher->dispatch($event, SecurityEvents::VIEW_AS);
-                        }
+                        $event = new ViewAsEvent($this->tokenStorage->getToken()?->getUser(), $viewAs);
+                        $this->eventDispatcher->dispatch($event, SecurityEvents::VIEW_AS);
                     } else {
                         throw new AccessDeniedException(sprintf('You do not have the right to usurp the role %s.', $viewAs));
                     }

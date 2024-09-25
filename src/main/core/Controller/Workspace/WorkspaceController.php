@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\Workspace;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Finder\FinderFactory;
@@ -37,10 +36,12 @@ use Claroline\CoreBundle\Messenger\Message\CreateWorkspace;
 use Claroline\CoreBundle\Messenger\Message\ImportWorkspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -97,7 +98,7 @@ class WorkspaceController extends AbstractCrudController
                 'model' => false,
                 'public' => true,
             ]]),
-            $this->getOptions()['list']
+            static::getOptions()['list']
         ));
     }
 
@@ -113,17 +114,16 @@ class WorkspaceController extends AbstractCrudController
      * )
      */
     #[Route(path: '/list/registered', name: 'list_registered', methods: ['GET'])]
-    public function listRegisteredAction(Request $request): StreamedJsonResponse
-    {
+    public function listRegisteredAction(
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         $workspaces = $this->finder->create(WorkspaceType::class)
-            ->addFilters([
-                //'model' => false,
+            ->submit($finderQuery->addFilters([
                 'roles' => $this->tokenStorage->getToken()->getRoleNames(),
-            ])
-            ->sortBy(['name' => 'ASC'])
-            ->handleRequest($request)
+            ]))
             ->getResult(function (Workspace $workspace): array {
                 return $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_LIST]);
             })
@@ -136,14 +136,12 @@ class WorkspaceController extends AbstractCrudController
     }
 
     #[Route(path: '/test', name: 'test', methods: ['GET'])]
-    public function testAction(Request $request): StreamedJsonResponse
-    {
+    public function testAction(
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
         $finder = $this->finder->create(WorkspaceType::class)
-            ->addFilters([
-                //'roles' => $this->tokenStorage->getToken()->getRoleNames(),
-            ])
-            ->sortBy(['name' => 'ASC'])
-            ->handleRequest($request)
+            ->submit($finderQuery)
             ->getResult(function (Workspace $workspace): array {
                 return $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_MINIMAL]);
             })
@@ -176,18 +174,18 @@ class WorkspaceController extends AbstractCrudController
      * )
      */
     #[Route(path: '/list/administrated', name: 'list_managed', methods: ['GET'])]
-    public function listManagedAction(Request $request): StreamedJsonResponse
-    {
+    public function listManagedAction(
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         $workspaces = $this->finder->create(WorkspaceType::class)
-            ->addFilters([
-                //'model' => false,
-                //'roles' => $this->tokenStorage->getToken()->getRoleNames(),
-                //'administrated' => true,
-            ])
-            ->sortBy(['name' => 'ASC'])
-            ->handleRequest($request)
+            ->submit($finderQuery->addFilters([
+                // 'model' => false,
+                // 'roles' => $this->tokenStorage->getToken()->getRoleNames(),
+                // 'administrated' => true,
+            ]))
             ->getResult(function (Workspace $workspace): array {
                 return $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_LIST]);
             })
@@ -211,18 +209,16 @@ class WorkspaceController extends AbstractCrudController
      * )
      */
     #[Route(path: '/list/model', name: 'list_model', methods: ['GET'])]
-    public function listModelAction(Request $request): StreamedJsonResponse
-    {
+    public function listModelAction(
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         $workspaces = $this->finder->create(WorkspaceType::class)
-            ->addFilters([
+            ->submit($finderQuery->addFilters([
                 'model' => true,
-                /*'roles' => $this->tokenStorage->getToken()->getRoleNames(),
-                'administrated' => true,*/
-            ])
-            ->sortBy(['name' => 'ASC'])
-            ->handleRequest($request)
+            ]))
             ->getResult(function (Workspace $workspace): array {
                 return $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_LIST]);
             })
@@ -232,14 +228,6 @@ class WorkspaceController extends AbstractCrudController
             'totalResults' => $workspaces->count(),
             'data' => $workspaces->getItems(),
         ]);
-
-        /*return new JsonResponse($this->crud->list(
-            Workspace::class,
-            array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
-                'model' => true,
-            ])]),
-            $this->getOptions()['list']
-        ));*/
     }
 
     /**
@@ -254,18 +242,18 @@ class WorkspaceController extends AbstractCrudController
      * )
      */
     #[Route(path: '/list/archived', name: 'list_archive', methods: ['GET'])]
-    public function listArchivedAction(Request $request): StreamedJsonResponse
-    {
+    public function listArchivedAction(
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         $workspaces = $this->finder->create(WorkspaceType::class)
-            ->addFilters([
+            ->submit($finderQuery->addFilters([
                 'archived' => true,
                 /*'roles' => $this->tokenStorage->getToken()->getRoleNames(),
                 'administrated' => true,*/
-            ])
-            ->sortBy(['name' => 'ASC'])
-            ->handleRequest($request)
+            ]))
             ->getResult(function (Workspace $workspace): array {
                 return $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_LIST]);
             })
@@ -363,12 +351,12 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
-     *
      */
     #[Route(path: '/{id}/export', name: 'export', methods: ['GET'])]
-    public function exportAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    Workspace $workspace): BinaryFileResponse
-    {
+    public function exportAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Workspace $workspace
+    ): BinaryFileResponse {
         $this->checkPermission('OPEN', $workspace, [], true);
 
         $pathArch = $this->workspaceManager->export($workspace);
@@ -376,7 +364,7 @@ class WorkspaceController extends AbstractCrudController
 
         $response = new BinaryFileResponse($pathArch);
         $response->headers->set('Content-Type', 'application/zip');
-        $response->headers->set('Content-Disposition', "attachment; filename={$filename}");
+        $response->headers->set('Content-Disposition', "attachment; filename=$filename");
 
         return $response;
     }
@@ -443,21 +431,24 @@ class WorkspaceController extends AbstractCrudController
 
     /**
      * Submit access code.
-     *
      */
     #[Route(path: '/unlock/{id}', name: 'apiv2_workspace_unlock', methods: ['POST'])]
-    public function unlockAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    Workspace $workspace, Request $request): JsonResponse
-    {
+    public function unlockAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Workspace $workspace,
+        Request $request
+    ): JsonResponse {
         $this->restrictionsManager->unlock($workspace, json_decode($request->getContent(), true)['code']);
 
         return new JsonResponse(null, 204);
     }
 
     #[Route(path: '/{id}/users', name: 'list_users', methods: ['GET'])]
-    public function listUsersAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    Workspace $workspace, Request $request): JsonResponse
-    {
+    public function listUsersAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Workspace $workspace,
+        Request $request
+    ): JsonResponse {
         $this->checkPermission('OPEN', $workspace, [], true);
 
         $workspaceRoles = $this->roleManager->getWorkspaceRoles($workspace);

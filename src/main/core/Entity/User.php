@@ -11,6 +11,9 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\CommunityBundle\Finder\UserType;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Doctrine\DBAL\Types\Types;
 use Claroline\CommunityBundle\Repository\UserRepository;
 use DateTimeInterface;
@@ -38,11 +41,14 @@ use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterfac
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-
 #[ORM\Table(name: 'claro_user')]
 #[ORM\Index(name: 'disabled_idx', columns: ['is_disabled'])]
 #[ORM\Index(name: 'is_removed', columns: ['is_removed'])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[CrudEntity(
+    serializerClass: UserSerializer::class,
+    finderClass: UserType::class
+)]
 class User extends AbstractRoleSubject implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface, CrudEntityInterface, ContextSubjectInterface
 {
     use Id;
@@ -81,7 +87,6 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
 
     #[ORM\Column(name: 'administrative_code', nullable: true)]
     private ?string $administrativeCode = null;
-
     
     /**
      * @var Collection<int, Group>
@@ -89,7 +94,6 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     #[ORM\JoinTable(name: 'claro_user_group')]
     #[ORM\ManyToMany(targetEntity: Group::class)]
     private Collection $groups;
-
     
     /**
      * @var Collection<int, Role>
@@ -97,7 +101,6 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     #[ORM\JoinTable(name: 'claro_user_role')]
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users', fetch: 'EXTRA_LAZY')]
     protected Collection $roles;
-
     
     #[ORM\JoinColumn(name: 'workspace_id', onDelete: 'SET NULL')]
     #[ORM\OneToOne(targetEntity: Workspace::class)]
@@ -176,7 +179,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
 
     public function __toString()
     {
-        return $this->firstName.' '.$this->lastName;
+        return $this->username;
     }
 
     /**

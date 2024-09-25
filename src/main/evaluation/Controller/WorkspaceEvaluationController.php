@@ -11,10 +11,11 @@
 
 namespace Claroline\EvaluationBundle\Controller;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Finder\FinderQuery;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -28,13 +29,19 @@ use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
+/**
+ * Manages user evaluations for resources {@see Evaluation}}.
+ */
 #[Route(path: '/evaluations/workspace')]
 class WorkspaceEvaluationController
 {
@@ -53,37 +60,31 @@ class WorkspaceEvaluationController
         $this->authorization = $authorization;
     }
 
-    #[Route(path: '/', name: 'apiv2_workspace_evaluations_all', methods: ['GET'])]
-    public function listAction(Request $request): JsonResponse
-    {
-        $this->checkToolAccess('OPEN');
-
-        return new JsonResponse($this->crud->list(
-            Evaluation::class,
-            $request->query->all()
-        ));
-    }
-
     #[Route(path: '/{workspace}', name: 'apiv2_workspace_evaluations_list', methods: ['GET'])]
-    public function listByWorkspaceAction(#[MapEntity(mapping: ['workspace' => 'uuid'])]
-    Workspace $workspace, Request $request): JsonResponse
-    {
+    public function listAction(
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery(),
+        #[MapEntity(mapping: ['workspace' => 'uuid'])]
+        ?Workspace $workspace = null
+    ): StreamedJsonResponse {
         $this->checkToolAccess('OPEN', $workspace);
 
-        return new JsonResponse($this->crud->list(
-            Evaluation::class,
-            array_merge($request->query->all(), ['hiddenFilters' => [
-                'workspace' => $workspace->getUuid(),
-            ]])
-        ));
+        if ($workspace) {
+            $finderQuery->addFilter('workspace', $workspace->getUuid());
+        }
+
+        $evaluations = $this->crud->search(Evaluation::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+
+        return $evaluations->toResponse();
     }
 
-    
     #[Route(path: '/{workspace}/user/{user}', name: 'apiv2_workspace_evaluation_get', methods: ['GET'])]
-    public function getAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
-    Workspace $workspace, #[MapEntity(class: 'Claroline\CoreBundle\Entity\User', mapping: ['user' => 'uuid'])]
-    User $user): JsonResponse
-    {
+    public function getAction(
+        #[MapEntity(mapping: ['workspace' => 'uuid'])]
+        Workspace $workspace,
+        #[MapEntity(mapping: ['user' => 'uuid'])]
+        User $user
+    ): JsonResponse {
         $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
             'workspace' => $workspace,
             'user' => $user,
@@ -98,12 +99,12 @@ class WorkspaceEvaluationController
 
     /**
      * Initializes evaluations for all the users of a workspace.
-     *
      */
     #[Route(path: '/{workspace}/init', name: 'apiv2_workspace_evaluations_init', methods: ['PUT'])]
-    public function initializeAction(#[MapEntity(mapping: ['workspace' => 'uuid'])]
-    Workspace $workspace): JsonResponse
-    {
+    public function initializeAction(
+        #[MapEntity(mapping: ['workspace' => 'uuid'])]
+        Workspace $workspace
+    ): JsonResponse {
         $this->checkToolAccess('EDIT', $workspace);
 
         $this->manager->initialize($workspace);
@@ -113,12 +114,12 @@ class WorkspaceEvaluationController
 
     /**
      * Recalculates (score, status, progression, ...) evaluations for all the users of a workspace.
-     *
      */
     #[Route(path: '/{workspace}/recompute', name: 'apiv2_workspace_evaluations_recompute', methods: ['PUT'])]
-    public function recomputeAction(#[MapEntity(mapping: ['workspace' => 'uuid'])]
-    Workspace $workspace): JsonResponse
-    {
+    public function recomputeAction(
+        #[MapEntity(mapping: ['workspace' => 'uuid'])]
+        Workspace $workspace
+    ): JsonResponse {
         $this->checkToolAccess('EDIT', $workspace);
 
         $this->manager->recompute($workspace);
@@ -126,12 +127,13 @@ class WorkspaceEvaluationController
         return new JsonResponse(null, 204);
     }
 
-    
     #[Route(path: '/{workspace}/progression/{user}', name: 'apiv2_workspace_get_user_progression', methods: ['GET'])]
-    public function getUserProgressionAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
-    Workspace $workspace, #[MapEntity(class: 'Claroline\CoreBundle\Entity\User', mapping: ['user' => 'uuid'])]
-    User $user): JsonResponse
-    {
+    public function getUserProgressionAction(
+        #[MapEntity(mapping: ['workspace' => 'uuid'])]
+        Workspace $workspace,
+        #[MapEntity(mapping: ['user' => 'uuid'])]
+        User $user
+    ): JsonResponse {
         $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
             'workspace' => $workspace,
             'user' => $user,
@@ -152,9 +154,11 @@ class WorkspaceEvaluationController
     }
 
     #[Route(path: '/{workspace}/requirements', name: 'apiv2_workspace_required_resource_list', methods: ['GET'])]
-    public function listRequiredResourcesAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
-    Workspace $workspace, Request $request): JsonResponse
-    {
+    public function listRequiredResourcesAction(
+        #[MapEntity(mapping: ['workspace' => 'uuid'])]
+        Workspace $workspace,
+        Request $request
+    ): JsonResponse {
         $this->checkToolAccess('OPEN', $workspace);
 
         return new JsonResponse(
@@ -166,9 +170,11 @@ class WorkspaceEvaluationController
     }
 
     #[Route(path: '/{workspace}/requirements', name: 'apiv2_workspace_required_resource_add', methods: ['PATCH'])]
-    public function addRequiredResourcesAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
-    Workspace $workspace, Request $request): JsonResponse
-    {
+    public function addRequiredResourcesAction(
+        #[MapEntity(mapping: ['workspace' => 'uuid'])]
+        Workspace $workspace,
+        Request $request
+    ): JsonResponse {
         $this->checkToolAccess('EDIT', $workspace);
 
         $resources = $this->decodeIdsString($request, ResourceNode::class);
@@ -187,9 +193,11 @@ class WorkspaceEvaluationController
     }
 
     #[Route(path: '/{workspace}/requirements', name: 'apiv2_workspace_required_resource_remove', methods: ['DELETE'])]
-    public function removeRequiredResourcesAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
-    Workspace $workspace, Request $request): JsonResponse
-    {
+    public function removeRequiredResourcesAction(
+        #[MapEntity(mapping: ['workspace' => 'uuid'])]
+        Workspace $workspace,
+        Request $request
+    ): JsonResponse {
         $this->checkToolAccess('EDIT', $workspace);
 
         $resources = $this->decodeIdsString($request, ResourceNode::class);

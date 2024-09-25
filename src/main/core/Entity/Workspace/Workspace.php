@@ -11,6 +11,9 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Finder\WorkspaceType;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -41,10 +44,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-
 #[ORM\Table(name: 'claro_workspace')]
 #[ORM\Index(name: 'name_idx', columns: ['entity_name'])]
 #[ORM\Entity(repositoryClass: WorkspaceRepository::class)]
+#[CrudEntity(
+    serializerClass: WorkspaceSerializer::class,
+    finderClass: WorkspaceType::class
+)]
 class Workspace implements ContextSubjectInterface, CrudEntityInterface
 {
     // identifiers
@@ -139,13 +145,13 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
     private Collection $organizations;
 
     // not mapped. Used for creation
-    private $workspaceModel;
+    private ?Workspace $workspaceModel;
 
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $estimatedDuration = null;
 
     #[ORM\Column(name: 'score_total', type: Types::FLOAT, options: ['default' => 100])]
-    private float $scoreTotal = 100;
+    private ?float $scoreTotal = 100;
 
     public function __construct()
     {

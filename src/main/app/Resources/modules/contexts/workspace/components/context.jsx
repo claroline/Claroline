@@ -4,7 +4,6 @@ import get from 'lodash/get'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl'
-import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {PageBanner} from '#/main/app/page/components/banner'
 import {ContextMain, selectors} from '#/main/app/context'
@@ -17,6 +16,7 @@ import {WorkspaceNotFound} from '#/main/app/contexts/workspace/components/not-fo
 import {WorkspaceMenu} from '#/main/app/contexts/workspace/containers/menu'
 import {WorkspaceEditor} from '#/main/app/contexts/workspace/editor/components/main'
 import {addRecent} from '#/main/app/history'
+import {hasPermission} from '#/main/app/security'
 
 const WorkspaceWarning = () => {
   const workspace = useSelector(selectors.data)
@@ -25,54 +25,67 @@ const WorkspaceWarning = () => {
 
   if (impersonated) {
     return (
-      <PageBanner content={`Vous parcourez l'espace d'activités avec les permissions du rôle <b>${roles[0] ? trans(roles[0].translationKey) : ''}</b>.`} type="warning" dismissible={false}>
-        <Button
-          className="btn btn-link text-reset p-1"
-          type={CALLBACK_BUTTON}
-          label={trans('Changer de rôle', {}, 'actions')}
-          callback={() => true}
-        />
-        <Button
-          className="btn btn-link text-reset p-1"
-          type={URL_BUTTON}
-          label={trans('exit', {}, 'actions')}
-          target={url(['claro_index', {}], {view_as: 'exit'}) + '#' + route(workspace)}
-        />
-      </PageBanner>
+      <PageBanner
+        type="warning"
+        content={`Vous parcourez l'espace d'activités avec les permissions du rôle <b>${roles[0] ? trans(roles[0].translationKey) : ''}</b>.`}
+        dismissible={false}
+        actions={[
+          {
+            name: 'change-role',
+            type: CALLBACK_BUTTON,
+            label: trans('Changer de rôle', {}, 'actions'),
+            callback: () => true
+          }, {
+            name: 'exit',
+            type: URL_BUTTON,
+            label: trans('exit', {}, 'actions'),
+            target: url(['claro_index', {}], {view_as: 'exit'}) + '#' + route(workspace)
+          }
+        ]}
+      />
     )
   }
 
   if (get(workspace, 'meta.archived')) {
     return (
-      <PageBanner content="Cet espace est archivé et n'est plus accessible par les utilisateurs." type="danger">
-        <Button
-          className="btn btn-link text-reset p-1"
-          type={CALLBACK_BUTTON}
-          label={trans('restore', {}, 'actions')}
-          callback={() => true}
-          confirm={true}
-        />
-        <Button
-          className="btn btn-link text-reset p-1"
-          type={CALLBACK_BUTTON}
-          label={trans('Supprimer définitivement', {}, 'actions')}
-          callback={() => true}
-          confirm={true}
-        />
-      </PageBanner>
+      <PageBanner
+        type="danger"
+        content="Cet espace est archivé et n'est plus accessible par les utilisateurs."
+        actions={[
+          {
+            name: 'restore',
+            type: CALLBACK_BUTTON,
+            label: trans('restore', {}, 'actions'),
+            callback: () => true,
+            displayed: hasPermission('administrate', workspace),
+            confirm: true
+          }, {
+            name: 'delete',
+            type: CALLBACK_BUTTON,
+            label: trans('Supprimer définitivement', {}, 'actions'),
+            callback: () => true,
+            displayed: hasPermission('administrate', workspace),
+            confirm: true
+          }
+        ]}
+      />
     )
   }
 
   if (get(workspace, 'meta.model')) {
     return (
-      <PageBanner content="Cet espace d'activités est un modèle utilisé pour la création de nouveaux espaces." type="primary">
-        <Button
-          className="btn btn-link text-reset p-1"
-          type={CALLBACK_BUTTON}
-          label={trans('Créer à partir du modèle', {}, 'actions')}
-          callback={() => true}
-        />
-      </PageBanner>
+      <PageBanner
+        type="primary"
+        content="Cet espace d'activités est un modèle utilisé pour la création de nouveaux espaces."
+        actions={[
+          {
+            name: 'create',
+            type: CALLBACK_BUTTON,
+            label: trans('Créer à partir du modèle', {}, 'actions'),
+            callback: () => true
+          }
+        ]}
+      />
     )
   }
 }

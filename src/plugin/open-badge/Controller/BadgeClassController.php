@@ -124,9 +124,11 @@ class BadgeClassController extends AbstractCrudController
     }
 
     #[Route(path: '/{badge}/users/add', name: 'add_users', methods: ['PATCH'])]
-    public function addUsersAction(#[MapEntity(class: 'Claroline\OpenBadgeBundle\Entity\BadgeClass', mapping: ['badge' => 'uuid'])]
-    BadgeClass $badge, Request $request): JsonResponse
-    {
+    public function addUsersAction(
+        #[MapEntity(mapping: ['badge' => 'uuid'])]
+        BadgeClass $badge,
+        Request $request
+    ): JsonResponse {
         $this->checkPermission('GRANT', $badge, [], true);
 
         $users = $this->decodeIdsString($request, User::class);

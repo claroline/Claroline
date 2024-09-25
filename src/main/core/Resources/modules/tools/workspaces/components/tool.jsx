@@ -134,8 +134,7 @@ const WorkspacesTool = (props) => {
               <WorkspacesPage path={props.path} title={trans('all_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
                 <PageListSection>
                   <WorkspaceList
-                    flush={true}
-                    url={props.contextType === toolConstants.TOOL_PUBLIC ? ['apiv2_workspace_list_public'] : ['apiv2_workspace_list_managed']}
+                    url={props.contextType === toolConstants.TOOL_PUBLIC ? ['apiv2_workspace_list_public'] : ['apiv2_workspace_list']}
                     name="workspaces.public"
                     refresher={refresher}
                   />

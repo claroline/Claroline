@@ -37,4 +37,19 @@ final class EvaluationStatus
             EvaluationStatus::FAILED,
         ]);
     }
+
+    public static function all(): array
+    {
+        return [
+            self::NOT_ATTEMPTED,
+            self::TODO,
+            self::UNKNOWN,
+            self::OPENED,
+            self::PARTICIPATED,
+            self::INCOMPLETE,
+            self::COMPLETED,
+            self::FAILED,
+            self::PASSED,
+        ];
+    }
 }

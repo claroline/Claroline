@@ -1,8 +1,9 @@
 services:
+    Claroline\CoreBundle\Finder\ResourceNodeType:
+        tags: [ claroline.finder.type ]
+
     Claroline\CoreBundle\Finder\WorkspaceType:
         tags: [claroline.finder.type]
-        arguments:
-            - '@security.token_storage'
 
     Claroline\CoreBundle\API\Finder\Planning\PlannedObjectFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder

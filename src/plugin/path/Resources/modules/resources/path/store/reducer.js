@@ -13,8 +13,6 @@ import {
   RESOURCE_EVALUATIONS_LOAD
 } from '#/plugin/path/resources/path/store/actions'
 
-import {reducer as analyticsReducer} from '#/plugin/path/analytics/resource/progression/store/reducer'
-
 const reducer = combineReducers({
   resource: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, 'innova_path')]: (state, action) => action.resourceData.resource || state,
@@ -43,8 +41,7 @@ const reducer = combineReducers({
 
       return newState
     }
-  }),
-  analytics: analyticsReducer
+  })
 })
 
 export {

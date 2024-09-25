@@ -11,11 +11,10 @@
 
 namespace Claroline\EvaluationBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
-use DateTimeInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\EvaluationBundle\Library\EvaluationInterface;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass]
@@ -46,7 +45,7 @@ abstract class AbstractEvaluation implements EvaluationInterface
     public const STATUS_PRIORITY = EvaluationStatus::PRIORITY;
 
     #[ORM\Column(name: 'evaluation_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    protected ?DateTimeInterface $date = null;
+    protected ?\DateTimeInterface $date = null;
 
     #[ORM\Column(name: 'evaluation_status')]
     protected string $status = EvaluationStatus::NOT_ATTEMPTED;
@@ -66,12 +65,12 @@ abstract class AbstractEvaluation implements EvaluationInterface
     #[ORM\Column(name: 'progression', type: Types::FLOAT)]
     protected ?float $progression = 0;
 
-    public function getDate(): ?DateTimeInterface
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(DateTimeInterface $date = null): void
+    public function setDate(\DateTimeInterface $date = null): void
     {
         $this->date = $date;
     }

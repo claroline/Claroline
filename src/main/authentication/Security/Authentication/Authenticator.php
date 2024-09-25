@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Listener\AuthenticationSuccessListener;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -30,7 +29,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class Authenticator
 {
     public function __construct(
-        private readonly string $secret,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
         private readonly AuthenticationSuccessListener $authenticationHandler
@@ -58,22 +56,9 @@ class Authenticator
         return $this->authenticationHandler->onAuthenticationSuccess($request, $token);
     }
 
-    public function createAnonymousToken(): TokenInterface
+    public function createAdminToken(User $user): TokenInterface
     {
-        $token = new AnonymousToken($this->secret, 'anon.', [PlatformRoles::ANONYMOUS]);
-        $this->tokenStorage->setToken($token);
-
-        return $token;
-    }
-
-    public function createAdminToken(User $user = null): TokenInterface
-    {
-        if (!empty($user)) {
-            $token = new UsernamePasswordToken($user,'main', [PlatformRoles::ADMIN]);
-        } else {
-            $token = new UsernamePasswordToken(null, 'main', [PlatformRoles::ADMIN]);
-        }
-
+        $token = new UsernamePasswordToken($user,'main', [PlatformRoles::ADMIN]);
         $this->tokenStorage->setToken($token);
 
         return $token;

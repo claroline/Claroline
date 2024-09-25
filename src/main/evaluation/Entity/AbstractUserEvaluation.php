@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\MappedSuperclass]
 abstract class AbstractUserEvaluation extends AbstractEvaluation
 {
-    
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $user = null;

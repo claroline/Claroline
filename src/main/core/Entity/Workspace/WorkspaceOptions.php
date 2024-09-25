@@ -15,42 +15,32 @@ use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
-
 #[ORM\Table(name: 'claro_workspace_options')]
 #[ORM\Entity]
 class WorkspaceOptions
 {
     use Id;
 
-    #[ORM\OneToOne(targetEntity: Workspace::class, inversedBy: 'options')]
+    #[ORM\OneToOne(targetEntity: Workspace::class, inversedBy: 'options', cascade: ['persist'])]
     #[ORM\JoinColumn(name: 'workspace_id', nullable: true, onDelete: 'CASCADE')]
     private ?Workspace $workspace = null;
 
     /**
      * The options of the workspace.
-     *
-     *
-     * @var array
-     * @todo split into multiple columns
      */
     #[ORM\Column(type: Types::JSON, nullable: true)]
-    private $details = [];
+    private ?array $details = [];
 
     /**
      * The list of items to display in the Workspace when shown.
-     *
-     *
-     * @var array
      */
     #[ORM\Column(type: Types::JSON, nullable: true)]
-    private $breadcrumbItems = ['desktop', 'workspaces', 'current', 'tool'];
+    private ?array $breadcrumbItems = ['desktop', 'workspaces', 'current', 'tool'];
 
     /**
      * Get workspace.
-     *
-     * @return Workspace
      */
-    public function getWorkspace()
+    public function getWorkspace(): ?Workspace
     {
         return $this->workspace;
     }
@@ -58,7 +48,7 @@ class WorkspaceOptions
     /**
      * Set workspace.
      */
-    public function setWorkspace(Workspace $workspace)
+    public function setWorkspace(Workspace $workspace): void
     {
         $this->workspace = $workspace;
     }
@@ -68,7 +58,7 @@ class WorkspaceOptions
      *
      * @return array
      */
-    public function getDetails()
+    public function getDetails(): ?array
     {
         return $this->details;
     }
@@ -76,27 +66,27 @@ class WorkspaceOptions
     /**
      * Set all workspace options.
      */
-    public function setDetails(array $details)
+    public function setDetails(array $details): void
     {
         $this->details = $details;
     }
 
-    public function getShowBreadcrumb()
+    public function getShowBreadcrumb(): bool
     {
         return !isset($this->details['hide_breadcrumb']) || !$this->details['hide_breadcrumb'];
     }
 
-    public function setShowBreadcrumb(bool $show)
+    public function setShowBreadcrumb(bool $show): void
     {
         $this->details['hide_breadcrumb'] = !$show;
     }
 
-    public function getBreadcrumbItems()
+    public function getBreadcrumbItems(): ?array
     {
         return $this->breadcrumbItems;
     }
 
-    public function setBreadcrumbItems(array $items)
+    public function setBreadcrumbItems(array $items): void
     {
         $this->breadcrumbItems = $items;
     }

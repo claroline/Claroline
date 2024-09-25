@@ -56,7 +56,7 @@ export default (contextType, contextData, refresher, currentUser) => {
         label: trans('code')
       }, {
         name: 'restrictions.disabled',
-        alias: 'isDisabled',
+        alias: 'disabled',
         type: 'boolean',
         label: trans('disabled'),
         displayed: true

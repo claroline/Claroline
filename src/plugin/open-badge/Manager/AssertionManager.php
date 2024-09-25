@@ -68,7 +68,6 @@ class AssertionManager
             $assertion = new Assertion();
             $assertion->setBadge($badge);
             $assertion->setRecipient($user);
-            $assertion->setImage($badge->getImage());
 
             $newlyGranted = true;
         }

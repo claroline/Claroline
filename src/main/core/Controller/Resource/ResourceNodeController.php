@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller\Resource;
 
+use Claroline\AppBundle\API\Finder\FinderQuery;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Options;
@@ -13,6 +14,8 @@ use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -67,11 +70,17 @@ class ResourceNodeController extends AbstractCrudController
     }
 
     #[Route(path: '/{contextId}/{parent}', name: 'list', defaults: ['contextId' => null, 'parent' => null])]
-    public function listAction(Request $request, ?string $contextId = null, ?string $parent = null): JsonResponse
-    {
-        $options = $request->query->all();
+    public function listAction(
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery(),
+        ?string $contextId = null,
+        ?string $parent = null
+    ): StreamedJsonResponse {
+        $finderQuery->addFilters([
+            'active' => true,
+            'resourceTypeEnabled' => true,
+        ]);
 
-        $options['hiddenFilters']['parent'] = null;
         if ($contextId || $parent) {
             if (!$parent) {
                 $parentNode = $this->om->getRepository(ResourceNode::class)->findWorkspaceRoot($contextId);
@@ -81,34 +90,33 @@ class ResourceNodeController extends AbstractCrudController
 
             // grab directory content
             if ($parentNode) {
-                $options['hiddenFilters']['parent'] = $parentNode->getUuid();
+                $finderQuery->addFilter('parent', $parentNode->getUuid());
 
                 if (!$this->authorization->isGranted('ADMINISTRATE', $parentNode)) {
-                    $options['hiddenFilters']['published'] = true;
-                    $options['hiddenFilters']['hidden'] = false;
+                    $finderQuery->addFilter('published', true);
                 }
-            } else {
-                $options['hiddenFilters']['workspace'] = $contextId;
             }
         }
 
-        $options['hiddenFilters']['active'] = true;
-        $options['hiddenFilters']['resourceTypeEnabled'] = true;
-
         $roles = $this->token->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
-        if (!in_array('ROLE_ADMIN', $roles) || empty($options['hiddenFilters']['parent'])) {
-            $options['hiddenFilters']['roles'] = $roles;
+        if (!in_array(PlatformRoles::ADMIN, $roles) || !$finderQuery->hasFilter('parent')) {
+            $finderQuery->addFilter('roles', $roles);
         }
 
-        return new JsonResponse(
-            $this->crud->list(ResourceNode::class, $options, $this->getOptions()['list'])
-        );
+        $options = static::getOptions();
+        $results = $this->crud->search(static::getClass(), $finderQuery, $options['list'] ?? []);
+
+        return new StreamedJsonResponse([
+            'totalResults' => $results->count(),
+            'data' => $results->getItems(),
+        ]);
     }
 
     #[Route(path: '/{workspace}/removed', name: 'workspace_removed_list')]
-    public function listRemovedAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
-    Workspace $workspace, Request $request): JsonResponse
-    {
+    public function listRemovedAction(
+        #[MapEntity(mapping: ['workspace' => 'uuid'])]
+        Workspace $workspace, Request $request
+    ): JsonResponse {
         return new JsonResponse(
             $this->crud->list(ResourceNode::class,
                 array_merge($request->query->all(), ['hiddenFilters' => [

@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\CoreBundle\Finder\ResourceNodeType;
 use Doctrine\Common\Collections\Collection;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
@@ -44,6 +46,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Entity(repositoryClass: ResourceNodeRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\Tree(type: 'materializedPath')]
+#[CrudEntity(
+    finderClass: ResourceNodeType::class
+)]
 class ResourceNode implements CrudEntityInterface
 {
     // identifiers

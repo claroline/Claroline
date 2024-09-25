@@ -36,8 +36,9 @@ interface FinderInterface
 
     public function add(self $child): static;
 
-    public function handleRequest(?Request $request = null): static;
-
+    /**
+     * Submits a user search query to the finder.
+     */
     public function submit(FinderQuery $query): static;
 
     /**

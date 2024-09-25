@@ -219,7 +219,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
     {
         return $this->createQueryBuilder('u')
             ->where('(u.lastActivity IS NULL OR u.lastActivity < :dateLastActivity)')
-            ->andWhere('u.isEnabled = true AND u.isRemoved = false AND u.technical = false')
+            ->andWhere('u.disabled = false AND u.isRemoved = false AND u.technical = false')
             ->setParameter('dateLastActivity', $dateLastActivity)
             ->getQuery()
             ->getResult();

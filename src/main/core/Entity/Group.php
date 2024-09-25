@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\CommunityBundle\Finder\GroupType;
 use Claroline\CommunityBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
@@ -30,6 +32,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_group')]
 #[ORM\Entity(repositoryClass: GroupRepository::class)]
+#[CrudEntity(
+    finderClass: GroupType::class
+)]
 class Group extends AbstractRoleSubject implements CrudEntityInterface
 {
     use Id;

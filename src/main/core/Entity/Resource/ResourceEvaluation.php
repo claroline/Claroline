@@ -19,8 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Represents an attempt of a User to a ResourceNode.
  * There may be several for a user and a resource.
- *
- *
  */
 #[ORM\Table(name: 'claro_resource_evaluation')]
 #[ORM\Entity(repositoryClass: ResourceAttemptRepository::class)]
@@ -31,7 +29,7 @@ class ResourceEvaluation extends AbstractEvaluation
     #[ORM\ManyToOne(targetEntity: ResourceUserEvaluation::class)]
     private ?ResourceUserEvaluation $resourceUserEvaluation;
 
-    #[ORM\Column(type: Types::TEXT, name: 'evaluation_comment', nullable: true)]
+    #[ORM\Column(name: 'evaluation_comment', type: Types::TEXT, nullable: true)]
     private ?string $comment = null;
 
     #[ORM\Column(name: 'more_data', type: Types::JSON, nullable: true)]

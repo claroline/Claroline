@@ -59,9 +59,9 @@ class ScoTrackingFinder extends AbstractFinder
                         $qb->join('obj.user', 'u');
                         $userJoin = true;
                     }
-                    $qb->andWhere('u.isEnabled = :isEnabled');
+                    $qb->andWhere('u.disabled = :userDisabled');
                     $qb->andWhere('u.isRemoved = FALSE');
-                    $qb->setParameter('isEnabled', !$filterValue);
+                    $qb->setParameter('userDisabled', $filterValue);
                     break;
 
                 case 'userEmail':

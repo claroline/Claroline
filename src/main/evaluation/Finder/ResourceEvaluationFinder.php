@@ -34,8 +34,8 @@ class ResourceEvaluationFinder extends AbstractFinder
             $qb->join('ru.user', 'u');
             $userJoin = true;
 
-            $qb->andWhere('u.isEnabled = TRUE');
-            $qb->andWhere('u.isRemoved = FALSE');
+            $qb->andWhere('u.disabled = false');
+            $qb->andWhere('u.isRemoved = false');
         }
 
         foreach ($searches as $filterName => $filterValue) {

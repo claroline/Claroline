@@ -4,8 +4,20 @@ namespace Claroline\AppBundle\API\Finder;
 
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * DTO which represents o user search request.
+ *
+ * It can be automatically filled with the Request query string :
+ *
+ *      public function controllerAction(
+ *          #[MapQueryString]
+ *          ?FinderQuery $finderQuery = new FinderQuery()
+ *      )
+ */
 class FinderQuery
 {
+    public const SORT_ASC = 'ASC';
+    public const SORT_DESC = 'DESC';
     public const ALL = -1;
 
     private ?string $search;
@@ -14,9 +26,9 @@ class FinderQuery
     private int $page;
     private int $pageSize;
 
-    public function __construct(string $search = null, array $filters = [], array $sortBy = [], ?int $page = 0, ?int $pageSize = self::ALL)
+    public function __construct(string $q = null, array $filters = [], array $sortBy = [], ?int $page = 0, ?int $pageSize = self::ALL)
     {
-        $this->search = $search;
+        $this->search = $q;
         $this->filters = $filters;
         $this->sortBy = $sortBy;
         $this->page = $page;
@@ -75,7 +87,7 @@ class FinderQuery
         return $this;
     }
 
-    public function getSortBy(): array
+    public function getSorts(): array
     {
         return $this->sortBy;
     }
@@ -89,18 +101,22 @@ class FinderQuery
         return null;
     }
 
-    public function addSorts(array $sort): self
+    public function addSorts(array $sort, ?bool $overrideExistingValue = true): self
     {
         foreach ($sort as $sortName => $sortDirection) {
-            $this->addSort($sortName, $sortDirection);
+            $this->addSort($sortName, $sortDirection, $overrideExistingValue);
         }
 
         return $this;
     }
 
-    public function addSort(string $propName, string $sortDirection): void
+    public function addSort(string $propName, string $sortDirection = self::SORT_ASC, ?bool $overrideExistingValue = true): self
     {
-        $this->sortBy[$propName] = $sortDirection;
+        if ($overrideExistingValue || !array_key_exists($propName, $this->sortBy)) {
+            $this->sortBy[$propName] = $sortDirection;
+        }
+
+        return $this;
     }
 
     public function getFilters(): array
@@ -122,18 +138,20 @@ class FinderQuery
         return null;
     }
 
-    public function addFilters(array $filters): self
+    public function addFilters(array $filters, ?bool $overrideExistingValue = true): self
     {
         foreach ($filters as $filterName => $filterValue) {
-            $this->addFilter($filterName, $filterValue);
+            $this->addFilter($filterName, $filterValue, $overrideExistingValue);
         }
 
         return $this;
     }
 
-    public function addFilter(string $filterName, mixed $filterValue): self
+    public function addFilter(string $filterName, mixed $filterValue, ?bool $overrideExistingValue = true): self
     {
-        $this->filters[$filterName] = $filterValue;
+        if ($overrideExistingValue || !array_key_exists($filterName, $this->filters)) {
+            $this->filters[$filterName] = $filterValue;
+        }
 
         return $this;
     }

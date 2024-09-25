@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Controller;
 
+use Claroline\AppBundle\API\Finder\FinderQuery;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -29,7 +30,9 @@ use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Manager\EventManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -116,20 +119,23 @@ class EventController extends AbstractCrudController
     }
 
     #[Route(path: '/{workspace}', name: 'list', methods: ['GET'])]
-    public function listAction(Request $request, $class = Event::class, #[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['workspace' => 'uuid'])]
-    Workspace $workspace = null): JsonResponse
-    {
-        $options = static::getOptions();
-
-        $query = $request->query->all();
-        $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
+    public function listAction(
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery(),
+        #[MapEntity(mapping: ['workspace' => 'uuid'])]
+        ?Workspace $workspace = null
+    ): StreamedJsonResponse {
         if ($workspace) {
-            $query['hiddenFilters']['workspace'] = $workspace->getUuid();
+            $finderQuery->addFilter('workspace', $workspace->getUuid());
         }
 
-        return new JsonResponse(
-            $this->crud->list($this->getClass(), $query, $options['list'] ?? [])
-        );
+        $options = static::getOptions();
+        $results = $this->crud->search(static::getClass(), $finderQuery, $options['list'] ?? []);
+
+        return new StreamedJsonResponse([
+            'totalResults' => $results->count(),
+            'data' => $results->getItems(),
+        ]);
     }
 
     #[Route(path: '/public/{workspace}', name: 'public', methods: ['GET'])]

@@ -11,7 +11,6 @@ const LogsMessage = () =>
   <ToolPage title={trans('message', {}, 'log')}>
     <PageListSection>
       <LogMessageList
-        flush={true}
         name={selectors.MESSAGE_NAME}
         url={['apiv2_logs_message']}
       />

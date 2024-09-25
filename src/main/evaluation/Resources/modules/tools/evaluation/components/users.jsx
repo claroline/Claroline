@@ -29,9 +29,7 @@ const EvaluationUsers = (props) => {
         <ListData
           name={selectors.STORE_NAME + '.workspaceEvaluations'}
           fetch={{
-            url: props.contextId ?
-              ['apiv2_workspace_evaluations_list', {workspace: props.contextId}] :
-              ['apiv2_workspace_evaluations_all'],
+            url: ['apiv2_workspace_evaluations_list', {workspace: props.contextId}],
             autoload: true
           }}
           primaryAction={(row) => getDefaultAction(row, evaluationsRefresher, props.path, props.currentUser)}
@@ -102,7 +100,7 @@ const EvaluationUsers = (props) => {
               ),
               filterable: false
             }, {
-              name: 'userDisabled',
+              name: 'user.disabled',
               label: trans('user_disabled', {}, 'community'),
               type: 'boolean',
               displayable: false,

@@ -16,14 +16,12 @@ use Doctrine\ORM\EntityRepository;
 
 class TaggedObjectRepository extends EntityRepository
 {
-    public function countByTag(Tag $tag)
+    public function countByTag(Tag $tag): int
     {
         return (int) $this->createQueryBuilder('t')
             ->select('COUNT(t)')
             ->where('t.tag = :tag')
-            ->setParameters([
-                'tag' => $tag,
-            ])
+            ->setParameter('tag', $tag)
             ->getQuery()
             ->getSingleScalarResult();
     }

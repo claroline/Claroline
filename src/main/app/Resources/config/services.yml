@@ -28,6 +28,7 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\ValidatorProvider'
             - '@Claroline\AppBundle\API\SchemaProvider'
+            - '@Claroline\AppBundle\API\Finder\FinderFactory'
             - '@security.authorization_checker'
 
     Claroline\AppBundle\API\SchemaProvider:

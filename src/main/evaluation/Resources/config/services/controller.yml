@@ -19,6 +19,7 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
+            - '@Claroline\AppBundle\API\Crud'
 
     Claroline\EvaluationBundle\Controller\CertificateController:
         arguments:

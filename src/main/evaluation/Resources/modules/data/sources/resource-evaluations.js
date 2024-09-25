@@ -75,7 +75,7 @@ export default {
         displayed: true,
         filterable: false
       }, {
-        name: 'userDisabled',
+        name: 'user.disabled',
         label: trans('user_disabled', {}, 'community'),
         type: 'boolean',
         displayable: false,

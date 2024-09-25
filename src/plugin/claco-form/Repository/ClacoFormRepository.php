@@ -65,7 +65,7 @@ class ClacoFormRepository extends EntityRepository
             LEFT JOIN e.user AS u
             WHERE ffv.fieldFacet = :field
               AND e.clacoForm = :clacoForm
-              AND (u.isEnabled = true AND u.isRemoved = false AND u.technical = false)
+              AND (u.disabled = false AND u.isRemoved = false AND u.technical = false)
             GROUP BY ffv.value
         ';
 
@@ -85,7 +85,7 @@ class ClacoFormRepository extends EntityRepository
                 FROM Claroline\ClacoFormBundle\Entity\Entry AS e
                 LEFT JOIN e.user AS u
                 WHERE e.clacoForm = :clacoForm
-                  AND (u.isEnabled = true AND u.isRemoved = false AND u.technical = false)
+                  AND (u.disabled = false AND u.isRemoved = false AND u.technical = false)
             ')
             ->setParameters([
                 'clacoForm' => $clacoForm,
@@ -101,7 +101,7 @@ class ClacoFormRepository extends EntityRepository
                 FROM Claroline\ClacoFormBundle\Entity\Entry AS e
                 LEFT JOIN e.user AS u
                 WHERE e.clacoForm = :clacoForm
-                  AND (u.isEnabled = true AND u.isRemoved = false AND u.technical = false)
+                  AND (u.disabled = false AND u.isRemoved = false AND u.technical = false)
             ')
             ->setParameters([
                 'clacoForm' => $clacoForm,

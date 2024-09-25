@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\EvaluationBundle\Finder\ResourceEvaluationType;
 use Doctrine\DBAL\Types\Types;
 use Claroline\EvaluationBundle\Entity\AbstractUserEvaluation;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,28 +24,18 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'claro_resource_user_evaluation')]
 #[ORM\UniqueConstraint(name: 'resource_user_evaluation', columns: ['resource_node', 'user_id'])]
 #[ORM\Entity]
+#[CrudEntity(finderClass: ResourceEvaluationType::class)]
 class ResourceUserEvaluation extends AbstractUserEvaluation
 {
-    /**
-     *
-     *
-     * @var ResourceNode
-     */
     #[ORM\JoinColumn(name: 'resource_node', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     private ?ResourceNode $resourceNode = null;
 
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'nb_attempts', type: Types::INTEGER)]
-    private $nbAttempts = 0;
+    private ?int $nbAttempts = 0;
 
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'nb_openings', type: Types::INTEGER)]
-    private $nbOpenings = 0;
+    private ?int $nbOpenings = 0;
 
     public function getResourceNode(): ?ResourceNode
     {

@@ -8,9 +8,6 @@ use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
 
-/**
- * AnswerRepository.
- */
 class AnswerRepository extends EntityRepository
 {
     /**
@@ -22,15 +19,13 @@ class AnswerRepository extends EntityRepository
      *
      * @return Answer[]
      */
-    public function findByQuestion(Item $question, Exercise $exercise = null, $finishedPapersOnly = false)
+    public function findByQuestion(Item $question, ?Exercise $exercise = null, ?bool $finishedPapersOnly = false): array
     {
         $qb = $this->createQueryBuilder('a')
             ->join('a.paper', 'p', 'WITH', 'p.exercise = :exercise')
             ->where('a.questionId = :question')
-            ->setParameters([
-                'exercise' => $exercise,
-                'question' => $question->getUuid(),
-            ]);
+            ->setParameter('exercise', $exercise)
+            ->setParameter('question', $question->getUuid());
 
         if ($finishedPapersOnly) {
             $qb->andWhere('p.end IS NOT NULL');
@@ -39,7 +34,7 @@ class AnswerRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getAvgScoreByAttempts(Exercise $exercise, bool $finishedOnly = false, User $user = null)
+    public function getAvgScoreByAttempts(Exercise $exercise, ?bool $finishedOnly = false, ?User $user = null): array
     {
         $parameters = [
             'exercise' => $exercise,

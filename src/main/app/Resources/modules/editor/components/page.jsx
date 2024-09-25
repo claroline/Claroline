@@ -29,8 +29,6 @@ const EditorPage = (props) => {
         <header className="d-flex flex-row align-items-center gap-2 mb-2" role="presentation">
           <Heading level={1} displayLevel={4} className="m-0">
             {props.title}
-
-
           </Heading>
 
           {props.managerOnly &&

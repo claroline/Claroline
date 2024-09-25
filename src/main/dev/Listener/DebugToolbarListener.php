@@ -6,12 +6,9 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class DebugToolbarListener
 {
-    /** @var bool */
-    private $debug;
-
-    public function __construct(bool $debug)
-    {
-        $this->debug = $debug;
+    public function __construct(
+        private readonly bool $debug
+    ) {
     }
 
     /**
@@ -19,7 +16,7 @@ class DebugToolbarListener
      *
      * @see https://symfony.com/doc/4.4/profiler.html#updating-the-web-debug-toolbar-after-ajax-requests
      */
-    public function onResponse(ResponseEvent $event)
+    public function onResponse(ResponseEvent $event): void
     {
         if (!$this->debug) {
             return;

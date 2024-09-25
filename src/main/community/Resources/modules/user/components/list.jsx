@@ -97,7 +97,7 @@ const Users = (props) => {
           sortable: false
         }, {
           name: 'restrictions.disabled',
-          alias: 'isDisabled',
+          alias: 'disabled',
           type: 'boolean',
           label: trans('disabled'),
           displayable: false,

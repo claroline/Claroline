@@ -156,7 +156,7 @@ class ListManagersExporter extends AbstractListExporter
                 'name' => 'restrictions.disabled',
                 'type' => 'boolean',
                 'label' => $this->translator->trans('disabled', [], 'platform'),
-                'alias' => 'isDisabled',
+                'alias' => 'disabled',
             ],
         ];
     }

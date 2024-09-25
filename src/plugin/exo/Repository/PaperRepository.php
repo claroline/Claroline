@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use UJM\ExoBundle\Entity\Attempt\Paper;
@@ -16,20 +17,16 @@ class PaperRepository extends EntityRepository
     /**
      * Returns the last paper (finished or not) done by a User.
      * Mostly use to know the next paper number.
-     *
-     * @return Paper
      */
-    public function findLastPaper(Exercise $exercise, User $user)
+    public function findLastPaper(Exercise $exercise, User $user): ?Paper
     {
         return $this->createQueryBuilder('p')
             ->where('p.user = :user')
             ->andWhere('p.exercise = :exercise')
             ->orderBy('p.number', 'DESC')
             ->setMaxResults(1)
-            ->setParameters([
-                'user' => $user,
-                'exercise' => $exercise,
-            ])
+            ->setParameter('user', $user)
+            ->setParameter('exercise', $exercise)
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -39,27 +36,23 @@ class PaperRepository extends EntityRepository
      *
      * @return Paper[]
      */
-    public function findUnfinishedPapers(Exercise $exercise, User $user)
+    public function findUnfinishedPapers(Exercise $exercise, User $user): array
     {
         return $this->createQueryBuilder('p')
             ->where('p.user = :user')
             ->andWhere('p.exercise = :exercise')
             ->andWhere('p.end IS NULL')
             ->orderBy('p.start', 'DESC')
-            ->setParameters([
-                'user' => $user,
-                'exercise' => $exercise,
-            ])
+            ->setParameter('user', $user)
+            ->setParameter('exercise', $exercise)
             ->getQuery()
             ->getResult();
     }
 
     /**
      * Checks that all the answers of a Paper have been marked.
-     *
-     * @return bool
      */
-    public function isFullyEvaluated(Paper $paper)
+    public function isFullyEvaluated(Paper $paper): bool
     {
         return 0 === (int) $this->getEntityManager()
             ->createQuery('
@@ -77,7 +70,7 @@ class PaperRepository extends EntityRepository
     /**
      * Retrieve a Claroline attempt (ResourceEvaluation) from a paper.
      */
-    public function getPaperAttempt(Paper $paper)
+    public function getPaperAttempt(Paper $paper): ?ResourceEvaluation
     {
         return $this->getEntityManager()
             ->createQuery('
@@ -96,7 +89,7 @@ class PaperRepository extends EntityRepository
      *
      * @return int the number of exercise papers
      */
-    public function countExercisePapers(Exercise $exercise)
+    public function countExercisePapers(Exercise $exercise): int
     {
         return (int) $this->getEntityManager()
             ->createQuery('
@@ -115,7 +108,7 @@ class PaperRepository extends EntityRepository
      *
      * @return int the number of registered users
      */
-    public function countUsersPapers(Exercise $exercise)
+    public function countUsersPapers(Exercise $exercise): int
     {
         return (int) $this->getEntityManager()
           ->createQuery('
@@ -135,7 +128,7 @@ class PaperRepository extends EntityRepository
      *
      * @return int the number of registered users
      */
-    public function countAnonymousPapers(Exercise $exercise)
+    public function countAnonymousPapers(Exercise $exercise): int
     {
         return (int) $this->getEntityManager()
           ->createQuery('
@@ -155,7 +148,7 @@ class PaperRepository extends EntityRepository
      *
      * @return Paper[]
      */
-    public function findPapersToCorrect(Exercise $exercise)
+    public function findPapersToCorrect(Exercise $exercise): array
     {
         return $this->getEntityManager()
             ->createQuery('
@@ -175,10 +168,8 @@ class PaperRepository extends EntityRepository
 
     /**
      * Returns whether a hint is related to a paper.
-     *
-     * @return bool
      */
-    public function hasHint(Paper $paper, Hint $hint)
+    public function hasHint(Paper $paper, Hint $hint): bool
     {
         return 0 < (int) $this->createQueryBuilder('p')
             ->select('COUNT(p)')
@@ -187,15 +178,13 @@ class PaperRepository extends EntityRepository
             ->join('s.stepQuestions', 'sq')
             ->where('e = :exercise')
             ->andWhere('sq.question = :question')
-            ->setParameters([
-                'question' => $hint->getQuestion(),
-                'exercise' => $paper->getExercise(),
-            ])
+            ->setParameter('question', $hint->getQuestion())
+            ->setParameter('exercise', $paper->getExercise())
             ->getQuery()
             ->getSingleScalarResult();
     }
 
-    public function getAvgScoreByAttempts(Exercise $exercise, bool $finishedOnly = false, User $user = null)
+    public function getAvgScoreByAttempts(Exercise $exercise, bool $finishedOnly = false, User $user = null): array
     {
         $parameters = [
             'exercise' => $exercise,

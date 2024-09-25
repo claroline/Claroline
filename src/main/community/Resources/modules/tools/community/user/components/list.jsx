@@ -79,11 +79,11 @@ const UserList = props =>
             name: 'groups',
             label: trans('groups'),
             type: 'groups',
-            options: {
+            /*options: {
               picker: !isEmpty(props.contextData) ? {
                 url: ['apiv2_workspace_list_groups', {id: props.contextData.id}]
               } : undefined
-            },
+            },*/
             displayed: false,
             displayable: false,
             sortable: false

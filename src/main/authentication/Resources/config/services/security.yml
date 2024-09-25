@@ -2,7 +2,6 @@ services:
     # Authenticators
     Claroline\AuthenticationBundle\Security\Authentication\Authenticator:
         arguments:
-            - '%secret%'
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Listener\AuthenticationSuccessListener'

@@ -2,12 +2,12 @@
 
 namespace Claroline\AppBundle\API\Finder;
 
-use Closure;
-use Countable;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 
-class FinderResult implements FinderResultInterface, Countable
+class FinderResult implements FinderResultInterface, \Countable
 {
     private ?int $count = null;
     private ?iterable $results = null;
@@ -16,7 +16,7 @@ class FinderResult implements FinderResultInterface, Countable
         private readonly string $name,
         private readonly FinderQuery $searchQuery,
         private readonly QueryBuilder $queryBuilder,
-        private readonly ?Closure $rowTransformer = null
+        private readonly ?\Closure $rowTransformer = null
     ) {
     }
 
@@ -30,7 +30,7 @@ class FinderResult implements FinderResultInterface, Countable
         return $this->count;
     }
 
-    public function getItems(): iterable
+    public function getItems(bool $flush = false): iterable
     {
         if (null === $this->results) {
             if (0 < $this->searchQuery->getPageSize()) {
@@ -40,12 +40,20 @@ class FinderResult implements FinderResultInterface, Countable
 
             $this->results = $this->queryBuilder
                 ->getQuery()
+                ->setHint(SqlWalker::HINT_DISTINCT, true)
                 ->toIterable();
         }
 
         if (null !== $this->rowTransformer) {
+            $count = 0;
             foreach ($this->results as $result) {
                 yield ($this->rowTransformer)($result);
+
+                $this->queryBuilder->getEntityManager()->detach($result);
+                ++$count;
+                if (0 === $count % 30 && $flush) {
+                    flush();
+                }
             }
         }
 
@@ -64,7 +72,8 @@ class FinderResult implements FinderResultInterface, Countable
             ->distinct(false)
             ->setFirstResult(0)
             ->setMaxResults(null)
-            ->getQuery();
+            ->getQuery()
+            ->setHint(SqlWalker::HINT_DISTINCT, true);
     }
 
     /**
@@ -73,5 +82,13 @@ class FinderResult implements FinderResultInterface, Countable
     public function getQuery(): Query
     {
         return $this->queryBuilder->getQuery();
+    }
+
+    public function toResponse(): StreamedJsonResponse
+    {
+        return new StreamedJsonResponse([
+            'totalResults' => $this->count(),
+            'data' => $this->getItems(true),
+        ]);
     }
 }

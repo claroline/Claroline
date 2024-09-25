@@ -2,7 +2,11 @@
 
 namespace Claroline\AppBundle\API;
 
+use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\AppBundle\API\Finder\FinderFactoryInterface;
 use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderResultInterface;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
@@ -47,6 +51,7 @@ class Crud
         private readonly SerializerProvider $serializer,
         private readonly ValidatorProvider $validator,
         private readonly SchemaProvider $schema,
+        private readonly FinderFactoryInterface $finderFactory,
         AuthorizationCheckerInterface $authorization
     ) {
         $this->authorization = $authorization;
@@ -118,12 +123,31 @@ class Crud
         return $this->finder->count($class, $query);
     }
 
-    /**
-     * @deprecated
-     */
-    public function search(string $class, FinderQuery $query, ?array $options = []): array
+    public function search(string $class, ?FinderQuery $query = null, ?array $options = []): FinderResultInterface|array
     {
-        return $this->finder->find($class, $query, $options);
+        $entityDef = new \ReflectionClass($class);
+        $attributes = $entityDef->getAttributes();
+
+        foreach ($attributes as $attribute) {
+            if (CrudEntity::class === $attribute->getName()) {
+                $args = $attribute->getArguments();
+                if ($args['finderClass']) {
+                    return $this->finderFactory->create($args['finderClass'])
+                        ->submit($query)
+                        ->getResult(function (object $entity) use ($options): array {
+                            return $this->serializer->serialize($entity, array_merge([SerializerInterface::SERIALIZE_LIST], $options));
+                        })
+                    ;
+                }
+            }
+        }
+
+        // for retro compatibility
+        return $this->list($class, $query ? [
+            'filters' => $query->getFilters(),
+            'page' => $query->getPage(),
+            'limit' => $query->getPageSize(),
+        ] : [], $options);
     }
 
     /**
