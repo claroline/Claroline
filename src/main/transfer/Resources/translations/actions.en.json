@@ -1,5 +1,16 @@
 {
   "import": "Import",
   "export": "Export",
-  "refresh": "Refresh data"
+  "refresh": "Refresh data",
+
+  "delete_import": "Delete import",
+  "delete_import_help": "Allows to delete import",
+  "delete_export": "Delete export",
+  "delete_export_help": "Allows to delete export",
+
+  "unblock": "Unblock",
+  "unblock_import": "Unblock import",
+  "unblock_import_help": "Allows to unblock import in case it remains blocked on In progress",
+  "unblock_export": "Unblock export",
+  "unblock_export_help": "Allows to unblock export in case it remains blocked on In progress"
 }

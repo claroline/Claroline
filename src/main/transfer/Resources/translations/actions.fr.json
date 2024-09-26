@@ -1,5 +1,16 @@
 {
   "import": "Importer",
   "export": "Exporter",
-  "refresh": "Rafraîchir les données"
+  "refresh": "Rafraîchir les données",
+
+  "delete_import": "Supprimer l'import",
+  "delete_import_help": "Permet de supprimer l'import",
+  "delete_export": "Supprimer l'export",
+  "delete_export_help": "Permet de supprimer l'export",
+
+  "unblock": "Débloquer",
+  "unblock_import": "Débloquer l'import",
+  "unblock_import_help": "Permet de débloquer l'import dans le cas où il reste bloqué sur En cours",
+  "unblock_export": "Débloquer l'export",
+  "unblock_export_help": "Permet de débloquer l'export dans le cas où il reste bloqué sur En cours"
 }

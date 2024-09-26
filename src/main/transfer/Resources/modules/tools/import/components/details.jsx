@@ -8,8 +8,8 @@ import {URL_BUTTON} from '#/main/app/buttons'
 
 import {Logs} from '#/main/transfer/log/components/logs'
 import {TransferDetails} from '#/main/transfer/components/details'
+import {ImportEditor} from '#/main/transfer/tools/import/editor/containers/main'
 import {ImportFile as ImportFileTypes} from '#/main/transfer/tools/import/prop-types'
-import {ImportForm} from '#/main/transfer/tools/import/containers/form'
 
 const ImportDetails = props =>
   <TransferDetails
@@ -37,8 +37,12 @@ const ImportDetails = props =>
             component: Logs
           }, {
             path: '/edit',
-            component: ImportForm,
-            onEnter: () => props.openForm(props.importFile)
+            onEnter: () => props.openForm(props.importFile),
+            render: () => (
+              <ImportEditor
+                path={props.path+'/'+props.importFile.id}
+              />
+            )
           }
         ]}
       />
