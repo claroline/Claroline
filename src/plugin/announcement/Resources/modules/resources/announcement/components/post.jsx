@@ -14,60 +14,65 @@ import {Datetime} from '#/main/app/components/date'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 import {MODAL_ANNOUNCEMENT_SENDING} from '#/plugin/announcement/resources/announcement/modals/sending'
+import {PageTitle} from '#/main/app/page/components/title'
 
 const AnnouncementPost = (props) => {
   const history = useHistory()
 
   return (
     <ResourcePage
-      title={props.announcement.title}
       poster={props.announcement.poster}
-      primaryAction="edit"
-      actions={[
-        {
-          name: 'download',
-          type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-file-pdf',
-          label: trans('export-pdf',{}, 'actions'),
-          callback: props.exportPDF
-        }, {
-          name: 'send',
-          type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-paper-plane',
-          label: trans('send', {}, 'actions'),
-          target: `${props.path}/${props.announcement.id}/send`,
-          modal: [MODAL_ANNOUNCEMENT_SENDING, {
-            aggregateId: props.aggregateId,
-            announcement: props.announcement,
-            workspaceRoles: props.workspaceRoles
-          }],
-          displayed: props.editable
-        }, {
-          name: 'edit',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-pencil',
-          label: trans('edit', {}, 'actions'),
-          target: `${props.path}/${props.announcement.id}/edit`,
-          displayed: props.editable
-        }, {
-          name: 'delete',
-          type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-trash',
-          label: trans('delete', {}, 'actions'),
-          callback: () => {
-            props.remove(props.aggregateId, props.announcement)
-            history.push(props.path)
-          },
-          dangerous: true,
-          confirm: {
-            title: trans('announcement_delete_confirm_title', {}, 'announcement'),
-            message: trans('announcement_delete_confirm_message', {}, 'announcement'),
-          },
-          displayed: props.editable
-        }
-      ]}
     >
-      <PageSection size="md" className="py-5 px-4">
+      <PageTitle
+        size="md"
+        title={props.announcement.title}
+        primaryAction="edit"
+        actions={[
+          {
+            name: 'download',
+            type: CALLBACK_BUTTON,
+            icon: 'fa fa-fw fa-file-pdf',
+            label: trans('export-pdf',{}, 'actions'),
+            callback: props.exportPDF
+          }, {
+            name: 'send',
+            type: MODAL_BUTTON,
+            icon: 'fa fa-fw fa-paper-plane',
+            label: trans('send', {}, 'actions'),
+            target: `${props.path}/${props.announcement.id}/send`,
+            modal: [MODAL_ANNOUNCEMENT_SENDING, {
+              aggregateId: props.aggregateId,
+              announcement: props.announcement,
+              workspaceRoles: props.workspaceRoles
+            }],
+            displayed: props.editable
+          }, {
+            name: 'edit',
+            type: LINK_BUTTON,
+            icon: 'fa fa-fw fa-pencil',
+            label: trans('edit', {}, 'actions'),
+            target: `${props.path}/${props.announcement.id}/edit`,
+            displayed: props.editable
+          }, {
+            name: 'delete',
+            type: CALLBACK_BUTTON,
+            icon: 'fa fa-fw fa-trash',
+            label: trans('delete', {}, 'actions'),
+            callback: () => {
+              props.remove(props.aggregateId, props.announcement)
+              history.push(props.path)
+            },
+            dangerous: true,
+            confirm: {
+              title: trans('announcement_delete_confirm_title', {}, 'announcement'),
+              message: trans('announcement_delete_confirm_message', {}, 'announcement'),
+            },
+            displayed: props.editable
+          }
+        ]}
+      />
+
+      <PageSection size="md" className="p-4 pb-5">
         <div className="text-body-tertiary fw-bolder d-flex align-items-center gap-3 mb-4" role="presentation">
           <UserMicro
             {...get(props.announcement, 'meta.creator', {})}

@@ -23,6 +23,7 @@ const GridData = props =>
         {props.selection &&
           <Checkbox
             id="data-grid-select"
+            className="py-2 m-0"
             label={<span className="d-none d-sm-block">{trans('list_select_all')}</span>}
             labelChecked={<span className="d-none d-sm-block">{trans('list_deselect_all')}</span>}
             checked={0 < props.selection.current.length}
@@ -55,7 +56,7 @@ const GridData = props =>
       />
     }
 
-    <ul className="data-grid-content mb-auto">
+    <ul className="data-grid-content list-unstyled mb-auto">
       {props.data.map((row) =>
         <GridItem
           key={row.id}

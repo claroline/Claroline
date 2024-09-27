@@ -23,14 +23,13 @@ const ContextPage = (props) => {
           target: contextPath
         }
       ] : []).concat(props.breadcrumb || [])}
-      poster={props.poster || get(contextData, 'poster')}
-      meta={{
-        title: get(contextData, 'name') || trans(contextType, {}, 'context'),
-        description: get(contextData, 'meta.description')
-      }}
-      title={get(contextData, 'name') || trans(contextType, {}, 'context')}
+      title={props.title ?
+        props.title + ' | ' + get(contextData, 'name', trans(contextType, {}, 'context')) :
+        get(contextData, 'name', trans(contextType, {}, 'context'))
+      }
+      description={props.description || get(contextData, 'meta.description')}
 
-      {...omit(props, 'className', 'breadcrumb', 'poster', 'root')}
+      {...omit(props, 'className', 'breadcrumb', 'root', 'title', 'description')}
     >
       {props.children}
     </PageFull>

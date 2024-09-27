@@ -11,22 +11,24 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CommunityBundle\Repository\RoleRepository;
-use Doctrine\DBAL\Types\Types;
-use RuntimeException;
+use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Restriction\Locked;
+use Claroline\CommunityBundle\Finder\RoleType;
+use Claroline\CommunityBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_role')]
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
+#[CrudEntity(finderClass: RoleType::class)]
 class Role implements CrudEntityInterface
 {
     use Id;
@@ -45,7 +47,8 @@ class Role implements CrudEntityInterface
     private ?string $translationKey = null;
 
     /**
-     * @deprecated should be unidirectional.
+     * @deprecated should be unidirectional
+     *
      * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles', fetch: 'EXTRA_LAZY')]
@@ -54,9 +57,8 @@ class Role implements CrudEntityInterface
     #[ORM\Column(name: 'entity_type', type: Types::STRING, length: 10)]
     private string $type = self::PLATFORM;
 
-    
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: Workspace::class, inversedBy: 'roles', fetch: 'EXTRA_LAZY')]
+    #[ORM\ManyToOne(targetEntity: Workspace::class, fetch: 'EXTRA_LAZY', inversedBy: 'roles')]
     private ?Workspace $workspace = null;
 
     #[ORM\Column(name: 'personal_workspace_creation_enabled', type: Types::BOOLEAN)]
@@ -84,16 +86,16 @@ class Role implements CrudEntityInterface
      * platform-wide roles (as listed in Claroline/CoreBundle/Security/PlatformRoles)
      * cannot be modified by this setter.
      *
-     * @throws RuntimeException if the name isn't prefixed by 'ROLE_' or if the role is platform-wide
+     * @throws \RuntimeException if the name isn't prefixed by 'ROLE_' or if the role is platform-wide
      */
     public function setName(string $name): void
     {
         if (!str_starts_with($name, 'ROLE_')) {
-            throw new RuntimeException('Role names must start with "ROLE_"');
+            throw new \RuntimeException('Role names must start with "ROLE_"');
         }
 
         if ($this->name && PlatformRoles::contains($this->name)) {
-            throw new RuntimeException('Platform roles cannot be modified');
+            throw new \RuntimeException('Platform roles cannot be modified');
         }
 
         if (PlatformRoles::contains($name)) {

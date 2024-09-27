@@ -1,4 +1,10 @@
 services:
+    Claroline\OpenBadgeBundle\Finder\AssertionType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\OpenBadgeBundle\Finder\BadgeType:
+        tags: [ claroline.finder.type ]
+
     Claroline\OpenBadgeBundle\Finder\BadgeClassFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]

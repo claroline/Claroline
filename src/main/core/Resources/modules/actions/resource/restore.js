@@ -20,13 +20,14 @@ export default (resourceNodes, nodesRefresher) => {
     icon: 'fa fa-fw fa-trash-restore-alt',
     label: trans('restore', {}, 'actions'),
     displayed: 0 !== processable.length,
-    primary: true,
+    dangerous: true,
     confirm: {
       message: transChoice('resources_restore_message', processable.length, {count: '<b class="fw-bold">'+processable.length+'</b>'}, 'resource'),
       items:  processable.map(item => ({
         thumbnail: item.thumbnail,
         name: item.name
-      }))
+      })),
+      dangerous: false
     },
     request: {
       url: url(

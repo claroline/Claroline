@@ -1,4 +1,4 @@
-import React, {forwardRef} from 'react'
+import React, {forwardRef, useMemo} from 'react'
 import classes from 'classnames'
 import identity from 'lodash/identity'
 import omit from 'lodash/omit'
@@ -16,7 +16,11 @@ import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 const StandardMenu = forwardRef((props, ref) => {
   const isStandard = typeof props.menu === 'object' && props.menu.items
 
-  if (isStandard) {
+  if (!isStandard) {
+    return props.menu
+  }
+
+  const actions = useMemo(() => {
     const displayedActions = props.menu.items.filter(
       action => undefined === action.displayed || action.displayed
     )
@@ -39,64 +43,69 @@ const StandardMenu = forwardRef((props, ref) => {
       }
     }
 
-    return (
-      <Menu
-        {...omit(props, 'id', 'menu')}
-        ref={ref}
-        align={'right' === props.menu.align ? 'end' : undefined}
-        className={props.className}
-      >
-        {(props.menu.label && 0 !== unclassifiedActions.length) &&
-          <MenuHeader>{props.menu.label}</MenuHeader>
-        }
+    return {
+      primary: primaryActions,
+      unclassified: unclassifiedActions,
+      groups: groupActions,
+      dangerous: dangerousActions
+    }
+  }, props.menu.items.map(i => i.name))
 
-        {primaryActions.map((action) =>
+  return (
+    <Menu
+      {...omit(props, 'id', 'menu')}
+      ref={ref}
+      align={'right' === props.menu.align ? 'end' : undefined}
+      className={props.className}
+    >
+      {(props.menu.label && 0 !== actions.unclassified.length) &&
+        <MenuHeader>{props.menu.label}</MenuHeader>
+      }
+
+      {actions.primary.map((action) =>
+        <MenuAction
+          {...action}
+          key={action.id || action.name || toKey(action.label)}
+          id={action.id || action.name || `${props.id || props.name}-${toKey(action.label)}`}
+        />
+      )}
+
+      {(0 !== actions.primary.length && 0 !== actions.unclassified.length) &&
+        <MenuDivider />
+      }
+
+      {actions.unclassified.map((action) =>
+        <MenuAction
+          {...action}
+          key={action.id || action.name || toKey(action.label)}
+          id={action.id || action.name || `${props.id || props.name}-${toKey(action.label)}`}
+        />
+      )}
+
+      {Object.keys(actions.groups).map((group) => [
+        <MenuHeader key={toKey(group)}>{group}</MenuHeader>,
+        ...actions.groups[group].map((action) =>
           <MenuAction
             {...action}
             key={action.id || action.name || toKey(action.label)}
             id={action.id || action.name || `${props.id || props.name}-${toKey(action.label)}`}
           />
-        )}
+        )
+      ])}
 
-        {(0 !== primaryActions.length && 0 !== unclassifiedActions.length) &&
-          <MenuDivider />
-        }
+      {((0 !== actions.primary.length || 0 !== actions.primary.length || 0 !== Object.keys(actions.groups).length) && 0 !== actions.dangerous.length) &&
+        <MenuDivider />
+      }
 
-        {unclassifiedActions.map((action) =>
-          <MenuAction
-            {...action}
-            key={action.id || action.name || toKey(action.label)}
-            id={action.id || action.name || `${props.id || props.name}-${toKey(action.label)}`}
-          />
-        )}
-
-        {Object.keys(groupActions).map((group) => [
-          <MenuHeader key={toKey(group)}>{group}</MenuHeader>,
-          ...groupActions[group].map((action) =>
-            <MenuAction
-              {...action}
-              key={action.id || action.name || toKey(action.label)}
-              id={action.id || action.name || `${props.id || props.name}-${toKey(action.label)}`}
-            />
-          )
-        ])}
-
-        {((0 !== unclassifiedActions.length || 0 !== Object.keys(groupActions).length) && 0 !== dangerousActions.length) &&
-          <MenuDivider />
-        }
-
-        {dangerousActions.map((action) =>
-          <MenuAction
-            {...action}
-            key={action.id || action.name || toKey(action.label)}
-            id={action.id || action.name || `${props.id || props.name}-${toKey(action.label)}`}
-          />
-        )}
-      </Menu>
-    )
-  }
-
-  return props.menu
+      {actions.dangerous.map((action) =>
+        <MenuAction
+          {...action}
+          key={action.id || action.name || toKey(action.label)}
+          id={action.id || action.name || `${props.id || props.name}-${toKey(action.label)}`}
+        />
+      )}
+    </Menu>
+  )
 })
 
 StandardMenu.propTypes = {

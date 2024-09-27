@@ -40,47 +40,14 @@
     }
 }
 
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    flex-shrink: 0;
-    flex-direction: column;
-    align-items: stretch;
-    margin: 0;
-    border-bottom: $page-header-border-width solid $page-header-border-color;
-
-    @include box-shadow($page-header-box-shadow);
-}
-
 .page-poster {
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    min-height: $page-header-height;
-
-    // use movie subtitles styles to make title always readable
-    .breadcrumb,
-    .breadcrumb-item::before,
-    .breadcrumb a,
-    .nav a.nav-link,
-    .nav button.nav-link,
-    .app-menu-toggle,
-    .page-title {
-        @include text-movie-subtitles();
-    }
-
-    a.nav-link.active {
-        border-color: currentColor !important;
-    }
 }
 
 .app-menu-toggle {
     font-size: $font-size-lg;
-}
-
-.page-header-content {
-    display: flex;
-    align-items: center;
 }
 
 .page-icon {
@@ -92,26 +59,7 @@
 }
 
 .page-title {
-    margin: 0;
-    flex: 1;
-    color: $page-title-color;
-    font-weight: $page-title-font-weight;
-
     @include font-size($page-title-font-size);
-
-    small {
-        color: $page-subtitle-color;
-        font-weight: $page-subtitle-font-weight;
-    }
-}
-
-.page-actions {
-    margin-left: auto;
-    white-space: nowrap;
-
-    .btn-toolbar {
-        white-space: nowrap;
-    }
 }
 
 .page-content {
@@ -151,14 +99,10 @@
     .page-header {
         margin-bottom: map-get($spacers, 5);
     }
-
-    .page-header-content {
-        align-items: flex-end;
-    }
 }
 
 @media (max-width: map-get($grid-breakpoints, 'sm')) {
-    .page-header {
+    /*.page-header {
         flex-wrap: wrap;
-    }
+    }*/
 }

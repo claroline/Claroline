@@ -19,6 +19,7 @@ const ResourceEvaluations = (props) =>
   >
     <PageListSection>
       <ListData
+        flush={true}
         name={selectors.STORE_NAME}
         fetch={{
           url: ['apiv2_resource_evaluation_list', {nodeId: props.nodeId}],

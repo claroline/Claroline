@@ -12,7 +12,7 @@ export default (badges, refresher) => ({
   icon: 'fa fa-fw fa-user-plus',
   label: trans('grant_users', {}, 'badge'),
   displayed: hasPermission('grant', badges[0]),
-  disabled: !get(badges[0], 'meta.enabled'),
+  disabled: get(badges[0], 'meta.archived', false),
 
   modal: [MODAL_USERS, {
     selectAction: (selected) => ({

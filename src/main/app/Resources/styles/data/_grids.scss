@@ -45,13 +45,6 @@
 // Content & Items
 // ---
 
-.data-grid-content {
-    // remove <ul> styles
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
 .data-grid-item-container {
     position: relative; // constrain selection checkbox
 
@@ -86,7 +79,7 @@
 .data-grid-col {
     .data-grid-content {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
         gap: $data-grid-gutter;
     }
 }

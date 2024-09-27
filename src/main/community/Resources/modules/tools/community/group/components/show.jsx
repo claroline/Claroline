@@ -32,7 +32,7 @@ const GroupShow = (props) =>
   >
     {get(props.group, 'meta.description') &&
       <PageSection size="md">
-        <ContentHtml className="lead my-5">{get(props.group, 'meta.description')}</ContentHtml>
+        <ContentHtml className="lead my-5 mt-4">{get(props.group, 'meta.description')}</ContentHtml>
       </PageSection>
     }
 

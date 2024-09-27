@@ -21,6 +21,7 @@ const EventsPresences = (props) =>
   >
     <PageListSection>
       <PresencesList
+        flush={true}
         path={props.path}
         name={selectors.STORE_NAME+'.presences'}
         url={['apiv2_cursus_workspace_presence_list', {id: props.contextId}]}

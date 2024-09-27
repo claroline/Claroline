@@ -43,10 +43,10 @@ export default {
           time: true
         }
       }, {
-        name: 'badge.meta.enabled',
+        name: 'badge.meta.archived',
+        alias: 'badge.archived',
         type: 'boolean',
-        label: trans('enabled', {}, 'badge'),
-        displayed: true
+        label: trans('archived')
       }
     ],
     card: AssertionBadgeCard

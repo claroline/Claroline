@@ -117,12 +117,6 @@
     }
 }
 
-/*.app-menu-impersonation {
-    @include gradient-striped($toolbar-bg, 45deg);
-
-    background-size: 100px 100px;
-}*/
-
 .app-menu-items {
     display: flex;
     flex-direction: column;
@@ -191,10 +185,6 @@
 
 // MD/LG screens :
 @media (max-width: map-get($grid-breakpoints, 'xl')) {
-    /*.app-contexts + .app-menu,
-    .app-contexts + .app-menu + .app-menu-backdrop {
-        left: 72px !important; // FIXME
-    }*/
     .app-body {
         padding-left: map-get($icon-sizes, sm) + 1.5rem;
     }
@@ -204,7 +194,6 @@
         z-index: $zindex-fixed;
 
         &.show {
-            //@include box-shadow(0 0 3px 1px rgba(0, 0, 0, 0.5));
             + .app-menu-backdrop {
                 position: fixed;
                 z-index: $zindex-fixed - 1;

@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class SecurityLog extends AbstractLog
 {
-    
     #[ORM\JoinColumn(name: 'target_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $target = null;

@@ -54,6 +54,7 @@ const DirectoryPlayer = props =>
         help={trans('file_drop_help', {}, 'resource')}
       >
         <ListSource
+          flush={true}
           name={props.listName}
           fetch={{
             url: ['apiv2_resource_list', {contextId: get(props.currentNode, 'workspace.id', null), parent: get(props.currentNode, 'id', null)}],

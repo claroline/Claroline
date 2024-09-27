@@ -11,6 +11,7 @@ const LogsOperational = () =>
   <ToolPage title={trans('operational', {}, 'log')}>
     <PageListSection>
       <LogOperationalList
+        flush={true}
         name={selectors.OPERATIONAL_NAME}
         url={['apiv2_logs_operational']}
         customDefinition={[

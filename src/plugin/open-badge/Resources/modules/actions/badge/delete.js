@@ -19,7 +19,7 @@ export default (badges, refresher) => {
     displayed: !isEmpty(processable),
     dangerous: true,
     confirm: {
-      message: transChoice('badge_delete_confirm_message', processable.length, {count: '<b class="fw-bold">'+processable.length+'</b>'}, 'badge'),
+      message: transChoice('delete_confirm_message', processable.length, {count: '<b class="fw-bold">'+processable.length+'</b>'}, 'badge'),
       additional: trans('irreversible_action_confirm'),
       items:  processable.map(item => ({
         thumbnail: item.thumbnail,

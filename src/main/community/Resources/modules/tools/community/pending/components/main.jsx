@@ -19,6 +19,7 @@ const PendingMain = props =>
   >
     <PageListSection>
       <ListData
+        flush={true}
         name={selectors.LIST_NAME}
         fetch={{
           url: ['apiv2_workspace_list_pending', {id: props.workspace.id}],

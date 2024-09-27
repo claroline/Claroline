@@ -72,7 +72,7 @@ class BadgeClassSerializer
             'meta' => [
                 'createdAt' => DateNormalizer::normalize($badge->getCreatedAt()),
                 'updatedAt' => DateNormalizer::normalize($badge->getUpdatedAt()),
-                'enabled' => $badge->getEnabled(),
+                'archived' => $badge->isArchived(),
             ],
             'workspace' => $badge->getWorkspace() ? $this->workspaceSerializer->serialize($badge->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
         ];
@@ -114,7 +114,7 @@ class BadgeClassSerializer
         $this->sipe('restrictions.hideRecipients', 'setHideRecipients', $data, $badge);
 
         if (isset($data['meta'])) {
-            $this->sipe('meta.enabled', 'setEnabled', $data, $badge);
+            $this->sipe('meta.archived', 'setArchived', $data, $badge);
 
             if (isset($data['meta']['createdAt'])) {
                 $badge->setCreatedAt(DateNormalizer::denormalize($data['meta']['createdAt']));

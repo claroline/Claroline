@@ -26,6 +26,7 @@ const TeamList = props =>
   >
     <PageListSection>
       <BaseTeamList
+        flush={true}
         path={props.path}
         name={selectors.LIST_NAME}
         url={['apiv2_team_workspace_list', {id: props.contextData.id}]}

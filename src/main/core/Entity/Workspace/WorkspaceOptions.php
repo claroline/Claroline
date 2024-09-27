@@ -55,8 +55,6 @@ class WorkspaceOptions
 
     /**
      * Get all Workspace options.
-     *
-     * @return array
      */
     public function getDetails(): ?array
     {

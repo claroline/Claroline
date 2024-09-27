@@ -29,54 +29,67 @@ const ContextNav = (props) => {
     <section className="app-contexts">
       <PlatformOrganization />
 
-      <Button
-        type={LINK_BUTTON}
-        className="app-context-btn position-relative"
-        label={trans('desktop', {}, 'context')}
-        tooltip="right"
-        target="/desktop"
-      >
-        <Thumbnail
-          size="sm"
-          thumbnail={props.currentUser.picture}
-          name={props.currentUser.name}
-          square={true}
-        />
-      </Button>
+      <ul className="list-unstyled d-flex flex-column gap-2 mb-0">
+        <li>
+          <Button
+            type={LINK_BUTTON}
+            className="app-context-btn position-relative"
+            label={trans('desktop', {}, 'context')}
+            tooltip="right"
+            target="/desktop"
+          >
+            <Thumbnail
+              size="sm"
+              thumbnail={props.currentUser.picture}
+              name={props.currentUser.name}
+              square={true}
+            />
+          </Button>
+        </li>
 
-      <NotificationButton
-        className="app-context-btn"
-        tooltip="right"
-      />
-
-      <Button
-        type={MODAL_BUTTON}
-        className="app-context-btn"
-        icon="far fa-fw fa-compass"
-        label={trans('search_and_history')}
-        tooltip="right"
-        modal={[MODAL_CONTEXT_SEARCH]}
-      />
-
-      <hr className="app-context-separator" />
-
-      {pinnedContexts.map(pinnedContext => (
-        <Button
-          key={pinnedContext.id || trans('loading')}
-          type={LINK_BUTTON}
-          className="app-context-btn position-relative"
-          label={pinnedContext.name || trans('loading')}
-          tooltip="right"
-          target={route(pinnedContext)}
-        >
-          <Thumbnail
-            size="sm"
-            thumbnail={pinnedContext.thumbnail}
-            name={pinnedContext.name}
-            square={true}
+        <li>
+          <NotificationButton
+            className="app-context-btn"
+            tooltip="right"
           />
-        </Button>
-      ))}
+        </li>
+
+        <li>
+          <Button
+            type={MODAL_BUTTON}
+            className="app-context-btn"
+            icon="far fa-fw fa-compass"
+            label={trans('search_and_history')}
+            tooltip="right"
+            modal={[MODAL_CONTEXT_SEARCH]}
+          />
+        </li>
+      </ul>
+
+      <hr className="app-context-separator mx-auto" aria-hidden={true} />
+
+      {0 !== pinnedContexts.length &&
+        <ul className="list-unstyled d-flex flex-column gap-2 mb-0">
+          {pinnedContexts.map(pinnedContext => (
+            <li key={pinnedContext.id || trans('loading')}>
+              <Button
+                type={LINK_BUTTON}
+                className="app-context-btn position-relative"
+                label={pinnedContext.name || trans('loading')}
+                tooltip="right"
+                target={route(pinnedContext)}
+              >
+                <Thumbnail
+                  size="sm"
+                  thumbnail={pinnedContext.thumbnail}
+                  name={pinnedContext.name}
+                  square={true}
+                />
+              </Button>
+            </li>
+          ))}
+        </ul>
+      }
     </section>
   )
 }

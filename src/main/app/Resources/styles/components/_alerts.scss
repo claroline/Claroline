@@ -5,9 +5,9 @@
 .alert {
     position: relative;
     display: flex;
-    align-items: flex-start;
+    align-items: baseline;
     flex-direction: row;
-    text-align: justify;
+    //text-align: justify;
     gap: var(--#{$prefix}alert-padding-x);
     border: var(--#{$prefix}border-width) solid transparent;
 

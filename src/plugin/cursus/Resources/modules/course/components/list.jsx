@@ -14,6 +14,7 @@ import {CourseCard} from '#/plugin/cursus/course/components/card'
 import {getActions, getDefaultAction} from '#/plugin/cursus/course/utils'
 
 import {ContentSizing} from '#/main/app/content/components/sizing'
+import omit from 'lodash/omit'
 
 const Courses = (props) => {
   const refresher = merge({
@@ -24,11 +25,6 @@ const Courses = (props) => {
 
   return (
     <ListData
-      name={props.name}
-      fetch={{
-        url: props.url,
-        autoload: true
-      }}
       primaryAction={(row) => getDefaultAction(row, refresher, props.path, props.currentUser)}
       actions={(rows) => getActions(rows, refresher, props.path, props.currentUser)}
       definition={[
@@ -77,10 +73,18 @@ const Courses = (props) => {
           filterable: false
         }
       ]}
-      card={CourseCard}
       display={{
         current: listConst.DISPLAY_LIST
       }}
+
+      {...omit(props, 'path', 'url', 'autoload', 'refresher', 'invalidate')}
+
+      name={props.name}
+      fetch={{
+        url: props.url,
+        autoload: props.autoload
+      }}
+      card={CourseCard}
     >
       <ContentSizing size="md" className="mt-4">
         {props.children}
@@ -100,7 +104,8 @@ Courses.propTypes = {
 }
 
 Courses.defaultProps = {
-  url: ['apiv2_cursus_course_list']
+  url: ['apiv2_cursus_course_list'],
+  autoload: true
 }
 
 const CourseList = connect(

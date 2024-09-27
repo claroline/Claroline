@@ -8,7 +8,7 @@ import isNumber from 'lodash/isNumber'
 import {trans} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security/permissions'
 import {getWindowSize, constants} from '#/main/app/dom/size'
-import {Toolbar} from '#/main/app/action'
+import {Button, Toolbar} from '#/main/app/action'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {ContextUser} from '#/main/app/context/containers/user'
@@ -132,19 +132,24 @@ class ContextMenu extends Component
               </header>
             }
 
-            <ContextUser />
+            <ContextUser poster={get(this.props.contextData, 'poster')}/>
 
             {this.props.children && Children.map(this.props.children, child => child && cloneElement(child, {
               autoClose: this.autoClose
             }))}
 
             {1 < toolLinks.length &&
-              <Toolbar
-                className="app-menu-items"
-                buttonName="app-menu-item"
-                actions={toolLinks}
-                onClick={this.autoClose}
-              />
+              <ul className="app-menu-items list-unstyled">
+                {toolLinks.map(toolLink =>
+                  <li key={toolLink.name}>
+                    <Button
+                      {...toolLink}
+                      className="app-menu-item"
+                      onClick={this.autoClose}
+                    />
+                  </li>
+                )}
+              </ul>
             }
           </section>
         </aside>

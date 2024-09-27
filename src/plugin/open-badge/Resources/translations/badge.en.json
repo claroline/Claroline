@@ -4,7 +4,6 @@
   "allowed_issuers": "Users allowed to grant the badge",
   "required_validation": "Validation required by an administrator",
   "push_to_backpack": "Push to Mozilla Backpack",
-  "assignable": "Assignable",
   "no_rule": "No rules have been defined yet.",
   "rules": "Rules",
   "award_rules": "Award rules",
@@ -48,7 +47,7 @@
   "granted_date": "Date of obtaining",
   "not_granted": "You don't own this badge",
   "grant_users": "Grant to users",
-  "badge_disabled_help": "This badge is disabled and cannot be granted.",
+  "badge_archived_help": "This badge is archived and cannot be granted.",
   "no_criteria": "No criteria has been defined",
   "hide_recipients": "Hide the list of badge recipients",
   "score_above_help": "This value represents the percentage of the total score to be obtained.",
@@ -57,5 +56,7 @@
   "notify_grant": "Notify users when the badge is granted",
   "transfer_from": "Transfer from",
   "transfer_to": "Transfer to",
-  "transferred": "Transferred badge"
+  "transferred": "Transferred badge",
+  "delete_confirm_message": "{1} Are you sure you want to delete this badge? | [2,Inf[ Are you sure you want to delete these %count% badges?",
+  "archive_confirm_message": "{1} Are you sure you want to archive this badge? | [2,Inf[ Are you sure you want to archive these %count% badges?"
 }

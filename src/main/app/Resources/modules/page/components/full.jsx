@@ -13,6 +13,7 @@ const PageFull = (props) =>
     className={classes(props.className, props.size && `page-${props.size}`)}
     meta={merge({}, {
       title: props.title,
+      description: props.description,
       poster: props.poster
     }, props.meta || {})}
   >
@@ -23,11 +24,6 @@ const PageFull = (props) =>
         title={props.title}
         icon={props.icon}
         poster={props.poster}
-        toolbar={props.toolbar}
-        disabled={props.disabled}
-        primaryAction={props.primaryAction}
-        secondaryAction={props.secondaryAction}
-        actions={props.actions}
         menu={props.menu}
         embedded={props.embedded}
       />

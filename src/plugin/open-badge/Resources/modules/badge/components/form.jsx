@@ -97,12 +97,6 @@ const BadgeFormComponent = (props) =>
         title: trans('access_restrictions'),
         fields: [
           {
-            name: 'meta.enabled',
-            type: 'boolean',
-            label: trans('disable'),
-            calculated: (badge) => !get(badge, 'meta.enabled', false),
-            onChange: (disabled) => props.updateProp(props.name, 'meta.enabled', !disabled)
-          }, {
             name: '_restrictDuration',
             type: 'boolean',
             label: trans('restrict_duration', {}, 'badge'),

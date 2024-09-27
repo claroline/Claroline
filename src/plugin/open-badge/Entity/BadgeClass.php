@@ -11,10 +11,12 @@
 
 namespace Claroline\OpenBadgeBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
+use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Color;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Archived;
 use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Name;
@@ -23,18 +25,19 @@ use Claroline\CoreBundle\Entity\Model\Template;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
+use Claroline\OpenBadgeBundle\Finder\BadgeType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Represents an obtainable badge.
- *
- *
  */
 #[ORM\Table(name: 'claro__open_badge_badge_class')]
 #[ORM\Entity]
-class BadgeClass
+#[CrudEntity(finderClass: BadgeType::class)]
+class BadgeClass implements CrudEntityInterface
 {
     use Id;
     use Uuid;
@@ -44,6 +47,7 @@ class BadgeClass
     use UpdatedAt;
     use Color;
     use Template;
+    use Archived;
 
     #[ORM\Column]
     private ?string $image = null;
@@ -62,9 +66,6 @@ class BadgeClass
 
     #[ORM\ManyToOne(targetEntity: Workspace::class)]
     private ?Workspace $workspace = null;
-
-    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
-    private bool $enabled = true;
 
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $durationValidation = null;
@@ -89,6 +90,11 @@ class BadgeClass
         $this->refreshUuid();
 
         $this->rules = new ArrayCollection();
+    }
+
+    public static function getIdentifiers(): array
+    {
+        return [];
     }
 
     public function getImage(): ?string
@@ -147,16 +153,6 @@ class BadgeClass
     public function getWorkspace(): ?Workspace
     {
         return $this->workspace;
-    }
-
-    public function setEnabled(bool $bool): void
-    {
-        $this->enabled = $bool;
-    }
-
-    public function getEnabled(): bool
-    {
-        return $this->enabled;
     }
 
     public function setHideRecipients(bool $hideRecipients): void

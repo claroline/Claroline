@@ -9,7 +9,7 @@ const BBBServers = (props) =>
   <Fragment>
     <ContentTitle level={2} title={trans('servers', {}, 'bbb')} />
 
-    <Table>
+    <Table className="table-hover">
       <TableHeader>
         <TableHeaderCell>{trans('status')}</TableHeaderCell>
         <TableHeaderCell>{trans('name')}</TableHeaderCell>

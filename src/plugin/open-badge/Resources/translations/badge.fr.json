@@ -4,7 +4,6 @@
   "allowed_issuers": "Utilisateurs pouvant attribuer le badge",
   "required_validation": "Validation requise par un administrateur",
   "push_to_backpack": "Envoyer sur Mozilla Backpack",
-  "assignable": "Assignable",
   "no_rule": "Aucune règle n'a été définie pour le moment.",
   "rules": "Règles",
   "award_rules": "Règles d'attribution",
@@ -47,7 +46,7 @@
   "granted_date": "Date d'obtention",
   "not_granted": "Vous ne possédez pas ce badge",
   "grant_users": "Attribuer à des utilisateurs",
-  "badge_disabled_help": "Ce badge est désactivé et ne peut être attribué.",
+  "badge_archived_help": "Ce badge est archivé et ne peut être attribué.",
   "no_criteria": "Aucun critère d'attribution n'a été défini.",
   "hide_recipients": "Cacher la liste des utilisateurs ayant obtenu le badge",
   "score_above_help": "Cette valeur représente le pourcentage du score total à obtenir.",
@@ -56,5 +55,7 @@
   "notify_grant": "Notifier les utilisateurs lors de l'attribution du badge",
   "transfer_from": "Transférer depuis",
   "transfer_to": "Transférer vers",
-  "transferred": "Badge transféré"
+  "transferred": "Badge transféré",
+  "delete_confirm_message": "{1} Êtes-vous sûr(e) de vouloir supprimer ce badge ? | [2,Inf[ Êtes-vous sûr(e) de vouloir supprimer ces %count% badges ?",
+  "archive_confirm_message": "{1} Êtes-vous sûr(e) de vouloir archiver ce badge ? | [2,Inf[ Êtes-vous sûr(e) de vouloir archiver ces %count% badges ?"
 }

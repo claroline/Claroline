@@ -87,9 +87,9 @@ class WorkspaceManager implements LoggerAwareInterface
         return $this->transferManager->import($archivePath, $workspace ?? new Workspace());
     }
 
-    public function hasAccess(Workspace $workspace, TokenInterface $token, string $toolName = null, string $permission = 'open'): bool
+    public function hasAccess(Workspace $workspace, ?TokenInterface $token, string $toolName = null, string $permission = 'open'): bool
     {
-        $roles = $token->getRoleNames();
+        $roles = $token?->getRoleNames() ?? [];
         if (!empty($roles)) {
             return $this->workspaceRepo->checkAccess($workspace, $roles, $toolName, $permission);
         }
@@ -201,13 +201,21 @@ class WorkspaceManager implements LoggerAwareInterface
         return false;
     }
 
-    public function isImpersonated(TokenInterface $token): bool
+    public function isImpersonated(?TokenInterface $token): bool
     {
+        if (!$token) {
+            return false;
+        }
+
         return in_array('ROLE_USURPATE_WORKSPACE_ROLE', $token->getRoleNames());
     }
 
-    public function getTokenRoles(TokenInterface $token, Workspace $workspace): array
+    public function getTokenRoles(?TokenInterface $token, Workspace $workspace): array
     {
+        if (!$token) {
+            return [];
+        }
+
         return array_values(array_filter($workspace->getRoles()->toArray(), function (Role $role) use ($token) {
             return in_array($role->getName(), $token->getRoleNames());
         }));

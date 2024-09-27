@@ -1,5 +1,4 @@
 import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
 
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {url} from '#/main/app/api'
@@ -7,23 +6,23 @@ import {trans} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
 
 export default (badges, refresher) => {
-  const processable = badges.filter(badge => hasPermission('edit', badge) && !get(badge, 'meta.enabled'))
+  const processable = badges.filter(badge => hasPermission('edit', badge) && get(badge, 'meta.archived'))
 
   return {
-    name: 'enable',
+    name: 'unarchive',
     type: ASYNC_BUTTON,
-    icon: 'fa fa-fw fa-circle-check',
-    label: trans('enable', {}, 'actions'),
-
-    displayed: !isEmpty(processable),
+    icon: 'fa fa-fw fa-box-open',
+    label: trans('unarchive', {}, 'actions'),
+    displayed: 0 !== processable.length,
     request: {
-      url: url(['apiv2_badge_enable'], {ids: processable.map(u => u.id)}),
+      url: url(['apiv2_badge_unarchive'], {ids: processable.map(u => u.id)}),
       request: {
         method: 'PUT'
       },
       success: () => refresher.update(processable)
     },
     scope: ['object', 'collection'],
-    group: trans('management')
+    group: trans('management'),
+    dangerous: true
   }
 }

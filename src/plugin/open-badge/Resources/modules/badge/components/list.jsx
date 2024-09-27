@@ -45,17 +45,6 @@ const Badges = (props) => {
           displayed: true,
           sortable: false
         }, {
-          name: 'meta.enabled',
-          label: trans('enabled'),
-          type: 'boolean'
-        }, {
-          name: 'assignable',
-          label: trans('assignable', {}, 'badge'),
-          type: 'boolean',
-          displayed: false,
-          displayable: false,
-          filterable: true
-        }, {
           name: 'meta.createdAt',
           type: 'date',
           label: trans('creation_date'),

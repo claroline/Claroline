@@ -33,6 +33,9 @@ class ResourceNodeType extends AbstractType
             ->add('code', TextType::class)
             ->add('description', TextType::class)
             ->add('published', BooleanType::class)
+            ->add('active', BooleanType::class, [
+                'default' => true,
+            ])
             ->add('hidden', HiddenType::class)
             ->add('creator', CreatorType::class)
             ->add('parent', RelatedEntityType::class)
@@ -50,20 +53,7 @@ class ResourceNodeType extends AbstractType
                     }
                 },
             ])
-            // ->add('roles', RoleType::class)
-
-            /*->add('personal', BooleanType::class, ['default' => false])
-            ->add('hidden', HiddenType::class)
-            ->add('archived', BooleanType::class, ['default' => false])
-            ->add('public', PublicType::class)
-            ->add('organizations', OrganizationType::class)*/
         ;
-
-        /*$qb->leftJoin('obj.rights', 'rights');
-        $qb->join('rights.role', 'rightsr');
-        $qb->andWhere('rightsr.name IN (:roles)');
-        $qb->andWhere('BIT_AND(rights.mask, 1) = 1');
-        $qb->setParameter('roles', $filterValue);*/
     }
 
     public function getParent(): ?string

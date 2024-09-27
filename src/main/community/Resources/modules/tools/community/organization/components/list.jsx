@@ -28,6 +28,7 @@ const OrganizationList = (props) =>
   >
     <PageListSection>
       <BaseOrganizationList
+        flush={true}
         path={props.path}
         name={selectors.LIST_NAME}
         url={['apiv2_organization_list']}

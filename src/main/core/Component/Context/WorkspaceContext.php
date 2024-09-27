@@ -73,7 +73,7 @@ class WorkspaceContext extends AbstractContext
         /** @var Workspace $workspace */
         $workspace = $contextSubject;
 
-        return $this->restrictionsManager->getErrors($workspace, $token->getUser() instanceof User ? $token->getUser() : null);
+        return $this->restrictionsManager->getErrors($workspace, $token && $token->getUser() instanceof User ? $token->getUser() : null);
     }
 
     public function isImpersonated(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool

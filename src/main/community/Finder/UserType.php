@@ -39,7 +39,6 @@ class UserType extends AbstractType
             ->add('groups', GroupType::class)
             ->add('organizations', OrganizationType::class, [
                 'joinQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
-                    //$finder->distinct();
                     $alias = $finder->getAlias();
                     if (!$finder->isRoot()) {
                         $alias = $finder->getParent()->getAlias();
@@ -47,7 +46,7 @@ class UserType extends AbstractType
 
                     $queryBuilder->leftJoin($alias.'.userOrganizationReferences', $alias.'_ref');
                     $queryBuilder->leftJoin($alias.'_ref.organization', $finder->getAlias());
-                }
+                },
             ])
         ;
     }

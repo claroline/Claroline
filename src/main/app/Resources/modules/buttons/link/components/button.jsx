@@ -8,6 +8,7 @@ import {
 
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 import {buttonClasses} from '#/main/app/buttons/utils'
+import {scrollTo} from '#/main/app/dom/scroll'
 
 /**
  * Link button.
@@ -22,6 +23,14 @@ const LinkButton = forwardRef((props, ref) =>
     exact={props.exact}
     disabled={props.disabled}
     className={buttonClasses(props.className, props.variant, props.size, props.disabled, props.active, props.primary, props.dangerous)}
+    onClick={(e) => {
+      console.log('coucou')
+      scrollTo('.app-page')
+
+      if (props.onClick) {
+        props.onClick(e)
+      }
+    }}
   >
     {props.children}
   </NavLink>
@@ -32,7 +41,8 @@ LinkButton.displayName = 'LinkButton'
 
 implementPropTypes(LinkButton, ButtonTypes, {
   target: T.string,
-  exact: T.bool
+  exact: T.bool,
+  autoScroll: T.bool
 }, {
   exact: false
 })

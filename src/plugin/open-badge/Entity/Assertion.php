@@ -11,6 +11,8 @@
 
 namespace Claroline\OpenBadgeBundle\Entity;
 
+use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\OpenBadgeBundle\Finder\AssertionType;
 use Doctrine\DBAL\Types\Types;
 use Claroline\OpenBadgeBundle\Repository\AssertionRepository;
 use DateTimeInterface;
@@ -24,22 +26,19 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Represents the obtaining of a BadgeClass by a User.
- *
- *
  */
 #[ORM\Table(name: 'claro__open_badge_assertion')]
 #[ORM\Entity(repositoryClass: AssertionRepository::class)]
+#[CrudEntity(finderClass: AssertionType::class)]
 class Assertion
 {
     use Id;
     use Uuid;
 
-    
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $recipient = null;
 
-    
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: BadgeClass::class)]
     private ?BadgeClass $badge = null;

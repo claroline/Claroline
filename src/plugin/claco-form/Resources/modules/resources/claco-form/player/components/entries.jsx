@@ -29,6 +29,7 @@ const EntriesComponent = props =>
   >
     <PageListSection>
       <ListSource
+        flush={true}
         name={selectors.STORE_NAME+'.entries.list'}
         fetch={{
           url: ['apiv2_clacoformentry_claroform_list', {clacoForm: props.clacoForm.id}],

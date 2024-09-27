@@ -34,11 +34,11 @@
 
 .sorting-cell {
     position: relative; // for positioning sorting indicator
-    padding-right: 24px !important; // arbitrary value to have the sorting indicator centered in the padding. FIXME
+    padding-right: 24px !important; // arbitrary value to have the sorting indicator centered in the padding.
     cursor: pointer;
 
     .fa {
-        line-height: /*1.42857 */$line-height-base; // todo find the correct computed line-height
+        line-height: $line-height-base;
         position: absolute;
         right: 8px; // same as horizontal padding of the cell
         color: var(--#{$prefix}secondary-color);
@@ -62,7 +62,7 @@
     }
 
     .placeholder {
-        margin: $table-cell-padding-y $table-cell-padding-x $table-cell-padding-y 0 !important;
+        margin: $table-cell-padding-y $table-cell-padding-x!important;
         display: block !important;
     }
 
@@ -117,5 +117,26 @@ tr.table-active {
             width: $nav-underline-border-width;
             background: var(--#{$prefix}primary);
         }
+    }
+}
+
+
+.table-invalidated {
+    position: relative;
+
+    &:after {
+        position: absolute;
+        display: block;
+        content: " ";
+        //background-color: rgba(255, 255, 255, .25);
+        backdrop-filter: blur(2px);
+        left: 0;
+        top: 0;
+        bottom: var(--#{$prefix}border-width);
+        right: 0;
+    }
+
+    td {
+        opacity: .75;
     }
 }

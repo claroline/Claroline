@@ -4,10 +4,6 @@
 // Forum variables
 @import "../variables";
 
-.current-subject{
-  margin-top: calc($line-height-computed - 4px);
-}
-
 .subjects-back {
   display: flex;
   justify-content: flex-end;

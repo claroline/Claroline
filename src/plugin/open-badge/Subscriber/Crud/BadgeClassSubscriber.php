@@ -96,8 +96,9 @@ class BadgeClassSubscriber implements EventSubscriberInterface
         if (empty($badge->getIssuer())) {
             $organization = null;
             if ($badge->getWorkspace()) {
-                if (count($badge->getWorkspace()->getOrganizations()) > 1) {
-                    $organization = $badge->getWorkspace()->getOrganizations()[0];
+                $wsOrganizations = $badge->getWorkspace()->getOrganizations()->toArray();
+                if (!empty($wsOrganizations)) {
+                    $organization = $wsOrganizations[0];
                 }
             } elseif ($this->tokenStorage->getToken()?->getUser() instanceof User) {
                 $organization = $this->tokenStorage->getToken()?->getUser()->getMainOrganization();

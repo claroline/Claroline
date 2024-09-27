@@ -12,7 +12,7 @@ const Badge = {
     color: T.string,
     issuingMode: T.arrayOf(T.string),
     meta: T.shape({
-      enabled: T.bool
+      archived: T.bool
     }),
     restrictions: T.shape({
       hideRecipients: T.bool
@@ -22,7 +22,7 @@ const Badge = {
     issuingPeer: false,
     description: '',
     meta: {
-      enabled: true
+      archived: false
     },
     restrictions: {
       hideRecipients: false

@@ -28,6 +28,7 @@ const RoleList = props =>
   >
     <PageListSection>
       <BaseRoleList
+        flush={true}
         path={props.path}
         name={selectors.LIST_NAME}
         url={!isEmpty(props.contextData) ?

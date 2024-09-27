@@ -7,6 +7,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ResolvedFinderType implements ResolvedFinderTypeInterface
 {
+    private ?OptionsResolver $optionsResolver = null;
+
     public function __construct(
         private readonly FinderTypeInterface $innerType,
         private readonly ?ResolvedFinderTypeInterface $parent

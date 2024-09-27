@@ -32,6 +32,7 @@ const CrudList = (props) =>
   >
     <PageListSection>
       <ListData
+        flush={true}
         name={selectors.LIST_NAME}
         fetch={{
           url: ['apiv2_example_list'],

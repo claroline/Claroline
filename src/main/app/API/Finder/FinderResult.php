@@ -49,9 +49,9 @@ class FinderResult implements FinderResultInterface, \Countable
             foreach ($this->results as $result) {
                 yield ($this->rowTransformer)($result);
 
-                $this->queryBuilder->getEntityManager()->detach($result);
                 ++$count;
                 if (0 === $count % 30 && $flush) {
+                    $this->queryBuilder->getEntityManager()->clear();
                     flush();
                 }
             }

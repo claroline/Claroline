@@ -49,9 +49,11 @@ class TextType extends AbstractType
         }
 
         $value = empty($finder->getFilterValue()) ? $options['default'] : $finder->getFilterValue();
-        $value = strtolower($value);
-        if ($options['trim']) {
+        if (null !== $value) {
             $value = strtolower($value);
+            if ($options['trim']) {
+                $value = strtolower($value);
+            }
         }
 
         if (empty($value)) {

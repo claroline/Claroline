@@ -20,6 +20,7 @@ const EventsAll = (props) =>
   >
     <PageListSection>
       <EventList
+        flush={true}
         path={props.path}
         name={selectors.LIST_NAME}
         url={['apiv2_cursus_event_list', {workspace: props.contextId}]}

@@ -105,12 +105,15 @@ const TableItem = props => {
   }
 
   let actions
-  if (!props.loading && props.actions) {
+  if (props.loaded && props.actions) {
     actions = getActions([props.row], props.actions)
   }
 
   return (
-    <TableRow className={classes(props.selected && 'table-active', props.loading && 'placeholder-glow')}>
+    <TableRow className={classes(props.selected && 'table-active', {
+      'placeholder-glow': !props.loaded,
+      'table-invalidated placeholder-glow': props.loaded && props.invalidated
+    })}>
       {props.onSelect &&
         <TableCell align="center" className="checkbox-cell">
           <input
@@ -123,7 +126,7 @@ const TableItem = props => {
         </TableCell>
       }
 
-      {props.loading && props.columns.map((column, index) =>
+      {!props.loaded && props.columns.map((column, index) =>
         <td key={column.name} className={classes(props.onSelect && 0 === index ? 'ps-0' : undefined, `${column.type}-cell`, column.primary && 'primary-cell')}>
           <div className="d-flex flex-direction-row gap-3 align-items-center">
             {column.primary &&
@@ -136,7 +139,7 @@ const TableItem = props => {
         </td>
       )}
 
-      {!props.loading && props.columns.map((column, index) =>
+      {props.loaded && props.columns.map((column, index) =>
         <DataCell
           key={column.name}
           className={props.onSelect && 0 === index ? 'ps-0' : undefined}
@@ -148,7 +151,7 @@ const TableItem = props => {
       )}
 
       <TableCell align="right" className="actions-cell">
-        {!props.loading && actions &&
+        {props.loaded && actions &&
           <Toolbar
             id={`data-table-item-${props.row.id}-actions`}
             buttonName="btn btn-text-body"
@@ -159,8 +162,8 @@ const TableItem = props => {
           />
         }
 
-        {props.loading && actions &&
-          <div className="placeholder bg-primary rounded-1">
+        {!props.loaded && props.actions &&
+          <div className="placeholder rounded-1">
             &nbsp;
           </div>
         }
@@ -181,7 +184,9 @@ TableItem.propTypes = {
   actions: T.func,
   selected: T.bool,
   onSelect: T.func,
-  loading: T.bool.isRequired
+  loading: T.bool.isRequired,
+  loaded: T.bool.isRequired,
+  invalidated: T.bool.isRequired
 }
 
 TableItem.defaultProps = {

@@ -37,6 +37,7 @@ const CatalogList = (props) =>
   >
     <PageListSection>
       <CourseList
+        flush={true}
         path={props.path}
         name={selectors.LIST_NAME}
         url={['apiv2_cursus_course_list']}

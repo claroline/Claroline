@@ -26,7 +26,7 @@ const BBBRooms = (props) =>
     }
 
     {0 < props.meetings.length &&
-      <Table className="data-table">
+      <Table className="table-hover data-table">
         <thead>
           <TableRow>
             <TableHeaderCell align={'left'}>

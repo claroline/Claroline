@@ -12,14 +12,10 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {getActions} from '#/main/community/group/utils'
 import {Group as GroupTypes} from '#/main/community/group/prop-types'
+import {PageTitle} from '#/main/app/page/components/title'
 
 const Group = (props) =>
   <ToolPage
-    className="group-page"
-    meta={{
-      title: trans('group_name', {name: get(props.group, 'name', trans('loading'))}, 'community'),
-      description: get(props.group, 'meta.description')
-    }}
     breadcrumb={[
       {
         type: LINK_BUTTON,
@@ -27,20 +23,27 @@ const Group = (props) =>
         target: `${props.path}/groups`
       }
     ].concat(props.group ? props.breadcrumb : [])}
-    title={get(props.group, 'name', trans('loading'))}
-    primaryAction="send-message"
-    toolbar="edit more"
     poster={get(props.group, 'poster')}
-    actions={!isEmpty(props.group) ? getActions([props.group], {
-      add: () => props.reload(props.group.id),
-      update: () => props.reload(props.group.id),
-      delete: () => props.reload(props.group.id)
-    }, props.path, props.currentUser) : []}
+    title={trans('group_name', {name: get(props.group, 'name', trans('loading'))}, 'community')}
+    description={get(props.group, 'meta.description')}
   >
     {isEmpty(props.group) &&
       <ContentLoader
         size="lg"
         description={trans('group_loading', {}, 'community')}
+      />
+    }
+
+    {!isEmpty(props.group) &&
+      <PageTitle
+        size="md"
+        title={get(props.group, 'name', trans('loading'))}
+        primaryAction="edit"
+        actions={!isEmpty(props.group) ? getActions([props.group], {
+          add: () => props.reload(props.group.id),
+          update: () => props.reload(props.group.id),
+          delete: () => props.reload(props.group.id)
+        }, props.path, props.currentUser) : []}
       />
     }
 

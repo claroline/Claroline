@@ -31,16 +31,30 @@ export default (contextType, contextData, refresher, currentUser) => {
           </div>
         )
       }, {
-        name: 'meta.enabled',
-        label: trans('enabled'),
-        type: 'boolean'
+        name: 'meta.description',
+        type: 'string',
+        label: trans('description'),
+        options: {long: true},
+        sortable: false
       }, {
-        name: 'assignable',
-        label: trans('assignable', {}, 'badge'),
-        type: 'boolean',
-        displayed: false,
-        displayable: false,
-        filterable: true
+        name: 'meta.createdAt',
+        type: 'date',
+        label: trans('creation_date'),
+        options: {time: true},
+        filterable: false,
+        sortable: false
+      }, {
+        name: 'meta.updatedAt',
+        type: 'date',
+        label: trans('modification_date'),
+        options: {time: true},
+        filterable: false,
+        sortable: false
+      }, {
+        name: 'meta.archived',
+        alias: 'archived',
+        label: trans('archived'),
+        type: 'boolean'
       }, {
         name: 'workspace',
         label: trans('workspace'),

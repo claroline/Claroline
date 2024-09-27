@@ -12,14 +12,10 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {getActions} from '#/main/community/role/utils'
 import {Role as RoleTypes} from '#/main/community/role/prop-types'
 import {ContentLoader} from '#/main/app/content/components/loader'
+import {PageTitle} from '#/main/app/page/components/title'
 
 const Role = (props) =>
   <ToolPage
-    className="role-page"
-    meta={{
-      title: trans('role_name', {name: trans(get(props.role, 'translationKey', 'loading'))}, 'community'),
-      description: get(props.role, 'meta.description')
-    }}
     breadcrumb={[
       {
         type: LINK_BUTTON,
@@ -27,19 +23,26 @@ const Role = (props) =>
         target: `${props.path}/roles`
       }
     ].concat(!isEmpty(props.role) ? props.breadcrumb : [])}
-    title={trans(get(props.role, 'translationKey', 'loading'))}
-    primaryAction="view-as"
-    toolbar="edit more"
-    actions={!isEmpty(props.role) ? getActions([props.role], {
-      add: () => props.reload(props.role.id),
-      update: () => props.reload(props.role.id),
-      delete: () => props.reload(props.role.id)
-    }, props.path, props.currentUser) : []}
+    title={trans('role_name', {name: trans(get(props.role, 'translationKey', 'loading'))}, 'community')}
+    description={get(props.role, 'meta.description')}
   >
     {isEmpty(props.role) &&
       <ContentLoader
         size="lg"
         description={trans('role_loading', {}, 'community')}
+      />
+    }
+
+    {!isEmpty(props.role) &&
+      <PageTitle
+        size="md"
+        title={trans(get(props.role, 'translationKey', 'loading'))}
+        primaryAction="edit"
+        actions={!isEmpty(props.role) ? getActions([props.role], {
+          add: () => props.reload(props.role.id),
+          update: () => props.reload(props.role.id),
+          delete: () => props.reload(props.role.id)
+        }, props.path, props.currentUser) : []}
       />
     }
 

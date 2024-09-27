@@ -15,7 +15,7 @@ export default (workspaces) => ({
   label: trans('view-as', {}, 'actions'),
   displayed: hasPermission('administrate', workspaces[0]),
   modal: [MODAL_ROLES, {
-    url: ['apiv2_workspace_list_roles_configurable', {workspace: workspaces[0].id}],
+    url: ['apiv2_workspace_list_roles', {id: workspaces[0].id}],
     filters: [],
     icon: 'fa fa-fw fa-mask',
     title: trans('view-as', {}, 'actions'),

@@ -27,6 +27,7 @@ const EvaluationUsers = (props) => {
     >
       <PageListSection>
         <ListData
+          flush={true}
           name={selectors.STORE_NAME + '.workspaceEvaluations'}
           fetch={{
             url: ['apiv2_workspace_evaluations_list', {workspace: props.contextId}],

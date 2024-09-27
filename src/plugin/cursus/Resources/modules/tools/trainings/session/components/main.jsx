@@ -53,6 +53,7 @@ const SessionMain = (props) =>
           render: () => (
             <PageListSection>
               <SessionList
+                flush={true}
                 path={props.path}
                 name={selectors.STORE_NAME}
                 url={['apiv2_cursus_my_sessions_active']}
@@ -75,6 +76,7 @@ const SessionMain = (props) =>
           render: () => (
             <PageListSection>
               <SessionList
+                flush={true}
                 path={props.path}
                 name={selectors.STORE_NAME}
                 url={['apiv2_cursus_my_sessions_ended']}
@@ -98,6 +100,7 @@ const SessionMain = (props) =>
           render: () => (
             <PageListSection>
               <SessionList
+                flush={true}
                 path={props.path}
                 name={selectors.STORE_NAME}
                 url={['apiv2_cursus_my_sessions_pending']}

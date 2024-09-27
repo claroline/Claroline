@@ -11,22 +11,26 @@
 
 namespace Claroline\OpenBadgeBundle\Controller;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
-use LogicException;
+use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Manager\AssertionManager;
 use Claroline\OpenBadgeBundle\Manager\BadgeManager;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -63,33 +67,34 @@ class AssertionController extends AbstractCrudController
     }
 
     #[Route(path: '/current-user/{workspace}', name: 'current_user_list', methods: ['GET'])]
-    public function listMyAssertionsAction(Request $request, ?string $workspace = null): JsonResponse
-    {
+    public function listMyAssertionsAction(
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery(),
+        #[MapEntity(mapping: ['workspace' => 'uuid'])]
+        ?Workspace $workspace = null
+    ): StreamedJsonResponse {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
         }
 
         $user = $this->tokenStorage->getToken()?->getUser();
 
-        $filters = [
-            'recipient' => $user->getUuid(),
-        ];
+        $finderQuery->addFilter('recipient', $user);
         if ($workspace) {
-            $filters['workspace'] = $workspace;
+            $finderQuery->addFilter('badge.workspace', $workspace);
         }
 
-        $assertions = $this->crud->list(Assertion::class, array_merge(
-            $request->query->all(),
-            ['hiddenFilters' => $filters]
-        ));
+        $assertions = $this->crud->search(Assertion::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
 
-        return new JsonResponse($assertions);
+        return $assertions->toResponse();
     }
 
     #[Route(path: '/{assertion}/evidences', name: 'evidences', methods: ['GET'])]
-    public function listEvidencesAction(Request $request, #[MapEntity(class: 'Claroline\OpenBadgeBundle\Entity\Assertion', mapping: ['assertion' => 'uuid'])]
-    Assertion $assertion): JsonResponse
-    {
+    public function listEvidencesAction(
+        Request $request,
+        #[MapEntity(mapping: ['assertion' => 'uuid'])]
+        Assertion $assertion
+    ): JsonResponse {
         $this->checkPermission('OPEN', $assertion, [], true);
 
         return new JsonResponse(
@@ -102,12 +107,12 @@ class AssertionController extends AbstractCrudController
 
     /**
      * Downloads pdf version of assertion.
-     *
      */
     #[Route(path: '/{assertion}/pdf/download', name: 'pdf_download', methods: ['GET'])]
-    public function downloadPdfAction(#[MapEntity(class: 'Claroline\OpenBadgeBundle\Entity\Assertion', mapping: ['assertion' => 'uuid'])]
-    Assertion $assertion): StreamedResponse
-    {
+    public function downloadPdfAction(
+        #[MapEntity(mapping: ['assertion' => 'uuid'])]
+        Assertion $assertion
+    ): StreamedResponse {
         $this->checkPermission('OPEN', $assertion, [], true);
 
         $badge = $assertion->getBadge();
@@ -125,6 +130,41 @@ class AssertionController extends AbstractCrudController
         ]);
     }
 
+    /**
+     * Transfer badges from one user to another.
+     */
+    #[Route(path: '/transfer/{userFrom}/{userTo}/', name: 'transfer', methods: ['POST'])]
+    public function transferBadgesAction(
+        #[MapEntity(mapping: ['userFrom' => 'uuid'])]
+        User $userFrom,
+        #[MapEntity(mapping: ['userTo' => 'uuid'])]
+        User $userTo
+    ): JsonResponse {
+        $this->canAdministrate();
+
+        $this->assertionManager->transferBadgesAction($userFrom, $userTo);
+
+        return new JsonResponse(null, 204);
+    }
+
+    private function canAdministrate(): void
+    {
+        $tool = $this->om->getRepository(OrderedTool::class)->findOneBy([
+            'name' => 'badges',
+            'contextName' => DesktopContext::getName(),
+        ]);
+
+        if (!$tool) {
+            throw new \LogicException("Cannot find tool 'badges'");
+        }
+
+        $granted = $this->authorization->isGranted('ADMINISTRATE', $tool);
+
+        if (!$granted) {
+            throw new AccessDeniedException('badges cannot be opened');
+        }
+    }
+
     protected function getDefaultHiddenFilters(): array
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -139,37 +179,5 @@ class AssertionController extends AbstractCrudController
         }
 
         return [];
-    }
-
-    /**
-     * Transfer badges from one user to another.
-     *
-     */
-    #[Route(path: '/transfer/{userFrom}/{userTo}/', name: 'transfer', methods: ['POST'])]
-    public function transferBadgesAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\User', mapping: ['userFrom' => 'uuid'])]
-    User $userFrom, #[MapEntity(class: 'Claroline\CoreBundle\Entity\User', mapping: ['userTo' => 'uuid'])]
-    User $userTo): JsonResponse
-    {
-        $this->canAdministrate();
-
-        $this->assertionManager->transferBadgesAction($userFrom, $userTo);
-
-        return new JsonResponse();
-    }
-
-    private function canAdministrate(): void
-    {
-        $tool = $this->om->getRepository(OrderedTool::class)
-            ->findOneBy(['name' => 'badges', 'contextName' => DesktopContext::getName()]);
-
-        if (!$tool) {
-            throw new LogicException("Annotation error: cannot found tool 'badges'");
-        }
-
-        $granted = $this->authorization->isGranted('ADMINISTRATE', $tool);
-
-        if (!$granted) {
-            throw new AccessDeniedException('badges cannot be opened');
-        }
     }
 }

@@ -77,55 +77,38 @@ class ResourceNode implements CrudEntityInterface
      * @var string
      */
     #[ORM\Column(nullable: true)]
-    private $license;
+    private ?string $license = null;
 
-    /**
-     * @var DateTimeInterface
-     */
     #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
-    private $creationDate;
+    private ?DateTimeInterface $creationDate = null;
 
-    /**
-     * @var DateTimeInterface
-     */
     #[ORM\Column(name: 'modification_date', type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'update')]
-    private $modificationDate;
+    private ?DateTimeInterface $modificationDate = null;
 
-    /**
-     * @var ResourceType
-     */
-    #[ORM\JoinColumn(name: 'resource_type_id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\JoinColumn(name: 'resource_type_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ResourceType::class)]
     private ?ResourceType $resourceType = null;
 
     /**
      * Display resource icon/evaluation when the resource is rendered.
-     *
-     * @var bool
      */
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 1])]
-    private $showIcon = true;
+    private ?bool $showIcon = true;
 
-    /**
-     * @var string
-     */
     #[ORM\Column]
     #[Gedmo\TreePathSource]
-    private $name;
+    private ?string $name = null;
 
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class, inversedBy: 'children')]
     #[Gedmo\TreeParent]
     protected ?ResourceNode $parent = null;
 
-    /**
-     * @todo this property shouldn't be nullable (is it due to materialized path strategy ?)
-     */
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     #[Gedmo\TreeLevel]
-    protected $lvl;
+    protected ?int $lvl = 0;
 
     /**
      * @var Collection<int, \Claroline\CoreBundle\Entity\Resource\ResourceNode>
@@ -205,11 +188,9 @@ class ResourceNode implements CrudEntityInterface
     private $slug;
 
     /**
-     * @var AbstractResource
-     *
      * @deprecated
      */
-    private $resource;
+    private ?AbstractResource $resource = null;
 
     public function __construct()
     {

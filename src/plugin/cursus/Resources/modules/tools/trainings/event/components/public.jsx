@@ -20,6 +20,7 @@ const EventsPublic = (props) =>
   >
     <PageListSection>
       <EventList
+        flush={true}
         path={props.path}
         name={selectors.STORE_NAME}
         url={['apiv2_cursus_event_public']}

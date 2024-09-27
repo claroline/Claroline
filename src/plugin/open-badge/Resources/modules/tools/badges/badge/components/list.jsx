@@ -27,6 +27,7 @@ const BadgeList = props =>
   >
     <PageListSection>
       <BaseBadgeList
+        flush={true}
         path={props.path}
         name={selectors.LIST_NAME}
         url={'workspace' === props.contextType ?

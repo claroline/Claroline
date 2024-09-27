@@ -36,6 +36,7 @@ use Claroline\CoreBundle\Messenger\Message\CreateWorkspace;
 use Claroline\CoreBundle\Messenger\Message\ImportWorkspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+use Claroline\OpenBadgeBundle\Finder\AssertionType;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -140,10 +141,10 @@ class WorkspaceController extends AbstractCrudController
         #[MapQueryString]
         ?FinderQuery $finderQuery = new FinderQuery()
     ): StreamedJsonResponse {
-        $finder = $this->finder->create(WorkspaceType::class)
+        $finder = $this->finder->create(AssertionType::class)
             ->submit($finderQuery)
-            ->getResult(function (Workspace $workspace): array {
-                return $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_MINIMAL]);
+            ->getResult(function (object $row): array {
+                return $this->serializer->serialize($row, [SerializerInterface::SERIALIZE_MINIMAL]);
             })
         ;
 

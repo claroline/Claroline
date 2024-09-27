@@ -17,6 +17,7 @@ import {AssertionUserCard} from '#/plugin/open-badge/tools/badges/assertion/comp
 import {actions as badgeActions}  from '#/plugin/open-badge/tools/badges/store'
 import {selectors}  from '#/plugin/open-badge/tools/badges/store'
 import {PageSection} from '#/main/app/page/components/section'
+import {Alert} from '#/main/app/components/alert'
 
 const BadgeDetailsComponent = (props) => {
   return (
@@ -32,11 +33,10 @@ const BadgeDetailsComponent = (props) => {
         className="bg-body-tertiary py-3"
         title={trans('Comment obtenir ce badge ?', {}, 'badge')}
       >
-        {!props.badge.meta.enabled &&
-          <div className="alert alert-info">
-            <span className="fa fa-fw fa-circle-info icon-with-text-right" />
-            {trans('badge_disabled_help', {}, 'badge')}
-          </div>
+        {get(props.badge, 'meta.archived', false) &&
+          <Alert type="info">
+            {trans('badge_archived_help', {}, 'badge')}
+          </Alert>
         }
 
         <div className="card">

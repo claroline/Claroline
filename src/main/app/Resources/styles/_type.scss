@@ -51,7 +51,6 @@
     border-radius: 50%;
 }
 
-
 .content-html {
     img {
         max-width: 100%; // avoids user images to overflow their container
@@ -59,6 +58,10 @@
 
     p:last-child {
         margin-bottom: 0;
+    }
+
+    a {
+        text-decoration: underline; // ensure correct contrast with surrounding text
     }
 }
 

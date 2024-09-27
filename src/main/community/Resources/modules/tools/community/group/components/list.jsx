@@ -47,6 +47,7 @@ const GroupList = props =>
   >
     <PageListSection>
       <BaseGroupList
+        flush={true}
         path={props.path}
         name={selectors.LIST_NAME}
         url={!isEmpty(props.contextData) ?

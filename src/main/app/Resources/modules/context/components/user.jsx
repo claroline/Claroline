@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
@@ -69,12 +70,14 @@ const ContextUser = (props) => {
     )
   }
 
+  const poster = props.poster || get(props.currentUser, 'poster')
+
   return (
     <>
       <div
-        className={classes('app-menu-cover', !isEmpty(props.currentUser.poster) && 'app-menu-poster')}
-        style={!isEmpty(props.currentUser.poster) ? {
-          backgroundImage: `url(${asset(props.currentUser.poster)})`,
+        className={classes('app-menu-cover', !isEmpty(poster) && 'app-menu-poster')}
+        style={!isEmpty(poster) ? {
+          backgroundImage: `url(${asset(poster)})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         } : undefined}

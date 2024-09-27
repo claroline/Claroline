@@ -81,36 +81,7 @@ const PageFull = {
      */
     poster: T.string,
 
-    /**
-     * The name of an optional primary action of the page.
-     * NB. The action MUST be defined in the `actions` list.
-     */
-    primaryAction: T.string,
 
-    /**
-     * The name of an optional secondary action of the page.
-     * NB. The action MUST be defined in the `actions` list.
-     */
-    secondaryAction: T.string,
-
-    toolbar: T.string,
-
-    /**
-     * The list of actions available for the current page.
-     * NB. This list MUST contain the actions for `primaryAction` and `secondaryAction` if defined.
-     *
-     * @type {Array}
-     */
-    actions: T.oneOfType([
-      // a regular array of actions
-      T.arrayOf(T.shape(
-        Action.propTypes
-      )),
-      // a promise that will resolve a list of actions
-      T.shape(
-        PromisedAction.propTypes
-      )
-    ])
   }),
   defaultProps: merge({}, PageSimple.defaultProps, {
     showHeader: true,

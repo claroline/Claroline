@@ -30,7 +30,7 @@ const ResourceOverview = props => {
     <ResourcePage
       primaryAction={props.primaryAction}
       actions={props.actions}
-      root={true}
+      //root={true}
     >
       {description &&
         <PageSection size="md" className="py-5 px-4">

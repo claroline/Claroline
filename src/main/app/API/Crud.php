@@ -449,7 +449,7 @@ class Crud
      *
      * @deprecated should use standard update instead
      */
-    public function replace(object $object, string $property, mixed $data, array $options = []): mixed
+    public function replace(object $object, string $property, mixed $data, array $options = []): object
     {
         $className = $this->getRealClass($object);
         $methodName = 'set'.ucfirst($property);

@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import classes from 'classnames'
 import fill from 'lodash/fill'
 
 import {DataListView} from '#/main/app/content/list/prop-types'
@@ -15,12 +16,14 @@ const TableData = props => {
   const [displayedColumns, setDisplayedColumns] = useState(getDisplayedProps(props.definition).map(column => column.name))
 
   let data = props.data
-  if (props.loading) {
+  if (!props.loaded) {
     data = fill(new Array(30), {id: ''})
   }
 
   return (
-    <Table className="data-table mb-auto" condensed={'sm' === props.size}>
+    <Table className={classes('data-table mb-auto', {
+      'table-hover': props.loaded && !props.invalidated
+    })} condensed={'sm' === props.size}>
       <TableHeader
         count={props.count}
         data={props.data}
@@ -30,13 +33,13 @@ const TableData = props => {
         selection={props.selection}
         sorting={props.sorting}
         actions={props.actions}
-        disabled={props.loading}
+        disabled={!props.loaded || props.invalidated}
       />
 
       <tbody>
         {data.map((row, index) =>
           <TableItem
-            key={index}
+            key={`row-${index}`}
             row={row}
             size={props.size}
             columns={props.definition.filter(prop => -1 !== displayedColumns.indexOf(prop.name))}
@@ -49,6 +52,8 @@ const TableData = props => {
               }: null
             }
             loading={props.loading}
+            loaded={props.loaded}
+            invalidated={props.invalidated}
           />
         )}
       </tbody>

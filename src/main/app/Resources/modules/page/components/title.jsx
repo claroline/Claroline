@@ -1,70 +1,61 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 
-import {trans} from '#/main/app/intl'
-import {toKey} from '#/main/core/scaffolding/text'
-import {Button} from '#/main/app/action'
-import {LINK_BUTTON} from '#/main/app/buttons'
-
-const PageBreadcrumb = props => {
-  if (0 !== props.breadcrumb.length) {
-    return (
-      <nav aria-label={trans('breadcrumb')}>
-        <ol className="breadcrumb">
-          {props.breadcrumb.map((item) =>
-            <li key={item.id || toKey(item.label)} className="breadcrumb-item">
-              <Button
-                {...item}
-                type={LINK_BUTTON}
-              />
-            </li>
-          )}
-          <li className="breadcrumb-item active visually-hidden" aria-current="page">{props.current}</li>
-        </ol>
-      </nav>
-    )
-  }
-
-  return undefined
-}
-
-PageBreadcrumb.propTypes = {
-  current: T.string.isRequired,
-  breadcrumb: T.arrayOf(T.shape({
-    label: T.string.isRequired,
-    target: T.string
-  }))
-}
-
-PageBreadcrumb.defaultProps = {
-  path: []
-}
+import {Await} from '#/main/app/components/await'
+import {PageActions} from '#/main/app/page/components/actions'
+import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 
 const PageTitle = props =>
-  <div role="presentation">
-    {!props.embedded &&
-      <PageBreadcrumb
-        breadcrumb={props.breadcrumb}
-        current={props.title}
-      />
-    }
-
-    <h1 className="page-title">
+  <header className={classes('py-4 pt-5 d-flex gap-3 align-items-end', props.className, props.size && `content-${props.size}`)}>
+    <h1 className="page-title m-0">
       {props.title}
     </h1>
-  </div>
+
+    {props.actions instanceof Promise ?
+      <Await for={props.actions} then={(resolvedActions) => (
+        <PageActions
+          actions={resolvedActions}
+          primaryAction={props.primaryAction}
+          secondaryAction={props.secondaryAction}
+          toolbar={props.toolbar}
+          disabled={props.disabled}
+        />
+      )} /> :
+      <PageActions
+        actions={props.actions}
+        primaryAction={props.primaryAction}
+        secondaryAction={props.secondaryAction}
+        toolbar={props.toolbar}
+        disabled={props.disabled}
+      />
+    }
+  </header>
 
 PageTitle.propTypes = {
+  className: T.string,
+  size: T.oneOf(['sm', 'md', 'lg', 'full']),
   title: T.string.isRequired,
-  /**
-   * The path of the page inside the application (used to build the breadcrumb).
-   */
-  breadcrumb: T.arrayOf(T.shape({
-    label: T.string.isRequired,
-    displayed: T.bool,
-    target: T.oneOfType([T.string, T.array])
-  })),
-  embedded: T.bool
+  primaryAction: T.string,
+  secondaryAction: T.string,
+  toolbar: T.string,
+  actions: T.oneOfType([
+    // a regular array of actions
+    T.arrayOf(T.shape(
+      ActionTypes.propTypes
+    )),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedActionTypes.propTypes
+    )
+  ]),
+  disabled: T.bool
+}
+
+PageTitle.defaultProps = {
+  actions: [],
+  disabled: false,
+  toolbar: 'more'
 }
 
 export {

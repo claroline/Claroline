@@ -12,14 +12,10 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {getActions} from '#/main/community/organization/utils'
 import {Organization as OrganizationTypes} from '#/main/community/organization/prop-types'
 import {ContentLoader} from '#/main/app/content/components/loader'
+import {PageTitle} from '#/main/app/page/components/title'
 
 const Organization = (props) =>
   <ToolPage
-    className="organization-page"
-    meta={{
-      title: trans('organization_name', {name: get(props.organization, 'name', trans('loading'))}, 'community'),
-      description: get(props.organization, 'meta.description')
-    }}
     breadcrumb={[
       {
         type: LINK_BUTTON,
@@ -27,20 +23,27 @@ const Organization = (props) =>
         target: `${props.path}/organizations`
       }
     ].concat(props.organization ? props.breadcrumb : [])}
-    title={get(props.organization, 'name', trans('loading'))}
-    primaryAction="browse"
-    toolbar="edit more"
     poster={get(props.organization, 'poster')}
-    actions={!isEmpty(props.organization) ? getActions([props.organization], {
-      add: () => props.reload(props.organization.id),
-      update: () => props.reload(props.organization.id),
-      delete: () => props.reload(props.organization.id)
-    }, props.path, props.currentUser) : []}
+    title={trans('organization_name', {name: get(props.organization, 'name', trans('loading'))}, 'community')}
+    description={get(props.organization, 'meta.description')}
   >
     {isEmpty(props.organization) &&
       <ContentLoader
         size="lg"
         description={trans('organization_loading', {}, 'community')}
+      />
+    }
+
+    {!isEmpty(props.organization) &&
+      <PageTitle
+        size="md"
+        title={get(props.organization, 'name', trans('loading'))}
+        primaryAction="edit"
+        actions={!isEmpty(props.organization) ? getActions([props.organization], {
+          add: () => props.reload(props.organization.id),
+          update: () => props.reload(props.organization.id),
+          delete: () => props.reload(props.organization.id)
+        }, props.path, props.currentUser) : []}
       />
     }
 

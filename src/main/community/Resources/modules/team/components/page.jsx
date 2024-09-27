@@ -5,21 +5,17 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ContentLoader} from '#/main/app/content/components/loader'
+import {PageTitle} from '#/main/app/page/components/title'
+import {ToolPage} from '#/main/core/tool'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {getActions} from '#/main/community/team/utils'
 import {Team as TeamTypes} from '#/main/community/team/prop-types'
-import {ContentLoader} from '#/main/app/content/components/loader'
 
 const Team = (props) =>
   <ToolPage
-    className="team-page"
-    meta={{
-      title: trans('team_name', {name: get(props.team, 'name', trans('loading'))}, 'community'),
-      description: get(props.team, 'meta.description')
-    }}
     breadcrumb={[
       {
         type: LINK_BUTTON,
@@ -27,19 +23,27 @@ const Team = (props) =>
         target: `${props.path}/teams`
       }
     ].concat(props.team ? props.breadcrumb : [])}
-    title={get(props.team, 'name', trans('loading'))}
-    toolbar="edit | fullscreen more"
     poster={get(props.team, 'poster')}
-    actions={!isEmpty(props.team) ? getActions([props.team], {
-      add: () => props.reload(props.team.id),
-      update: () => props.reload(props.team.id),
-      delete: () => props.reload(props.team.id)
-    }, props.path, props.currentUser) : []}
+    title={trans('team_name', {name: get(props.team, 'name', trans('loading'))}, 'community')}
+    description={get(props.team, 'meta.description')}
   >
     {isEmpty(props.team) &&
       <ContentLoader
         size="lg"
         description={trans('team_loading', {}, 'community')}
+      />
+    }
+
+    {!isEmpty(props.team) &&
+      <PageTitle
+        size="md"
+        title={get(props.team, 'name', trans('loading'))}
+        primaryAction="edit"
+        actions={!isEmpty(props.team) ? getActions([props.team], {
+          add: () => props.reload(props.team.id),
+          update: () => props.reload(props.team.id),
+          delete: () => props.reload(props.team.id)
+        }, props.path, props.currentUser) : []}
       />
     }
 

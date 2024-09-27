@@ -163,6 +163,7 @@ class ListData extends Component {
               card:          this.props.card,
 
               loading: this.props.loading,
+              loaded: this.props.loaded,
               invalidated: this.props.invalidated
             }
           ))

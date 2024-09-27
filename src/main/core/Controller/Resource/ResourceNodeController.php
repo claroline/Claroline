@@ -50,12 +50,12 @@ class ResourceNodeController extends AbstractCrudController
     /**
      * Get the list of rights for a resource node.
      * This may be directly managed by the standard action system (rights edition already is) instead.
-     *
      */
     #[Route(path: '/{id}/rights', name: 'get_rights')]
-    public function getRightsAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Resource\ResourceNode', mapping: ['id' => 'uuid'])]
-    ResourceNode $resourceNode): JsonResponse
-    {
+    public function getRightsAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        ResourceNode $resourceNode
+    ): JsonResponse {
         // only give access to users which have the right to edit the resource rights
         $rightsAction = $this->actionManager->get($resourceNode, 'rights');
 
@@ -106,10 +106,7 @@ class ResourceNodeController extends AbstractCrudController
         $options = static::getOptions();
         $results = $this->crud->search(static::getClass(), $finderQuery, $options['list'] ?? []);
 
-        return new StreamedJsonResponse([
-            'totalResults' => $results->count(),
-            'data' => $results->getItems(),
-        ]);
+        return $results->toResponse();
     }
 
     #[Route(path: '/{workspace}/removed', name: 'workspace_removed_list')]

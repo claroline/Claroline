@@ -37,6 +37,8 @@ doctrine:
         auto_mapping: true
         validate_xml_mapping: true
         proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+        controller_resolver:
+            auto_mapping: false # feature is deprecated, so just disable it
 
         metadata_cache_driver:
             type: pool

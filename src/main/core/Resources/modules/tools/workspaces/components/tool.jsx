@@ -12,6 +12,7 @@ import {WorkspaceList} from '#/main/core/workspace/components/list'
 import {PageListSection} from '#/main/app/page/components/list-section'
 import {WorkspacesEditor} from '#/main/core/tools/workspaces/editor/containers/main'
 import {MODAL_WORKSPACE_CREATION} from '#/main/core/workspace/modals/creation'
+import {constants as listConst} from '#/main/app/content/list/constants'
 
 const WorkspacesPage = (props) =>
   <ToolPage
@@ -47,22 +48,22 @@ const WorkspacesTool = (props) => {
       props.invalidateList('workspaces.registered')
       props.invalidateList('workspaces.public')
       props.invalidateList('workspaces.managed')
-      props.invalidateList('workspaces.models')
-      props.invalidateList('workspaces.archives')
+      //props.invalidateList('workspaces.models')
+      //props.invalidateList('workspaces.archives')
     },
     update: () => {
       props.invalidateList('workspaces.registered')
       props.invalidateList('workspaces.public')
       props.invalidateList('workspaces.managed')
-      props.invalidateList('workspaces.models')
-      props.invalidateList('workspaces.archives')
+      //props.invalidateList('workspaces.models')
+      //props.invalidateList('workspaces.archives')
     },
     delete: () => {
       props.invalidateList('workspaces.registered')
       props.invalidateList('workspaces.public')
       props.invalidateList('workspaces.managed')
-      props.invalidateList('workspaces.models')
-      props.invalidateList('workspaces.archives')
+      //props.invalidateList('workspaces.models')
+      //props.invalidateList('workspaces.archives')
     }
   }
 
@@ -116,9 +117,13 @@ const WorkspacesTool = (props) => {
               <WorkspacesPage path={props.path} title={trans('my_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
                 <PageListSection>
                   <WorkspaceList
+                    flush={true}
                     url={['apiv2_workspace_list_registered']}
                     name="workspaces.registered"
                     refresher={refresher}
+                    display={{
+                      current: listConst.DISPLAY_TILES_SM
+                    }}
                   />
                 </PageListSection>
               </WorkspacesPage>
@@ -134,9 +139,13 @@ const WorkspacesTool = (props) => {
               <WorkspacesPage path={props.path} title={trans('all_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
                 <PageListSection>
                   <WorkspaceList
+                    flush={true}
                     url={props.contextType === toolConstants.TOOL_PUBLIC ? ['apiv2_workspace_list_public'] : ['apiv2_workspace_list']}
                     name="workspaces.public"
                     refresher={refresher}
+                    display={{
+                      current: listConst.DISPLAY_TILES_SM
+                    }}
                   />
                 </PageListSection>
               </WorkspacesPage>
@@ -152,9 +161,13 @@ const WorkspacesTool = (props) => {
               <WorkspacesPage path={props.path} title={trans('managed_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
                 <PageListSection>
                   <WorkspaceList
+                    flush={true}
                     url={['apiv2_workspace_list_managed']}
                     name="workspaces.managed"
                     refresher={refresher}
+                    display={{
+                      current: listConst.DISPLAY_TILES_SM
+                    }}
                   />
                 </PageListSection>
               </WorkspacesPage>

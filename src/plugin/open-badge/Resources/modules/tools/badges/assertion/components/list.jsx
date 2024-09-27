@@ -17,6 +17,7 @@ const AssertionsList = (props) =>
   <ToolPage title={trans('my_badges', {}, 'badge')}>
     <PageListSection>
       <ListData
+        flush={true}
         name={selectors.STORE_NAME + '.mine'}
         fetch={{
           url: ['apiv2_badge_assertion_current_user_list', {workspace: props.contextData ? props.contextData.id : null}],
@@ -44,9 +45,9 @@ const AssertionsList = (props) =>
               time: true
             }
           }, {
-            name: 'badge.meta.enabled',
+            name: 'badge.archived',
             type: 'boolean',
-            label: trans('enabled'),
+            label: trans('archived'),
             displayed: true
           }
         ]}

@@ -183,6 +183,7 @@ const DataListView = {
       DataListSelection.propTypes
     ),
     loading: T.bool.isRequired,
+    loaded: T.bool.isRequired,
     invalidated: T.bool.isRequired,
 
     /**

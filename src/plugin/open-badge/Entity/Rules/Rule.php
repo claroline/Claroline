@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Doctrine\ORM\Mapping as ORM;
 
-
 #[ORM\Table(name: 'claro__open_badge_rule')]
 #[ORM\Entity]
 class Rule

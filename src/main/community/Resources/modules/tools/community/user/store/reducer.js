@@ -5,6 +5,7 @@ import {makeListReducer} from '#/main/app/content/list/store'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {makeInstanceAction} from '#/main/app/store/actions'
 
+import {CONTEXT_OPEN} from '#/main/app/context/store/actions'
 import {TOOL_LOAD, TOOL_OPEN} from '#/main/core/tool/store/actions'
 
 import {selectors as baseSelectors} from '#/main/community/tools/community/store/selectors'
@@ -14,6 +15,9 @@ const reducer = combineReducers({
   list: makeListReducer(selectors.LIST_NAME, {
     sortBy: {property: 'lastName', direction: 1}
   }, {
+    loaded: makeReducer(false, {
+      [CONTEXT_OPEN]: () => false
+    }),
     invalidated: makeReducer(false, {
       [TOOL_OPEN]: () => true,
       [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.FORM_NAME)]: () => true
