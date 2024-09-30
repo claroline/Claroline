@@ -6,11 +6,10 @@ import {Routes} from '#/main/app/router'
 import {hasPermission} from '#/main/app/security'
 import {Alert} from '#/main/app/alert/components/alert'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {ExportForm} from '#/main/transfer/tools/export/containers/form'
 
-import {ExportFile as ExportFileTypes} from '#/main/transfer/tools/export/prop-types'
 import {TransferDetails} from '#/main/transfer/components/details'
-
+import {ExportEditor} from '#/main/transfer/tools/export/editor/containers/main'
+import {ExportFile as ExportFileTypes} from '#/main/transfer/tools/export/prop-types'
 
 const ExportDetails = props =>
   <TransferDetails
@@ -46,8 +45,12 @@ const ExportDetails = props =>
         routes={[
           {
             path: '/edit',
-            component: ExportForm,
-            onEnter: () => props.openForm(props.exportFile)
+            onEnter: () => props.openForm(props.exportFile),
+            render: () => (
+              <ExportEditor
+                path={props.path+'/'+props.exportFile.id}
+              />
+            )
           }
         ]}
       />
