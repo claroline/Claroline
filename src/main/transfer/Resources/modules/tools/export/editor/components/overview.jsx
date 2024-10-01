@@ -10,10 +10,15 @@ import {selectors as formSelectors} from '#/main/app/content/form'
 
 const ExportEditorOverview = () => {
   const formData = useSelector(state => formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)))
+  const isNew = useSelector(state => formSelectors.isNew(formSelectors.form(state, selectors.FORM_NAME)))
   const explanation = useSelector(state => selectors.exportExplanation(state))
 
-  const entity = formData.action.substring(0, formData.action.indexOf('_'))
-  const action = formData.action.substring(formData.action.indexOf('_') + 1)
+  let entity = typeof formData.action !== 'undefined' ? formData.action.substring(0, formData.action.indexOf('_')) : formData.type
+  let action = typeof formData.action !== 'undefined' ? formData.action.substring(formData.action.indexOf('_') + 1) : formData.action
+  if(typeof formData.type !== 'undefined' && formData.type !== entity) {
+    entity = formData.type
+    action = ''
+  }
 
   const additionalFields = explanation ? get(explanation, entity+'.'+action+'.fields', []): []
   const filters = additionalFields.map(field => merge({}, field, {
@@ -31,18 +36,26 @@ const ExportEditorOverview = () => {
           fields: [
             {
               name: 'type',
-              type: 'string',
+              type: 'choice',
               label: trans('type'),
-              hideLabel: true,
-              disabled: true,
-              calculated: (formData) => trans(formData.action.substring(0, formData.action.indexOf('_')))
-            },{
+              disabled: !isNew,
+              calculated: () => entity,
+              options: {
+                noEmpty: false,
+                condensed: true,
+                choices: Object.keys(explanation).sort().reduce((o, key) => Object.assign(o, {
+                  [key]: trans(key, {}, 'transfer')
+                }), {})
+              }
+            }, {
               name: 'action',
               type: 'choice',
               label: trans('action'),
-              disabled: true,
+              disabled: !isNew,
+              displayed: !!entity,
+              calculated: () => entity + '_' + action,
               options: {
-                noEmpty: true,
+                noEmpty: false,
                 condensed: true,
                 choices: Object.keys(get(explanation, entity, [])).reduce((o, key) => Object.assign(o, {
                   [entity + '_' + key]: trans(key, {}, 'transfer')
@@ -51,7 +64,8 @@ const ExportEditorOverview = () => {
             }, {
               name: 'name',
               type: 'string',
-              label: trans('name')
+              label: trans('name'),
+              disabled: false
             }
           ].concat(filters)
         }

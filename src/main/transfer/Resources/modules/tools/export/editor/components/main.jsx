@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import get from 'lodash/get'
 import {PropTypes as T} from 'prop-types'
 
@@ -11,18 +11,28 @@ import {ExportEditorPlaning} from '#/main/transfer/tools/export/editor/component
 import {ExportEditorOverview} from '#/main/transfer/tools/export/editor/components/overview'
 
 const ExportEditor = (props) => {
-  const entity = props.formData.action.substring(0, props.formData.action.indexOf('_'))
-  const action = props.formData.action.substring(props.formData.action.indexOf('_') + 1)
+  const entity = typeof props.formData.action !== 'undefined' ? props.formData.action.substring(0, props.formData.action.indexOf('_')) : ''
+  const action = typeof props.formData.action !== 'undefined' ? props.formData.action.substring(props.formData.action.indexOf('_') + 1) : ''
+
+  useEffect(() => {
+    if (props.isNew) {
+      props.resetForm()
+    }
+  }, [props.isNew])
 
   return (
     <Editor
-      path={props.path + '/edit'}
-      title={get(props.formData, 'name')}
+      path={props.path + (props.isNew ? '/new' : '/edit')}
+      title={get(props.formData, 'name', trans('export', {}, 'transfer'))}
       name={selectors.FORM_NAME}
-      target={['apiv2_transfer_export_update', {id: props.formData.id}]}
+      target={(formData, isNew) => isNew ? ['apiv2_transfer_export_create']: ['apiv2_transfer_export_update', {id: props.formData.id}]}
+      onSave={(response) => {
+        props.history.push(props.path + '/' + response.id + '/edit')
+        return props.onSave(response)
+      }}
       close={props.path}
       defaultPage="overview"
-      actionsPage={ExportEditorActions}
+      actionsPage={!props.isNew ? ExportEditorActions : undefined}
       overviewPage={ExportEditorOverview}
       pages={[
         {
@@ -42,6 +52,8 @@ const ExportEditor = (props) => {
           render: () => (
             <ExportEditorPlaning
               schedulerEnabled={props.schedulerEnabled}
+              updateProp={props.updateProp}
+              isNew={props.isNew}
             />
           )
         }
@@ -52,11 +64,15 @@ const ExportEditor = (props) => {
 
 ExportEditor.propTypes = {
   path: T.string.isRequired,
+  isNew: T.bool.isRequired,
   formData: T.shape({
     id: T.string,
     name: T.string,
     action: T.string
   }),
+  history: T.object,
+  onSave: T.func.isRequired,
+  resetForm: T.func.isRequired,
   explanation: T.object.isRequired,
   updateProp: T.func.isRequired,
   schedulerEnabled: T.bool.isRequired,

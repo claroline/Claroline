@@ -11,7 +11,7 @@ const reducer = combineReducers({
   explanation: makeReducer({}, {
     [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.explanation
   }),
-  form: makeFormReducer(selectors.FORM_NAME, {new: true}),
+  form: makeFormReducer(selectors.FORM_NAME, {new: true, data: {format: 'csv'}}),
 
   details: makeReducer(null, {
     [TOOL_OPEN]: () => null,

@@ -1,8 +1,9 @@
 import {connect} from 'react-redux'
 
+import isEmpty from 'lodash/isEmpty'
 import {param} from '#/main/app/config'
 import {withRouter} from '#/main/app/router'
-import {selectors} from '#/main/transfer/tools/export/store'
+import {actions, selectors} from '#/main/transfer/tools/export/store'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 import {ExportEditor as ExportEditorComponent} from '#/main/transfer/tools/export/editor/components/main'
 
@@ -18,8 +19,16 @@ const ExportEditor = withRouter(
       openForm(exportFile) {
         dispatch(formActions.reset(selectors.FORM_NAME, exportFile, false))
       },
+      resetForm() {
+        dispatch(formActions.reset(selectors.FORM_NAME, {format: 'csv'}, true))
+      },
       updateProp(prop, value) {
         dispatch(formActions.updateProp(selectors.FORM_NAME, prop, value))
+      },
+      onSave(response) {
+        if (isEmpty(response.scheduler)) {
+          return dispatch(actions.execute(response.id))
+        }
       }
     })
   )(ExportEditorComponent)
