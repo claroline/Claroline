@@ -9,8 +9,15 @@ import {selectors as formSelectors} from '#/main/app/content/form'
 
 const ImportEditorOverview = () => {
   const formData = useSelector(state => formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)))
+  const isNew = useSelector(state => formSelectors.isNew(formSelectors.form(state, selectors.FORM_NAME)))
   const explanation = useSelector(state => selectors.importExplanation(state))
-  const entity = formData.action.substring(0, formData.action.indexOf('_'))
+
+  let entity = typeof formData.action !== 'undefined' ? formData.action.substring(0, formData.action.indexOf('_')) : formData.type
+  let action = typeof formData.action !== 'undefined' ? formData.action.substring(formData.action.indexOf('_') + 1) : formData.action
+  if(typeof formData.type !== 'undefined' && formData.type !== entity) {
+    entity = formData.type
+    action = ''
+  }
 
   return (
     <EditorPage
@@ -22,18 +29,26 @@ const ImportEditorOverview = () => {
           fields: [
             {
               name: 'type',
-              type: 'string',
+              type: 'choice',
               label: trans('type'),
-              hideLabel: true,
-              disabled: true,
-              calculated: (formData) => trans(formData.action.substring(0, formData.action.indexOf('_')))
+              disabled: !isNew,
+              calculated: () => entity,
+              options: {
+                noEmpty: false,
+                condensed: true,
+                choices: Object.keys(explanation).sort().reduce((o, key) => Object.assign(o, {
+                  [key]: trans(key, {}, 'transfer')
+                }), {})
+              }
             },{
               name: 'action',
               type: 'choice',
               label: trans('action'),
-              disabled: true,
+              disabled: !isNew,
+              displayed: !!entity,
+              calculated: () => entity + '_' + action,
               options: {
-                noEmpty: true,
+                noEmpty: false,
                 condensed: true,
                 choices: Object.keys(get(explanation, entity, [])).reduce((o, key) => Object.assign(o, {
                   [entity + '_' + key]: trans(key, {}, 'transfer')
@@ -47,7 +62,7 @@ const ImportEditorOverview = () => {
               name: 'file',
               type: 'file',
               label: trans('file'),
-              disabled: true
+              disabled: !isNew
             }
           ]
         }
