@@ -19,8 +19,8 @@ const ExportEditor = withRouter(
       openForm(exportFile) {
         dispatch(formActions.reset(selectors.FORM_NAME, exportFile, false))
       },
-      resetForm() {
-        dispatch(formActions.reset(selectors.FORM_NAME, {format: 'csv'}, true))
+      resetForm(workspace) {
+        dispatch(formActions.reset(selectors.FORM_NAME, {format: 'csv', workspace: workspace }, true))
       },
       updateProp(prop, value) {
         dispatch(formActions.updateProp(selectors.FORM_NAME, prop, value))

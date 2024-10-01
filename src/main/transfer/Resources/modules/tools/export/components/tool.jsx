@@ -19,7 +19,13 @@ const ExportTool = (props) =>
       }, {
         path: '/new',
         disabled: !props.canExport,
-        render: () => (<ExportEditor path={props.path} isNew={true}/>)
+        render: () => (
+          <ExportEditor
+            isNew={true}
+            path={props.path}
+            contextData={props.contextData}
+          />
+        )
       }, {
         path: '/:id',
         onEnter: (params) => props.open(params.id),
@@ -29,9 +35,10 @@ const ExportTool = (props) =>
   />
 
 ExportTool.propTypes = {
+  contextData: T.object,
+  open: T.func.isRequired,
   path: T.string.isRequired,
-  canExport: T.bool.isRequired,
-  open: T.func.isRequired
+  canExport: T.bool.isRequired
 }
 
 export {

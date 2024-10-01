@@ -16,7 +16,7 @@ const ExportEditor = (props) => {
 
   useEffect(() => {
     if (props.isNew) {
-      props.resetForm()
+      props.resetForm(props.contextData)
     }
   }, [props.isNew])
 
@@ -64,19 +64,20 @@ const ExportEditor = (props) => {
 
 ExportEditor.propTypes = {
   path: T.string.isRequired,
-  isNew: T.bool.isRequired,
   formData: T.shape({
     id: T.string,
     name: T.string,
     action: T.string
   }),
+  pages: T.array,
   history: T.object,
+  contextData: T.object,
+  isNew: T.bool.isRequired,
   onSave: T.func.isRequired,
   resetForm: T.func.isRequired,
-  explanation: T.object.isRequired,
   updateProp: T.func.isRequired,
-  schedulerEnabled: T.bool.isRequired,
-  pages: T.array
+  explanation: T.object.isRequired,
+  schedulerEnabled: T.bool.isRequired
 }
 
 export {
