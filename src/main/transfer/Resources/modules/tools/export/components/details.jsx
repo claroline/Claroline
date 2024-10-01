@@ -8,7 +8,7 @@ import {Alert} from '#/main/app/alert/components/alert'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {TransferDetails} from '#/main/transfer/components/details'
-import {ExportEditor} from '#/main/transfer/tools/export/editor/containers/main'
+import {ExportEditor} from '#/main/transfer/export/editor/containers/main'
 import {ExportFile as ExportFileTypes} from '#/main/transfer/tools/export/prop-types'
 
 const ExportDetails = props => {

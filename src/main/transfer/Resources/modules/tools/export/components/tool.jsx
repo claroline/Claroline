@@ -4,8 +4,8 @@ import {PropTypes as T} from 'prop-types'
 import {Tool} from '#/main/core/tool'
 
 import {ExportList} from '#/main/transfer/tools/export/containers/list'
+import {ExportEditor} from '#/main/transfer/export/editor/containers/main'
 import {ExportDetails} from '#/main/transfer/tools/export/containers/details'
-import {ExportEditor} from '#/main/transfer/tools/export/editor/containers/main'
 
 const ExportTool = (props) =>
   <Tool

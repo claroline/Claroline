@@ -5,7 +5,7 @@ import {param} from '#/main/app/config'
 import {withRouter} from '#/main/app/router'
 import {actions, selectors} from '#/main/transfer/tools/export/store'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
-import {ExportEditor as ExportEditorComponent} from '#/main/transfer/tools/export/editor/components/main'
+import {ExportEditor as ExportEditorComponent} from '#/main/transfer/export/editor/components/main'
 
 const ExportEditor = withRouter(
   connect(
