@@ -147,21 +147,17 @@ class CourseController extends AbstractCrudController
     /**
      * @Route("/list/existing", name="list_existing", methods={"GET"})
      */
-    public function listExistingAction(Request $request): JsonResponse
+    public function listNoWorkspaceAction(Request $request): JsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         $filters = array_merge($request->query->all(), [
-            'hiddenFilters' => $this->getDefaultHiddenFilters(),
+            'hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
+                'workspace' => null,
+            ]),
         ]);
 
         $list = $this->crud->list(Course::class, $filters, $this->getOptions()['list']);
-
-        $list['data'] = array_filter($list['data'], function (array $course) {
-            return is_null($course['workspace']);
-        });
-
-        sort($list['data']);
 
         return new JsonResponse($list);
     }
@@ -267,12 +263,12 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/bind", name="bind_workspace", methods={"PATCH"})
+     * @Route("/{id}/bind", name="bind_workspace", methods={"PATCH"})
+     *
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
-    public function bindCourseToWorkspaceAction(Request $request): JsonResponse
+    public function bindCourseToWorkspaceAction(Course $course, Request $request): JsonResponse
     {
-        $processed = [];
-
         $this->om->startFlushSuite();
 
         $data = $this->decodeRequest($request);
@@ -281,26 +277,18 @@ class CourseController extends AbstractCrudController
         $workspace = null;
 
         if ($workspaceData) {
-            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['workspace']['id']]);
+            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $workspaceData['id']]);
         }
 
-        /** @var Course[] $courses */
-        $courses = $this->om->getRepository(Course::class)->findBy([
-            'uuid' => $data['ids'],
-        ]);
-
-        foreach ($courses as $course) {
-            if ($this->authorization->isGranted('ADMINISTRATE', $course)) {
-                $course->setWorkspace($workspace);
-                $processed[] = $course;
-            }
+        if ($this->authorization->isGranted('ADMINISTRATE', $course)) {
+            $course->setWorkspace($workspace);
+        } else {
+            throw new AccessDeniedException();
         }
 
         $this->om->endFlushSuite();
 
-        return new JsonResponse(array_map(function (Course $course) {
-            return $this->serializer->serialize($course);
-        }, $processed));
+        return new JsonResponse($this->serializer->serialize($course));
     }
 
     /**

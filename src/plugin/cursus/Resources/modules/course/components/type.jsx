@@ -122,15 +122,14 @@ const CreationType = (props) => {
             type: MODAL_BUTTON,
             modal: [MODAL_TRAINING_COURSES, {
               url: ['apiv2_cursus_course_list_existing'],
-              selectAction: (selected) => ({
+              selectAction: (selectedCourses) => ({
                 type: ASYNC_BUTTON,
                 label: trans('bind', {}, 'actions'),
                 request: {
-                  url: url(['apiv2_cursus_course_bind_workspace']),
+                  url: url(['apiv2_cursus_course_bind_workspace', {id: (selectedCourses && selectedCourses.length > 0) ? selectedCourses[0].id : null}]),
                   request: {
                     method: 'PATCH',
                     body: JSON.stringify({
-                      ids: selected.map(course => course.id),
                       workspace: props.contextId
                     })
                   },
@@ -151,7 +150,7 @@ CreationType.propTypes = {
   openForm: T.func,
   reset: T.func,
   contextType: T.string,
-  contextId: T.object,
+  contextId: T.string,
   modal: T.bool,
   fadeModal: T.func
 }

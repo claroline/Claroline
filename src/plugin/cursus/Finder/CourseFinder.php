@@ -49,6 +49,15 @@ class CourseFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
+                case 'workspace':
+                    if (is_null($filterValue)) {
+                        $qb->andWhere('obj.workspace IS NULL');
+                    } else {
+                        $qb->andWhere('obj.workspace = :workspace');
+                        $qb->setParameter('workspace', $filterValue);
+                    }
+                    break;
+
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }

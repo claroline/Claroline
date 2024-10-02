@@ -41,7 +41,7 @@ const EmptyCourse = (props) =>
 EmptyCourse.propTypes = {
   path: T.string.isRequired,
   canEdit: T.bool.isRequired,
-  contextId: T.string.isRequired
+  contextId: T.string
 }
 
 export {

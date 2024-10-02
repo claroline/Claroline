@@ -125,9 +125,6 @@ class CourseSerializer
                 'users' => $course->getMaxUsers(),
             ],
             'tags' => $this->serializeTags($course),
-            'workspace' => $course->getWorkspace() ?
-                $this->workspaceSerializer->serialize($course->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]) :
-                null,
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
@@ -173,6 +170,9 @@ class CourseSerializer
                 'children' => array_map(function (Course $child) {
                     return $this->serialize($child, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $course->getChildren()->toArray()),
+                'workspace' => $course->getWorkspace() ?
+                    $this->workspaceSerializer->serialize($course->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]) :
+                    null,
             ]);
         }
 

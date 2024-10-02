@@ -75,9 +75,9 @@ Course.propTypes = {
     SessionTypes.propTypes
   )),
   registrations: T.shape({
-    users: T.array.isRequired,
-    groups: T.array.isRequired,
-    pending: T.array.isRequired
+    users: T.array,
+    groups: T.array,
+    pending: T.array
   }),
   participantsView: T.string.isRequired,
   switchParticipantsView: T.func.isRequired,
