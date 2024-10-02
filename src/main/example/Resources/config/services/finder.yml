@@ -1,0 +1,3 @@
+services:
+    Claroline\ExampleBundle\Finder\ExampleType:
+        tags: [ claroline.finder.type ]
