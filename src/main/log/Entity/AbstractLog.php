@@ -11,10 +11,9 @@
 
 namespace Claroline\LogBundle\Entity;
 
-use DateTimeInterface;
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass]
@@ -23,7 +22,7 @@ abstract class AbstractLog
     use Id;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    protected DateTimeInterface $date;
+    protected \DateTimeInterface $date;
 
     #[ORM\Column(type: Types::STRING)]
     protected string $event;
@@ -31,7 +30,6 @@ abstract class AbstractLog
     #[ORM\Column(type: Types::TEXT)]
     protected ?string $details = null;
 
-    
     #[ORM\JoinColumn(name: 'doer_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $doer = null;
@@ -45,12 +43,12 @@ abstract class AbstractLog
     #[ORM\Column(name: 'doer_city', type: Types::STRING, nullable: true)]
     protected ?string $doerCity = null;
 
-    public function getDate(): ?DateTimeInterface
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(DateTimeInterface $dateTime): void
+    public function setDate(\DateTimeInterface $dateTime): void
     {
         $this->date = $dateTime;
     }

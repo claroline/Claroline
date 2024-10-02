@@ -12,11 +12,6 @@
 namespace Claroline\CoreBundle\Entity\Workspace;
 
 use Claroline\AppBundle\API\Attribute\CrudEntity;
-use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
-use Claroline\CoreBundle\Finder\WorkspaceType;
-use Claroline\CoreBundle\Repository\WorkspaceRepository;
-use Doctrine\DBAL\Types\Types;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Hidden;
@@ -38,9 +33,14 @@ use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\AppBundle\Entity\Restriction\AllowedIps;
 use Claroline\CommunityBundle\Model\HasOrganizations;
+use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Finder\WorkspaceType;
+use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -90,7 +90,6 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
     #[ORM\OneToMany(targetEntity: Role::class, mappedBy: 'workspace', fetch: 'EXTRA_LAZY')]
     private Collection $roles;
 
-    
     #[ORM\JoinColumn(name: 'default_role_id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: Role::class)]
     private ?Role $defaultRole;
@@ -122,7 +121,6 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
     #[ORM\Column(name: 'is_personal', type: Types::BOOLEAN)]
     private bool $personal = false;
 
-
     #[ORM\OneToOne(targetEntity: WorkspaceOptions::class, mappedBy: 'workspace', cascade: ['persist'])]
     private WorkspaceOptions $options;
 
@@ -136,7 +134,6 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $successCondition = [];
 
-    
     /**
      * @var Collection<int, Organization>
      */

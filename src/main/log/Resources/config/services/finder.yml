@@ -1,4 +1,19 @@
 services:
+    Claroline\LogBundle\Finder\LogType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\LogBundle\Finder\FunctionalLogType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\LogBundle\Finder\MessageLogType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\LogBundle\Finder\OperationalLogType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\LogBundle\Finder\SecurityLogType:
+        tags: [ claroline.finder.type ]
+
     Claroline\LogBundle\Finder\SecurityLogFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]

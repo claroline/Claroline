@@ -7,8 +7,8 @@ services:
             - '@security.authorization_checker'
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
+            - '@Claroline\AppBundle\API\Crud'
 
     Claroline\CommunityBundle\Controller\GroupController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

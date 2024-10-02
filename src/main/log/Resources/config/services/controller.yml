@@ -5,7 +5,7 @@ services:
         arguments:
             - '@security.token_storage'
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\Crud'
 
     Claroline\LogBundle\Controller\MessageLogController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
@@ -13,7 +13,7 @@ services:
         arguments:
             - '@security.token_storage'
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\Crud'
 
     Claroline\LogBundle\Controller\FunctionalLogController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
@@ -21,11 +21,11 @@ services:
         arguments:
             - '@security.token_storage'
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\Crud'
 
     Claroline\LogBundle\Controller\OperationalLogController:
         public: true
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\Component\Context\ContextProvider'
+            - '@Claroline\AppBundle\API\Crud'

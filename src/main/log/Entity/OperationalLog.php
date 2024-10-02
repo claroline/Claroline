@@ -2,6 +2,8 @@
 
 namespace Claroline\LogBundle\Entity;
 
+use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\LogBundle\Finder\OperationalLogType;
 use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\HasContext;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_log_operational')]
 #[ORM\Entity]
+#[CrudEntity(finderClass: OperationalLogType::class)]
 class OperationalLog extends AbstractLog
 {
     use HasContext;

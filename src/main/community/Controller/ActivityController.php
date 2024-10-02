@@ -2,7 +2,10 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Finder\FinderQuery;
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Repository\GroupRepository;
 use Claroline\CommunityBundle\Repository\UserRepository;
@@ -17,7 +20,8 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Claroline\LogBundle\Entity\FunctionalLog;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -35,8 +39,8 @@ class ActivityController
         AuthorizationCheckerInterface $authorization,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
-        private readonly FinderProvider $finder,
-        private readonly ToolManager $toolManager
+        private readonly ToolManager $toolManager,
+        private readonly Crud $crud
     ) {
         $this->authorization = $authorization;
         $this->userRepo = $om->getRepository(User::class);
@@ -77,15 +81,20 @@ class ActivityController
     }
 
     #[Route(path: '/logs/{contextId}', name: 'apiv2_community_functional_logs', methods: ['GET'])]
-    public function functionalLogsAction(Request $request, string $contextId = null): JsonResponse
-    {
+    public function functionalLogsAction(
+        string $contextId = null,
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
         if (!$this->checkToolAccess('SHOW_ACTIVITY', $contextId)) {
             throw new AccessDeniedException();
         }
 
-        return new JsonResponse(
-            $this->finder->search(FunctionalLog::class, $this->filterQuery($request->query->all(), $contextId))
-        );
+        $finderQuery->addFilter('workspace', $contextId);
+
+        $logs = $this->crud->search(FunctionalLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+
+        return $logs->toResponse();
     }
 
     private function checkToolAccess(string $rights = 'OPEN', string $contextId = null): bool

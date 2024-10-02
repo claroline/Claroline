@@ -110,7 +110,6 @@ class ResourceNode implements CrudEntityInterface
      * @var Collection<int, ResourceNode>
      */
     #[ORM\OneToMany(targetEntity: ResourceNode::class, mappedBy: 'parent')]
-    #[ORM\OrderBy(['index' => 'ASC'])]
     protected Collection $children;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

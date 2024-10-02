@@ -39,7 +39,7 @@ class UserType extends AbstractType
             ->add('createdAt', DateType::class)
             ->add('updatedAt', DateType::class)
             ->add('disabled', BooleanType::class, ['default' => $options['disabled']])
-            ->add('groups', GroupType::class)
+            //->add('groups', GroupType::class)
             ->add('roles', RoleType::class, [
                 /*'joinQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
                     $queryBuilder->leftJoin(Role::class, $finder->getAlias(), Join::WITH, "$alias MEMBER OF {$finder->getAlias()}.users");
