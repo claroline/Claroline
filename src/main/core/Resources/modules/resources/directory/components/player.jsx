@@ -39,7 +39,7 @@ function transformAction(action, resourceNodes, embedded = false) {
 
 const DirectoryPlayer = props =>
   <ResourcePage
-    root={true}
+    root={props.isRoot}
     title={props.isRoot ? trans('resources', {}, 'tools') : get(props.currentNode, 'name', null)}
   >
     {props.storageLock &&
@@ -93,9 +93,6 @@ DirectoryPlayer.propTypes = {
   all: T.string,
   embedded: T.bool.isRequired,
   currentUser: T.object,
-  rootNode: T.shape(
-    ResourceNodeTypes.propTypes
-  ),
   currentNode: T.shape(
     ResourceNodeTypes.propTypes
   ).isRequired,
@@ -103,6 +100,7 @@ DirectoryPlayer.propTypes = {
   listConfiguration: T.shape(
     ListParametersTypes.propTypes
   ),
+  isRoot: T.bool,
   storageLock: T.bool.isRequired,
 
   createFiles: T.func.isRequired,

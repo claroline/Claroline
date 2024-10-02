@@ -15,23 +15,7 @@ const reducer = combineReducers({
       [makeInstanceAction(TOOL_LOAD, 'locations')]: () => true
     })
   }),
-  current: makeFormReducer(selectors.STORE_NAME+'.current', {}, {
-    users: makeListReducer(selectors.STORE_NAME+'.current.users', {}, {
-      invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, 'locations')]: () => true
-      })
-    }),
-    organizations: makeListReducer(selectors.STORE_NAME+'.current.organizations', {}, {
-      invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, 'locations')]: () => true
-      })
-    }),
-    groups: makeListReducer(selectors.STORE_NAME+'.current.groups', {}, {
-      invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, 'locations')]: () => true
-      })
-    })
-  })
+  current: makeFormReducer(selectors.STORE_NAME+'.current')
 })
 
 export {

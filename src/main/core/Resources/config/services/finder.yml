@@ -1,4 +1,7 @@
 services:
+    Claroline\CoreBundle\Finder\LocationType:
+        tags: [ claroline.finder.type ]
+
     Claroline\CoreBundle\Finder\ResourceNodeType:
         tags: [ claroline.finder.type ]
 

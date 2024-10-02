@@ -12,13 +12,6 @@
 namespace Claroline\CoreBundle\Entity\Resource;
 
 use Claroline\AppBundle\API\Attribute\CrudEntity;
-use Claroline\CoreBundle\Finder\ResourceNodeType;
-use Doctrine\Common\Collections\Collection;
-use DateTimeInterface;
-use Doctrine\DBAL\Types\Types;
-use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
-use DateTime;
-use InvalidArgumentException;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Hidden;
 use Claroline\AppBundle\Entity\Display\Poster;
@@ -32,10 +25,13 @@ use Claroline\AppBundle\Entity\Meta\DescriptionHtml;
 use Claroline\AppBundle\Entity\Meta\Published;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
+use Claroline\CoreBundle\Finder\ResourceNodeType;
 use Claroline\CoreBundle\Model\HasWorkspace;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Claroline\EvaluationBundle\Entity\Evaluated;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Event\PreFlushEventArgs;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -70,22 +66,22 @@ class ResourceNode implements CrudEntityInterface
     // evaluation parameters
     use Evaluated;
 
-    const PATH_SEPARATOR = '/';
-    const PATH_OLDSEPARATOR = '`';
-
     /**
-     * @var string
+     * The char used by Gedmo\Tree extension to generate the path of the resource.
+     * It cannot be used in the resource name.
      */
+    public const PATH_SEPARATOR = '`';
+
     #[ORM\Column(nullable: true)]
     private ?string $license = null;
 
     #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
-    private ?DateTimeInterface $creationDate = null;
+    private ?\DateTimeInterface $creationDate = null;
 
     #[ORM\Column(name: 'modification_date', type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'update')]
-    private ?DateTimeInterface $modificationDate = null;
+    private ?\DateTimeInterface $modificationDate = null;
 
     #[ORM\JoinColumn(name: 'resource_type_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ResourceType::class)]
@@ -111,29 +107,15 @@ class ResourceNode implements CrudEntityInterface
     protected ?int $lvl = 0;
 
     /**
-     * @var Collection<int, \Claroline\CoreBundle\Entity\Resource\ResourceNode>
+     * @var Collection<int, ResourceNode>
      */
     #[ORM\OneToMany(targetEntity: ResourceNode::class, mappedBy: 'parent')]
     #[ORM\OrderBy(['index' => 'ASC'])]
     protected Collection $children;
 
-    /**
-     * @var string
-     *
-     *
-     * @todo remove me
-     */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Gedmo\TreePath(separator: '`')]
-    protected $path;
-
-    /**
-     * @var string
-     *
-     * nullable true because it's a new property and migrations/updaters were needed
-     */
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    protected $materializedPath;
+    #[Gedmo\TreePath(separator: ResourceNode::PATH_SEPARATOR)]
+    protected ?string $path = null;
 
     /**
      * @var Collection<int, ResourceRights>
@@ -141,51 +123,27 @@ class ResourceNode implements CrudEntityInterface
     #[ORM\OneToMany(targetEntity: ResourceRights::class, mappedBy: 'resourceNode', orphanRemoval: true)]
     protected Collection $rights;
 
-    /**
-     * @var int
-     */
-    #[ORM\Column(name: 'value', nullable: true, type: Types::INTEGER)]
-    protected $index;
-
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'mime_type', nullable: true)]
-    protected $mimeType;
+    protected ?string $mimeType = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(nullable: true)]
-    protected $author;
+    protected ?string $author = null;
 
-    /**
-     * @var bool
-     */
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 1])]
-    protected $active = true;
+    protected bool $active = true;
 
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
-    protected $fullscreen = false;
+    protected bool $fullscreen = false;
 
-    /**
-     * @todo split IPS & access code into 2 props.
-     */
     #[ORM\Column(type: Types::JSON, nullable: true)]
-    protected $accesses = [];
+    protected ?array $accesses = [];
 
-    /**
-     * @var int
-     */
-    #[ORM\Column(nullable: false, type: Types::INTEGER, name: 'views_count', options: ['default' => 0])]
-    protected $viewsCount = 0;
+    #[ORM\Column(name: 'views_count', type: Types::INTEGER, nullable: false, options: ['default' => 0])]
+    protected int $viewsCount = 0;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(length: 128, unique: true)]
     #[Gedmo\Slug(fields: ['name'])]
-    private $slug;
+    private ?string $slug = null;
 
     /**
      * @deprecated
@@ -205,32 +163,17 @@ class ResourceNode implements CrudEntityInterface
         return ['code', 'slug'];
     }
 
-    /**
-     * Returns the resource license.
-     *
-     * @return string
-     */
-    public function getLicense()
+    public function getLicense(): ?string
     {
         return $this->license;
     }
 
-    /**
-     * Sets the resource license.
-     *
-     * @param string $license
-     */
-    public function setLicense($license)
+    public function setLicense(?string $license): void
     {
         $this->license = $license;
     }
 
-    /**
-     * Returns the resource creation date.
-     *
-     * @return DateTime
-     */
-    public function getCreationDate()
+    public function getCreationDate(): ?\DateTimeInterface
     {
         return $this->creationDate;
     }
@@ -241,18 +184,13 @@ class ResourceNode implements CrudEntityInterface
      * NOTE : creation date is already handled by the timestamp listener; this
      *        setter exists mainly for testing purposes.
      */
-    public function setCreationDate(DateTime $date)
+    public function setCreationDate(\DateTime $date): void
     {
         $this->creationDate = $date;
         $this->modificationDate = $date;
     }
 
-    /**
-     * Returns the resource modification date.
-     *
-     * @return DateTime
-     */
-    public function getModificationDate()
+    public function getModificationDate(): \DateTimeInterface
     {
         return $this->modificationDate;
     }
@@ -260,97 +198,65 @@ class ResourceNode implements CrudEntityInterface
     /**
      * Sets the resource modification date.
      */
-    public function setModificationDate(DateTime $date)
+    public function setModificationDate(\DateTime $date): void
     {
         $this->modificationDate = $date;
     }
 
-    /**
-     * Returns the resource type.
-     *
-     * @return ResourceType
-     */
-    public function getResourceType()
+    public function getResourceType(): ?ResourceType
     {
         return $this->resourceType;
     }
 
-    /**
-     * Sets the resource type.
-     *
-     * @param ResourceType
-     */
-    public function setResourceType(ResourceType $resourceType)
+    public function setResourceType(ResourceType $resourceType): void
     {
         $this->resourceType = $resourceType;
     }
 
     /**
-     * Unmapped field so we don't have to force flush and fetch the database at node copy for the moment.
-     *
-     * @param AbstractResource
+     * Unmapped field, so we don't have to force flush and fetch the database at node copy for the moment.
      *
      * @deprecated
      */
-    public function setResource(AbstractResource $resource)
+    public function setResource(AbstractResource $resource): void
     {
         $this->resource = $resource;
     }
 
     /**
-     * @return AbstractResource
-     *
      * @deprecated
      */
-    public function getResource()
+    public function getResource(): ?AbstractResource
     {
         return $this->resource;
     }
 
-    /**
-     * Returns the children resource instances.
-     *
-     * @return ArrayCollection|ResourceNode[]
-     */
-    public function getChildren()
+    public function getChildren(): Collection
     {
         return $this->children;
     }
 
-    public function getShowIcon()
+    public function getShowIcon(): bool
     {
         return $this->showIcon;
     }
 
-    public function setShowIcon($showIcon)
+    public function setShowIcon(bool $showIcon): void
     {
         $this->showIcon = $showIcon;
     }
 
-    /**
-     * Sets the parent resource.
-     */
-    public function setParent(self $parent = null)
+    public function setParent(self $parent = null): void
     {
         $this->parent = $parent;
     }
 
-    /**
-     * Returns the parent resource.
-     *
-     * @return ResourceNode
-     */
-    public function getParent()
+    public function getParent(): ?ResourceNode
     {
         return $this->parent;
     }
 
-    /**
-     * Return the lvl value of the resource in the tree.
-     *
-     * @return int
-     */
-    public function getLvl()
+    public function getLvl(): ?int
     {
         return $this->lvl;
     }
@@ -359,54 +265,28 @@ class ResourceNode implements CrudEntityInterface
      * Returns the "raw" path of the resource
      * (the path merge names and ids of all items).
      * Eg.: "Root-1/sub_dir-2/file.txt-3/".
-     *
-     * @return string
      */
-    public function getPath()
+    public function getPath(): ?string
     {
         return $this->path;
     }
 
-    /**
-     * Sets the resource name.
-     *
-     * @param string $name
-     *
-     * @throws InvalidArgumentException if the name contains the path separator ('/')
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
-        if (false !== strpos(self::PATH_SEPARATOR, $name)) {
-            throw new InvalidArgumentException('Invalid character "'.self::PATH_SEPARATOR.'" in resource name.');
-        }
-
         $this->name = $name;
     }
 
-    /**
-     * Returns the resource name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * Returns the resource rights.
-     *
-     * @return ResourceRights[]|ArrayCollection
-     */
-    public function getRights()
+    public function getRights(): Collection
     {
         return $this->rights;
     }
 
-    /**
-     * Add rights to the resource.
-     */
-    public function addRight(ResourceRights $right)
+    public function addRight(ResourceRights $right): void
     {
         if (!$this->rights->contains($right)) {
             $this->rights->add($right);
@@ -414,10 +294,7 @@ class ResourceNode implements CrudEntityInterface
         }
     }
 
-    /**
-     * Remove rights from the resource.
-     */
-    public function removeRight(ResourceRights $right)
+    public function removeRight(ResourceRights $right): void
     {
         if ($this->rights->contains($right)) {
             $this->rights->removeElement($right);
@@ -425,45 +302,26 @@ class ResourceNode implements CrudEntityInterface
         }
     }
 
-    /**
-     * Returns the resource mime-type.
-     *
-     * @return string
-     */
-    public function getMimeType()
+    public function getMimeType(): ?string
     {
         return $this->mimeType;
     }
 
-    /**
-     * Sets the resource mime-type.
-     *
-     * @param string $mimeType
-     */
-    public function setMimeType($mimeType)
+    public function setMimeType(string $mimeType): void
     {
         $this->mimeType = $mimeType;
     }
 
-    /**
-     * Returns the resource class name.
-     */
     public function getClass(): ?string
     {
         return $this->resourceType->getClass();
     }
 
-    /**
-     * Returns the resource type name.
-     */
     public function getType(): string
     {
         return $this->resourceType->getName();
     }
 
-    /**
-     * Add a child resource node.
-     */
     public function addChild(self $resourceNode): void
     {
         if (!$this->children->contains($resourceNode)) {
@@ -471,77 +329,37 @@ class ResourceNode implements CrudEntityInterface
         }
     }
 
-    public function setIndex(int $index): void
-    {
-        $this->index = $index;
-    }
-
-    /**
-     * Returns the resource index.
-     *
-     * @return int
-     */
-    public function getIndex()
-    {
-        return $this->index;
-    }
-
-    /**
-     * Returns the resource author.
-     *
-     * @return string
-     */
-    public function getAuthor()
+    public function getAuthor(): ?string
     {
         return $this->author;
     }
 
-    /**
-     * Sets the resource author.
-     *
-     * @param string $author
-     */
-    public function setAuthor($author)
+    public function setAuthor(?string $author): void
     {
         $this->author = $author;
     }
 
-    /**
-     * Returns whether the resource is active.
-     *
-     * @return bool
-     */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active;
     }
 
-    /**
-     * Sets the resource active state.
-     *
-     * @param $active
-     */
-    public function setActive($active)
+    public function setActive(bool $active): void
     {
         $this->active = $active;
     }
 
-    public function setFullscreen($fullscreen)
+    public function setFullscreen(bool $fullscreen): void
     {
         $this->fullscreen = $fullscreen;
     }
 
-    public function getFullscreen()
+    public function isFullscreen(): bool
     {
         return $this->fullscreen;
     }
 
-    public function isFullscreen()
-    {
-        return $this->getFullscreen();
-    }
-
-    public function setAllowedIps($ips)
+    public function setAllowedIps(?array $ips): void
     {
         $this->accesses['ip'] = [
             'activateFilters' => !empty($ips),
@@ -549,141 +367,54 @@ class ResourceNode implements CrudEntityInterface
         ];
     }
 
-    public function getAllowedIps()
+    public function getAllowedIps(): array
     {
         return isset($this->accesses['ip']) ? $this->accesses['ip']['ips'] : [];
     }
 
-    public function getAccessCode()
+    public function getAccessCode(): ?string
     {
         return isset($this->accesses['code']) ? $this->accesses['code'] : null;
     }
 
-    public function setAccessCode($code)
+    public function setAccessCode(?string $code): void
     {
         $this->accesses['code'] = $code;
     }
 
-    public function getAccesses()
+    public function getAccesses(): ?array
     {
         return $this->accesses;
     }
 
-    public function setAccesses(array $accesses)
+    public function setAccesses(array $accesses): void
     {
         $this->accesses = $accesses;
     }
 
     /**
      * Gets how many times a resource has been viewed.
-     *
-     * @return int
      */
-    public function getViewsCount()
+    public function getViewsCount(): ?int
     {
         return $this->viewsCount;
     }
 
     /**
      * Adds one unit to the resource view count.
-     *
-     * @return ResourceNode
      */
-    public function addView()
+    public function addView(): void
     {
         ++$this->viewsCount;
-
-        return $this;
     }
 
-    /**
-     * Returns the ancestors of a resource.
-     *
-     * @return array[array] An array of resources represented as arrays
-     */
-    public function getAncestors(): array
-    {
-        // No need to access DB to get ancestors as they are given by the materialized path.
-        //I use \/ instead of PATH_SEPARATOR for escape purpose
-        $parts = preg_split('/%([^\/]+)\//', $this->materializedPath, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-
-        $ancestors = [];
-        $countAncestors = count($parts);
-        for ($i = 0; $i < $countAncestors; $i += 2) {
-            if (array_key_exists($i + 1, $parts)) {
-                $ancestors[] = [
-                  'id' => $parts[$i + 1], // retro-compatibility
-                  'slug' => $parts[$i + 1],
-                  'name' => $parts[$i],
-              ];
-            }
-        }
-
-        return $ancestors;
-    }
-
-    #[ORM\PreFlush]
-    public function preFlush(PreFlushEventArgs $args)
-    {
-        $ancestors = $this->getOldAncestors();
-        $ids = array_map(function ($ancestor) {
-            return $ancestor['id'];
-        }, $ancestors);
-        $ids = array_unique($ids);
-
-        if (count($ids) !== count($ancestors)) {
-            return;
-        }
-
-        $entityManager = $args->getObjectManager();
-
-        $this->materializedPath = $this->makePath($this);
-        $entityManager->persist($this);
-    }
-
-    private function makePath(self $node, $path = '')
-    {
-        if ($node->getParent()) {
-            $path = $this->makePath($node->getParent(), $node->getName().'%'.$node->getSlug().self::PATH_SEPARATOR.$path);
-        } else {
-            $path = $node->getName().'%'.$node->getSlug().self::PATH_SEPARATOR.$path;
-        }
-
-        return $path;
-    }
-
-    /**
-     * Returns the ancestors of a resource.
-     *
-     * @return array[array] An array of resources represented as arrays
-     */
-    private function getOldAncestors(): array
-    {
-        // No need to access DB to get ancestors as they are given by the materialized path.
-        $parts = preg_split('/-(\d+)'.ResourceNode::PATH_OLDSEPARATOR.'/', $this->path, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        $ancestors = [];
-        $countAncestors = count($parts);
-        for ($i = 0; $i < $countAncestors; $i += 2) {
-            if (array_key_exists($i + 1, $parts)) {
-                $ancestors[] = [
-                    'id' => $parts[$i + 1], // retro-compatibility
-                    'slug' => $parts[$i + 1],
-                    'name' => $parts[$i],
-                ];
-            }
-        }
-
-        return $ancestors;
-    }
-
-    public function getSlug()
+    public function getSlug(): ?string
     {
         return $this->slug;
     }
 
-    public function setSlug($slug = null)
+    public function setSlug(?string $slug = null): void
     {
         $this->slug = $slug;
     }
-
 }

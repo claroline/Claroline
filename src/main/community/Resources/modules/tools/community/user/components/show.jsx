@@ -19,6 +19,9 @@ import {GroupList} from '#/main/community/group/components/list'
 import {MODAL_ORGANIZATIONS} from '#/main/community/modals/organizations'
 import {OrganizationList} from '#/main/community/organization/components/list'
 import {ContentSizing} from '#/main/app/content/components/sizing'
+import get from 'lodash/get'
+import {PageSection} from '#/main/app/page'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 const UserShow = (props) =>
   <UserPage
@@ -26,6 +29,12 @@ const UserShow = (props) =>
     user={props.user}
     reload={props.reload}
   >
+    {get(props.user, 'meta.description') &&
+      <PageSection size="md" className="pb-5">
+        <ContentHtml className="lead">{get(props.user, 'meta.description')}</ContentHtml>
+      </PageSection>
+    }
+
     {!isEmpty(props.user) &&
       <ContentSizing size="lg">
         <ProfileShow

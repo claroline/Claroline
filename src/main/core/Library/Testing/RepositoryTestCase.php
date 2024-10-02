@@ -40,7 +40,6 @@ abstract class RepositoryTestCase extends WebTestCase
     private static $references;
     private static $time;
     private static $persister;
-    private static $nodeIdx = 1;
 
     public static function setUpBeforeClass(): void
     {
@@ -313,13 +312,11 @@ abstract class RepositoryTestCase extends WebTestCase
         $node->setCode($name);
         $node->setMimeType($mimeType);
         $node->setUuid(uniqid());
-        $node->setIndex(self::$nodeIdx);
 
         if ($parent) {
             $node->setParent($parent);
         }
 
-        ++self::$nodeIdx;
         self::$om->persist($node);
         $resource->setResourceNode($node);
 

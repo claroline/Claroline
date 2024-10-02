@@ -1,8 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 
-import {Action, PromisedAction} from '#/main/app/action/prop-types'
-
 const PageSimple = {
   propTypes: {
     id: T.string,
@@ -45,7 +43,6 @@ const PageSimple = {
  */
 const PageFull = {
   propTypes: merge({}, PageSimple.propTypes, {
-    size: T.oneOf(['xl']),
     showHeader: T.bool,
 
     disabled: T.bool,
@@ -67,12 +64,11 @@ const PageFull = {
     title: T.string,
 
     /**
-     * An optional icon for the page.
-     * NB. we also use it to display a progression gauge.
+     * The description of the page.
      *
      * @type {string}
      */
-    icon: T.oneOfType([T.string, T.element]),
+    description: T.string,
 
     /**
      * An optional url to a poster image for the page.
@@ -80,14 +76,10 @@ const PageFull = {
      * @type {string}
      */
     poster: T.string,
-
-
   }),
   defaultProps: merge({}, PageSimple.defaultProps, {
     showHeader: true,
     disabled: false,
-    actions: [],
-    toolbar: 'more',
     breadcrumb: [],
     root: false
   })

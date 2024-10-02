@@ -12,7 +12,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {getActions} from '#/main/community/role/utils'
 import {Role as RoleTypes} from '#/main/community/role/prop-types'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {PageTitle} from '#/main/app/page/components/title'
+import {PageHeading} from '#/main/app/page/components/heading'
 
 const Role = (props) =>
   <ToolPage
@@ -34,7 +34,7 @@ const Role = (props) =>
     }
 
     {!isEmpty(props.role) &&
-      <PageTitle
+      <PageHeading
         size="md"
         title={trans(get(props.role, 'translationKey', 'loading'))}
         primaryAction="edit"

@@ -25,7 +25,6 @@ trait HasUsersTrait
     /**
      * List users of the collection.
      *
-     *
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\User.",
      *     queryString={
@@ -65,7 +64,6 @@ trait HasUsersTrait
 
     /**
      * Adds users to the collection.
-     *
      *
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\User.",

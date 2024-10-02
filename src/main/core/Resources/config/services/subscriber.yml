@@ -15,6 +15,12 @@ services:
               arguments:
                   - '@Claroline\CoreBundle\Manager\PlanningManager'
 
+    Claroline\CoreBundle\Subscriber\Crud\LocationSubscriber:
+        tags: [ kernel.event_subscriber ]
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\Manager\FileManager'
+
     Claroline\CoreBundle\Subscriber\Crud\File\PublicFileSubscriber:
         tags: [kernel.event_subscriber]
         arguments:

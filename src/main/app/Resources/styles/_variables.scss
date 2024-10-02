@@ -13,12 +13,12 @@ $icon-primary-color: var(--#{$prefix}primary) !default;
 $icon-secondary-color: $gray-900 !default;
 
 // content sizing
-$content-sm: 540px !default;
-$content-md: 860px !default;
-$content-lg: 1180px !default;
+$content-sm: 42rem !default; // deprecated
+$content-md: 56rem !default;
+$content-lg: 72rem !default;
 
 $content-sizes: (
-    sm: $content-sm,
+    sm: $content-sm, // deprecated
     md: $content-md,
     lg: $content-lg
 ) !default;

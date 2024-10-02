@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Transfer\Importer\Workspace;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -13,18 +12,10 @@ use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 
 class RemoveUser extends AbstractImporter
 {
-    /** @var Crud */
-    private $crud;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var ObjectManager */
-    private $om;
-
-    public function __construct(Crud $crud, SerializerProvider $serializer, ObjectManager $om)
-    {
-        $this->crud = $crud;
-        $this->serializer = $serializer;
-        $this->om = $om;
+    public function __construct(
+        private readonly Crud $crud,
+        private readonly ObjectManager $om
+    ) {
     }
 
     public function execute(array $data): array
@@ -34,21 +25,20 @@ class RemoveUser extends AbstractImporter
             throw new \Exception('No role set for delete for user '.$this->printError($data['user']).'.');
         }
 
-        $user = $this->om->getObject($data['user'], User::class, array_keys($data['user']));
-
+        $user = $this->crud->find(User::class, $data['user']);
         if (!$user) {
             throw new \Exception('User '.$this->printError($data['user'])." doesn't exists.");
         }
 
-        //todo find a generic way to find the identifiers
-        $workspace = $this->om->getObject($data['workspace'], Workspace::class, ['code']);
-
+        $workspace = $this->crud->find(Workspace::class, $data['workspace']);
         if (!$workspace) {
             throw new \Exception('Workspace '.$this->printError($data['workspace'])." doesn't exists.");
         }
 
-        $role = $this->om->getRepository(Role::class)
-            ->findOneBy(['workspace' => $workspace, 'translationKey' => $data['role']['translationKey']]);
+        $role = $this->om->getRepository(Role::class)->findOneBy([
+            'workspace' => $workspace,
+            'translationKey' => $data['role']['translationKey'],
+        ]);
 
         if (!$role) {
             throw new \Exception('Role '.$this->printError($data['role'])." doesn't exists.");
@@ -59,7 +49,7 @@ class RemoveUser extends AbstractImporter
         return [];
     }
 
-    public function printError(array $el)
+    public function printError(array $el): string
     {
         $string = '';
 
@@ -73,26 +63,26 @@ class RemoveUser extends AbstractImporter
     public function getSchema(?array $options = [], ?array $extra = []): array
     {
         $roleSchema = [
-          '$schema' => 'http:\/\/json-schema.org\/draft-04\/schema#',
-          'type' => 'object',
-          'properties' => [
-            'translationKey' => [
-              'type' => 'string',
-              'description' => 'The role name',
+            '$schema' => 'http:\/\/json-schema.org\/draft-04\/schema#',
+            'type' => 'object',
+            'properties' => [
+                'translationKey' => [
+                    'type' => 'string',
+                    'description' => 'The role name',
+                ],
             ],
-          ],
-          'claroline' => [
-            'requiredAtCreation' => ['translationKey'],
-            'ids' => ['translationKey'],
-            'class' => Role::class,
-          ],
+            'claroline' => [
+                'requiredAtCreation' => ['translationKey'],
+                'ids' => ['translationKey'],
+                'class' => Role::class,
+            ],
         ];
 
         $schema = json_decode(json_encode($roleSchema));
 
         $schema = [
-          'user' => User::class,
-          'role' => $schema,
+            'user' => User::class,
+            'role' => $schema,
         ];
 
         if (!in_array(Options::WORKSPACE_IMPORT, $options)) {

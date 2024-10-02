@@ -1,4 +1,4 @@
-import React, {createElement} from 'react'
+import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
@@ -56,10 +56,6 @@ const OrganizationListComponent = props => {
           name: 'email',
           type: 'email',
           label: trans('email')
-        }, {
-          name: 'parent',
-          type: 'organization',
-          label: trans('parent')
         }, {
           name: 'restrictions.public',
           alias: 'public',

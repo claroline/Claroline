@@ -14,6 +14,7 @@ namespace Claroline\OpenBadgeBundle\Entity;
 use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Color;
+use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Archived;
@@ -48,6 +49,7 @@ class BadgeClass implements CrudEntityInterface
     use Color;
     use Template;
     use Archived;
+    use Poster;
 
     #[ORM\Column]
     private ?string $image = null;

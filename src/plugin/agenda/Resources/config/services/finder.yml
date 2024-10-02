@@ -1,4 +1,13 @@
 services:
+    Claroline\AgendaBundle\Finder\EventInvitationType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\AgendaBundle\Finder\EventType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\AgendaBundle\Finder\TaskType:
+        tags: [ claroline.finder.type ]
+
     Claroline\AgendaBundle\Finder\EventFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]

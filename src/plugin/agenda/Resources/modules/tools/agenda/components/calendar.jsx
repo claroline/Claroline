@@ -14,6 +14,8 @@ import {MODAL_EVENT_CREATION} from '#/plugin/agenda/event/modals/creation'
 
 import {route} from '#/plugin/agenda/tools/agenda/routing'
 import {AGENDA_VIEWS} from '#/plugin/agenda/tools/agenda/views'
+import {Toolbar} from '#/main/app/action'
+import {Heading} from '#/main/app/components/heading'
 
 const AgendaCalendar = (props) => {
   const currentView = AGENDA_VIEWS[props.view]
@@ -22,58 +24,73 @@ const AgendaCalendar = (props) => {
   return (
     <ToolPage
       title={currentView.display(props.referenceDate)}
-      primaryAction="add"
-      toolbar="previous range next | today"
-      actions={[
-        {
-          name: 'previous',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-chevron-left',
-          label: trans('previous'),
-          target: route(props.path, props.view, currentView.previous(props.referenceDate))
-        }, {
-          name: 'next',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-chevron-right',
-          label: trans('next'),
-          target: route(props.path, props.view, currentView.next(props.referenceDate))
-        }, {
-          name: 'range',
-          type: MENU_BUTTON,
-          icon: <span>{currentView.label}</span>,
-          label: trans('change-calendar-view', {}, 'actions'),
-          menu: {
-            align: 'right',
-            label: trans('display_modes', {}, 'agenda'),
-            items: Object.keys(AGENDA_VIEWS).map(viewName => ({
-              type: LINK_BUTTON,
-              label: AGENDA_VIEWS[viewName].label,
-              target: route(props.path, viewName, props.referenceDate)
-            }))
-          }
-        }, {
-          name: 'today',
-          type: LINK_BUTTON,
-          icon: <span>{trans('today')}</span>,
-          label: trans('today'),
-          target: route(props.path, props.view, now())
-        }, {
-          name: 'add',
-          type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-plus',
-          label: trans('add-event', {}, 'actions'),
-          modal: [MODAL_EVENT_CREATION, {
-            event: {
-              start: now(false),
-              workspace: !isEmpty(props.contextData) ? props.contextData : null
-            },
-            onSave: (event) => props.reload(event, true)
-          }],
-          displayed: !isEmpty(props.currentUser),
-          primary: true
-        }
-      ]}
     >
+      <header className="d-flex align-items-center gap-3 px-4 py-3 border-bottom border-top">
+        <Heading level={1} displayLevel={5} className="m-0">
+          {currentView.display(props.referenceDate)}
+        </Heading>
+        <Toolbar
+          className="ms-auto gap-1 d-flex"
+          toolbar="previous today next | range | add"
+          buttonName="btn"
+          defaultName="btn-body"
+          primaryName="btn-primary"
+          separatorName="mx-1"
+          tooltip="bottom"
+          actions={[
+            {
+              name: 'previous',
+              type: LINK_BUTTON,
+              icon: 'fa fa-chevron-left',
+              label: trans('previous'),
+              target: route(props.path, props.view, currentView.previous(props.referenceDate))
+            }, {
+              name: 'next',
+              type: LINK_BUTTON,
+              icon: 'fa fa-chevron-right',
+              label: trans('next'),
+              target: route(props.path, props.view, currentView.next(props.referenceDate))
+            }, {
+              name: 'range',
+              type: MENU_BUTTON,
+              icon: <>{trans('display_mode', {name: currentView.label}, 'agenda')}</>,
+              label: trans('change-calendar-view', {}, 'actions'),
+              menu: {
+                align: 'right',
+                label: trans('display_modes', {}, 'agenda'),
+                items: Object.keys(AGENDA_VIEWS).map(viewName => ({
+                  type: LINK_BUTTON,
+                  label: AGENDA_VIEWS[viewName].label,
+                  target: route(props.path, viewName, props.referenceDate)
+                }))
+              }
+            }, {
+              name: 'today',
+              type: LINK_BUTTON,
+              label: trans('today'),
+              target: route(props.path, props.view, now()),
+              tooltip: null,
+              activeClassName: null
+            }, {
+              name: 'add',
+              type: MODAL_BUTTON,
+              //icon: 'fa fa-fw fa-plus',
+              label: trans('add-event', {}, 'actions'),
+              modal: [MODAL_EVENT_CREATION, {
+                event: {
+                  start: now(false),
+                  workspace: !isEmpty(props.contextData) ? props.contextData : null
+                },
+                onSave: (event) => props.reload(event, true)
+              }],
+              displayed: !isEmpty(props.currentUser),
+              primary: true,
+              tooltip: null
+            }
+          ]}
+        />
+      </header>
+
       <Routes
         path={props.path}
         routes={[

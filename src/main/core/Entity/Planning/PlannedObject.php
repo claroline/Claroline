@@ -11,10 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity\Planning;
 
-use Doctrine\DBAL\Types\Types;
-use Claroline\CoreBundle\Repository\Planning\PlannedObjectRepository;
-use DateTimeInterface;
-use DateTime;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -25,8 +21,9 @@ use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\AppBundle\Entity\Meta\UpdatedAt;
 use Claroline\CoreBundle\Entity\Location;
+use Claroline\CoreBundle\Repository\Planning\PlannedObjectRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
 
 #[ORM\Table(name: 'claro_planned_object')]
 #[ORM\Entity(repositoryClass: PlannedObjectRepository::class)]
@@ -53,10 +50,10 @@ class PlannedObject
     private ?string $class = null;
 
     #[ORM\Column(name: 'start_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $startDate = null;
+    private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(name: 'end_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $endDate = null;
+    private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(nullable: true)]
     private ?string $color = null;
@@ -64,7 +61,6 @@ class PlannedObject
     #[ORM\Column(nullable: true)]
     private ?string $locationUrl = null;
 
-    
     #[ORM\JoinColumn(name: 'location_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: Location::class)]
     private ?Location $location = null;
@@ -94,29 +90,29 @@ class PlannedObject
         $this->class = $class;
     }
 
-    public function getStartDate(): ?DateTimeInterface
+    public function getStartDate(): ?\DateTimeInterface
     {
         return $this->startDate;
     }
 
-    public function setStartDate(DateTimeInterface $startDate = null): void
+    public function setStartDate(\DateTimeInterface $startDate = null): void
     {
         $this->startDate = $startDate;
     }
 
-    public function getEndDate(): ?DateTimeInterface
+    public function getEndDate(): ?\DateTimeInterface
     {
         return $this->endDate;
     }
 
-    public function setEndDate(DateTimeInterface $endDate = null): void
+    public function setEndDate(\DateTimeInterface $endDate = null): void
     {
         $this->endDate = $endDate;
     }
 
     public function isTerminated(): bool
     {
-        $now = new DateTime();
+        $now = new \DateTime();
 
         return $this->endDate && $now > $this->endDate;
     }

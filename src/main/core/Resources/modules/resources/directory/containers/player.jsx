@@ -14,7 +14,6 @@ const DirectoryPlayer = connect(
     path: resourceSelectors.basePath(state), // the base path without current resource id
     currentUser: securitySelectors.currentUser(state),
     embedded: resourceSelectors.embedded(state),
-    rootNode: resourcesToolSelectors.root(state),
     currentNode: resourceSelectors.resourceNode(state),
     listName: selectors.LIST_NAME,
     listConfiguration: selectors.listConfiguration(state),

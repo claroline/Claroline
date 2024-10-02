@@ -8,20 +8,17 @@ use Claroline\CommunityBundle\Serializer\UserSerializer;
 
 class EventInvitationSerializer
 {
-    /** @var UserSerializer */
-    private $userSerializer;
-
     public function getName(): string
     {
         return 'event_invitation';
     }
 
-    public function __construct(UserSerializer $userSerializer)
-    {
-        $this->userSerializer = $userSerializer;
+    public function __construct(
+        private readonly UserSerializer $userSerializer
+    ) {
     }
 
-    public function serialize(EventInvitation $invitation)
+    public function serialize(EventInvitation $invitation): array
     {
         return [
             'id' => $invitation->getId(),

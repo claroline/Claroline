@@ -7,22 +7,22 @@ use Doctrine\ORM\Mapping as ORM;
 trait Address
 {
     #[ORM\Column(name: 'address_street1', nullable: true)]
-    protected ?string $addressStreet1;
+    protected ?string $addressStreet1 = null;
 
     #[ORM\Column(name: 'address_street2', nullable: true)]
-    protected ?string $addressStreet2;
+    protected ?string $addressStreet2 = null;
 
     #[ORM\Column(name: 'address_postal_code', nullable: true)]
-    protected ?string $addressPostalCode;
+    protected ?string $addressPostalCode = null;
 
     #[ORM\Column(name: 'address_city', nullable: true)]
-    protected ?string $addressCity;
+    protected ?string $addressCity = null;
 
     #[ORM\Column(name: 'address_state', nullable: true)]
-    protected ?string $addressState;
+    protected ?string $addressState = null;
 
     #[ORM\Column(name: 'address_country', nullable: true)]
-    protected ?string $addressCountry;
+    protected ?string $addressCountry = null;
 
     public function getAddress(): string
     {

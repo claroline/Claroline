@@ -3,16 +3,12 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 import {ToolPage} from '#/main/core/tool'
 
 import {LogFunctionalList} from '#/main/log/components/functional-list'
 import {selectors} from '#/main/community/tools/community/activity/store'
-import {ContentSizing} from '#/main/app/content/components/sizing'
-import {ContentTitle} from '#/main/app/content/components/title'
-import {ActivityCalendar} from '#/main/app/chart/activity-calendar/components/main'
-import {Activity} from '#/main/log/activity/components/main'
+import {PageListSection, PageSection} from '#/main/app/page'
 
 class ActivityMain extends Component {
   constructor(props) {
@@ -32,25 +28,23 @@ class ActivityMain extends Component {
       <ToolPage
         title={trans('activity')}
       >
-        {/*<div className="row" role="presentation">
-          <ContentSizing size="md">*/}
-            <ContentInfoBlocks
-              className="my-4"
-              size="lg"
-              items={[
-                {
-                  icon: 'fa fa-user',
-                  label: trans('users', {}, 'community'),
-                  value: !this.state.loaded ? '?' : this.props.count.users
-                }, {
-                  icon: 'fa fa-users',
-                  label: trans('groups', {}, 'community'),
-                  value: !this.state.loaded ? '?' : this.props.count.groups
-                }
-              ]}
-            />
-        {/*  </ContentSizing>
-        </div>*/}
+        <PageSection size="full">
+          <ContentInfoBlocks
+            className="my-4"
+            size="lg"
+            items={[
+              {
+                icon: 'fa fa-user',
+                label: trans('users', {}, 'community'),
+                value: !this.state.loaded ? '?' : this.props.count.users
+              }, {
+                icon: 'fa fa-users',
+                label: trans('groups', {}, 'community'),
+                value: !this.state.loaded ? '?' : this.props.count.groups
+              }
+            ]}
+          />
+        </PageSection>
 
         {/*<div className="row py-4" role="presentation">
           <ContentSizing size="md">
@@ -58,25 +52,28 @@ class ActivityMain extends Component {
           </ContentSizing>
         </div>*/}
 
-        <LogFunctionalList
-          className="component-container"
-          name={selectors.STORE_NAME + '.logs'}
-          url={['apiv2_community_functional_logs', {contextId: this.props.contextId}]}
-          customDefinition={[
-            {
-              name: 'workspace',
-              type: 'workspace',
-              label: trans('workspace'),
-              displayable: isEmpty(this.props.contextId),
-              displayed: isEmpty(this.props.contextId)
-            }, {
-              name: 'resource',
-              type: 'resource',
-              label: trans('resource'),
-              displayed: true
-            }
-          ]}
-        />
+        <PageListSection>
+          <LogFunctionalList
+            flush={true}
+            className="component-container"
+            name={selectors.STORE_NAME + '.logs'}
+            url={['apiv2_community_functional_logs', {contextId: this.props.contextId}]}
+            customDefinition={[
+              {
+                name: 'workspace',
+                type: 'workspace',
+                label: trans('workspace'),
+                displayable: isEmpty(this.props.contextId),
+                displayed: isEmpty(this.props.contextId)
+              }, {
+                name: 'resource',
+                type: 'resource',
+                label: trans('resource'),
+                displayed: true
+              }
+            ]}
+          />
+        </PageListSection>
       </ToolPage>
     )
   }

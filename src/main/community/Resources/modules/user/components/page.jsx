@@ -13,14 +13,10 @@ import {getActions} from '#/main/community/user/utils'
 import {User as UserTypes} from '#/main/community/user/prop-types'
 import {UserAvatar} from '#/main/app/user/components/avatar'
 import {ContentLoader} from '#/main/app/content/components/loader'
+import {PageHeading} from '#/main/app/page/components/heading'
 
 const User = (props) =>
   <ToolPage
-    size="xl"
-    meta={{
-      title: get(props.user, 'name'),
-      description: get(props.user, 'meta.description')
-    }}
     breadcrumb={[
       {
         type: LINK_BUTTON,
@@ -28,23 +24,30 @@ const User = (props) =>
         target: `${props.path}/users`
       }
     ].concat(props.user ? props.breadcrumb : [])}
-    icon={
-      <UserAvatar user={!isEmpty(props.user) ? props.user : undefined} size="xl" />
-    }
-    title={get(props.user, 'name', trans('loading'))}
     poster={get(props.user, 'poster')}
-    primaryAction="send-message"
-    toolbar="edit more"
-    actions={!isEmpty(props.user) ? getActions([props.user], {
-      add: () => props.reload(props.user.id),
-      update: () => props.reload(props.user.id),
-      delete: () => props.reload(props.user.id)
-    }, props.path, props.currentUser) : []}
+    title={get(props.user, 'name', trans('loading'))}
+    description={get(props.group, 'meta.description')}
   >
     {isEmpty(props.user) &&
       <ContentLoader
         size="lg"
         description={trans('user_loading', {}, 'community')}
+      />
+    }
+
+    {!isEmpty(props.user) &&
+      <PageHeading
+        size="md"
+        icon={
+          <UserAvatar user={!isEmpty(props.user) ? props.user : undefined} size="xl" />
+        }
+        title={get(props.user, 'name', trans('loading'))}
+        primaryAction="send-message"
+        actions={!isEmpty(props.user) ? getActions([props.user], {
+          add: () => props.reload(props.user.id),
+          update: () => props.reload(props.user.id),
+          delete: () => props.reload(props.user.id)
+        }, props.path, props.currentUser) : []}
       />
     }
 

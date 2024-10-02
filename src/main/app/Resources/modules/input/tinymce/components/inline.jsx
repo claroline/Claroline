@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {Editor} from '@tinymce/tinymce-react'
 import merge from 'lodash/merge'

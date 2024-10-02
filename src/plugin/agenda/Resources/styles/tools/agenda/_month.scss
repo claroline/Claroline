@@ -5,9 +5,7 @@
     flex: 1; // fill .page-content
     display: flex;
     flex-direction: column;
-    margin: 0 (-(($grid-gutter-width * .5))); // absorb .page-content padding
     max-height: 100%;
-    //background: $agenda-bg;
 
     // rows
     .calendar-row {
@@ -35,6 +33,7 @@
     .calendar-cell {
         flex: 1;
         text-align: center;
+        width: calc(100% / 7);
 
         border-right: 1px solid $agenda-grid-border;
 
@@ -44,7 +43,7 @@
     }
 
     .day-name {
-        padding: 5px;
+        padding: map-get($spacers, 1);
     }
 
     .day {
@@ -58,7 +57,7 @@
             justify-content: center;
             width: 26px;
             height: 26px;
-            margin: 5px auto;
+            margin: map-get($spacers, 1) auto;
             border-radius: 50%;
 
             background: transparent;

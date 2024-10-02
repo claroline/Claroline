@@ -9,7 +9,16 @@ import {constants} from '#/main/app/overlays/alert/constants'
 
 const FlyingAlertContent = props => {
   const status = constants.ALERT_STATUS[props.status]
-  //const action = actionConstants.ACTIONS[props.action]
+
+  let role = 'status'
+  if ([
+    constants.ALERT_STATUS_WARNING,
+    constants.ALERT_STATUS_ERROR,
+    constants.ALERT_STATUS_UNAUTHORIZED,
+    constants.ALERT_STATUS_FORBIDDEN
+  ].includes(status)) {
+    role = 'alert'
+  }
 
   return (
     <li
@@ -17,6 +26,7 @@ const FlyingAlertContent = props => {
         removable: status.removable
       })}
       onClick={() => status.removable && props.removeAlert(props.id)}
+      role={role}
     >
       <span className="flying-alert-icon">
         <span className={classes('fa fa-fw', status.icon)} />

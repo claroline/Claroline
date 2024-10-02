@@ -1,4 +1,5 @@
 {
   "add_location": "Add a location",
-  "new_location": "New location"
+  "new_location": "New location",
+  "location_name": "Location: %name%"
 }

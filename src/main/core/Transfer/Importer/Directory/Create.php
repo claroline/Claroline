@@ -15,37 +15,19 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @todo merge some logic with CreateOrUpdate action.
- */
 class Create extends AbstractImporter
 {
-    /** @var Crud */
-    private $crud;
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var TranslatorInterface */
-    private $translator;
-
     public function __construct(
-        Crud $crud,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        TranslatorInterface $translator
+        private readonly Crud $crud,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly TranslatorInterface $translator
     ) {
-        $this->crud = $crud;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->translator = $translator;
     }
 
     public function execute(array $data): array
     {
-        // todo find a generic way to find the identifiers
-        /** @var Workspace $workspace */
-        $workspace = $this->om->getObject($data['workspace'], Workspace::class, ['code']);
+        $workspace = $this->crud->find(Workspace::class, $data['workspace']);
         if (!$workspace) {
             throw new \Exception('Workspace '.json_encode($data['workspace'])." doesn't exists.");
         }

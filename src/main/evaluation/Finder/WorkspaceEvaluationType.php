@@ -6,9 +6,9 @@ use Claroline\AppBundle\API\Finder\AbstractType;
 use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
 use Claroline\AppBundle\API\Finder\Type\ChoiceType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
-use Claroline\AppBundle\API\Finder\Type\RelatedEntityType;
 use Claroline\CommunityBundle\Finder\UserType;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
+use Claroline\CoreBundle\Finder\WorkspaceType;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,7 +27,7 @@ class WorkspaceEvaluationType extends AbstractType
             ->add('status', ChoiceType::class, [
                 'choices' => EvaluationStatus::all(),
             ])
-            ->add('workspace', RelatedEntityType::class)
+            ->add('workspace', WorkspaceType::class)
             ->add('user', UserType::class)
         ;
     }

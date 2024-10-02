@@ -14,7 +14,7 @@ import {Datetime} from '#/main/app/components/date'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 import {MODAL_ANNOUNCEMENT_SENDING} from '#/plugin/announcement/resources/announcement/modals/sending'
-import {PageTitle} from '#/main/app/page/components/title'
+import {PageHeading} from '#/main/app/page/components/heading'
 
 const AnnouncementPost = (props) => {
   const history = useHistory()
@@ -22,8 +22,9 @@ const AnnouncementPost = (props) => {
   return (
     <ResourcePage
       poster={props.announcement.poster}
+      title={props.announcement.title}
     >
-      <PageTitle
+      <PageHeading
         size="md"
         title={props.announcement.title}
         primaryAction="edit"
@@ -72,7 +73,7 @@ const AnnouncementPost = (props) => {
         ]}
       />
 
-      <PageSection size="md" className="p-4 pb-5">
+      <PageSection size="md" className="pb-5">
         <div className="text-body-tertiary fw-bolder d-flex align-items-center gap-3 mb-4" role="presentation">
           <UserMicro
             {...get(props.announcement, 'meta.creator', {})}

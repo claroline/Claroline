@@ -1,8 +1,8 @@
 import {createSelector} from 'reselect'
+import isEmpty from 'lodash/isEmpty'
 
 import {now} from '#/main/app/intl/date'
 
-import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
 import {selectors as configSelectors} from '#/main/app/config/store/selectors'
 
 const restrictions = (state) => configSelectors.param(state, 'restrictions') || {}
@@ -35,6 +35,14 @@ const availableContexts = (state) => state.contexts
 
 const favoriteContexts = (state) => state.contextFavorites
 
+const isContextFavorite = (state, context) => {
+  if (isEmpty(state.contextFavorites)) {
+    return false
+  }
+
+  return -1 !== state.contextFavorites.findIndex(f => f.id === context.id)
+}
+
 const currentOrganization = (state) => state.currentOrganization
 const availableOrganizations = (state) => state.availableOrganizations
 
@@ -44,6 +52,7 @@ export const selectors = {
   selfRegistration,
   availableContexts,
   favoriteContexts,
+  isContextFavorite,
   currentOrganization,
   availableOrganizations
 }

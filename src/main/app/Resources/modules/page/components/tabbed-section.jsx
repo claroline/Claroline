@@ -24,7 +24,8 @@ const PageTabbedSection = (props) =>
         label: tab.title,
         target: `${props.path}${tab.path}`,
         displayed: tab.displayed,
-        exact: tab.exact
+        exact: tab.exact,
+        autoScroll: false
       }))}
     />
 

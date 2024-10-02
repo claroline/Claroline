@@ -42,7 +42,7 @@ class AddUser extends AbstractImporter
         return [];
     }
 
-    public function printError(array $el)
+    public function printError(array $el): string
     {
         $string = '';
 

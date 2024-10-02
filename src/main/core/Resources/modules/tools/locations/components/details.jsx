@@ -21,9 +21,7 @@ const LocationDetails = (props) =>
           render: () => (
             <LocationAbout
               location={props.location}
-              addGroups={props.addGroups}
               addOrganizations={props.addOrganizations}
-              addUsers={props.addUsers}
             />
           )
         }, {

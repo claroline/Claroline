@@ -13,28 +13,39 @@ import {selectors} from '#/main/app/context/profile/store'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 import {ContextPage} from '#/main/app/context/components/page'
 import {UserAvatar} from '#/main/app/user/components/avatar'
+import {PageHeading} from '#/main/app/page/components/heading'
 
 const ContextProfile = (props) => {
   return (
     <ContextPage
       size="xl"
-      title={props.currentUser.name}
+      title={trans('my_profile')}
       poster={props.currentUser.poster}
-      icon={
-        <UserAvatar user={props.currentUser} size="xl" />
-      }
-      toolbar="edit"
-      actions={[
+      breadcrumb={[
         {
-          name: 'edit',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-pencil',
-          label: trans('edit', {}, 'actions'),
-          target: `${props.path}/profile/edit`,
-          primary: true
+          label: trans('my_profile'),
+          target: `${props.path}/profile`
         }
       ]}
     >
+      <PageHeading
+        size="md"
+        title={props.currentUser.name}
+        icon={<UserAvatar user={props.currentUser} size="xl" />}
+        primaryAction="edit"
+        actions={[
+          {
+            name: 'edit',
+            type: LINK_BUTTON,
+            icon: 'fa fa-fw fa-pencil',
+            label: trans('edit', {}, 'actions'),
+            target: `${props.path}/profile/edit`,
+            primary: true
+          }
+        ]}
+      />
+
       <ContentSizing size="lg">
         <Routes
           path={`${props.path}/profile`}

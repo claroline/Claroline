@@ -2,11 +2,11 @@
 
 namespace Claroline\CoreBundle\Entity\Planning;
 
-use Doctrine\Common\Collections\Collection;
-use Claroline\CoreBundle\Repository\Planning\PlanningRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\CoreBundle\Repository\Planning\PlanningRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_planning')]
@@ -16,20 +16,13 @@ class Planning
     use Id;
     use Uuid;
 
-    /**
-     * @var string
-     */
     #[ORM\Column]
-    private $objectId;
+    private ?string $objectId = null;
+
+    #[ORM\Column]
+    private ?string $objectClass = null;
 
     /**
-     * @var string
-     */
-    #[ORM\Column]
-    private $objectClass;
-
-    /**
-     *
      * @var Collection<int, PlannedObject>
      */
     #[ORM\JoinTable(name: 'claro_planning_planned_object')]
@@ -50,7 +43,7 @@ class Planning
         return $this->objectId;
     }
 
-    public function setObjectId(string $objectId)
+    public function setObjectId(string $objectId): void
     {
         $this->objectId = $objectId;
     }
@@ -60,24 +53,24 @@ class Planning
         return $this->objectClass;
     }
 
-    public function setObjectClass(string $objectClass)
+    public function setObjectClass(string $objectClass): void
     {
         $this->objectClass = $objectClass;
     }
 
-    public function getPlannedObjects()
+    public function getPlannedObjects(): Collection
     {
         return $this->plannedObjects;
     }
 
-    public function addPlannedObject(PlannedObject $plannedObject)
+    public function addPlannedObject(PlannedObject $plannedObject): void
     {
         if (!$this->plannedObjects->contains($plannedObject)) {
             $this->plannedObjects->add($plannedObject);
         }
     }
 
-    public function removePlannedObject(PlannedObject $plannedObject)
+    public function removePlannedObject(PlannedObject $plannedObject): void
     {
         if ($this->plannedObjects->contains($plannedObject)) {
             $this->plannedObjects->removeElement($plannedObject);

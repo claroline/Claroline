@@ -9,6 +9,7 @@ import {selectors} from '#/main/evaluation/tools/evaluation/store'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_RESOURCES} from '#/main/core/modals/resources'
+import {PageListSection} from '#/main/app/page'
 
 const EvaluationActivities = (props) =>
   <ToolPage
@@ -30,25 +31,27 @@ const EvaluationActivities = (props) =>
     ]}
   >
     <Alert
-      className="mt-3"
+      className="m-0"
       type="info"
       title={trans('workspace_requirements_help_title', {}, 'evaluation')}
     >
       {trans('workspace_requirements_help_description', {}, 'evaluation')}
     </Alert>
 
-    <ResourceList
-      className="mb-3"
-      name={selectors.STORE_NAME+'.requiredResources'}
-      url={['apiv2_workspace_required_resource_list', {workspace: props.contextId}]}
-      delete={{
-        url: ['apiv2_workspace_required_resource_remove', {workspace: props.contextId}]
-      }}
-      actions={undefined}
-      display={{
-        current: listConst.DISPLAY_LIST_SM
-      }}
-    />
+    <PageListSection>
+      <ResourceList
+        flush={true}
+        name={selectors.STORE_NAME+'.requiredResources'}
+        url={['apiv2_workspace_required_resource_list', {workspace: props.contextId}]}
+        delete={{
+          url: ['apiv2_workspace_required_resource_remove', {workspace: props.contextId}]
+        }}
+        actions={undefined}
+        display={{
+          current: listConst.DISPLAY_LIST_SM
+        }}
+      />
+    </PageListSection>
   </ToolPage>
 
 EvaluationActivities.propTypes = {

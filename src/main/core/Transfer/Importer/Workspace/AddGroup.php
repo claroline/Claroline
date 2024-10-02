@@ -13,37 +13,28 @@ use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 
 class AddGroup extends AbstractImporter
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var Crud */
-    private $crud;
-
-    public function __construct(Crud $crud, SerializerProvider $serializer, ObjectManager $om)
-    {
-        $this->crud = $crud;
-        $this->serializer = $serializer;
-        $this->om = $om;
+    public function __construct(
+        private readonly Crud $crud,
+        private readonly ObjectManager $om
+    ) {
     }
 
     public function execute(array $data): array
     {
-        $group = $this->om->getObject($data['group'], Group::class, array_keys($data['group']));
-
+        $group = $this->crud->find(Group::class, $data['group']);
         if (!$group) {
             throw new \Exception('Group '.$this->printError($data['group'])." doesn't exists.");
         }
 
-        //todo find a generic way to find the identifiers
-        $workspace = $this->om->getObject($data['workspace'], Workspace::class, ['code']);
-
+        $workspace = $this->crud->find(Workspace::class, $data['workspace']);
         if (!$workspace) {
             throw new \Exception('Workspace '.$this->printError($data['workspace'])." doesn't exists.");
         }
 
-        $role = $this->om->getRepository(Role::class)
-            ->findOneBy(['workspace' => $workspace, 'translationKey' => $data['role']['translationKey']]);
+        $role = $this->om->getRepository(Role::class)->findOneBy([
+            'workspace' => $workspace,
+            'translationKey' => $data['role']['translationKey'],
+        ]);
 
         if (!$role) {
             throw new \Exception('Role '.$this->printError($data['role'])." doesn't exists.");
@@ -54,7 +45,7 @@ class AddGroup extends AbstractImporter
         return [];
     }
 
-    public function printError(array $el)
+    public function printError(array $el): string
     {
         $string = '';
 

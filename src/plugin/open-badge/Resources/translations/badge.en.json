@@ -58,5 +58,6 @@
   "transfer_to": "Transfer to",
   "transferred": "Transferred badge",
   "delete_confirm_message": "{1} Are you sure you want to delete this badge? | [2,Inf[ Are you sure you want to delete these %count% badges?",
-  "archive_confirm_message": "{1} Are you sure you want to archive this badge? | [2,Inf[ Are you sure you want to archive these %count% badges?"
+  "archive_confirm_message": "{1} Are you sure you want to archive this badge? | [2,Inf[ Are you sure you want to archive these %count% badges?",
+  "badge_name": "Badge: %name%"
 }

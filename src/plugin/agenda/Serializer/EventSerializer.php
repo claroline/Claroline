@@ -17,37 +17,26 @@ class EventSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var WorkspaceSerializer */
-    private $workspaceSerializer;
-    /** @var PlannedObjectSerializer */
-    private $plannedObjectSerializer;
-    /** @var TemplateSerializer */
-    private $templateSerializer;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        WorkspaceSerializer $workspaceSerializer,
-        PlannedObjectSerializer $plannedObjectSerializer,
-        TemplateSerializer $templateSerializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly WorkspaceSerializer $workspaceSerializer,
+        private readonly PlannedObjectSerializer $plannedObjectSerializer,
+        private readonly TemplateSerializer $templateSerializer
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->workspaceSerializer = $workspaceSerializer;
-        $this->plannedObjectSerializer = $plannedObjectSerializer;
-        $this->templateSerializer = $templateSerializer;
     }
 
-    public function getName()
+    public function getClass(): string
+    {
+        return Event::class;
+    }
+
+    public function getName(): string
     {
         return 'event';
     }
 
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/plugin/agenda/event.json';
     }

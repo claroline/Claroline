@@ -32,8 +32,8 @@ const RoleShow = (props) =>
     reload={(role) => props.reload(role, props.contextData)}
   >
     {get(props.role, 'meta.description') &&
-      <PageSection size="md">
-        <ContentHtml className="lead my-5">{get(props.role, 'meta.description')}</ContentHtml>
+      <PageSection size="md" className="pb-5">
+        <ContentHtml className="lead">{get(props.role, 'meta.description')}</ContentHtml>
       </PageSection>
     }
 

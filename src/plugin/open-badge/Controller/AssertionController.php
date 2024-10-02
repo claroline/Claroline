@@ -79,9 +79,9 @@ class AssertionController extends AbstractCrudController
 
         $user = $this->tokenStorage->getToken()?->getUser();
 
-        $finderQuery->addFilter('recipient', $user);
+        $finderQuery->addFilter('recipient', $user->getUuid());
         if ($workspace) {
-            $finderQuery->addFilter('badge.workspace', $workspace);
+            $finderQuery->addFilter('badge.workspace', $workspace->getUuid());
         }
 
         $assertions = $this->crud->search(Assertion::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);

@@ -15,7 +15,7 @@ registry.add('HeVinciFavouriteBundle', {
     },*/
 
     workspace: {
-      'favourite': () => { return import(/* webpackChunkName: "favourite-action-favourite-ws" */ '#/plugin/favourite/workspace/actions/favourite') }
+      //'favourite': () => { return import(/* webpackChunkName: "favourite-action-favourite-ws" */ '#/plugin/favourite/workspace/actions/favourite') }
     }
   }
 })

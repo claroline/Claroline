@@ -43,7 +43,7 @@ const reducer = combineReducers({
   }),
 
   storageLock: makeReducer(false, {
-    [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => action.resourceData.storageLock
+    [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => action.resourceData.storageLock || false
   }),
 
   /**

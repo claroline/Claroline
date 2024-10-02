@@ -12,11 +12,15 @@ import {selectors as baseSelectors} from '#/main/community/tools/community/store
 
 import {ROLE_WORKSPACE_RIGHTS_LOAD, ROLE_DESKTOP_RIGHTS_LOAD} from '#/main/community/tools/community/role/store/actions'
 import {selectors} from '#/main/community/tools/community/role/store/selectors'
+import {CONTEXT_OPEN} from '#/main/app/context/store/actions'
 
 const reducer = combineReducers({
   list: makeListReducer(selectors.LIST_NAME, {
     sortBy: {property: 'name', direction: 1}
   }, {
+    loaded: makeReducer(false, {
+      [CONTEXT_OPEN]: () => false
+    }),
     invalidated: makeReducer(false, {
       [TOOL_OPEN]: () => true,
       [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.FORM_NAME)]: () => true

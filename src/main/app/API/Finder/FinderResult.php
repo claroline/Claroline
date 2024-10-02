@@ -33,14 +33,7 @@ class FinderResult implements FinderResultInterface, \Countable
     public function getItems(bool $flush = false): iterable
     {
         if (null === $this->results) {
-            if (0 < $this->searchQuery->getPageSize()) {
-                $this->queryBuilder->setFirstResult($this->searchQuery->getPage() * $this->searchQuery->getPageSize());
-                $this->queryBuilder->setMaxResults($this->searchQuery->getPageSize());
-            }
-
-            $this->results = $this->queryBuilder
-                ->getQuery()
-                ->setHint(SqlWalker::HINT_DISTINCT, true)
+            $this->results = $this->getQuery()
                 ->toIterable();
         }
 
@@ -51,7 +44,7 @@ class FinderResult implements FinderResultInterface, \Countable
 
                 ++$count;
                 if (0 === $count % 30 && $flush) {
-                    $this->queryBuilder->getEntityManager()->clear();
+                    // $this->queryBuilder->getEntityManager()->clear();
                     flush();
                 }
             }
@@ -77,11 +70,18 @@ class FinderResult implements FinderResultInterface, \Countable
     }
 
     /**
-     * @deprecated dev only
+     * @internal
      */
     public function getQuery(): Query
     {
-        return $this->queryBuilder->getQuery();
+        if (0 < $this->searchQuery->getPageSize()) {
+            $this->queryBuilder->setFirstResult($this->searchQuery->getPage() * $this->searchQuery->getPageSize());
+            $this->queryBuilder->setMaxResults($this->searchQuery->getPageSize());
+        }
+
+        return $this->queryBuilder
+            ->getQuery()
+            ->setHint(SqlWalker::HINT_DISTINCT, true);
     }
 
     public function toResponse(): StreamedJsonResponse

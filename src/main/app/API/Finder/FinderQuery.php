@@ -26,29 +26,13 @@ class FinderQuery
     private int $page;
     private int $pageSize;
 
-    public function __construct(string $q = null, array $filters = [], array $sortBy = [], ?int $page = 0, ?int $pageSize = self::ALL)
+    public function __construct(string $q = null, array $filters = [], array $sortBy = [], ?int $page = 0, ?int $limit = self::ALL)
     {
         $this->search = $q;
         $this->filters = $filters;
         $this->sortBy = $sortBy;
         $this->page = $page;
-        $this->pageSize = $pageSize;
-    }
-
-    /**
-     * Build a FinderQuery from an HTTP request.
-     */
-    public static function fromRequest(Request $request): self
-    {
-        $query = $request->query->all();
-
-        return new self(
-            !empty($query['q']) ? $query['q'] : null,
-            !empty($query['filters']) ? $query['filters'] : [],
-            !empty($query['sortBy']) ? $query['sortBy'] : [],
-            !empty($query['page']) ? (int) $query['page'] : 0,
-            !empty($query['limit']) ? (int) $query['limit'] : self::ALL
-        );
+        $this->pageSize = $limit;
     }
 
     public function getSearch(): ?string

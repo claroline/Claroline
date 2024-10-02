@@ -162,7 +162,7 @@ class EventPresenceController
     }
 
     #[Route(path: '/workspace/{id}', name: 'apiv2_cursus_workspace_presence_list', methods: ['GET'])]
-    public function listByWorkspaceAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Workspace\Workspace', mapping: ['id' => 'uuid'])]
+    public function listByWorkspaceAction(#[MapEntity(mapping: ['id' => 'uuid'])]
     Workspace $workspace, Request $request): JsonResponse
     {
         $isManager = $this->checkPermission(ToolPermissions::getPermission(TrainingEventsTool::getName(), 'EDIT'), $workspace, [])

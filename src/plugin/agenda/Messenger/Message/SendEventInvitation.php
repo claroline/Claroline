@@ -11,17 +11,13 @@ class SendEventInvitation implements AsyncHighMessageInterface
 {
     /**
      * The auto id of the EventInvitation to be sent.
-     *
-     * @var int
      */
-    private $invitationId;
+    private int $invitationId;
 
     /**
      * The path to the exported ICS of the event which will be sent as attachment.
-     *
-     * @var string
      */
-    private $icsPath;
+    private string $icsPath;
 
     public function __construct(int $invitationId, string $icsPath)
     {

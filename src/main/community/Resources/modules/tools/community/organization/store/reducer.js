@@ -8,11 +8,15 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {TOOL_OPEN} from '#/main/core/tool/store/actions'
 
 import {selectors} from '#/main/community/tools/community/organization/store/selectors'
+import {CONTEXT_OPEN} from '#/main/app/context/store/actions'
 
 const reducer = combineReducers({
   list: makeListReducer(selectors.LIST_NAME, {
     sortBy: {property: 'name', direction: 1}
   }, {
+    loaded: makeReducer(false, {
+      [CONTEXT_OPEN]: () => false
+    }),
     invalidated: makeReducer(false, {
       [TOOL_OPEN]: () => true,
       [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.FORM_NAME)]: () => true

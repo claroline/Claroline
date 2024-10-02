@@ -31,8 +31,8 @@ const TeamShow = (props) => {
       reload={props.reload}
     >
       {get(props.team, 'meta.description') &&
-        <PageSection size="md">
-          <ContentHtml className="lead my-5">{get(props.team, 'meta.description')}</ContentHtml>
+        <PageSection size="md" className="pb-5">
+          <ContentHtml className="lead">{get(props.team, 'meta.description')}</ContentHtml>
         </PageSection>
       }
 

@@ -25,6 +25,14 @@ const BadgeDetailsComponent = (props) => {
       {props.badge.description &&
         <PageSection size="md" className="pb-5">
           <ContentHtml className="lead">{props.badge.description}</ContentHtml>
+
+          {!isEmpty(props.badge.tags) &&
+            <div className="mt-4" role="presentation">
+              {props.badge.tags.map(tag =>
+                <span key={tag} className="badge text-secondary-emphasis bg-secondary-subtle fs-sm lh-base">{tag}</span>
+              )}
+            </div>
+          }
         </PageSection>
       }
 

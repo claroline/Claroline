@@ -16,7 +16,8 @@ Badge.propTypes = {
 }
 
 Badge.defaultProps = {
-  subtle: false
+  subtle: false,
+  variant: 'secondary'
 }
 
 export {

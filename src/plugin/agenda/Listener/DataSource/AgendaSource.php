@@ -20,23 +20,15 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class AgendaSource
 {
-    /** @var FinderProvider */
-    private $finder;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
-        FinderProvider $finder,
-        TokenStorageInterface $tokenStorage
+        private readonly FinderProvider $finder,
+        private readonly TokenStorageInterface $tokenStorage
     ) {
-        $this->finder = $finder;
-        $this->tokenStorage = $tokenStorage;
     }
 
-    public function getEventsData(GetDataEvent $event)
+    public function getEventsData(GetDataEvent $event): void
     {
-        $options = $event->getOptions() ? $event->getOptions() : [];
+        $options = $event->getOptions() ?: [];
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
             $options['hiddenFilters']['workspaces'] = [$event->getWorkspace()->getUuid()];
@@ -53,9 +45,9 @@ class AgendaSource
         $event->stopPropagation();
     }
 
-    public function getTasksData(GetDataEvent $event)
+    public function getTasksData(GetDataEvent $event): void
     {
-        $options = $event->getOptions() ? $event->getOptions() : [];
+        $options = $event->getOptions() ?: [];
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
             $options['hiddenFilters']['workspaces'] = [$event->getWorkspace()->getUuid()];

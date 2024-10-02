@@ -79,9 +79,10 @@ class EventController extends AbstractCrudController
     }
 
     #[Route(path: '/{id}/ics', name: 'download_ics', methods: ['GET'])]
-    public function downloadICSAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    Event $event): StreamedResponse
-    {
+    public function downloadICSAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Event $event
+    ): StreamedResponse {
         $this->checkPermission('OPEN', $event, [], true);
 
         return new StreamedResponse(function () use ($event): void {
@@ -94,12 +95,13 @@ class EventController extends AbstractCrudController
 
     /**
      * Lists the participants of an event.
-     *
      */
     #[Route(path: '/{id}/participants', name: 'list_participants', methods: ['GET'])]
-    public function listParticipantsAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    Event $event, Request $request): JsonResponse
-    {
+    public function listParticipantsAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Event $event,
+        Request $request
+    ): JsonResponse {
         $this->checkPermission('OPEN', $event, [], true);
 
         return new JsonResponse(
@@ -111,12 +113,13 @@ class EventController extends AbstractCrudController
 
     /**
      * Adds the selected users as event participants.
-     *
      */
     #[Route(path: '/{id}/participants', name: 'add_participants', methods: ['POST'])]
-    public function addParticipantsAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    Event $event, Request $request): JsonResponse
-    {
+    public function addParticipantsAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Event $event,
+        Request $request
+    ): JsonResponse {
         $this->checkPermission('EDIT', $event, [], true);
 
         $invitations = [];
@@ -137,12 +140,13 @@ class EventController extends AbstractCrudController
 
     /**
      * Removes selected users from the event participants.
-     *
      */
     #[Route(path: '/{id}/participants', name: 'remove_participants', methods: ['DELETE'])]
-    public function removeParticipantsAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    Event $event, Request $request): JsonResponse
-    {
+    public function removeParticipantsAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Event $event,
+        Request $request
+    ): JsonResponse {
         $this->checkPermission('EDIT', $event, [], true);
 
         $this->om->startFlushSuite();
@@ -160,12 +164,13 @@ class EventController extends AbstractCrudController
 
     /**
      * Sends invitations to the selected participants.
-     *
      */
     #[Route(path: '/{id}/invitations/send', name: 'send_invitations', methods: ['POST'])]
-    public function sendInvitationsAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    Event $event, Request $request): JsonResponse
-    {
+    public function sendInvitationsAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Event $event,
+        Request $request
+    ): JsonResponse {
         $this->checkPermission('EDIT', $event, [], true);
 
         $users = $this->decodeIdsString($request, User::class);
@@ -177,9 +182,12 @@ class EventController extends AbstractCrudController
     }
 
     #[Route(path: '/invitations/{id}/status/{status}', name: 'change_invitation_status', methods: ['GET'])]
-    public function changeInvitationStatusAction(#[MapEntity(mapping: ['id' => 'id'])]
-    EventInvitation $invitation, string $status, Request $request): Response
-    {
+    public function changeInvitationStatusAction(
+        #[MapEntity(mapping: ['id' => 'id'])]
+        EventInvitation $invitation,
+        string $status,
+        Request $request
+    ): Response {
         $canEdit = $this->checkPermission('EDIT', $invitation->getEvent());
 
         $currentUser = $this->tokenStorage->getToken()?->getUser();

@@ -16,13 +16,18 @@ class EntityType extends AbstractType
             ->define('data_class')
             ->required();
 
+        $resolver
+            ->define('identifier')
+            ->default('uuid')
+            ->required();
+
         // enabled multi-column search for the entity
         $resolver
             ->define('fulltext')
             ->allowedTypes('null', 'array')
             ->default([]);
 
-        // allows to customize to join the entity when the finder is embedded into another
+        // allows to customize the join to the entity when the finder is embedded into another
         // the callback is called with the QueryBuilder, FinderInterface and resolved options as parameters.
         $resolver
             ->define('joinQuery')
@@ -39,6 +44,18 @@ class EntityType extends AbstractType
             }
 
             $finder->distinct();
+
+            if (null !== $finder->getFilterValue()) {
+                $value = is_array($finder->getFilterValue()) ? $finder->getFilterValue() : [$finder->getFilterValue()];
+                if (1 === count($value)) {
+                    $queryBuilder->andWhere("{$finder->getAlias()}.{$options['identifier']} = :{$finder->getAlias()}")
+                        ->setParameter($finder->getAlias(), $value[0]);
+                    $finder->distinct(false);
+                } else {
+                    $queryBuilder->andWhere("{$finder->getAlias()}.{$options['identifier']} IN (:{$finder->getAlias()})")
+                        ->setParameter($finder->getAlias(), $value);
+                }
+            }
         }
 
         // only enable fulltext search for first level finder for now

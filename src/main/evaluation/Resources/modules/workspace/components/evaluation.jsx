@@ -38,10 +38,10 @@ class WorkspaceEvaluation extends Component {
 
     return (
       <>
-        {/*<EvaluationJumbotron
+        <EvaluationJumbotron
           evaluation={this.props.workspaceEvaluation}
-        />*/}
-        <PageSection size="md">
+        />
+        <PageSection size="md" className="mt-3">
           <ul className="nav nav-tabs mb-3">
             <li className="nav-item">
               <Button

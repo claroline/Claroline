@@ -40,37 +40,24 @@
     }
 }
 
-.page-poster {
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
+.app-page-heading {
+    z-index: 1;
 }
 
-.app-menu-toggle {
-    font-size: $font-size-lg;
+.app-page-poster + .app-page-heading .app-page-icon {
+    margin-top: -6rem;
 }
 
-.page-icon {
-    flex-shrink: 0;
+.app-page-icon {
+    //flex-shrink: 0;
     border-radius: 50%;
     background: var(--#{$prefix}body-bg);
     font-size: 0;
     padding: $thumbnail-padding;
 }
 
-.page-title {
+.app-page-title {
     @include font-size($page-title-font-size);
-}
-
-.page-content {
-    display: flex;
-    flex-direction: column;
-    flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
-}
-
-.page-section {
-    margin-left: -$grid-gutter-width*.5; // to escape the page-content container-fluid
-    margin-right: -$grid-gutter-width*.5; // to escape the page-content container-fluid
 }
 
 .page-section-title {
@@ -88,21 +75,4 @@
         border-bottom: $nav-underline-border-width solid var(--#{$prefix}primary);
         width: 40px;
     }
-}
-
-.page-xl {
-    // make icon looks bigger than standard page icons
-    .page-icon {
-        margin-bottom: map-get($spacers, 5) * -1;
-    }
-
-    .page-header {
-        margin-bottom: map-get($spacers, 5);
-    }
-}
-
-@media (max-width: map-get($grid-breakpoints, 'sm')) {
-    /*.page-header {
-        flex-wrap: wrap;
-    }*/
 }

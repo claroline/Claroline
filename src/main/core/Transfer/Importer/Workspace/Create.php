@@ -12,17 +12,10 @@ use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 
 class Create extends AbstractImporter
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-
     public function __construct(
-        ObjectManager $om,
-        Crud $crud
+        private readonly ObjectManager $om,
+        private readonly Crud $crud
     ) {
-        $this->om = $om;
-        $this->crud = $crud;
     }
 
     public function execute(array $data): array

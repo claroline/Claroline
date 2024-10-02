@@ -4,8 +4,6 @@ namespace Claroline\AppBundle\API\Finder;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use OutOfBoundsException;
-use RuntimeException;
 
 class Finder implements FinderInterface
 {
@@ -93,7 +91,7 @@ class Finder implements FinderInterface
             return $this->children[$name];
         }
 
-        throw new OutOfBoundsException(sprintf('Child "%s" does not exist.', $name));
+        throw new \OutOfBoundsException(sprintf('Child "%s" does not exist.', $name));
     }
 
     public function submit(?FinderQuery $query): static
@@ -110,7 +108,7 @@ class Finder implements FinderInterface
     public function getResult(?callable $rowTransformer = null): FinderResultInterface
     {
         if (!$this->isRoot()) {
-            throw new RuntimeException('Method can only be called on root finder.');
+            throw new \RuntimeException('Method can only be called on root finder.');
         }
 
         $queryBuilder = $this->createQueryBuilder();

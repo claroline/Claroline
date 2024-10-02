@@ -12,7 +12,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {getActions} from '#/main/community/group/utils'
 import {Group as GroupTypes} from '#/main/community/group/prop-types'
-import {PageTitle} from '#/main/app/page/components/title'
+import {PageHeading} from '#/main/app/page/components/heading'
 
 const Group = (props) =>
   <ToolPage
@@ -35,7 +35,7 @@ const Group = (props) =>
     }
 
     {!isEmpty(props.group) &&
-      <PageTitle
+      <PageHeading
         size="md"
         title={get(props.group, 'name', trans('loading'))}
         primaryAction="edit"

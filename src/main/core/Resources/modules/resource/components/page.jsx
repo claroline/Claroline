@@ -26,7 +26,7 @@ const ResourcePage = (props) => {
   const dispatch = useDispatch()
   const reload = useCallback(() => dispatch(actions.reload()), [get(resourceNode, 'id')])
 
-  // remove workspace root from path (it's already known by the breadcrumb)
+  // appends direct parent to the breadcrumb
   const breadcrumb = []
   if (get(resourceNode, 'parent') && !get(resourceNode, 'parent.root')) {
     breadcrumb.push({
@@ -38,10 +38,6 @@ const ResourcePage = (props) => {
   return (
     <ToolPage
       className={classes('resource-page', `${resourceNode.meta.type}-page`, props.className)}
-      meta={{
-        title: resourceNode.name,
-        description: resourceNode.meta ? resourceNode.meta.description : null
-      }}
       breadcrumb={breadcrumb.concat(!props.root ? [
         {
           label: resourceNode.name,
@@ -49,7 +45,11 @@ const ResourcePage = (props) => {
         }
       ] : [], props.breadcrumb || [])}
       poster={props.poster || get(resourceNode, 'poster')}
-      title={props.title || props.subtitle || resourceNode.name}
+      title={props.title ?
+        props.title + ' | ' + resourceNode.name :
+        resourceNode.name
+      }
+      description={props.description || get(resourceNode, 'meta.description')}
       embedded={embedded}
       showHeader={!embedded || showHeader}
       menu={{
@@ -81,7 +81,7 @@ const ResourcePage = (props) => {
         }, basePath, currentUser, false).then(loadedActions => [].concat(loadedActions, resourceDef.actions || []))
       }}
 
-      {...omit(props, 'className', 'breadcrumb', 'poster', 'styles', 'embedded', 'showHeader', 'root')}
+      {...omit(props, 'className', 'breadcrumb', 'poster', 'styles', 'embedded', 'showHeader', 'root', 'title', 'description')}
       styles={[].concat(resourceDef.styles, props.styles || [])}
     >
       {props.children}

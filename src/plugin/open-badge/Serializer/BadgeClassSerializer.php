@@ -65,6 +65,7 @@ class BadgeClassSerializer
             'name' => $badge->getName(),
             'description' => $badge->getDescription(),
             'image' => $badge->getImage(),
+            'poster' => $badge->getPoster(),
             'color' => $badge->getColor(),
             'criteria' => $badge->getCriteria(),
             'duration' => $badge->getDurationValidation(),
@@ -106,7 +107,7 @@ class BadgeClassSerializer
         $this->sipe('description', 'setDescription', $data, $badge);
         $this->sipe('image', 'setImage', $data, $badge);
         $this->sipe('color', 'setColor', $data, $badge);
-        $this->sipe('color', 'setColor', $data, $badge);
+        $this->sipe('poster', 'setPoster', $data, $badge);
         $this->sipe('criteria', 'setCriteria', $data, $badge);
         $this->sipe('duration', 'setDurationValidation', $data, $badge);
         $this->sipe('issuingPeer', 'setIssuingPeer', $data, $badge);

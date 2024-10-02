@@ -37,6 +37,7 @@ const reducer = combineReducers({
   }),
 
   plannings: makeReducer([], {
+    [TOOL_OPEN]: () => [],
     [makeInstanceAction(TOOL_LOAD, 'agenda')]: (state, action) => action.toolData.plannings.map(planning => Object.assign(planning, {
       displayed: true
     })),

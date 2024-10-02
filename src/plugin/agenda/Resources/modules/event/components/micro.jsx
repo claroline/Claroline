@@ -18,7 +18,7 @@ const EventMicro = props => {
 
   return (
     <ModalButton
-      className={classes('agenda-event-micro', props.className, {
+      className={classes('agenda-event-micro text-truncate', props.className, {
         'text-light': color && color.isDark(),
         'text-dark': color && color.isLight()
       })}
@@ -30,8 +30,6 @@ const EventMicro = props => {
         reload: props.reload
       }]}
     >
-      <EventIcon className="icon-with-text-right" type={props.event.meta.type} />
-
       {props.event.name}
     </ModalButton>
   )

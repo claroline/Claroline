@@ -11,7 +11,7 @@ import {LocationCard} from '#/main/core/data/types/location/components/card'
 
 const LocationList = props =>
   <ToolPage
-    root={true}
+    /*root={true}*/
     primaryAction="add"
     actions={[
       {

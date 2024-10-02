@@ -115,7 +115,7 @@ class ContextMenu extends Component
             show: this.props.opened
           })}>
             {this.props.title &&
-              <header className="app-menu-header m-3 ms-4 me-1 d-flex align-items-center justify-content-between">
+              <header className="app-menu-header my-lg-3 my-2 ms-4 me-1 d-flex align-items-center justify-content-between">
                 <h1 className="app-menu-title text-truncate d-block">{this.props.title}</h1>
 
                 {!this.props.notFound && !this.props.hasErrors && actions &&

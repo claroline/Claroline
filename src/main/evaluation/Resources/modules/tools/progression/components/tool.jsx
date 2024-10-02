@@ -17,7 +17,7 @@ const ProgressionTool = (props) =>
     {...props}
   >
     <ToolPage
-      root={true}
+      /*root={true}*/
       primaryAction="start"
       size="xl"
       icon={
@@ -53,7 +53,6 @@ const ProgressionTool = (props) =>
     >
       {!props.loaded &&
         <ContentLoader
-          className="row"
           size="lg"
           description="Nous chargeons la progression..."
         />

@@ -11,30 +11,23 @@
 
 namespace Claroline\AgendaBundle\Entity;
 
-use Doctrine\Common\Collections\Collection;
 use Claroline\CoreBundle\Entity\Planning\AbstractPlanned;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_event')]
 #[ORM\Entity]
 class Event extends AbstractPlanned
 {
-    /**
-     *
-     * @var Workspace
-     */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Workspace::class, cascade: ['persist'])]
     private ?Workspace $workspace = null;
 
     /**
      * Template used to send invitations to Users.
-     *
-     *
-     * @var Template
      */
     #[ORM\JoinColumn(name: 'invitation_template_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: Template::class)]
@@ -64,22 +57,22 @@ class Event extends AbstractPlanned
         return $this->workspace;
     }
 
-    public function setWorkspace(Workspace $workspace = null)
+    public function setWorkspace(Workspace $workspace = null): void
     {
         $this->workspace = $workspace;
     }
 
-    public function addEventInvitation(EventInvitation $eventInvitation)
+    public function addEventInvitation(EventInvitation $eventInvitation): void
     {
         $this->eventInvitations[] = $eventInvitation;
     }
 
-    public function removeEventInvitation(EventInvitation $eventInvitation)
+    public function removeEventInvitation(EventInvitation $eventInvitation): void
     {
         $this->eventInvitations->removeElement($eventInvitation);
     }
 
-    public function getEventInvitations()
+    public function getEventInvitations(): Collection
     {
         return $this->eventInvitations;
     }
@@ -89,7 +82,7 @@ class Event extends AbstractPlanned
         return $this->invitationTemplate;
     }
 
-    public function setInvitationTemplate(?Template $template = null)
+    public function setInvitationTemplate(?Template $template = null): void
     {
         $this->invitationTemplate = $template;
     }

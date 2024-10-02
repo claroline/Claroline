@@ -12,15 +12,13 @@
 namespace Claroline\OpenBadgeBundle\Entity;
 
 use Claroline\AppBundle\API\Attribute\CrudEntity;
-use Claroline\OpenBadgeBundle\Finder\AssertionType;
-use Doctrine\DBAL\Types\Types;
-use Claroline\OpenBadgeBundle\Repository\AssertionRepository;
-use DateTimeInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\OpenBadgeBundle\Finder\AssertionType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -28,7 +26,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * Represents the obtaining of a BadgeClass by a User.
  */
 #[ORM\Table(name: 'claro__open_badge_assertion')]
-#[ORM\Entity(repositoryClass: AssertionRepository::class)]
+#[ORM\Entity]
 #[CrudEntity(finderClass: AssertionType::class)]
 class Assertion
 {
@@ -45,7 +43,7 @@ class Assertion
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
-    private ?DateTimeInterface $issuedOn = null;
+    private ?\DateTimeInterface $issuedOn = null;
 
     /**
      * @var Collection<int, Evidence>
@@ -83,12 +81,12 @@ class Assertion
         $this->badge = $badge;
     }
 
-    public function getIssuedOn(): DateTimeInterface
+    public function getIssuedOn(): \DateTimeInterface
     {
         return $this->issuedOn;
     }
 
-    public function setIssuedOn(DateTimeInterface $issuedOn): void
+    public function setIssuedOn(\DateTimeInterface $issuedOn): void
     {
         $this->issuedOn = $issuedOn;
     }

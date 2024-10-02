@@ -9,17 +9,11 @@ const ALERT_STATUS_SUCCESS      = 'success'
 const ALERT_STATUS_WARNING      = 'warning'
 const ALERT_STATUS_ERROR        = 'error'
 const ALERT_STATUS_INFO         = 'info'
-const ALERT_STATUS_PENDING      = 'pending'
 const ALERT_STATUS_UNAUTHORIZED = 'unauthorized'
 const ALERT_STATUS_UNAVAILABLE  = 'unavailable'
 const ALERT_STATUS_FORBIDDEN    = 'forbidden'
 
 const ALERT_STATUS = {
-  [ALERT_STATUS_PENDING]: {
-    order: 1,
-    icon: 'fa-spinner',
-    removable: false
-  },
   [ALERT_STATUS_FORBIDDEN]: {
     order: 2,
     icon: 'fa-lock',
@@ -62,15 +56,6 @@ const ALERT_STATUS = {
 }
 
 /**
- * The list of status that should be stacked when displayed.
- * (this permits to avoid having lots of loading messages at once)
- * @type {Array}
- */
-const ALERT_STACKED_STATUS = [
-  ALERT_STATUS_PENDING
-]
-
-/**
  * Defines available alerts for the app ACTIONS.
  * NB. If ACTION do not declare one of the ALERT_STATUS, this will disable it.
  *
@@ -78,10 +63,6 @@ const ALERT_STACKED_STATUS = [
  */
 const ALERT_ACTIONS = {
   [actionConstants.ACTION_GENERIC]: {
-    [ALERT_STATUS_PENDING]: {
-      title: trans('generic.pending.title', {}, 'alerts'),
-      message: trans('generic.pending.message', {}, 'alerts')
-    },
     [ALERT_STATUS_SUCCESS]: {
       title: trans('generic.success.title', {}, 'alerts'),
       message: trans('generic.success.message', {}, 'alerts')
@@ -108,30 +89,18 @@ const ALERT_ACTIONS = {
     }
   },
   [actionConstants.ACTION_LOAD]: {
-    [ALERT_STATUS_PENDING]: {
-      title: trans('load.pending.title', {}, 'alerts'),
-      message: trans('load.pending.message', {}, 'alerts')
-    },
     [ALERT_STATUS_ERROR]: {
       title: trans('load.error.title', {}, 'alerts'),
       message: trans('load.error.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_REFRESH]: {
-    [ALERT_STATUS_PENDING]: {
-      title: trans('refresh.pending.title', {}, 'alerts'),
-      message: trans('refresh.pending.message', {}, 'alerts')
-    },
     [ALERT_STATUS_ERROR]: {
       title: trans('refresh.error.title', {}, 'alerts'),
       message: trans('refresh.error.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_SAVE]: {
-    [ALERT_STATUS_PENDING]: {
-      title: trans('save.pending.title', {}, 'alerts'),
-      message: trans('save.pending.message', {}, 'alerts')
-    },
     [ALERT_STATUS_SUCCESS]: {
       title: trans('save.success.title', {}, 'alerts'),
       message: trans('save.success.message', {}, 'alerts')
@@ -146,10 +115,6 @@ const ALERT_ACTIONS = {
     }
   },
   [actionConstants.ACTION_CREATE]: {
-    [ALERT_STATUS_PENDING]: {
-      title: trans('create.pending.title', {}, 'alerts'),
-      message: trans('create.pending.message', {}, 'alerts')
-    },
     [ALERT_STATUS_SUCCESS]: {
       title: trans('create.success.title', {}, 'alerts'),
       message: trans('create.success.message', {}, 'alerts')
@@ -168,10 +133,6 @@ const ALERT_ACTIONS = {
     }
   },
   [actionConstants.ACTION_UPDATE]: {
-    [ALERT_STATUS_PENDING]: {
-      title: trans('update.pending.title', {}, 'alerts'),
-      message: trans('update.pending.message', {}, 'alerts')
-    },
     [ALERT_STATUS_SUCCESS]: {
       title: trans('update.success.title', {}, 'alerts'),
       message: trans('update.success.message', {}, 'alerts')
@@ -190,10 +151,6 @@ const ALERT_ACTIONS = {
     }
   },
   [actionConstants.ACTION_DELETE]: {
-    [ALERT_STATUS_PENDING]: {
-      title: trans('delete.pending.title', {}, 'alerts'),
-      message: trans('delete.pending.message', {}, 'alerts')
-    },
     [ALERT_STATUS_SUCCESS]: {
       title: trans('delete.success.title', {}, 'alerts'),
       message: trans('delete.success.message', {}, 'alerts')
@@ -212,10 +169,6 @@ const ALERT_ACTIONS = {
     }
   },
   [actionConstants.ACTION_SEND]: {
-    [ALERT_STATUS_PENDING]: {
-      title: trans('send.pending.title', {}, 'alerts'),
-      message: trans('send.pending.message', {}, 'alerts')
-    },
     [ALERT_STATUS_SUCCESS]: {
       title: trans('send.success.title', {}, 'alerts'),
       message: trans('send.success.message', {}, 'alerts')
@@ -226,10 +179,6 @@ const ALERT_ACTIONS = {
     }
   },
   [actionConstants.ACTION_UPLOAD]: {
-    [ALERT_STATUS_PENDING]: {
-      title: trans('upload.pending.title', {}, 'alerts'),
-      message: trans('upload.pending.message', {}, 'alerts')
-    },
     [ALERT_STATUS_SUCCESS]: {
       title: trans('upload.success.title', {}, 'alerts'),
       message: trans('upload.success.message', {}, 'alerts')
@@ -248,10 +197,6 @@ const ALERT_ACTIONS = {
     }
   },
   [actionConstants.ACTION_PUBLISH]: {
-    [ALERT_STATUS_PENDING]: {
-      title: trans('publish.pending.title', {}, 'alerts'),
-      message: trans('publish.pending.message', {}, 'alerts')
-    },
     [ALERT_STATUS_SUCCESS]: {
       title: trans('publish.success.title', {}, 'alerts'),
       message: trans('publish.success.message', {}, 'alerts')
@@ -262,10 +207,6 @@ const ALERT_ACTIONS = {
     }
   },
   [actionConstants.ACTION_UNPUBLISH]: {
-    [ALERT_STATUS_PENDING]: {
-      title: trans('unpublish.pending.title', {}, 'alerts'),
-      message: trans('unpublish.pending.message', {}, 'alerts')
-    },
     [ALERT_STATUS_SUCCESS]: {
       title: trans('unpublish.success.title', {}, 'alerts'),
       message: trans('unpublish.success.message', {}, 'alerts')
@@ -276,10 +217,6 @@ const ALERT_ACTIONS = {
     }
   },
   [actionConstants.ACTION_SCHEDULE]: {
-    [ALERT_STATUS_PENDING]: {
-      title: trans('schedule.pending.title', {}, 'alerts'),
-      message: trans('schedule.pending.message', {}, 'alerts')
-    },
     [ALERT_STATUS_INFO]: {
       title: trans('schedule.info.title', {}, 'alerts'),
       message: trans('schedule.info.message', {}, 'alerts')
@@ -297,12 +234,10 @@ export const constants = {
   ALERT_DISPLAY_TIMEOUT,
   // status
   ALERT_STATUS,
-  ALERT_STACKED_STATUS,
   ALERT_STATUS_SUCCESS,
   ALERT_STATUS_WARNING,
   ALERT_STATUS_ERROR,
   ALERT_STATUS_INFO,
-  ALERT_STATUS_PENDING,
   ALERT_STATUS_UNAUTHORIZED,
   ALERT_STATUS_FORBIDDEN,
   ALERT_STATUS_UNAVAILABLE,

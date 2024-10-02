@@ -15,33 +15,25 @@ class TaskSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var WorkspaceSerializer */
-    private $workspaceSerializer;
-    /** @var PlannedObjectSerializer */
-    private $plannedObjectSerializer;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        WorkspaceSerializer $workspaceSerializer,
-        PlannedObjectSerializer $plannedObjectSerializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly WorkspaceSerializer $workspaceSerializer,
+        private readonly PlannedObjectSerializer $plannedObjectSerializer
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->workspaceSerializer = $workspaceSerializer;
-        $this->plannedObjectSerializer = $plannedObjectSerializer;
     }
 
-    public function getName()
+    public function getClass(): string
+    {
+        return Task::class;
+    }
+
+    public function getName(): string
     {
         return 'task';
     }
 
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/plugin/agenda/task.json';
     }

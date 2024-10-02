@@ -9,17 +9,10 @@ use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 
 class Archive extends AbstractImporter
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var WorkspaceManager */
-    private $manager;
-
     public function __construct(
-        ObjectManager $om,
-        WorkspaceManager $manager
+        private readonly ObjectManager $om,
+        private readonly WorkspaceManager $manager
     ) {
-        $this->om = $om;
-        $this->manager = $manager;
     }
 
     public function execute(array $data): array
@@ -52,7 +45,7 @@ class Archive extends AbstractImporter
 
     public function getSchema(?array $options = [], ?array $extra = []): array
     {
-        //this is so we don't show all properties. See ImportProvider and search $root
+        // this is so we don't show all properties. See ImportProvider and search $root
         return [static::getAction()[0] => Workspace::class];
     }
 }

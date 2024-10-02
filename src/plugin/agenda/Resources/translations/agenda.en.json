@@ -5,6 +5,7 @@
     "events": "Events",
     "task": "Task",
     "tasks": "Tasks",
+    "display_mode": "View: %name%",
     "display_modes": "View modes",
     "new_event": "New event",
     "agenda_day": "Day",

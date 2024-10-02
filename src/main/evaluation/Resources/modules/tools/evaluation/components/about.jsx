@@ -68,7 +68,7 @@ const EvaluationAbout = (props) => {
   const contextId = useSelector(toolSelectors.contextId)
 
   return (
-    <ToolPage root={true}>
+    <ToolPage /*root={true}*/>
       {false && contextId &&
         <PageSection className="my-4" size="lg">
           <ContentInfoBlocks

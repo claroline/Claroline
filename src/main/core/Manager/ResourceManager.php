@@ -95,9 +95,6 @@ class ResourceManager
             $node->setWorkspace($workspace);
         }
         $node->setParent($parent);
-        if ($parent) {
-            $this->setLastIndex($parent, $node);
-        }
         if (!is_null($parent)) {
             $node->setAccessibleFrom($parent->getAccessibleFrom());
             $node->setAccessibleUntil($parent->getAccessibleUntil());
@@ -162,7 +159,6 @@ class ResourceManager
         }
 
         $this->om->startFlushSuite();
-        $this->setLastIndex($parent, $child);
         $child->setParent($parent);
 
         if ($child->getWorkspace()->getId() !== $parent->getWorkspace()->getId()) {
@@ -445,18 +441,6 @@ class ResourceManager
 
         $node->setActive(true);
         $this->om->persist($node);
-    }
-
-    /**
-     * Set the $node at the last position of the $parent.
-     */
-    private function setLastIndex(ResourceNode $parent, ResourceNode $node): void
-    {
-        $max = $this->resourceNodeRepo->findLastIndex($parent);
-        $node->setIndex($max + 1);
-
-        $this->om->persist($node);
-        $this->om->flush();
     }
 
     /**

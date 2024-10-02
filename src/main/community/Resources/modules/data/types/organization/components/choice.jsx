@@ -29,7 +29,7 @@ class OrganizationChoice extends Component {
   }
 
   componentDidMount() {
-    fetch(url(['apiv2_organization_list_recursive']), {
+    fetch(url(['apiv2_organization_list']), {
       method: 'GET' ,
       credentials: 'include'
     })

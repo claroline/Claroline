@@ -33,7 +33,7 @@ const Announce = (props) =>
       }
 
       {!isEmpty(props.announcement.tags) &&
-        <div className="" role="presentation">
+        <div role="presentation">
           {props.announcement.tags.map(tag =>
             <span key={tag} className="badge text-secondary-emphasis bg-secondary-subtle fs-sm lh-base">{tag}</span>
           )}

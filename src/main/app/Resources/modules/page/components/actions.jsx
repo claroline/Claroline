@@ -1,17 +1,11 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
-import {asset} from '#/main/app/config/asset'
 import {Button} from '#/main/app/action'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 
-import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
-
-import {PageTitle} from '#/main/app/page/components/title'
-import {PageMenu} from '#/main/app/page/components/menu'
-import {Await} from '#/main/app/components/await'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 const PageActions = (props) => {
   if (isEmpty(props.actions)) {
@@ -44,7 +38,7 @@ const PageActions = (props) => {
   }
 
   return (
-    <div className="page-actions gap-2 ms-auto d-flex flex-nowrap" role="presentation">
+    <div className="page-actions gap-2 ms-auto d-flex flex-nowrap" role="toolbar">
       {primaryAction && (undefined === primaryAction.displayed || primaryAction.displayed) &&
         <Button
           {...primaryAction}
@@ -75,6 +69,7 @@ const PageActions = (props) => {
           actions={actions}
           disabled={props.disabled}
           scope="object"
+          role="presentation"
         />
       }
     </div>
@@ -104,16 +99,9 @@ PageActions.propTypes = {
    *
    * @type {Array}
    */
-  actions: T.oneOfType([
-    // a regular array of actions
-    T.arrayOf(T.shape(
-      ActionTypes.propTypes
-    )),
-    // a promise that will resolve a list of actions
-    T.shape(
-      PromisedActionTypes.propTypes
-    )
-  ])
+  actions: T.arrayOf(T.shape(
+    ActionTypes.propTypes
+  ))
 }
 
 export {

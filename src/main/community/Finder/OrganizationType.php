@@ -10,6 +10,7 @@ use Claroline\AppBundle\API\Finder\Type\PublicType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -20,6 +21,7 @@ class OrganizationType extends AbstractType
         private readonly TokenStorageInterface $tokenStorage
     ) {
     }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -42,10 +44,13 @@ class OrganizationType extends AbstractType
         $organizations = [];
         if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()?->getUser() instanceof User) {
             $user = $this->tokenStorage->getToken()?->getUser();
-            $organizations = [$user->getMainOrganization()];
-            /*if (!in_array(PlatformRoles::ADMIN, $this->tokenStorage->getToken()->getRoleNames())) {
-                $organizations = $user->getOrganizations();
-            }*/
+            if ($finder->isRoot()) {
+                if (!in_array(PlatformRoles::ADMIN, $this->tokenStorage->getToken()->getRoleNames())) {
+                    $organizations = $user->getOrganizations();
+                }
+            } else {
+                $organizations = [$user->getMainOrganization()];
+            }
         }
 
         if (!empty($organizations)) {

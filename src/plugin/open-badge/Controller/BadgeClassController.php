@@ -61,11 +61,11 @@ class BadgeClassController extends AbstractCrudController
         #[MapEntity(mapping: ['workspace' => 'uuid'])]
         Workspace $workspace,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery(),
+        ?FinderQuery $finderQuery = new FinderQuery()
     ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $workspace, [], true);
 
-        $finderQuery->addFilter('workspace', $workspace);
+        $finderQuery->addFilter('workspace', $workspace->getUuid());
 
         $assertions = $this->crud->search(BadgeClass::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
 

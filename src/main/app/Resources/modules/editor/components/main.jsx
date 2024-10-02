@@ -87,6 +87,7 @@ const Editor = (props) => {
         className="app-editor"
         animation={false}
         backdrop={false}
+        /*enforceFocus={false}*/
         onHide={() => {
           // TODO : check pending changes
           history.push(props.close)

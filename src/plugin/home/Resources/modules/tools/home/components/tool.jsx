@@ -44,7 +44,7 @@ const HomeTool = props => {
       ]}
     >
       {!props.loaded &&
-        <ToolPage root={true} />
+        <ToolPage /*root={true}*/ />
       }
     </Tool>
   )

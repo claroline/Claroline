@@ -7,12 +7,12 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {PageTitle} from '#/main/app/page/components/title'
 import {ToolPage} from '#/main/core/tool'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {getActions} from '#/main/community/team/utils'
 import {Team as TeamTypes} from '#/main/community/team/prop-types'
+import {PageHeading} from '#/main/app/page/components/heading'
 
 const Team = (props) =>
   <ToolPage
@@ -35,7 +35,7 @@ const Team = (props) =>
     }
 
     {!isEmpty(props.team) &&
-      <PageTitle
+      <PageHeading
         size="md"
         title={get(props.team, 'name', trans('loading'))}
         primaryAction="edit"

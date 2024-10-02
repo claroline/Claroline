@@ -44,7 +44,6 @@ services:
     Claroline\CoreBundle\Transfer\Importer\Workspace\RemoveUser:
         arguments:
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Transfer\Importer\Workspace\RemoveAllUsers:
@@ -55,13 +54,11 @@ services:
     Claroline\CoreBundle\Transfer\Importer\Workspace\AddGroup:
         arguments:
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Transfer\Importer\Workspace\RemoveGroup:
         arguments:
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Transfer\Importer\Workspace\RemoveAllGroups:

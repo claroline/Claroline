@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Organization;
 
-use Doctrine\DBAL\Types\Types;
+use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Display\Thumbnail;
@@ -21,14 +21,17 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\IsPublic;
 use Claroline\AppBundle\Entity\Meta\Name;
+use Claroline\CommunityBundle\Finder\OrganizationType;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid as BaseUuid;
 
 #[ORM\Table(name: 'claro__organization')]
 #[ORM\Entity]
+#[CrudEntity(finderClass: OrganizationType::class)]
 class Organization implements CrudEntityInterface
 {
     use Code;
@@ -40,7 +43,7 @@ class Organization implements CrudEntityInterface
     use Poster;
     use Thumbnail;
 
-    #[ORM\Column(nullable: true, type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $email = null;
 
     #[ORM\Column(name: 'is_default', type: Types::BOOLEAN)]

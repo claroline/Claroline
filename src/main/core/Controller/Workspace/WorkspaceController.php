@@ -36,7 +36,7 @@ use Claroline\CoreBundle\Messenger\Message\CreateWorkspace;
 use Claroline\CoreBundle\Messenger\Message\ImportWorkspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Claroline\OpenBadgeBundle\Finder\AssertionType;
+use Claroline\EvaluationBundle\Finder\WorkspaceEvaluationType;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -141,7 +141,7 @@ class WorkspaceController extends AbstractCrudController
         #[MapQueryString]
         ?FinderQuery $finderQuery = new FinderQuery()
     ): StreamedJsonResponse {
-        $finder = $this->finder->create(AssertionType::class)
+        $finder = $this->finder->create(WorkspaceEvaluationType::class)
             ->submit($finderQuery)
             ->getResult(function (object $row): array {
                 return $this->serializer->serialize($row, [SerializerInterface::SERIALIZE_MINIMAL]);
@@ -216,19 +216,15 @@ class WorkspaceController extends AbstractCrudController
     ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        $workspaces = $this->finder->create(WorkspaceType::class)
-            ->submit($finderQuery->addFilters([
-                'model' => true,
-            ]))
-            ->getResult(function (Workspace $workspace): array {
-                return $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_LIST]);
-            })
-        ;
-
-        return new StreamedJsonResponse([
-            'totalResults' => $workspaces->count(),
-            'data' => $workspaces->getItems(),
+        $finderQuery->addFilters([
+            'model' => true,
+            /*'roles' => $this->tokenStorage->getToken()->getRoleNames(),
+            'administrated' => true,*/
         ]);
+
+        $models = $this->crud->search(Workspace::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+
+        return $models->toResponse();
     }
 
     /**
@@ -249,30 +245,15 @@ class WorkspaceController extends AbstractCrudController
     ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        $workspaces = $this->finder->create(WorkspaceType::class)
-            ->submit($finderQuery->addFilters([
-                'archived' => true,
-                /*'roles' => $this->tokenStorage->getToken()->getRoleNames(),
-                'administrated' => true,*/
-            ]))
-            ->getResult(function (Workspace $workspace): array {
-                return $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_LIST]);
-            })
-        ;
-
-        return new StreamedJsonResponse([
-            'totalResults' => $workspaces->count(),
-            'data' => $workspaces->getItems(),
+        $finderQuery->addFilters([
+            'archived' => true,
+            /*'roles' => $this->tokenStorage->getToken()->getRoleNames(),
+            'administrated' => true,*/
         ]);
 
-        /*return new JsonResponse($this->crud->list(
-            Workspace::class,
-            array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
-                'administrated' => true,
-                'archived' => true,
-            ])]),
-            $this->getOptions()['list']
-        ));*/
+        $archives = $this->crud->search(Workspace::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+
+        return $archives->toResponse();
     }
 
     #[Route(path: '/', name: 'create', methods: ['POST'])]
@@ -448,34 +429,19 @@ class WorkspaceController extends AbstractCrudController
     public function listUsersAction(
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Workspace $workspace,
-        Request $request
-    ): JsonResponse {
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $workspace, [], true);
 
         $workspaceRoles = $this->roleManager->getWorkspaceRoles($workspace);
-        $hiddenFilters = [
-            'roles' => array_map(function (Role $role) {
-                return $role->getUuid();
-            }, $workspaceRoles),
-        ];
+        $finderQuery->addFilter('roles', array_map(function (Role $role) {
+            return $role->getName();
+        }, $workspaceRoles));
 
-        if (!$this->checkPermission('ROLE_ADMIN')) {
-            $hiddenFilters['organizations'] = [];
+        $users = $this->crud->search(User::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
 
-            $currentUser = $this->tokenStorage->getToken()?->getUser();
-            if ($currentUser instanceof User) {
-                // only list users for the current user organizations
-                $hiddenFilters['organizations'] = array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $currentUser->getOrganizations());
-            }
-        }
-
-        return new JsonResponse(
-            $this->crud->list(User::class, array_merge($request->query->all(), [
-                'hiddenFilters' => $hiddenFilters,
-            ]))
-        );
+        return $users->toResponse();
     }
 
     protected function getDefaultHiddenFilters(): array

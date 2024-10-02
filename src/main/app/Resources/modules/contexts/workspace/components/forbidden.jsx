@@ -53,7 +53,7 @@ class StandardRestrictions extends Component {
       <>
         {get(this.props.workspace, 'meta.description') &&
           <PageSection size="md">
-            <ContentHtml className="lead my-5">{get(this.props.workspace, 'meta.description')}</ContentHtml>
+            <ContentHtml className="lead mb-5 mt-4">{get(this.props.workspace, 'meta.description')}</ContentHtml>
           </PageSection>
         }
 

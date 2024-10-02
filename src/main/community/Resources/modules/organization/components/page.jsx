@@ -12,7 +12,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {getActions} from '#/main/community/organization/utils'
 import {Organization as OrganizationTypes} from '#/main/community/organization/prop-types'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {PageTitle} from '#/main/app/page/components/title'
+import {PageHeading} from '#/main/app/page/components/heading'
 
 const Organization = (props) =>
   <ToolPage
@@ -35,7 +35,7 @@ const Organization = (props) =>
     }
 
     {!isEmpty(props.organization) &&
-      <PageTitle
+      <PageHeading
         size="md"
         title={get(props.organization, 'name', trans('loading'))}
         primaryAction="edit"

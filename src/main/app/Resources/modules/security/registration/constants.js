@@ -2,10 +2,6 @@ import {trans} from '#/main/app/intl/translation'
 import {constants as alertConstants} from '#/main/app/overlays/alert/constants'
 
 const ALERT_REGISTRATION = {
-  [alertConstants.ALERT_STATUS_PENDING]: {
-    title: trans('register.pending.title', {}, 'alerts'),
-    message: trans('register.pending.message', {}, 'alerts')
-  },
   [alertConstants.ALERT_STATUS_SUCCESS]: {
     title: trans('register.success.title', {}, 'alerts'),
     message: trans('register.success.message', {}, 'alerts')

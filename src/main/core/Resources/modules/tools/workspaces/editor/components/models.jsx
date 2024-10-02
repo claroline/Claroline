@@ -36,7 +36,7 @@ const ModelExplain = () =>
       <ul className="list-unstyled mb-0 d-grid gap-2">
         <li>
           <span className="fa fa-fw fa-times-circle text-danger me-2" aria-hidden={true} />
-          Membres (utilisateurs ou groupes)
+          Membres (utilisateurs et groupes)
         </li>
         <li>
           <span className="fa fa-fw fa-times-circle text-danger me-2" aria-hidden={true} />

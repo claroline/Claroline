@@ -35,10 +35,6 @@ export default (contextType, contextData, refresher, currentUser) => {
         options: {long: true},
         displayed: true,
         sortable: false
-      },{
-        name: 'meta.default',
-        type: 'boolean',
-        label: trans('default')
       }, {
         name: 'email',
         type: 'email',

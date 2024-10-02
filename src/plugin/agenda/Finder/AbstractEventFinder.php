@@ -117,7 +117,7 @@ abstract class AbstractEventFinder extends AbstractFinder
                     break;
 
                 case 'location':
-                    $qb->join('po.location', 'l');
+                    $qb->join('p.location', 'l');
                     $qb->andWhere("l.uuid = :$filterName");
                     $qb->setParameter($filterName, $filterValue);
                     break;

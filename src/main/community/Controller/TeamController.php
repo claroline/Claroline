@@ -11,18 +11,20 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CommunityBundle\Entity\Team;
 use Claroline\CommunityBundle\Manager\TeamManager;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Security\ToolPermissions;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -54,50 +56,43 @@ class TeamController extends AbstractCrudController
     public function listByWorkspaceAction(
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Workspace $workspace,
-        Request $request
-    ): JsonResponse {
-        $this->checkToolAccess($workspace, 'open');
-        $params = $request->query->all();
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
+        $this->checkToolAccess($workspace, 'OPEN');
 
-        if (!isset($params['hiddenFilters'])) {
-            $params['hiddenFilters'] = [];
-        }
-        $params['hiddenFilters']['workspace'] = $workspace->getUuid();
+        $finderQuery->addFilter('workspace', $workspace->getUuid());
 
-        return new JsonResponse(
-            $this->crud->list(Team::class, $params, [Options::SERIALIZE_LIST])
-        );
+        $teams = $this->crud->search(Team::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+
+        return $teams->toResponse();
     }
 
-    
     #[Route(path: '/{id}/users/{role}', name: 'list_users', methods: ['GET'])]
-    public function listUsersAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    Team $team, string $role, #[CurrentUser] ?User $user, Request $request): JsonResponse
-    {
+    public function listUsersAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Team $team,
+        string $role,
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $team, [], true);
 
-        $hiddenFilters = [
-            'role' => ['manager' === $role ? $team->getManagerRole()->getUuid() : $team->getRole()->getUuid()],
-        ];
+        $finderQuery->addFilter('teams', $team->getUuid());
+        $finderQuery->addFilter('roles', ['manager' === $role ? $team->getManagerRole()->getName() : $team->getRole()->getName()]);
 
-        if (!$this->checkPermission('ROLE_ADMIN')) {
-            // only list users for the current user organizations
-            $hiddenFilters['organizations'] = array_map(function (Organization $organization) {
-                return $organization->getUuid();
-            }, $user->getOrganizations());
-        }
+        $users = $this->crud->search(User::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
 
-        return new JsonResponse(
-            $this->crud->list(User::class, array_merge($request->query->all(), [
-                'hiddenFilters' => $hiddenFilters,
-            ]))
-        );
+        return $users->toResponse();
     }
 
     #[Route(path: '/{id}/users/{role}', name: 'register', methods: ['PATCH'])]
-    public function registerAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    Team $team, string $role, Request $request): JsonResponse
-    {
+    public function registerAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Team $team,
+        string $role,
+        Request $request
+    ): JsonResponse {
         $this->checkPermission('EDIT', $team, [], true);
 
         $users = parent::decodeIdsString($request, User::class);
@@ -130,9 +125,12 @@ class TeamController extends AbstractCrudController
     }
 
     #[Route(path: '/{id}/users/{role}', name: 'unregister', methods: ['DELETE'])]
-    public function unregisterAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    Team $team, string $role, Request $request): JsonResponse
-    {
+    public function unregisterAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Team $team,
+        string $role,
+        Request $request
+    ): JsonResponse {
         $this->checkPermission('EDIT', $team, [], true);
 
         $users = parent::decodeIdsString($request, User::class);
@@ -146,11 +144,13 @@ class TeamController extends AbstractCrudController
         return new JsonResponse(null, 200);
     }
 
-    
     #[Route(path: '/{id}/register', name: 'self_register', methods: ['PUT'])]
-    public function selfRegisterAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    Team $team, #[CurrentUser] ?User $user): JsonResponse
-    {
+    public function selfRegisterAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Team $team,
+        #[CurrentUser]
+        ?User $user
+    ): JsonResponse {
         $this->checkPermission('OPEN', $team, [], true);
 
         if (!$team->isSelfRegistration()) {
@@ -173,11 +173,12 @@ class TeamController extends AbstractCrudController
         return new JsonResponse(null, 200);
     }
 
-    
     #[Route(path: '/{id}/unregister', name: 'self_unregister', methods: ['DELETE'])]
-    public function selfUnregisterAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    Team $team, #[CurrentUser] ?User $user): JsonResponse
-    {
+    public function selfUnregisterAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Team $team,
+        #[CurrentUser] ?User $user
+    ): JsonResponse {
         $this->checkPermission('OPEN', $team, [], true);
 
         if (!$team->isSelfUnregistration()) {

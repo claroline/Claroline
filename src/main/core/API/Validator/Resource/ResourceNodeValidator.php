@@ -10,12 +10,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 
 class ResourceNodeValidator implements ValidatorInterface
 {
-    /**
-     * The char used by Gedmo\Tree extension to generate the path of the resource.
-     * It cannot be used in the resource name.
-     */
-    private const PATH_SEPARATOR = '`';
-
     public function __construct(
         private readonly ObjectManager $om
     ) {
@@ -31,10 +25,6 @@ class ResourceNodeValidator implements ValidatorInterface
         return [];
     }
 
-    /**
-     * @param array  $data
-     * @param string $mode
-     */
     public function validate(array $data, string $mode, array $options = []): array
     {
         $errors = [];
@@ -45,10 +35,10 @@ class ResourceNodeValidator implements ValidatorInterface
         }
 
         if (!empty($data['name'])) {
-            if (str_contains($data['name'], self::PATH_SEPARATOR)) {
+            if (str_contains($data['name'], ResourceNode::PATH_SEPARATOR)) {
                 $errors[] = [
                     'path' => 'name',
-                    'message' => sprintf('Invalid character "%s".', self::PATH_SEPARATOR),
+                    'message' => sprintf('Invalid character "%s".', ResourceNode::PATH_SEPARATOR),
                 ];
             }
         }

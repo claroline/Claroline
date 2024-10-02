@@ -72,7 +72,12 @@ const UserList = props =>
           disabled: -1 === rows.findIndex(row => -1 !== row.roles.findIndex(r => r.context !== 'group' && -1 !== r.name.indexOf(props.contextData.id))),
           confirm: {
             title: trans('unregister', {}, 'actions'),
-            message: transChoice('unregister_users_confirm_message', rows.length, {count: rows.length})
+            message: transChoice('unregister_users_confirm_message', rows.length, {count: rows.length}),
+            items:  rows.filter(row => -1 !== row.roles.findIndex(r => r.context !== 'group' && -1 !== r.name.indexOf(props.contextData.id))).map(item => ({
+              thumbnail: item.picture,
+              name: item.name
+            })),
+            additional: trans('unregister_users_confirm_additional')
           }
         }] : []}
         customDefinition={[

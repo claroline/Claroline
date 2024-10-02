@@ -114,7 +114,7 @@ const ContextUser = (props) => {
                 name: 'profile',
                 type: LINK_BUTTON,
                 icon: 'fa fa-fw fa-user',
-                label: trans('Mon profile', {}, 'actions'),
+                label: trans('my_profile'),
                 target: props.path+'/profile'
               }, {
                 name: 'parameters',

@@ -31,8 +31,8 @@ const GroupShow = (props) =>
     reload={props.reload}
   >
     {get(props.group, 'meta.description') &&
-      <PageSection size="md">
-        <ContentHtml className="lead my-5 mt-4">{get(props.group, 'meta.description')}</ContentHtml>
+      <PageSection size="md" className="pb-5">
+        <ContentHtml className="lead">{get(props.group, 'meta.description')}</ContentHtml>
       </PageSection>
     }
 

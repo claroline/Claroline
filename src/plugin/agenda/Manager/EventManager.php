@@ -23,25 +23,12 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class EventManager
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var ICSGenerator */
-    private $ics;
-    /** @var MessageBusInterface */
-    private $messageBus;
-    /** @var PlanningManager */
-    private $planningManager;
-
     public function __construct(
-        ObjectManager $om,
-        ICSGenerator $ics,
-        MessageBusInterface $messageBus,
-        PlanningManager $planningManager
+        private readonly ObjectManager $om,
+        private readonly ICSGenerator $ics,
+        private readonly MessageBusInterface $messageBus,
+        private readonly PlanningManager $planningManager
     ) {
-        $this->om = $om;
-        $this->ics = $ics;
-        $this->messageBus = $messageBus;
-        $this->planningManager = $planningManager;
     }
 
     public function getICS(Event $event, bool $toFile = false): string
@@ -94,7 +81,7 @@ class EventManager
         return $eventInvitation;
     }
 
-    public function removeInvitation(EventInvitation $invitation)
+    public function removeInvitation(EventInvitation $invitation): void
     {
         // remove event from user planning
         $this->planningManager->addToPlanning($invitation->getEvent(), $invitation->getUser());
@@ -103,7 +90,7 @@ class EventManager
         $this->om->flush();
     }
 
-    public function sendInvitation(Event $event, array $users = [])
+    public function sendInvitation(Event $event, array $users = []): void
     {
         // create ics file to attach to the message
         $icsPath = $this->getICS($event, true);

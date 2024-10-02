@@ -3,7 +3,9 @@
 namespace Claroline\OpenBadgeBundle\Component\Tool;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Finder\FinderQuery;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
@@ -51,7 +53,13 @@ class BadgesTool extends AbstractTool
     {
         $user = $this->tokenStorage->getToken()?->getUser();
         if ($user instanceof User) {
-            return $this->om->getRepository(Assertion::class)->countUserBadges($user, $contextSubject);
+            $countQuery = new FinderQuery();
+            $countQuery->addFilter('recipient', $user->getUuid());
+            if ($contextSubject) {
+                $countQuery->addFilter('badge.workspace', $contextSubject->getUuid());
+            }
+
+            return $this->crud->search(Assertion::class, $countQuery)->count();
         }
 
         return 0;
@@ -68,7 +76,7 @@ class BadgesTool extends AbstractTool
         $badgesData = [];
         /** @var BadgeClass $badge */
         foreach ($badges as $badge) {
-            $badgesData[] = $this->serializer->serialize($badge);
+            $badgesData[] = $this->serializer->serialize($badge, [SerializerInterface::SERIALIZE_TRANSFER]);
 
             if (!empty($badge->getImage())) {
                 $fileBag->add($badge->getUuid(), $badge->getImage());

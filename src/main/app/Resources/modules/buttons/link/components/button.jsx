@@ -16,7 +16,7 @@ import {scrollTo} from '#/main/app/dom/scroll'
  */
 const LinkButton = forwardRef((props, ref) =>
   <NavLink
-    {...omit(props, 'variant', 'active', 'displayed', 'primary', 'dangerous', 'size', 'target', 'confirm', 'history', 'match', 'staticContext')}
+    {...omit(props, 'variant', 'displayed', 'primary', 'dangerous', 'size', 'target', 'confirm', 'staticContext', 'autoScroll')}
     ref={ref}
     tabIndex={props.tabIndex}
     to={props.target}
@@ -24,8 +24,9 @@ const LinkButton = forwardRef((props, ref) =>
     disabled={props.disabled}
     className={buttonClasses(props.className, props.variant, props.size, props.disabled, props.active, props.primary, props.dangerous)}
     onClick={(e) => {
-      console.log('coucou')
-      scrollTo('.app-page')
+      if (props.autoScroll) {
+        scrollTo('.app-page')
+      }
 
       if (props.onClick) {
         props.onClick(e)
@@ -44,6 +45,7 @@ implementPropTypes(LinkButton, ButtonTypes, {
   exact: T.bool,
   autoScroll: T.bool
 }, {
+  autoScroll: true,
   exact: false
 })
 

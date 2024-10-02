@@ -11,9 +11,7 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\Model\HasUsersTrait;
@@ -21,6 +19,7 @@ use Claroline\CoreBundle\Controller\Model\HasWorkspacesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -50,20 +49,6 @@ class OrganizationController extends AbstractCrudController
     public static function getClass(): string
     {
         return Organization::class;
-    }
-
-    #[Route(path: '/list/recursive', name: 'list_recursive')]
-    public function recursiveListAction(Request $request): JsonResponse
-    {
-        $query = $request->query->all();
-
-        $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
-        // only get the root organization to build the tree
-        $query['hiddenFilters']['parent'] = null;
-
-        return new JsonResponse(
-            $this->crud->list(Organization::class, $query, [Options::IS_RECURSIVE])
-        );
     }
 
     #[Route(path: '/{id}/managers', name: 'list_managers', methods: ['GET'])]

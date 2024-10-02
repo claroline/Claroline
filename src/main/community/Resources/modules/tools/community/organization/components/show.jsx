@@ -30,8 +30,8 @@ const OrganizationShow = props =>
     reload={props.reload}
   >
     {get(props.organization, 'meta.description') &&
-      <PageSection size="md">
-        <ContentHtml className="lead my-5">{get(props.organization, 'meta.description')}</ContentHtml>
+      <PageSection size="md" className="pb-5">
+        <ContentHtml className="lead">{get(props.organization, 'meta.description')}</ContentHtml>
       </PageSection>
     }
 

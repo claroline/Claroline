@@ -5,6 +5,7 @@ const PageListSection = (props) =>
   <PageSection
     className="flex-fill"
     size="full"
+    flush={true}
     {...props}
   >
     {props.children}

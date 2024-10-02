@@ -1,4 +1,7 @@
 services:
+    Claroline\CommunityBundle\Finder\GroupType:
+        tags: [ claroline.finder.type ]
+
     Claroline\CommunityBundle\Finder\OrganizationType:
         tags: [ claroline.finder.type ]
         arguments:
@@ -9,10 +12,10 @@ services:
         arguments:
             - '@security.token_storage'
 
-    Claroline\CommunityBundle\Finder\UserType:
+    Claroline\CommunityBundle\Finder\TeamType:
         tags: [ claroline.finder.type ]
 
-    Claroline\CommunityBundle\Finder\GroupType:
+    Claroline\CommunityBundle\Finder\UserType:
         tags: [ claroline.finder.type ]
 
     # Finders

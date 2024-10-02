@@ -31,6 +31,7 @@ const ResourceOverview = props => {
       primaryAction={props.primaryAction}
       actions={props.actions}
       //root={true}
+      poster={get(resourceNode, 'poster')}
     >
       {description &&
         <PageSection size="md" className="py-5 px-4">

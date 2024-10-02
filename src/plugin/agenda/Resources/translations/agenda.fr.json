@@ -5,6 +5,7 @@
     "events": "Evènements",
     "task": "Tâche",
     "tasks": "Tâches",
+    "display_mode": "Vue : %name%",
     "display_modes": "Modes de vue",
     "new_event": "Nouvel évènement",
     "agenda_day": "Jour",

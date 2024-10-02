@@ -39,9 +39,6 @@ trait ListAction
             return new StreamedJsonResponse($results);
         }
 
-        return new StreamedJsonResponse([
-            'totalResults' => $results->count(),
-            'data' => $results->getItems(),
-        ]);
+        return $results->toResponse();
     }
 }

@@ -5,13 +5,9 @@ import {Image as ImageTypes} from '#/plugin/image-player/files/image/prop-types'
 import {ResourcePage} from '#/main/core/resource'
 
 const ImagePlayer = props =>
-  <ResourcePage root={true}>
+  <ResourcePage>
     <img
-      style={{
-        marginLeft: 'auto',
-        marginRight: 'auto'
-      }}
-      className="img-fluid"
+      className="img-fluid m-auto"
       src={props.file.url}
       alt={props.file.hashName}
       onContextMenu={(e)=> {

@@ -5,12 +5,12 @@ import omit from 'lodash/omit'
 
 import {PageFull as PageFullTypes} from '#/main/app/page/prop-types'
 import {PageSimple} from '#/main/app/page/components/simple'
-import {PageHeader} from '#/main/app/page/components/header'
+import {PageMenu} from '#/main/app/page/components/menu'
+import {Poster} from '#/main/app/components/poster'
 
 const PageFull = (props) =>
   <PageSimple
-    {...omit(props, 'showHeader', 'title', 'icon', 'poster', 'toolbar', 'actions', 'menu')}
-    className={classes(props.className, props.size && `page-${props.size}`)}
+    {...omit(props, 'showHeader', 'title', 'description', 'poster', 'toolbar', 'menu')}
     meta={merge({}, {
       title: props.title,
       description: props.description,
@@ -18,20 +18,18 @@ const PageFull = (props) =>
     }, props.meta || {})}
   >
     {props.showHeader &&
-      <PageHeader
-        id={props.id}
-        breadcrumb={props.breadcrumb}
-        title={props.title}
-        icon={props.icon}
-        poster={props.poster}
-        menu={props.menu}
+      <PageMenu
         embedded={props.embedded}
+        {...props.menu}
+        breadcrumb={props.breadcrumb}
       />
     }
 
-    <div role="presentation" className={classes('page-content container-fluid', {'main-page-content': !props.embedded})}>
-      {props.children}
-    </div>
+    {props.showHeader && props.poster &&
+      <Poster url={props.poster} className="app-page-poster" />
+    }
+
+    {props.children}
   </PageSimple>
 
 PageFull.propTypes = PageFullTypes.propTypes

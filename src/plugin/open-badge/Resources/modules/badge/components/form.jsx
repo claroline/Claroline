@@ -79,6 +79,10 @@ const BadgeFormComponent = (props) =>
             label: trans('color'),
             type: 'color'
           }, */{
+            name: 'poster',
+            label: trans('poster'),
+            type: 'image'
+          }, {
             name: 'template',
             label: trans('badge_certificate', {}, 'template'),
             type: 'template',

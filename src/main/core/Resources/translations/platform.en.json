@@ -617,6 +617,7 @@
     "unpublished": "Unpublished",
 
     "unregister_users_confirm_message": "{1} Are you sure you want to unsubscribe from this user ?|[2,Inf[ Are you sure you want to unsubscribe from these %count% users ?",
+    "unregister_users_confirm_additional": "These users will no longer be able to access this workspace and its content..",
     "up": "Up",
     "update": "Update to %version%",
     "updated_by": "Last update: %modificationDate%",
@@ -1016,6 +1017,7 @@
     "per_day_short": "/day",
     "internal_note": "Internal note",
     "my_account": "My account",
+    "my_profile": "My profile",
     "file_drop_help": "Drop your files to import them in the platform",
     "file_opening_download": "Suggest file download",
     "file_opening_browser": "Open file with browser player",

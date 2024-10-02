@@ -11,15 +11,10 @@ use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 
 class RemoveAllUsers extends AbstractImporter
 {
-    /** @var Crud */
-    private $crud;
-    /** @var ObjectManager */
-    private $om;
-
-    public function __construct(Crud $crud, ObjectManager $om)
-    {
-        $this->crud = $crud;
-        $this->om = $om;
+    public function __construct(
+        private readonly Crud $crud,
+        private readonly ObjectManager $om
+    ) {
     }
 
     public function execute(array $data): array
@@ -28,8 +23,7 @@ class RemoveAllUsers extends AbstractImporter
             throw new \InvalidArgumentException('The "workspace" key is missing or is not an array.');
         }
 
-        $workspace = $this->om->getRepository(Workspace::class)->findOneBy($data['workspace']);
-
+        $workspace = $this->crud->find(Workspace::class, $data['workspace']);
         if (!$workspace) {
             throw new \Exception('Workspace '.$this->printError($data['workspace'])." doesn't exists.");
         }

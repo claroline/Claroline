@@ -8,7 +8,7 @@ const AppLoader = () => {
   const currentRequests = useSelector(apiSelectors.currentRequests)
 
   return (
-    <div className={classes('app-loader sticky-top', currentRequests && 'show')} role="presentation" aria-hidden={!currentRequests}>
+    <div className={classes('app-loader sticky-top', currentRequests && 'show')} role="progressbar" aria-hidden={!currentRequests}>
       <span className="visually-hidden">The app is currently loading...</span>
     </div>
   )

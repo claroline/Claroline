@@ -12,6 +12,7 @@ import {TOOL_LOAD, TOOL_OPEN} from '#/main/core/tool/store/actions'
 import {selectors as baseSelectors} from '#/main/community/tools/community/store/selectors'
 import {selectors} from '#/main/community/tools/community/team/store/selectors'
 import {MY_TEAMS_ADD, MY_TEAMS_REMOVE} from '#/main/community/tools/community/team/store/actions'
+import {CONTEXT_OPEN} from '#/main/app/context/store/actions'
 
 const reducer = combineReducers({
   // the list of the current user teams
@@ -37,6 +38,9 @@ const reducer = combineReducers({
   list: makeListReducer(selectors.LIST_NAME, {
     sortBy: {property: 'name', direction: 1}
   }, {
+    loaded: makeReducer(false, {
+      [CONTEXT_OPEN]: () => false
+    }),
     invalidated: makeReducer(false, {
       [TOOL_OPEN]: () => true,
       [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.FORM_NAME)]: () => true

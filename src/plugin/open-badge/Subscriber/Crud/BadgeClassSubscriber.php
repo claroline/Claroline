@@ -52,6 +52,10 @@ class BadgeClassSubscriber implements EventSubscriberInterface
         if ($badge->getImage()) {
             $this->fileManager->linkFile(BadgeClass::class, $badge->getUuid(), $badge->getImage());
         }
+
+        if ($badge->getPoster()) {
+            $this->fileManager->linkFile(BadgeClass::class, $badge->getUuid(), $badge->getPoster());
+        }
     }
 
     public function preUpdate(UpdateEvent $event): void
@@ -76,6 +80,13 @@ class BadgeClassSubscriber implements EventSubscriberInterface
             $badge->getImage(),
             !empty($oldData['image']) ? $oldData['image'] : null
         );
+
+        $this->fileManager->updateFile(
+            BadgeClass::class,
+            $badge->getUuid(),
+            $badge->getPoster(),
+            !empty($oldData['poster']) ? $oldData['poster'] : null
+        );
     }
 
     public function postDelete(DeleteEvent $event): void
@@ -85,6 +96,10 @@ class BadgeClassSubscriber implements EventSubscriberInterface
 
         if ($badge->getImage()) {
             $this->fileManager->unlinkFile(BadgeClass::class, $badge->getUuid(), $badge->getImage());
+        }
+
+        if ($badge->getPoster()) {
+            $this->fileManager->unlinkFile(BadgeClass::class, $badge->getUuid(), $badge->getPoster());
         }
     }
 
