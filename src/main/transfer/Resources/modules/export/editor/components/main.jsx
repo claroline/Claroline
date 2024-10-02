@@ -23,6 +23,7 @@ const ExportEditor = (props) => {
   return (
     <Editor
       path={props.path + (props.isNew ? '/new' : '/edit')}
+      styles={['claroline-distribution-main-transfer-transfer-tool']}
       title={get(props.formData, 'name', trans('export', {}, 'transfer'))}
       name={selectors.FORM_NAME}
       target={(formData, isNew) => isNew ? ['apiv2_transfer_export_create']: ['apiv2_transfer_export_update', {id: props.formData.id}]}

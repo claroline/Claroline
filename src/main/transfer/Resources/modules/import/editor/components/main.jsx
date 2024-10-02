@@ -24,6 +24,7 @@ const ImportEditor = (props) => {
   return (
     <Editor
       path={props.path + (props.isNew ? '/new' : '/edit')}
+      styles={['claroline-distribution-main-transfer-transfer-tool']}
       title={get(props.formData, 'name', trans('import', {}, 'transfer'))}
       name={selectors.FORM_NAME}
       target={(formData, isNew) => isNew ? ['apiv2_transfer_import_create']: ['apiv2_transfer_import_update', {id: props.formData.id}]}
