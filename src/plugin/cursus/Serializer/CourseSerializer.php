@@ -164,15 +164,15 @@ class CourseSerializer
                         return $this->panelFacetSerializer->serialize($panelFacet);
                     }, $course->getPanelFacets()->toArray()),
                 ],
-                'workspace' => $course->getWorkspace() ?
-                    $this->workspaceSerializer->serialize($course->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]) :
-                    null,
                 'organizations' => array_map(function (Organization $organization) {
                     return $this->orgaSerializer->serialize($organization, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $course->getOrganizations()->toArray()),
                 'children' => array_map(function (Course $child) {
                     return $this->serialize($child, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $course->getChildren()->toArray()),
+                'workspace' => $course->getWorkspace() ?
+                    $this->workspaceSerializer->serialize($course->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]) :
+                    null,
             ]);
         }
 

@@ -14,6 +14,8 @@
   "archive_training_confirm_title": "{1} Archivage d'une formation | [2,Inf[ Archivage de plusieurs formations",
   "archive_training_confirm_message": "{1} Êtes-vous sûr de vouloir archiver cette formation ? | [2,Inf[ Êtes-vous sûr de vouloir archiver ces %count% formations ?",
 
+  "bind": "Associer",
+
   "restore_training": "Restaurer la formation",
   "restore_training_help": "Permet de restaurer la formation dans la liste des formations actives.",
 

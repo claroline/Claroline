@@ -145,6 +145,24 @@ class CourseController extends AbstractCrudController
     }
 
     /**
+     * @Route("/list/existing", name="list_existing", methods={"GET"})
+     */
+    public function listNoWorkspaceAction(Request $request): JsonResponse
+    {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
+        $filters = array_merge($request->query->all(), [
+            'hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
+                'workspace' => null,
+            ]),
+        ]);
+
+        $list = $this->crud->list(Course::class, $filters, $this->getOptions()['list']);
+
+        return new JsonResponse($list);
+    }
+
+    /**
      * @Route("/archive", name="archive", methods={"POST"})
      */
     public function archiveAction(Request $request): JsonResponse
@@ -242,6 +260,35 @@ class CourseController extends AbstractCrudController
         return new JsonResponse(array_map(function (Course $course) {
             return $this->serializer->serialize($course);
         }, $processed));
+    }
+
+    /**
+     * @Route("/{id}/bind", name="bind_workspace", methods={"PATCH"})
+     *
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
+     */
+    public function bindCourseToWorkspaceAction(Course $course, Request $request): JsonResponse
+    {
+        $this->om->startFlushSuite();
+
+        $data = $this->decodeRequest($request);
+
+        $workspaceData = $data['workspace'] ?? null;
+        $workspace = null;
+
+        if ($workspaceData) {
+            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $workspaceData['id']]);
+        }
+
+        if ($this->authorization->isGranted('ADMINISTRATE', $course)) {
+            $course->setWorkspace($workspace);
+        } else {
+            throw new AccessDeniedException();
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse($this->serializer->serialize($course));
     }
 
     /**
