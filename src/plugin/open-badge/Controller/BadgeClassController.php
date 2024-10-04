@@ -72,46 +72,6 @@ class BadgeClassController extends AbstractCrudController
         return $assertions->toResponse();
     }
 
-    #[Route(path: '/unarchive', name: 'unarchive', methods: ['PUT'])]
-    public function unarchiveAction(Request $request): JsonResponse
-    {
-        $badges = $this->decodeIdsString($request, BadgeClass::class);
-
-        foreach ($badges as $badge) {
-            try {
-                $this->crud->replace($badge, 'archived', false);
-            } catch (\Exception $e) {
-                // do not break the whole process if user has no right on one of the badges
-            }
-        }
-
-        return new JsonResponse(
-            array_map(function (BadgeClass $badge) {
-                return $this->serializer->serialize($badge);
-            }, $badges)
-        );
-    }
-
-    #[Route(path: '/archive', name: 'archive', methods: ['PUT'])]
-    public function archiveAction(Request $request): JsonResponse
-    {
-        $badges = $this->decodeIdsString($request, BadgeClass::class);
-
-        foreach ($badges as $badge) {
-            try {
-                $this->crud->replace($badge, 'archived', true);
-            } catch (\Exception $e) {
-                // do not break the whole process if user has no right on one of the badges
-            }
-        }
-
-        return new JsonResponse(
-            array_map(function (BadgeClass $badge) {
-                return $this->serializer->serialize($badge);
-            }, $badges)
-        );
-    }
-
     #[Route(path: '/{badge}/users', name: 'list_assertions', methods: ['GET'])]
     public function listUsersAction(
         Request $request,

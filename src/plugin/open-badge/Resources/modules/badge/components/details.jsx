@@ -55,7 +55,7 @@ const BadgeDetailsComponent = (props) => {
       {(hasPermission('grant', props.badge) || !get(props.badge, 'restrictions.hideRecipients')) &&
         <PageSection
           size="md"
-          className="py-3"
+          className="embedded-list-section py-3"
           title={trans('Utilisateurs ayant obtenu ce badge', {}, 'badges')}
         >
           <ListData

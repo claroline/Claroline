@@ -12,18 +12,6 @@ import {PageListSection} from '#/main/app/page'
 const BadgeList = props =>
   <ToolPage
     title={trans('all_badges', {}, 'badge')}
-    primaryAction="add"
-    actions={[
-      {
-        name: 'add',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-plus',
-        label: trans('add_badge', {}, 'actions'),
-        target: `${props.path}/new`,
-        displayed: props.canEdit,
-        primary: true
-      }
-    ]}
   >
     <PageListSection>
       <BaseBadgeList
@@ -34,6 +22,15 @@ const BadgeList = props =>
           ['apiv2_badge_workspace_list', {workspace: props.contextId}] :
           ['apiv2_badge_list']
         }
+        addAction={{
+          name: 'add',
+          type: LINK_BUTTON,
+          // icon: 'fa fa-fw fa-plus',
+          label: trans('add_badge', {}, 'actions'),
+          target: `${props.path}/new`,
+          displayed: props.canEdit,
+          primary: true
+        }}
         customDefinition={'workspace' !== props.contextType ? [
           {
             name: 'workspace',

@@ -13,7 +13,7 @@ import {BadgeList}  from '#/plugin/open-badge/tools/badges/badge/containers/list
 import {BadgeEdit} from '#/plugin/open-badge/tools/badges/badge/containers/edit'
 import {BadgeCreate} from '#/plugin/open-badge/tools/badges/badge/components/create'
 import {BadgeShow} from '#/plugin/open-badge/tools/badges/badge/containers/show'
-import {BadgesToolEditor} from '#/plugin/open-badge/tools/badges/components/editor'
+import {BadgesEditor} from '#/plugin/open-badge/tools/badges/editor/containers/main'
 
 const BadgeTool = props =>
   <Tool
@@ -34,7 +34,7 @@ const BadgeTool = props =>
         exact: true
       }
     ]}
-    editor={BadgesToolEditor}
+    editor={BadgesEditor}
     pages={[
       {
         path: '/my',
@@ -67,9 +67,6 @@ const BadgeTool = props =>
 
 BadgeTool.propTypes = {
   path: T.string.isRequired,
-  canEdit: T.bool.isRequired,
-  canGrant: T.bool.isRequired,
-  canAdministrate: T.bool.isRequired,
   currentContext: T.object.isRequired,
   openBadge: T.func.isRequired,
   openAssertion: T.func.isRequired

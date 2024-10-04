@@ -2,6 +2,14 @@ services:
     _defaults:
         public: true # because controller
 
+    Claroline\OpenBadgeBundle\Controller\ArchiveController:
+        arguments:
+            - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
+
     Claroline\OpenBadgeBundle\Controller\AssertionController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true

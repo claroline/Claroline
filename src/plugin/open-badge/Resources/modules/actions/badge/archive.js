@@ -18,7 +18,7 @@ export default (badges, refresher) => {
     request: {
       url: url(['apiv2_badge_archive'], {ids: processable.map(u => u.id)}),
       request: {
-        method: 'PUT'
+        method: 'POST'
       },
       success: () => refresher.update(processable)
     },

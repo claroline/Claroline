@@ -2,12 +2,11 @@ import React from 'react'
 
 import {trans} from '#/main/app/intl'
 import {MODAL_BUTTON} from '#/main/app/buttons'
-import {ToolEditor} from '#/main/core/tool'
 import {ToolEditorActions} from '#/main/core/tool/editor'
 
 import {MODAL_TRANSFER} from '#/plugin/open-badge/modals/transfer'
 
-const BadgesToolActions = () =>
+const BadgesEditorActions = () =>
   <ToolEditorActions
     actions={[
       {
@@ -24,11 +23,6 @@ const BadgesToolActions = () =>
     ]}
   />
 
-const BadgesToolEditor = () =>
-  <ToolEditor
-    actionsPage={BadgesToolActions}
-  />
-
 export {
-  BadgesToolEditor
+  BadgesEditorActions
 }
