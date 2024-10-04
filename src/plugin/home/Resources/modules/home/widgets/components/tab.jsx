@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {Widget} from '#/main/core/widget/player/components/widget'
 
-import {HomePage} from '#/plugin/home/tools/home/containers/page'
+import {HomePage} from '#/plugin/home/tools/home/components/page'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
 
 const WidgetsTab = props => {

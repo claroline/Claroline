@@ -11,7 +11,6 @@
 
 namespace Claroline\HomeBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Display\Color;
 use Claroline\AppBundle\Entity\Display\Hidden;
 use Claroline\AppBundle\Entity\Display\Icon;
@@ -26,8 +25,8 @@ use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
 
 #[ORM\Table(name: 'claro_home_tab')]
 #[ORM\Entity]
@@ -67,22 +66,18 @@ class HomeTab
 
     /**
      * Parent tab.
-     *
-     *
      */
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: HomeTab::class, inversedBy: 'children')]
     private ?HomeTab $parent = null;
 
-    
     /**
-     * @var Collection<int, \Claroline\HomeBundle\Entity\HomeTab>
+     * @var Collection<int, HomeTab>
      */
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: HomeTab::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: HomeTab::class, mappedBy: 'parent', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $children;
 
-    
     /**
      * @var Collection<int, Role>
      */
@@ -138,41 +133,25 @@ class HomeTab
         $this->longTitle = $longTitle;
     }
 
-    /**
-     * Set parent.
-     */
     public function setParent(HomeTab $parent = null): void
     {
         if ($parent !== $this->parent) {
             $this->parent = $parent;
 
-            if (null !== $parent) {
-                $parent->addChild($this);
-            }
+            $parent?->addChild($this);
         }
     }
 
-    /**
-     * Get parent.
-     */
     public function getParent(): ?HomeTab
     {
         return $this->parent;
     }
 
-    /**
-     * Get children of the tab.
-     *
-     * @return ArrayCollection|HomeTab[]
-     */
-    public function getChildren()
+    public function getChildren(): Collection
     {
         return $this->children;
     }
 
-    /**
-     * Add new child to the tab.
-     */
     public function addChild(HomeTab $homeTab): void
     {
         if (!$this->children->contains($homeTab)) {
@@ -181,9 +160,6 @@ class HomeTab
         }
     }
 
-    /**
-     * Remove a tab from children.
-     */
     public function removeChild(HomeTab $homeTab): void
     {
         if ($this->children->contains($homeTab)) {
@@ -192,10 +168,7 @@ class HomeTab
         }
     }
 
-    /**
-     * @return Role[]|ArrayCollection
-     */
-    public function getRoles()
+    public function getRoles(): Collection
     {
         return $this->roles;
     }

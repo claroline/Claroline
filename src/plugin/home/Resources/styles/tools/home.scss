@@ -4,36 +4,3 @@
 
 @import "../variables";
 @import "../components/widget";
-
-/*.home-nav {
-  order: 0;
-  width: 100%;
-  align-self: flex-start;
-  margin: 0 ($grid-gutter-width * .5);
-
-  .home-nav-item {
-    color: $home-tab-color;
-    background: $home-tab-bg;
-    border: 1px solid transparent;
-    border-radius: $home-tab-border-radius;
-
-    &.active {
-      color: $nav-pills-link-active-color;
-      background: $nav-pills-link-active-bg;
-    }
-  }
-
-  .home-nav-item-hidden {
-    color: var(--#{$prefix}secondary-color);
-    text-decoration: line-through !important;
-  }
-
-  .home-nav-expand {
-    padding: $nav-link-padding-y ($nav-link-padding-x*.5);
-  }
-
-  .home-nav-expand,
-  .home-nav-link {
-    color: inherit;
-  }
-}*/

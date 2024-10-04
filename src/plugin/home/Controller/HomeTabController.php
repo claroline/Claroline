@@ -2,7 +2,6 @@
 
 namespace Claroline\HomeBundle\Controller;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
@@ -10,6 +9,7 @@ use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\HomeBundle\Entity\HomeTab;
 use Claroline\HomeBundle\Manager\HomeManager;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -44,8 +44,7 @@ class HomeTabController extends AbstractCrudController
     }
 
     #[Route(path: '/open/{id}', name: 'open', methods: ['GET'])]
-    public function openAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    HomeTab $homeTab): JsonResponse
+    public function openAction(#[MapEntity(mapping: ['id' => 'uuid'])] HomeTab $homeTab): JsonResponse
     {
         $accessErrors = $this->manager->getRestrictionsErrors($homeTab);
         $isManager = $this->checkPermission('EDIT', $homeTab);
@@ -70,11 +69,9 @@ class HomeTabController extends AbstractCrudController
 
     /**
      * Submit access code.
-     *
      */
     #[Route(path: '/unlock/{id}', name: 'unlock', methods: ['POST'])]
-    public function unlockAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    HomeTab $homeTab, Request $request): JsonResponse
+    public function unlockAction(#[MapEntity(mapping: ['id' => 'uuid'])] HomeTab $homeTab, Request $request): JsonResponse
     {
         $this->manager->unlock($homeTab, $request);
 

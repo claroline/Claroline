@@ -8,7 +8,7 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 
 import {getTab} from '#/plugin/home/home'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
-import {HomePage} from '#/plugin/home/tools/home/containers/page'
+import {HomePage} from '#/plugin/home/tools/home/components/page'
 import {HomeRestrictions} from '#/plugin/home/tools/home/components/restrictions'
 
 class HomeTab extends Component {
