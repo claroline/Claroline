@@ -11,7 +11,7 @@ const TrainingsEditor = (props) =>
     pages={[
       {
         name: 'archive',
-        title: trans('archived_trainings', {}, 'cursus'),
+        title: trans('archives'),
         help: trans('archived_trainings_help', {}, 'cursus'),
         render: () => (
           <TrainingsEditorArchive

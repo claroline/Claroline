@@ -8,7 +8,7 @@ import {selectors} from '#/plugin/cursus/tools/trainings/editor/store'
 
 const TrainingsEditorArchive = (props) =>
   <EditorPage
-    title={trans('archived_trainings', {}, 'cursus')}
+    title={trans('archives')}
     help={trans('archived_trainings_help', {}, 'cursus')}
   >
     <CourseList

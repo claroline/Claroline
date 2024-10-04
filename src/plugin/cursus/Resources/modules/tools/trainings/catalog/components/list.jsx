@@ -19,21 +19,6 @@ const CatalogList = (props) =>
       target: props.path
     }]}
     title={trans('catalog', {}, 'cursus')}
-    primaryAction="add"
-    actions={[
-      {
-        name: 'add',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-plus',
-        label: trans('add_course', {}, 'cursus'),
-        modal: [MODAL_COURSE_TYPE_CREATION, {
-          path: props.path + '/course'
-        }],
-        group: trans('management'),
-        displayed: props.canEdit,
-        primary: true
-      }
-    ]}
   >
     <PageListSection>
       <CourseList
@@ -41,6 +26,17 @@ const CatalogList = (props) =>
         path={props.path}
         name={selectors.LIST_NAME}
         url={['apiv2_cursus_course_list']}
+        addAction={{
+          name: 'add',
+          type: MODAL_BUTTON,
+          // icon: 'fa fa-fw fa-plus',
+          label: trans('add_course', {}, 'cursus'),
+          modal: [MODAL_COURSE_TYPE_CREATION, {
+            path: props.path + '/course'
+          }],
+          displayed: props.canEdit,
+          primary: true
+        }}
       >
         <p className="text-center my-5 mt-1">
           <span className="h1 fa fa-graduation-cap mb-3 text-body-tertiary" />
