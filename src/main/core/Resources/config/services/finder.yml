@@ -8,6 +8,13 @@ services:
     Claroline\CoreBundle\Finder\WorkspaceType:
         tags: [claroline.finder.type]
 
+    Claroline\CoreBundle\Finder\Template\TemplateType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\CoreBundle\Finder\Template\TemplateTypeType:
+        tags: [ claroline.finder.type ]
+
+
     Claroline\CoreBundle\API\Finder\Planning\PlannedObjectFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]

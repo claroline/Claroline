@@ -11,47 +11,37 @@
 
 namespace Claroline\CoreBundle\Entity\Template;
 
-use Doctrine\DBAL\Types\Types;
+use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\CoreBundle\Entity\Plugin;
+use Claroline\CoreBundle\Finder\Template\TemplateTypeType;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_template_type')]
 #[ORM\UniqueConstraint(name: 'template_unique_type', columns: ['entity_name'])]
 #[ORM\Entity]
+#[CrudEntity(finderClass: TemplateTypeType::class)]
 class TemplateType
 {
     use Id;
     use Name;
     use Uuid;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'entity_type', type: Types::STRING)]
-    private $type;
+    private ?string $type = null;
 
-    /**
-     *
-     * @var Plugin
-     */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Plugin::class)]
     private ?Plugin $plugin = null;
 
-    /**
-     * @var array
-     */
     #[ORM\Column(type: Types::JSON, nullable: true)]
-    private $placeholders = [];
+    private ?array $placeholders = [];
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'default_template', nullable: true)]
-    private $defaultTemplate;
+    private ?string $defaultTemplate = null;
 
     public function __construct()
     {
@@ -63,7 +53,7 @@ class TemplateType
         return $this->type;
     }
 
-    public function setType(string $type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
@@ -73,7 +63,7 @@ class TemplateType
         return $this->plugin;
     }
 
-    public function setPlugin(Plugin $plugin)
+    public function setPlugin(Plugin $plugin): void
     {
         $this->plugin = $plugin;
     }
@@ -83,7 +73,7 @@ class TemplateType
         return $this->placeholders;
     }
 
-    public function setPlaceholders(array $placeholders = [])
+    public function setPlaceholders(array $placeholders = []): void
     {
         $this->placeholders = $placeholders;
     }
@@ -93,7 +83,7 @@ class TemplateType
         return $this->defaultTemplate;
     }
 
-    public function setDefaultTemplate(?string $defaultTemplate)
+    public function setDefaultTemplate(?string $defaultTemplate): void
     {
         $this->defaultTemplate = $defaultTemplate;
     }

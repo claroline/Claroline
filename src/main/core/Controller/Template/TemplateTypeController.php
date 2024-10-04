@@ -11,15 +11,17 @@
 
 namespace Claroline\CoreBundle\Controller\Template;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -38,50 +40,36 @@ class TemplateTypeController
     }
 
     #[Route(path: '/{type}', name: 'apiv2_template_type_list', methods: ['GET'])]
-    public function listAction(Request $request, string $type = null): JsonResponse
-    {
-        $query = $request->query->all();
+    public function listAction(
+        ?string $type = null,
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         if ($type) {
-            $query['hiddenFilters'] = [
-                'type' => $type,
-            ];
+            $finderQuery->addFilter('type', $type);
         }
 
-        return new JsonResponse(
-            $this->crud->list(TemplateType::class, $query)
-        );
+        $templateTypes = $this->crud->search(TemplateType::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+
+        return $templateTypes->toResponse();
     }
 
     #[Route(path: '/{id}/open', name: 'apiv2_template_type_open', methods: ['GET'])]
-    public function openAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Template\TemplateType', mapping: ['id' => 'uuid'])]
-    TemplateType $templateType): JsonResponse
-    {
+    public function openAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        TemplateType $templateType
+    ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $templateType, [], true);
 
-        $query = [];
-        $query['hiddenFilters'] = [
-            'type' => $templateType->getUuid(),
-        ];
+        $finderQuery = new FinderQuery();
+        $finderQuery->addFilter('type', $templateType->getUuid());
+        $templates = $this->crud->search(Template::class, $finderQuery);
 
-        return new JsonResponse([
+        return new StreamedJsonResponse([
             'type' => $this->serializer->serialize($templateType),
-            'templates' => $this->crud->list(Template::class, $query),
+            'templates' => $templates->getItems(),
         ]);
-    }
-
-    #[Route(path: '/{id}/templates', name: 'apiv2_template_type_templates')]
-    public function listTemplatesAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\Template\TemplateType', mapping: ['id' => 'uuid'])]
-    TemplateType $templateType, Request $request): JsonResponse
-    {
-        $this->checkPermission('OPEN', $templateType, [], true);
-
-        $query = $request->query->all();
-        $query['hiddenFilters'] = [
-            'type' => $templateType->getUuid(),
-        ];
-
-        return new JsonResponse(
-            $this->crud->list(Template::class, $query)
-        );
     }
 }

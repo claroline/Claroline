@@ -18,7 +18,7 @@ const templateType = createSelector(
 
 const templates = createSelector(
   [currentTemplate],
-  (currentTemplate) => currentTemplate && currentTemplate.templates ? currentTemplate.templates.data : []
+  (currentTemplate) => currentTemplate && currentTemplate.templates ? currentTemplate.templates : []
 )
 
 const locales = (state) => configSelectors.param(state, 'locale.available')

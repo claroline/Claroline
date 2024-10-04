@@ -11,28 +11,25 @@
 
 namespace Claroline\CoreBundle\Entity\Template;
 
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
+use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Name;
+use Claroline\CoreBundle\Finder\Template\TemplateType as TemplateFinder;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
 
 #[ORM\Table(name: 'claro_template')]
 #[ORM\Entity]
+#[CrudEntity(finderClass: TemplateFinder::class)]
 class Template
 {
     use Id;
     use Name;
     use Uuid;
 
-    /**
-     *
-     *
-     * @var TemplateType
-     */
     #[ORM\JoinColumn(name: 'claro_template_type', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: TemplateType::class)]
     private ?TemplateType $type = null;
@@ -40,12 +37,9 @@ class Template
     /**
      * System templates can not be edited nor deleted by users.
      * They are managed through DataFixtures.
-     *
-     *
-     * @var bool
      */
     #[ORM\Column(name: 'is_system', type: Types::BOOLEAN)]
-    private $system = false;
+    private bool $system = false;
 
     /**
      * @var Collection<int, TemplateContent>
@@ -65,7 +59,7 @@ class Template
         return $this->type;
     }
 
-    public function setType(TemplateType $type)
+    public function setType(TemplateType $type): void
     {
         $this->type = $type;
     }
@@ -75,12 +69,12 @@ class Template
         return $this->system;
     }
 
-    public function setSystem(bool $system)
+    public function setSystem(bool $system): void
     {
         $this->system = $system;
     }
 
-    public function getTemplateContents()
+    public function getTemplateContents(): Collection
     {
         return $this->contents;
     }
@@ -96,7 +90,7 @@ class Template
         return null;
     }
 
-    public function addTemplateContent(TemplateContent $content)
+    public function addTemplateContent(TemplateContent $content): void
     {
         if (!$this->contents->contains($content)) {
             $this->contents->add($content);
@@ -104,7 +98,7 @@ class Template
         }
     }
 
-    public function removeTemplateContent(TemplateContent $content)
+    public function removeTemplateContent(TemplateContent $content): void
     {
         if ($this->contents->contains($content)) {
             $this->contents->removeElement($content);
