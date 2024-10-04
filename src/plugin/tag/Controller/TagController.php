@@ -11,14 +11,18 @@
 
 namespace Claroline\TagBundle\Controller;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Manager\TagManager;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -46,42 +50,29 @@ class TagController extends AbstractCrudController
 
     /**
      * List all objects linked to a Tag.
-     *
      */
     #[Route(path: '/{id}/object', name: 'list_objects', methods: ['GET'])]
-    public function listObjectsAction(#[MapEntity(class: 'Claroline\TagBundle\Entity\Tag', mapping: ['id' => 'uuid'])]
-    Tag $tag, Request $request): JsonResponse
-    {
-        return new JsonResponse(
-            $this->crud->list(TaggedObject::class, array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => ['tag' => $tag->getUuid()]]
-            ))
-        );
+    public function listObjectsAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Tag $tag,
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
+        $this->checkPermission('OPEN', $tag, [], true);
+
+        $finderQuery->addFilter('tag', $tag->getUuid());
+
+        $tags = $this->crud->search(TaggedObject::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+
+        return $tags->toResponse();
     }
 
-    /**
-     * Adds a tag to a collection of taggable objects.
-     * NB. If the tag does not exist, it will be created if the user has the correct rights.
-     *
-     */
-    #[Route(path: '/{tag}/object', name: 'add_objects', methods: ['POST'])]
-    public function addObjectsAction(string $tag, Request $request): JsonResponse
-    {
-        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
-
-        $taggedObjects = $this->manager->tagData([$tag], $this->decodeRequest($request));
-
-        return new JsonResponse(
-            !empty($taggedObjects) ? $this->serializer->serialize($taggedObjects[0]->getTag()) : null
-        );
-    }
-
-    
     #[Route(path: '/{id}/object', name: 'remove_objects', methods: ['DELETE'])]
-    public function removeObjectsAction(#[MapEntity(class: 'Claroline\TagBundle\Entity\Tag', mapping: ['id' => 'uuid'])]
-    Tag $tag, Request $request): JsonResponse
-    {
+    public function removeObjectsAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Tag $tag,
+        Request $request
+    ): JsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         $this->manager->removeTagFromObjects($tag, $this->decodeRequest($request));

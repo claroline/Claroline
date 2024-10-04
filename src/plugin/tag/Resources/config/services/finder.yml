@@ -1,4 +1,10 @@
 services:
+    Claroline\TagBundle\Finder\TagType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\TagBundle\Finder\TaggedObjectType:
+        tags: [ claroline.finder.type ]
+
     Claroline\TagBundle\Finder\TagFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]

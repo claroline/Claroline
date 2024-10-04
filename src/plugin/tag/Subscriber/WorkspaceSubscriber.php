@@ -2,12 +2,11 @@
 
 namespace Claroline\TagBundle\Subscriber;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Manager\TagManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

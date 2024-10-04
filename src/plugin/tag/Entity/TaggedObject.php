@@ -11,6 +11,8 @@
 
 namespace Claroline\TagBundle\Entity;
 
+use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\TagBundle\Finder\TaggedObjectType;
 use Claroline\TagBundle\Repository\TaggedObjectRepository;
 use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -19,110 +21,60 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'claro_tagbundle_tagged_object')]
 #[ORM\UniqueConstraint(name: 'unique', columns: ['object_id', 'object_class', 'tag_id'])]
 #[ORM\Entity(repositoryClass: TaggedObjectRepository::class)]
+#[CrudEntity(finderClass: TaggedObjectType::class)]
 class TaggedObject
 {
     use Id;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'object_id', type: Types::STRING)]
-    private $objectId;
+    private ?string $objectId = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'object_class')]
-    private $objectClass;
+    private ?string $objectClass = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'object_name', nullable: true)]
-    private $objectName;
+    private ?string $objectName = null;
 
-    /**
-     *
-     * @var Tag
-     */
-    #[ORM\JoinColumn(name: 'tag_id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\JoinColumn(name: 'tag_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Tag::class, inversedBy: 'taggedObjects')]
     private ?Tag $tag = null;
 
-    /**
-     * Get tag.
-     *
-     * @return Tag
-     */
-    public function getTag()
+    public function getTag(): ?Tag
     {
         return $this->tag;
     }
 
-    /**
-     * Set tag.
-     */
-    public function setTag(Tag $tag)
+    public function setTag(Tag $tag): void
     {
         $this->tag = $tag;
     }
 
-    /**
-     * Get object id.
-     *
-     * @return string
-     */
-    public function getObjectId()
+    public function getObjectId(): ?string
     {
         return $this->objectId;
     }
 
-    /**
-     * Set object id.
-     *
-     * @param string $objectId
-     */
-    public function setObjectId($objectId)
+    public function setObjectId(string $objectId): void
     {
         $this->objectId = $objectId;
     }
 
-    /**
-     * Get object class.
-     *
-     * @return string
-     */
-    public function getObjectClass()
+    public function getObjectClass(): ?string
     {
         return $this->objectClass;
     }
 
-    /**
-     * Set object class.
-     *
-     * @param string $objectClass
-     */
-    public function setObjectClass($objectClass)
+    public function setObjectClass($objectClass): void
     {
         $this->objectClass = $objectClass;
     }
 
-    /**
-     * Get object name.
-     *
-     * @return string
-     */
-    public function getObjectName()
+    public function getObjectName(): ?string
     {
         return $this->objectName;
     }
 
-    /**
-     * Set object name.
-     *
-     * @param string $objectName
-     */
-    public function setObjectName($objectName)
+    public function setObjectName($objectName): void
     {
         $this->objectName = $objectName;
     }

@@ -9,34 +9,37 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\TagBundle\Listener;
+namespace Claroline\TagBundle\Subscriber;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\SearchObjectsEvent;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Manager\TagManager;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class TagListener
+class TagSubscriber implements EventSubscriberInterface
 {
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var TagManager */
-    private $manager;
-
     /**
      * TagListener constructor.
      */
     public function __construct(
-        ObjectManager $om,
-        TagManager $tagManager
+        private readonly ObjectManager $om,
+        private readonly TagManager $manager
     ) {
-        $this->om = $om;
-        $this->manager = $tagManager;
     }
 
-    public function onSearchObjects(SearchObjectsEvent $event)
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            'objects.search' => 'onSearchObjects',
+            'claroline_tag_multiple_data' => 'onDataTag',
+            'claroline_retrieve_used_tags_by_class_and_ids' => 'onRetrieveUsedTagsByClassAndIds',
+            'claroline_retrieve_used_tags_object_by_class_and_ids' => 'onRetrieveUsedTagsObjectByClassAndIds',
+        ];
+    }
+
+    public function onSearchObjects(SearchObjectsEvent $event): void
     {
         // checks if there are filters managed by tag plugin in query
         $filters = $event->getFilters();
@@ -68,7 +71,7 @@ class TagListener
         }
     }
 
-    public function onDataTag(GenericDataEvent $event)
+    public function onDataTag(GenericDataEvent $event): void
     {
         $taggedObject = null;
         $data = $event->getData();
@@ -83,7 +86,7 @@ class TagListener
     /**
      * Used by serializers to retrieves tags.
      */
-    public function onRetrieveUsedTagsByClassAndIds(GenericDataEvent $event)
+    public function onRetrieveUsedTagsByClassAndIds(GenericDataEvent $event): void
     {
         $tags = [];
         $data = $event->getData();
@@ -116,7 +119,7 @@ class TagListener
     /**
      * Used by serializers to retrieves tags object.
      */
-    public function onRetrieveUsedTagsObjectByClassAndIds(GenericDataEvent $event)
+    public function onRetrieveUsedTagsObjectByClassAndIds(GenericDataEvent $event): void
     {
         $tags = [];
         $data = $event->getData();

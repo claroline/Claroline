@@ -11,16 +11,19 @@
 
 namespace Claroline\TagBundle\Entity;
 
+use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\AppBundle\Entity\Display\Color;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\TagBundle\Finder\TagType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'claro_tagbundle_tag')]
 #[ORM\Entity]
+#[ORM\Table(name: 'claro_tagbundle_tag')]
+#[CrudEntity(finderClass: TagType::class)]
 class Tag
 {
     use Id;
@@ -37,6 +40,7 @@ class Tag
 
     /**
      * The list of objects with the tag.
+     *
      * @var Collection<int, TaggedObject>
      */
     #[ORM\OneToMany(targetEntity: TaggedObject::class, mappedBy: 'tag')]
