@@ -15,6 +15,7 @@ import {
 } from '#/main/app/context/store/actions'
 
 import {TOOL_LOAD} from '#/main/core/tool/store'
+import {PLATFORM_SET_CURRENT_ORGANIZATION} from '#/main/app/platform/store/actions'
 
 const reducer = combineReducers({
   menu: combineReducers({
@@ -63,6 +64,7 @@ const reducer = combineReducers({
    */
   loaded: makeReducer(false, {
     [SECURITY_USER_CHANGE]: () => false,
+    [PLATFORM_SET_CURRENT_ORGANIZATION]: () => false,
     [CONTEXT_OPEN]: () => false,
     [CONTEXT_LOAD]: () => true,
     [CONTEXT_NOT_FOUND]: () => true,

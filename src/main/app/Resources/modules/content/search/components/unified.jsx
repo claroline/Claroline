@@ -248,46 +248,34 @@ class SearchUnified extends Component {
   render() {
     return (
       <form className="list-search search-unified" role="search">
-        <div className="search-current" role="presentation">
-          <span className="search-icon fa fa-search" />
+        <div className="d-flex align-items-center" role="presentation">
+          <span className="search-icon fa fa-search text-secondary" />
 
-          <div className="search-filters">
-            {this.props.current.map(activeFilter => {
-              const propDef = getPropDefinition(activeFilter.property, this.props.available)
-
-              return (
-                <CurrentFilter
-                  key={`current-filter-${activeFilter.property}`}
-                  type={propDef.type}
-                  label={propDef.label}
-                  options={propDef.options}
-                  value={activeFilter.value}
-                  locked={activeFilter.locked}
-                  remove={() => this.props.removeFilter(activeFilter)}
-                />
-              )
-            })}
-
-            <input
-              type="text"
-              className="form-control form-control-lg search-control"
-              placeholder={trans('list_search_placeholder')}
-              value={this.state.currentSearch}
-              disabled={this.props.disabled}
-              autoFocus={this.props.autoFocus}
-              onChange={(e) => this.updateSearch(e.target.value)}
-            />
-          </div>
+          <input
+            type="text"
+            className="form-control form-control-lg search-control py-0 px-3"
+            placeholder={trans('list_search_placeholder')}
+            value={this.state.currentSearch}
+            disabled={this.props.disabled}
+            autoFocus={this.props.autoFocus}
+            onChange={(e) => this.updateSearch(e.target.value)}
+          />
 
           <Button
-            className="btn btn-text-secondary dropdown-toggle search-btn"
+            className="btn btn-text-body dropdown-toggle search-btn position-relative px-2"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-caret-down"
+            icon="fa fa-fw fa-filter"
             label={trans('filters')}
             tooltip="bottom"
             callback={() => this.setState({opened : !this.state.opened})}
             disabled={this.props.disabled}
-          />
+          >
+            {!isEmpty(this.props.current) &&
+              <span className="position-absolute end-0 bottom-0 translate-middle p-1 bg-primary rounded-circle">
+                <span className="visually-hidden">New alerts</span>
+              </span>
+            }
+          </Button>
         </div>
 
         <MenuOverlay

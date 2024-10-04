@@ -115,7 +115,7 @@ const TableItem = props => {
       'table-invalidated placeholder-glow': props.loaded && props.invalidated
     })}>
       {props.onSelect &&
-        <TableCell align="center" className="checkbox-cell">
+        <TableCell align="center" className="checkbox-cell ps-4">
           <input
             className="form-check-input"
             type="checkbox"
@@ -127,7 +127,7 @@ const TableItem = props => {
       }
 
       {!props.loaded && props.columns.map((column, index) =>
-        <td key={column.name} className={classes(props.onSelect && 0 === index ? 'ps-0' : undefined, `${column.type}-cell`, column.primary && 'primary-cell')}>
+        <td key={column.name} className={classes(props.onSelect && 0 === index ? 'ps-0' : 'ps-4', `${column.type}-cell`, column.primary && 'primary-cell')}>
           <div className="d-flex flex-direction-row gap-3 align-items-center">
             {column.primary &&
               <div className={classes('placeholder thumbnail thumbnail-icon thumbnail-icon-xs', props.primaryAction && 'bg-primary')} />
@@ -142,7 +142,7 @@ const TableItem = props => {
       {props.loaded && props.columns.map((column, index) =>
         <DataCell
           key={column.name}
-          className={props.onSelect && 0 === index ? 'ps-0' : undefined}
+          className={props.onSelect && 0 === index ? 'ps-0' : 'ps-4'}
           column={column}
           rowData={props.row}
           size={props.size}

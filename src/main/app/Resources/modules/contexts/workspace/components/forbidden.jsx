@@ -250,7 +250,7 @@ const WorkspaceForbidden = (props) => {
   }, [props.workspace.id])
 
   return (
-    <ContextPage root={true}>
+    <ContextPage>
       {!isUndefined(restrictions) && 0 !== restrictions.length &&
         createElement(restrictions[0].component, {
           workspace: props.workspace,

@@ -5,8 +5,8 @@ import classes from 'classnames'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const PageSection = (props) =>
-  <section className={classes('page-section d-flex', props.className)}>
-    <ContentSizing className={classes('flex-fill', {
+  <section className={classes('page-section', props.className)}>
+    <ContentSizing className={classes('flex-fill d-flex flex-column', {
       'px-4': !props.flush
     })} size={props.size}>
       {props.title &&

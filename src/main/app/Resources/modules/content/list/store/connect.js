@@ -169,7 +169,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     children:      ownProps.children
   }
 
-  props.customActions = ownProps.customActions
+  if (ownProps.addAction && (undefined === ownProps.addAction.displayed || ownProps.addAction.displayed)) {
+    props.addAction = ownProps.addAction
+  }
+
   // Data actions
   props.primaryAction = ownProps.primaryAction
 

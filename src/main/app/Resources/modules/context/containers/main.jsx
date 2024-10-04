@@ -22,6 +22,9 @@ const ContextMain = withRouter(
       (dispatch) => ({
         open(contextType, contextId) {
           return dispatch(actions.open(contextType, contextId))
+        },
+        fetch(contextType, contextId) {
+          return dispatch(actions.fetch(contextType, contextId))
         }
       })
     )(ContextMainComponent)

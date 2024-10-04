@@ -446,8 +446,6 @@ class Crud
      * @param array  $options  - an array of options
      *
      * @return object
-     *
-     * @deprecated should use standard update instead
      */
     public function replace(object $object, string $property, mixed $data, array $options = []): object
     {

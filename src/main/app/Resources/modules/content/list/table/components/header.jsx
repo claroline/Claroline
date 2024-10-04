@@ -27,7 +27,7 @@ const TableHeader = props => {
     <thead>
       <tr>
         {props.selection &&
-          <TableHeaderCell align="center" className="checkbox-cell">
+          <TableHeaderCell align="center" className="checkbox-cell ps-4">
             <TooltipOverlay
               id="data-table-select"
               position="right"
@@ -52,7 +52,7 @@ const TableHeader = props => {
             <TableSortingCell
               key={column.name}
               disabled={props.disabled}
-              className={props.selection && 0 === index ? 'ps-0' : undefined}
+              className={props.selection && 0 === index ? 'ps-0' : 'ps-4'}
               direction={(column.alias && column.alias === props.sorting.current.property) || column.name === props.sorting.current.property ? props.sorting.current.direction : 0}
               onSort={() => {
                 let direction = 1
@@ -93,6 +93,7 @@ const TableHeader = props => {
         <tr className="table-selected">
           <td className="p-0" colSpan={props.displayedColumns.length + (props.selection ? 1:0) + (props.actions || !isEmpty(displayableColumns) ? 1:0) }>
             <ListBulkActions
+              className="px-2"
               count={props.selection.current.length}
               actions={bulkActions}
             />

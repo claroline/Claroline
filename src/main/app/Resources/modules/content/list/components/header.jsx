@@ -1,13 +1,14 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
-import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 import {ListDisplay} from '#/main/app/content/list/components/display'
 import {Search} from '#/main/app/content/search/components/search'
 import {DataListProperty, DataListDisplay} from '#/main/app/content/list/prop-types'
+import {Button} from '#/main/app/action'
 
 /**
  * Data list header.
@@ -16,17 +17,12 @@ import {DataListProperty, DataListDisplay} from '#/main/app/content/list/prop-ty
  * @constructor
  */
 const ListHeader = props =>
-  <div className="list-header">
-    {!isEmpty(props.customActions) &&
-      <Toolbar
-        id={props.id + '-toolbar'}
-        className="list-toolbar"
-        buttonName="list-header-btn btn btn-text-secondary"
-        tooltip="bottom"
-        actions={props.customActions}
-      />
-    }
-
+  <div className={classes('list-header d-flex align-items-center gap-2 py-2 px-4 bg-body-tertiary', {
+    'rounded-3': !props.flush,
+    'border-top border-bottom': props.flush,
+    'pe-2': !isEmpty(props.addAction),
+    'pe-3': isEmpty(props.addAction) && (props.filters || props.display)
+  })}>
     {props.filters &&
       <Search
         id={props.id + '-search'}
@@ -42,10 +38,20 @@ const ListHeader = props =>
         disabled={props.disabled}
       />
     }
+
+    {!isEmpty(props.addAction) &&
+      <Button
+        id={props.id + '-add'}
+        //disabled={props.disabled}
+        {...props.addAction}
+        className="btn btn-primary"
+      />
+    }
   </div>
 
 ListHeader.propTypes = {
   id: T.string.isRequired,
+  flush: T.bool,
   disabled: T.bool,
   display: T.shape(
     DataListDisplay.propTypes
@@ -64,9 +70,9 @@ ListHeader.propTypes = {
     removeFilter: T.func.isRequired
   }),
 
-  customActions: T.arrayOf(T.shape(
+  addAction: T.shape(
     ActionTypes.propTypes
-  ))
+  )
 }
 
 ListHeader.defaultProps = {

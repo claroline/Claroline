@@ -1,13 +1,13 @@
 
 @mixin embedded-list-variant() {
     .list-header {
-        background: $list-controls-bg;
+        //background: $list-controls-bg;
     }
 
     .list-footer {
         margin: 0;
-        padding: $data-tree-gutter*.5 $data-grid-gutter;
-        padding-right: 0;
+        padding: map-get($spacers, 2) map-get($spacers, 4);
+        padding-right: map-get($spacers, 2);
     }
 
     .content-loader {
@@ -21,7 +21,7 @@
     }
 
     .data-grid {
-        margin-left: $data-grid-gutter;
-        margin-right: $data-grid-gutter;
+        margin-left: map-get($spacers, 4);
+        margin-right: map-get($spacers, 4);
     }
 }

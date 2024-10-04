@@ -9,7 +9,7 @@ const PaginationSize = props =>
   <MenuButton
     id="page-sizes-dropdown"
     containerClassName="results-per-page"
-    className="btn btn-link"
+    className="btn btn-body"
     menu={{
       position: 'top',
       align: 'right',

@@ -8,6 +8,7 @@ import {constants as searchConst} from '#/main/app/content/search/constants'
 import {connect} from '#/main/app/content/list/store'
 import {DataListProperty as DataListPropertyTypes} from '#/main/app/content/list/prop-types'
 import {ListData as ListDataComponent} from '#/main/app/content/list/components/data'
+import {ActionTypes} from '#/main/app/action'
 
 /**
  * Connected DataList.
@@ -138,6 +139,8 @@ ListData.propTypes = {
    * A list of data related actions.
    */
   actions: T.func,
+
+  addAction: T.shape(ActionTypes.propTypes),
 
   /**
    * The card component to render in grid modes.

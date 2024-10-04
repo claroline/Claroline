@@ -50,6 +50,7 @@ const PickerModal = (props) => {
             }}
             autoFocus={true}
             name={props.name}
+            flush={true}
             definition={props.definition}
             card={props.card}
             primaryAction={(row) => {

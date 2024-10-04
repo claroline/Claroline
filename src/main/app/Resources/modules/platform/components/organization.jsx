@@ -1,5 +1,5 @@
 import React from 'react'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 
 import {trans} from '#/main/app/intl'
 import {Button} from '#/main/app/action'

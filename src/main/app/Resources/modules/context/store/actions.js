@@ -35,18 +35,18 @@ actions.load = makeActionCreator(CONTEXT_LOAD, 'contextData')
 actions.setLoaded = makeActionCreator(CONTEXT_SET_LOADED, 'loaded')
 actions.setNotFound = makeActionCreator(CONTEXT_NOT_FOUND)
 actions.reload = () => actions.setLoaded(false)
+actions.open = (contextType, contextId = null) => ({
+  type: CONTEXT_OPEN,
+  contextType: contextType,
+  contextId: contextId
+})
 
-actions.open = (contextType, contextId = null) => (dispatch) => dispatch({
+actions.fetch = (contextType, contextId = null) => (dispatch) => dispatch({
   [API_REQUEST]: {
     silent: true,
     url: contextId ?
       ['claro_context_open', {context: contextType, contextId: contextId}] :
       ['claro_context_open', {context: contextType}],
-    before: () => dispatch({
-      type: CONTEXT_OPEN,
-      contextType: contextType,
-      contextId: contextId
-    }),
     success: (response) => dispatch(actions.load(response)),
     error: (response, status) => {
       switch (status) {
@@ -66,6 +66,7 @@ actions.openMenu = makeActionCreator(CONTEXT_MENU_OPEN)
 actions.closeMenu = makeActionCreator(CONTEXT_MENU_CLOSE)
 actions.toggleMenu = makeActionCreator(CONTEXT_MENU_TOGGLE)
 
+// todo : to move in platform actions instead ?
 actions.changeStatus = (currentUser, status) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: ['apiv2_user_change_status', {status: status}],

@@ -27,8 +27,10 @@ services:
 
     Claroline\AppBundle\Controller\PlatformController:
         arguments:
+            - '@security.authorization_checker'
             - '@security.token_storage'
             - '@twig'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\AppBundle\Manager\SecurityManager'

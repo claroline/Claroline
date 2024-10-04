@@ -15,27 +15,39 @@ import {hasPermission} from '#/main/app/security'
 import {AppLoader} from '#/main/app/platform/components/loader'
 
 const ContextMain = (props) => {
+  // change current context
+  useEffect(() => {
+    if (props.name) {
+      props.open(props.name, props.id)
+    }
+  }, [props.name, props.id])
+
   // fetch current context data
   useEffect(() => {
     let openQuery
-    if (props.name) {
+    if (props.name && !props.loaded) {
       openQuery = makeCancelable(
-        props.open(props.name, props.id)
+        props.fetch(props.name, props.id)
       )
 
-      openQuery.promise.then((response) => {
-        if (props.onOpen) {
-          props.onOpen(response.data)
-        }
-      })
+      openQuery.promise
+        .then((response) => {
+          if (props.onOpen) {
+            props.onOpen(response.data)
+          }
+        })
+        .then(
+          () => openQuery = null,
+          () => openQuery = null
+        )
     }
 
     return () => {
-      if (openQuery) {
+      if (openQuery && props.loaded) {
         openQuery.cancel()
       }
     }
-  }, [props.name, props.id])
+  }, [props.loaded])
 
   // fetch tool apps
   const [toolApps, setToolApps] = useState(null)

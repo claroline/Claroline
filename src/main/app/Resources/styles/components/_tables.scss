@@ -53,6 +53,7 @@
 .actions-cell {
     width: 50px; // because this cell should only contain a dropdown to gain horizontal space (no buttons bar)
     padding: 0 !important; // move padding on btns
+    padding-right: map-get($spacers, 2) !important;
     white-space: nowrap; // avoids buttons to break on multi lines
     text-transform: none !important; // because in th can have a text transform base on the value of var(--#{$prefix}label-text-transform)
 

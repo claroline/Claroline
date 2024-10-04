@@ -132,14 +132,15 @@ class ListData extends Component {
 
     return (
       <div className={classes('data-list', this.props.className, {'data-list-flush': this.props.flush})} role="presentation">
-        {(displayTool || filtersTool || this.props.customActions) &&
+        {(displayTool || filtersTool || this.props.addAction) &&
           <ListHeader
             id={this.props.id}
+            flush={this.props.flush}
             autoFocus={this.props.autoFocus}
             disabled={this.props.loading || 0 === this.props.totalResults}
             display={displayTool}
             filters={filtersTool}
-            customActions={this.props.customActions}
+            addAction={this.props.addAction}
           />
         }
 
@@ -221,13 +222,11 @@ ListData.propTypes = {
   actions: T.func,
 
   /**
-   * A list of actions to add to the list header.
-   *
-   * @deprecated
+   * An action to add data in the list (displayed in the header if provided).
    */
-  customActions: T.arrayOf(T.shape(
+  addAction: T.shape(
     ActionTypes.propTypes
-  )),
+  ),
 
   /**
    * Display formats of the list.

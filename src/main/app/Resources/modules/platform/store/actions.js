@@ -31,3 +31,13 @@ actions.saveFavorite = (workspace) => (dispatch) => dispatch({
     }
   }
 })
+
+actions.changeOrganization = (organization) => (dispatch) => dispatch({
+  [API_REQUEST]: {
+    url: ['claro_organization_change', {organization: organization.id}],
+    request: {
+      method: 'PUT'
+    },
+    success: () => dispatch(actions.setCurrentOrganizations(organization))
+  }
+})

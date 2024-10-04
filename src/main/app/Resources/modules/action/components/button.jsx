@@ -20,7 +20,6 @@ const ButtonComponent = forwardRef((props, ref) => {
   if (props.subscript) {
     if ('text' === props.subscript.type) {
       subscript = <span key="button-subscript" className={classes('action-subscript', `text-${props.subscript.status || 'primary'}`)}>{props.subscript.value}</span>
-
     } else {
       subscript = <span key="button-subscript" className={classes('action-subscript badge', `text-bg-${props.subscript.status || 'primary'}`)}>{props.subscript.value}</span>
     }

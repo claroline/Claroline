@@ -31,11 +31,11 @@
 }
 
 .list-header {
-    display: flex;
+    /*display: flex;
     align-items: stretch;
-    justify-content: flex-end;
+    justify-content: flex-end;*/
 
-    .list-header-btn {
+    /*.list-header-btn {
         font-size: $font-size-lg; // same as search icon
         line-height: $line-height-large;
         height: $input-height-lg;
@@ -43,16 +43,7 @@
         background: $list-controls-bg;
 
         @include border-radius(0);
-    }
-}
-
-.list-options {
-    background: $list-controls-bg;
-    margin-left: auto; // force right alignment if no search
-}
-
-.list-toolbar {
-    background: $list-controls-bg;
+    }*/
 }
 
 .list-selected {
@@ -60,7 +51,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background: $list-controls-bg;
+    //background: $list-controls-bg;
 
     .list-selected-label {
         font-weight: $font-weight-bold;
@@ -150,6 +141,13 @@
     }
 
     @include embedded-list-variant();
+
+    .data-grid-col {
+        .data-grid-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); // smaller cards
+        }
+    }
 }
 
 
@@ -158,9 +156,16 @@
 // ---
 
 .embedded-list-section {
-    @include embedded-list-variant();
+    //@include embedded-list-variant();
 
     .accordion-body {
         padding: 0; // maybe not the best way to handle it
+    }
+
+    .data-grid-col {
+        .data-grid-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); // smaller cards
+        }
     }
 }

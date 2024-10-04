@@ -7,15 +7,20 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Manager\ClientManager;
 use Claroline\AppBundle\Manager\SecurityManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LocaleManager;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 
 /**
@@ -24,8 +29,10 @@ use Twig\Environment;
 class PlatformController
 {
     public function __construct(
+        private readonly AuthorizationCheckerInterface $authorization,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly Environment $templating,
+        private readonly ObjectManager $om,
         private readonly PlatformConfigurationHandler $configHandler,
         private readonly LocaleManager $localeManager,
         private readonly SecurityManager $securityManager,
@@ -103,5 +110,30 @@ class PlatformController
         return new RedirectResponse(
             $request->headers->get('referer')
         );
+    }
+
+    #[Route(path: '/o/{organization}', name: 'claro_organization_change', methods: ['GET', 'PUT'])]
+    public function changeOrganizationAction(
+        #[MapEntity(mapping: ['organization' => 'uuid'])]
+        Organization $organization
+    ): JsonResponse {
+        $currentUser = $this->tokenStorage->getToken()?->getUser();
+        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY') || !$currentUser->hasOrganization($organization)) {
+            throw new AccessDeniedException();
+        }
+
+        $currentUser->setMainOrganization($organization);
+        $this->om->persist($organization);
+        $this->om->persist($currentUser);
+        $this->om->flush();
+
+        //$this->tokenStorage->getToken()->setUser($currentUser);
+
+        //$this->om->refresh($currentUser);
+
+        return new JsonResponse([
+            //'contextFavorites' => $this->contextProvider->getFavoriteContexts(),
+            //'currentOrganization' => $this->serializer->serialize($currentUser->getMainOrganization(), [Options::SERIALIZE_MINIMAL]),
+        ]);
     }
 }

@@ -10,7 +10,7 @@ import {PaginationSize} from '#/main/app/content/pagination/components/size'
 const Pagination = props => {
   if (props.availableSizes[0] < props.totalResults) {
     return (
-      <div className="pagination-container" role="presentation">
+      <div className="pagination-container gap-2" role="presentation">
         <PaginationPages
           disabled={props.disabled}
           current={props.current}

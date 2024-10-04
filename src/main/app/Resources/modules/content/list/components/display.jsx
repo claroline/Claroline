@@ -1,4 +1,5 @@
 import React from 'react'
+import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
@@ -11,7 +12,7 @@ import DISPLAY_MODES from '#/main/app/content/list/modes'
 const ListDisplay = props =>
   <Button
     id="list-format-toggle"
-    className="list-header-btn btn btn-text-secondary"
+    className={classes('list-header-btn btn btn-text-body px-2', props.className)}
     type={MENU_BUTTON}
     icon={DISPLAY_MODES[props.current].icon}
     label={trans('list_display_modes_title')}
@@ -31,7 +32,8 @@ const ListDisplay = props =>
   />
 
 implementPropTypes(ListDisplay, DataListDisplay, {
-  disabled: T.bool
+  disabled: T.bool,
+  className: T.string
 })
 
 export {

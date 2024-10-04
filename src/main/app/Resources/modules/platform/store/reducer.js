@@ -1,8 +1,8 @@
+import cloneDeep from 'lodash/cloneDeep'
 import {makeReducer} from '#/main/app/store/reducer'
 
 import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'
 import {FAVORITE_TOGGLE, PLATFORM_SET_CURRENT_ORGANIZATION} from '#/main/app/platform/store/actions'
-import cloneDeep from 'lodash/cloneDeep'
 
 export const reducer = {
   contexts: makeReducer([], {

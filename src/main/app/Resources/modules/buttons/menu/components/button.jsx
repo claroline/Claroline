@@ -49,7 +49,7 @@ const StandardMenu = forwardRef((props, ref) => {
       groups: groupActions,
       dangerous: dangerousActions
     }
-  }, props.menu.items.map(i => i.name))
+  }, props.menu.items)
 
   return (
     <Menu

@@ -27,7 +27,7 @@ const OrganizationsModal = (props) => {
               primaryAction={{
                 type: CALLBACK_BUTTON,
                 callback: () => {
-                  dispatch(actions.setCurrentOrganizations(organization))
+                  dispatch(actions.changeOrganization(organization))
                   props.fadeModal()
                 }
               }}

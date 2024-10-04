@@ -17,7 +17,7 @@ import isArray from 'lodash/isArray'
 const StaticPrimaryAction = props => {
   if (isEmpty(props.action) || props.action.disabled || (props.action.displayed !== undefined && !props.action.displayed)) {
     return (
-      <span className={props.className}>
+      <span className={props.className} role="presentation">
         {props.children}
       </span>
     )
@@ -92,7 +92,7 @@ ListPrimaryAction.propTypes = {
  * Bulk actions available for selected data items.
  */
 const ListBulkActions = props =>
-  <div className="data-bulk-actions list-selected text-primary-emphasis bg-primary-subtle">
+  <div className={classes('data-bulk-actions list-selected text-primary-emphasis bg-primary-subtle', props.className)}>
     <div className="list-selected-label">
       <span className="fa fa-level-up fa-rotate-90 fa-fw icon-with-text-right" />
       {transChoice('list_selected_count', props.count, {count: props.count}, 'platform')}
@@ -112,6 +112,7 @@ const ListBulkActions = props =>
   </div>
 
 ListBulkActions.propTypes = {
+  className: T.string,
   count: T.number.isRequired,
   actions: T.oneOfType([
     // a regular array of actions
