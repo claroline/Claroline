@@ -18,7 +18,7 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class RoleSubscriber implements EventSubscriberInterface
+final class RoleSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly Connection $conn,

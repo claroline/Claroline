@@ -18,38 +18,9 @@ import {PageListSection} from '#/main/app/page/components/list-section'
 const UserList = props =>
   <ToolPage
     title={trans('users')}
-    primaryAction="add"
-    actions={[
-      'workspace' === props.contextType ?
-        {
-          name: 'add',
-          type: MODAL_BUTTON,
-          label: trans('register_users'),
-          icon: 'fa fa-fw fa-plus',
-          primary: true,
-          displayed: props.canRegister,
-
-          // select users to register
-          modal: [MODAL_REGISTER, {
-            title: trans('register_users'),
-            subtitle: trans('workspace_register_select_users'),
-            workspaces: [props.contextData],
-            onRegister: props.registerUsers,
-            mode: 'users'
-          }]
-        } : {
-          name: 'add',
-          type: LINK_BUTTON,
-          label: trans('register_users'),
-          icon: 'fa fa-fw fa-plus',
-          target: `${props.path}/users/new`,
-          displayed: props.canRegister && !props.limitReached,
-          primary: true
-        }
-    ]}
   >
     {props.limitReached && props.canRegister &&
-      <Alert type="warning" className="mt-3">{trans('users_limit_reached')}</Alert>
+      <Alert type="warning">{trans('users_limit_reached')}</Alert>
     }
 
     <PageListSection>
@@ -60,6 +31,33 @@ const UserList = props =>
         url={!isEmpty(props.contextData) ?
           ['apiv2_workspace_list_users', {id: props.contextData.id}] :
           ['apiv2_user_list']
+        }
+        addAction={'workspace' === props.contextType ?
+          {
+            name: 'add',
+            type: MODAL_BUTTON,
+            label: trans('register_users'),
+            // icon: 'fa fa-fw fa-plus',
+            primary: true,
+            displayed: props.canRegister,
+
+            // select users to register
+            modal: [MODAL_REGISTER, {
+              title: trans('register_users'),
+              subtitle: trans('workspace_register_select_users'),
+              workspaces: [props.contextData],
+              onRegister: props.registerUsers,
+              mode: 'users'
+            }]
+          } : {
+            name: 'add',
+            type: LINK_BUTTON,
+            label: trans('register_users'),
+            // icon: 'fa fa-fw fa-plus',
+            target: `${props.path}/users/new`,
+            displayed: props.canRegister && !props.limitReached,
+            primary: true
+          }
         }
         customActions={(rows) => !isEmpty(props.contextData) ? [{
           name: 'unregister',

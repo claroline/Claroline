@@ -38,7 +38,7 @@ const Users = (props) => {
           filterable: param('community.username'),
           primary: param('community.username'),
           render: (user) => (
-            <div className="d-flex flex-direction-row gap-3 align-items-center">
+            <div className="d-flex flex-direction-row gap-3 align-items-center" role="presentation">
               <UserAvatar user={user} size="xs" />
               {user.username}
             </div>

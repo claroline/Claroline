@@ -6,7 +6,6 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {Button} from '#/main/app/action'
 import {PageTabbedSection} from '#/main/app/page/components/tabbed-section'
 
 import {UserList} from '#/main/community/user/components/list'
@@ -62,7 +61,7 @@ const OrganizationShow = props =>
 
     <PageTabbedSection
       size="md"
-      className="py-3"
+      className="py-3 embedded-list-section"
       path={route(props.organization, props.path)}
       tabs={[
         {
@@ -71,160 +70,140 @@ const OrganizationShow = props =>
           icon: 'fa fa-user',
           title: trans('users', {}, 'community'),
           render: () => (
-            <>
-              {hasPermission('edit', props.organization) &&
-                <Button
-                  className="btn btn-primary mt-3"
-                  {...{
-                    name: 'add',
-                    type: MODAL_BUTTON,
-                    label: trans('add_users'),
-                    modal: [MODAL_USERS, {
-                      selectAction: (users) => ({
-                        type: CALLBACK_BUTTON,
-                        label: trans('add', {}, 'actions'),
-                        callback: () => props.addUsers(props.organization.id, users.map(user => user.id))
-                      })
-                    }]
-                  }}
-                />
-              }
-
-              <UserList
-                className="mt-3"
-                path={props.path}
-                name={`${selectors.FORM_NAME}.users`}
-                url={['apiv2_organization_list_users', {id: props.organization.id}]}
-                autoload={!!props.organization.id}
-                delete={{
-                  url: ['apiv2_organization_remove_users', {id: props.organization.id}],
-                  displayed: () => hasPermission('edit', props.organization)
-                }}
-                actions={undefined}
-              />
-            </>
+            <UserList
+              className="mt-3"
+              path={props.path}
+              name={`${selectors.FORM_NAME}.users`}
+              url={['apiv2_organization_list_users', {id: props.organization.id}]}
+              autoload={!!props.organization.id}
+              addAction={{
+                name: 'add',
+                type: MODAL_BUTTON,
+                icon: 'fa fa-fw fa-plus',
+                tooltip: 'bottom',
+                label: trans('add_users'),
+                displayed: hasPermission('edit', props.organization),
+                modal: [MODAL_USERS, {
+                  selectAction: (users) => ({
+                    type: CALLBACK_BUTTON,
+                    label: trans('add', {}, 'actions'),
+                    callback: () => props.addUsers(props.organization.id, users.map(user => user.id))
+                  })
+                }]
+              }}
+              delete={{
+                url: ['apiv2_organization_remove_users', {id: props.organization.id}],
+                displayed: () => hasPermission('edit', props.organization)
+              }}
+              actions={undefined}
+            />
           )
         }, {
           path: '/managers',
           icon: 'fa fa-user-tie',
           title: trans('managers', {}, 'community'),
           render: () => (
-            <>
-              {hasPermission('edit', props.organization) &&
-                <Button
-                  className="btn btn-primary mt-3"
-                  {...{
-                    name: 'add-managers',
-                    type: MODAL_BUTTON,
-                    label: trans('add_managers'),
-                    modal: [MODAL_USERS, {
-                      selectAction: (users) => ({
-                        type: CALLBACK_BUTTON,
-                        label: trans('add', {}, 'actions'),
-                        callback: () => props.addManagers(props.organization.id, users.map(user => user.id))
-                      })
-                    }]
-                  }}
-                />
-              }
-
-              <UserList
-                className="mt-3"
-                path={props.path}
-                name={`${selectors.FORM_NAME}.managers`}
-                url={['apiv2_organization_list_managers', {id: props.organization.id}]}
-                autoload={!!props.organization.id}
-                delete={{
-                  url: ['apiv2_organization_remove_managers', {id: props.organization.id}],
-                  displayed: () => hasPermission('edit', props.organization)
-                }}
-                actions={undefined}
-              />
-            </>
+            <UserList
+              className="mt-3"
+              path={props.path}
+              name={`${selectors.FORM_NAME}.managers`}
+              url={['apiv2_organization_list_managers', {id: props.organization.id}]}
+              autoload={!!props.organization.id}
+              addAction={{
+                name: 'add-managers',
+                type: MODAL_BUTTON,
+                icon: 'fa fa-fw fa-plus',
+                tooltip: 'bottom',
+                label: trans('add_managers'),
+                displayed: hasPermission('edit', props.organization),
+                modal: [MODAL_USERS, {
+                  selectAction: (users) => ({
+                    type: CALLBACK_BUTTON,
+                    label: trans('add', {}, 'actions'),
+                    callback: () => props.addManagers(props.organization.id, users.map(user => user.id))
+                  })
+                }]
+              }}
+              delete={{
+                url: ['apiv2_organization_remove_managers', {id: props.organization.id}],
+                displayed: () => hasPermission('edit', props.organization)
+              }}
+              actions={undefined}
+            />
           )
         }, {
           path: '/groups',
           icon: 'fa fa-users',
           title: trans('groups', {}, 'community'),
           render: () => (
-            <>
-              {hasPermission('edit', props.organization) &&
-                <Button
-                  className="btn btn-primary mt-3"
-                  {...{
-                    name: 'add',
-                    type: MODAL_BUTTON,
-                    label: trans('add_groups'),
-                    modal: [MODAL_GROUPS, {
-                      selectAction: (groups) => ({
-                        type: CALLBACK_BUTTON,
-                        label: trans('add', {}, 'actions'),
-                        callback: () => props.addGroups(props.organization.id, groups.map(group => group.id))
-                      })
-                    }]
-                  }}
-                />
-              }
-
-              <GroupList
-                className="mt-3"
-                path={props.path}
-                name={`${selectors.FORM_NAME}.groups`}
-                url={['apiv2_organization_list_groups', {id: props.organization.id}]}
-                autoload={!!props.organization.id}
-                delete={{
-                  url: ['apiv2_organization_remove_groups', {id: props.organization.id}],
-                  displayed: () => hasPermission('edit', props.organization)
-                }}
-                actions={undefined}
-              />
-            </>
+            <GroupList
+              className="mt-3"
+              path={props.path}
+              name={`${selectors.FORM_NAME}.groups`}
+              url={['apiv2_organization_list_groups', {id: props.organization.id}]}
+              autoload={!!props.organization.id}
+              addAction={{
+                name: 'add',
+                type: MODAL_BUTTON,
+                icon: 'fa fa-fw fa-plus',
+                tooltip: 'bottom',
+                label: trans('add_groups'),
+                displayed: hasPermission('edit', props.organization),
+                modal: [MODAL_GROUPS, {
+                  selectAction: (groups) => ({
+                    type: CALLBACK_BUTTON,
+                    label: trans('add', {}, 'actions'),
+                    callback: () => props.addGroups(props.organization.id, groups.map(group => group.id))
+                  })
+                }]
+              }}
+              delete={{
+                url: ['apiv2_organization_remove_groups', {id: props.organization.id}],
+                displayed: () => hasPermission('edit', props.organization)
+              }}
+              actions={undefined}
+            />
           )
         }, {
           path: '/workspaces',
           icon: 'fa fa-book',
           title: trans('workspaces'),
           render: () => (
-            <>
-              {hasPermission('edit', props.organization) &&
-                <Button
-                  className="btn btn-primary mt-3"
-                  {...{
-                    name: 'add-workspace',
-                    type: MODAL_BUTTON,
-                    label: trans('add_workspaces'),
-                    modal: [MODAL_WORKSPACES, {
-                      url: ['apiv2_workspace_list'],
-                      selectAction: (workspaces) => ({
-                        type: CALLBACK_BUTTON,
-                        label: trans('add', {}, 'actions'),
-                        callback: () => props.addWorkspaces(props.organization.id, workspaces.map(workspace => workspace.id))
-                      })
-                    }]
-                  }}
-                />
-              }
-
-              <WorkspaceList
-                className="mt-3"
-                name={`${selectors.FORM_NAME}.workspaces`}
-                url={['apiv2_organization_list_workspaces', {id: props.organization.id}]}
-                autoload={!!props.organization.id}
-                delete={{
-                  url: ['apiv2_organization_remove_workspaces', {id: props.organization.id}],
-                  displayed: () => hasPermission('edit', props.organization)
-                }}
-                actions={undefined}
-                customDefinition={[
-                  {
-                    name: 'meta.model',
-                    label: trans('model'),
-                    type: 'boolean',
-                    alias: 'model'
-                  }
-                ]}
-              />
-            </>
+            <WorkspaceList
+              className="mt-3"
+              name={`${selectors.FORM_NAME}.workspaces`}
+              url={['apiv2_organization_list_workspaces', {id: props.organization.id}]}
+              autoload={!!props.organization.id}
+              addAction={{
+                name: 'add-workspace',
+                type: MODAL_BUTTON,
+                icon: 'fa fa-fw fa-plus',
+                tooltip: 'bottom',
+                label: trans('add_workspaces'),
+                displayed: hasPermission('edit', props.organization),
+                modal: [MODAL_WORKSPACES, {
+                  url: ['apiv2_workspace_list'],
+                  selectAction: (workspaces) => ({
+                    type: CALLBACK_BUTTON,
+                    label: trans('add', {}, 'actions'),
+                    callback: () => props.addWorkspaces(props.organization.id, workspaces.map(workspace => workspace.id))
+                  })
+                }]
+              }}
+              delete={{
+                url: ['apiv2_organization_remove_workspaces', {id: props.organization.id}],
+                displayed: () => hasPermission('edit', props.organization)
+              }}
+              actions={undefined}
+              customDefinition={[
+                {
+                  name: 'meta.model',
+                  label: trans('model'),
+                  type: 'boolean',
+                  alias: 'model'
+                }
+              ]}
+            />
           )
         }
       ]}

@@ -11,28 +11,22 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * Update the user last activity date at the end of each request.
  */
-class UserActivitySubscriber implements EventSubscriberInterface
+final class UserActivitySubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var ObjectManager */
-    private $om;
-
-    public function __construct(TokenStorageInterface $tokenStorage, ObjectManager $om)
-    {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om
+    ) {
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-             TerminateEvent::class => ['setLastActivityDate', -500], // arbitrary low priority to be the last
+            TerminateEvent::class => ['setLastActivityDate', -500], // arbitrary low priority to be the last
         ];
     }
 
-    public function setLastActivityDate()
+    public function setLastActivityDate(): void
     {
         $currentUser = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()?->getUser() : null;
         if ($currentUser instanceof User) {

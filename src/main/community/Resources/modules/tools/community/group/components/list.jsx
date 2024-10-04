@@ -16,34 +16,6 @@ import {PageListSection} from '#/main/app/page/components/list-section'
 const GroupList = props =>
   <ToolPage
     title={trans('groups', {}, 'community')}
-    primaryAction="add"
-    actions={['desktop' === props.contextType ?
-      {
-        name: 'add',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-plus',
-        label: trans('add_group', {}, 'actions'),
-        target: `${props.path}/groups/new`,
-        displayed: props.canEdit,
-        primary: true
-      } : {
-        name: 'add',
-        type: MODAL_BUTTON,
-        label: trans('register_groups'),
-        icon: 'fa fa-fw fa-plus',
-        primary: true,
-        displayed: props.canRegister,
-
-        // select groups to register
-        modal: [MODAL_REGISTER, {
-          title: trans('register_groups'),
-          subtitle: trans('workspace_register_select_groups'),
-          workspaces: [props.contextData],
-          onRegister: props.registerGroups,
-          mode: 'groups'
-        }]
-      }
-    ]}
   >
     <PageListSection>
       <BaseGroupList
@@ -53,6 +25,30 @@ const GroupList = props =>
         url={!isEmpty(props.contextData) ?
           ['apiv2_workspace_list_groups', {id: props.contextData.id}]:
           ['apiv2_group_list']
+        }
+        addAction={'desktop' === props.contextType ?
+          {
+            name: 'add',
+            type: LINK_BUTTON,
+            // icon: 'fa fa-fw fa-plus',
+            label: trans('add_group', {}, 'actions'),
+            target: `${props.path}/groups/new`,
+            displayed: props.canEdit
+          } : {
+            name: 'add',
+            type: MODAL_BUTTON,
+            label: trans('register_groups'),
+            // icon: 'fa fa-fw fa-plus',
+            displayed: props.canRegister,
+            // select groups to register
+            modal: [MODAL_REGISTER, {
+              title: trans('register_groups'),
+              subtitle: trans('workspace_register_select_groups'),
+              workspaces: [props.contextData],
+              onRegister: props.registerGroups,
+              mode: 'groups'
+            }]
+          }
         }
         customActions={(rows) => !isEmpty(props.contextData) ? [
           {

@@ -95,7 +95,7 @@ const TeamShow = (props) => {
 
       <PageTabbedSection
         size="md"
-        className="py-3"
+        className="py-3 embedded-list-section"
         path={route(props.team, props.path)}
         tabs={[
           {
@@ -104,82 +104,71 @@ const TeamShow = (props) => {
             icon: 'fa fa-user',
             title: trans('users', {}, 'community'),
             render: () => (
-              <>
-                {hasPermission('edit', props.team) &&
-                  <Button
-                    className="btn btn-primary mt-3"
-                    {...{
-                      name: 'add-users',
-                      type: MODAL_BUTTON,
-                      label: trans('add_users'),
-                      disabled: full,
-                      modal: [MODAL_USERS, {
-                        url: ['apiv2_workspace_list_users', {id: props.contextData.id}],
-                        selectAction: (selected) => ({
-                          type: CALLBACK_BUTTON,
-                          label: trans('add', {}, 'actions'),
-                          callback: () => props.addUsers(props.team.id, selected)
-                        })
-                      }]
-                    }}
-                  />
-                }
-
-                <UserList
-                  className="mt-3"
-                  path={props.path}
-                  name={`${selectors.FORM_NAME}.users`}
-                  url={['apiv2_team_list_users', {id: get(props.team, 'id'), role: 'user'}]}
-                  autoload={!!props.team.id}
-                  delete={{
-                    url: ['apiv2_team_unregister', {id: get(props.team, 'id'), role: 'user'}],
-                    label: trans('unregister', {}, 'actions'),
-                    displayed: () => hasPermission('edit', props.team)
-                  }}
-                  actions={undefined}
-                />
-              </>
+              <UserList
+                className="mt-3"
+                path={props.path}
+                name={`${selectors.FORM_NAME}.users`}
+                url={['apiv2_team_list_users', {id: get(props.team, 'id'), role: 'user'}]}
+                autoload={!!props.team.id}
+                addAction={{
+                  name: 'add-users',
+                  type: MODAL_BUTTON,
+                  icon: 'fa fa-fw fa-plus',
+                  label: trans('add_users'),
+                  tooltip: 'bottom',
+                  disabled: full,
+                  displayed: hasPermission('edit', props.team),
+                  modal: [MODAL_USERS, {
+                    url: ['apiv2_workspace_list_users', {id: props.contextData.id}],
+                    selectAction: (selected) => ({
+                      type: CALLBACK_BUTTON,
+                      label: trans('add', {}, 'actions'),
+                      callback: () => props.addUsers(props.team.id, selected)
+                    })
+                  }]
+                }}
+                delete={{
+                  url: ['apiv2_team_unregister', {id: get(props.team, 'id'), role: 'user'}],
+                  label: trans('unregister', {}, 'actions'),
+                  displayed: () => hasPermission('edit', props.team)
+                }}
+                actions={undefined}
+              />
             )
           }, {
             path: '/managers',
             icon: 'fa fa-user-tie',
             title: trans('managers', {}, 'community'),
             render: () => (
-              <>
-                {hasPermission('edit', props.team) &&
-                  <Button
-                    className="btn btn-primary mt-3"
-                    {...{
-                      name: 'add-managers',
-                      type: MODAL_BUTTON,
-                      label: trans('add_managers'),
-                      displayed: hasPermission('edit', props.team),
-                      modal: [MODAL_USERS, {
-                        url: ['apiv2_workspace_list_users', {id: props.contextData.id}],
-                        selectAction: (selected) => ({
-                          type: CALLBACK_BUTTON,
-                          label: trans('add', {}, 'actions'),
-                          callback: () => props.addManagers(props.team.id, selected)
-                        })
-                      }]
-                    }}
-                  />
-                }
-
-                <UserList
-                  className="mt-3"
-                  path={props.path}
-                  name={`${selectors.FORM_NAME}.managers`}
-                  url={['apiv2_team_list_users', {id: get(props.team, 'id'), role: 'manager'}]}
-                  autoload={!!props.team.id}
-                  delete={{
-                    url: ['apiv2_team_unregister', {id: get(props.team, 'id'), role: 'manager'}],
-                    label: trans('unregister', {}, 'actions'),
-                    displayed: () => hasPermission('edit', props.team)
-                  }}
-                  actions={undefined}
-                />
-              </>
+              <UserList
+                className="mt-3"
+                path={props.path}
+                name={`${selectors.FORM_NAME}.managers`}
+                url={['apiv2_team_list_users', {id: get(props.team, 'id'), role: 'manager'}]}
+                autoload={!!props.team.id}
+                addAction={{
+                  name: 'add-managers',
+                  type: MODAL_BUTTON,
+                  icon: 'fa fa-fw fa-plus',
+                  label: trans('add_managers'),
+                  tooltip: 'bottom',
+                  displayed: hasPermission('edit', props.team),
+                  modal: [MODAL_USERS, {
+                    url: ['apiv2_workspace_list_users', {id: props.contextData.id}],
+                    selectAction: (selected) => ({
+                      type: CALLBACK_BUTTON,
+                      label: trans('add', {}, 'actions'),
+                      callback: () => props.addManagers(props.team.id, selected)
+                    })
+                  }]
+                }}
+                delete={{
+                  url: ['apiv2_team_unregister', {id: get(props.team, 'id'), role: 'manager'}],
+                  label: trans('unregister', {}, 'actions'),
+                  displayed: () => hasPermission('edit', props.team)
+                }}
+                actions={undefined}
+              />
             )
           }
         ]}

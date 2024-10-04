@@ -6,7 +6,6 @@ import {trans} from '#/main/app/intl/translation'
 import {route} from '#/main/community/role/routing'
 import {hasPermission} from '#/main/app/security'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {Button} from '#/main/app/action'
 import {PageSection} from '#/main/app/page/components/section'
 import {PageTabbedSection} from '#/main/app/page/components/tabbed-section'
 import {ContentHtml} from '#/main/app/content/components/html'
@@ -124,7 +123,7 @@ const RoleShow = (props) =>
     {'ROLE_ANONYMOUS' !== props.role.name &&
       <PageTabbedSection
         size="md"
-        className="py-3"
+        className="py-3 embedded-list-section"
         path={route(props.role, props.path)}
         tabs={[
           {
@@ -133,76 +132,66 @@ const RoleShow = (props) =>
             icon: 'fa fa-user',
             title: trans('users', {}, 'community'),
             render: () => (
-              <>
-                {hasPermission('edit', props.role) && ('workspace' !== props.contextType || constants.ROLE_PLATFORM !== props.role.type) &&
-                  <Button
-                    className="btn btn-primary mt-3"
-                    {...{
-                      name: 'add-users',
-                      type: MODAL_BUTTON,
-                      label: trans('add_users'),
-                      modal: [MODAL_USERS, {
-                        selectAction: (selected) => ({
-                          type: CALLBACK_BUTTON,
-                          label: trans('add', {}, 'actions'),
-                          callback: () => props.addUsers(props.role.id, selected)
-                        })
-                      }]
-                    }}
-                  />
-                }
-
-                <UserList
-                  className="mt-3"
-                  path={props.path}
-                  name={`${selectors.FORM_NAME}.users`}
-                  url={['apiv2_role_list_users', {id: props.role.id}]}
-                  autoload={!!props.role.id}
-                  delete={{
-                    url: ['apiv2_role_remove_users', {id: props.role.id}],
-                    displayed: () => (hasPermission('edit', props.role) && ('workspace' !== props.contextType || constants.ROLE_PLATFORM !== props.role.type))
-                  }}
-                  actions={undefined}
-                />
-              </>
+              <UserList
+                className="mt-3"
+                path={props.path}
+                name={`${selectors.FORM_NAME}.users`}
+                url={['apiv2_role_list_users', {id: props.role.id}]}
+                autoload={!!props.role.id}
+                addAction={{
+                  name: 'add-users',
+                  type: MODAL_BUTTON,
+                  icon: 'fa fa-fw fa-plus',
+                  label: trans('add_users'),
+                  tooltip: 'bottom',
+                  displayed: hasPermission('edit', props.role) && ('workspace' !== props.contextType || constants.ROLE_PLATFORM !== props.role.type),
+                  modal: [MODAL_USERS, {
+                    selectAction: (selected) => ({
+                      type: CALLBACK_BUTTON,
+                      label: trans('add', {}, 'actions'),
+                      callback: () => props.addUsers(props.role.id, selected)
+                    })
+                  }]
+                }}
+                delete={{
+                  url: ['apiv2_role_remove_users', {id: props.role.id}],
+                  displayed: () => (hasPermission('edit', props.role) && ('workspace' !== props.contextType || constants.ROLE_PLATFORM !== props.role.type))
+                }}
+                actions={undefined}
+              />
             )
           }, {
             path: '/groups',
             icon: 'fa fa-users',
             title: trans('groups', {}, 'community'),
             render: () => (
-              <>
-                {hasPermission('edit', props.role) && ('workspace' !== props.contextType || constants.ROLE_PLATFORM !== props.role.type) &&
-                  <Button
-                    className="btn btn-primary mt-3"
-                    {...{
-                      name: 'add-groups',
-                      type: MODAL_BUTTON,
-                      label: trans('add_groups'),
-                      modal: [MODAL_GROUPS, {
-                        selectAction: (selected) => ({
-                          type: CALLBACK_BUTTON,
-                          label: trans('add', {}, 'actions'),
-                          callback: () => props.addGroups(props.role.id, selected)
-                        })
-                      }]
-                    }}
-                  />
-                }
-
-                <GroupList
-                  className="mt-3"
-                  path={props.path}
-                  name={`${selectors.FORM_NAME}.groups`}
-                  url={['apiv2_role_list_groups', {id: props.role.id}]}
-                  autoload={!!props.role.id}
-                  delete={{
-                    url: ['apiv2_role_remove_groups', {id: props.role.id}],
-                    displayed: () => (hasPermission('edit', props.role) && ('workspace' !== props.contextType || constants.ROLE_PLATFORM !== props.role.type))
-                  }}
-                  actions={undefined}
-                />
-              </>
+              <GroupList
+                className="mt-3"
+                path={props.path}
+                name={`${selectors.FORM_NAME}.groups`}
+                url={['apiv2_role_list_groups', {id: props.role.id}]}
+                autoload={!!props.role.id}
+                addAction={{
+                  name: 'add-groups',
+                  type: MODAL_BUTTON,
+                  icon: 'fa fa-fw fa-plus',
+                  label: trans('add_groups'),
+                  tooltip: 'bottom',
+                  displayed: hasPermission('edit', props.role) && ('workspace' !== props.contextType || constants.ROLE_PLATFORM !== props.role.type),
+                  modal: [MODAL_GROUPS, {
+                    selectAction: (selected) => ({
+                      type: CALLBACK_BUTTON,
+                      label: trans('add', {}, 'actions'),
+                      callback: () => props.addGroups(props.role.id, selected)
+                    })
+                  }]
+                }}
+                delete={{
+                  url: ['apiv2_role_remove_groups', {id: props.role.id}],
+                  displayed: () => (hasPermission('edit', props.role) && ('workspace' !== props.contextType || constants.ROLE_PLATFORM !== props.role.type))
+                }}
+                actions={undefined}
+              />
             )
           }
         ]}

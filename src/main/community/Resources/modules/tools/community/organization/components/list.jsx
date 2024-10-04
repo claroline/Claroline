@@ -2,7 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool'
 
@@ -13,18 +12,6 @@ import {PageListSection} from '#/main/app/page/components/list-section'
 const OrganizationList = (props) =>
   <ToolPage
     title={trans('organizations', {}, 'community')}
-    primaryAction="add"
-    actions={[
-      {
-        name: 'add',
-        type: LINK_BUTTON,
-        icon: 'fa fa-plus',
-        label: trans('add_organization', {}, 'actions'),
-        target: `${props.path}/organizations/new`,
-        primary: true,
-        displayed: props.canCreate
-      }
-    ]}
   >
     <PageListSection>
       <BaseOrganizationList
@@ -32,6 +19,14 @@ const OrganizationList = (props) =>
         path={props.path}
         name={selectors.LIST_NAME}
         url={['apiv2_organization_list']}
+        addAction={{
+          name: 'add',
+          type: LINK_BUTTON,
+          // icon: 'fa fa-plus',
+          label: trans('add_organization', {}, 'actions'),
+          target: `${props.path}/organizations/new`,
+          displayed: props.canCreate
+        }}
       />
     </PageListSection>
   </ToolPage>
@@ -44,4 +39,3 @@ OrganizationList.propTypes = {
 export {
   OrganizationList
 }
-

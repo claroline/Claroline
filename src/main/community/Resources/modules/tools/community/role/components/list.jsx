@@ -13,18 +13,6 @@ import {PageListSection} from '#/main/app/page/components/list-section'
 const RoleList = props =>
   <ToolPage
     title={trans('roles', {}, 'community')}
-    primaryAction="add"
-    actions={[
-      {
-        name: 'add',
-        type: LINK_BUTTON,
-        label: trans('add_role', {}, 'actions'),
-        icon: 'fa fa-fw fa-plus',
-        target: `${props.path}/roles/new`,
-        primary: true,
-        displayed: props.canCreate
-      }
-    ]}
   >
     <PageListSection>
       <BaseRoleList
@@ -35,6 +23,15 @@ const RoleList = props =>
           ['apiv2_workspace_list_roles_configurable', {workspace: props.contextData.id}] :
           ['apiv2_role_list']
         }
+        addAction={{
+          name: 'add',
+          type: LINK_BUTTON,
+          label: trans('add_role', {}, 'actions'),
+          // icon: 'fa fa-fw fa-plus',
+          target: `${props.path}/roles/new`,
+          primary: true,
+          displayed: props.canCreate
+        }}
       />
     </PageListSection>
   </ToolPage>

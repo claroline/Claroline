@@ -67,6 +67,7 @@ const UserShow = (props) =>
               ]}
             >
               <GroupList
+                flush={true}
                 path={props.path}
                 name={`${selectors.FORM_NAME}.groups`}
                 url={['apiv2_user_list_groups', {id: props.user.id}]}
@@ -103,6 +104,7 @@ const UserShow = (props) =>
               ]}
             >
               <OrganizationList
+                flush={true}
                 path={props.path}
                 name={`${selectors.FORM_NAME}.organizations`}
                 url={['apiv2_user_list_organizations', {id: props.user.id}]}
@@ -139,6 +141,7 @@ const UserShow = (props) =>
                 ]}
               >
                 <RoleList
+                  flush={true}
                   path={props.path}
                   name={`${selectors.FORM_NAME}.roles`}
                   url={['apiv2_user_list_roles', {id: props.user.id}]}

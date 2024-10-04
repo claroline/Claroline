@@ -53,11 +53,11 @@ class Team
     private Collection $users;
 
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    #[ORM\OneToOne(targetEntity: Role::class, cascade: ['remove'])]
+    #[ORM\OneToOne(targetEntity: Role::class)]
     private ?Role $role = null;
 
     #[ORM\JoinColumn(name: 'manager_role_id', nullable: true, onDelete: 'SET NULL')]
-    #[ORM\OneToOne(targetEntity: Role::class, cascade: ['remove'])]
+    #[ORM\OneToOne(targetEntity: Role::class)]
     private ?Role $managerRole = null;
 
     #[ORM\Column(name: 'max_users', type: Types::INTEGER, nullable: true)]
