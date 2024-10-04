@@ -33,7 +33,7 @@ class Revision
     private ?string $content = null;
 
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user;
 
     public function getVersion(): int

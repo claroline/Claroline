@@ -44,10 +44,6 @@ class Subject
     #[Gedmo\Timestampable(on: 'update')]
     protected $updated;
 
-    /**
-     *
-     * @var Forum
-     */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'subjects')]
     protected ?Forum $forum = null;
@@ -60,12 +56,8 @@ class Subject
     #[ORM\OrderBy(['id' => 'ASC'])]
     protected Collection $messages;
 
-    /**
-     *
-     * @var User
-     */
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $creator = null;
 
     /**

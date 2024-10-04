@@ -11,11 +11,10 @@
 
 namespace Claroline\CoreBundle\Entity\Organization;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
 
 #[ORM\Table(name: 'user_organization')]
 #[ORM\UniqueConstraint(name: 'organization_unique_user', columns: ['user_id', 'organization_id'])]
@@ -25,7 +24,7 @@ class UserOrganizationReference
     use Id;
 
     #[ORM\JoinColumn(name: 'user_id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'userOrganizationReferences')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userOrganizationReferences')]
     private User $user;
 
     #[ORM\JoinColumn(name: 'organization_id', nullable: false, onDelete: 'CASCADE')]

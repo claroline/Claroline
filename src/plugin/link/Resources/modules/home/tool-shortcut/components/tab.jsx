@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {url} from '#/main/app/api'
-import {HomePage} from '#/plugin/home/tools/home/containers/page'
+import {HomePage} from '#/plugin/home/tools/home/components/page'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
 
 import {route as desktopRoute} from '#/main/core/tool/routing'

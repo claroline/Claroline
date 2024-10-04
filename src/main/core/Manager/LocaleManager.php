@@ -112,7 +112,7 @@ class LocaleManager
 
     public function getLocale(User $user): string
     {
-        return $user->getLocale() ? $user->getLocale() : $this->getDefault();
+        return $user->getLocale() ?: $this->getDefault();
     }
 
     public function getLocaleDate(\DateTimeInterface $date): \DateTimeInterface

@@ -13,7 +13,7 @@ const EditorArchives = () =>
     managerOnly={true}
   >
     <WorkspaceList
-      url={['apiv2_workspace_list_archive']}
+      url={['apiv2_workspace_archive_list']}
       name={selectors.ARCHIVES_LIST_NAME}
       customDefinition={[
         {

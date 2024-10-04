@@ -30,7 +30,7 @@ export default (workspaces, refresher) => {
     request: {
       url: url(['apiv2_workspace_archive'], {ids: processable.map(workspace => workspace.id)}),
       request: {
-        method: 'PUT'
+        method: 'POST'
       },
       success: (response) => refresher.update(response)
     },

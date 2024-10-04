@@ -79,7 +79,6 @@ const LogsComponent = props =>
       >
         <FormSection
           id="log-section"
-          className="embedded-list-section"
           title={trans('log')}
         >
           <pre>{props.data.log}</pre>
@@ -87,7 +86,6 @@ const LogsComponent = props =>
 
         <FormSection
           id="success-section"
-          className="embedded-list-section"
           title={trans('success')}
         >
           <Fragment>
@@ -104,7 +102,6 @@ const LogsComponent = props =>
 
         <FormSection
           id="error-section"
-          className="embedded-list-section"
           title={trans('error')}
         >
           <Fragment>

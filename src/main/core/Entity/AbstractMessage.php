@@ -11,10 +11,9 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
-use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -25,31 +24,27 @@ abstract class AbstractMessage
     use Uuid;
 
     #[ORM\Column(name: 'content', type: Types::TEXT)]
-    protected $content;
+    protected ?string $content = null;
 
     #[ORM\Column(name: 'created', type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
-    protected $creationDate;
+    protected ?\DateTimeInterface $creationDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'update')]
-    protected $updated;
+    protected ?\DateTimeInterface $updated = null;
 
-    /**
-     *
-     * @var User
-     */
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $creator = null;
 
     #[ORM\Column(nullable: true)]
-    protected $author;
+    protected ?string $author = null;
 
     public function __construct()
     {
-        $this->creationDate = new DateTime();
-        $this->updated = new DateTime();
+        $this->creationDate = new \DateTime();
+        $this->updated = new \DateTime();
         $this->refreshUuid();
     }
 
@@ -65,8 +60,6 @@ abstract class AbstractMessage
 
     /**
      * Sets the message creator.
-     *
-     * @param \Claroline\CoreBundle\Entity\User
      */
     public function setCreator(User $creator)
     {

@@ -95,6 +95,7 @@ const SendingModal = (props) =>
       >
         {0 !== get(props.formData, 'roles', []).length &&
           <UserList
+            flush={true}
             name={selectors.STORE_NAME+'.receivers'}
             url={['claro_announcement_validate', {aggregateId: props.aggregateId, id: props.announcement.id}]}
             selectable={false}

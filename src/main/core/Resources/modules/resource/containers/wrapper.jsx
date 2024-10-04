@@ -15,8 +15,11 @@ const ResourceWrapper = withReducer(selectors.STORE_NAME, reducer)(
       notFound: selectors.notFound(state)
     }),
     (dispatch) => ({
-      open(resourceSlug, embedded) {
+      fetch(resourceSlug, embedded) {
         return dispatch(actions.fetchResource(resourceSlug, embedded))
+      },
+      open(resourceSlug, embedded) {
+        return dispatch(actions.open(resourceSlug, embedded))
       },
       openType(resourceType, resourceSlug, resourceData) {
         return dispatch(actions.loadResourceType(resourceType, resourceData))

@@ -227,35 +227,6 @@ class WorkspaceController extends AbstractCrudController
         return $models->toResponse();
     }
 
-    /**
-     * @ApiDoc(
-     *     description="The list of archived workspace for the current security token.",
-     *     queryString={
-     *         "$finder=Claroline\CoreBundle\Entity\Workspace\Workspace&!archived",
-     *         {"name": "page", "type": "integer", "description": "The queried page."},
-     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
-     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     }
-     * )
-     */
-    #[Route(path: '/list/archived', name: 'list_archive', methods: ['GET'])]
-    public function listArchivedAction(
-        #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
-    ): StreamedJsonResponse {
-        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
-
-        $finderQuery->addFilters([
-            'archived' => true,
-            /*'roles' => $this->tokenStorage->getToken()->getRoleNames(),
-            'administrated' => true,*/
-        ]);
-
-        $archives = $this->crud->search(Workspace::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
-
-        return $archives->toResponse();
-    }
-
     #[Route(path: '/', name: 'create', methods: ['POST'])]
     public function createAction(Request $request): JsonResponse
     {
@@ -349,66 +320,6 @@ class WorkspaceController extends AbstractCrudController
         $response->headers->set('Content-Disposition', "attachment; filename=$filename");
 
         return $response;
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Archive workspaces.",
-     *     queryString={
-     *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
-     *     }
-     * )
-     */
-    #[Route(path: '/archive', name: 'archive', methods: ['PUT'])]
-    public function archiveBulkAction(Request $request): JsonResponse
-    {
-        $processed = [];
-
-        $this->om->startFlushSuite();
-
-        /** @var Workspace[] $workspaces */
-        $workspaces = parent::decodeIdsString($request, Workspace::class);
-        foreach ($workspaces as $workspace) {
-            if ($this->authorization->isGranted('ADMINISTRATE', $workspace) && !$workspace->isArchived()) {
-                $processed[] = $this->workspaceManager->archive($workspace);
-            }
-        }
-
-        $this->om->endFlushSuite();
-
-        return new JsonResponse(array_map(function (Workspace $workspace) {
-            return $this->serializer->serialize($workspace);
-        }, $processed));
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Unarchive workspaces.",
-     *     queryString={
-     *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
-     *     }
-     * )
-     */
-    #[Route(path: '/unarchive', name: 'unarchive', methods: ['PUT'])]
-    public function unarchiveBulkAction(Request $request): JsonResponse
-    {
-        $processed = [];
-
-        $this->om->startFlushSuite();
-
-        /** @var Workspace[] $workspaces */
-        $workspaces = parent::decodeIdsString($request, Workspace::class);
-        foreach ($workspaces as $workspace) {
-            if ($this->authorization->isGranted('ADMINISTRATE', $workspace) && $workspace->isArchived()) {
-                $processed[] = $this->workspaceManager->unarchive($workspace);
-            }
-        }
-
-        $this->om->endFlushSuite();
-
-        return new JsonResponse(array_map(function (Workspace $workspace) {
-            return $this->serializer->serialize($workspace);
-        }, $processed));
     }
 
     /**

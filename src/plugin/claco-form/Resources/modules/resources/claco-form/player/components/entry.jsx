@@ -336,6 +336,7 @@ class EntryComponent extends Component {
               title={trans('shared_with', {}, 'clacoform')}
             >
               <ListData
+                flush={true}
                 name={`${selectors.STORE_NAME}.entries.sharedUsers`}
                 fetch={{
                   url: ['claro_claco_form_entry_shared_users_list', {entry: this.props.entryId}],

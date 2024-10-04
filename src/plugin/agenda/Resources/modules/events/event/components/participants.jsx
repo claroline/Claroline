@@ -39,6 +39,7 @@ const EventParticipants = (props) =>
 
       {!props.isNew &&
         <ListData
+          flush={true}
           name={selectors.LIST_NAME}
           fetch={{
             url: ['apiv2_event_list_participants', {id: props.eventId}],

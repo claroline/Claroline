@@ -53,7 +53,6 @@ const EditorMain = (props) =>
           return (
             <FormSections level={3}>
               <FormSection
-                className="embedded-list-section"
                 title={trans(getTypeName(props.mimeType) + '_section')}
               >
                 {createElement(get(module, 'fileType.components.editor'), {

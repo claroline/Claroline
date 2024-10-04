@@ -2,16 +2,14 @@
 
 namespace Claroline\CoreBundle\Transfer\Importer\Workspace;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\API\Crud;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 
 class Archive extends AbstractImporter
 {
     public function __construct(
-        private readonly ObjectManager $om,
-        private readonly WorkspaceManager $manager
+        private readonly Crud $crud
     ) {
     }
 
@@ -22,10 +20,10 @@ class Archive extends AbstractImporter
         }
 
         /** @var Workspace $object */
-        $object = $this->om->getObject($data[static::getAction()[0]], Workspace::class, array_keys($data[static::getAction()[0]]));
+        $object = $this->crud->find(Workspace::class, $data[static::getAction()[0]]);
 
         if (!empty($object)) {
-            $this->manager->archive($object);
+            $this->crud->replace($object, 'archived', true);
 
             return [
                 'archive' => [[

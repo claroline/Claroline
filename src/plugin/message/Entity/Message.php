@@ -38,11 +38,8 @@ class Message
     #[ORM\Column(type: Types::TEXT)]
     protected $content;
 
-    /**
-     * @var User
-     */
     #[ORM\JoinColumn(name: 'sender_id', onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $user = null;
 
     /**
@@ -75,19 +72,12 @@ class Message
     #[Gedmo\TreeRoot]
     protected $root;
 
-    /**
-     *
-     *
-     * @var Message
-     */
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: Message::class, inversedBy: 'children')]
     #[Gedmo\TreeParent]
     protected ?Message $parent = null;
 
     /**
-     *
-     *
      * @var Collection<int, Message>
      */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Message::class)]

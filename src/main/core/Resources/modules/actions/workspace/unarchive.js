@@ -22,7 +22,7 @@ export default (workspaces, refresher) => {
     displayed: 0 !== processable.length,
     request: {
       url: url(
-        ['apiv2_workspace_unarchive'],
+        ['apiv2_workspace_restore'],
         {ids: processable.map(workspace => workspace.id)}
       ),
       request: {

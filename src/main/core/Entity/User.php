@@ -12,13 +12,6 @@
 namespace Claroline\CoreBundle\Entity;
 
 use Claroline\AppBundle\API\Attribute\CrudEntity;
-use Claroline\CommunityBundle\Finder\UserType;
-use Claroline\CommunityBundle\Serializer\UserSerializer;
-use Doctrine\DBAL\Types\Types;
-use Claroline\CommunityBundle\Repository\UserRepository;
-use DateTimeInterface;
-use DateTime;
-use DateInterval;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Poster;
@@ -27,13 +20,17 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Disabled;
+use Claroline\CommunityBundle\Finder\UserType;
 use Claroline\CommunityBundle\Model\HasGroups;
+use Claroline\CommunityBundle\Repository\UserRepository;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\EquatableInterface;
@@ -87,34 +84,34 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
 
     #[ORM\Column(name: 'administrative_code', nullable: true)]
     private ?string $administrativeCode = null;
-    
+
     /**
      * @var Collection<int, Group>
      */
     #[ORM\JoinTable(name: 'claro_user_group')]
     #[ORM\ManyToMany(targetEntity: Group::class)]
     private Collection $groups;
-    
+
     /**
      * @var Collection<int, Role>
      */
     #[ORM\JoinTable(name: 'claro_user_role')]
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users', fetch: 'EXTRA_LAZY')]
     protected Collection $roles;
-    
+
     #[ORM\JoinColumn(name: 'workspace_id', onDelete: 'SET NULL')]
     #[ORM\OneToOne(targetEntity: Workspace::class)]
     private ?Workspace $personalWorkspace = null;
 
     #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
-    private ?DateTimeInterface $created = null;
+    private ?\DateTimeInterface $created = null;
 
     #[ORM\Column(name: 'last_activity', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $lastActivity = null;
+    private ?\DateTimeInterface $lastActivity = null;
 
     #[ORM\Column(name: 'initialization_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $initDate = null;
+    private ?\DateTimeInterface $initDate = null;
 
     #[ORM\Column(name: 'reset_password', nullable: true)]
     private ?string $resetPasswordHash = null;
@@ -143,12 +140,11 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     private bool $mailValidated = false;
 
     #[ORM\Column(name: 'expiration_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $expirationDate = null;
+    private ?\DateTimeInterface $expirationDate = null;
 
     #[ORM\Column(name: 'email_validation_hash', nullable: true)]
     private ?string $emailValidationHash = null;
 
-    
     /**
      * @var Collection<int, UserOrganizationReference>
      */
@@ -235,14 +231,14 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         }
 
         if ($this->lastActivity) {
-            $now = new DateTime();
-            $now = $now->sub(DateInterval::createFromDateString('15 minute'));
+            $now = new \DateTime();
+            $now = $now->sub(\DateInterval::createFromDateString('15 minute'));
 
             if ($this->lastActivity >= $now) {
                 return 'online';
             }
 
-            $now = $now->sub(DateInterval::createFromDateString('30 minute'));
+            $now = $now->sub(\DateInterval::createFromDateString('30 minute'));
             if ($this->lastActivity >= $now) {
                 return 'absent';
             }
@@ -404,10 +400,6 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
 
     public function isEqualTo(UserInterface $user): bool
     {
-        if (0 === count($user->getRoles())) {
-            return false;
-        }
-
         if ($user->isDisabled() || $user->isRemoved()) {
             return false;
         }
@@ -463,12 +455,12 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         return $this->personalWorkspace;
     }
 
-    public function getCreationDate(): ?DateTimeInterface
+    public function getCreationDate(): ?\DateTimeInterface
     {
         return $this->created;
     }
 
-    public function getCreated(): ?DateTimeInterface
+    public function getCreated(): ?\DateTimeInterface
     {
         return $this->created;
     }
@@ -479,7 +471,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      * NOTE : creation date is already handled by the timestamp listener; this
      *        setter exists mainly for testing purposes.
      */
-    public function setCreationDate(DateTime $date): void
+    public function setCreationDate(\DateTime $date): void
     {
         $this->created = $date;
     }
@@ -521,7 +513,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
             return true;
         }
 
-        return empty($this->getExpirationDate()) || $this->getExpirationDate() >= new DateTime();
+        return empty($this->getExpirationDate()) || $this->getExpirationDate() >= new \DateTime();
     }
 
     public function isTechnical(): bool
@@ -544,22 +536,22 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         return $this->mailNotified;
     }
 
-    public function setExpirationDate(?DateTimeInterface $expirationDate): void
+    public function setExpirationDate(?\DateTimeInterface $expirationDate): void
     {
         $this->expirationDate = $expirationDate;
     }
 
-    public function getExpirationDate(): ?DateTimeInterface
+    public function getExpirationDate(): ?\DateTimeInterface
     {
         return $this->expirationDate;
     }
 
-    public function setInitDate(?DateTimeInterface $initDate): void
+    public function setInitDate(?\DateTimeInterface $initDate): void
     {
         $this->initDate = $initDate;
     }
 
-    public function getInitDate(): ?DateTimeInterface
+    public function getInitDate(): ?\DateTimeInterface
     {
         return $this->initDate;
     }
@@ -706,12 +698,12 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         return $this->isRemoved;
     }
 
-    public function setLastActivity(DateTimeInterface $date): void
+    public function setLastActivity(\DateTimeInterface $date): void
     {
         $this->lastActivity = $date;
     }
 
-    public function getLastActivity(): ?DateTimeInterface
+    public function getLastActivity(): ?\DateTimeInterface
     {
         return $this->lastActivity;
     }

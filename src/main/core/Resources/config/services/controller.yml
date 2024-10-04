@@ -50,6 +50,15 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
 
+    Claroline\CoreBundle\Controller\Workspace\ArchiveController:
+        public: true
+        arguments:
+            - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
+
     Claroline\CoreBundle\Controller\Workspace\RegistrationController:
         arguments:
             - '@security.authorization_checker'

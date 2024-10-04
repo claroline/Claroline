@@ -12,32 +12,45 @@ import {ContentNotFound} from '#/main/app/content/components/not-found'
 const ResourceWrapper = (props) => {
   const [app, setApp] = useState(null)
 
+  // change current resource
+  useEffect(() => {
+    if (props.slug) {
+      props.open(props.slug, props.embedded)
+    }
+  }, [props.slug])
+
+  // fetch resource data
   useEffect(() => {
     let openQuery
-    if (props.slug) {
+    if (props.slug && !props.loaded) {
       openQuery = makeCancelable(
-        props.open(props.slug, props.embedded)
+        props.fetch(props.slug, props.embedded)
       )
 
       openQuery.promise
-        .then(response => getResource(get(response, 'resourceNode.meta.type'))
-          .then((resourceApp) => {
-            setApp({
-              type: get(response, 'resourceNode.meta.type'),
-              component: resourceApp.default.component,
-              data: response
+        .then(response => {
+          return getResource(get(response, 'resourceNode.meta.type'))
+            .then((resourceApp) => {
+              setApp({
+                type: get(response, 'resourceNode.meta.type'),
+                component: resourceApp.default.component,
+                data: response
+              })
             })
-          })
-          .catch(e => console.error(e))
+            .catch(e => console.error(e))
+        })
+        .then(
+          () => openQuery = null,
+          () => openQuery = null
         )
     }
 
     return () => {
-      if (openQuery) {
+      if (openQuery && props.loaded) {
         openQuery.cancel()
       }
     }
-  }, [props.slug])
+  }, [props.loaded])
 
   if (!props.loaded || !app) {
     return (
@@ -75,6 +88,7 @@ ResourceWrapper.propTypes = {
   loaded: T.bool.isRequired,
   notFound: T.bool.isRequired,
   open: T.func.isRequired,
+  fetch: T.func.isRequired,
   openType: T.func.isRequired
 }
 

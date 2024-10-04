@@ -1,5 +1,3 @@
-import get from 'lodash/get'
-
 import {makeActionCreator, makeInstanceActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 
@@ -23,6 +21,11 @@ actions.setNotFound = makeActionCreator(RESOURCE_NOT_FOUND)
 actions.loadResource = makeActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.loadResourceType = makeInstanceActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.reload = () => actions.setResourceLoaded(false)
+actions.open = (slug, embedded = false) => ({
+  type: RESOURCE_OPEN,
+  resourceSlug: slug,
+  embedded: embedded
+})
 
 actions.fetchResource = (slug, embedded = false) => (dispatch) => dispatch({
   [API_REQUEST]: {
@@ -30,23 +33,7 @@ actions.fetchResource = (slug, embedded = false) => (dispatch) => dispatch({
     url: embedded ?
       ['claro_resource_load_embedded', {id: slug, embedded: embedded ? 1 : 0}] :
       ['claro_resource_load', {id: slug}],
-    before: () => dispatch({
-      type: RESOURCE_OPEN,
-      resourceSlug: slug,
-      embedded: embedded
-    }),
-    success: (response) => {
-      // load resource base data
-      dispatch(actions.loadResource(response))
-
-      /*// load resource data inside the store
-      dispatch(actions.loadResourceType(get(response, 'resourceNode.meta.type'), response))
-
-      // mark the resource as loaded
-      // it's done through another action (not RESOURCE_LOAD) to be sure all reducers have been resolved
-      // and store is up-to-date
-      dispatch(actions.setResourceLoaded(true))*/
-    },
+    success: (response) => dispatch(actions.loadResource(response)),
     error: (response, status) => {
       switch (status) {
         case 404:

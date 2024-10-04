@@ -103,6 +103,7 @@ const ScheduledTaskForm = props =>
         >
           {props.task.id && !props.new &&
             <UserList
+              flush={true}
               name={selectors.STORE_NAME + '.task.users'}
               url={['apiv2_scheduled_task_list_users', {id: props.task.id}]}
               delete={{

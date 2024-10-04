@@ -25,17 +25,18 @@ const AgendaCalendar = (props) => {
     <ToolPage
       title={currentView.display(props.referenceDate)}
     >
-      <header className="d-flex align-items-center gap-3 px-4 py-3 border-bottom border-top">
+      <header className="d-flex align-items-center gap-3 px-4 py-2 border-bottom border-top bg-body-tertiary pe-2">
         <Heading level={1} displayLevel={5} className="m-0">
           {currentView.display(props.referenceDate)}
         </Heading>
+
         <Toolbar
-          className="ms-auto gap-1 d-flex"
+          className="ms-auto gap-2 d-flex"
           toolbar="previous today next | range | add"
           buttonName="btn"
-          defaultName="btn-body"
+          defaultName="btn-text-body p-2"
           primaryName="btn-primary"
-          separatorName="mx-1"
+          //separatorName="mx-1"
           tooltip="bottom"
           actions={[
             {

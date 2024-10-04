@@ -1,11 +1,9 @@
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store/reducer'
-import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
 import {TOOL_LOAD, TOOL_OPEN} from '#/main/core/tool/store/actions'
-
-import {Workspace} from '#/main/core/workspace/prop-types'
+import {CONTEXT_OPEN} from '#/main/app/context/store/actions'
 
 export const reducer = combineReducers({
   /**
@@ -21,20 +19,14 @@ export const reducer = combineReducers({
   }),
 
   /**
-   * The form to create new workspaces.
-   */
-  creation: makeFormReducer('workspaces.creation', {
-    new: true,
-    data: Workspace.defaultProps,
-    originalData: Workspace.defaultProps
-  }),
-
-  /**
    * The list of workspaces in which the current user is registered.
    */
   registered: makeListReducer('workspaces.registered', {
     sortBy: {property: 'createdAt', direction: -1}
   }, {
+    loaded: makeReducer(false, {
+      [CONTEXT_OPEN]: () => false
+    }),
     invalidated: makeReducer(false, {
       [TOOL_OPEN]: () => true
     })
@@ -46,42 +38,9 @@ export const reducer = combineReducers({
   public: makeListReducer('workspaces.public', {
     sortBy: {property: 'createdAt', direction: -1}
   }, {
-    invalidated: makeReducer(false, {
-      [TOOL_OPEN]: () => true
-    })
-  }),
-
-  /**
-   * The list of workspaces managed by the current user.
-   */
-  managed: makeListReducer('workspaces.managed', {
-    filters: [
-      {property: 'personal', value: false}
-    ],
-    sortBy: {property: 'createdAt', direction: -1}
-  }, {
-    invalidated: makeReducer(false, {
-      [TOOL_OPEN]: () => true
-    })
-  }),
-
-  /**
-   * The list of the platform public workspaces.
-   */
-  models: makeListReducer('workspaces.models', {
-    sortBy: {property: 'createdAt', direction: -1}
-  }, {
-    invalidated: makeReducer(false, {
-      [TOOL_OPEN]: () => true
-    })
-  }),
-
-  /**
-   * The list of the archived workspaces.
-   */
-  archives: makeListReducer('workspaces.archives', {
-    sortBy: {property: 'createdAt', direction: -1}
-  }, {
+    loaded: makeReducer(false, {
+      [CONTEXT_OPEN]: () => false
+    }),
     invalidated: makeReducer(false, {
       [TOOL_OPEN]: () => true
     })

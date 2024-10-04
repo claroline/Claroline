@@ -221,28 +221,6 @@ class WorkspaceManager implements LoggerAwareInterface
         }));
     }
 
-    public function archive(Workspace $workspace): Workspace
-    {
-        // $workspace->setName('[archive]'.$workspace->getName());
-        // $workspace->setCode('[archive]'.$workspace->getCode().uniqid());
-        $workspace->setArchived(true);
-
-        $this->om->persist($workspace);
-        $this->om->flush();
-
-        return $workspace;
-    }
-
-    public function unarchive(Workspace $workspace): Workspace
-    {
-        $workspace->setArchived(false);
-
-        $this->om->persist($workspace);
-        $this->om->flush();
-
-        return $workspace;
-    }
-
     public function getDefaultModel($isPersonal = false, $restore = false): Workspace
     {
         $name = $isPersonal ? 'default_personal' : 'default_workspace';

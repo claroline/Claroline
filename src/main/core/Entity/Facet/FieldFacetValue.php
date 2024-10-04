@@ -22,19 +22,12 @@ class FieldFacetValue extends AbstractFacetValue
     /**
      * Used by profile to retrieve the values of a user to fill its profile.
      * This should be done in another entity. This is not used by claco-form.
-     *
-     *
-     * @var User
      */
-    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user = null;
 
-    /**
-     *
-     * @var FieldFacet
-     */
-    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: FieldFacet::class, cascade: ['persist'])]
     private ?FieldFacet $fieldFacet = null;
 

@@ -69,6 +69,7 @@ const ResourcesModal = (props) => {
           ['apiv2_resource_list', {contextId: props.contextId, parent: get(props.currentDirectory, 'slug')}] :
           ['apiv2_resource_list', props.currentDirectory ? {contextId: get(props.currentDirectory, 'workspace.id'), parent: get(props.currentDirectory, 'slug')} : {}]
         }
+        flush={true}
         autoFocus={true}
         autoload={initialized}
         backAction={{

@@ -1,8 +1,13 @@
 services:
+    Claroline\EvaluationBundle\Finder\EvaluationType:
+        tags: [ claroline.finder.type ]
+
     Claroline\EvaluationBundle\Finder\ResourceAttemptType:
         tags: [ claroline.finder.type ]
+
     Claroline\EvaluationBundle\Finder\ResourceEvaluationType:
         tags: [ claroline.finder.type ]
+
     Claroline\EvaluationBundle\Finder\WorkspaceEvaluationType:
         tags: [ claroline.finder.type ]
 

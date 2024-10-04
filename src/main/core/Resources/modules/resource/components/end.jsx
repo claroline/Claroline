@@ -13,7 +13,7 @@ import {Toolbar} from '#/main/app/action'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 import {constants as evalConstants} from '#/main/evaluation/constants'
-import {actions as evalActions} from '#/main/evaluation//store/actions'
+import {actions as evalActions} from '#/main/evaluation/store/actions'
 import {constants} from '#/main/evaluation/resource/constants'
 import {ResourceAttempt as ResourceAttemptTypes} from '#/main/evaluation/resource/prop-types'
 import {EvaluationFeedback} from '#/main/evaluation/components/feedback'
