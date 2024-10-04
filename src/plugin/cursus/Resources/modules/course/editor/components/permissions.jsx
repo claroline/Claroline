@@ -1,9 +1,9 @@
 import React from 'react'
-
+import get from 'lodash/get'
 import {trans} from '#/main/app/intl'
 import {EditorPage} from '#/main/app/editor'
 
-const CourseEditorPermissions = () =>
+const CourseEditorPermissions = (props) =>
   <EditorPage
     title={trans('permissions')}
     help={trans('course_permissions_help', {}, 'cursus')}
@@ -15,6 +15,28 @@ const CourseEditorPermissions = () =>
         primary: true,
         fields: [
           {
+            name: 'restrictions._restrictUsers',
+            type: 'boolean',
+            label: trans('restrict_users_count'),
+            calculated: (course) => !!get(course, 'restrictions.users') || get(course, 'restrictions._restrictUsers'),
+            onChange: (value) => {
+              if (!value) {
+                props.update(props.name, 'restrictions.users', null)
+              }
+            },
+            linked: [
+              {
+                name: 'restrictions.users',
+                type: 'number',
+                label: trans('users_count'),
+                required: true,
+                displayed: (course) => get(course, 'restrictions.users') || get(course, 'restrictions._restrictUsers'),
+                options: {
+                  min: 0
+                }
+              }
+            ]
+          },{
             name: 'meta.public',
             type: 'boolean',
             label: trans('make_course_public', {}, 'cursus'),
