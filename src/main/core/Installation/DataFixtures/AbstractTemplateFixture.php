@@ -20,7 +20,6 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Environment;
 
 abstract class AbstractTemplateFixture extends AbstractFixture implements PostInstallInterface, PostUpdateInterface, LoggerAwareInterface
@@ -29,9 +28,9 @@ abstract class AbstractTemplateFixture extends AbstractFixture implements PostIn
 
     protected Environment $twig;
 
-    public function setContainer(ContainerInterface $container = null): void
+    public function setTwig(Environment $twig): void
     {
-        $this->twig = $container->get('twig');
+        $this->twig = $twig;
     }
 
     /**

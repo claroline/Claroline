@@ -8,6 +8,7 @@ services:
         arguments:
             - '@service_container'
             - '@claroline.doctrine_fixture_executor'
+            - '@twig'
         calls:
             - setLogger: ['@logger']
 

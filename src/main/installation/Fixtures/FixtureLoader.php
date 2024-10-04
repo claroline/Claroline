@@ -17,6 +17,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Twig\Environment;
 
 /**
  * Class responsible for loading the data fixtures of a bundle.
@@ -26,13 +27,15 @@ class FixtureLoader implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     private ContainerInterface $container;
+    private Environment $twig;
     private ORMExecutor $executor;
     private Loader $loader;
 
-    public function __construct(ContainerInterface $container, ORMExecutor $executor)
+    public function __construct(ContainerInterface $container, ORMExecutor $executor, Environment $twig)
     {
         $this->container = $container;
         $this->executor = $executor;
+        $this->twig = $twig;
         $this->loader = new Loader();
     }
 
@@ -61,6 +64,12 @@ class FixtureLoader implements LoggerAwareInterface
 
                 if (method_exists($fixture, 'setContainer')) {
                     $fixture->setContainer($this->container);
+                }
+
+                // for retro-compatibility because twig service is now private,
+                // and we don't have full DI in fixtures
+                if (method_exists($fixture, 'setTwig')) {
+                    $fixture->setTwig($this->twig);
                 }
 
                 $toLoad[] = $fixture;
