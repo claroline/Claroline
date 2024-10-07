@@ -56,8 +56,8 @@ class SessionGroupController extends AbstractCrudController
     /**
      * List registered groups to sessions.
      *
-     * @Route("/{id}", name="list", methods={"GET"})
-     * @Route("/{id}/{sessionId}", name="list", methods={"GET"})
+     * @Route("/{id}", name="course_list", methods={"GET"})
+     * @Route("/{id}/{sessionId}", name="course_list", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
