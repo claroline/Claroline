@@ -1,12 +1,10 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl'
 import {Tool} from '#/main/core/tool'
 
-import {TransferForm} from '#/main/transfer/components/form'
 import {ExportList} from '#/main/transfer/tools/export/containers/list'
-import {ExportForm} from '#/main/transfer/tools/export/containers/form'
+import {ExportEditor} from '#/main/transfer/export/editor/containers/main'
 import {ExportDetails} from '#/main/transfer/tools/export/containers/details'
 
 const ExportTool = (props) =>
@@ -22,15 +20,11 @@ const ExportTool = (props) =>
         path: '/new',
         disabled: !props.canExport,
         render: () => (
-          <TransferForm
-            path={props.path+'/new'}
-            title={trans('export', {}, 'transfer')}
-            explanation={props.explanation}
-            openForm={props.openForm}
+          <ExportEditor
+            isNew={true}
+            path={props.path}
             contextData={props.contextData}
-          >
-            <ExportForm />
-          </TransferForm>
+          />
         )
       }, {
         path: '/:id',
@@ -41,12 +35,10 @@ const ExportTool = (props) =>
   />
 
 ExportTool.propTypes = {
-  path: T.string.isRequired,
   contextData: T.object,
-  explanation: T.object,
-  canExport: T.bool.isRequired,
   open: T.func.isRequired,
-  openForm: T.func.isRequired
+  path: T.string.isRequired,
+  canExport: T.bool.isRequired
 }
 
 export {

@@ -23,7 +23,6 @@ actions.fetch = (importFileId) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: ['apiv2_transfer_import_get', {id: importFileId}],
     silent: true,
-    before: () => dispatch(actions.load(null)),
     success: (response) => {
       dispatch(actions.load(response))
       dispatch(logActions.load(response.id))

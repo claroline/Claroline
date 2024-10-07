@@ -18,9 +18,6 @@ const ExportTool = withReducer(selectors.STORE_NAME, reducer)(
     (dispatch) => ({
       open(exportFileId) {
         dispatch(actions.fetch(exportFileId))
-      },
-      openForm(params) {
-        dispatch(actions.open(selectors.FORM_NAME, Object.assign({format: 'csv'}, params)))
       }
     })
   )(ExportToolComponent)

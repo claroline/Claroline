@@ -24,7 +24,6 @@ actions.fetch = (exportFileId) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: ['apiv2_transfer_export_get', {id: exportFileId}],
     silent: true,
-    before: () => dispatch(actions.load(null)),
     success: (response) => dispatch(actions.load(response))
   }
 })
