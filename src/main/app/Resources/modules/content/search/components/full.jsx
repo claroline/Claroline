@@ -71,7 +71,7 @@ class SearchFull extends Component {
 
   render() {
     return (
-      <search className="list-search search-full">
+      <search className="list-search search-full flex-fill">
         {this.props.available.map(availableFilter =>
           <DataFilter
             id={this.props.id+'-'+toKey(availableFilter.name)}

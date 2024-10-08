@@ -6,7 +6,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\TransferBundle\Transfer\Importer\AbstractDeleteImporter;
 
-class Delete extends AbstractDeleteImporter
+final class Delete extends AbstractDeleteImporter
 {
     public static function getAction(): array
     {

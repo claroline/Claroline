@@ -15,6 +15,9 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * @deprecated
+ */
 class ResourceEvaluationFinder extends AbstractFinder
 {
     public static function getClass(): string

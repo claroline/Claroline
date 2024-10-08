@@ -1,57 +1,16 @@
-import React, {Component, forwardRef} from 'react'
+import React, {Component, forwardRef, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
-import cloneDeep from 'lodash/cloneDeep'
 
 import {trans} from '#/main/app/intl/translation'
-import {Await} from '#/main/app/components/await'
 import {toKey} from '#/main/core/scaffolding/text'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {getType} from '#/main/app/data/types'
 import {Menu, MenuOverlay} from '#/main/app/overlays/menu'
 
-import {getPropDefinition} from '#/main/app/content/list/utils'
 import {DataFilter} from '#/main/app/data/components/filter'
-
-const CurrentFilter = props =>
-  <Await
-    for={getType(props.type)}
-    then={(definition) => (
-      <div className="search-filter">
-        <span className="search-filter-prop">
-          {props.label}
-        </span>
-
-        <span className="search-filter-value">
-          {definition.render(props.value, props.options)}
-
-          {!props.locked &&
-            <button type="button" className="btn btn-link" onClick={props.remove}>
-              <span className="fa fa-times"/>
-              <span className="sr-only">{trans('list_remove_filter')}</span>
-            </button>
-          }
-        </span>
-      </div>
-    )}
-  />
-
-CurrentFilter.propTypes = {
-  type: T.string.isRequired,
-  label: T.string.isRequired,
-  options: T.object,
-  value: T.any,
-  locked: T.bool,
-  remove: T.func.isRequired
-}
-
-CurrentFilter.defaultProps = {
-  options: {},
-  locked: false
-}
 
 class SearchForm extends Component {
   constructor(props) {
@@ -135,12 +94,12 @@ class SearchForm extends Component {
     return (
       <>
         {this.props.available.map(filter =>
-          <div key={filter.name} className="form-group row">
+          <div key={filter.name} className="form-group row" role="presentation">
             <label className="col-sm-3 col-form-label col-form-label-sm text-end" htmlFor={this.props.id+'-'+toKey(filter.name)}>
               {filter.label}
             </label>
 
-            <div className="col-sm-9">
+            <div className="col-sm-9" role="presentation">
               <DataFilter
                 {...omit(filter)}
 
@@ -154,7 +113,7 @@ class SearchForm extends Component {
           </div>
         )}
 
-        <div className="row">
+        <div className="row" role="presentation">
           <Button
             className="search-submit w-100"
             type={CALLBACK_BUTTON}
@@ -201,106 +160,96 @@ const SearchMenu = forwardRef((props, ref) =>
   </div>
 )
 
-class SearchUnified extends Component {
-  constructor(props) {
-    super(props)
+const SearchUnified = (props) => {
+  const [currentText, updateText] = useState(props.currentText)
+  const [opened, setOpened] = useState(false)
+  const [updated, setUpdated] = useState(false)
 
-    this.state = {
-      opened: false,
-      currentSearch: '',
-      updated: false
-    }
+  return (
+    <form className="list-search search-unified flex-fill" role="search" action="#">
+      <div className="d-flex align-items-center" role="presentation">
+        <span className="search-icon fa fa-search text-secondary" aria-hidden={true} />
 
-    this.updateSearch = this.updateSearch.bind(this)
-  }
+        <input
+          type="text"
+          className="form-control form-control-lg search-control py-0 px-3"
+          placeholder={trans('list_search_placeholder')}
+          value={currentText}
+          autoFocus={props.autoFocus}
+          onChange={(e) => updateText(e.target.value)}
+        />
 
-  updateSearch(search) {
-    this.setState({
-      currentSearch: search,
-      updated: 0 !== search.length,
-      opened: 0 !== search.length
-    })
-  }
-
-  getFormFilters() {
-    const filters = cloneDeep(this.props.current)
-    if (0 !== this.state.currentSearch.length) {
-      // get the first available string filter which is not locked as default for now
-      const defaultFilter = this.props.available.find(filter => 'string' === filter.type && -1 === filters.findIndex(value => filter.name === value.property && value.locked))
-      if (defaultFilter) {
-        const valuePos = filters.findIndex(value => defaultFilter.name === value.property)
-        if (-1 !== valuePos) {
-          // update existing value
-          filters[valuePos].value = this.state.currentSearch
-        } else {
-          // push new filter
-          filters.push({
-            property: defaultFilter.alias || defaultFilter.name,
-            value: this.state.currentSearch
-          })
-        }
-      }
-    }
-
-    return filters
-  }
-
-  render() {
-    return (
-      <form className="list-search search-unified" role="search">
-        <div className="d-flex align-items-center" role="presentation">
-          <span className="search-icon fa fa-search text-secondary" />
-
-          <input
-            type="text"
-            className="form-control form-control-lg search-control py-0 px-3"
-            placeholder={trans('list_search_placeholder')}
-            value={this.state.currentSearch}
-            disabled={this.props.disabled}
-            autoFocus={this.props.autoFocus}
-            onChange={(e) => this.updateSearch(e.target.value)}
-          />
-
+        {(currentText !== props.currentText) &&
           <Button
-            className="btn btn-text-body dropdown-toggle search-btn position-relative px-2"
+            className="btn btn-text-secondary px-2"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-filter"
-            label={trans('filters')}
-            tooltip="bottom"
-            callback={() => this.setState({opened : !this.state.opened})}
-            disabled={this.props.disabled}
-          >
-            {!isEmpty(this.props.current) &&
-              <span className="position-absolute end-0 bottom-0 translate-middle p-1 bg-primary rounded-circle">
-                <span className="visually-hidden">New alerts</span>
-              </span>
-            }
-          </Button>
-        </div>
-
-        <MenuOverlay
-          id={`${this.props.id}-search-menu`}
-          show={this.state.opened}
-          onToggle={() => this.setState({opened: false})}
-        >
-          <Menu
-            align="end"
-            as={SearchMenu}
-
-            id={this.props.id}
-            updated={this.state.updated}
-            current={this.getFormFilters()}
-            available={this.props.available}
-            updateFilters={() => this.setState({opened: true, updated: true})}
-            updateSearch={(filters) => {
-              this.props.resetFilters(filters)
-              this.setState({currentSearch: '', updated: false, opened: false})
+            label={trans('search', {},'actions')}
+            htmlType="submit"
+            callback={() => {
+              props.updateText(currentText)
+              props.onSubmit()
             }}
           />
-        </MenuOverlay>
-      </form>
-    )
-  }
+        }
+
+        {((!isEmpty(props.current) || props.currentText) && props.currentText === currentText) &&
+          <Button
+            className="btn btn-text-secondary position-relative px-2"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-times"
+            label={trans('remove_all_filter')}
+            tooltip="bottom"
+            callback={() => {
+              updateText('')
+              props.updateText('')
+              props.resetFilters([])
+            }}
+          />
+        }
+
+        <Button
+          className="btn btn-text-body dropdown-toggle search-btn position-relative px-2"
+          type={CALLBACK_BUTTON}
+          icon="fa fa-fw fa-filter"
+          label={trans('filters')}
+          tooltip="bottom"
+          callback={() => setOpened(!opened)}
+        >
+          {!isEmpty(props.current) &&
+            <span className="position-absolute end-0 bottom-0 translate-middle p-1 bg-danger rounded-circle" role="presentation">
+              <span className="visually-hidden">New alerts</span>
+            </span>
+          }
+        </Button>
+      </div>
+
+      <MenuOverlay
+        id={`${props.id}-search-menu`}
+        show={opened}
+        onToggle={() => setOpened(false)}
+      >
+        <Menu
+          align="end"
+          as={SearchMenu}
+
+          id={props.id}
+          updated={updated}
+          current={props.current}
+          available={props.available}
+          updateFilters={() => {
+            setOpened(true)
+            setUpdated(true)
+          }}
+          updateSearch={(filters) => {
+            props.resetFilters(filters)
+            setOpened(false)
+            setUpdated(false)
+            //this.setState({currentSearch: '', updated: false, opened: false})
+          }}
+        />
+      </MenuOverlay>
+    </form>
+  )
 }
 
 SearchUnified.propTypes = {
@@ -312,11 +261,18 @@ SearchUnified.propTypes = {
     type: T.string.isRequired,
     options: T.object
   })).isRequired,
+
+  // from store
+  currentText: T.string,
   current: T.arrayOf(T.shape({
     property: T.string.isRequired,
     value: T.any,
     locked: T.bool
   })).isRequired,
+
+  onSubmit: T.func,
+
+  updateText: T.func.isRequired,
   addFilter: T.func.isRequired,
   removeFilter: T.func.isRequired,
   resetFilters: T.func.isRequired

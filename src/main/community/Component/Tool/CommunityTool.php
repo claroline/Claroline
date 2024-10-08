@@ -78,7 +78,7 @@ class CommunityTool extends AbstractTool
             }, $userTeams),
             'profile' => $this->profileSerializer->serialize(),
             'usersLimitReached' => $this->userManager->hasReachedLimit(),
-            'parameters' => $contextSubject ? $this->getWorkspaceParameters($contextSubject) : $this->getDesktopParameters(),
+            'parameters' => WorkspaceContext::getName() === $context ? $this->getWorkspaceParameters($contextSubject) : $this->getDesktopParameters(),
         ];
     }
 
@@ -87,7 +87,7 @@ class CommunityTool extends AbstractTool
         $this->om->startFlushSuite();
 
         if (!empty($configData['parameters'])) {
-            if (!empty($contextSubject)) {
+            if (WorkspaceContext::getName() === $context) {
                 // configure workspace tool
                 $this->updateWorkspaceParameters($configData['parameters'], $contextSubject);
             } else {

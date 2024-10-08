@@ -31,7 +31,6 @@ services:
     Claroline\CommunityBundle\Transfer\Importer\User\Create:
         arguments:
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CommunityBundle\Transfer\Importer\User\CreateOrUpdate:
         parent: Claroline\TransferBundle\Transfer\Importer\AbstractCreateOrUpdateImporter
@@ -41,8 +40,6 @@ services:
 
     Claroline\CommunityBundle\Transfer\Importer\User\Update:
         parent: Claroline\TransferBundle\Transfer\Importer\AbstractUpdateImporter
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CommunityBundle\Transfer\Importer\User\Enable:
         arguments:
@@ -56,7 +53,6 @@ services:
 
     Claroline\CommunityBundle\Transfer\Importer\User\SetMainOrganization:
         arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
 
     # Organizations

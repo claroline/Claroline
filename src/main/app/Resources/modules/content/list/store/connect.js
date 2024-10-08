@@ -7,7 +7,7 @@ import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {actions as listActions} from '#/main/app/content/list/store/actions'
-import {select as listSelect} from '#/main/app/content/list/store/selectors'
+import {selectors as listSelectors} from '#/main/app/content/list/store/selectors'
 
 /**
  * Gets list data and config from redux store.
@@ -21,33 +21,34 @@ import {select as listSelect} from '#/main/app/content/list/store/selectors'
  */
 function mapStateToProps(state, ownProps) {
   // get the root of the list in the store
-  const listState = listSelect.list(state, ownProps.name)
+  const listState = listSelectors.list(state, ownProps.name)
 
   invariant(undefined !== listState, `Try to connect list on undefined store '${ownProps.name}'.`)
 
   const newProps = {
-    loaded: listSelect.loaded(listState),
-    invalidated: listSelect.invalidated(listState),
-    data: listSelect.data(listState),
-    totalResults: listSelect.totalResults(listState)
+    loaded: listSelectors.loaded(listState),
+    invalidated: listSelectors.invalidated(listState),
+    data: listSelectors.data(listState),
+    totalResults: listSelectors.totalResults(listState)
   }
 
   // grab data for optional features
   if (ownProps.filterable) {
-    newProps.filters = listSelect.filters(listState)
+    newProps.searchText = listSelectors.searchText(listState)
+    newProps.filters = listSelectors.filters(listState)
   }
 
   if (ownProps.sortable) {
-    newProps.sortBy = listSelect.sortBy(listState)
+    newProps.sortBy = listSelectors.sortBy(listState)
   }
 
   if (ownProps.selectable) {
-    newProps.selected = listSelect.selected(listState)
+    newProps.selected = listSelectors.selected(listState)
   }
 
   if (ownProps.paginated) {
-    newProps.pageSize    = listSelect.pageSize(listState)
-    newProps.currentPage = listSelect.currentPage(listState)
+    newProps.pageSize    = listSelectors.pageSize(listState)
+    newProps.currentPage = listSelectors.currentPage(listState)
   }
 
   return newProps
@@ -76,6 +77,9 @@ function mapDispatchToProps(dispatch, ownProps) {
     },
 
     // filtering
+    updateText(textSearch) {
+      dispatch(listActions.updateText(ownProps.name, textSearch))
+    },
     addFilter(property, value, locked) {
       dispatch(listActions.addFilter(ownProps.name, property, value, locked))
     },
@@ -227,7 +231,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   if (ownProps.filterable) {
     props.filters = {
       mode: ownProps.searchMode,
+      currentText: stateProps.searchText,
       current: stateProps.filters,
+      updateText: dispatchProps.updateText,
+      onSubmit: () => dispatchProps.invalidateData(),
       addFilter: asyncDecorator(dispatchProps.addFilter),
       removeFilter: asyncDecorator(dispatchProps.removeFilter),
       resetFilters: asyncDecorator(dispatchProps.resetFilters)

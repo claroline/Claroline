@@ -18,6 +18,9 @@ use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
+/**
+ * @deprecated
+ */
 class WorkspaceFinder extends AbstractFinder
 {
     public function __construct(

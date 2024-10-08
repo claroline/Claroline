@@ -2,6 +2,8 @@ import invariant from 'invariant'
 
 import {makeInstanceAction, makeInstanceActionCreator} from '#/main/app/store/actions'
 
+export const SEARCH_TEXT_UPDATE    = 'SEARCH_TEXT_UPDATE'
+
 export const SEARCH_FILTER_ADD    = 'SEARCH_FILTER_ADD'
 export const SEARCH_FILTER_REMOVE = 'SEARCH_FILTER_REMOVE'
 export const SEARCH_FILTER_RESET  = 'SEARCH_FILTER_RESET'
@@ -27,6 +29,8 @@ actions.addFilter = (searchName, property, value, locked = false) => {
     locked
   })
 }
+
+actions.updateText = makeInstanceActionCreator(SEARCH_TEXT_UPDATE, 'text')
 
 /**
  * Remove a filter from the search.

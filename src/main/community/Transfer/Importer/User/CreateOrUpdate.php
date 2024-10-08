@@ -5,7 +5,7 @@ namespace Claroline\CommunityBundle\Transfer\Importer\User;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\TransferBundle\Transfer\Importer\AbstractCreateOrUpdateImporter;
 
-class CreateOrUpdate extends AbstractCreateOrUpdateImporter
+final class CreateOrUpdate extends AbstractCreateOrUpdateImporter
 {
     public static function getAction(): array
     {

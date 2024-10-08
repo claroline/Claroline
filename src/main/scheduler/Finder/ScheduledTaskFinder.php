@@ -14,6 +14,9 @@ namespace Claroline\SchedulerBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\SchedulerBundle\Entity\ScheduledTask;
 
+/**
+ * @deprecated
+ */
 class ScheduledTaskFinder extends AbstractFinder
 {
     public static function getClass(): string

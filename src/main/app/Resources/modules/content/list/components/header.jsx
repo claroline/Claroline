@@ -3,18 +3,14 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
-import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {Button, ActionTypes} from '#/main/app/action'
 
-import {ListDisplay} from '#/main/app/content/list/components/display'
 import {Search} from '#/main/app/content/search/components/search'
+import {ListDisplay} from '#/main/app/content/list/components/display'
 import {DataListProperty, DataListDisplay} from '#/main/app/content/list/prop-types'
-import {Button} from '#/main/app/action'
 
 /**
  * Data list header.
- *
- * @param props
- * @constructor
  */
 const ListHeader = props =>
   <div className={classes('list-header d-flex align-items-center gap-2 py-2 px-4 bg-body-tertiary', {
@@ -26,9 +22,10 @@ const ListHeader = props =>
     {props.filters &&
       <Search
         id={props.id + '-search'}
+        //name={props.name+'.filters'}
         {...props.filters}
         autoFocus={props.autoFocus}
-        disabled={props.disabled && isEmpty(props.filters.current)}
+        disabled={props.disabled}
       />
     }
 
@@ -52,6 +49,7 @@ const ListHeader = props =>
 ListHeader.propTypes = {
   id: T.string.isRequired,
   flush: T.bool,
+  name: T.string.isRequired,
   disabled: T.bool,
   display: T.shape(
     DataListDisplay.propTypes

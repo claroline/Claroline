@@ -33,6 +33,8 @@ class DesktopContext extends AbstractContext
     public function getObject(?string $contextId): ?ContextSubjectInterface
     {
         return null;
+
+        // return $this->securityManager->getCurrentUser()?->getMainOrganization();
     }
 
     public function isAvailable(): bool

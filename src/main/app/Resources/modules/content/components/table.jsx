@@ -2,10 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
-
-// TODO : add Content prefix to components
-
 const TableCell = props =>
   <td className={classes(props.className, {
     'text-center': 'center' === props.align,
@@ -22,30 +18,6 @@ TableCell.propTypes = {
 
 TableCell.defaultProps = {
   align: 'left',
-  children: null
-}
-
-const TableTooltipCell = props =>
-  <TableCell {...props}>
-    <TooltipOverlay
-      id={props.id}
-      tip={props.tip}
-      position={props.placement}
-    >
-      <span>
-        {props.children}
-      </span>
-    </TooltipOverlay>
-  </TableCell>
-
-TableTooltipCell.propTypes = {
-  id: T.node.isRequired,
-  placement: T.string,
-  tip: T.string.isRequired,
-  children: T.node
-}
-
-TableTooltipCell.defaultProps = {
   children: null
 }
 
@@ -146,7 +118,6 @@ export {
   Table,
   TableRow,
   TableCell,
-  TableTooltipCell,
   TableHeader,
   TableHeaderCell,
   TableSortingCell

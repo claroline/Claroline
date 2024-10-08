@@ -20,6 +20,7 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
+use Claroline\CommunityBundle\Finder\UserType;
 use Claroline\CoreBundle\Controller\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\Model\HasRolesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -36,7 +37,6 @@ use Claroline\CoreBundle\Messenger\Message\CreateWorkspace;
 use Claroline\CoreBundle\Messenger\Message\ImportWorkspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Claroline\LogBundle\Finder\OperationalLogType;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -141,7 +141,7 @@ class WorkspaceController extends AbstractCrudController
         #[MapQueryString]
         ?FinderQuery $finderQuery = new FinderQuery()
     ): StreamedJsonResponse {
-        $finder = $this->finder->create(OperationalLogType::class)
+        $finder = $this->finder->create(UserType::class)
             ->submit($finderQuery)
             ->getResult(function (object $row): array {
                 return $this->serializer->serialize($row, [SerializerInterface::SERIALIZE_MINIMAL]);

@@ -15,6 +15,9 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\LogBundle\Entity\FunctionalLog;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * @deprecated
+ */
 class FunctionalLogFinder extends AbstractFinder
 {
     public static function getClass(): string

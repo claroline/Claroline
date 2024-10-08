@@ -2,23 +2,14 @@
 
 namespace Claroline\CommunityBundle\Transfer\Importer\User;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\TransferBundle\Transfer\Importer\AbstractUpdateImporter;
 
-class Update extends AbstractUpdateImporter
+final class Update extends AbstractUpdateImporter
 {
-    /** @var ObjectManager */
-    private $om;
-
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
-    }
-
     public static function getAction(): array
     {
         return ['user', self::MODE_UPDATE];
@@ -29,7 +20,7 @@ class Update extends AbstractUpdateImporter
         $groups = [];
         if (isset($data['groups'])) {
             foreach ($data['groups'] as $group) {
-                $object = $this->om->getObject($group, Group::class, array_keys($group));
+                $object = $this->crud->find(Group::class, $group);
                 if (!$object) {
                     throw new \Exception('Group '.implode(',', $group).' does not exists');
                 }
@@ -44,7 +35,7 @@ class Update extends AbstractUpdateImporter
         $roles = [];
         if (isset($data['roles'])) {
             foreach ($data['roles'] as $role) {
-                $object = $this->om->getObject($role, Role::class, array_keys($role));
+                $object = $this->crud->find(Role::class, $role);
                 if (!$object) {
                     throw new \Exception('Role '.implode(',', $role).' does not exists');
                 }
@@ -59,7 +50,7 @@ class Update extends AbstractUpdateImporter
         $organizations = [];
         if (isset($data['organizations'])) {
             foreach ($data['organizations'] as $organization) {
-                $object = $this->om->getObject($organization, Organization::class, array_keys($organization));
+                $object = $this->crud->find(Organization::class, $organization);
                 if (!$object) {
                     throw new \Exception('Organization '.implode(',', $organization).' does not exists');
                 }

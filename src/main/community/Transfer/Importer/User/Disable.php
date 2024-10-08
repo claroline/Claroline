@@ -7,17 +7,12 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 
-class Disable extends AbstractImporter
+final class Disable extends AbstractImporter
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var UserManager */
-    private $userManager;
-
-    public function __construct(ObjectManager $om, UserManager $userManager)
-    {
-        $this->om = $om;
-        $this->userManager = $userManager;
+    public function __construct(
+        private readonly ObjectManager $om,
+        private readonly UserManager $userManager
+    ) {
     }
 
     public function execute(array $data): array
@@ -46,7 +41,6 @@ class Disable extends AbstractImporter
 
     public function getSchema(?array $options = [], ?array $extra = []): array
     {
-        //this is so we don't show all properties. See ImportProvider and search $root
         return [static::getAction()[0] => User::class];
     }
 }

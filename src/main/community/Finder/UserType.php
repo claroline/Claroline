@@ -23,6 +23,7 @@ class UserType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             'disabled' => false,
+            'fulltext' => ['username', 'firstName', 'lastName', 'email'],
         ]);
 
         $resolver->setAllowedValues('disabled', [null, true, false]);

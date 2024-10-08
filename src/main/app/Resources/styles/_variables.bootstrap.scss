@@ -602,7 +602,7 @@ $aspect-ratios: (
         "16x9": calc(9 / 16 * 100%),
         "21x9": calc(9 / 21 * 100%),
         "thumbnail": calc(9 / 21 * 100%),
-        "poster": calc(1 / 5 * 100%)
+        "poster": calc(1 / 6 * 100%)
 ) !default;
 // scss-docs-end aspect-ratios
 // stylelint-enable function-disallowed-list

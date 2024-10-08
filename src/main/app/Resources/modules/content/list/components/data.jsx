@@ -128,13 +128,14 @@ class ListData extends Component {
     }
 
     const empty = !this.props.loading && 0 === this.props.totalResults
-    const hasFilters = this.props.filters && 0 < this.props.filters.current.length
+    const hasFilters = this.props.filters && this.props.filters.current && 0 < this.props.filters.current.length
 
     return (
       <div className={classes('data-list', this.props.className, {'data-list-flush': this.props.flush})} role="presentation">
         {(displayTool || filtersTool || this.props.addAction) &&
           <ListHeader
             id={this.props.id}
+            name={this.props.name}
             flush={this.props.flush}
             autoFocus={this.props.autoFocus}
             disabled={this.props.loading || 0 === this.props.totalResults}

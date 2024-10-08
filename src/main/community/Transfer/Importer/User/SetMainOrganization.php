@@ -3,31 +3,24 @@
 namespace Claroline\CommunityBundle\Transfer\Importer\User;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 
-class SetMainOrganization extends AbstractImporter
+final class SetMainOrganization extends AbstractImporter
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-
-    public function __construct(ObjectManager $om, Crud $crud)
-    {
-        $this->om = $om;
-        $this->crud = $crud;
+    public function __construct(
+        private readonly Crud $crud
+    ) {
     }
 
     public function execute(array $data): array
     {
         /** @var User $user */
-        $user = $this->om->getObject($data[static::getAction()[0]], User::class, array_keys($data[static::getAction()[0]]));
+        $user = $this->crud->find(User::class, $data[static::getAction()[0]]);
 
         /** @var Organization $organization */
-        $organization = $this->om->getObject($data['organization'], Organization::class, array_keys($data['organization']));
+        $organization = $this->crud->find(Organization::class, $data['organization']);
 
         if (!empty($user) && !empty($organization)) {
             $this->crud->update($user, [

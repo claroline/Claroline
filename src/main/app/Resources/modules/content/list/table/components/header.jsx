@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
@@ -52,7 +53,10 @@ const TableHeader = props => {
             <TableSortingCell
               key={column.name}
               disabled={props.disabled}
-              className={props.selection && 0 === index ? 'ps-0' : 'ps-4'}
+              className={classes({
+                'ps-0': props.selection && 0 === index,
+                'ps-4': !props.selection && 0 === index,
+              })}
               direction={(column.alias && column.alias === props.sorting.current.property) || column.name === props.sorting.current.property ? props.sorting.current.direction : 0}
               onSort={() => {
                 let direction = 1
@@ -70,7 +74,13 @@ const TableHeader = props => {
               {column.label}
             </TableSortingCell>
             :
-            <TableHeaderCell key={column.name} className={props.selection && 0 === index ? 'ps-0' : undefined}>
+            <TableHeaderCell
+              key={column.name}
+              className={classes({
+                'ps-0': props.selection && 0 === index,
+                'ps-4': !props.selection && 0 === index,
+              })}
+            >
               {column.label}
             </TableHeaderCell>
           )

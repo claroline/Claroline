@@ -16,6 +16,9 @@ use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * @deprecated
+ */
 class ResourceUserEvaluationFinder extends AbstractFinder
 {
     public static function getClass(): string

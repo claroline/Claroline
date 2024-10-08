@@ -127,7 +127,14 @@ const TableItem = props => {
       }
 
       {!props.loaded && props.columns.map((column, index) =>
-        <td key={column.name} className={classes(props.onSelect && 0 === index ? 'ps-0' : 'ps-4', `${column.type}-cell`, column.primary && 'primary-cell')}>
+        <td
+          key={column.name}
+          className={classes(`${column.type}-cell`,{
+            'ps-0': props.onSelect && 0 === index,
+            'ps-4': !props.onSelect && 0 === index,
+            'primary-cell': column.primary
+          })}
+        >
           <div className="d-flex flex-direction-row gap-3 align-items-center">
             {column.primary &&
               <div className={classes('placeholder thumbnail thumbnail-icon thumbnail-icon-xs', props.primaryAction && 'bg-primary')} />
@@ -142,7 +149,11 @@ const TableItem = props => {
       {props.loaded && props.columns.map((column, index) =>
         <DataCell
           key={column.name}
-          className={props.onSelect && 0 === index ? 'ps-0' : 'ps-4'}
+          className={classes(`${column.type}-cell`,{
+            'ps-0': props.onSelect && 0 === index,
+            'ps-4': !props.onSelect && 0 === index,
+            'primary-cell': column.primary
+          })}
           column={column}
           rowData={props.row}
           size={props.size}

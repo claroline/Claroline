@@ -13,6 +13,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {getActions} from '#/main/community/group/utils'
 import {Group as GroupTypes} from '#/main/community/group/prop-types'
 import {PageHeading} from '#/main/app/page/components/heading'
+import {Thumbnail} from '#/main/app/components/thumbnail'
 
 const Group = (props) =>
   <ToolPage
@@ -37,6 +38,17 @@ const Group = (props) =>
     {!isEmpty(props.group) &&
       <PageHeading
         size="md"
+        icon={get(props.group, 'thumbnail') ?
+          <Thumbnail
+            size="xl"
+            thumbnail={get(props.group, 'thumbnail')}
+            name={get(props.group, 'name')}
+            square={true}
+          >
+            <span className="fa fa-users" aria-hidden={true} />
+          </Thumbnail> :
+          undefined
+        }
         title={get(props.group, 'name', trans('loading'))}
         primaryAction="edit"
         actions={!isEmpty(props.group) ? getActions([props.group], {

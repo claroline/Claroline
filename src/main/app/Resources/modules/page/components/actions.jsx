@@ -38,7 +38,7 @@ const PageActions = (props) => {
   }
 
   return (
-    <div className="page-actions gap-2 ms-auto d-flex flex-nowrap" role="toolbar">
+    <div className="page-actions gap-1 ms-auto d-flex flex-nowrap" role="toolbar">
       {primaryAction && (undefined === primaryAction.displayed || primaryAction.displayed) &&
         <Button
           {...primaryAction}

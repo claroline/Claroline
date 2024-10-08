@@ -11,7 +11,6 @@
 
 namespace Claroline\CursusBundle\Subscriber\Crud\Registration;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;

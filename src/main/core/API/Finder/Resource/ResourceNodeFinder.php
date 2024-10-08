@@ -18,19 +18,15 @@ use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
+/**
+ * @deprecated
+ */
 class ResourceNodeFinder extends AbstractFinder
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authChecker;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
-        AuthorizationCheckerInterface $authChecker,
-        TokenStorageInterface $tokenStorage
+        private readonly AuthorizationCheckerInterface $authChecker,
+        private readonly TokenStorageInterface $tokenStorage
     ) {
-        $this->authChecker = $authChecker;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public static function getClass(): string

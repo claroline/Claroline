@@ -20,6 +20,7 @@ const pageSize     = (listState) => paginationSelectors.pageSize(pagination(list
 const currentPage  = (listState) => paginationSelectors.currentPage(pagination(listState)) // for retro-compatibility
 
 const filters      = (listState) => searchSelectors.filters(listState.filters) // for retro-compatibility
+const searchText   = (listState) => searchSelectors.text(listState.filters) // for retro-compatibility
 
 const sortByQueryString = createSelector(
   [sortBy],
@@ -87,6 +88,7 @@ selectors = select = {
   data,
   totalResults,
   filters,
+  searchText,
   sortBy,
   selected,
   selectedFull,

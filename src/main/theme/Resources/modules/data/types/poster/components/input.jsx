@@ -137,7 +137,7 @@ class PosterInputComponent extends PureComponent {
 
         {this.props.value && this.state.loaded &&
           <div
-            className="poster-preview ratio ratio-poster rounded-2"
+            className="poster-preview ratio ratio-poster rounded-3"
             style={{
               backgroundImage: `url("${asset(this.props.value)}")`,
               backgroundSize: 'cover',

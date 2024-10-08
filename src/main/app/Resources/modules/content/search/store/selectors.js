@@ -1,17 +1,39 @@
 import get from 'lodash/get'
 import isArray from 'lodash/isArray'
+import isEmpty from 'lodash/isEmpty'
 
 // retrieves a search instance in the store
 const search = (state, searchName) => get(state, searchName)
 
-const filters = (searchState) => searchState
+const text = (searchState) => searchState.text
+
+const filters = (searchState) => searchState.filters
+
+const hasSearch = (searchState) => {
+  const currentText = text(searchState)
+  if (!isEmpty(currentText)) {
+    return true
+  }
+
+  const currentFilters = filters(searchState)
+  if (!isEmpty(currentFilters)) {
+    return true
+  }
+
+  return false
+}
 
 const queryString = (searchState) => {
   const queryParams = []
 
   // add filters
+  const searchText = text(searchState)
+  if (searchText) {
+    queryParams.push(`q=${encodeURIComponent(searchText)}`)
+  }
+
   const currentFilters = filters(searchState)
-  if (0 < currentFilters.length) {
+  if (!isEmpty(currentFilters)) {
     currentFilters.map(filter => {
       if (isArray(filter.value)) {
         filter.value.map(arrValue =>
@@ -28,6 +50,8 @@ const queryString = (searchState) => {
 
 export const selectors = {
   search,
+  text,
   filters,
+  hasSearch,
   queryString
 }

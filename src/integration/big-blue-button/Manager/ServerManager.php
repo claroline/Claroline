@@ -75,8 +75,8 @@ class ServerManager
         if ($server) {
             $user = $this->tokenStorage->getToken()?->getUser();
 
-            $checksum = sha1("getMeetings${server['token']}");
-            $url = "${server['url']}/bigbluebutton/api/getMeetings?checksum=$checksum";
+            $checksum = sha1("getMeetings{$server['token']}");
+            $url = "{$server['url']}/bigbluebutton/api/getMeetings?checksum=$checksum";
 
             $response = $this->curlManager->exec($url);
 
@@ -99,8 +99,8 @@ class ServerManager
                                 $userId = $user->getUuid();
                                 $userName = urlencode($user->getFirstName().' '.$user->getLastName());
                                 $queryString = "meetingID=$meetingId&password=$moderatorPwd&userId=$userId&fullName=$userName&joinViaHtml5=true";
-                                $check = sha1("join$queryString${server['token']}");
-                                $joinUrl = "${server['url']}/bigbluebutton/api/join?$queryString&checksum=$check";
+                                $check = sha1("join$queryString{$server['token']}");
+                                $joinUrl = "{$server['url']}/bigbluebutton/api/join?$queryString&checksum=$check";
                             }
 
                             $meetings[] = array_merge($this->extractMeetingInfo($meetingEl), [

@@ -5,11 +5,19 @@ import {makeInstanceReducer} from '#/main/app/store/reducer'
 import {
   SEARCH_FILTER_ADD,
   SEARCH_FILTER_REMOVE,
-  SEARCH_FILTER_RESET
+  SEARCH_FILTER_RESET,
+  SEARCH_TEXT_UPDATE
 } from '#/main/app/content/search/store/actions'
 
-const reducer = makeInstanceReducer([], {
-  [SEARCH_FILTER_RESET]: (state, action) => action.filters,
+const reducer = makeInstanceReducer({text: '', filters: []}, {
+  [SEARCH_TEXT_UPDATE]: (state, action) => ({
+    text: action.text || '',
+    filters: state.filters
+  }),
+  [SEARCH_FILTER_RESET]: (state, action) => ({
+    text: state.text,
+    filters: action.filters
+  }),
 
   [SEARCH_FILTER_ADD]: (state, action) => {
     const newFilters = cloneDeep(state)
@@ -25,7 +33,10 @@ const reducer = makeInstanceReducer([], {
       })
     }
 
-    return newFilters
+    return {
+      text: state.text,
+      filters: newFilters
+    }
   },
 
   [SEARCH_FILTER_REMOVE]: (state, action) => {
@@ -35,7 +46,10 @@ const reducer = makeInstanceReducer([], {
       newFilters.splice(pos, 1)
     }
 
-    return newFilters
+    return {
+      text: state.text,
+      filters: newFilters
+    }
   }
 })
 

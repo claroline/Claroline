@@ -4,24 +4,17 @@ namespace Claroline\CommunityBundle\Transfer\Importer\User;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 
-class Create extends AbstractImporter
+final class Create extends AbstractImporter
 {
-    /** @var Crud */
-    private $crud;
-    /** @var ObjectManager */
-    private $om;
-
-    public function __construct(Crud $crud, ObjectManager $om)
-    {
-        $this->crud = $crud;
-        $this->om = $om;
+    public function __construct(
+        private readonly Crud $crud
+    ) {
     }
 
     public static function getAction(): array
@@ -43,8 +36,7 @@ class Create extends AbstractImporter
         }
 
         if (isset($data['mainOrganization'])) {
-            $organization = $this->om->getObject($data['mainOrganization'], Organization::class, array_keys($data['mainOrganization']));
-
+            $organization = $this->crud->find(Organization::class, $data['mainOrganization']);
             if (!$organization) {
                 throw new \Exception('Organization '.implode(',', $data['mainOrganization']).' does not exists');
             }
@@ -53,7 +45,7 @@ class Create extends AbstractImporter
         $groups = [];
         if (isset($data['groups'])) {
             foreach ($data['groups'] as $group) {
-                $object = $this->om->getObject($group, Group::class, array_keys($group));
+                $object = $this->crud->find(Group::class, $group);
                 if (!$object) {
                     throw new \Exception('Group '.implode(',', $group).' does not exists');
                 }
@@ -68,7 +60,7 @@ class Create extends AbstractImporter
         $roles = [];
         if (isset($data['roles'])) {
             foreach ($data['roles'] as $role) {
-                $object = $this->om->getObject($role, Role::class, array_keys($role));
+                $object = $this->crud->find(Role::class, $role);
                 if (!$object) {
                     throw new \Exception('Role '.implode(',', $role).' does not exists');
                 }
@@ -83,7 +75,7 @@ class Create extends AbstractImporter
         $organizations = [];
         if (isset($data['organizations'])) {
             foreach ($data['organizations'] as $organization) {
-                $object = $this->om->getObject($organization, Organization::class, array_keys($organization));
+                $object = $this->crud->find(Organization::class, $organization);
                 if (!$object) {
                     throw new \Exception('Organization '.implode(',', $organization).' does not exists');
                 }

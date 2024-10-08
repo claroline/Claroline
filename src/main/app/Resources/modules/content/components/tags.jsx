@@ -28,14 +28,12 @@ const ContentTags = props => {
   )
 }
 
-
 ContentTags.propTypes = {
   minSize: T.number.isRequired,
   maxSize: T.number.isRequired,
   onClick: T.func.isRequired,
   tags: T.object
 }
-
 
 export {
   ContentTags

@@ -15,6 +15,9 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * @deprecated
+ */
 class TaggedObjectFinder extends AbstractFinder
 {
     public static function getClass(): string

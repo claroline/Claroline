@@ -8,8 +8,6 @@ import {
 
 const defaultState = {
   page: 0,
-  // fixme : this should be -1, otherwise it will break if paginated=false
-  // but if I change it know, it will make -1 the default for all list in app
   pageSize: constants.DEFAULT_PAGE_SIZE
 }
 

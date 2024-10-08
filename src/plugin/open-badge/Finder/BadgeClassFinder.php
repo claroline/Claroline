@@ -21,6 +21,9 @@ use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+/**
+ * @deprecated
+ */
 class BadgeClassFinder extends AbstractFinder
 {
     public function __construct(

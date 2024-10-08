@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Organization;
 
 use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Display\Thumbnail;
@@ -32,7 +33,7 @@ use Ramsey\Uuid\Uuid as BaseUuid;
 #[ORM\Table(name: 'claro__organization')]
 #[ORM\Entity]
 #[CrudEntity(finderClass: OrganizationType::class)]
-class Organization implements CrudEntityInterface
+class Organization implements CrudEntityInterface, ContextSubjectInterface
 {
     use Code;
     use Id;
@@ -54,6 +55,11 @@ class Organization implements CrudEntityInterface
         $this->refreshUuid();
         // todo : generate unique from name for a more beautiful code
         $this->code = BaseUuid::uuid4()->toString();
+    }
+
+    public function getContextIdentifier(): string
+    {
+        return $this->uuid;
     }
 
     public static function getIdentifiers(): array

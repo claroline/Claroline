@@ -15,6 +15,9 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * @deprecated
+ */
 class ConnectionMessageFinder extends AbstractFinder
 {
     public static function getClass(): string

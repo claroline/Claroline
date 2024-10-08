@@ -18,6 +18,9 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\SearchObjectsEvent;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * @deprecated
+ */
 class WorkspaceEvaluationFinder extends AbstractFinder
 {
     public static function getClass(): string

@@ -14,6 +14,9 @@ namespace Claroline\CoreBundle\API\Finder\Platform;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Plugin;
 
+/**
+ * @deprecated
+ */
 class PluginFinder extends AbstractFinder
 {
     public static function getClass(): string

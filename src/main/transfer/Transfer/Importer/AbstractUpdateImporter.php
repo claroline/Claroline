@@ -6,12 +6,11 @@ use Claroline\AppBundle\API\Crud;
 
 abstract class AbstractUpdateImporter extends AbstractImporter
 {
-    /** @var Crud */
-    protected $crud;
+    protected Crud $crud;
 
     abstract protected static function getClass(): string;
 
-    public function setCrud(Crud $crud)
+    public function setCrud(Crud $crud): void
     {
         $this->crud = $crud;
     }

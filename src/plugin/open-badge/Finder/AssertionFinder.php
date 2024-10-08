@@ -21,6 +21,9 @@ use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+/**
+ * @deprecated
+ */
 class AssertionFinder extends AbstractFinder
 {
     public function __construct(

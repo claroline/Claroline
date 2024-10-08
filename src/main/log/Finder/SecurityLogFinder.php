@@ -15,6 +15,9 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\LogBundle\Entity\SecurityLog;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * @deprecated
+ */
 class SecurityLogFinder extends AbstractFinder
 {
     public static function getClass(): string

@@ -45,7 +45,7 @@
 }
 
 .app-page-poster + .app-page-heading .app-page-icon {
-    margin-top: -6rem;
+    margin-top: -5rem;
 }
 
 .app-page-icon {
@@ -54,6 +54,7 @@
     background: var(--#{$prefix}body-bg);
     font-size: 0;
     padding: $thumbnail-padding;
+    margin-left: -$thumbnail-padding;
 }
 
 .app-page-title {
