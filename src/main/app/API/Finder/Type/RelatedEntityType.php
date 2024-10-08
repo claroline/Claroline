@@ -12,7 +12,12 @@ class RelatedEntityType extends AbstractType
     {
         if (null !== $finder->getFilterValue()) {
             $queryBuilder->join($finder->getQueryPath(false), $finder->getAlias());
-            $queryBuilder->andWhere("{$finder->getAlias()}.uuid = :{$finder->getAlias()}");
+            if (is_array($finder->getFilterValue())) {
+                $queryBuilder->andWhere("{$finder->getAlias()}.uuid = :{$finder->getAlias()}");
+            } else {
+                $queryBuilder->andWhere("{$finder->getAlias()}.uuid IN (:{$finder->getAlias()})");
+            }
+
             $queryBuilder->setParameter($finder->getAlias(), $finder->getFilterValue());
         }
     }

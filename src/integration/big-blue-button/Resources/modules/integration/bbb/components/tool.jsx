@@ -13,6 +13,7 @@ import {BBBResources} from '#/integration/big-blue-button/integration/bbb/compon
 import {BBBRooms} from '#/integration/big-blue-button/integration/bbb/components/rooms'
 import {BBBRecordings} from '#/integration/big-blue-button/integration/bbb/components/recordings'
 import {BBBServers} from '#/integration/big-blue-button/integration/bbb/components/servers'
+import {PageSection} from '#/main/app/page'
 
 class BBBTool extends Component {
   componentDidMount() {
@@ -40,83 +41,84 @@ class BBBTool extends Component {
         }]}
         title={trans('bbb', {}, 'integration')}
       >
-        <BBBMetrics
-          meetings={this.props.activeMeetingsCount}
-          maxMeetings={this.props.maxMeetings}
-          meetingParticipants={this.props.maxMeetingParticipants}
-          participants={this.props.participantsCount}
-          maxParticipants={this.props.maxParticipants}
-          servers={this.props.servers.length}
-          availableServers={this.props.servers.filter(server => !server.disabled && (!server.limit || server.limit > server.participants)).length}
-        />
+        <PageSection size="full">
+          <BBBMetrics
+            meetings={this.props.activeMeetingsCount}
+            maxMeetings={this.props.maxMeetings}
+            meetingParticipants={this.props.maxMeetingParticipants}
+            participants={this.props.participantsCount}
+            maxParticipants={this.props.maxParticipants}
+            servers={this.props.servers.length}
+            availableServers={this.props.servers.filter(server => !server.disabled && (!server.limit || server.limit > server.participants)).length}
+          />
+        </PageSection>
 
-        <div className="row">
-          <div className="col-md-3">
-            <Vertical
-              basePath={this.props.path+'/bbb'}
-              style={{
-                marginTop: 20
-              }}
-              tabs={[
-                {
-                  icon: 'fa fa-fw fa-folder',
-                  title: trans('resources'),
-                  path: '/',
-                  exact: true
-                }, {
-                  icon: 'fa fa-fw fa-chalkboard',
-                  title: trans('meetings', {}, 'bbb'),
-                  path: '/rooms'
-                }, {
-                  icon: 'fa fa-fw fa-video',
-                  title: trans('recordings', {}, 'bbb'),
-                  path: '/recordings'
-                }, {
-                  icon: 'fa fa-fw fa-server',
-                  title: trans('servers', {}, 'bbb'),
-                  path: '/servers'
-                }
-              ]}
-            />
-          </div>
+        <PageSection size="full">
+          <div className="row" role="presentation">
+            <div className="col-md-3" role="presentation">
+              <Vertical
+                basePath={this.props.path+'/bbb'}
+                tabs={[
+                  {
+                    icon: 'fa fa-fw fa-folder',
+                    title: trans('resources'),
+                    path: '/',
+                    exact: true
+                  }, {
+                    icon: 'fa fa-fw fa-chalkboard',
+                    title: trans('meetings', {}, 'bbb'),
+                    path: '/rooms'
+                  }, {
+                    icon: 'fa fa-fw fa-video',
+                    title: trans('recordings', {}, 'bbb'),
+                    path: '/recordings'
+                  }, {
+                    icon: 'fa fa-fw fa-server',
+                    title: trans('servers', {}, 'bbb'),
+                    path: '/servers'
+                  }
+                ]}
+              />
+            </div>
 
-          <div className="col-md-9">
-            <Routes
-              path={this.props.path+'/bbb'}
-              routes={[
-                {
-                  path: '/',
-                  exact: true,
-                  render: () => (
-                    <BBBResources
-                      servers={this.props.servers}
-                      endMeetings={this.props.endMeetings}
-                    />
-                  )
-                }, {
-                  path: '/rooms',
-                  render: () => (
-                    <BBBRooms
-                      meetings={this.props.activeMeetings}
-                    />
-                  )
-                }, {
-                  path: '/recordings',
-                  render: () => (
-                    <BBBRecordings syncRecordings={this.props.syncRecordings} />
-                  )
-                }, {
-                  path: '/servers',
-                  render: () => (
-                    <BBBServers
-                      servers={this.props.servers}
-                    />
-                  )
-                }
-              ]}
-            />
+            <div className="col-md-9" role="presentation">
+              <Routes
+                path={this.props.path+'/bbb'}
+                routes={[
+                  {
+                    path: '/',
+                    exact: true,
+                    render: () => (
+                      <BBBResources
+                        servers={this.props.servers}
+                        endMeetings={this.props.endMeetings}
+                      />
+                    )
+                  }, {
+                    path: '/rooms',
+                    render: () => (
+                      <BBBRooms
+                        meetings={this.props.activeMeetings}
+                      />
+                    )
+                  }, {
+                    path: '/recordings',
+                    render: () => (
+                      <BBBRecordings syncRecordings={this.props.syncRecordings} />
+                    )
+                  }, {
+                    path: '/servers',
+                    render: () => (
+                      <BBBServers
+                        servers={this.props.servers}
+                      />
+                    )
+                  }
+                ]}
+              />
+            </div>
           </div>
-        </div>
+        </PageSection>
       </ToolPage>
     )
   }

@@ -1,4 +1,10 @@
 services:
+    Claroline\BigBlueButtonBundle\Finder\BBBType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\BigBlueButtonBundle\Finder\RecordingType:
+        tags: [ claroline.finder.type ]
+
     Claroline\BigBlueButtonBundle\Finder\BBBFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [claroline.finder]

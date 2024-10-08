@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        public: true
+
     Claroline\BigBlueButtonBundle\Controller\AdministrationController:
         arguments:
             - '@security.authorization_checker'

@@ -40,7 +40,7 @@ class BBBListener extends ResourceComponent implements EvaluatedResourceInterfac
         return 'claroline_big_blue_button';
     }
 
-    /** @var BBB $resource */
+    /** @param BBB $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
         $joinStatus = 'closed';
@@ -78,7 +78,7 @@ class BBBListener extends ResourceComponent implements EvaluatedResourceInterfac
         ];
     }
 
-    /** @var BBB $resource */
+    /** @param BBB $resource */
     public function update(AbstractResource $resource, array $data): ?array
     {
         return [
@@ -86,7 +86,7 @@ class BBBListener extends ResourceComponent implements EvaluatedResourceInterfac
         ];
     }
 
-    /** @var BBB $resource */
+    /** @param BBB $resource */
     public function delete(AbstractResource $resource, FileBag $fileBag, bool $softDelete = true): bool
     {
         if (!$softDelete) {

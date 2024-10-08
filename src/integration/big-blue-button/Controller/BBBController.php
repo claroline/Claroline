@@ -12,21 +12,25 @@
 namespace Claroline\BigBlueButtonBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\BigBlueButtonBundle\Entity\BBB;
 use Claroline\BigBlueButtonBundle\Entity\Recording;
 use Claroline\BigBlueButtonBundle\Manager\BBBManager;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: '/bbb/{id}')]
-#[EXT\ParamConverter('bbb', class: 'Claroline\BigBlueButtonBundle\Entity\BBB', options: ['mapping' => ['id' => 'uuid']])]
 class BBBController
 {
     use PermissionCheckerTrait;
@@ -43,7 +47,7 @@ class BBBController
     }
 
     #[Route(path: '/meeting', name: 'apiv2_bbb_meeting_create', methods: ['POST'])]
-    public function createMeetingAction(BBB $bbb): JsonResponse
+    public function createMeetingAction(#[MapEntity(mapping: ['id' => 'uuid'])] BBB $bbb): JsonResponse
     {
         $this->checkPermission('OPEN', $bbb->getResourceNode(), [], true);
 
@@ -58,7 +62,7 @@ class BBBController
     }
 
     #[Route(path: '/meeting/join/{username}', name: 'apiv2_bbb_meeting_join')]
-    public function joinMeetingAction(BBB $bbb, string $username = null): RedirectResponse
+    public function joinMeetingAction(#[MapEntity(mapping: ['id' => 'uuid'])] BBB $bbb, string $username = null): RedirectResponse
     {
         $this->checkPermission('OPEN', $bbb->getResourceNode(), [], true);
 
@@ -78,7 +82,7 @@ class BBBController
     }
 
     #[Route(path: '/meeting/end', name: 'apiv2_bbb_meeting_end', methods: ['PUT'])]
-    public function endMeetingAction(BBB $bbb): JsonResponse
+    public function endMeetingAction(#[MapEntity(mapping: ['id' => 'uuid'])] BBB $bbb): JsonResponse
     {
         $this->checkPermission('ADMINISTRATE', $bbb->getResourceNode(), [], true);
 
@@ -88,7 +92,7 @@ class BBBController
     }
 
     #[Route(path: '/meeting/moderators/check', name: 'apiv2_bbb_meeting_moderators_check', methods: ['GET'])]
-    public function meetingModeratorsCheckAction(BBB $bbb): JsonResponse
+    public function meetingModeratorsCheckAction(#[MapEntity(mapping: ['id' => 'uuid'])] BBB $bbb): JsonResponse
     {
         $this->checkPermission('OPEN', $bbb->getResourceNode(), [], true);
 
@@ -98,22 +102,23 @@ class BBBController
     }
 
     #[Route(path: '/recordings', name: 'apiv2_bbb_meeting_recordings_list', methods: ['GET'])]
-    public function listRecordingsAction(BBB $bbb, Request $request): JsonResponse
-    {
+    public function listRecordingsAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        BBB $bbb,
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $bbb->getResourceNode(), [], true);
 
-        $query = $request->query->all();
-        $query['hiddenFilters'] = [
-            'meeting' => $bbb,
-        ];
+        $finderQuery->addFilter('meeting', $bbb->getUuid());
 
-        return new JsonResponse(
-            $this->crud->list(Recording::class, $query)
-        );
+        $recordings = $this->crud->search(Recording::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+
+        return $recordings->toResponse();
     }
 
     #[Route(path: '/recordings', name: 'apiv2_bbb_meeting_recording_delete', methods: ['DELETE'])]
-    public function deleteRecordingsAction(BBB $bbb, Request $request): JsonResponse
+    public function deleteRecordingsAction(Request $request): JsonResponse
     {
         $this->crud->deleteBulk(
             $this->decodeIdsString($request, Recording::class)

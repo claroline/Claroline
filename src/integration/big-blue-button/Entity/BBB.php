@@ -11,15 +11,18 @@
 
 namespace Claroline\BigBlueButtonBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
+use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\BigBlueButtonBundle\Finder\BBBType;
 use Claroline\BigBlueButtonBundle\Repository\BBBRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_bigbluebuttonbundle_bbb')]
 #[ORM\Entity(repositoryClass: BBBRepository::class)]
+#[CrudEntity(finderClass: BBBType::class)]
 class BBB extends AbstractResource
 {
     #[ORM\Column(name: 'welcome_message', type: Types::TEXT, nullable: true)]
@@ -64,7 +67,7 @@ class BBB extends AbstractResource
     /**
      * @var Collection<int, Recording>
      */
-    #[ORM\OneToMany(mappedBy: 'meeting', targetEntity: Recording::class, orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Recording::class, mappedBy: 'meeting', orphanRemoval: true)]
     #[ORM\OrderBy(['startTime' => 'DESC'])]
     private Collection $recordings;
 

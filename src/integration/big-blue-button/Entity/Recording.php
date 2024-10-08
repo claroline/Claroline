@@ -2,13 +2,16 @@
 
 namespace Claroline\BigBlueButtonBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
+use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\BigBlueButtonBundle\Finder\RecordingType;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_bigbluebuttonbundle_recording')]
 #[ORM\Entity]
+#[CrudEntity(finderClass: RecordingType::class)]
 class Recording
 {
     use Id;

@@ -15,6 +15,9 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\BigBlueButtonBundle\Entity\BBB;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * @deprecated
+ */
 class BBBFinder extends AbstractFinder
 {
     public static function getClass(): string
