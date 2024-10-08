@@ -63,7 +63,7 @@ const PageMenu = (props) => {
   const main = breadcrumb.shift()
 
   return (
-    <div className={classes('app-page-menu px-4 py-2 py-lg-3 d-flex gap-4 flex-nowrap align-items-center bg-body', {
+    <div className={classes('app-page-menu px-4  d-flex gap-4 flex-nowrap align-items-center bg-body', {
       'sticky-top': !props.embedded
     })} role="presentation">
       {!props.embedded &&
@@ -75,7 +75,7 @@ const PageMenu = (props) => {
       }
 
       {!props.embedded &&
-        <div className="text-truncate" role="presentation">
+        <div className="text-truncate py-2" role="presentation">
           <div role="presentation" className="d-flex align-items-center">
             <Button
               {...main}
@@ -100,7 +100,7 @@ const PageMenu = (props) => {
                   <li className="nav-item" key={nav.name || toKey(nav.label)}>
                     <Button
                       {...nav}
-                      className="nav-link py-2 fw-normal"
+                      className="nav-link py-3 fw-normal rounded-0"
                     />
                   </li>
                 )}
@@ -111,7 +111,7 @@ const PageMenu = (props) => {
           {props.actions &&
             <Toolbar
               className={classes('nav nav-pills flex-nowrap', 1 >= displayedNav.length && 'ms-auto')}
-              buttonName="nav-link py-2 fw-normal"
+              buttonName="nav-link py-3 fw-normal rounded-0"
               toolbar={props.toolbar}
               tooltip="bottom"
               actions={props.actions}
