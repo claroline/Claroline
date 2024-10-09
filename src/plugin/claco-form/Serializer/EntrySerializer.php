@@ -93,8 +93,13 @@ class EntrySerializer
             'clacoForm' => [ // should not be exposed here
                 'id' => $entry->getClacoForm()->getUuid(),
             ],
-            'values' => $this->serializeValues($entry),
         ];
+
+        $fieldValues = $this->serializeValues($entry);
+        if (!empty($fieldValues)) {
+            // don't send an empty array, because the ui expect an object here
+            $serialized['values'] = $fieldValues;
+        }
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
