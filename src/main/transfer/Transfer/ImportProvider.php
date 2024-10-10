@@ -29,7 +29,7 @@ class ImportProvider extends AbstractProvider
      */
     public function execute($data, string $format, string $action, string $logFile, array $options = [], array $extra = [])
     {
-        $fs = new FileSystem();
+        $fs = new Filesystem();
         $fs->mkDir($this->logDir);
 
         $logFile = $this->logDir.'/'.$logFile;

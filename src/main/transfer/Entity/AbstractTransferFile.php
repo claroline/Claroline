@@ -2,14 +2,12 @@
 
 namespace Claroline\TransferBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
-use DateTimeInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Creator;
-use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass]
@@ -20,46 +18,27 @@ abstract class AbstractTransferFile implements TransferFileInterface
     use Creator;
     use CreatedAt;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: Types::STRING, nullable: true)]
-    protected $name;
-
-    /**
-     * @var string
-     */
-    #[ORM\Column(type: Types::STRING, nullable: true)]
-    protected $action;
+    protected ?string $name = null;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
-    protected $status = self::PENDING;
+    protected ?string $action = null;
 
-    /**
-     * @var string
-     */
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    protected string $status = self::PENDING;
+
     #[ORM\Column(name: 'file_format', type: Types::STRING)]
-    protected $format;
+    protected ?string $format = null;
 
     /**
      * Extra data required to process the import/export (eg. parent directory for directory creation).
-     *
-     *
-     * @var mixed
      */
     #[ORM\Column(type: Types::JSON, nullable: true)]
-    protected $extra;
+    protected ?array $extra = [];
 
-    /**
-     * @var DateTimeInterface
-     */
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    protected $executionDate;
+    protected ?\DateTimeInterface $executionDate = null;
 
-    /**
-     *
-     * @var Workspace
-     */
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Workspace::class)]
     protected ?Workspace $workspace = null;
@@ -74,7 +53,7 @@ abstract class AbstractTransferFile implements TransferFileInterface
         return $this->name;
     }
 
-    public function setName(?string $name)
+    public function setName(?string $name): void
     {
         $this->name = $name;
     }
@@ -84,7 +63,7 @@ abstract class AbstractTransferFile implements TransferFileInterface
         return $this->action;
     }
 
-    public function setAction(string $action)
+    public function setAction(string $action): void
     {
         $this->action = $action;
     }
@@ -94,7 +73,7 @@ abstract class AbstractTransferFile implements TransferFileInterface
         return $this->status;
     }
 
-    public function setStatus(string $status)
+    public function setStatus(string $status): void
     {
         $this->status = $status;
     }
@@ -104,27 +83,27 @@ abstract class AbstractTransferFile implements TransferFileInterface
         return $this->format;
     }
 
-    public function getExtra()
+    public function getExtra(): ?array
     {
         return $this->extra;
     }
 
-    public function setExtra($extra)
+    public function setExtra(?array $extra): void
     {
         $this->extra = $extra;
     }
 
-    public function setFormat(string $format)
+    public function setFormat(string $format): void
     {
         $this->format = $format;
     }
 
-    public function getExecutionDate(): ?DateTimeInterface
+    public function getExecutionDate(): ?\DateTimeInterface
     {
         return $this->executionDate;
     }
 
-    public function setExecutionDate(?DateTimeInterface $date = null)
+    public function setExecutionDate(?\DateTimeInterface $date = null): void
     {
         $this->executionDate = $date;
     }
@@ -134,7 +113,7 @@ abstract class AbstractTransferFile implements TransferFileInterface
         return $this->workspace;
     }
 
-    public function setWorkspace(?Workspace $workspace = null)
+    public function setWorkspace(?Workspace $workspace = null): void
     {
         $this->workspace = $workspace;
     }

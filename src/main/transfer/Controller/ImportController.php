@@ -11,18 +11,22 @@
 
 namespace Claroline\TransferBundle\Controller;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Security\ToolPermissions;
 use Claroline\TransferBundle\Entity\ImportFile;
+use Claroline\TransferBundle\Entity\TransferFileInterface;
 use Claroline\TransferBundle\Manager\ImportManager;
 use Claroline\TransferBundle\Transfer\ImportProvider;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -51,21 +55,23 @@ class ImportController extends AbstractCrudController
     }
 
     #[Route(path: '/workspace/{workspaceId}', name: 'workspace_list', methods: ['GET'])]
-    public function listByWorkspaceAction(#[MapEntity(mapping: ['workspaceId' => 'uuid'])]
-    Workspace $workspace, Request $request): JsonResponse
-    {
+    public function listByWorkspaceAction(
+        #[MapEntity(mapping: ['workspaceId' => 'uuid'])]
+        Workspace $workspace,
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
         $this->checkPermission(ToolPermissions::getPermission('import', 'OPEN'), $workspace, [], true);
 
-        return new JsonResponse(
-            $this->crud->list(self::getClass(), array_merge($request->query->all(), ['hiddenFilters' => [
-                'workspace' => $workspace->getUuid(),
-            ]]), $this->getOptions()['list'] ?? [])
-        );
+        $finderQuery->addFilter('workspace', $workspace->getUuid());
+
+        $imports = $this->crud->search(ImportFile::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+
+        return $imports->toResponse();
     }
 
     #[Route(path: '/{id}/execute', name: 'execute', methods: ['POST'])]
-    public function executeAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    ImportFile $importFile): JsonResponse
+    public function executeAction(#[MapEntity(mapping: ['id' => 'uuid'])] ImportFile $importFile): JsonResponse
     {
         $this->checkPermission('EDIT', $importFile, [], true);
 
@@ -73,13 +79,12 @@ class ImportController extends AbstractCrudController
 
         return new JsonResponse(
             $this->serializer->serialize($importFile),
-            ImportFile::IN_PROGRESS === $importFile->getStatus() ? 202 : 200
+            TransferFileInterface::IN_PROGRESS === $importFile->getStatus() ? 202 : 200
         );
     }
 
     #[Route(path: '/{id}/log', name: 'log', methods: ['GET'])]
-    public function logAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    ImportFile $importFile): Response
+    public function logAction(#[MapEntity(mapping: ['id' => 'uuid'])] ImportFile $importFile): Response
     {
         $this->checkPermission('OPEN', $importFile, [], true);
 

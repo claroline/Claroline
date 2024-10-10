@@ -14,7 +14,7 @@ namespace Claroline\TransferBundle\Installation;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 use Claroline\TransferBundle\Installation\Updater\Updater150000;
 
-class ClarolineTransferInstaller extends AdditionalInstaller
+final class ClarolineTransferInstaller extends AdditionalInstaller
 {
     public static function getUpdaters(): array
     {

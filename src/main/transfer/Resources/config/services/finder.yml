@@ -1,4 +1,10 @@
 services:
+    Claroline\TransferBundle\Finder\ImportFileType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\TransferBundle\Finder\ExportFileType:
+        tags: [ claroline.finder.type ]
+
     Claroline\TransferBundle\Finder\ImportFileFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]

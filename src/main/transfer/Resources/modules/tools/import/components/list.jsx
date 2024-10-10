@@ -17,23 +17,20 @@ import {PageListSection} from '#/main/app/page/components/list-section'
 const ImportList = props =>
   <ToolPage
     title={trans('all_imports', {}, 'transfer')}
-    primaryAction="add"
-    actions={[
-      {
-        name: 'add',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-plus',
-        label: trans('new_import', {}, 'transfer'),
-        target: `${props.path}/new`,
-        group: trans('management'),
-        displayed: props.canImport,
-        primary: true
-      }
-    ]}
   >
     <PageListSection>
       <ListData
+        flush={true}
         name={selectors.LIST_NAME}
+        addAction={{
+          name: 'add',
+          type: LINK_BUTTON,
+          label: trans('new_import', {}, 'transfer'),
+          target: `${props.path}/new`,
+          group: trans('management'),
+          displayed: props.canImport,
+          primary: true
+        }}
         primaryAction={(row) => ({
           type: LINK_BUTTON,
           target: `${props.path}/${row.id}`
@@ -86,26 +83,25 @@ const ImportList = props =>
             calculated: (row) => transAction(row.action),
             displayed: true
           }, {
-            name: 'format',
-            type: 'choice',
-            label: trans('format'),
-            options: {
-              choices: {
-                csv: trans('csv')
-              }
-            }
-          }, {
             name: 'file',
             type: 'file',
             label: trans('file'),
             sortable: false,
             filterable: false
           }, {
+            name: 'executionDate',
+            alias: 'executedAt',
+            type: 'date',
+            label: trans('execution_date'),
+            displayed: true,
+            options: {
+              time: true
+            }
+          }, {
             name: 'meta.createdAt',
             alias: 'createdAt',
             type: 'date',
             label: trans('creation_date'),
-            displayed: true,
             options: {
               time: true
             }

@@ -11,7 +11,8 @@
 
 namespace Claroline\TransferBundle\Controller;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -19,10 +20,13 @@ use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Security\ToolPermissions;
 use Claroline\TransferBundle\Entity\ExportFile;
+use Claroline\TransferBundle\Entity\TransferFileInterface;
 use Claroline\TransferBundle\Manager\ExportManager;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -50,21 +54,23 @@ class ExportController extends AbstractCrudController
     }
 
     #[Route(path: '/workspace/{workspaceId}', name: 'workspace_list', methods: ['GET'])]
-    public function listByWorkspaceAction(#[MapEntity(mapping: ['workspaceId' => 'uuid'])]
-    Workspace $workspace, Request $request): JsonResponse
-    {
+    public function listByWorkspaceAction(
+        #[MapEntity(mapping: ['workspaceId' => 'uuid'])]
+        Workspace $workspace,
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
         $this->checkPermission(ToolPermissions::getPermission('export', 'OPEN'), $workspace, [], true);
 
-        return new JsonResponse(
-            $this->crud->list(self::getClass(), array_merge($request->query->all(), ['hiddenFilters' => [
-                'workspace' => $workspace->getUuid(),
-            ]]), $this->getOptions()['list'] ?? [])
-        );
+        $finderQuery->addFilter('workspace', $workspace->getUuid());
+
+        $exports = $this->crud->search(ExportFile::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+
+        return $exports->toResponse();
     }
 
     #[Route(path: '/{id}/execute', name: 'execute', methods: ['POST'])]
-    public function executeAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    ExportFile $exportFile): JsonResponse
+    public function executeAction(#[MapEntity(mapping: ['id' => 'uuid'])] ExportFile $exportFile): JsonResponse
     {
         $this->checkPermission('REFRESH', $exportFile, [], true);
 
@@ -72,13 +78,12 @@ class ExportController extends AbstractCrudController
 
         return new JsonResponse(
             $this->serializer->serialize($exportFile),
-            ExportFile::IN_PROGRESS === $exportFile->getStatus() ? 202 : 200
+            TransferFileInterface::IN_PROGRESS === $exportFile->getStatus() ? 202 : 200
         );
     }
 
     #[Route(path: '/{id}/download', name: 'download', methods: ['GET'])]
-    public function downloadAction(#[MapEntity(mapping: ['id' => 'uuid'])]
-    ExportFile $exportFile): BinaryFileResponse
+    public function downloadAction(#[MapEntity(mapping: ['id' => 'uuid'])] ExportFile $exportFile): BinaryFileResponse
     {
         $this->checkPermission('OPEN', $exportFile, [], true);
 
@@ -88,7 +93,7 @@ class ExportController extends AbstractCrudController
 
         return new BinaryFileResponse($this->filesDir.DIRECTORY_SEPARATOR.'transfer'.DIRECTORY_SEPARATOR.$exportFile->getUuid(), 200, [
             'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => "attachment; filename={$filename}",
+            'Content-Disposition' => "attachment; filename=$filename",
         ]);
     }
 }

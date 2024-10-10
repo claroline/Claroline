@@ -15,6 +15,9 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\TransferBundle\Entity\ImportFile;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * @deprecated
+ */
 class ImportFileFinder extends AbstractFinder
 {
     public static function getClass(): string

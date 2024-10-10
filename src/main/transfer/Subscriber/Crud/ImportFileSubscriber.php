@@ -6,16 +6,16 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Claroline\TransferBundle\Entity\ImportFile;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ImportFileSubscriber implements EventSubscriberInterface
+final class ImportFileSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
@@ -62,7 +62,7 @@ class ImportFileSubscriber implements EventSubscriberInterface
             'name' => $object->getAction(),
             'action' => 'import',
             'parentId' => $object->getUuid(),
-        ]), [Crud::THROW_EXCEPTION]);
+        ]));
     }
 
     public function postUpdate(UpdateEvent $event): void
@@ -83,13 +83,13 @@ class ImportFileSubscriber implements EventSubscriberInterface
             }
         } else {
             if (!empty($scheduler)) {
-                $this->crud->update($scheduler, $data['scheduler'], [Crud::NO_PERMISSIONS, Crud::THROW_EXCEPTION]);
+                $this->crud->update($scheduler, $data['scheduler'], [Crud::NO_PERMISSIONS]);
             } else {
                 $this->crud->create(ScheduledTask::class, array_merge($data['scheduler'], [
                     'name' => $object->getAction(),
                     'action' => 'import',
                     'parentId' => $object->getUuid(),
-                ]), [Crud::NO_PERMISSIONS, Crud::THROW_EXCEPTION]);
+                ]), [Crud::NO_PERMISSIONS]);
             }
         }
     }
@@ -106,7 +106,7 @@ class ImportFileSubscriber implements EventSubscriberInterface
 
         // delete log file
         if ($object->getLog()) {
-            $fs = new FileSystem();
+            $fs = new Filesystem();
             $fs->remove($this->logDir.DIRECTORY_SEPARATOR.$object->getLog());
         }
 

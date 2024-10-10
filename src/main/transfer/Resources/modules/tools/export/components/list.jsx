@@ -17,23 +17,20 @@ import {PageListSection} from '#/main/app/page/components/list-section'
 const ExportList = (props) =>
   <ToolPage
     title={trans('all_exports', {}, 'transfer')}
-    primaryAction="add"
-    actions={[
-      {
-        name: 'add',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-plus',
-        label: trans('new_export', {}, 'transfer'),
-        target: `${props.path}/new`,
-        group: trans('management'),
-        displayed: props.canExport,
-        primary: true
-      }
-    ]}
   >
     <PageListSection>
       <ListData
+        flush={true}
         name={selectors.LIST_NAME}
+        addAction={{
+          name: 'add',
+          type: LINK_BUTTON,
+          label: trans('new_export', {}, 'transfer'),
+          target: `${props.path}/new`,
+          group: trans('management'),
+          displayed: props.canExport,
+          primary: true
+        }}
         primaryAction={(row) => ({
           type: LINK_BUTTON,
           target: `${props.path}/${row.id}`
@@ -86,20 +83,19 @@ const ExportList = (props) =>
             calculated: (row) => transAction(row.action),
             displayed: true
           }, {
-            name: 'format',
-            type: 'choice',
-            label: trans('format'),
+            name: 'executionDate',
+            alias: 'executedAt',
+            type: 'date',
+            label: trans('execution_date'),
+            displayed: true,
             options: {
-              choices: {
-                csv: trans('csv')
-              }
+              time: true
             }
           }, {
             name: 'meta.createdAt',
             alias: 'createdAt',
             type: 'date',
             label: trans('creation_date'),
-            displayed: true,
             options: {
               time: true
             }

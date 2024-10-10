@@ -119,7 +119,7 @@ class BadgeClassFinder extends AbstractFinder
                     break;
 
                 case 'meta.enabled':
-                    $qb->andWhere('obj.enabled = :enabled');
+                    $qb->andWhere('obj.archived = :enabled');
                     $qb->setParameter('enabled', $filterValue);
                     break;
 

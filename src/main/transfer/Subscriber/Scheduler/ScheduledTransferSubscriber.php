@@ -21,18 +21,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ScheduledTransferSubscriber implements EventSubscriberInterface
 {
-    private ObjectManager $om;
-    private ImportManager $importManager;
-    private ExportManager $exportManager;
-
     public function __construct(
-        ObjectManager $om,
-        ImportManager $importManager,
-        ExportManager $exportManager
+        private readonly ObjectManager $om,
+        private readonly ImportManager $importManager,
+        private readonly ExportManager $exportManager
     ) {
-        $this->om = $om;
-        $this->importManager = $importManager;
-        $this->exportManager = $exportManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -43,7 +36,7 @@ class ScheduledTransferSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function executeExport(ExecuteScheduledTaskEvent $event)
+    public function executeExport(ExecuteScheduledTaskEvent $event): void
     {
         $task = $event->getTask();
         if (empty($task->getParentId())) {
@@ -61,7 +54,7 @@ class ScheduledTransferSubscriber implements EventSubscriberInterface
         $event->setStatus($status);
     }
 
-    public function executeImport(ExecuteScheduledTaskEvent $event)
+    public function executeImport(ExecuteScheduledTaskEvent $event): void
     {
         $task = $event->getTask();
         if (empty($task->getParentId())) {

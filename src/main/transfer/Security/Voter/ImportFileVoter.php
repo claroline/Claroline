@@ -39,7 +39,6 @@ class ImportFileVoter extends AbstractTransferFileVoter
                 return VoterInterface::ACCESS_DENIED;
 
             case self::OPEN:
-            case self::VIEW:
                 if ($this->isToolGranted(self::OPEN, 'import', $object->getWorkspace() ?? null)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }

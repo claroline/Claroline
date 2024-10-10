@@ -20,42 +20,22 @@ class ImportFileSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var UserSerializer */
-    private $userSerializer;
-    /** @var PublicFileSerializer */
-    private $fileSerializer;
-    /** @var WorkspaceSerializer */
-    private $workspaceSerializer;
-    /** @var ScheduledTaskSerializer */
-    private $scheduledTaskSerializer;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        UserSerializer $userSerializer,
-        PublicFileSerializer $fileSerializer,
-        WorkspaceSerializer $workspaceSerializer,
-        ScheduledTaskSerializer $scheduledTaskSerializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly UserSerializer $userSerializer,
+        private readonly PublicFileSerializer $fileSerializer,
+        private readonly WorkspaceSerializer $workspaceSerializer,
+        private readonly ScheduledTaskSerializer $scheduledTaskSerializer
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->userSerializer = $userSerializer;
-        $this->fileSerializer = $fileSerializer;
-        $this->workspaceSerializer = $workspaceSerializer;
-        $this->scheduledTaskSerializer = $scheduledTaskSerializer;
     }
 
-    /** @return string */
-    public function getClass()
+    public function getClass(): string
     {
         return ImportFile::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'import_file';
     }

@@ -6,16 +6,16 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Claroline\TransferBundle\Entity\ExportFile;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ExportFileSubscriber implements EventSubscriberInterface
+final class ExportFileSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
@@ -63,7 +63,7 @@ class ExportFileSubscriber implements EventSubscriberInterface
             'name' => $object->getAction(),
             'action' => 'export',
             'parentId' => $object->getUuid(),
-        ]), [Crud::THROW_EXCEPTION]);
+        ]));
     }
 
     public function postUpdate(UpdateEvent $event): void
@@ -84,13 +84,13 @@ class ExportFileSubscriber implements EventSubscriberInterface
             }
         } else {
             if (!empty($scheduler)) {
-                $this->crud->update($scheduler, $data['scheduler'], [Crud::NO_PERMISSIONS, Crud::THROW_EXCEPTION]);
+                $this->crud->update($scheduler, $data['scheduler'], [Crud::NO_PERMISSIONS]);
             } else {
                 $this->crud->create(ScheduledTask::class, array_merge($data['scheduler'], [
                     'name' => $object->getAction(),
                     'action' => 'export',
                     'parentId' => $object->getUuid(),
-                ]), [Crud::NO_PERMISSIONS, Crud::THROW_EXCEPTION]);
+                ]), [Crud::NO_PERMISSIONS]);
             }
         }
     }
@@ -100,7 +100,7 @@ class ExportFileSubscriber implements EventSubscriberInterface
         /** @var ExportFile $object */
         $object = $event->getObject();
 
-        $fs = new FileSystem();
+        $fs = new Filesystem();
 
         // delete log file
         if (file_exists($this->logDir.DIRECTORY_SEPARATOR.$object->getUuid())) {

@@ -6,7 +6,7 @@ use Claroline\TransferBundle\Transfer\Exporter\ExporterInterface;
 
 class ExportProvider extends AbstractProvider
 {
-    public function execute(string $fileDest, string $format, string $action, ?array $options = [], ?array $extra = [])
+    public function execute(string $fileDest, string $format, string $action, ?array $options = [], ?array $extra = []): void
     {
         $adapter = $this->getAdapter($format);
         $executor = $this->getAction($action);

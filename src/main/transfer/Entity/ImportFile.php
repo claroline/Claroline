@@ -11,41 +11,38 @@
 
 namespace Claroline\TransferBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
+use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\TransferBundle\Finder\ImportFileType;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_transfer_import')]
 #[ORM\Entity]
+#[CrudEntity(finderClass: ImportFileType::class)]
 class ImportFile extends AbstractTransferFile
 {
-    /**
-     *
-     * @var PublicFile
-     */
     #[ORM\JoinColumn(name: 'file_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: PublicFile::class)]
     private ?PublicFile $file = null;
 
     /**
-     *
-     * @var string
      * @deprecated. we should use uuid instead.
      */
     #[ORM\Column(type: Types::STRING, nullable: true)]
-    private $log;
+    private ?string $log = null;
 
-    public function setFile(PublicFile $file)
+    public function setFile(PublicFile $file): void
     {
         $this->file = $file;
     }
 
-    public function getFile()
+    public function getFile(): ?PublicFile
     {
         return $this->file;
     }
 
-    public function setLog($log)
+    public function setLog(?string $log): void
     {
         $this->log = $log;
     }

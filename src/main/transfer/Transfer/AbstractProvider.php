@@ -7,14 +7,14 @@ use Claroline\TransferBundle\Transfer\Adapter\AdapterInterface;
 abstract class AbstractProvider
 {
     /** @var iterable|AdapterInterface[] */
-    protected $adapters = [];
+    protected iterable $adapters = [];
 
     /** @var iterable|ActionInterface[] */
-    protected $actions = [];
+    protected iterable $actions = [];
 
     abstract public function getAvailableActions(string $format, ?array $options = [], ?array $extra = []): array;
 
-    public function setAdapters(iterable $adapters)
+    public function setAdapters(iterable $adapters): void
     {
         $this->adapters = $adapters;
     }
@@ -33,7 +33,7 @@ abstract class AbstractProvider
         throw new \Exception('No adapter found for mime type '.$mimeType);
     }
 
-    public function setActions(iterable $actions)
+    public function setActions(iterable $actions): void
     {
         $this->actions = $actions;
     }
