@@ -23,9 +23,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 
-/**
- * PlatformController is in charge of the rendering of the Claroline web UI.
- */
 class PlatformController
 {
     public function __construct(
@@ -46,7 +43,7 @@ class PlatformController
      * Renders the Claroline web application.
      */
     #[Route(path: '/', name: 'claro_index')]
-    public function indexAction(Request $request): Response
+    public function indexAction(): Response
     {
         $currentUser = null;
         if ($this->tokenStorage->getToken()?->getUser() instanceof User) {
@@ -71,11 +68,6 @@ class PlatformController
                 'availableOrganizations' => $currentUser ? array_map(function (Organization $organization) {
                     return $this->serializer->serialize($organization, [Options::SERIALIZE_MINIMAL]);
                 }, $currentUser->getOrganizations()) : [],
-
-                'client' => [
-                    'ip' => $request->getClientIp(),
-                    'forwarded' => $request->headers->get('X-Forwarded-For'), // I can only get trusted proxies if I use symfony getClientIps()
-                ],
                 'footer' => [
                     'content' => $this->configHandler->getParameter('footer.content'),
                     'display' => [
@@ -94,7 +86,7 @@ class PlatformController
     }
 
     /**
-     * Change locale.
+     * Change current user locale.
      */
     #[Route(path: '/locale/{locale}', name: 'claroline_locale_change')]
     public function changeLocaleAction(Request $request, string $locale): RedirectResponse
@@ -112,6 +104,9 @@ class PlatformController
         );
     }
 
+    /**
+     * Change current organization.
+     */
     #[Route(path: '/o/{organization}', name: 'claro_organization_change', methods: ['GET', 'PUT'])]
     public function changeOrganizationAction(
         #[MapEntity(mapping: ['organization' => 'uuid'])]

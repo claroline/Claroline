@@ -21,7 +21,7 @@ class InjectStylesheetEvent extends Event
 {
     private string $content = '';
 
-    public function addContent($content): void
+    public function addContent(string $content): void
     {
         $this->content .= $content;
     }

@@ -15,41 +15,31 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Answerable
 {
     /**
      * Gets the question Validator instance.
-     *
-     * @return ValidatorInterface
      */
-    abstract protected function getQuestionValidator();
+    abstract protected function getQuestionValidator(): ValidatorInterface;
 
     /**
      * Gets the answer Validator instance.
-     *
-     * @return ValidatorInterface
      */
-    abstract protected function getAnswerValidator();
+    abstract protected function getAnswerValidator(): ValidatorInterface;
 
     /**
      * Gets the question Serializer instance.
      */
-    abstract protected function getQuestionSerializer();
+    abstract protected function getQuestionSerializer(): object;
 
     /**
-     * Validates a choice question.
-     *
-     * @return array
+     * Validates a question data.
      */
-    public function validateQuestion(array $question, array $options = [])
+    public function validateQuestion(array $question, array $options = []): array
     {
         return $this->getQuestionValidator()->validate($question, $options);
     }
 
     /**
      * Validates the answer data for a question.
-     *
-     * @param mixed $answer
-     *
-     * @return array
      */
-    public function validateAnswer($answer, AbstractItem $question, array $options = [])
+    public function validateAnswer(mixed $answer, AbstractItem $question, array $options = []): array
     {
         $options[Validation::QUESTION] = $question;
 
@@ -58,27 +48,21 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Answerable
 
     /**
      * Serializes a question entity.
-     *
-     * @return array
      */
-    public function serializeQuestion(AbstractItem $question, array $options = [])
+    public function serializeQuestion(AbstractItem $question, array $options = []): array
     {
         return $this->getQuestionSerializer()->serialize($question, $options);
     }
 
     /**
      * Deserializes question data.
-     *
-     * @param AbstractItem $question
-     *
-     * @return AbstractItem
      */
-    public function deserializeQuestion(array $questionData, AbstractItem $question = null, array $options = [])
+    public function deserializeQuestion(array $data, AbstractItem $question = null, array $options = []): AbstractItem
     {
-        return $this->getQuestionSerializer()->deserialize($questionData, $question, $options);
+        return $this->getQuestionSerializer()->deserialize($data, $question, $options);
     }
 
-    public function getCsvTitles(AbstractItem $question)
+    public function getCsvTitles(AbstractItem $question): array
     {
         if (!empty($question->getQuestion()->getTitle())) {
             return [$question->getQuestion()->getTitle()];
@@ -87,7 +71,7 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Answerable
         return [$question->getQuestion()->getContentText()];
     }
 
-    public function getCsvAnswers(AbstractItem $question, Answer $answer)
+    public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         return ['nope'];
     }

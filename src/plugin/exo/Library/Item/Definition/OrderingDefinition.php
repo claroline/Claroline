@@ -6,7 +6,6 @@ use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\OrderingQuestion;
 use UJM\ExoBundle\Entity\Misc\OrderingItem;
-use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
@@ -20,91 +19,42 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\OrderingQuestionValidator;
  */
 class OrderingDefinition extends AbstractDefinition
 {
-    /**
-     * @var OrderingQuestionValidator
-     */
-    private $validator;
-
-    /**
-     * @var OrderingAnswerValidator
-     */
-    private $answerValidator;
-
-    /**
-     * @var OrderingQuestionSerializer
-     */
-    private $serializer;
-
-    /**
-     * OrderingDefinition constructor.
-     */
     public function __construct(
-        OrderingQuestionValidator $validator,
-        OrderingAnswerValidator $answerValidator,
-        OrderingQuestionSerializer $serializer
+        private readonly OrderingQuestionValidator $validator,
+        private readonly OrderingAnswerValidator $answerValidator,
+        private readonly OrderingQuestionSerializer $serializer
     ) {
-        $this->validator = $validator;
-        $this->answerValidator = $answerValidator;
-        $this->serializer = $serializer;
     }
 
-    /**
-     * Gets the choice question mime-type.
-     *
-     * @return string
-     */
-    public static function getMimeType()
+    public static function getMimeType(): string
     {
         return ItemType::ORDERING;
     }
 
-    /**
-     * Gets the choice question entity.
-     *
-     * @return string
-     */
-    public static function getEntityClass()
+    public static function getEntityClass(): string
     {
-        return '\UJM\ExoBundle\Entity\ItemType\OrderingQuestion';
+        return OrderingQuestion::class;
     }
 
-    /**
-     * Gets the ordering question validator.
-     *
-     * @return OrderingQuestionValidator
-     */
-    protected function getQuestionValidator()
+    protected function getQuestionValidator(): OrderingQuestionValidator
     {
         return $this->validator;
     }
 
-    /**
-     * Gets the ordering answer validator.
-     *
-     * @return OrderingAnswerValidator
-     */
-    protected function getAnswerValidator()
+    protected function getAnswerValidator(): OrderingAnswerValidator
     {
         return $this->answerValidator;
     }
 
-    /**
-     * Gets the ordering question serializer.
-     *
-     * @return OrderingQuestionSerializer
-     */
-    protected function getQuestionSerializer()
+    protected function getQuestionSerializer(): OrderingQuestionSerializer
     {
         return $this->serializer;
     }
 
     /**
      * @param OrderingQuestion $question
-     * @param $answer
-     *
-     * @return CorrectedAnswer
      */
-    public function correctAnswer(AbstractItem $question, $answer = [])
+    public function correctAnswer(AbstractItem $question, mixed $answer = []): CorrectedAnswer
     {
         $corrected = new CorrectedAnswer();
 
@@ -125,10 +75,8 @@ class OrderingDefinition extends AbstractDefinition
 
     /**
      * @param OrderingQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function expectAnswer(AbstractItem $question)
+    public function expectAnswer(AbstractItem $question): array
     {
         return array_filter($question->getItems()->toArray(), function (OrderingItem $item) {
             return !empty($item->getPosition());
@@ -137,15 +85,16 @@ class OrderingDefinition extends AbstractDefinition
 
     /**
      * @param OrderingQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function allAnswers(AbstractItem $question)
+    public function allAnswers(AbstractItem $question): array
     {
         return $question->getItems()->toArray();
     }
 
-    public function getStatistics(AbstractItem $question, array $answersData, $total)
+    /**
+     * @param OrderingQuestion $question
+     */
+    public function getStatistics(AbstractItem $question, array $answersData, int $total): array
     {
         $orders = [];
         $unused = [];
@@ -192,20 +141,22 @@ class OrderingDefinition extends AbstractDefinition
     /**
      * Refreshes item UUIDs.
      *
-     * @param OrderingQuestion $item
+     * @param OrderingQuestion $question
      */
-    public function refreshIdentifiers(AbstractItem $item)
+    public function refreshIdentifiers(AbstractItem $question): void
     {
-        /** @var OrderingItem $item */
-        foreach ($item->getItems() as $orderingItem) {
+        foreach ($question->getItems() as $orderingItem) {
             $orderingItem->refreshUuid();
         }
     }
 
-    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    /**
+     * @param OrderingQuestion $question
+     */
+    public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         $data = json_decode($answer->getData(), true);
-        $items = $item->getItems();
+        $items = $question->getItems();
         $answers = [];
 
         foreach ($data as $el) {

@@ -89,13 +89,6 @@ services:
          alias: UJM\ExoBundle\Serializer\Item\Type\SetQuestionSerializer
          public: true
 
-    UJM\ExoBundle\Serializer\Item\Type\SelectionQuestionSerializer:
-        tags: [claroline.serializer]
-
-    ujm_exo.serializer.question_selection:
-         alias: UJM\ExoBundle\Serializer\Item\Type\SelectionQuestionSerializer
-         public: true
-
     UJM\ExoBundle\Serializer\Item\Type\PairQuestionSerializer:
         tags: [claroline.serializer]
         arguments:

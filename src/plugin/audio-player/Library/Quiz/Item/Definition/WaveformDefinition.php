@@ -9,7 +9,6 @@ use Claroline\AudioPlayerBundle\Validator\Quiz\JsonSchema\Attempt\AnswerData\Wav
 use Claroline\AudioPlayerBundle\Validator\Quiz\JsonSchema\Item\Type\WaveformQuestionValidator;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
-use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
@@ -20,91 +19,42 @@ use UJM\ExoBundle\Library\Item\Definition\AbstractDefinition;
  */
 class WaveformDefinition extends AbstractDefinition
 {
-    /**
-     * @var WaveformQuestionValidator
-     */
-    private $validator;
-
-    /**
-     * @var WaveformAnswerValidator
-     */
-    private $answerValidator;
-
-    /**
-     * @var WaveformQuestionSerializer
-     */
-    private $serializer;
-
-    /**
-     * WaveformDefinition constructor.
-     */
     public function __construct(
-        WaveformQuestionValidator $validator,
-        WaveformAnswerValidator $answerValidator,
-        WaveformQuestionSerializer $serializer
+        private readonly WaveformQuestionValidator $validator,
+        private readonly WaveformAnswerValidator $answerValidator,
+        private readonly WaveformQuestionSerializer $serializer
     ) {
-        $this->validator = $validator;
-        $this->answerValidator = $answerValidator;
-        $this->serializer = $serializer;
     }
 
-    /**
-     * Gets the waveform question mime-type.
-     *
-     * @return string
-     */
-    public static function getMimeType()
+    public static function getMimeType(): string
     {
         return 'application/x.waveform+json';
     }
 
-    /**
-     * Gets the waveform question entity.
-     *
-     * @return string
-     */
-    public static function getEntityClass()
+    public static function getEntityClass(): string
     {
         return WaveformQuestion::class;
     }
 
-    /**
-     * Gets the waveform question validator.
-     *
-     * @return WaveformQuestionValidator
-     */
-    protected function getQuestionValidator()
+    protected function getQuestionValidator(): WaveformQuestionValidator
     {
         return $this->validator;
     }
 
-    /**
-     * Gets the waveform answer validator.
-     *
-     * @return WaveformAnswerValidator
-     */
-    protected function getAnswerValidator()
+    protected function getAnswerValidator(): WaveformAnswerValidator
     {
         return $this->answerValidator;
     }
 
-    /**
-     * Gets the waveform question serializer.
-     *
-     * @return WaveformQuestionSerializer
-     */
-    protected function getQuestionSerializer()
+    protected function getQuestionSerializer(): WaveformQuestionSerializer
     {
         return $this->serializer;
     }
 
     /**
      * @param WaveformQuestion $question
-     * @param $answer
-     *
-     * @return CorrectedAnswer
      */
-    public function correctAnswer(AbstractItem $question, $answer)
+    public function correctAnswer(AbstractItem $question, mixed $answer): CorrectedAnswer
     {
         $corrected = new CorrectedAnswer();
 
@@ -114,10 +64,10 @@ class WaveformDefinition extends AbstractDefinition
                 $found = false;
 
                 foreach ($answer as $selection) {
-                    if ($selection['start'] >= $section->getStart() - $section->getStartTolerance() &&
-                        $selection['start'] <= $section->getStart() + $section->getStartTolerance() &&
-                        $selection['end'] >= $section->getEnd() - $section->getEndTolerance() &&
-                        $selection['end'] <= $section->getEnd() + $section->getEndTolerance()
+                    if ($selection['start'] >= $section->getStart() - $section->getStartTolerance()
+                        && $selection['start'] <= $section->getStart() + $section->getStartTolerance()
+                        && $selection['end'] >= $section->getEnd() - $section->getEndTolerance()
+                        && $selection['end'] <= $section->getEnd() + $section->getEndTolerance()
                     ) {
                         $found = true;
                         break;
@@ -137,10 +87,10 @@ class WaveformDefinition extends AbstractDefinition
                 $found = false;
 
                 foreach ($question->getSections() as $section) {
-                    if ($selection['start'] >= $section->getStart() - $section->getStartTolerance() &&
-                        $selection['start'] <= $section->getStart() + $section->getStartTolerance() &&
-                        $selection['end'] >= $section->getEnd() - $section->getEndTolerance() &&
-                        $selection['end'] <= $section->getEnd() + $section->getEndTolerance()
+                    if ($selection['start'] >= $section->getStart() - $section->getStartTolerance()
+                        && $selection['start'] <= $section->getStart() + $section->getStartTolerance()
+                        && $selection['end'] >= $section->getEnd() - $section->getEndTolerance()
+                        && $selection['end'] <= $section->getEnd() + $section->getEndTolerance()
                     ) {
                         $found = true;
                         break;
@@ -156,9 +106,9 @@ class WaveformDefinition extends AbstractDefinition
     }
 
     /**
-     * @return array
+     * @param WaveformQuestion $question
      */
-    public function expectAnswer(AbstractItem $question)
+    public function expectAnswer(AbstractItem $question): array
     {
         return array_filter($question->getSections()->toArray(), function (Section $section) {
             return 0 < $section->getScore();
@@ -167,20 +117,16 @@ class WaveformDefinition extends AbstractDefinition
 
     /**
      * @param WaveformQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function allAnswers(AbstractItem $question)
+    public function allAnswers(AbstractItem $question): array
     {
         return $question->getSections()->toArray();
     }
 
     /**
-     * @param int $total
-     *
-     * @return array
+     * @param WaveformQuestion $question
      */
-    public function getStatistics(AbstractItem $waveformQuestion, array $answersData, $total)
+    public function getStatistics(AbstractItem $question, array $answersData, int $total): array
     {
         $sections = [];
 
@@ -189,11 +135,11 @@ class WaveformDefinition extends AbstractDefinition
                 if (isset($sectionAnswer['start']) && isset($sectionAnswer['end'])) {
                     $isInSection = false;
 
-                    foreach ($waveformQuestion->getSections() as $section) {
-                        if ($sectionAnswer['start'] >= $section->getStart() - $section->getStartTolerance() &&
-                            $sectionAnswer['start'] <= $section->getStart() + $section->getStartTolerance() &&
-                            $sectionAnswer['end'] >= $section->getEnd() - $section->getEndTolerance() &&
-                            $sectionAnswer['end'] <= $section->getEnd() + $section->getEndTolerance()
+                    foreach ($question->getSections() as $section) {
+                        if ($sectionAnswer['start'] >= $section->getStart() - $section->getStartTolerance()
+                            && $sectionAnswer['start'] <= $section->getStart() + $section->getStartTolerance()
+                            && $sectionAnswer['end'] >= $section->getEnd() - $section->getEndTolerance()
+                            && $sectionAnswer['end'] <= $section->getEnd() + $section->getEndTolerance()
                         ) {
                             $sectionId = $section->getUuid();
                             $sections[$sectionId] = isset($sections[$sectionId]) ? $sections[$sectionId] + 1 : 1;
@@ -218,17 +164,22 @@ class WaveformDefinition extends AbstractDefinition
     /**
      * No additional identifier to regenerate.
      */
-    public function refreshIdentifiers(AbstractItem $item)
+    public function refreshIdentifiers(AbstractItem $item): void
     {
-        return;
     }
 
-    public function getCsvTitles(AbstractItem $item)
+    /**
+     * @param WaveformQuestion $question
+     */
+    public function getCsvTitles(AbstractItem $question): array
     {
-        return [$item->getQuestion()->getContentText()];
+        return [$question->getQuestion()->getContentText()];
     }
 
-    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    /**
+     * @param WaveformQuestion $question
+     */
+    public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         $data = json_decode($answer->getData(), true);
         $answers = [];

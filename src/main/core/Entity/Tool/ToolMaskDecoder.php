@@ -15,7 +15,6 @@ use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
-
 #[ORM\Table(name: 'claro_tool_mask_decoder')]
 #[ORM\UniqueConstraint(name: 'tool_mask_decoder_unique_tool_and_name', columns: ['tool_name', 'name'])]
 #[ORM\Entity]

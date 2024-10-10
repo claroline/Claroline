@@ -96,7 +96,7 @@ class CsvAdapter implements AdapterInterface
             $headers = ArrayUtils::getPropertiesName($data[0]);
         }
 
-        $fs = new FileSystem();
+        $fs = new Filesystem();
 
         if (!$append) {
             $fs->appendToFile($fileDest, implode(self::COLUMN_DELIMITER, array_map(function ($columnName) use ($schema) {

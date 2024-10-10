@@ -7,7 +7,6 @@ use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\PairQuestion;
 use UJM\ExoBundle\Entity\Misc\GridItem;
 use UJM\ExoBundle\Entity\Misc\GridRow;
-use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
@@ -21,91 +20,42 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\PairQuestionValidator;
  */
 class PairDefinition extends AbstractDefinition
 {
-    /**
-     * @var PairQuestionValidator
-     */
-    private $validator;
-
-    /**
-     * @var PairAnswerValidator
-     */
-    private $answerValidator;
-
-    /**
-     * @var PairQuestionSerializer
-     */
-    private $serializer;
-
-    /**
-     * PairDefinition constructor.
-     */
     public function __construct(
-        PairQuestionValidator $validator,
-        PairAnswerValidator $answerValidator,
-        PairQuestionSerializer $serializer
+        private readonly PairQuestionValidator $validator,
+        private readonly PairAnswerValidator $answerValidator,
+        private readonly PairQuestionSerializer $serializer
     ) {
-        $this->validator = $validator;
-        $this->answerValidator = $answerValidator;
-        $this->serializer = $serializer;
     }
 
-    /**
-     * Gets the pair question mime-type.
-     *
-     * @return string
-     */
-    public static function getMimeType()
+    public static function getMimeType(): string
     {
         return ItemType::PAIR;
     }
 
-    /**
-     * Gets the pair question entity.
-     *
-     * @return string
-     */
-    public static function getEntityClass()
+    public static function getEntityClass(): string
     {
-        return '\UJM\ExoBundle\Entity\ItemType\PairQuestion';
+        return PairQuestion::class;
     }
 
-    /**
-     * Gets the pair question validator.
-     *
-     * @return PairQuestionValidator
-     */
-    protected function getQuestionValidator()
+    protected function getQuestionValidator(): PairQuestionValidator
     {
         return $this->validator;
     }
 
-    /**
-     * Gets the pair answer validator.
-     *
-     * @return PairAnswerValidator
-     */
-    protected function getAnswerValidator()
+    protected function getAnswerValidator(): PairAnswerValidator
     {
         return $this->answerValidator;
     }
 
-    /**
-     * Gets the pair question serializer.
-     *
-     * @return PairQuestionSerializer
-     */
-    protected function getQuestionSerializer()
+    protected function getQuestionSerializer(): PairQuestionSerializer
     {
         return $this->serializer;
     }
 
     /**
      * @param PairQuestion $question
-     * @param array        $answer
-     *
-     * @return CorrectedAnswer
      */
-    public function correctAnswer(AbstractItem $question, $answer)
+    public function correctAnswer(AbstractItem $question, mixed $answer): CorrectedAnswer
     {
         $corrected = new CorrectedAnswer();
         $rows = $question->getRows()->toArray();
@@ -158,10 +108,8 @@ class PairDefinition extends AbstractDefinition
 
     /**
      * @param PairQuestion $question
-     *
-     * @return array
      */
-    public function expectAnswer(AbstractItem $question)
+    public function expectAnswer(AbstractItem $question): array
     {
         return array_filter($question->getRows()->toArray(), function (GridRow $row) {
             return 0 < $row->getScore();
@@ -170,32 +118,27 @@ class PairDefinition extends AbstractDefinition
 
     /**
      * @param PairQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function allAnswers(AbstractItem $question)
+    public function allAnswers(AbstractItem $question): array
     {
         return array_merge($question->getRows()->toArray(), $question->getOddItems()->toArray());
     }
 
     /**
-     * @param PairQuestion $pairQuestion
-     * @param int          $total
-     *
-     * @return array
+     * @param PairQuestion $question
      */
-    public function getStatistics(AbstractItem $pairQuestion, array $answersData, $total)
+    public function getStatistics(AbstractItem $question, array $answersData, int $total): array
     {
         $paired = [];
         $unpaired = [];
         $unusedItems = [];
         $valid = [];
 
-        foreach ($pairQuestion->getItems()->toArray() as $item) {
+        foreach ($question->getItems()->toArray() as $item) {
             $unusedItems[$item->getUuid()] = true;
         }
         // Initialize acceptable pairs
-        foreach ($pairQuestion->getRows()->toArray() as $row) {
+        foreach ($question->getRows()->toArray() as $row) {
             $rowItems = $row->getItems();
 
             if (2 === count($rowItems)) {
@@ -215,11 +158,11 @@ class PairDefinition extends AbstractDefinition
                 }
             }
         }
-        // Build remaining acceptable pairs to group inversed pairs together
-        foreach ($pairQuestion->getItems()->toArray() as $i1) {
-            foreach ($pairQuestion->getItems()->toArray() as $i2) {
-                if ((!isset($valid[$i1->getUuid()]) || !isset($valid[$i1->getUuid()][$i2->getUuid()])) &&
-                    (!isset($valid[$i2->getUuid()]) || !isset($valid[$i2->getUuid()][$i1->getUuid()]))
+        // Build remaining acceptable pairs to group inverse pairs together
+        foreach ($question->getItems()->toArray() as $i1) {
+            foreach ($question->getItems()->toArray() as $i2) {
+                if ((!isset($valid[$i1->getUuid()]) || !isset($valid[$i1->getUuid()][$i2->getUuid()]))
+                    && (!isset($valid[$i2->getUuid()]) || !isset($valid[$i2->getUuid()][$i1->getUuid()]))
                 ) {
                     if (!isset($valid[$i1->getUuid()])) {
                         $valid[$i1->getUuid()] = [];
@@ -260,17 +203,17 @@ class PairDefinition extends AbstractDefinition
     /**
      * Refreshes items UUIDs.
      *
-     * @param PairQuestion $item
+     * @param PairQuestion $question
      */
-    public function refreshIdentifiers(AbstractItem $item)
+    public function refreshIdentifiers(AbstractItem $question): void
     {
         /** @var GridItem $pairItem */
-        foreach ($item->getItems() as $pairItem) {
+        foreach ($question->getItems() as $pairItem) {
             $pairItem->refreshUuid();
         }
     }
 
-    private function findRowByAnswer(array $items, array &$rows)
+    private function findRowByAnswer(array $items, array &$rows): ?GridRow
     {
         $found = null;
 
@@ -304,10 +247,13 @@ class PairDefinition extends AbstractDefinition
         return $found;
     }
 
-    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    /**
+     * @param PairQuestion $question
+     */
+    public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         $data = json_decode($answer->getData(), true);
-        $items = $item->getItems();
+        $items = $question->getItems();
         $answers = [];
 
         foreach ($data as $pair) {

@@ -6,7 +6,6 @@ use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
 use UJM\ExoBundle\Entity\Misc\Choice;
-use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
 use UJM\ExoBundle\Library\Item\ItemType;
@@ -19,91 +18,42 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\ChoiceQuestionValidator;
  */
 class ChoiceDefinition extends AbstractDefinition
 {
-    /**
-     * @var ChoiceQuestionValidator
-     */
-    private $validator;
-
-    /**
-     * @var ChoiceAnswerValidator
-     */
-    private $answerValidator;
-
-    /**
-     * @var ChoiceQuestionSerializer
-     */
-    private $serializer;
-
-    /**
-     * ChoiceDefinition constructor.
-     */
     public function __construct(
-        ChoiceQuestionValidator $validator,
-        ChoiceAnswerValidator $answerValidator,
-        ChoiceQuestionSerializer $serializer
+        private readonly ChoiceQuestionValidator $validator,
+        private readonly ChoiceAnswerValidator $answerValidator,
+        private readonly ChoiceQuestionSerializer $serializer
     ) {
-        $this->validator = $validator;
-        $this->answerValidator = $answerValidator;
-        $this->serializer = $serializer;
     }
 
-    /**
-     * Gets the choice question mime-type.
-     *
-     * @return string
-     */
-    public static function getMimeType()
+    public static function getMimeType(): string
     {
         return ItemType::CHOICE;
     }
 
-    /**
-     * Gets the choice question entity.
-     *
-     * @return string
-     */
-    public static function getEntityClass()
+    public static function getEntityClass(): string
     {
-        return '\UJM\ExoBundle\Entity\ItemType\ChoiceQuestion';
+        return ChoiceQuestion::class;
     }
 
-    /**
-     * Gets the choice question validator.
-     *
-     * @return ChoiceQuestionValidator
-     */
-    protected function getQuestionValidator()
+    protected function getQuestionValidator(): ChoiceQuestionValidator
     {
         return $this->validator;
     }
 
-    /**
-     * Gets the choice answer validator.
-     *
-     * @return ChoiceAnswerValidator
-     */
-    protected function getAnswerValidator()
+    protected function getAnswerValidator(): ChoiceAnswerValidator
     {
         return $this->answerValidator;
     }
 
-    /**
-     * Gets the choice question serializer.
-     *
-     * @return ChoiceQuestionSerializer
-     */
-    protected function getQuestionSerializer()
+    protected function getQuestionSerializer(): ChoiceQuestionSerializer
     {
         return $this->serializer;
     }
 
     /**
      * @param ChoiceQuestion $question
-     * @param $answer
-     *
-     * @return CorrectedAnswer
      */
-    public function correctAnswer(AbstractItem $question, $answer = [])
+    public function correctAnswer(AbstractItem $question, mixed $answer = []): CorrectedAnswer
     {
         $corrected = new CorrectedAnswer();
 
@@ -129,10 +79,8 @@ class ChoiceDefinition extends AbstractDefinition
 
     /**
      * @param ChoiceQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function expectAnswer(AbstractItem $question)
+    public function expectAnswer(AbstractItem $question): array
     {
         return array_filter($question->getChoices()->toArray(), function (Choice $choice) {
             return 0 < $choice->getScore();
@@ -141,15 +89,16 @@ class ChoiceDefinition extends AbstractDefinition
 
     /**
      * @param ChoiceQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function allAnswers(AbstractItem $question)
+    public function allAnswers(AbstractItem $question): array
     {
         return $question->getChoices()->toArray();
     }
 
-    public function getStatistics(AbstractItem $choiceQuestion, array $answersData, $total)
+    /**
+     * @param ChoiceQuestion $question
+     */
+    public function getStatistics(AbstractItem $question, array $answersData, int $total): array
     {
         $choices = [];
         foreach ($answersData as $answerData) {
@@ -168,12 +117,12 @@ class ChoiceDefinition extends AbstractDefinition
     /**
      * Refreshes choice UUIDs.
      *
-     * @param ChoiceQuestion $item
+     * @param ChoiceQuestion $question
      */
-    public function refreshIdentifiers(AbstractItem $item)
+    public function refreshIdentifiers(AbstractItem $question): void
     {
         /** @var Choice $choice */
-        foreach ($item->getChoices() as $choice) {
+        foreach ($question->getChoices() as $choice) {
             $choice->refreshUuid();
         }
     }
@@ -181,14 +130,14 @@ class ChoiceDefinition extends AbstractDefinition
     /**
      * Exports choice answers.
      *
-     * @param ChoiceQuestion $item
+     * @param ChoiceQuestion $question
      */
-    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         $data = json_decode($answer->getData(), true);
         $answers = [];
 
-        foreach ($item->getChoices() as $choice) {
+        foreach ($question->getChoices() as $choice) {
             if (is_array($data) && in_array($choice->getUuid(), $data)) {
                 $answers[] = $choice->getData();
             }

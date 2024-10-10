@@ -33,30 +33,14 @@ class DataSource
     /** @deprecated use Claroline\CoreBundle\Component\Context\PublicContext::getName() */
     public const CONTEXT_HOME = 'public';
 
-    /**
-     * The name of the source.
-     *
-     * @var string
-     */
     #[ORM\Column(name: 'source_name')]
-    private $name;
+    private ?string $name = null;
 
-    /**
-     * The type of the source.
-     *
-     * @var string
-     */
     #[ORM\Column(name: 'source_type')]
-    private $type;
+    private ?string $type = null;
 
-    /**
-     * The context of the source (workspace, desktop).
-     *
-     *
-     * @var array
-     */
     #[ORM\Column(type: Types::JSON)]
-    private $context = [
+    private ?array $context = [
         self::CONTEXT_DESKTOP,
         self::CONTEXT_WORKSPACE,
         self::CONTEXT_ADMINISTRATION,
@@ -65,89 +49,51 @@ class DataSource
 
     /**
      * A list of tags to group similar sources.
-     *
-     *
-     * @var array
      */
     #[ORM\Column(type: Types::JSON)]
-    private $tags = [];
+    private ?array $tags = [];
 
-    /**
-     * DataSource constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * Set name.
-     */
-    public function setName($name)
+    public function setName(?string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * Get type.
-     *
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * Set type.
-     */
-    public function setType($type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    /**
-     * Get the context of the source (workspace, desktop).
-     *
-     * @return array
-     */
-    public function getContext()
+    public function getContext(): ?array
     {
         return $this->context;
     }
 
-    /**
-     * Set context.
-     */
-    public function setContext(array $context)
+    public function setContext(array $context): void
     {
         $this->context = $context;
     }
 
-    /**
-     * Get tags.
-     *
-     * @return array
-     */
-    public function getTags()
+    public function getTags(): ?array
     {
         return $this->tags;
     }
 
-    /**
-     * Set tags.
-     */
-    public function setTags(array $tags)
+    public function setTags(array $tags): void
     {
         $this->tags = $tags;
     }

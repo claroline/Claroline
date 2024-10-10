@@ -10,26 +10,26 @@ use UJM\ExoBundle\Library\Item\Definition\ItemDefinitionInterface;
  */
 class UnregisterableDefinitionException extends \Exception
 {
-    const DUPLICATE_MIME = 1;
-    const NOT_A_STRING_MIME = 2;
-    const UNSUPPORTED_MIME = 3;
+    public const DUPLICATE_MIME = 1;
+    public const NOT_A_STRING_MIME = 2;
+    public const UNSUPPORTED_MIME = 3;
 
-    public static function notAStringMimeType(ItemDefinitionInterface $handler)
+    public static function notAStringMimeType(ItemDefinitionInterface $handler): UnregisterableDefinitionException
     {
         return self::notAString($handler, 'MIME type', self::NOT_A_STRING_MIME);
     }
 
-    public static function unsupportedMimeType(ItemDefinitionInterface $handler)
+    public static function unsupportedMimeType(ItemDefinitionInterface $handler): UnregisterableDefinitionException
     {
         return self::unsupported($handler, 'MIME type', self::UNSUPPORTED_MIME);
     }
 
-    public static function duplicateMimeType(ItemDefinitionInterface $handler)
+    public static function duplicateMimeType(ItemDefinitionInterface $handler): UnregisterableDefinitionException
     {
         return self::duplicate($handler, 'MIME type', $handler->getMimeType(), self::DUPLICATE_MIME);
     }
 
-    private static function notAString(ItemDefinitionInterface $handler, $type, $error)
+    private static function notAString(ItemDefinitionInterface $handler, $type, $error): UnregisterableDefinitionException
     {
         return new self(
             sprintf(
@@ -41,7 +41,7 @@ class UnregisterableDefinitionException extends \Exception
         );
     }
 
-    private static function unsupported(ItemDefinitionInterface $handler, $type, $error)
+    private static function unsupported(ItemDefinitionInterface $handler, $type, $error): UnregisterableDefinitionException
     {
         return new self(
             sprintf(

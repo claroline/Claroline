@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Repository\PluginRepository;
 use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\CoreBundle\Repository\PluginRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_plugin')]
@@ -23,12 +23,12 @@ class Plugin
     use Id;
 
     #[ORM\Column(name: 'vendor_name', length: 50)]
-    protected $vendorName;
+    protected ?string $vendorName = null;
 
     #[ORM\Column(name: 'short_name', length: 50)]
-    protected $bundleName;
+    protected ?string $bundleName = null;
 
-    public function getBundleFQCN()
+    public function getBundleFQCN(): string
     {
         $vendor = $this->getVendorName();
         $bundle = $this->getBundleName();
@@ -36,37 +36,36 @@ class Plugin
         return "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
     }
 
-    public function getShortName()
+    public function getShortName(): string
     {
         return strtolower($this->getVendorName().'_'.str_replace('Bundle', '', $this->getBundleName()));
     }
 
-    public function getVendorName()
+    public function getVendorName(): ?string
     {
         return $this->vendorName;
     }
 
-    public function setVendorName($name)
+    public function setVendorName(string $name): void
     {
         $this->vendorName = $name;
     }
 
-    public function getBundleName()
+    public function getBundleName(): ?string
     {
         return $this->bundleName;
     }
 
-    public function setBundleName($name)
+    public function setBundleName(string $name): void
     {
         $this->bundleName = $name;
     }
 
-    public function getSfName()
+    public function getSfName(): ?string
     {
         return $this->vendorName.$this->bundleName;
     }
 
-    //for debugging
     public function __toString()
     {
         return $this->getBundleFQCN();

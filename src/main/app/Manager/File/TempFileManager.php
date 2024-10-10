@@ -20,7 +20,7 @@ class TempFileManager
         string $tmpDir
     ) {
         $this->tmpDir = $tmpDir;
-        $this->filesystem = new FileSystem();
+        $this->filesystem = new Filesystem();
     }
 
     /**

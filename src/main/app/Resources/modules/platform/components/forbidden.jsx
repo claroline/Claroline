@@ -83,13 +83,6 @@ const PlatformForbidden = () => {
               target: '/login',
               displayed: !authenticated,
               primary: true
-            }, {
-              name: 'reactivate',
-              type: CALLBACK_BUTTON,
-              label: trans('reactivate', {}, 'actions'),
-              callback: () => dispatch(actions.extend()),
-              displayed: authenticated && !restrictions.disabled && ended,
-              primary: true
             }
           ]}
         />

@@ -8,7 +8,6 @@ use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Entity\Misc\Association;
 use UJM\ExoBundle\Entity\Misc\Label;
 use UJM\ExoBundle\Entity\Misc\Proposal;
-use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
@@ -22,91 +21,42 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\MatchQuestionValidator;
  */
 class MatchDefinition extends AbstractDefinition
 {
-    /**
-     * @var MatchQuestionValidator
-     */
-    private $validator;
-
-    /**
-     * @var MatchAnswerValidator
-     */
-    private $answerValidator;
-
-    /**
-     * @var MatchQuestionSerializer
-     */
-    private $serializer;
-
-    /**
-     * MatchDefinition constructor.
-     */
     public function __construct(
-        MatchQuestionValidator $validator,
-        MatchAnswerValidator $answerValidator,
-        MatchQuestionSerializer $serializer
+        private readonly MatchQuestionValidator $validator,
+        private readonly MatchAnswerValidator $answerValidator,
+        private readonly MatchQuestionSerializer $serializer
     ) {
-        $this->validator = $validator;
-        $this->answerValidator = $answerValidator;
-        $this->serializer = $serializer;
     }
 
-    /**
-     * Gets the match question mime-type.
-     *
-     * @return string
-     */
-    public static function getMimeType()
+    public static function getMimeType(): string
     {
         return ItemType::MATCH;
     }
 
-    /**
-     * Gets the match question entity.
-     *
-     * @return string
-     */
-    public static function getEntityClass()
+    public static function getEntityClass(): string
     {
-        return '\UJM\ExoBundle\Entity\ItemType\MatchQuestion';
+        return MatchQuestion::class;
     }
 
-    /**
-     * Gets the match question validator.
-     *
-     * @return MatchQuestionValidator
-     */
-    protected function getQuestionValidator()
+    protected function getQuestionValidator(): MatchQuestionValidator
     {
         return $this->validator;
     }
 
-    /**
-     * Gets the match answer validator.
-     *
-     * @return MatchAnswerValidator
-     */
-    protected function getAnswerValidator()
+    protected function getAnswerValidator(): MatchAnswerValidator
     {
         return $this->answerValidator;
     }
 
-    /**
-     * Gets the match question serializer.
-     *
-     * @return MatchQuestionSerializer
-     */
-    protected function getQuestionSerializer()
+    protected function getQuestionSerializer(): MatchQuestionSerializer
     {
         return $this->serializer;
     }
 
     /**
      * @param MatchQuestion $question
-     * @param $answer
-     *
-     * @return CorrectedAnswer
      */
-    public function correctAnswer(AbstractItem $question, $answer)
+    public function correctAnswer(AbstractItem $question, mixed $answer): CorrectedAnswer
     {
         $corrected = new CorrectedAnswer();
 
@@ -152,10 +102,8 @@ class MatchDefinition extends AbstractDefinition
 
     /**
      * @param MatchQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function expectAnswer(AbstractItem $question)
+    public function expectAnswer(AbstractItem $question): array
     {
         return array_filter($question->getAssociations()->toArray(), function (Association $association) {
             return 0 < $association->getScore();
@@ -164,15 +112,16 @@ class MatchDefinition extends AbstractDefinition
 
     /**
      * @param MatchQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function allAnswers(AbstractItem $question)
+    public function allAnswers(AbstractItem $question): array
     {
         return $question->getAssociations()->toArray();
     }
 
-    public function getStatistics(AbstractItem $matchQuestion, array $answersData, $total)
+    /**
+     * @param MatchQuestion $question
+     */
+    public function getStatistics(AbstractItem $question, array $answersData, int $total): array
     {
         $matches = [];
 
@@ -199,26 +148,29 @@ class MatchDefinition extends AbstractDefinition
     /**
      * Refreshes items UUIDs.
      *
-     * @param MatchQuestion $item
+     * @param MatchQuestion $question
      */
-    public function refreshIdentifiers(AbstractItem $item)
+    public function refreshIdentifiers(AbstractItem $question): void
     {
         /** @var Label $label */
-        foreach ($item->getLabels() as $label) {
+        foreach ($question->getLabels() as $label) {
             $label->refreshUuid();
         }
 
         /** @var Proposal $proposal */
-        foreach ($item->getProposals() as $proposal) {
+        foreach ($question->getProposals() as $proposal) {
             $proposal->refreshUuid();
         }
     }
 
-    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    /**
+     * @param MatchQuestion $question
+     */
+    public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         $data = json_decode($answer->getData(), true);
-        $proposals = $item->getProposals();
-        $labels = $item->getLabels();
+        $proposals = $question->getProposals();
+        $labels = $question->getLabels();
         $answers = [];
 
         foreach ($data as $pair) {

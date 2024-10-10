@@ -14,7 +14,6 @@ namespace Claroline\TransferBundle\Transfer;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
-use Psr\Log\LogLevel;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ImportLogger implements LoggerInterface
@@ -29,7 +28,7 @@ class ImportLogger implements LoggerInterface
         $this->file = $file;
 
         if (!file_exists($file)) {
-            $fs = new FileSystem();
+            $fs = new Filesystem();
             $fs->touch($file);
         }
     }

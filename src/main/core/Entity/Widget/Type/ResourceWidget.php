@@ -17,9 +17,6 @@ class ResourceWidget extends AbstractWidget
 {
     /**
      * Choose the resourceNode to display in widget.
-     *
-     *
-     * @var ResourceNode
      */
     #[ORM\JoinColumn(name: 'node_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
@@ -29,40 +26,24 @@ class ResourceWidget extends AbstractWidget
      * Choose to display the header of the resource.
      */
     #[ORM\Column(type: Types::BOOLEAN)]
-    private $showResourceHeader = false;
+    private bool $showResourceHeader = false;
 
-    /**
-     * Get resource node.
-     *
-     * @return ResourceNode
-     */
-    public function getResourceNode()
+    public function getResourceNode(): ?ResourceNode
     {
         return $this->resourceNode;
     }
 
-    /**
-     * Set resource node.
-     *
-     * @param ResourceNode $resourceNode
-     */
-    public function setResourceNode(ResourceNode $resourceNode = null)
+    public function setResourceNode(?ResourceNode $resourceNode = null): void
     {
         $this->resourceNode = $resourceNode;
     }
 
-    /**
-     * Get showResourceHeader.
-     */
-    public function getShowResourceHeader()
+    public function getShowResourceHeader(): bool
     {
         return $this->showResourceHeader;
     }
 
-    /**
-     * Set showResourceHeader.
-     */
-    public function setShowResourceHeader($showResourceHeader)
+    public function setShowResourceHeader(bool $showResourceHeader): void
     {
         $this->showResourceHeader = $showResourceHeader;
     }

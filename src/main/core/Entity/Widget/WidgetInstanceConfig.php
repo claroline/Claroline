@@ -11,14 +11,13 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
-use Doctrine\DBAL\Types\Types;
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\AppBundle\Entity\Identifier\Id;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- *
  * @todo merge with WidgetInstance entity.
  */
 #[ORM\Table(name: 'claro_widget_instance_config')]
@@ -27,109 +26,109 @@ class WidgetInstanceConfig
 {
     use Id;
 
-    #[ORM\JoinColumn(name: 'widget_instance_id', onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: WidgetInstance::class, inversedBy: 'widgetInstanceConfigs', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: WidgetInstance::class, cascade: ['persist', 'remove'], inversedBy: 'widgetInstanceConfigs')]
+    #[ORM\JoinColumn(name: 'widget_instance_id', nullable: true, onDelete: 'CASCADE')]
     private ?WidgetInstance $widgetInstance = null;
 
-    #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'CASCADE')]
     private ?User $user = null;
 
-    #[ORM\JoinColumn(name: 'workspace_id', nullable: true, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Workspace::class)]
+    #[ORM\JoinColumn(name: 'workspace_id', nullable: true, onDelete: 'CASCADE')]
     private ?Workspace $workspace = null;
 
     #[ORM\Column(name: 'widget_order', type: Types::INTEGER)]
-    private $widgetOrder = 0;
+    private int $widgetOrder = 0;
 
     #[ORM\Column]
-    private $type;
+    private ?string $type = null;
 
-    #[ORM\Column(type: Types::BOOLEAN, name: 'is_visible')]
-    private $visible = true;
+    #[ORM\Column(name: 'is_visible', type: Types::BOOLEAN)]
+    private bool $visible = true;
 
-    #[ORM\Column(type: Types::BOOLEAN, name: 'is_locked')]
-    private $locked = false;
+    #[ORM\Column(name: 'is_locked', type: Types::BOOLEAN)]
+    private bool $locked = false;
 
-    public function getWidgetInstance()
+    public function getWidgetInstance(): ?WidgetInstance
     {
         return $this->widgetInstance;
     }
 
-    public function setWidgetInstance(WidgetInstance $widgetInstance)
+    public function setWidgetInstance(WidgetInstance $widgetInstance): void
     {
         $this->widgetInstance = $widgetInstance;
         $widgetInstance->addWidgetInstanceConfig($this);
     }
 
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser($user)
+    public function setUser(?User $user): void
     {
         $this->user = $user;
     }
 
-    public function getWorkspace()
+    public function getWorkspace(): ?Workspace
     {
         return $this->workspace;
     }
 
-    public function setWorkspace($workspace)
+    public function setWorkspace(?Workspace $workspace): void
     {
         $this->workspace = $workspace;
     }
 
-    public function getWidgetOrder()
+    public function getWidgetOrder(): int
     {
         return $this->widgetOrder;
     }
 
-    public function setWidgetOrder($widgetOrder)
+    public function setWidgetOrder(int $widgetOrder): void
     {
         $this->widgetOrder = $widgetOrder;
     }
 
     /* alias */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->getWidgetOrder();
     }
 
     /* alias */
-    public function setPosition($widgetOrder)
+    public function setPosition(int $widgetOrder): int
     {
         $this->setWidgetOrder($widgetOrder);
     }
 
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    public function setType($type)
+    public function setType(?string $type): void
     {
         $this->type = $type;
     }
 
-    public function isVisible()
+    public function isVisible(): bool
     {
         return $this->visible;
     }
 
-    public function setVisible($visible)
+    public function setVisible(bool $visible): void
     {
         $this->visible = $visible;
     }
 
-    public function isLocked()
+    public function isLocked(): bool
     {
         return $this->locked;
     }
 
-    public function setLocked($locked)
+    public function setLocked(bool $locked): void
     {
         $this->locked = $locked;
     }

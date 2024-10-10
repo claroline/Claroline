@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
-use Doctrine\DBAL\Types\Types;
-use Claroline\CoreBundle\Repository\Widget\WidgetRepository;
 use Claroline\AppBundle\Entity\FromPlugin;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\CoreBundle\Repository\Widget\WidgetRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,167 +41,102 @@ class Widget
     /** @deprecated use Claroline\CoreBundle\Component\Context\PublicContext::getName() */
     public const CONTEXT_HOME = 'public';
 
-    /**
-     * The name of the widget.
-     *
-     *
-     * @var string
-     */
     #[ORM\Column]
-    private $name;
+    private ?string $name = null;
 
     /**
      * The class that holds the widget custom configuration if any.
-     *
-     *
-     * @var string
      */
     #[ORM\Column(nullable: true)]
-    private $class;
+    private ?string $class = null;
 
     /**
      * The list of DataSources accepted by the widget.
-     *
-     *
-     * @var array
      */
     #[ORM\Column(type: Types::JSON)]
-    private $sources = [];
+    private ?array $sources = [];
 
     /**
      * The rendering context of the widget (workspace, desktop).
-     *
-     *
-     * @var array
      */
     #[ORM\Column(type: Types::JSON)]
-    private $context = [
+    private ?array $context = [
         self::CONTEXT_DESKTOP,
         self::CONTEXT_WORKSPACE,
         self::CONTEXT_ADMINISTRATION,
         self::CONTEXT_HOME,
     ];
 
-    /**
-     * @var bool
-     */
     #[ORM\Column(name: 'is_exportable', type: Types::BOOLEAN)]
-    private $exportable;
+    private bool $exportable = false;
 
     /**
      * A list of tags to group similar widgets.
-     *
-     *
-     * @var array
      */
     #[ORM\Column(type: Types::JSON)]
-    private $tags = [];
+    private ?array $tags = [];
 
-    /**
-     * Widget constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * Set name.
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * Get widget class.
-     *
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): ?string
     {
         return $this->class;
     }
 
-    /**
-     * Set class.
-     *
-     * @param string $class
-     */
-    public function setClass($class)
+    public function setClass(?string $class): void
     {
         $this->class = $class;
     }
 
-    /**
-     * Get sources.
-     *
-     * @return array
-     */
-    public function getSources()
+    public function getSources(): ?array
     {
         return $this->sources;
     }
 
-    public function setSources(array $sources)
+    public function setSources(array $sources): void
     {
         $this->sources = $sources;
     }
 
-    /**
-     * Get the rendering context of the widget (workspace, desktop).
-     *
-     * @return array
-     */
-    public function getContext()
+    public function getContext(): ?array
     {
         return $this->context;
     }
 
-    public function setContext(array $context)
+    public function setContext(array $context): void
     {
         $this->context = $context;
     }
 
-    /**
-     * Is widget exportable ?
-     *
-     * @return bool
-     */
-    public function isExportable()
+    public function isExportable(): bool
     {
         return $this->exportable;
     }
 
-    /**
-     * Set exportable.
-     */
-    public function setExportable($exportable)
+    public function setExportable(bool $exportable): void
     {
         $this->exportable = $exportable;
     }
 
-    /**
-     * Get tags.
-     *
-     * @return array
-     */
-    public function getTags()
+    public function getTags(): ?array
     {
         return $this->tags;
     }
 
-    public function setTags(array $tags)
+    public function setTags(array $tags): void
     {
         $this->tags = $tags;
     }

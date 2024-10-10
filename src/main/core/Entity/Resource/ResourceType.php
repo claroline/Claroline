@@ -26,32 +26,25 @@ class ResourceType
     use Id;
 
     #[ORM\Column(unique: true)]
-    private $name;
+    private ?string $name = null;
 
     /**
      * The entity class of resources of this type.
-     *
-     * @var string
      */
     #[ORM\Column(length: 256)]
-    private $class;
+    private ?string $class = null;
 
     /**
-     *
      * @var Collection<int, MaskDecoder>
-     * @todo : we may remove it after checking it's not used
      */
     #[ORM\OneToMany(targetEntity: MaskDecoder::class, mappedBy: 'resourceType', cascade: ['persist'])]
     private Collection $maskDecoders;
 
     #[ORM\Column(name: 'is_exportable', type: Types::BOOLEAN)]
-    private $exportable = false;
+    private bool $exportable = false;
 
     /**
      * A list of tags to group similar types.
-     *
-     *
-     * @var array
      */
     #[ORM\Column(type: Types::JSON)]
     private ?array $tags = [];
@@ -126,10 +119,7 @@ class ResourceType
         return $this->exportable;
     }
 
-    /**
-     * @return MaskDecoder[]|ArrayCollection
-     */
-    public function getMaskDecoders()
+    public function getMaskDecoders(): Collection
     {
         return $this->maskDecoders;
     }

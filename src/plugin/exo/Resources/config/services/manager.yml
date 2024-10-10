@@ -38,7 +38,7 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
-            - '@ujm_exo.generator.paper'
+            - '@UJM\ExoBundle\Library\Attempt\PaperGenerator'
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
             - '@UJM\ExoBundle\Manager\Attempt\AnswerManager'
             - '@UJM\ExoBundle\Manager\Item\ItemManager'

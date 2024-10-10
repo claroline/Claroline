@@ -2,15 +2,12 @@
 
 namespace Claroline\CoreBundle\Entity\ConnectionMessage;
 
-use Doctrine\DBAL\Types\Types;
+use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Meta\Poster;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Slide.
- */
 #[ORM\Table(name: 'claro_connection_message_slide')]
 #[ORM\Entity]
 class Slide
@@ -19,135 +16,73 @@ class Slide
     use Uuid;
     use Poster;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private $content;
+    private ?string $content = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(nullable: true)]
-    private $title;
+    private ?string $title = null;
 
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'slide_order', type: Types::INTEGER)]
-    private $order;
+    private int $order = 0;
 
-    /**
-     *
-     * @var ConnectionMessage
-     */
     #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ConnectionMessage::class, inversedBy: 'slides')]
     private ?ConnectionMessage $message = null;
 
-    /**
-     * @var array
-     */
     #[ORM\Column(name: 'shortcuts', type: Types::JSON, nullable: true)]
-    private $shortcuts = [];
+    private array $shortcuts = [];
 
-    /**
-     * Slide constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    /**
-     * Get content.
-     *
-     * @return string
-     */
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    /**
-     * Set content.
-     *
-     * @param string $content
-     */
-    public function setContent($content)
+    public function setContent(?string $content): void
     {
         $this->content = $content;
     }
 
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * Set title.
-     *
-     * @param string $title
-     */
-    public function setTitle($title)
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * Get order.
-     *
-     * @return int
-     */
-    public function getOrder()
+    public function getOrder(): int
     {
         return $this->order;
     }
 
-    /**
-     * Set order.
-     *
-     * @param int $order
-     */
-    public function setOrder($order)
+    public function setOrder(int $order): void
     {
         $this->order = $order;
     }
 
-    /**
-     * Get connection message.
-     *
-     * @return ConnectionMessage
-     */
-    public function getMessage()
+    public function getMessage(): ?ConnectionMessage
     {
         return $this->message;
     }
 
-    /**
-     * Set connection message.
-     *
-     * @param ConnectionMessage $message
-     */
-    public function setMessage(ConnectionMessage $message = null)
+    public function setMessage(?ConnectionMessage $message = null): void
     {
         $this->message = $message;
     }
 
-    /**
-     * @return array
-     */
-    public function getShortcuts()
+    public function getShortcuts(): ?array
     {
         return $this->shortcuts;
     }
 
-    public function setShortcuts(array $shortcuts)
+    public function setShortcuts(array $shortcuts): void
     {
         $this->shortcuts = $shortcuts;
     }

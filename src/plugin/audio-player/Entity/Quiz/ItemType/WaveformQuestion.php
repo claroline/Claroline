@@ -23,13 +23,13 @@ class WaveformQuestion extends AbstractItem
     use PenaltyTrait;
 
     #[ORM\Column(name: 'url', type: Types::STRING)]
-    private $url;
+    private ?string $url = null;
 
     #[ORM\Column(name: 'tolerance', type: Types::FLOAT)]
-    private $tolerance = 1;
+    private float $tolerance = 1;
 
     #[ORM\Column(name: 'answers_limit', type: Types::INTEGER)]
-    private $answersLimit = 0;
+    private int $answersLimit = 0;
 
     /**
      * @var Collection<int, Section>
@@ -37,68 +37,61 @@ class WaveformQuestion extends AbstractItem
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'waveform', cascade: ['persist', 'remove'], orphanRemoval: true)]
     protected Collection $sections;
 
-    /**
-     * WaveformQuestion constructor.
-     */
     public function __construct()
     {
         $this->sections = new ArrayCollection();
     }
 
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->url;
     }
 
-    public function setUrl($url)
+    public function setUrl(string $url): void
     {
         $this->url = $url;
     }
 
-    public function getTolerance()
+    public function getTolerance(): ?float
     {
         return $this->tolerance;
     }
 
-    public function setTolerance($tolerance)
+    public function setTolerance(float $tolerance): void
     {
         $this->tolerance = $tolerance;
     }
 
-    public function getAnswersLimit()
+    public function getAnswersLimit(): int
     {
         return $this->answersLimit;
     }
 
-    public function setAnswersLimit($answersLimit)
+    public function setAnswersLimit(int $answersLimit): void
     {
         $this->answersLimit = $answersLimit;
     }
 
-    public function getSections()
+    public function getSections(): Collection
     {
         return $this->sections;
     }
 
-    public function addSection(Section $section)
+    public function addSection(Section $section): void
     {
         if (!$this->sections->contains($section)) {
             $this->sections->add($section);
         }
-
-        return $this;
     }
 
-    public function removeSection(Section $section)
+    public function removeSection(Section $section): void
     {
         if ($this->sections->contains($section)) {
             $this->sections->removeElement($section);
         }
-
-        return $this;
     }
 
-    public function emptySections()
+    public function emptySections(): void
     {
         $this->sections->clear();
     }

@@ -11,13 +11,14 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Resource;
 
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
+use Claroline\AppBundle\Entity\Display\Color;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_audio_resource_section')]
@@ -26,53 +27,51 @@ class Section
 {
     use Id;
     use Uuid;
+    use Color;
 
     #[ORM\JoinColumn(name: 'node_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
-    protected ?ResourceNode $resourceNode = null;
+    private ?ResourceNode $resourceNode = null;
 
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected ?User $user = null;
+    private ?User $user = null;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
-    private $title;
+    private ?string $title = null;
 
     #[ORM\Column(name: 'section_start', type: Types::FLOAT, nullable: false)]
-    private $start;
+    private ?float $start = null;
 
     #[ORM\Column(name: 'section_end', type: Types::FLOAT, nullable: false)]
-    private $end;
-
-    #[ORM\Column(type: Types::STRING, nullable: true)]
-    private $color;
+    private ?float $end = null;
 
     #[ORM\Column(name: 'section_type')]
-    private $type;
+    private ?string $type = null;
 
     #[ORM\Column(name: 'show_transcript', type: Types::BOOLEAN)]
-    private $showTranscript = false;
+    private bool $showTranscript = false;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private $transcript;
+    private ?string $transcript = null;
 
     #[ORM\Column(name: 'comments_allowed', type: Types::BOOLEAN)]
-    private $commentsAllowed = false;
+    private bool $commentsAllowed = false;
 
     #[ORM\Column(name: 'show_help', type: Types::BOOLEAN)]
-    private $showHelp = false;
+    private bool $showHelp = false;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private $help;
+    private ?string $help;
 
     #[ORM\Column(name: 'show_audio', type: Types::BOOLEAN)]
-    private $showAudio = false;
+    private bool $showAudio = false;
 
     #[ORM\Column(name: 'audio_url', type: Types::STRING, nullable: true)]
-    private $audioUrl;
+    private ?string $audioUrl;
 
     #[ORM\Column(name: 'audio_description', type: Types::STRING, nullable: true)]
-    private $audioDescription;
+    private ?string $audioDescription;
 
     /**
      * @var Collection<int, SectionComment>
@@ -87,247 +86,147 @@ class Section
         $this->comments = new ArrayCollection();
     }
 
-    /**
-     * @return ResourceNode
-     */
-    public function getResourceNode()
+    public function getResourceNode(): ?ResourceNode
     {
         return $this->resourceNode;
     }
 
-    public function setResourceNode(ResourceNode $resourceNode)
+    public function setResourceNode(ResourceNode $resourceNode): void
     {
         $this->resourceNode = $resourceNode;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user = null)
+    public function setUser(User $user = null): void
     {
         $this->user = $user;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     */
-    public function setTitle($title)
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * @return float
-     */
-    public function getStart()
+    public function getStart(): ?float
     {
         return $this->start;
     }
 
-    /**
-     * @param float $start
-     */
-    public function setStart($start)
+    public function setStart(float $start): void
     {
         $this->start = $start;
     }
 
-    /**
-     * @return float
-     */
-    public function getEnd()
+    public function getEnd(): ?float
     {
         return $this->end;
     }
 
-    /**
-     * @param float $end
-     */
-    public function setEnd($end)
+    public function setEnd(float $end): void
     {
         $this->end = $end;
     }
 
-    /**
-     * @return string
-     */
-    public function getColor()
-    {
-        return $this->color;
-    }
-
-    /**
-     * @param string $color
-     */
-    public function setColor($color)
-    {
-        $this->color = $color;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     */
-    public function setType($type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    /**
-     * @return bool
-     */
-    public function getShowTranscript()
+    public function getShowTranscript(): bool
     {
         return $this->showTranscript;
     }
 
-    /**
-     * @param bool $showTranscript
-     */
-    public function setShowTranscript($showTranscript)
+    public function setShowTranscript(bool $showTranscript): void
     {
         $this->showTranscript = $showTranscript;
     }
 
-    /**
-     * @return string
-     */
-    public function getTranscript()
+    public function getTranscript(): ?string
     {
         return $this->transcript;
     }
 
-    /**
-     * @param string $transcript
-     */
-    public function setTranscript($transcript)
+    public function setTranscript(?string $transcript): void
     {
         $this->transcript = $transcript;
     }
 
-    /**
-     * @return bool
-     */
-    public function isCommentsAllowed()
+    public function isCommentsAllowed(): bool
     {
         return $this->commentsAllowed;
     }
 
-    /**
-     * @param bool $commentsAllowed
-     */
-    public function setCommentsAllowed($commentsAllowed)
+    public function setCommentsAllowed(bool $commentsAllowed): void
     {
         $this->commentsAllowed = $commentsAllowed;
     }
 
-    /**
-     * @return bool
-     */
-    public function getShowHelp()
+    public function getShowHelp(): bool
     {
         return $this->showHelp;
     }
 
-    /**
-     * @param bool $showHelp
-     */
-    public function setShowHelp($showHelp)
+    public function setShowHelp(bool $showHelp): void
     {
         $this->showHelp = $showHelp;
     }
 
-    /**
-     * @return string
-     */
-    public function getHelp()
+    public function getHelp(): ?string
     {
         return $this->help;
     }
 
-    /**
-     * @param string $help
-     */
-    public function setHelp($help)
+    public function setHelp(?string $help): void
     {
         $this->help = $help;
     }
 
-    /**
-     * @return bool
-     */
-    public function getShowAudio()
+    public function getShowAudio(): bool
     {
         return $this->showAudio;
     }
 
-    /**
-     * @param bool $showAudio
-     */
-    public function setShowAudio($showAudio)
+    public function setShowAudio(bool $showAudio): void
     {
         $this->showAudio = $showAudio;
     }
 
-    /**
-     * @return string
-     */
-    public function getAudioUrl()
+    public function getAudioUrl(): ?string
     {
         return $this->audioUrl;
     }
 
-    /**
-     * @param string $audioUrl
-     */
-    public function setAudioUrl($audioUrl)
+    public function setAudioUrl(string $audioUrl): void
     {
         $this->audioUrl = $audioUrl;
     }
 
-    /**
-     * @return string
-     */
-    public function getAudioDescription()
+    public function getAudioDescription(): ?string
     {
         return $this->audioDescription;
     }
 
-    /**
-     * @param string $audioDescription
-     */
-    public function setAudioDescription($audioDescription)
+    public function setAudioDescription(?string $audioDescription): void
     {
         $this->audioDescription = $audioDescription;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getComments()
+    public function getComments(): Collection
     {
         return $this->comments;
     }

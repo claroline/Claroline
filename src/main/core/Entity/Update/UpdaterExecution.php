@@ -27,10 +27,10 @@ class UpdaterExecution
     use Id;
 
     /**
-     * @var string the FQCN of the executed updater
+     * The FQCN of the executed updater
      */
     #[ORM\Column(name: 'updater_class', type: Types::STRING, unique: true)]
-    private $updaterClass;
+    private ?string $updaterClass = null;
 
     public function __construct(string $updaterClass)
     {

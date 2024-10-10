@@ -12,35 +12,35 @@ class CorrectedAnswer
      *
      * @var AnswerPartInterface[]
      */
-    private $expected = [];
+    private array $expected = [];
 
     /**
      * The expected answers that have been missed by the user.
      *
      * @var AnswerPartInterface[]
      */
-    private $missing = [];
+    private array $missing = [];
 
     /**
      * The answers that are not supposed to be chosen by the user.
      *
      * @var AnswerPartInterface[]
      */
-    private $unexpected = [];
+    private array $unexpected = [];
 
     /**
      * Penalties to apply to the score (eg. hints).
      *
      * @var PenaltyItemInterface[]
      */
-    private $penalties = [];
+    private array $penalties = [];
 
     /**
      * The answers that have been correctly not chosen by the user.
      *
      * @var AnswerPartInterface[]
      */
-    private $expectedMissing = [];
+    private array $expectedMissing = [];
 
     /**
      * CorrectedAnswer constructor.
@@ -70,12 +70,12 @@ class CorrectedAnswer
      *
      * @return AnswerPartInterface[]
      */
-    public function getExpected()
+    public function getExpected(): array
     {
         return $this->expected;
     }
 
-    public function addExpected(AnswerPartInterface $expected)
+    public function addExpected(AnswerPartInterface $expected): void
     {
         $found = false;
 
@@ -100,12 +100,12 @@ class CorrectedAnswer
      *
      * @return AnswerPartInterface[]
      */
-    public function getMissing()
+    public function getMissing(): array
     {
         return $this->missing;
     }
 
-    public function addMissing(AnswerPartInterface $missing)
+    public function addMissing(AnswerPartInterface $missing): void
     {
         $this->missing[] = $missing;
     }
@@ -115,12 +115,12 @@ class CorrectedAnswer
      *
      * @return AnswerPartInterface[]
      */
-    public function getUnexpected()
+    public function getUnexpected(): array
     {
         return $this->unexpected;
     }
 
-    public function addUnexpected(AnswerPartInterface $unexpected)
+    public function addUnexpected(AnswerPartInterface $unexpected): void
     {
         $this->unexpected[] = $unexpected;
     }
@@ -130,12 +130,12 @@ class CorrectedAnswer
      *
      * @return PenaltyItemInterface[]
      */
-    public function getPenalties()
+    public function getPenalties(): array
     {
         return $this->penalties;
     }
 
-    public function addPenalty(PenaltyItemInterface $penalty)
+    public function addPenalty(PenaltyItemInterface $penalty): void
     {
         $this->penalties[] = $penalty;
     }
@@ -145,12 +145,12 @@ class CorrectedAnswer
      *
      * @return AnswerPartInterface[]
      */
-    public function getExpectedMissing()
+    public function getExpectedMissing(): array
     {
         return $this->expectedMissing;
     }
 
-    public function addExpectedMissing(AnswerPartInterface $expectedMissing)
+    public function addExpectedMissing(AnswerPartInterface $expectedMissing): void
     {
         $this->expectedMissing[] = $expectedMissing;
     }

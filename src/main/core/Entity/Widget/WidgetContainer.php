@@ -2,10 +2,10 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
-use Doctrine\Common\Collections\Collection;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,7 +21,6 @@ class WidgetContainer
     /**
      * The list of content instances.
      *
-     *
      * @var Collection<int, WidgetInstance>
      */
     #[ORM\OneToMany(targetEntity: WidgetInstance::class, mappedBy: 'container', cascade: ['persist', 'remove', 'refresh'])]
@@ -31,11 +30,8 @@ class WidgetContainer
      * @var Collection<int, WidgetContainerConfig>
      */
     #[ORM\OneToMany(targetEntity: WidgetContainerConfig::class, mappedBy: 'widgetContainer', cascade: ['persist', 'remove'])]
-    protected Collection $widgetContainerConfigs;
+    private Collection $widgetContainerConfigs;
 
-    /**
-     * WidgetContainer constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
@@ -44,12 +40,7 @@ class WidgetContainer
         $this->widgetContainerConfigs = new ArrayCollection();
     }
 
-    /**
-     * Get the list of WidgetInstance in the container.
-     *
-     * @return ArrayCollection|WidgetInstance[]
-     */
-    public function getInstances()
+    public function getInstances(): Collection
     {
         return $this->instances;
     }
@@ -71,7 +62,7 @@ class WidgetContainer
     /**
      * Add a WidgetInstance into the container.
      */
-    public function addInstance(WidgetInstance $instance)
+    public function addInstance(WidgetInstance $instance): void
     {
         if (!$this->instances->contains($instance)) {
             $this->instances->add($instance);
@@ -82,7 +73,7 @@ class WidgetContainer
     /**
      * Remove a WidgetInstance from the container.
      */
-    public function removeInstance(WidgetInstance $instance)
+    public function removeInstance(WidgetInstance $instance): void
     {
         if ($this->instances->contains($instance)) {
             $this->instances->removeElement($instance);
@@ -90,19 +81,19 @@ class WidgetContainer
         }
     }
 
-    public function getWidgetContainerConfigs()
+    public function getWidgetContainerConfigs(): Collection
     {
         return $this->widgetContainerConfigs;
     }
 
-    public function addWidgetContainerConfig(WidgetContainerConfig $config)
+    public function addWidgetContainerConfig(WidgetContainerConfig $config): void
     {
         if (!$this->widgetContainerConfigs->contains($config)) {
             $this->widgetContainerConfigs->add($config);
         }
     }
 
-    public function removeWidgetContainerConfig(WidgetContainerConfig $config)
+    public function removeWidgetContainerConfig(WidgetContainerConfig $config): void
     {
         if ($this->widgetContainerConfigs->contains($config)) {
             $this->widgetContainerConfigs->removeElement($config);

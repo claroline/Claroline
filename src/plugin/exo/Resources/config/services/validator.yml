@@ -34,8 +34,6 @@ services:
 
     UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\PairAnswerValidator: ~
 
-    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\SelectionAnswerValidator: ~
-
     UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\SetAnswerValidator: ~
 
     UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\WordsAnswerValidator: ~
@@ -70,8 +68,6 @@ services:
     UJM\ExoBundle\Validator\JsonSchema\Item\Type\OrderingQuestionValidator: ~
 
     UJM\ExoBundle\Validator\JsonSchema\Item\Type\PairQuestionValidator: ~
-
-    UJM\ExoBundle\Validator\JsonSchema\Item\Type\SelectionQuestionValidator: ~
 
     UJM\ExoBundle\Validator\JsonSchema\Item\Type\SetQuestionValidator: ~
 

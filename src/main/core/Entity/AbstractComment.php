@@ -11,11 +11,9 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
-use DateTime;
-use DateTimeInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass]
@@ -25,22 +23,23 @@ abstract class AbstractComment
     use Uuid;
 
     #[ORM\Column(type: Types::TEXT)]
-    protected $content;
+    protected ?string $content = null;
 
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $user = null;
 
     #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
-    protected $creationDate;
+    protected ?\DateTimeInterface $creationDate = null;
 
     #[ORM\Column(name: 'edition_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    protected $editionDate;
+    protected ?\DateTimeInterface $editionDate = null;
 
     public function __construct()
     {
         $this->refreshUuid();
-        $this->setCreationDate(new DateTime());
+        $this->creationDate = new \DateTime();
+        $this->editionDate = new \DateTime();
     }
 
     public function getContent(): ?string
@@ -48,7 +47,7 @@ abstract class AbstractComment
         return $this->content;
     }
 
-    public function setContent(string $content)
+    public function setContent(string $content): void
     {
         $this->content = $content;
     }
@@ -58,27 +57,27 @@ abstract class AbstractComment
         return $this->user;
     }
 
-    public function setUser(?User $user = null)
+    public function setUser(?User $user = null): void
     {
         $this->user = $user;
     }
 
-    public function getCreationDate(): ?DateTimeInterface
+    public function getCreationDate(): ?\DateTimeInterface
     {
         return $this->creationDate;
     }
 
-    public function setCreationDate(DateTimeInterface $creationDate)
+    public function setCreationDate(\DateTimeInterface $creationDate): void
     {
         $this->creationDate = $creationDate;
     }
 
-    public function getEditionDate(): ?DateTimeInterface
+    public function getEditionDate(): ?\DateTimeInterface
     {
         return $this->editionDate;
     }
 
-    public function setEditionDate(?DateTimeInterface $editionDate = null)
+    public function setEditionDate(?\DateTimeInterface $editionDate = null): void
     {
         $this->editionDate = $editionDate;
     }

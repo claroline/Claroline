@@ -109,8 +109,6 @@ services:
             - '@security.authorization_checker'
             - '@event_dispatcher'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\FileManager'
             - '@Claroline\CoreBundle\Manager\VersionManager'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
 

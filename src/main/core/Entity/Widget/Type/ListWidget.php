@@ -17,18 +17,15 @@ class ListWidget extends AbstractWidget
 {
     use ListParameters;
 
-    /**
-     * @var int
-     */
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    private $maxResults;
+    private ?int $maxResults = null;
 
-    public function getMaxResults()
+    public function getMaxResults(): ?int
     {
         return $this->maxResults;
     }
 
-    public function setMaxResults($maxResults)
+    public function setMaxResults(?int $maxResults): void
     {
         $this->maxResults = $maxResults;
     }

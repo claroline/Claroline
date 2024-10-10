@@ -11,11 +11,9 @@
 
 namespace Claroline\CoreBundle\Entity\Update;
 
-use DateTimeInterface;
-use Doctrine\DBAL\Types\Types;
-use Claroline\CoreBundle\Repository\VersionRepository;
-use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\CoreBundle\Repository\VersionRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -26,29 +24,25 @@ class Version
     use Id;
 
     #[ORM\Column]
-    protected $commit;
+    protected ?string $commit = null;
 
     #[ORM\Column]
-    protected $version;
+    protected ?string $version = null;
 
     #[ORM\Column]
-    protected $branch;
+    protected ?string $branch = null;
 
     #[ORM\Column]
-    protected $bundle;
+    protected ?string $bundle = null;
 
     #[ORM\Column(name: 'is_upgraded', type: Types::BOOLEAN)]
-    protected $isUpgraded = false;
+    protected bool $isUpgraded = false;
 
-    /**
-     *
-     * @var DateTimeInterface
-     */
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     #[Gedmo\Timestampable(on: 'create')]
-    protected $date;
+    protected ?int $date = null;
 
-    public function __construct($version = null, $commit = null, $branch = null, $bundle = null)
+    public function __construct(?string $version = null, ?string $commit = null, ?string $branch = null, ?string $bundle = null)
     {
         $this->version = $version;
         $this->commit = $commit;
@@ -56,63 +50,63 @@ class Version
         $this->bundle = $bundle;
     }
 
-    public function setCommit($commit)
+    public function setCommit(?string $commit): void
     {
         $this->commit = $commit;
     }
 
-    public function getCommit($commit)
+    public function getCommit(): ?string
     {
-        $this->commit = $commit;
+        return $this->commit;
     }
 
-    public function setVersion($version)
+    public function setVersion(?string $version): void
     {
         $this->version = $version;
     }
 
-    public function getVersion()
+    public function getVersion(): ?string
     {
         return $this->version;
     }
 
-    public function setBranch($branch)
+    public function setBranch(?string $branch): void
     {
         $this->branch = $branch;
     }
 
-    public function getBranch()
+    public function getBranch(): ?string
     {
         return $this->branch;
     }
 
-    public function setDate($date)
+    public function setDate(int $date): void
     {
         $this->date = $date;
     }
 
-    public function getDate()
+    public function getDate(): ?int
     {
         return $this->date;
     }
 
-    public function setIsUpgraded($bool)
+    public function setIsUpgraded(bool $bool): void
     {
         $this->isUpgraded = $bool;
     }
 
-    public function isUpgraded()
+    public function isUpgraded(): bool
     {
         return $this->isUpgraded;
     }
 
-    public function getBundle()
+    public function getBundle(): ?string
     {
         return $this->bundle;
     }
 
-    //alias
-    public function getName()
+    // alias
+    public function getName(): ?string
     {
         return $this->getBundle();
     }

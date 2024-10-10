@@ -12,9 +12,6 @@
 namespace Claroline\CoreBundle\Entity;
 
 use Claroline\AppBundle\API\Attribute\CrudEntity;
-use Claroline\CommunityBundle\Finder\GroupType;
-use Claroline\CommunityBundle\Repository\GroupRepository;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Display\Thumbnail;
@@ -24,11 +21,13 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\AppBundle\Entity\Restriction\Locked;
+use Claroline\CommunityBundle\Finder\GroupType;
 use Claroline\CommunityBundle\Model\HasOrganizations;
+use Claroline\CommunityBundle\Repository\GroupRepository;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
 
 #[ORM\Table(name: 'claro_group')]
 #[ORM\Entity(repositoryClass: GroupRepository::class)]
@@ -39,15 +38,14 @@ class Group extends AbstractRoleSubject implements CrudEntityInterface
 {
     use Id;
     use Uuid;
+    use Code;
     use Name;
     use Description;
     use Poster;
     use Thumbnail;
     use Locked;
     use HasOrganizations;
-    use Code;
 
-    
     /**
      * @var Collection<int, Role>
      */

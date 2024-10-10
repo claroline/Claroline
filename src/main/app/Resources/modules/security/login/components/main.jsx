@@ -113,11 +113,6 @@ class LoginMain extends Component {
           }
         </div>
 
-        {this.props.showClientIp &&
-          <div className={classes('authentication-client-ip  mb-3 mx-auto', {
-            'login-with-sso': internalAccount && otherSso.length
-          })}>{trans('location')} : {this.props.clientIp}</div>
-        }
       </Fragment>
     )
   }
@@ -128,8 +123,6 @@ LoginMain.propTypes = {
   help: T.string,
   internalAccount: T.bool.isRequired,
   forceInternalAccount: T.bool,
-  showClientIp: T.bool.isRequired,
-  clientIp: T.string,
   sso: T.arrayOf(T.shape({
     service: T.string.isRequired,
     label: T.string,

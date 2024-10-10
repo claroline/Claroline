@@ -8,7 +8,6 @@ use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Entity\Misc\Association;
 use UJM\ExoBundle\Entity\Misc\Label;
 use UJM\ExoBundle\Entity\Misc\Proposal;
-use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
@@ -22,91 +21,42 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\SetQuestionValidator;
  */
 class SetDefinition extends AbstractDefinition
 {
-    /**
-     * @var SetQuestionValidator
-     */
-    private $validator;
-
-    /**
-     * @var SetAnswerValidator
-     */
-    private $answerValidator;
-
-    /**
-     * @var SetQuestionSerializer
-     */
-    private $serializer;
-
-    /**
-     * SetDefinition constructor.
-     */
     public function __construct(
-        SetQuestionValidator $validator,
-        SetAnswerValidator $answerValidator,
-        SetQuestionSerializer $serializer
+        private readonly SetQuestionValidator $validator,
+        private readonly SetAnswerValidator $answerValidator,
+        private readonly SetQuestionSerializer $serializer
     ) {
-        $this->validator = $validator;
-        $this->answerValidator = $answerValidator;
-        $this->serializer = $serializer;
     }
 
-    /**
-     * Gets the set question mime-type.
-     *
-     * @return string
-     */
-    public static function getMimeType()
+    public static function getMimeType(): string
     {
         return ItemType::SET;
     }
 
-    /**
-     * Gets the set question entity.
-     *
-     * @return string
-     */
-    public static function getEntityClass()
+    public static function getEntityClass(): string
     {
-        return '\UJM\ExoBundle\Entity\ItemType\MatchQuestion';
+        return MatchQuestion::class;
     }
 
-    /**
-     * Gets the set question validator.
-     *
-     * @return SetQuestionValidator
-     */
-    protected function getQuestionValidator()
+    protected function getQuestionValidator(): SetQuestionValidator
     {
         return $this->validator;
     }
 
-    /**
-     * Gets the set answer validator.
-     *
-     * @return SetAnswerValidator
-     */
-    protected function getAnswerValidator()
+    protected function getAnswerValidator(): SetAnswerValidator
     {
         return $this->answerValidator;
     }
 
-    /**
-     * Gets the set question serializer.
-     *
-     * @return SetQuestionSerializer
-     */
-    protected function getQuestionSerializer()
+    protected function getQuestionSerializer(): SetQuestionSerializer
     {
         return $this->serializer;
     }
 
     /**
      * @param MatchQuestion $question
-     * @param array         $answer
-     *
-     * @return CorrectedAnswer
      */
-    public function correctAnswer(AbstractItem $question, $answer)
+    public function correctAnswer(AbstractItem $question, mixed $answer): CorrectedAnswer
     {
         $corrected = new CorrectedAnswer();
 
@@ -148,10 +98,8 @@ class SetDefinition extends AbstractDefinition
 
     /**
      * @param MatchQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function expectAnswer(AbstractItem $question)
+    public function expectAnswer(AbstractItem $question): array
     {
         return array_filter($question->getAssociations()->toArray(), function (Association $association) {
             return 0 < $association->getScore();
@@ -160,21 +108,22 @@ class SetDefinition extends AbstractDefinition
 
     /**
      * @param MatchQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function allAnswers(AbstractItem $question)
+    public function allAnswers(AbstractItem $question): array
     {
         return $question->getAssociations()->toArray();
     }
 
-    public function getStatistics(AbstractItem $setQuestion, array $answersData, $total)
+    /**
+     * @param MatchQuestion $question
+     */
+    public function getStatistics(AbstractItem $question, array $answersData, int $total): array
     {
         $sets = [];
         $unused = [];
         $unusedItems = [];
 
-        foreach ($setQuestion->getProposals()->toArray() as $item) {
+        foreach ($question->getProposals()->toArray() as $item) {
             $unusedItems[$item->getUuid()] = true;
         }
         foreach ($answersData as $answerData) {
@@ -207,22 +156,25 @@ class SetDefinition extends AbstractDefinition
     /**
      * Refreshes items and sets UUIDs.
      *
-     * @param MatchQuestion $item
+     * @param MatchQuestion $question
      */
-    public function refreshIdentifiers(AbstractItem $item)
+    public function refreshIdentifiers(AbstractItem $question): void
     {
         /** @var Label $label */
-        foreach ($item->getLabels() as $label) {
+        foreach ($question->getLabels() as $label) {
             $label->refreshUuid();
         }
 
         /** @var Proposal $proposal */
-        foreach ($item->getProposals() as $proposal) {
+        foreach ($question->getProposals() as $proposal) {
             $proposal->refreshUuid();
         }
     }
 
-    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    /**
+     * @param MatchQuestion $question
+     */
+    public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         $data = json_decode($answer->getData(), true);
         $answers = [];

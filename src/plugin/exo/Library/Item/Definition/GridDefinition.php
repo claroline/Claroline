@@ -22,121 +22,60 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\GridQuestionValidator;
  */
 class GridDefinition extends AbstractDefinition
 {
-    /**
-     * @var GridQuestionValidator
-     */
-    private $validator;
-
-    /**
-     * @var GridAnswerValidator
-     */
-    private $answerValidator;
-
-    /**
-     * @var GridQuestionSerializer
-     */
-    private $serializer;
-
-    /**
-     * PairDefinition constructor.
-     */
     public function __construct(
-        GridQuestionValidator $validator,
-        GridAnswerValidator $answerValidator,
-        GridQuestionSerializer $serializer
+        private readonly GridQuestionValidator $validator,
+        private readonly GridAnswerValidator $answerValidator,
+        private readonly GridQuestionSerializer $serializer
     ) {
-        $this->validator = $validator;
-        $this->answerValidator = $answerValidator;
-        $this->serializer = $serializer;
     }
 
-    /**
-     * Gets the grid question mime-type.
-     *
-     * @return string
-     */
-    public static function getMimeType()
+    public static function getMimeType(): string
     {
         return ItemType::GRID;
     }
 
-    /**
-     * Gets the grid question entity.
-     *
-     * @return string
-     */
-    public static function getEntityClass()
+    public static function getEntityClass(): string
     {
-        return '\UJM\ExoBundle\Entity\ItemType\GridQuestion';
+        return GridQuestion::class;
     }
 
-    /**
-     * Gets the grid question validator.
-     *
-     * @return GridQuestionValidator
-     */
-    protected function getQuestionValidator()
+    protected function getQuestionValidator(): GridQuestionValidator
     {
         return $this->validator;
     }
 
-    /**
-     * Gets the grid answer validator.
-     *
-     * @return GridAnswerValidator
-     */
-    protected function getAnswerValidator()
+    protected function getAnswerValidator(): GridAnswerValidator
     {
         return $this->answerValidator;
     }
 
-    /**
-     * Gets the grid question serializer.
-     *
-     * @return GridQuestionSerializer
-     */
-    protected function getQuestionSerializer()
+    protected function getQuestionSerializer(): GridQuestionSerializer
     {
         return $this->serializer;
     }
 
     /**
-     * Used to compute the answer(s) score.
-     *
      * @param GridQuestion $question
-     * @param array        $answer
-     *
-     * @return CorrectedAnswer
      */
-    public function correctAnswer(AbstractItem $question, $answer)
+    public function correctAnswer(AbstractItem $question, mixed $answer): CorrectedAnswer
     {
         $scoreRule = json_decode($question->getQuestion()->getScoreRule(), true);
 
-        if ('fixed' === $scoreRule['type']) {
-            return $this->getCorrectAnswerForFixMode($question, $answer);
-        } else {
-            // 3 sum submode
+        if ('fixed' !== $scoreRule['type']) {
             switch ($question->getSumMode()) {
-              case GridQuestion::SUM_CELL:
-                return $this->getCorrectAnswerForSumCellsMode($question, $answer);
-              break;
-              case GridQuestion::SUM_COLUMN:
-                return $this->getCorrectAnswerForColumnSumMode($question, $answer);
-              break;
-              case GridQuestion::SUM_ROW:
-                return $this->getCorrectAnswerForRowSumMode($question, $answer);
-              break;
+                case GridQuestion::SUM_CELL:
+                    return $this->getCorrectAnswerForSumCellsMode($question, $answer);
+                case GridQuestion::SUM_COLUMN:
+                    return $this->getCorrectAnswerForColumnSumMode($question, $answer);
+                case GridQuestion::SUM_ROW:
+                    return $this->getCorrectAnswerForRowSumMode($question, $answer);
             }
         }
+
+        return $this->getCorrectAnswerForFixMode($question, $answer);
     }
 
-    /**
-     * @param GridQuestion $question
-     * @param array        $answer
-     *
-     * @return CorrectedAnswer
-     */
-    private function getCorrectAnswerForFixMode(AbstractItem $question, $answer)
+    private function getCorrectAnswerForFixMode(GridQuestion $question, ?array $answer): CorrectedAnswer
     {
         $corrected = new CorrectedAnswer();
 
@@ -169,13 +108,7 @@ class GridDefinition extends AbstractDefinition
         return $corrected;
     }
 
-    /**
-     * @param GridQuestion $question
-     * @param array        $answer
-     *
-     * @return CorrectedAnswer
-     */
-    private function getCorrectAnswerForSumCellsMode(AbstractItem $question, $answer)
+    private function getCorrectAnswerForSumCellsMode(GridQuestion $question, ?array $answer): CorrectedAnswer
     {
         $corrected = new CorrectedAnswer();
 
@@ -208,13 +141,7 @@ class GridDefinition extends AbstractDefinition
         return $corrected;
     }
 
-    /**
-     * @param GridQuestion $question
-     * @param array        $answer
-     *
-     * @return CorrectedAnswer
-     */
-    private function getCorrectAnswerForRowSumMode(AbstractItem $question, $answer)
+    private function getCorrectAnswerForRowSumMode(GridQuestion $question, ?array $answer): CorrectedAnswer
     {
         $corrected = new CorrectedAnswer();
 
@@ -270,13 +197,7 @@ class GridDefinition extends AbstractDefinition
         return $corrected;
     }
 
-    /**
-     * @param GridQuestion $question
-     * @param array        $answer
-     *
-     * @return CorrectedAnswer
-     */
-    private function getCorrectAnswerForColumnSumMode(AbstractItem $question, $answer)
+    private function getCorrectAnswerForColumnSumMode(GridQuestion $question, ?array $answer): CorrectedAnswer
     {
         $corrected = new CorrectedAnswer();
 
@@ -343,10 +264,8 @@ class GridDefinition extends AbstractDefinition
      * Used to compute the question total score. Only for sum score type.
      *
      * @param GridQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function expectAnswer(AbstractItem $question)
+    public function expectAnswer(AbstractItem $question): array
     {
         $expected = [];
 
@@ -395,10 +314,8 @@ class GridDefinition extends AbstractDefinition
 
     /**
      * @param GridQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function allAnswers(AbstractItem $question)
+    public function allAnswers(AbstractItem $question): array
     {
         $answers = [];
         foreach ($question->getCells() as $cell) {
@@ -408,7 +325,10 @@ class GridDefinition extends AbstractDefinition
         return $answers;
     }
 
-    public function getStatistics(AbstractItem $gridQuestion, array $answersData, $total)
+    /**
+     * @param GridQuestion $question
+     */
+    public function getStatistics(AbstractItem $question, array $answersData, int $total): array
     {
         $cells = [];
         $answered = [];
@@ -417,7 +337,7 @@ class GridDefinition extends AbstractDefinition
         // Create an array with cellId => cellObject for easy search
         $cellsMap = [];
         /** @var Cell $cell */
-        foreach ($gridQuestion->getCells() as $cell) {
+        foreach ($question->getCells() as $cell) {
             $cellsMap[$cell->getUuid()] = $cell;
             $answered[$cell->getUuid()] = 0;
         }
@@ -449,7 +369,7 @@ class GridDefinition extends AbstractDefinition
                 }
             }
         }
-        foreach ($gridQuestion->getCells() as $cell) {
+        foreach ($question->getCells() as $cell) {
             $cellId = $cell->getUuid();
 
             if (0 < count($answersData) - $answered[$cellId]) {
@@ -470,20 +390,17 @@ class GridDefinition extends AbstractDefinition
     /**
      * Refreshes cells UUIDs.
      *
-     * @param GridQuestion $item
+     * @param GridQuestion $question
      */
-    public function refreshIdentifiers(AbstractItem $item)
+    public function refreshIdentifiers(AbstractItem $question): void
     {
         /** @var Cell $cell */
-        foreach ($item->getCells() as $cell) {
+        foreach ($question->getCells() as $cell) {
             $cell->refreshUuid();
         }
     }
 
-    /**
-     * @return CellChoice|null
-     */
-    private function findCellExpectedAnswer(Cell $cell)
+    private function findCellExpectedAnswer(Cell $cell): ?CellChoice
     {
         $best = null;
         foreach ($cell->getChoices() as $choice) {
@@ -496,14 +413,20 @@ class GridDefinition extends AbstractDefinition
         return $best;
     }
 
-    public function getCsvTitles(AbstractItem $item)
+    /**
+     * @param GridQuestion $question
+     */
+    public function getCsvTitles(AbstractItem $question): array
     {
         return array_map(function (Cell $choice) {
             return 'grid-'.$choice->getUuid();
-        }, $item->getCells()->toArray());
+        }, $question->getCells()->toArray());
     }
 
-    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    /**
+     * @param GridQuestion $question
+     */
+    public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         $data = json_decode($answer->getData(), true);
         $values = array_map(function ($el) {

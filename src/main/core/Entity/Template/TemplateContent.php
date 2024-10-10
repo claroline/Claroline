@@ -22,28 +22,15 @@ class TemplateContent
 {
     use Id;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(nullable: true)]
-    private $title;
+    private ?string $title = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private $content;
+    private ?string $content = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column]
-    private $lang = 'en';
+    private string $lang = 'en';
 
-    /**
-     *
-     * @var Template
-     */
     #[ORM\JoinColumn(name: 'template_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Template::class, inversedBy: 'contents')]
     private ?Template $template = null;
@@ -53,7 +40,7 @@ class TemplateContent
         return $this->title;
     }
 
-    public function setTitle(?string $title = null)
+    public function setTitle(?string $title = null): void
     {
         $this->title = $title;
     }
@@ -63,7 +50,7 @@ class TemplateContent
         return $this->content;
     }
 
-    public function setContent(?string $content = null)
+    public function setContent(?string $content = null): void
     {
         $this->content = $content;
     }
@@ -73,7 +60,7 @@ class TemplateContent
         return $this->lang;
     }
 
-    public function setLang(string $lang)
+    public function setLang(string $lang): void
     {
         $this->lang = $lang;
     }
@@ -83,7 +70,7 @@ class TemplateContent
         return $this->template;
     }
 
-    public function setTemplate(?Template $template = null)
+    public function setTemplate(?Template $template = null): void
     {
         $this->template = $template;
     }

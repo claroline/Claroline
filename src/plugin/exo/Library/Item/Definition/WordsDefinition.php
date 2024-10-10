@@ -18,91 +18,42 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\WordsQuestionValidator;
  */
 class WordsDefinition extends AbstractDefinition
 {
-    /**
-     * @var WordsQuestionValidator
-     */
-    private $validator;
-
-    /**
-     * @var WordsAnswerValidator
-     */
-    private $answerValidator;
-
-    /**
-     * @var WordsQuestionSerializer
-     */
-    private $serializer;
-
-    /**
-     * WordsDefinition constructor.
-     */
     public function __construct(
-        WordsQuestionValidator $validator,
-        WordsAnswerValidator $answerValidator,
-        WordsQuestionSerializer $serializer
+        private readonly WordsQuestionValidator $validator,
+        private readonly WordsAnswerValidator $answerValidator,
+        private readonly WordsQuestionSerializer $serializer
     ) {
-        $this->validator = $validator;
-        $this->answerValidator = $answerValidator;
-        $this->serializer = $serializer;
     }
 
-    /**
-     * Gets the words question mime-type.
-     *
-     * @return string
-     */
-    public static function getMimeType()
+    public static function getMimeType(): string
     {
         return ItemType::WORDS;
     }
 
-    /**
-     * Gets the words question entity.
-     *
-     * @return string
-     */
-    public static function getEntityClass()
+    public static function getEntityClass(): string
     {
-        return '\UJM\ExoBundle\Entity\ItemType\OpenQuestion';
+        return OpenQuestion::class;
     }
 
-    /**
-     * Gets the words question validator.
-     *
-     * @return WordsQuestionValidator
-     */
-    protected function getQuestionValidator()
+    protected function getQuestionValidator(): WordsQuestionValidator
     {
         return $this->validator;
     }
 
-    /**
-     * Gets the words answer validator.
-     *
-     * @return WordsAnswerValidator
-     */
-    protected function getAnswerValidator()
+    protected function getAnswerValidator(): WordsAnswerValidator
     {
         return $this->answerValidator;
     }
 
-    /**
-     * Gets the words question serializer.
-     *
-     * @return WordsQuestionSerializer
-     */
-    protected function getQuestionSerializer()
+    protected function getQuestionSerializer(): WordsQuestionSerializer
     {
         return $this->serializer;
     }
 
     /**
      * @param OpenQuestion $question
-     * @param string       $answer
-     *
-     * @return CorrectedAnswer
      */
-    public function correctAnswer(AbstractItem $question, $answer)
+    public function correctAnswer(AbstractItem $question, mixed $answer): CorrectedAnswer
     {
         $corrected = new CorrectedAnswer();
         foreach ($question->getKeywords() as $keyword) {
@@ -122,10 +73,8 @@ class WordsDefinition extends AbstractDefinition
 
     /**
      * @param OpenQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function expectAnswer(AbstractItem $question)
+    public function expectAnswer(AbstractItem $question): array
     {
         return array_filter($question->getKeywords()->toArray(), function (Keyword $keyword) {
             return 0 < $keyword->getScore();
@@ -134,27 +83,22 @@ class WordsDefinition extends AbstractDefinition
 
     /**
      * @param OpenQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function allAnswers(AbstractItem $question)
+    public function allAnswers(AbstractItem $question): array
     {
         return $question->getKeywords()->toArray();
     }
 
     /**
-     * @param OpenQuestion $wordsQuestion
-     * @param int          $total
-     *
-     * @return array
+     * @param OpenQuestion $question
      */
-    public function getStatistics(AbstractItem $wordsQuestion, array $answersData, $total)
+    public function getStatistics(AbstractItem $question, array $answersData, int $total): array
     {
         $words = [];
 
         foreach ($answersData as $answerData) {
             /** @var Keyword $keyword */
-            foreach ($wordsQuestion->getKeywords() as $keyword) {
+            foreach ($question->getKeywords() as $keyword) {
                 if ($this->containKeyword($answerData, $keyword)) {
                     $words[$keyword->getText()] = isset($words[$keyword->getText()]) ? $words[$keyword->getText()] + 1 : 1;
                 }
@@ -170,13 +114,14 @@ class WordsDefinition extends AbstractDefinition
 
     /**
      * No additional identifier to regenerate.
+     *
+     * @param OpenQuestion $question
      */
-    public function refreshIdentifiers(AbstractItem $item)
+    public function refreshIdentifiers(AbstractItem $question): void
     {
-        return;
     }
 
-    private function containKeyword($string, Keyword $keyword, $contentType = 'text')
+    private function containKeyword(string $string, Keyword $keyword, ?string $contentType = 'text'): bool
     {
         $found = false;
 
@@ -194,7 +139,10 @@ class WordsDefinition extends AbstractDefinition
         return $found;
     }
 
-    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    /**
+     * @param OpenQuestion $question
+     */
+    public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         return [json_decode($answer->getData(), true)];
     }

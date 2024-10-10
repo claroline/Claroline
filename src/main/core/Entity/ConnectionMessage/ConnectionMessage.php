@@ -2,22 +2,19 @@
 
 namespace Claroline\CoreBundle\Entity\ConnectionMessage;
 
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Claroline\CoreBundle\Repository\ConnectionMessage\ConnectionMessageRepository;
+use Claroline\AppBundle\Entity\Display\Hidden;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
-use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Repository\ConnectionMessage\ConnectionMessageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * ConnectionMessage.
- */
 #[ORM\Table(name: 'claro_connection_message')]
 #[ORM\Entity(repositoryClass: ConnectionMessageRepository::class)]
 class ConnectionMessage
@@ -30,30 +27,20 @@ class ConnectionMessage
     use AccessibleFrom;
     use AccessibleUntil;
 
-    const TYPE_ONCE = 'once';
-    const TYPE_ALWAYS = 'always';
-    const TYPE_DISCARD = 'discard';
+    public const TYPE_ONCE = 'once';
+    public const TYPE_ALWAYS = 'always';
+    public const TYPE_DISCARD = 'discard';
 
-    /**
-     * @var string
-     */
     #[ORM\Column]
-    private $title;
+    private ?string $title = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'message_type')]
-    protected $type = self::TYPE_ONCE;
+    private string $type = self::TYPE_ONCE;
 
-    /**
-     * @var bool
-     */
     #[ORM\Column(type: Types::BOOLEAN)]
-    private $locked = false;
+    private bool $locked = false;
 
     /**
-     *
      * @var Collection<int, Slide>
      */
     #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'message', cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -63,7 +50,6 @@ class ConnectionMessage
     /**
      * List of roles the message is destined to.
      *
-     *
      * @var Collection<int, Role>
      */
     #[ORM\JoinTable(name: 'claro_connection_message_role')]
@@ -71,18 +57,14 @@ class ConnectionMessage
     private Collection $roles;
 
     /**
-     * List of users for who the message doesn't have to be displayed anymore.
-     *
+     * List of users for whom the message doesn't have to be displayed anymore.
      *
      * @var Collection<int, User>
      */
     #[ORM\JoinTable(name: 'claro_connection_message_user')]
-    #[ORM\ManyToMany(targetEntity: User::class)]
+    #[ORM\ManyToMany(targetEntity: User::class, fetch: 'EXTRA_LAZY')]
     private Collection $users;
 
-    /**
-     * ConnectionMessage constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
@@ -92,76 +74,42 @@ class ConnectionMessage
         $this->users = new ArrayCollection();
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     */
-    public function setTitle($title)
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * Get type.
-     *
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * Set type.
-     *
-     * @param string $type
-     */
-    public function setType($type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    /**
-     * Get locked.
-     *
-     * @return bool
-     */
-    public function isLocked()
+    public function isLocked(): bool
     {
         return $this->locked;
     }
 
-    /**
-     * Set locked.
-     *
-     * @param bool $locked
-     */
-    public function setLocked($locked)
+    public function setLocked(bool $locked): void
     {
         $this->locked = $locked;
     }
 
-    /**
-     * Get slides.
-     *
-     * @return ArrayCollection
-     */
-    public function getSlides()
+    public function getSlides(): Collection
     {
         return $this->slides;
     }
 
-    /**
-     * Add a slide to the message.
-     */
-    public function addSlide(Slide $slide)
+    public function addSlide(Slide $slide): void
     {
         if (!$this->slides->contains($slide)) {
             $this->slides->add($slide);
@@ -169,10 +117,7 @@ class ConnectionMessage
         }
     }
 
-    /**
-     * Remove a slide from the message.
-     */
-    public function removeSlide(Slide $slide)
+    public function removeSlide(Slide $slide): void
     {
         if ($this->slides->contains($slide)) {
             $this->slides->removeElement($slide);
@@ -180,68 +125,43 @@ class ConnectionMessage
         }
     }
 
-    /**
-     * Get roles.
-     *
-     * @return ArrayCollection
-     */
-    public function getRoles()
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
 
-    /**
-     * Add a role to the message.
-     */
-    public function addRole(Role $role)
+    public function addRole(Role $role): void
     {
         if (!$this->roles->contains($role)) {
             $this->roles->add($role);
         }
     }
 
-    /**
-     * Remove a role from the message.
-     */
-    public function removeRole(Role $role)
+    public function removeRole(Role $role): void
     {
         if ($this->roles->contains($role)) {
             $this->roles->removeElement($role);
         }
     }
 
-    /**
-     * Remove all roles from message.
-     */
-    public function emptyRoles()
+    public function emptyRoles(): void
     {
         $this->roles->clear();
     }
 
-    /**
-     * Get users.
-     *
-     * @return ArrayCollection
-     */
-    public function getUsers()
+    public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    /**
-     * Add an user to the message.
-     */
-    public function addUser(User $user)
+    public function addUser(User $user): void
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
         }
     }
 
-    /**
-     * Remove an user from the message.
-     */
-    public function removeUser(User $user)
+    public function removeUser(User $user): void
     {
         if ($this->users->contains($user)) {
             $this->users->removeElement($user);

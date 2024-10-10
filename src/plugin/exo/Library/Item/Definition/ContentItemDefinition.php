@@ -3,111 +3,70 @@
 namespace UJM\ExoBundle\Library\Item\Definition;
 
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
+use UJM\ExoBundle\Entity\ItemType\ContentItem;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\ContentItemSerializer;
 use UJM\ExoBundle\Validator\JsonSchema\Item\Type\ContentItemValidator;
 
-/**
- * Content item definition.
- */
 class ContentItemDefinition implements ItemDefinitionInterface
 {
-    /**
-     * @var ContentItemValidator
-     */
-    private $validator;
-
-    /**
-     * @var ContentItemSerializer
-     */
-    private $serializer;
-
-    /**
-     * ContentItemDefinition constructor.
-     */
-    public function __construct(ContentItemValidator $validator, ContentItemSerializer $serializer)
-    {
-        $this->validator = $validator;
-        $this->serializer = $serializer;
+    public function __construct(
+        private readonly ContentItemValidator $validator,
+        private readonly ContentItemSerializer $serializer
+    ) {
     }
 
-    /**
-     * Gets the content item mime-type.
-     *
-     * @return string
-     */
-    public static function getMimeType()
+    public static function getMimeType(): string
     {
         return ItemType::CONTENT;
     }
 
-    /**
-     * Gets the text content item entity.
-     *
-     * @return string
-     */
-    public static function getEntityClass()
+    public static function getEntityClass(): string
     {
-        return '\UJM\ExoBundle\Entity\ItemType\ContentItem';
+        return ContentItem::class;
     }
 
-    /**
-     * Gets the content item validator.
-     *
-     * @return ContentItemValidator
-     */
-    protected function getItemValidator()
+    protected function getItemValidator(): ContentItemValidator
     {
         return $this->validator;
     }
 
-    /**
-     * Gets the content item serializer.
-     *
-     * @return ContentItemSerializer
-     */
-    protected function getItemSerializer()
+    protected function getItemSerializer(): ContentItemSerializer
     {
         return $this->serializer;
     }
 
-    /**
-     * Validates a content item.
-     *
-     * @return array
-     */
-    public function validateQuestion(array $item, array $options = [])
+    public function validateQuestion(array $question, array $options = []): array
     {
-        return $this->getItemValidator()->validate($item, $options);
+        return $this->getItemValidator()->validate($question, $options);
     }
 
     /**
      * Serializes a content item entity.
      *
-     * @return array
+     * @param ContentItem $question
      */
-    public function serializeQuestion(AbstractItem $item, array $options = [])
+    public function serializeQuestion(AbstractItem $question, array $options = []): array
     {
-        return $this->getItemSerializer()->serialize($item, $options);
+        return $this->getItemSerializer()->serialize($question, $options);
     }
 
     /**
      * Deserializes content item data.
      *
-     * @param AbstractItem $item
-     *
-     * @return AbstractItem
+     * @param ContentItem $question
      */
-    public function deserializeQuestion(array $itemData, AbstractItem $item = null, array $options = [])
+    public function deserializeQuestion(array $data, AbstractItem $question = null, array $options = []): ContentItem
     {
-        return $this->getItemSerializer()->deserialize($itemData, $item, $options);
+        return $this->getItemSerializer()->deserialize($data, $question, $options);
     }
 
     /**
      * No additional identifier to regenerate.
+     *
+     * @param ContentItem $question
      */
-    public function refreshIdentifiers(AbstractItem $item)
+    public function refreshIdentifiers(AbstractItem $question): void
     {
-        return;
     }
 }

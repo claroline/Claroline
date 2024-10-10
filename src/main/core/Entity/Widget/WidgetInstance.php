@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
-use Doctrine\Common\Collections\Collection;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\DataSource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,22 +30,16 @@ class WidgetInstance
 
     /**
      * The widget which is rendered.
-     *
-     *
-     * @var Widget
      */
-    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Widget::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Widget $widget = null;
 
     /**
      * The parent container.
-     *
-     *
-     * @var WidgetContainer
      */
+    #[ORM\ManyToOne(targetEntity: WidgetContainer::class, inversedBy: 'instances')]
     #[ORM\JoinColumn(name: 'container_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: WidgetContainer::class, inversedBy: 'instances', cascade: ['persist', 'remove', 'refresh'])]
     private ?WidgetContainer $container = null;
 
     /**
@@ -56,17 +50,11 @@ class WidgetInstance
 
     /**
      * The data source to fill the widget if any.
-     *
-     *
-     * @var DataSource
      */
-    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: DataSource::class)]
     private ?DataSource $dataSource = null;
 
-    /**
-     * WidgetContainer constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
@@ -74,68 +62,42 @@ class WidgetInstance
         $this->widgetInstanceConfigs = new ArrayCollection();
     }
 
-    /**
-     * Get widget.
-     *
-     * @return Widget
-     */
-    public function getWidget()
+    public function getWidget(): ?Widget
     {
         return $this->widget;
     }
 
-    /**
-     * Set widget.
-     */
-    public function setWidget(Widget $widget)
+    public function setWidget(Widget $widget): void
     {
         $this->widget = $widget;
     }
 
-    /**
-     * Get widget container.
-     *
-     * @return WidgetContainer
-     */
-    public function getContainer()
+    public function getContainer(): ?WidgetContainer
     {
         return $this->container;
     }
 
-    /**
-     * Set widget container.
-     *
-     * @param WidgetContainer $container
-     */
-    public function setContainer(WidgetContainer $container = null)
+    public function setContainer(?WidgetContainer $container = null): void
     {
         $this->container = $container;
     }
 
-    /**
-     * Get data source.
-     *
-     * @return DataSource
-     */
-    public function getDataSource()
+    public function getDataSource(): ?DataSource
     {
         return $this->dataSource;
     }
 
-    /**
-     * Set data source.
-     */
-    public function setDataSource(DataSource $dataSource)
+    public function setDataSource(?DataSource $dataSource): void
     {
         $this->dataSource = $dataSource;
     }
 
-    public function getWidgetInstanceConfigs()
+    public function getWidgetInstanceConfigs(): Collection
     {
         return $this->widgetInstanceConfigs;
     }
 
-    public function addWidgetInstanceConfig(WidgetInstanceConfig $config)
+    public function addWidgetInstanceConfig(WidgetInstanceConfig $config): void
     {
         if (!$this->widgetInstanceConfigs->contains($config)) {
             $this->widgetInstanceConfigs->add($config);

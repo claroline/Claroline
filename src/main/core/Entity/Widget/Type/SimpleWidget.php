@@ -16,29 +16,16 @@ class SimpleWidget extends AbstractWidget
 {
     /**
      * The HTML content of the widget.
-     *
-     *
-     * @var string
      */
     #[ORM\Column(type: Types::TEXT)]
-    private $content;
+    private ?string $content = null;
 
-    /**
-     * Get content.
-     *
-     * @return string
-     */
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    /**
-     * Set content.
-     *
-     * @param string $content
-     */
-    public function setContent($content)
+    public function setContent(?string $content): void
     {
         $this->content = $content;
     }

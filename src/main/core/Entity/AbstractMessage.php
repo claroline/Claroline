@@ -43,63 +43,58 @@ abstract class AbstractMessage
 
     public function __construct()
     {
+        $this->refreshUuid();
+
         $this->creationDate = new \DateTime();
         $this->updated = new \DateTime();
-        $this->refreshUuid();
     }
 
-    public function setContent($content)
+    public function setContent(?string $content): void
     {
         $this->content = $content;
     }
 
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    /**
-     * Sets the message creator.
-     */
-    public function setCreator(User $creator)
+    public function setCreator(User $creator): void
     {
         $this->creator = $creator;
     }
 
-    /**
-     * @return User
-     */
-    public function getCreator()
+    public function getCreator(): ?User
     {
         return $this->creator;
     }
 
-    public function getCreationDate()
+    public function getCreationDate(): ?\DateTimeInterface
     {
         return $this->creationDate;
     }
 
-    public function setCreationDate($date)
+    public function setCreationDate(\DateTimeInterface $date): void
     {
         $this->creationDate = $date;
     }
 
-    public function setModificationDate($date)
+    public function setModificationDate(\DateTimeInterface $date): void
     {
         $this->updated = $date;
     }
 
-    public function getModificationDate()
+    public function getModificationDate(): ?\DateTimeInterface
     {
         return $this->updated;
     }
 
-    public function getAuthor()
+    public function getAuthor(): ?string
     {
         return $this->author;
     }
 
-    public function setAuthor($author)
+    public function setAuthor(?string $author): void
     {
         $this->author = $author;
     }

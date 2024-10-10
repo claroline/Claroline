@@ -2,11 +2,11 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Resource;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_audio_params')]
@@ -17,51 +17,51 @@ class AudioParams
     use Uuid;
     use Description;
 
-    const MANAGER_TYPE = 'manager';
-    const USER_TYPE = 'user';
-    const NO_TYPE = 'none';
+    public const MANAGER_TYPE = 'manager';
+    public const USER_TYPE = 'user';
+    public const NO_TYPE = 'none';
 
     #[ORM\JoinColumn(name: 'node_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
-    protected ?ResourceNode $resourceNode = null;
+    private ?ResourceNode $resourceNode = null;
 
     #[ORM\Column(name: 'sections_type')]
-    private $sectionsType = self::MANAGER_TYPE;
+    private string $sectionsType = self::MANAGER_TYPE;
 
     #[ORM\Column(name: 'rate_control', type: Types::BOOLEAN)]
-    private $rateControl = true;
+    private bool $rateControl = true;
 
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    public function getResourceNode()
+    public function getResourceNode(): ?ResourceNode
     {
         return $this->resourceNode;
     }
 
-    public function setResourceNode(ResourceNode $resourceNode)
+    public function setResourceNode(ResourceNode $resourceNode): void
     {
         $this->resourceNode = $resourceNode;
     }
 
-    public function getSectionsType()
+    public function getSectionsType(): string
     {
         return $this->sectionsType;
     }
 
-    public function setSectionsType($sectionsType)
+    public function setSectionsType(string $sectionsType): void
     {
         $this->sectionsType = $sectionsType;
     }
 
-    public function getRateControl()
+    public function getRateControl(): bool
     {
         return $this->rateControl;
     }
 
-    public function setRateControl($rateControl)
+    public function setRateControl(bool $rateControl): void
     {
         $this->rateControl = $rateControl;
     }

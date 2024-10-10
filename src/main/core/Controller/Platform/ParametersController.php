@@ -11,24 +11,12 @@
 
 namespace Claroline\CoreBundle\Controller\Platform;
 
-use DateInterval;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\AppBundle\Event\Platform\EnableEvent;
-use Claroline\AppBundle\Event\Platform\ExtendEvent;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
-use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\VersionManager;
-use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,8 +34,6 @@ class ParametersController extends AbstractSecurityController
         AuthorizationCheckerInterface $authorization,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly PlatformConfigurationHandler $config,
-        private readonly ObjectManager $om,
-        private readonly FileManager $fileManager,
         private readonly VersionManager $versionManager,
         private readonly ParametersSerializer $serializer
     ) {
@@ -83,86 +69,5 @@ class ParametersController extends AbstractSecurityController
             'version' => $this->versionManager->getCurrent(),
             'changelogs' => $this->versionManager->getChangelogs($request->getLocale()),
         ]);
-    }
-
-    #[Route(path: '/info', name: 'apiv2_platform_info', methods: ['GET'])]
-    public function getAction(): JsonResponse
-    {
-        $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
-
-        return new JsonResponse([
-            'version' => $this->versionManager->getCurrent(),
-            'meta' => $this->config->getParameter('meta'),
-            'analytics' => [  // TODO : add analytics through eventing to avoid hard dependencies
-                'resources' => $this->om->getRepository(ResourceNode::class)->countActiveResources(),
-                'storage' => $this->fileManager->getUsedStorage(),
-                'users' => $this->om->getRepository(User::class)->countUsers(),
-                //'roles' => count($this->om->getRepository(Role::class)->findAllPlatformRoles()),
-                'groups' => $this->om->getRepository(Group::class)->count([]),
-                'workspaces' => $this->om->getRepository(Workspace::class)->countNonPersonalWorkspaces(),
-                'organizations' => $this->om->getRepository(Organization::class)->count([]),
-            ],
-        ]);
-    }
-
-    /**
-     * Enables the platform.
-     */
-    #[Route(path: '/enable', name: 'apiv2_platform_enable', methods: ['PUT'])]
-    public function enableAction(): JsonResponse
-    {
-        $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
-
-        $event = new EnableEvent();
-        $this->eventDispatcher->dispatch($event, 'platform.enable');
-        if ($event->isCanceled()) {
-            return new JsonResponse($event->getCancellationMessage(), 422); // not sure if it's the correct status
-        }
-
-        $this->config->setParameter('restrictions.disabled', false);
-
-        return new JsonResponse(null, 204);
-    }
-
-    /**
-     * Extends the period of availability of the platform.
-     */
-    #[Route(path: '/extend', name: 'apiv2_platform_extend', methods: ['PUT'])]
-    public function extendAction(): JsonResponse
-    {
-        $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
-
-        $newEnd = null;
-
-        $dates = $this->config->getParameter('restrictions.dates');
-        if (!empty($dates) && !empty($dates[1])) {
-            // only do something if there is an end date
-            // by default extend for 1 week
-            // event listener can override it
-            $event = new ExtendEvent(DateNormalizer::denormalize($dates[1])->add(new DateInterval('P7D')));
-            $this->eventDispatcher->dispatch($event, 'platform.extend');
-
-            if ($event->isCanceled()) {
-                return new JsonResponse($event->getCancellationMessage(), 422); // not sure if it's the correct status
-            }
-
-            $newEnd = $event->getEnd();
-
-            // replace date in config
-            $dates[1] = DateNormalizer::normalize($newEnd);
-            $this->config->setParameter('restrictions.dates', $dates);
-        }
-
-        return new JsonResponse($newEnd, 204);
-    }
-
-    #[Route(path: '/disable', name: 'apiv2_platform_disable', methods: ['PUT'])]
-    public function disableAction(): JsonResponse
-    {
-        $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
-
-        $this->config->setParameter('restrictions.disabled', true);
-
-        return new JsonResponse(null, 204);
     }
 }

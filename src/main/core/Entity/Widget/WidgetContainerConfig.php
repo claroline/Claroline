@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,26 +17,14 @@ class WidgetContainerConfig
     use Id;
     use Uuid;
 
-    /**
-     * The name of the widget.
-     *
-     *
-     * @var string
-     */
     #[ORM\Column(name: 'widget_name', nullable: true)]
-    private $name;
+    private ?string $name = null;
 
-    /**
-     * Widget name align (left, center, right).
-     *
-     *
-     * @var string
-     */
     #[ORM\Column]
-    private $alignName = 'left';
+    private ?string $alignName = 'left';
 
-    #[ORM\Column(type: Types::BOOLEAN, name: 'is_visible')]
-    protected $visible = true;
+    #[ORM\Column(name: 'is_visible', type: Types::BOOLEAN)]
+    protected bool $visible = true;
 
     /**
      * The display layout of the container.
@@ -46,240 +34,146 @@ class WidgetContainerConfig
      *
      * Example: [2, 1]
      *   The layout has 2 columns, the first one is 2/3 width and the second is 1/3.
-     *
-     * @var array
      */
     #[ORM\Column(type: Types::JSON, nullable: true)]
-    private $layout = [];
+    private ?array $layout = [];
 
     /**
      * The color of the text inside the widget.
-     *
-     *
-     * @var string
      */
     #[ORM\Column(nullable: true)]
-    private $color = null;
+    private ?string $color = null;
 
     /**
      * The color of the border of the widget.
-     *
-     *
-     * @var string
      */
     #[ORM\Column(nullable: true)]
-    private $borderColor = null;
+    private ?string $borderColor = null;
 
     /**
      * The type of the background (none, color, image).
-     *
-     *
-     * @var string
      */
     #[ORM\Column]
-    private $backgroundType = 'none';
+    private ?string $backgroundType = 'none';
 
     /**
      * The background data (either the color or the image url).
-     *
-     *
-     * @var string
      */
     #[ORM\Column(nullable: true)]
-    private $background = null;
+    private ?string $background = null;
 
     /**
      * The position of the instance inside its container.
-     *
-     *
-     * @var int
      */
     #[ORM\Column(name: 'position', type: Types::INTEGER, nullable: true)]
-    private $position = 0;
+    private int $position = 0;
 
-    /**
-     *
-     * @var WidgetContainer
-     */
-    #[ORM\JoinColumn(name: 'widget_container_id', onDelete: 'CASCADE', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: WidgetContainer::class, inversedBy: 'widgetContainerConfigs', cascade: ['persist'])]
-    protected ?WidgetContainer $widgetContainer = null;
+    #[ORM\ManyToOne(targetEntity: WidgetContainer::class, cascade: ['persist'], inversedBy: 'widgetContainerConfigs')]
+    #[ORM\JoinColumn(name: 'widget_container_id', nullable: true, onDelete: 'CASCADE')]
+    private ?WidgetContainer $widgetContainer = null;
 
-    /**
-     * WidgetContainer constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(?string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * Get name align.
-     *
-     * @return string
-     */
-    public function getAlignName()
+    public function getAlignName(): ?string
     {
         return $this->alignName;
     }
 
-    /**
-     * Set name align.
-     *
-     * @param string $alignName
-     */
-    public function setAlignName($alignName)
+    public function setAlignName(?string $alignName): void
     {
         $this->alignName = $alignName;
     }
 
-    /**
-     * Get layout.
-     *
-     * @return array
-     */
-    public function getLayout()
+    public function getLayout(): ?array
     {
         return $this->layout;
     }
 
-    public function setLayout($layout)
+    public function setLayout(array $layout): void
     {
         $this->layout = $layout;
     }
 
-    /**
-     * Get color.
-     *
-     * @return string
-     */
-    public function getColor()
+    public function getColor(): ?string
     {
         return $this->color;
     }
 
-    /**
-     * Set color.
-     *
-     * @param string $color
-     */
-    public function setColor($color)
+    public function setColor(?string $color): void
     {
         $this->color = $color;
     }
 
-    /**
-     * Get border color.
-     *
-     * @return string
-     */
-    public function getBorderColor()
+    public function getBorderColor(): ?string
     {
         return $this->borderColor;
     }
 
-    /**
-     * Set border color.
-     *
-     * @param string $borderColor
-     */
-    public function setBorderColor($borderColor)
+    public function setBorderColor(?string $borderColor): void
     {
         $this->borderColor = $borderColor;
     }
 
-    /**
-     * Get background type.
-     *
-     * @return string
-     */
-    public function getBackgroundType()
+    public function getBackgroundType(): ?string
     {
         return $this->backgroundType;
     }
 
-    /**
-     * Set background type.
-     *
-     * @param string $backgroundType
-     */
-    public function setBackgroundType($backgroundType)
+    public function setBackgroundType(?string $backgroundType): void
     {
         $this->backgroundType = $backgroundType;
     }
 
-    /**
-     * Get background.
-     *
-     * @return string
-     */
-    public function getBackground()
+    public function getBackground(): ?string
     {
         return $this->background;
     }
 
-    /**
-     * Set background.
-     *
-     * @param string $background
-     */
-    public function setBackground($background)
+    public function setBackground(?string $background): void
     {
         $this->background = $background;
     }
 
-    /**
-     * Get position.
-     *
-     * @return int
-     */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position;
     }
 
-    public function setPosition($position)
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }
 
-    public function setWidgetContainer(WidgetContainer $container)
+    public function setWidgetContainer(WidgetContainer $container): void
     {
         $this->widgetContainer = $container;
         $container->addWidgetContainerConfig($this);
     }
 
-    public function getWidgetContainer()
+    public function getWidgetContainer(): ?WidgetContainer
     {
         return $this->widgetContainer;
     }
 
-    public function isVisible()
+    public function isVisible(): bool
     {
         return $this->visible;
     }
 
-    public function setVisible($visible)
+    public function setVisible(bool $visible): void
     {
         $this->visible = $visible;
     }

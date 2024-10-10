@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Library\Item\Definition\Exception;
 
 class UnregisteredDefinitionException extends \Exception
 {
-    const TARGET_MIME_TYPE = 'mime';
+    public const TARGET_MIME_TYPE = 'mime';
 
     public function __construct($type, $target)
     {

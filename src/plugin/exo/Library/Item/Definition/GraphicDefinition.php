@@ -6,7 +6,6 @@ use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\GraphicQuestion;
 use UJM\ExoBundle\Entity\Misc\Area;
-use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
 use UJM\ExoBundle\Library\Item\ItemType;
@@ -19,91 +18,42 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\GraphicQuestionValidator;
  */
 class GraphicDefinition extends AbstractDefinition
 {
-    /**
-     * @var GraphicQuestionValidator
-     */
-    private $validator;
-
-    /**
-     * @var GraphicAnswerValidator
-     */
-    private $answerValidator;
-
-    /**
-     * @var GraphicQuestionSerializer
-     */
-    private $serializer;
-
-    /**
-     * GraphicDefinition constructor.
-     */
     public function __construct(
-        GraphicQuestionValidator $validator,
-        GraphicAnswerValidator $answerValidator,
-        GraphicQuestionSerializer $serializer
+        private readonly GraphicQuestionValidator $validator,
+        private readonly GraphicAnswerValidator $answerValidator,
+        private readonly GraphicQuestionSerializer $serializer
     ) {
-        $this->validator = $validator;
-        $this->answerValidator = $answerValidator;
-        $this->serializer = $serializer;
     }
 
-    /**
-     * Gets the graphic question mime-type.
-     *
-     * @return string
-     */
-    public static function getMimeType()
+    public static function getMimeType(): string
     {
         return ItemType::GRAPHIC;
     }
 
-    /**
-     * Gets the graphic question entity.
-     *
-     * @return string
-     */
-    public static function getEntityClass()
+    public static function getEntityClass(): string
     {
-        return '\UJM\ExoBundle\Entity\ItemType\GraphicQuestion';
+        return GraphicQuestion::class;
     }
 
-    /**
-     * Gets the graphic question validator.
-     *
-     * @return GraphicQuestionValidator
-     */
-    protected function getQuestionValidator()
+    protected function getQuestionValidator(): GraphicQuestionValidator
     {
         return $this->validator;
     }
 
-    /**
-     * Gets the graphic question serializer.
-     *
-     * @return GraphicQuestionSerializer
-     */
-    protected function getQuestionSerializer()
+    protected function getQuestionSerializer(): GraphicQuestionSerializer
     {
         return $this->serializer;
     }
 
-    /**
-     * Gets the graphic answer validator.
-     *
-     * @return GraphicAnswerValidator
-     */
-    protected function getAnswerValidator()
+    protected function getAnswerValidator(): GraphicAnswerValidator
     {
         return $this->answerValidator;
     }
 
     /**
      * @param GraphicQuestion $question
-     * @param $answer
-     *
-     * @return CorrectedAnswer
      */
-    public function correctAnswer(AbstractItem $question, $answer)
+    public function correctAnswer(AbstractItem $question, mixed $answer): CorrectedAnswer
     {
         $corrected = new CorrectedAnswer();
 
@@ -131,10 +81,8 @@ class GraphicDefinition extends AbstractDefinition
 
     /**
      * @param GraphicQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function expectAnswer(AbstractItem $question)
+    public function expectAnswer(AbstractItem $question): array
     {
         return array_filter($question->getAreas()->toArray(), function (Area $area) {
             return 0 < $area->getScore();
@@ -143,15 +91,16 @@ class GraphicDefinition extends AbstractDefinition
 
     /**
      * @param GraphicQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function allAnswers(AbstractItem $question)
+    public function allAnswers(AbstractItem $question): array
     {
         return $question->getAreas()->toArray();
     }
 
-    public function getStatistics(AbstractItem $graphicQuestion, array $answersData, $total)
+    /**
+     * @param GraphicQuestion $question
+     */
+    public function getStatistics(AbstractItem $question, array $answersData, int $total): array
     {
         $areas = [];
 
@@ -162,7 +111,7 @@ class GraphicDefinition extends AbstractDefinition
                 if (isset($areaAnswer['x']) && isset($areaAnswer['y'])) {
                     $isInArea = false;
 
-                    foreach ($graphicQuestion->getAreas() as $area) {
+                    foreach ($question->getAreas() as $area) {
                         if ($this->isPointInArea($area, $areaAnswer['x'], $areaAnswer['y'])) {
                             $areasToInc[$area->getUuid()] = true;
                             $isInArea = true;
@@ -188,35 +137,35 @@ class GraphicDefinition extends AbstractDefinition
     /**
      * Refreshes image and areas UUIDs.
      *
-     * @param GraphicQuestion $item
+     * @param GraphicQuestion $question
      */
-    public function refreshIdentifiers(AbstractItem $item)
+    public function refreshIdentifiers(AbstractItem $question): void
     {
         // generate image id
-        $item->getImage()->refreshUuid();
+        $question->getImage()->refreshUuid();
 
         /** @var Area $area */
-        foreach ($item->getAreas() as $area) {
+        foreach ($question->getAreas() as $area) {
             $area->refreshUuid();
         }
     }
 
-    private function isPointInArea(Area $area, $x, $y)
+    private function isPointInArea(Area $area, $x, $y): bool
     {
         $coords = explode(',', $area->getValue());
 
         if (2 === count($coords)) {
             if (GraphicQuestion::SHAPE_CIRCLE !== $area->getShape()) {
                 // must be old "square" shape
-                $coords[] = $coords[0] + $area->getSize();
-                $coords[] = $coords[1] + $area->getSize();
+                $coords[] = (float) $coords[0] + $area->getSize();
+                $coords[] = (float) $coords[1] + $area->getSize();
 
                 return $this->isPointInRect($coords, $x, $y);
             } else {
-                // must be circle
+                // must be a circle
                 $r = $area->getSize() / 2;
-                $cx = $coords[0] + $r;
-                $cy = $coords[1] + $r;
+                $cx = (float) $coords[0] + $r;
+                $cy = (float) $coords[1] + $r;
 
                 // coordinates relative to the circle center
                 $x = abs($cx - $x);
@@ -231,16 +180,19 @@ class GraphicDefinition extends AbstractDefinition
         return $this->isPointInRect($coords, $x, $y);
     }
 
-    private function isPointInRect($coords, $x, $y)
+    private function isPointInRect($coords, $x, $y): bool
     {
         return
-            $x >= $coords[0] &&
-            $x <= $coords[2] &&
-            $y >= $coords[1] &&
-            $y <= $coords[3];
+            $x >= $coords[0]
+            && $x <= $coords[2]
+            && $y >= $coords[1]
+            && $y <= $coords[3];
     }
 
-    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    /**
+     * @param GraphicQuestion $question
+     */
+    public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         $data = json_decode($answer->getData(), true);
         $answers = [];

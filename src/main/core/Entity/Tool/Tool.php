@@ -30,7 +30,7 @@ class Tool
      * The name of the tool.
      */
     #[ORM\Column]
-    private string $name;
+    private ?string $name = null;
 
     /**
      * The icon of the tool (For now, only the name of a FontAwesome icon is allowed).

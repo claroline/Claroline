@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
+use Claroline\AppBundle\Entity\Display\Icon;
+use Claroline\AppBundle\Entity\Display\Order;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Meta\Icon;
 use Claroline\AppBundle\Entity\Meta\Name;
-use Claroline\AppBundle\Entity\Meta\Order;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_facet')]
@@ -31,20 +31,13 @@ class Facet
     use Order;
     use Icon;
 
-    /**
-     * @var bool
-     */
     #[ORM\Column(name: 'isMain', type: Types::BOOLEAN)]
-    private $main = false;
+    private bool $main = false;
 
-    /**
-     * @var bool
-     */
     #[ORM\Column(type: Types::BOOLEAN)]
-    private $forceCreationForm = false;
+    private bool $forceCreationForm = false;
 
     /**
-     *
      * @var Collection<int, PanelFacet>
      */
     #[ORM\OneToMany(targetEntity: PanelFacet::class, mappedBy: 'facet', cascade: ['all'])]
@@ -92,17 +85,11 @@ class Facet
         }
     }
 
-    /**
-     * @return ArrayCollection|PanelFacet[]
-     */
-    public function getPanelFacets()
+    public function getPanelFacets(): Collection
     {
         return $this->panelFacets;
     }
 
-    /**
-     * Removes all PanelFacet.
-     */
     public function resetPanelFacets(): void
     {
         foreach ($this->panelFacets as $panelFacet) {

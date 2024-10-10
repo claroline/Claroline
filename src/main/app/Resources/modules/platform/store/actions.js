@@ -10,16 +10,6 @@ export const actions = {}
 
 actions.setCurrentOrganizations = makeActionCreator(PLATFORM_SET_CURRENT_ORGANIZATION, 'organization')
 
-actions.extend = () => ({
-  [API_REQUEST]: {
-    url: ['apiv2_platform_extend'],
-    request: {
-      method: 'PUT'
-    },
-    success: () => window.location.href = url(['claro_index'])
-  }
-})
-
 actions.toggleFavorite = makeActionCreator(FAVORITE_TOGGLE, 'favorite')
 actions.saveFavorite = (workspace) => (dispatch) => dispatch({
   [API_REQUEST]: {
@@ -35,6 +25,7 @@ actions.saveFavorite = (workspace) => (dispatch) => dispatch({
 actions.changeOrganization = (organization) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: ['claro_organization_change', {organization: organization.id}],
+    silent: true,
     request: {
       method: 'PUT'
     },

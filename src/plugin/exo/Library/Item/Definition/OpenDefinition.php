@@ -4,7 +4,8 @@ namespace UJM\ExoBundle\Library\Item\Definition;
 
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
-use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
+use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
+use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\OpenQuestionSerializer;
 use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\OpenAnswerValidator;
@@ -15,122 +16,63 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\OpenQuestionValidator;
  */
 class OpenDefinition extends AbstractDefinition
 {
-    /**
-     * @var OpenQuestionValidator
-     */
-    private $validator;
-
-    /**
-     * @var OpenAnswerValidator
-     */
-    private $answerValidator;
-
-    /**
-     * @var OpenQuestionSerializer
-     */
-    private $serializer;
-
-    /**
-     * OpenDefinition constructor.
-     */
     public function __construct(
-        OpenQuestionValidator $validator,
-        OpenAnswerValidator $answerValidator,
-        OpenQuestionSerializer $serializer
+        private readonly OpenQuestionValidator $validator,
+        private readonly OpenAnswerValidator $answerValidator,
+        private readonly OpenQuestionSerializer $serializer
     ) {
-        $this->validator = $validator;
-        $this->answerValidator = $answerValidator;
-        $this->serializer = $serializer;
     }
 
-    /**
-     * Gets the open question mime-type.
-     *
-     * @return string
-     */
-    public static function getMimeType()
+    public static function getMimeType(): string
     {
         return ItemType::OPEN;
     }
 
-    /**
-     * Gets the open question entity.
-     *
-     * @return string
-     */
-    public static function getEntityClass()
+    public static function getEntityClass(): string
     {
-        return '\UJM\ExoBundle\Entity\ItemType\OpenQuestion';
+        return OpenQuestion::class;
     }
 
-    /**
-     * Gets the open question validator.
-     *
-     * @return OpenQuestionValidator
-     */
-    protected function getQuestionValidator()
+    protected function getQuestionValidator(): OpenQuestionValidator
     {
         return $this->validator;
     }
 
-    /**
-     * Gets the open answer validator.
-     *
-     * @return OpenAnswerValidator
-     */
-    protected function getAnswerValidator()
+    protected function getAnswerValidator(): OpenAnswerValidator
     {
         return $this->answerValidator;
     }
 
-    /**
-     * Gets the open question serializer.
-     *
-     * @return OpenQuestionSerializer
-     */
-    protected function getQuestionSerializer()
+    protected function getQuestionSerializer(): OpenQuestionSerializer
     {
         return $this->serializer;
     }
 
     /**
-     * Not implemented for open questions as it's not auto corrected.
-     *
-     * @param $answer
-     *
-     * @return bool
+     * Not implemented for open questions as it's not autocorrected.
      */
-    public function correctAnswer(AbstractItem $question, $answer)
+    public function correctAnswer(AbstractItem $question, $answer): ?CorrectedAnswer
     {
-        return false;
+        return null;
     }
 
     /**
-     * Not implemented for open questions as it's not auto corrected.
-     *
-     * @return AnswerPartInterface[]
+     * Not implemented for open questions as it's not autocorrected.
      */
-    public function expectAnswer(AbstractItem $question)
+    public function expectAnswer(AbstractItem $question): array
     {
         return [];
     }
 
-    /**
-     * @return AnswerPartInterface[]
-     */
-    public function allAnswers(AbstractItem $question)
+    public function allAnswers(AbstractItem $question): array
     {
         return [];
     }
 
     /**
      * Not implemented because not relevant.
-     *
-     * @param int $total
-     *
-     * @return array
      */
-    public function getStatistics(AbstractItem $openQuestion, array $answersData, $total)
+    public function getStatistics(AbstractItem $question, array $answersData, int $total): array
     {
         return [];
     }
@@ -138,12 +80,11 @@ class OpenDefinition extends AbstractDefinition
     /**
      * No additional identifier to regenerate.
      */
-    public function refreshIdentifiers(AbstractItem $item)
+    public function refreshIdentifiers(AbstractItem $question): void
     {
-        return;
     }
 
-    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         return [json_decode($answer->getData(), true)];
     }

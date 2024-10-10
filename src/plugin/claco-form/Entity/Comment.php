@@ -2,9 +2,7 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
-use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
-use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -22,37 +20,21 @@ class Comment
     public const BLOCKED = 2;
 
     #[ORM\Column(type: Types::TEXT)]
-    protected $content;
+    protected ?string $content = null;
 
-    /**
-     *
-     *
-     * @var User
-     */
-    #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL', nullable: true)]
+    #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $user = null;
 
-    /**
-     *
-     *
-     * @var Entry
-     */
     #[ORM\JoinColumn(name: 'entry_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Entry::class, inversedBy: 'comments')]
     protected ?Entry $entry = null;
 
-    /**
-     * @var DateTimeInterface
-     */
     #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
-    protected $creationDate;
+    protected ?\DateTimeInterface $creationDate = null;
 
-    /**
-     * @var DateTimeInterface
-     */
     #[ORM\Column(name: 'edition_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    protected $editionDate;
+    protected ?\DateTimeInterface $editionDate = null;
 
     /**
      * @var int
@@ -124,30 +106,20 @@ class Comment
         $this->entry = $entry;
     }
 
-    /**
-     * Get creation date.
-     *
-     * @return DateTime
-     */
-    public function getCreationDate()
+    public function getCreationDate(): ?\DateTimeInterface
     {
         return $this->creationDate;
     }
 
-    /**
-     * Set creation date.
-     */
-    public function setCreationDate(DateTime $creationDate)
+    public function setCreationDate(?\DateTimeInterface $creationDate): void
     {
         $this->creationDate = $creationDate;
     }
 
     /**
      * Get edition date.
-     *
-     * @return DateTime
      */
-    public function getEditionDate()
+    public function getEditionDate(): ?\DateTimeInterface
     {
         return $this->editionDate;
     }
@@ -155,7 +127,7 @@ class Comment
     /**
      * Set edition date.
      */
-    public function setEditionDate(DateTime $editionDate = null)
+    public function setEditionDate(?\DateTimeInterface $editionDate = null): void
     {
         $this->editionDate = $editionDate;
     }

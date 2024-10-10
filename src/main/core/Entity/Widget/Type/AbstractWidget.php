@@ -13,28 +13,17 @@ abstract class AbstractWidget
 
     /**
      * The parent instance.
-     *
-     *
-     * @var WidgetInstance
      */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: WidgetInstance::class, cascade: ['persist'])]
     private ?WidgetInstance $widgetInstance = null;
 
-    /**
-     * Get widget instance.
-     *
-     * @return WidgetInstance
-     */
-    public function getWidgetInstance()
+    public function getWidgetInstance(): ?WidgetInstance
     {
         return $this->widgetInstance;
     }
 
-    /**
-     * Set widget instance.
-     */
-    public function setWidgetInstance(WidgetInstance $widgetInstance)
+    public function setWidgetInstance(WidgetInstance $widgetInstance): void
     {
         $this->widgetInstance = $widgetInstance;
     }

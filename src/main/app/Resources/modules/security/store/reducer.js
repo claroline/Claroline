@@ -12,6 +12,5 @@ export const reducer = combineReducers({
   }),
   impersonated: makeReducer(false, {
     [SECURITY_USER_CHANGE]: (state, action) => action.impersonated
-  }),
-  client: makeReducer({ip: null, forwarded: null})
+  })
 })

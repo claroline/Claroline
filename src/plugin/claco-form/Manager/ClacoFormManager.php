@@ -32,7 +32,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Messenger\Message\SendMessage;
 use Claroline\CoreBundle\Security\PlatformRoles;
-use Doctrine\Common\Collections\ArrayCollection;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -682,9 +681,9 @@ class ClacoFormManager
     }
 
     /**
-     * @return Entry[]|ArrayCollection
+     * @return Entry[]
      */
-    public function getAllEntries(ClacoForm $clacoForm)
+    public function getAllEntries(ClacoForm $clacoForm): array
     {
         return $this->entryRepo->findBy(['clacoForm' => $clacoForm]);
     }

@@ -17,39 +17,33 @@ use Claroline\CoreBundle\Entity\AbstractMessage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-
 #[ORM\Table(name: 'claro_forum_message')]
 #[ORM\Entity]
 class Message extends AbstractMessage
 {
-    
     #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Subject::class, cascade: ['persist'], inversedBy: 'messages')]
-    protected ?Subject $subject = null;
+    private ?Subject $subject = null;
 
-    
-    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Message::class, inversedBy: 'children')]
-    protected ?Message $parent = null;
+    private ?Message $parent = null;
 
     /**
-     * @var Collection<int, \Claroline\ForumBundle\Entity\Message>
+     * @var Collection<int, Message>
      */
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Message::class)]
-    protected Collection $children;
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'parent')]
+    private Collection $children;
 
     #[ORM\Column(type: Types::STRING)]
-    protected string $moderation = Forum::VALIDATE_NONE;
+    private string $moderation = Forum::VALIDATE_NONE;
 
     #[ORM\Column(type: Types::BOOLEAN)]
-    protected bool $flagged = false;
+    private bool $flagged = false;
 
     #[ORM\Column(type: Types::BOOLEAN)]
-    protected bool $first = false;
+    private bool $first = false;
 
-    /**
-     * Message constructor.
-     */
     public function __construct()
     {
         parent::__construct();
@@ -101,7 +95,7 @@ class Message extends AbstractMessage
         return $this->parent;
     }
 
-    public function getChildren()
+    public function getChildren(): Collection
     {
         return $this->children;
     }

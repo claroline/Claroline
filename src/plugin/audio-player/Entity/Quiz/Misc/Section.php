@@ -2,10 +2,11 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Quiz\Misc;
 
-use Doctrine\DBAL\Types\Types;
+use Claroline\AppBundle\Entity\Display\Color;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AudioPlayerBundle\Entity\Quiz\ItemType\WaveformQuestion;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
@@ -17,26 +18,24 @@ class Section implements AnswerPartInterface
 {
     use Id;
     use Uuid;
+    use Color;
     use FeedbackTrait;
     use ScoreTrait;
 
     #[ORM\Column(name: 'section_start', type: Types::FLOAT, nullable: false)]
-    private $start;
+    private ?float $start = null;
 
     #[ORM\Column(name: 'section_end', type: Types::FLOAT, nullable: false)]
-    private $end;
+    private ?float $end = null;
 
     #[ORM\Column(name: 'start_tolerance', type: Types::FLOAT, nullable: false)]
-    private $startTolerance = 0;
+    private float $startTolerance = 0;
 
     #[ORM\Column(name: 'end_tolerance', type: Types::FLOAT, nullable: false)]
-    private $endTolerance = 0;
-
-    #[ORM\Column(type: Types::STRING, nullable: true)]
-    private $color;
+    private float $endTolerance = 0;
 
     #[ORM\JoinColumn(name: 'waveform_id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: WaveformQuestion::class, inversedBy: 'sections', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: WaveformQuestion::class, cascade: ['persist'], inversedBy: 'sections')]
     private ?WaveformQuestion $waveform = null;
 
     public function __construct()
@@ -44,34 +43,22 @@ class Section implements AnswerPartInterface
         $this->refreshUuid();
     }
 
-    /**
-     * @return float
-     */
-    public function getStart()
+    public function getStart(): ?float
     {
         return $this->start;
     }
 
-    /**
-     * @param float $start
-     */
-    public function setStart($start)
+    public function setStart(float $start): void
     {
         $this->start = $start;
     }
 
-    /**
-     * @return float
-     */
-    public function getEnd()
+    public function getEnd(): ?float
     {
         return $this->end;
     }
 
-    /**
-     * @param float $end
-     */
-    public function setEnd($end)
+    public function setEnd(float $end): void
     {
         $this->end = $end;
     }
@@ -79,60 +66,32 @@ class Section implements AnswerPartInterface
     /**
      * @return float
      */
-    public function getStartTolerance()
+    public function getStartTolerance(): float
     {
         return $this->startTolerance;
     }
 
-    /**
-     * @param float $startTolerance
-     */
-    public function setStartTolerance($startTolerance)
+    public function setStartTolerance(float $startTolerance): void
     {
         $this->startTolerance = $startTolerance;
     }
 
-    /**
-     * @return float
-     */
-    public function getEndTolerance()
+    public function getEndTolerance(): float
     {
         return $this->endTolerance;
     }
 
-    /**
-     * @param float $endTolerance
-     */
-    public function setEndTolerance($endTolerance)
+    public function setEndTolerance(float $endTolerance): void
     {
         $this->endTolerance = $endTolerance;
     }
 
-    /**
-     * @return string
-     */
-    public function getColor()
-    {
-        return $this->color;
-    }
-
-    /**
-     * @param string $color
-     */
-    public function setColor($color)
-    {
-        $this->color = $color;
-    }
-
-    /**
-     * @return WaveformQuestion
-     */
-    public function getWaveform()
+    public function getWaveform(): ?WaveformQuestion
     {
         return $this->waveform;
     }
 
-    public function setWaveform(WaveformQuestion $waveform)
+    public function setWaveform(WaveformQuestion $waveform): void
     {
         $this->waveform = $waveform;
     }

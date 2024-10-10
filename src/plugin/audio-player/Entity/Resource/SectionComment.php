@@ -2,12 +2,10 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Resource;
 
-use DateTimeInterface;
-use Doctrine\DBAL\Types\Types;
-use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_audio_resource_section_comment')]
@@ -17,95 +15,75 @@ class SectionComment
     use Id;
     use Uuid;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    protected $content;
+    private ?string $content = null;
 
-    /**
-     *
-     * @var Section
-     */
     #[ORM\JoinColumn(name: 'section_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Section::class, inversedBy: 'comments')]
-    protected ?Section $section = null;
+    private ?Section $section = null;
 
-    /**
-     *
-     * @var User
-     */
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected ?User $user = null;
+    private ?User $user = null;
 
-    /**
-     * @var DateTimeInterface
-     */
     #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
-    protected $creationDate;
+    private ?\DateTimeInterface $creationDate = null;
 
-    /**
-     * @var DateTimeInterface
-     */
     #[ORM\Column(name: 'edition_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    protected $editionDate;
+    private ?\DateTimeInterface $editionDate = null;
 
     public function __construct()
     {
         $this->refreshUuid();
-        $this->creationDate = new DateTime();
+        $this->creationDate = new \DateTime();
     }
 
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    public function setContent($content)
+    public function setContent(?string $content): void
     {
         $this->content = $content;
     }
 
-    public function getSection()
+    public function getSection(): ?Section
     {
         return $this->section;
     }
 
-    public function setSection(Section $section)
+    public function setSection(Section $section): void
     {
         $this->section = $section;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(User $user = null)
+    public function setUser(User $user = null): void
     {
         $this->user = $user;
     }
 
-    public function getCreationDate()
+    public function getCreationDate(): \DateTimeInterface
     {
         return $this->creationDate;
     }
 
-    public function setCreationDate(DateTime $creationDate)
+    public function setCreationDate(\DateTimeInterface $creationDate): void
     {
         $this->creationDate = $creationDate;
     }
 
-    public function getEditionDate()
+    public function getEditionDate(): ?\DateTimeInterface
     {
         return $this->editionDate;
     }
 
-    public function setEditionDate(DateTime $editionDate = null)
+    public function setEditionDate(\DateTimeInterface $editionDate = null): void
     {
         $this->editionDate = $editionDate;
     }

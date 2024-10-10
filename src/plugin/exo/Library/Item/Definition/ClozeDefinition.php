@@ -7,7 +7,6 @@ use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\ClozeQuestion;
 use UJM\ExoBundle\Entity\Misc\Hole;
 use UJM\ExoBundle\Entity\Misc\Keyword;
-use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\ClozeQuestionSerializer;
@@ -19,91 +18,42 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\ClozeQuestionValidator;
  */
 class ClozeDefinition extends AbstractDefinition
 {
-    /**
-     * @var ClozeQuestionValidator
-     */
-    private $validator;
-
-    /**
-     * @var ClozeAnswerValidator
-     */
-    private $answerValidator;
-
-    /**
-     * @var ClozeQuestionSerializer
-     */
-    private $serializer;
-
-    /**
-     * ClozeDefinition constructor.
-     */
     public function __construct(
-        ClozeQuestionValidator $validator,
-        ClozeAnswerValidator $answerValidator,
-        ClozeQuestionSerializer $serializer
+        private readonly ClozeQuestionValidator $validator,
+        private readonly ClozeAnswerValidator $answerValidator,
+        private readonly ClozeQuestionSerializer $serializer
     ) {
-        $this->validator = $validator;
-        $this->answerValidator = $answerValidator;
-        $this->serializer = $serializer;
     }
 
-    /**
-     * Gets the cloze question mime-type.
-     *
-     * @return string
-     */
-    public static function getMimeType()
+    public static function getMimeType(): string
     {
         return ItemType::CLOZE;
     }
 
-    /**
-     * Gets the cloze question entity.
-     *
-     * @return string
-     */
-    public static function getEntityClass()
+    public static function getEntityClass(): string
     {
-        return '\UJM\ExoBundle\Entity\ItemType\ClozeQuestion';
+        return ClozeQuestion::class;
     }
 
-    /**
-     * Gets the cloze question validator.
-     *
-     * @return ClozeQuestionValidator
-     */
-    protected function getQuestionValidator()
+    protected function getQuestionValidator(): ClozeQuestionValidator
     {
         return $this->validator;
     }
 
-    /**
-     * Gets the cloze answer validator.
-     *
-     * @return ClozeAnswerValidator
-     */
-    protected function getAnswerValidator()
+    protected function getAnswerValidator(): ClozeAnswerValidator
     {
         return $this->answerValidator;
     }
 
-    /**
-     * Gets the cloze question serializer.
-     *
-     * @return ClozeQuestionSerializer
-     */
-    protected function getQuestionSerializer()
+    protected function getQuestionSerializer(): ClozeQuestionSerializer
     {
         return $this->serializer;
     }
 
     /**
      * @param ClozeQuestion $question
-     * @param array         $answer
-     *
-     * @return CorrectedAnswer
      */
-    public function correctAnswer(AbstractItem $question, $answer)
+    public function correctAnswer(AbstractItem $question, mixed $answer): CorrectedAnswer
     {
         $corrected = new CorrectedAnswer();
 
@@ -137,10 +87,8 @@ class ClozeDefinition extends AbstractDefinition
 
     /**
      * @param ClozeQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function expectAnswer(AbstractItem $question)
+    public function expectAnswer(AbstractItem $question): array
     {
         return array_map(function (Hole $hole) {
             return $this->findHoleExpectedAnswer($hole);
@@ -149,10 +97,8 @@ class ClozeDefinition extends AbstractDefinition
 
     /**
      * @param ClozeQuestion $question
-     *
-     * @return AnswerPartInterface[]
      */
-    public function allAnswers(AbstractItem $question)
+    public function allAnswers(AbstractItem $question): array
     {
         $answers = [];
         foreach ($question->getHoles() as $hole) {
@@ -163,11 +109,9 @@ class ClozeDefinition extends AbstractDefinition
     }
 
     /**
-     * @param ClozeQuestion $clozeQuestion
-     *
-     * @return array
+     * @param ClozeQuestion $question
      */
-    public function getStatistics(AbstractItem $clozeQuestion, array $answersData, $total)
+    public function getStatistics(AbstractItem $question, array $answersData, int $total): array
     {
         $holes = [];
         $answered = [];
@@ -176,7 +120,7 @@ class ClozeDefinition extends AbstractDefinition
         // Create an array with holeId => holeObject for easy search
         $holesMap = [];
         /** @var Hole $hole */
-        foreach ($clozeQuestion->getHoles() as $hole) {
+        foreach ($question->getHoles() as $hole) {
             $holesMap[$hole->getUuid()] = $hole;
             $answered[$hole->getUuid()] = 0;
         }
@@ -208,7 +152,7 @@ class ClozeDefinition extends AbstractDefinition
                 }
             }
         }
-        foreach ($clozeQuestion->getHoles() as $hole) {
+        foreach ($question->getHoles() as $hole) {
             $holeId = $hole->getUuid();
 
             if (0 < count($answersData) - $answered[$holeId]) {
@@ -229,14 +173,14 @@ class ClozeDefinition extends AbstractDefinition
     /**
      * Refreshes hole UUIDs and update placeholders in text.
      *
-     * @param ClozeQuestion $item
+     * @param ClozeQuestion $question
      */
-    public function refreshIdentifiers(AbstractItem $item)
+    public function refreshIdentifiers(AbstractItem $question): void
     {
-        $text = $item->getText();
+        $text = $question->getText();
 
         /** @var Hole $hole */
-        foreach ($item->getHoles() as $hole) {
+        foreach ($question->getHoles() as $hole) {
             // stash current id
             $oldId = $hole->getUuid();
 
@@ -247,13 +191,10 @@ class ClozeDefinition extends AbstractDefinition
             $text = str_replace('[['.$oldId.']]', '[['.$hole->getUuid().']]', $text);
         }
 
-        $item->setText($text);
+        $question->setText($text);
     }
 
-    /**
-     * @return Keyword|null
-     */
-    private function findHoleExpectedAnswer(Hole $hole)
+    private function findHoleExpectedAnswer(Hole $hole): ?Keyword
     {
         $best = null;
         foreach ($hole->getKeywords() as $keyword) {
@@ -266,16 +207,22 @@ class ClozeDefinition extends AbstractDefinition
         return $best;
     }
 
-    public function getCsvTitles(AbstractItem $item)
+    /**
+     * @param ClozeQuestion $question
+     */
+    public function getCsvTitles(AbstractItem $question): array
     {
-        $qText = $item->getQuestion()->getTitle() ?? $item->getQuestion()->getContent();
+        $qText = $question->getQuestion()->getTitle() ?? $question->getQuestion()->getContent();
 
         return array_map(function (Hole $hole) use ($qText) {
             return $qText.': hole-'.$hole->getUuid();
-        }, $item->getHoles()->toArray());
+        }, $question->getHoles()->toArray());
     }
 
-    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    /**
+     * @param ClozeQuestion $question
+     */
+    public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         $data = json_decode($answer->getData(), true);
         $answers = [];
@@ -287,7 +234,7 @@ class ClozeDefinition extends AbstractDefinition
             }
         }
 
-        foreach ($item->getHoles() as $hole) {
+        foreach ($question->getHoles() as $hole) {
             (array_key_exists($hole->getUuid(), $answeredHoles)) ?
               $answers[] = $answeredHoles[$hole->getUuid()] :
               $answers[] = null;

@@ -1,26 +1,11 @@
 import {createSelector} from 'reselect'
 import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/app/intl/translation'
 import {isAdmin as userIsAdmin} from '#/main/app/security/permissions'
 
 const STORE_NAME = 'security'
 
 const security = (state) => state[STORE_NAME]
-
-/**
- * Get a user placeholder object.
- *
- * @return {object}
- */
-const fakeUser = () => ({
-  name: trans('guest'),
-  username: trans('guest'),
-  roles: [{
-    name: 'ROLE_ANONYMOUS',
-    translationKey: 'anonymous'
-  }]
-})
 
 /**
  * Get the user currently authenticated.
@@ -81,28 +66,14 @@ const mainOrganization = createSelector(
   (currentUser) => currentUser.mainOrganization
 )
 
-const clientIp = createSelector(
-  [security],
-  (store) => {
-    let ip = store.client.ip
-    if (store.client.forwarded) {
-      ip += ' / ' + store.client.forwarded
-    }
-
-    return ip
-  }
-)
-
 export const selectors = {
   STORE_NAME,
 
   security,
-  fakeUser,
   currentUser,
   currentUserId,
   isImpersonated,
   isAuthenticated,
   isAdmin,
-  mainOrganization,
-  clientIp
+  mainOrganization
 }
