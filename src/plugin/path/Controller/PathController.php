@@ -11,15 +11,16 @@
 
 namespace Innova\PathBundle\Controller;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\EvaluationManager;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -30,6 +31,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 class PathController
 {
     use PermissionCheckerTrait;
+    use RequestDecoderTrait;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -39,30 +41,17 @@ class PathController
         $this->authorization = $authorization;
     }
 
-    public static function getClass(): string
-    {
-        return Path::class;
-    }
-
-    public static function getName(): string
-    {
-        return 'path';
-    }
-
-    public function getIgnore(): array
-    {
-        // we only keep update method
-        return ['list', 'get', 'create', 'deleteBulk'];
-    }
-
     /**
      * Update step progression for a user.
-     *
      */
     #[Route(path: '/step/{id}/progression', name: 'innova_path_progression_update', methods: ['PUT'])]
-    public function updateProgressionAction(#[MapEntity(class: 'Innova\PathBundle\Entity\Step', mapping: ['id' => 'uuid'])]
-    Step $step, #[CurrentUser] ?User $user, Request $request): JsonResponse
-    {
+    public function updateProgressionAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Step $step,
+        #[CurrentUser]
+        ?User $user,
+        Request $request
+    ): JsonResponse {
         if (null === $user) {
             return new JsonResponse(null, 204);
         }
@@ -84,12 +73,13 @@ class PathController
     /**
      * Gets current user progression in the Path.
      * It includes, the Path evaluation, current attempt and evaluations for the embedded resources.
-     *
      */
     #[Route(path: '/{id}/attempt', name: 'innova_path_user_progression', methods: ['GET'])]
-    public function getUserProgressionAction(#[MapEntity(class: 'Innova\PathBundle\Entity\Path\Path', mapping: ['id' => 'uuid'])]
-    Path $path, #[CurrentUser] ?User $user = null): JsonResponse
-    {
+    public function getUserProgressionAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Path $path,
+        #[CurrentUser] ?User $user = null
+    ): JsonResponse {
         $this->checkPermission('OPEN', $path->getResourceNode(), [], true);
 
         if ($user) {
@@ -105,13 +95,14 @@ class PathController
 
     /**
      * Fetch user progressions for path.
-     *
      */
     #[Route(path: '/{id}/user/{user}/steps/progression/fetch', name: 'innova_path_user_steps_progression_fetch', methods: ['GET'])]
-    public function userStepsProgressionFetchAction(#[MapEntity(class: 'Innova\PathBundle\Entity\Path\Path', mapping: ['id' => 'uuid'])]
-    Path $path, #[MapEntity(class: 'Claroline\CoreBundle\Entity\User', mapping: ['user' => 'uuid'])]
-    User $user): JsonResponse
-    {
+    public function userStepsProgressionFetchAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Path $path,
+        #[MapEntity(mapping: ['user' => 'uuid'])]
+        User $user
+    ): JsonResponse {
         $this->checkPermission('ADMINISTRATE', $path->getResourceNode(), [], true);
 
         return new JsonResponse([
