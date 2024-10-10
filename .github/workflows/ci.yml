@@ -14,10 +14,10 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: "Install PHP 8.1"
+      - name: "Install PHP 8.2"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: "8.1"
+          php-version: "8.2"
 
       - name: "List modified files"
         id: diff
@@ -65,7 +65,7 @@ jobs:
           DIFF: ${{ steps.diff.outputs.diff_js }}
 
   php-81:
-    name: "PHPUnit (PHP 8.1)"
+    name: "PHPUnit (PHP 8.2)"
     needs: cs
     runs-on: ubuntu-latest
 
@@ -85,10 +85,10 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: "Install PHP 8.1"
+      - name: "Install PHP 8.2"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: "8.1"
+          php-version: "8.2"
           extensions: pdo_mysql
 
       - name: "Cache composer dependencies"
