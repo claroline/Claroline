@@ -7,7 +7,7 @@ import classes from 'classnames'
 import {Popover} from '#/main/app/overlays/popover/components/popover'
 import {trans} from '#/main/app/intl/translation'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
-import {DataError} from '#/main/app/data/components/error'
+import {FormError} from '#/main/app/content/form/components/error'
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -173,48 +173,56 @@ KeywordItem.defaultProps = {
  * @param props
  * @constructor
  */
-const KeywordItems = props =>
-  <div className="keyword-items">
-    {get(props, '_errors.count') &&
-      <DataError error={props._errors.count} warnOnly={!props.validating} />
-    }
-    {get(props, '_errors.noValidKeyword') &&
-      <DataError error={props._errors.noValidKeyword} warnOnly={!props.validating} />
-    }
-    {get(props, '_errors.duplicate') &&
-      <DataError error={props._errors.duplicate} warnOnly={!props.validating} />
-    }
-    {get(props, '_errors.text') &&
-      <DataError error={props._errors.text} warnOnly={!props.validating} />
-    }
-    {get(props, '_errors.score') &&
-      <DataError error={props._errors.score} warnOnly={!props.validating} />
-    }
+const KeywordItems = props => {
+  const errors = []
+  if (get(props, '_errors.count')) {
+    errors.push(get(props, '_errors.count'))
+  }
+  if (get(props, '_errors.noValidKeyword')) {
+    errors.push(get(props, '_errors.noValidKeyword'))
+  }
+  if (get(props, '_errors.duplicate')) {
+    errors.push(get(props, '_errors.duplicate'))
+  }
+  if (get(props, '_errors.text')) {
+    errors.push(get(props, '_errors.text'))
+  }
+  if (get(props, '_errors.score')) {
+    errors.push(get(props, '_errors.score'))
+  }
 
-    <ul>
-      {props.keywords.map((keyword, index) =>
-        <KeywordItem
-          key={keyword._id}
-          index={index}
-          keyword={keyword}
-          contentType={props.contentType}
-          showCaseSensitive={props.showCaseSensitive}
-          showScore={props.showScore}
-          hasExpectedAnswers={props.hasExpectedAnswers}
-          updateKeyword={(property, newValue) => props.updateKeyword(keyword._id, property, newValue)}
-          removeKeyword={() => props.removeKeyword(keyword._id)}
-        />
-      )}
-    </ul>
+  return (
+    <div className="keyword-items">
+      {!isEmpty(errors) &&
+        <FormError error={errors} warnOnly={!props.validating} />
+      }
 
-    <Button
-      type={CALLBACK_BUTTON}
-      className="add-keyword btn btn-primary w-100"
-      icon="fa fa-fw fa-plus"
-      label={trans('words_add_word', {}, 'quiz')}
-      callback={props.addKeyword}
-    />
-  </div>
+      <ul>
+        {props.keywords.map((keyword, index) =>
+          <KeywordItem
+            key={keyword._id}
+            index={index}
+            keyword={keyword}
+            contentType={props.contentType}
+            showCaseSensitive={props.showCaseSensitive}
+            showScore={props.showScore}
+            hasExpectedAnswers={props.hasExpectedAnswers}
+            updateKeyword={(property, newValue) => props.updateKeyword(keyword._id, property, newValue)}
+            removeKeyword={() => props.removeKeyword(keyword._id)}
+          />
+        )}
+      </ul>
+
+      <Button
+        type={CALLBACK_BUTTON}
+        className="add-keyword btn btn-primary w-100"
+        icon="fa fa-fw fa-plus"
+        label={trans('words_add_word', {}, 'quiz')}
+        callback={props.addKeyword}
+      />
+    </div>
+  )
+}
 
 KeywordItems.propTypes = {
   /**

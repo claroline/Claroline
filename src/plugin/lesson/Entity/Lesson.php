@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Lesson extends AbstractResource
 {
     #[ORM\Column(name: 'description', type: Types::TEXT, nullable: true)]
-    private ?string $description;
+    private ?string $description = null;
 
     /**
      * Show overview to users or directly start the lesson.
@@ -24,7 +24,7 @@ class Lesson extends AbstractResource
     
     #[ORM\JoinColumn(name: 'root_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\OneToOne(targetEntity: Chapter::class, cascade: ['all'])]
-    private ?Chapter $root;
+    private ?Chapter $root = null;
 
     /**
      * Numbering of the chapters.

@@ -61,7 +61,7 @@ class TimeInput extends Component {
     return (
       <div className={classes('input-group', this.props.className, {
         [`input-group-${this.props.size}`]: !!this.props.size
-      })}>
+      })} role="presentation">
         <input
           className="form-control text-right"
           type="number"
@@ -109,10 +109,7 @@ class TimeInput extends Component {
 }
 
 implementPropTypes(TimeInput, DataInputTypes, {
-  value: T.number,
-
-  min: T.number, // todo : implement
-  max: T.number // todo : implement
+  value: T.number
 }, {
   value: 0
 })

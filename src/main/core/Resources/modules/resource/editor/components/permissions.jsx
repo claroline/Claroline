@@ -79,6 +79,7 @@ const ResourceEditorPermissions = (props) => {
             {
               name: 'resourceNode.restrictions.enableDates',
               label: trans('restrict_by_dates'),
+              help: trans('restrict_by_dates_help'),
               type: 'boolean',
               calculated: restrictedByDates,
               onChange: activated => {
@@ -114,7 +115,10 @@ const ResourceEditorPermissions = (props) => {
                   label: trans('access_code'),
                   displayed: restrictedByCode,
                   type: 'password',
-                  required: true
+                  required: true,
+                  options: {
+                    disablePasswordCheck: true
+                  }
                 }
               ]
             }

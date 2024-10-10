@@ -4,6 +4,7 @@ import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {getValidationClassName} from '#/main/app/content/form/validator'
+import isEmpty from 'lodash/isEmpty'
 
 class StringInput extends PureComponent {
   constructor(props) {
@@ -27,7 +28,9 @@ class StringInput extends PureComponent {
       onChange: this.onChange,
       placeholder: this.props.placeholder,
       autoComplete: this.props.autoComplete,
-      autoFocus: this.props.autoFocus
+      autoFocus: this.props.autoFocus,
+      'aria-required': this.props.required,
+      'aria-invalid': !isEmpty(this.props.error)
     }
 
     if (this.props.long) {

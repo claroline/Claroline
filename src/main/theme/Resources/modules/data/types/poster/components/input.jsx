@@ -3,14 +3,14 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
-import {asset} from '#/main/app/config/asset'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {Alert} from '#/main/app/alert/components/alert'
+import {Alert} from '#/main/app/components/alert'
 
 import {actions} from '#/main/app/api/store'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {Poster} from '#/main/app/components/poster'
 
 class PosterInputComponent extends PureComponent {
   constructor(props) {
@@ -86,7 +86,7 @@ class PosterInputComponent extends PureComponent {
 
   render() {
     return (
-      <fieldset className={this.props.className}>
+      <div className={this.props.className} role="presentation">
         {this.state.notFound && !this.state.file &&
           <Alert type="warning" className="mb-3">
             {trans('image_not_found')}
@@ -136,22 +136,9 @@ class PosterInputComponent extends PureComponent {
         }
 
         {this.props.value && this.state.loaded &&
-          <div
-            className="poster-preview ratio ratio-poster rounded-3"
-            style={{
-              backgroundImage: `url("${asset(this.props.value)}")`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center center',
-              backgroundRepeat: 'no-repeat'
-            }}
-          >
-
-            {/*<img
-              className="poster"
-              src={asset(this.props.value)}
-            />*/}
-          </div>
+          <Poster url={this.props.value} className="poster-preview rounded-3" />
         }
+
         {false && this.props.value && this.state.loaded &&
           <Button
             id={`${this.props.id}-delete`}
@@ -167,7 +154,7 @@ class PosterInputComponent extends PureComponent {
           />
         }
 
-      </fieldset>
+      </div>
     )
   }
 }

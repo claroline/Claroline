@@ -30,7 +30,7 @@ const EditorMenu = (props) => {
 
       {!isEmpty(otherPages) &&
         <>
-          <hr className="app-editor-menu-separator my-2" />
+          <hr className="app-editor-menu-separator my-2" aria-hidden={true} />
           <Toolbar
             role="presentation"
             className="nav nav-pills flex-column"
@@ -47,7 +47,7 @@ const EditorMenu = (props) => {
 
       {!isEmpty(advancedPages) &&
         <>
-          <hr className="app-editor-menu-separator my-2" />
+          <hr className="app-editor-menu-separator my-2" aria-hidden={true} />
           <Toolbar
             role="presentation"
             className="nav nav-pills flex-column"

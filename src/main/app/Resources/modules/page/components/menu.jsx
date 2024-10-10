@@ -50,6 +50,7 @@ const MenuButton = () => {
       label={trans(menuOpened ? 'hide-menu' : 'show-menu', {}, 'actions')}
       icon="fa fa-bars"
       tooltip="bottom"
+      aria-expanded={menuOpened}
       callback={() => dispatch(contextActions.toggleMenu())}
     />
   )

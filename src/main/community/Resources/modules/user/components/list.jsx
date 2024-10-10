@@ -30,7 +30,7 @@ const Users = (props) => {
       definition={[
         {
           name: 'username',
-          type: 'username',
+          type: 'string',
           label: trans('username'),
           displayable: param('community.username'),
           displayed: param('community.username'),

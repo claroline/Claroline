@@ -29,7 +29,6 @@ const CallbackButton = forwardRef((props, ref) => {
     {...omit(props, 'variant', 'active', 'displayed', 'primary', 'dangerous', 'size', 'callback', 'htmlType')}
     ref={ref}
     type={props.htmlType}
-    role="button"
     tabIndex={props.tabIndex}
     disabled={props.disabled}
     className={buttonClasses(props.className, props.variant, props.size, props.disabled, props.active, props.primary, props.dangerous)}

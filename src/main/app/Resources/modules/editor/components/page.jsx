@@ -26,7 +26,7 @@ const EditorPage = (props) => {
         onSave={editorDef.onSave}
         buttons={true}
       >
-        <header className="d-flex flex-row align-items-center gap-2 mb-2" role="presentation">
+        <header className="d-flex flex-row align-items-center gap-2 mb-2">
           <Heading level={1} displayLevel={4} className="m-0">
             {props.title}
           </Heading>

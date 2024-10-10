@@ -16,13 +16,13 @@ function passwordStrength( password ) {
   const complexity = Math.pow(N, L)
 
   if (complexity < Math.pow(2, 64) )
-    return 1
+    return 0
   else if (complexity < Math.pow(2, 84))
-    return 2
+    return 1
   else if (complexity < Math.pow(2, 100))
-    return 3
+    return 2
   else
-    return 4
+    return 3
 }
 
 export {

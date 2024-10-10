@@ -25,7 +25,7 @@ export default (contextType, contextData, refresher, currentUser) => {
     definition: [
       {
         name: 'username',
-        type: 'username',
+        type: 'string',
         label: trans('username'),
         displayed: true,
         primary: true,

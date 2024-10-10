@@ -7,12 +7,12 @@ import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/main/example//tools/example/store/selectors'
 
-const ExampleForm = (props) =>
+const ExampleForm = () =>
   <ToolPage
     title="Forms"
   >
     <FormData
-      className="mt-3"
+      className="my-5"
       name={selectors.FORM_NAME}
       buttons={true}
       save={{
@@ -66,6 +66,23 @@ const ExampleForm = (props) =>
               label: 'Date range',
               type: 'date-range',
               required: true
+            }, {
+              name: 'time',
+              label: 'Time',
+              type: 'time',
+              required: true
+            }, {
+              name: 'number',
+              label: 'Number',
+              type: 'number',
+              required: true,
+              options: {min: 0, max: 100}
+            }, {
+              name: 'numberUnit',
+              label: 'Number with unit',
+              type: 'number',
+              required: true,
+              options: {min: 0, max: 100, unit: 'unit'}
             }, {
               name: 'boolean',
               label: 'This checkbox will display additional fields once checked.',
@@ -182,17 +199,30 @@ const ExampleForm = (props) =>
             }
           ]
         }, {
-          icon: 'fa fa-fw fa-power-off',
-          title: 'Authentication',
+          icon: 'fa fa-fw fa-key',
+          title: 'Passwords',
           fields: [
             {
-              name: 'username',
-              label: 'Username',
-              type: 'username',
-              required: true
+              name: 'simplePassword',
+              label: 'Password simple',
+              type: 'password',
+              required: true,
+              options: {
+                hideStrength: true,
+                disablePasswordCheck: true
+              }
             }, {
-              name: 'password',
-              label: 'Password',
+              name: 'strengthPassword',
+              label: 'Password with strength',
+              type: 'password',
+              required: true,
+              options: {
+                hideStrength: false,
+                disablePasswordCheck: true
+              }
+            }, {
+              name: 'requirementsPassword',
+              label: 'Password with requirements and strength',
               type: 'password',
               required: true
             }
@@ -208,7 +238,6 @@ const ExampleForm = (props) =>
             }, {
               name: 'icon',
               label: 'FontAwesome icon',
-              help: trans('resource_showIcon_help', {}, 'resource'),
               type: 'icon',
               required: true
             }, {
@@ -247,6 +276,10 @@ const ExampleForm = (props) =>
               name: 'country',
               label: 'Country',
               type: 'country'
+            }, {
+              name: 'address',
+              label: 'Address',
+              type: 'address'
             }
           ]
         }

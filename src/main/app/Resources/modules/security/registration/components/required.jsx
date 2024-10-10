@@ -41,13 +41,14 @@ const Required = () =>
             }
           }, {
             name: 'username',
-            type: 'username',
+            type: 'string',
             label: trans('username'),
             required: true,
             displayed: param('community.username'),
             options: {
               unique: {
-                check: ['apiv2_user_get', {field: 'username'}]
+                check: ['apiv2_user_get', {field: 'username'}],
+                error: 'This username already exists.'
               }
             }
           }, {

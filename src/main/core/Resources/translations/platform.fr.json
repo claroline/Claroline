@@ -735,6 +735,7 @@
     "access_date": "Date d'accès",
     "access_dates": "Période d'accès",
     "restrict_by_dates": "Restreindre par dates",
+    "restrict_by_dates_help": "Le contenu est uniquement accessible durant la période définie.",
     "restrict_by_ips": "Restreindre par IPs",
     "restrict_by_code": "Restreindre par code",
     "restrict_by_roles": "Restreindre par roles",

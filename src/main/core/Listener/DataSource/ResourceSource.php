@@ -13,29 +13,17 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ResourceSource
 {
-    /** @var ResourceNodeRepository */
-    private $repository;
+    private ResourceNodeRepository $repository;
 
-    /** @var FinderProvider */
-    private $finder;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /**
-     * ResourceSource constructor.
-     */
     public function __construct(
         ObjectManager $om,
-        FinderProvider $finder,
-        TokenStorageInterface $tokenStorage
+        private readonly FinderProvider $finder,
+        private readonly TokenStorageInterface $tokenStorage
     ) {
         $this->repository = $om->getRepository(ResourceNode::class);
-        $this->finder = $finder;
-        $this->tokenStorage = $tokenStorage;
     }
 
-    public function getData(GetDataEvent $event)
+    public function getData(GetDataEvent $event): void
     {
         $options = $event->getOptions();
         $options['hiddenFilters']['hidden'] = false;

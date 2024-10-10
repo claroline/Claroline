@@ -33,7 +33,7 @@ class LoginAccount extends Component {
                 label: trans('username_or_email'),
                 placeholder: this.props.username ? trans('username_or_email') : trans('email'),
                 hideLabel: true,
-                type: 'username',
+                type: 'string',
                 required: true
               }, {
                 name: 'password',

@@ -3,6 +3,8 @@ import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {getValidationClassName} from '#/main/app/content/form/validator'
+import isEmpty from 'lodash/isEmpty'
 
 class EmailInput extends PureComponent {
   constructor(props) {
@@ -20,7 +22,7 @@ class EmailInput extends PureComponent {
       <input
         id={this.props.id}
         type="email"
-        className={classes('form-control', this.props.className, {
+        className={classes('form-control', getValidationClassName(this.props.error, this.props.validating), this.props.className, {
           [`form-control-${this.props.size}`]: !!this.props.size
         })}
         autoComplete={this.props.autoComplete || 'email'}
@@ -28,6 +30,8 @@ class EmailInput extends PureComponent {
         disabled={this.props.disabled}
         placeholder={this.props.placeholder}
         onChange={this.onChange}
+        aria-required={this.props.required}
+        aria-invalid={!isEmpty(this.props.error)}
       />
     )
   }

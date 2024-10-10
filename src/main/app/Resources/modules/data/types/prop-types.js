@@ -224,16 +224,21 @@ const DataInput = {
     autoComplete: T.string,
     autoFocus: T.bool,
     disabled: T.bool,
+    required: T.bool,
     size: T.oneOf(['sm', 'lg']),
     onChange: T.func.isRequired,
     onError: T.func,
     /**
-     * @deprecated use validating
+     * @deprecated
      */
     warnOnly: T.bool,
+    /**
+     * @deprecated
+     */
     validating: T.bool
   },
   defaultProps: {
+    required: false,
     disabled: false
   }
 }
@@ -251,9 +256,12 @@ const DataGroup = {
     hideLabel: T.bool,
     help: T.oneOfType([T.string, T.arrayOf(T.string)]),
     /**
-     * @deprecated use validating
+     * @deprecated
      */
     warnOnly: T.bool,
+    /**
+     * @deprecated
+     */
     validating: T.bool,
     error: T.oneOfType([T.string, T.arrayOf(T.string), T.arrayOf(T.arrayOf(T.string))]),
     optional: T.bool

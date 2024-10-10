@@ -78,13 +78,24 @@ function getFormDefaultSections(user, update, isNew = false) {
           name: 'email',
           type: 'email',
           label: trans('email'),
-          required: true
+          required: true,
+          options: {
+            unique: {
+              check: ['apiv2_user_get', {field: 'email'}]
+            }
+          }
         }, {
           name: 'username',
-          type: 'username',
+          type: 'string',
           label: trans('username'),
           required: true,
-          displayed: param('community.username')
+          displayed: param('community.username'),
+          options: {
+            unique: {
+              check: ['apiv2_user_get', {field: 'username'}],
+              error: 'This username already exists.'
+            }
+          }
         }, {
           name: 'plainPassword',
           type: 'password',

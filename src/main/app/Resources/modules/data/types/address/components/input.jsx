@@ -12,53 +12,54 @@ import {FormFieldset} from '#/main/app/content/form/components/fieldset'
 import {Address as AddressTypes} from '#/main/app/data/types/address/prop-types'
 
 const AddressInput = props =>
-  <FormFieldset
-    {...omit(props, 'value', 'error', 'onChange', 'onError')}
-    className={classes('address-control', props.className)}
-    data={props.value}
-    errors={props.error}
-    updateProp={(name, value) => {
-      const newAddress = props.value ? cloneDeep(props.value) : {}
-      newAddress[name] = value
+  <div className={classes('address-control bg-body-tertiary p-3 rounded-3', props.className)} role="presentation">
+    <FormFieldset
+      {...omit(props, 'value', 'error', 'onChange', 'onError')}
+      data={props.value}
+      errors={props.error}
+      updateProp={(name, value) => {
+        const newAddress = props.value ? cloneDeep(props.value) : {}
+        newAddress[name] = value
 
-      props.onChange(newAddress)
-    }}
-    setErrors={(error) => props.onError(merge({}, props.error || {}, error || {}))}
-    fields={[
-      {
-        name: 'street1',
-        label: trans('address_street'),
-        type: 'string',
-        required: -1 !== props.requiredParts.indexOf('street1')
-      }, {
-        name: 'street2',
-        label: trans('address_street'),
-        hideLabel: true,
-        type: 'string',
-        required: -1 !== props.requiredParts.indexOf('street2')
-      }, {
-        name: 'postalCode',
-        label: trans('address_postal_code'),
-        type: 'string',
-        required: -1 !== props.requiredParts.indexOf('postalCode')
-      }, {
-        name: 'city',
-        label: trans('address_city'),
-        type: 'string',
-        required: -1 !== props.requiredParts.indexOf('city')
-      }, {
-        name: 'state',
-        label: trans('address_state'),
-        type: 'string',
-        required: -1 !== props.requiredParts.indexOf('state')
-      }, {
-        name: 'country',
-        label: trans('address_country'),
-        type: 'country',
-        required: -1 !== props.requiredParts.indexOf('country')
-      }
-    ]}
-  />
+        props.onChange(newAddress)
+      }}
+      setErrors={(error) => props.onError(merge({}, props.error || {}, error || {}))}
+      fields={[
+        {
+          name: 'street1',
+          label: trans('address_street'),
+          type: 'string',
+          required: -1 !== props.requiredParts.indexOf('street1')
+        }, {
+          name: 'street2',
+          label: trans('address_street'),
+          hideLabel: true,
+          type: 'string',
+          required: -1 !== props.requiredParts.indexOf('street2')
+        }, {
+          name: 'postalCode',
+          label: trans('address_postal_code'),
+          type: 'string',
+          required: -1 !== props.requiredParts.indexOf('postalCode')
+        }, {
+          name: 'city',
+          label: trans('address_city'),
+          type: 'string',
+          required: -1 !== props.requiredParts.indexOf('city')
+        }, {
+          name: 'state',
+          label: trans('address_state'),
+          type: 'string',
+          required: -1 !== props.requiredParts.indexOf('state')
+        }, {
+          name: 'country',
+          label: trans('address_country'),
+          type: 'country',
+          required: -1 !== props.requiredParts.indexOf('country')
+        }
+      ]}
+    />
+  </div>
 
 implementPropTypes(AddressInput, DataInputTypes, {
   // more precise value type

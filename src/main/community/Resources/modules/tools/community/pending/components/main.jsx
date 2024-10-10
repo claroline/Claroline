@@ -51,7 +51,7 @@ const PendingMain = props =>
         definition={[
           {
             name: 'username',
-            type: 'username',
+            type: 'string',
             label: trans('username'),
             displayed: true,
             primary: true

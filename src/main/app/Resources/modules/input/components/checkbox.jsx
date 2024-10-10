@@ -6,7 +6,7 @@ const Checkbox = props =>
   <div className={classes('form-check', {
     'form-check-inline': props.inline,
     'form-switch': props.switch
-  }, props.className)}>
+  }, props.className)} role="presentation">
     <input
       id={props.id}
       className="form-check-input"

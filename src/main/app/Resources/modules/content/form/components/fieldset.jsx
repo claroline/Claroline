@@ -5,14 +5,14 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 
-import {Alert} from '#/main/app/alert/components/alert'
+import {Alert} from '#/main/app/components/alert'
 import {DataInput} from '#/main/app/data/components/input'
 import {DataDisplay} from '#/main/app/data/components/display'
 import {toKey} from '#/main/core/scaffolding/text'
 import {ContentHtml} from '#/main/app/content/components/html'
 
 /**
- * ATTENTION : as it's only be used in the FormData component, the `fields` are not defaulted by the component.
+ * ATTENTION : as it's only to be used in the FormData component, the `fields` are not defaulted by the component.
  * You should consider apply `createFieldsetDefinition` on your fields list before using it.
  */
 class FormFieldset extends Component {
@@ -113,9 +113,9 @@ class FormFieldset extends Component {
 
       if (field.linked && 0 !== field.linked.length) {
         rendered.push(
-          <fieldset className="sub-fields mb-3" key={`${field.name}-subset`}>
+          <div className="sub-fields mb-4" key={`${field.name}-subset`} role="presentation">
             {this.renderFields(field.linked)}
-          </fieldset>
+          </div>
         )
       }
     })
@@ -139,16 +139,12 @@ class FormFieldset extends Component {
 
   render() {
     return (
-      <fieldset
-        id={this.props.id}
-        className={this.props.className}
-        disabled={this.props.disabled}
-      >
+      <>
         {this.renderHelp()}
         {this.renderFields(this.props.fields)}
 
         {this.props.children}
-      </fieldset>
+      </>
     )
   }
 }

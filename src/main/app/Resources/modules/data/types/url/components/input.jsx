@@ -1,5 +1,6 @@
 import React, {PureComponent} from 'react'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -8,6 +9,7 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {getValidationClassName} from '#/main/app/content/form/validator'
 
 class UrlInput extends PureComponent {
   constructor(props) {
@@ -28,17 +30,21 @@ class UrlInput extends PureComponent {
   render() {
     return (
       <div className={classes('input-group', this.props.className, {
-        [`input-group-${this.props.size}`]: !!this.props.size
-      })}>
+        [`input-group-${this.props.size}`]: !!this.props.size,
+        'has-validation': !isEmpty(this.props.error)
+      })} role="presentation">
         <input
           id={this.props.id}
           type="text"
-          className="form-control"
+          className={classes('form-control', getValidationClassName(this.props.error, this.props.validating))}
           value={this.props.value || ''}
           disabled={this.props.disabled}
           placeholder={this.props.placeholder}
+          autoFocus={this.props.autoFocus}
           autoComplete={this.props.autoComplete}
           onChange={this.onChange}
+          aria-required={this.props.required}
+          aria-invalid={!isEmpty(this.props.error)}
         />
 
         <Button

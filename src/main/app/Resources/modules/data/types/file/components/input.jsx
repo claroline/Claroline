@@ -79,6 +79,8 @@ class FileComponent extends Component {
             ref={input => this.input = input}
             onChange={this.onFileSelect}
             disabled={this.props.disabled}
+            aria-required={this.props.required}
+            aria-invalid={!isEmpty(this.props.error)}
           />
 
           {param('uploadMaxFilesize') &&

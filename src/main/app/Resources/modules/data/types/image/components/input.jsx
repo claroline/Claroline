@@ -12,6 +12,8 @@ import {Alert} from '#/main/app/alert/components/alert'
 
 import {actions} from '#/main/app/api/store'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import isEmpty from 'lodash/isEmpty'
+import {getValidationClassName} from '#/main/app/content/form/validator'
 
 class ImageInputComponent extends PureComponent {
   constructor(props) {
@@ -87,7 +89,7 @@ class ImageInputComponent extends PureComponent {
 
   render() {
     return (
-      <fieldset className={this.props.className}>
+      <div className={this.props.className} role="presentation">
         {this.state.notFound && !this.state.file &&
           <Alert type="warning" className="mb-3">
             {trans('image_not_found')}
@@ -116,13 +118,15 @@ class ImageInputComponent extends PureComponent {
             id={this.props.id}
             style={this.state.notFound ? {display: 'none'} : undefined}
             type="file"
-            className={classes('form-control', this.props.className, {
+            className={classes('form-control', getValidationClassName(this.props.error, this.props.validating), this.props.className, {
               [`form-control-${this.props.size}`]: !!this.props.size
             })}
             accept="image"
             ref={input => this.input = input}
             onChange={this.onChange}
             disabled={this.props.disabled}
+            aria-required={this.props.required}
+            aria-invalid={!isEmpty(this.props.error)}
           />
         }
 
@@ -147,7 +151,7 @@ class ImageInputComponent extends PureComponent {
             />
           </div>
         }
-      </fieldset>
+      </div>
     )
   }
 }

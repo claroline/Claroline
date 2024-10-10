@@ -123,17 +123,9 @@ class PlatformController
         }
 
         $currentUser->setMainOrganization($organization);
-        $this->om->persist($organization);
         $this->om->persist($currentUser);
         $this->om->flush();
 
-        //$this->tokenStorage->getToken()->setUser($currentUser);
-
-        //$this->om->refresh($currentUser);
-
-        return new JsonResponse([
-            //'contextFavorites' => $this->contextProvider->getFavoriteContexts(),
-            //'currentOrganization' => $this->serializer->serialize($currentUser->getMainOrganization(), [Options::SERIALIZE_MINIMAL]),
-        ]);
+        return new JsonResponse(null, 204);
     }
 }

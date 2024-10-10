@@ -5,7 +5,6 @@ import classes from 'classnames'
 import {trans} from '#/main/app/intl/translation'
 import {ContentTitle} from '#/main/app/content/components/title'
 
-import {FormActions} from '#/main/app/content/form/components/actions'
 import {FormSave} from '#/main/app/content/form/components/save'
 
 const FormWrapper = props => props.embedded ?

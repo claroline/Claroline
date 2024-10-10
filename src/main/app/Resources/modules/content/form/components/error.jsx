@@ -4,22 +4,21 @@ import classes from 'classnames'
 
 import {toKey} from '#/main/core/scaffolding/text'
 
-/**
- * todo : to move in form module
- */
-const DataError = (props) => {
-  if (Array.isArray(props.error)) {
+const FormError = (props) => {
+  const errors = Array.isArray(props.error) && 1 === props.error.length ? props.error[0] : props.error
+
+  if (Array.isArray(errors)) {
     return (
-      <>
-        {props.error.map(error =>
-          <div key={toKey(error)} className={classes({
+      <ul className="list-unstyled mb-0" role="alert">
+        {errors.map(error =>
+          <li key={toKey(error)} className={classes({
             'incomplete-feedback': props.warnOnly,
             'invalid-feedback': !props.warnOnly
           })}>
             {error}
-          </div>
+          </li>
         )}
-      </>
+      </ul>
     )
   }
 
@@ -27,13 +26,13 @@ const DataError = (props) => {
     <div className={classes({
       'incomplete-feedback': props.warnOnly,
       'invalid-feedback': !props.warnOnly
-    })}>
-      {props.error}
+    })} role="alert">
+      {errors}
     </div>
   )
 }
 
-DataError.propTypes = {
+FormError.propTypes = {
   error: T.oneOfType([
     T.string,           // a single error message
     T.arrayOf(T.string) // a list of error messages
@@ -41,10 +40,10 @@ DataError.propTypes = {
   warnOnly: T.bool
 }
 
-DataError.defaultProps = {
+FormError.defaultProps = {
   warnOnly: false
 }
 
 export {
-  DataError
+  FormError
 }

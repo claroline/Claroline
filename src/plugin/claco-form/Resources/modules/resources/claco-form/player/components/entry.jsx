@@ -348,7 +348,7 @@ class EntryComponent extends Component {
                 definition={[
                   {
                     name: 'username',
-                    type: 'username',
+                    type: 'string',
                     label: trans('username'),
                     displayed: true,
                     primary: true
@@ -386,7 +386,6 @@ class EntryComponent extends Component {
 EntryComponent.propTypes = {
   path: T.string.isRequired,
   clacoFormId: T.string.isRequired,
-  slideshowQueryString: T.string,
   entryId: T.string,
   canEdit: T.bool.isRequired,
   canAdministrate: T.bool.isRequired,
@@ -436,7 +435,6 @@ const Entry = withRouter(connect(
   (state, ownProps) => ({
     path: resourceSelectors.path(state),
     clacoFormId: selectors.clacoForm(state).id,
-    slideshowQueryString: playerSelectors.slideshowQueryString(state),
     entryId: ownProps.match.params.id || formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')).id,
     entry: formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
     entryUser: selectors.entryUser(state),

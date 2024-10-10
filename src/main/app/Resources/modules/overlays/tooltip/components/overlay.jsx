@@ -13,7 +13,7 @@ const TooltipOverlay = props => {
     <OverlayTrigger
       placement={props.position}
       overlay={
-        <Tooltip id={props.id}>{props.tip}</Tooltip>
+        <Tooltip id={props.id} role="tooltip" >{props.tip}</Tooltip>
       }
     >
       {props.children}

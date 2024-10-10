@@ -11,9 +11,6 @@
 
 namespace Claroline\AnnouncementBundle\Entity;
 
-use DateTimeInterface;
-use Doctrine\DBAL\Types\Types;
-use DateTime;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -22,6 +19,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_announcement')]
@@ -32,69 +30,36 @@ class Announcement
     use Uuid;
     use Poster;
 
-    /**
-     * The title of the Announcement.
-     *
-     *
-     * @var string
-     */
     #[ORM\Column(nullable: true)]
-    private $title;
+    private ?string $title = null;
 
-    /**
-     * The content of the Announcement.
-     *
-     * @var string
-     */
     #[ORM\Column(type: Types::TEXT)]
-    private $content;
+    private ?string $content = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(nullable: true)]
-    private $announcer;
+    private ?string $announcer = null;
 
-    /**
-     * @var DateTimeInterface
-     */
     #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE, nullable: false)]
-    private $creationDate;
+    private ?\DateTimeInterface $creationDate;
 
-    /**
-     * @var DateTimeInterface
-     */
     #[ORM\Column(name: 'publication_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private $publicationDate;
+    private ?\DateTimeInterface $publicationDate;
 
-    /**
-     * @var bool
-     */
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
-    private $visible;
+    private ?bool $visible = true;
 
-    /**
-     * @var DateTimeInterface
-     */
     #[ORM\Column(name: 'visible_from', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private $visibleFrom;
+    private ?\DateTimeInterface $visibleFrom = null;
 
-    /**
-     * @var DateTimeInterface
-     */
     #[ORM\Column(name: 'visible_until', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private $visibleUntil;
+    private ?\DateTimeInterface $visibleUntil = null;
 
-    /**
-     *
-     * @var User
-     */
     #[ORM\JoinColumn(name: 'creator_id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $creator = null;
 
-    #[ORM\JoinColumn(name: 'aggregate_id', onDelete: 'CASCADE', nullable: false)]
     #[ORM\ManyToOne(targetEntity: AnnouncementAggregate::class, inversedBy: 'announcements')]
+    #[ORM\JoinColumn(name: 'aggregate_id', nullable: false, onDelete: 'CASCADE')]
     private ?AnnouncementAggregate $aggregate = null;
 
     #[ORM\JoinColumn(name: 'task_id', nullable: true, onDelete: 'SET NULL')]
@@ -111,202 +76,106 @@ class Announcement
     public function __construct()
     {
         $this->refreshUuid();
-        $this->creationDate = new DateTime();
+        $this->creationDate = new \DateTime();
         $this->roles = new ArrayCollection();
     }
 
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * Set title.
-     *
-     * @param string $title
-     */
-    public function setTitle($title)
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * Get content.
-     *
-     * @return string
-     */
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    /**
-     * Set content.
-     *
-     * @param string $content
-     */
-    public function setContent($content)
+    public function setContent(?string $content): void
     {
         $this->content = $content;
     }
 
-    /**
-     * Get announcer.
-     *
-     * @return string
-     */
-    public function getAnnouncer()
+    public function getAnnouncer(): ?string
     {
         return $this->announcer;
     }
 
-    /**
-     * Set announcer.
-     *
-     * @param string $announcer
-     */
-    public function setAnnouncer($announcer)
+    public function setAnnouncer(?string $announcer): void
     {
         $this->announcer = $announcer;
     }
 
-    /**
-     * Get creation date.
-     *
-     * @return DateTime
-     */
-    public function getCreationDate()
+    public function getCreationDate(): ?\DateTimeInterface
     {
         return $this->creationDate;
     }
 
-    /**
-     * Set creation date.
-     */
-    public function setCreationDate(DateTime $creationDate)
+    public function setCreationDate(\DateTimeInterface $creationDate): void
     {
         $this->creationDate = $creationDate;
     }
 
-    /**
-     * Get publication date.
-     *
-     * @return DateTime
-     */
-    public function getPublicationDate()
+    public function getPublicationDate(): ?\DateTimeInterface
     {
         return $this->publicationDate;
     }
 
-    /**
-     * Set publication date.
-     *
-     * @param DateTime $publicationDate
-     */
-    public function setPublicationDate(DateTime $publicationDate = null)
+    public function setPublicationDate(?\DateTimeInterface $publicationDate = null): void
     {
         $this->publicationDate = $publicationDate;
     }
 
-    /**
-     * Is visible ?
-     *
-     * @return bool
-     */
-    public function isVisible()
+    public function isVisible(): bool
     {
         return $this->visible;
     }
 
-    /**
-     * Set visible.
-     *
-     * @param bool $visible
-     */
-    public function setVisible($visible)
+    public function setVisible(bool $visible): void
     {
         $this->visible = $visible;
     }
 
-    /**
-     * Get visible from.
-     *
-     * @return DateTime
-     */
-    public function getVisibleFrom()
+    public function getVisibleFrom(): ?\DateTimeInterface
     {
         return $this->visibleFrom;
     }
 
-    /**
-     * Set visible from.
-     *
-     * @param DateTime $visibleFrom
-     */
-    public function setVisibleFrom(DateTime $visibleFrom = null)
+    public function setVisibleFrom(?\DateTimeInterface $visibleFrom = null): void
     {
         $this->visibleFrom = $visibleFrom;
     }
 
-    /**
-     * Get visible until.
-     *
-     * @return DateTime
-     */
-    public function getVisibleUntil()
+    public function getVisibleUntil(): ?\DateTimeInterface
     {
         return $this->visibleUntil;
     }
 
-    /**
-     * Set visible until.
-     *
-     * @param DateTime $visibleUntil
-     */
-    public function setVisibleUntil(DateTime $visibleUntil = null)
+    public function setVisibleUntil(?\DateTimeInterface $visibleUntil = null): void
     {
         $this->visibleUntil = $visibleUntil;
     }
 
-    /**
-     * Get creator.
-     *
-     * @return User
-     */
-    public function getCreator()
+    public function getCreator(): ?User
     {
         return $this->creator;
     }
 
-    /**
-     * Set creator.
-     */
-    public function setCreator(?User $creator = null)
+    public function setCreator(?User $creator = null): void
     {
         $this->creator = $creator;
     }
 
-    /**
-     * Get parent aggregate.
-     *
-     * @return AnnouncementAggregate
-     */
-    public function getAggregate()
+    public function getAggregate(): ?AnnouncementAggregate
     {
         return $this->aggregate;
     }
 
-    /**
-     * Set parent aggregate.
-     *
-     * @param AnnouncementAggregate $aggregate
-     */
-    public function setAggregate(AnnouncementAggregate $aggregate = null)
+    public function setAggregate(AnnouncementAggregate $aggregate = null): void
     {
         $this->aggregate = $aggregate;
     }

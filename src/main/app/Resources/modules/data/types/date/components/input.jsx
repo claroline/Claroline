@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
@@ -9,6 +10,7 @@ import {isValidDate, getApiFormat, getDisplayFormat, displayDate, apiDate} from 
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
 import {CalendarMenu} from '#/main/app/data/types/date/components/menu'
+import {getValidationClassName} from '#/main/app/content/form/validator'
 
 class DateInput extends Component {
   constructor(props) {
@@ -37,8 +39,9 @@ class DateInput extends Component {
 
     return (
       <div className={classes('date-control input-group', this.props.className, {
-        [`input-group-${this.props.size}`]: !!this.props.size
-      })}>
+        [`input-group-${this.props.size}`]: !!this.props.size,
+        'has-validation': !isEmpty(this.props.error)
+      })} role="presentation">
         <Button
           className="btn btn-body rounded-end-0"
           type={MENU_BUTTON}
@@ -64,11 +67,13 @@ class DateInput extends Component {
           id={this.props.id}
           type="text"
           autoComplete={this.props.autoComplete || 'date'}
-          className="form-control"
+          className={classes('form-control', getValidationClassName(this.props.error, this.props.validating))}
           placeholder={this.props.placeholder || displayFormat}
           value={displayValue}
           disabled={this.props.disabled}
           onChange={this.onInputChange}
+          aria-required={this.props.required}
+          aria-invalid={!isEmpty(this.props.error)}
         />
       </div>
     )

@@ -28,12 +28,11 @@ class DateRangeInput extends Component {
 
   render() {
     return (
-      <div className={classes('row', this.props.className)}>
+      <div className={classes('d-flex flex-row gap-4', this.props.className)} role="presentation">
         <FormGroup
           id={`${this.props.id}-start`}
-          className="col-md-6 col-xs-12"
-          hideLabel={true}
-          label={trans('range_start')}
+          className="flex-fill"
+          label={trans('start_date')}
           validating={this.props.validating}
           error={isArray(this.props.error) && get(this.props, 'error[0]') ? get(this.props, 'error[0]') : null}
         >
@@ -53,9 +52,8 @@ class DateRangeInput extends Component {
 
         <FormGroup
           id={`${this.props.id}-end`}
-          className="col-md-6 col-xs-12"
-          hideLabel={true}
-          label={trans('range_end')}
+          className="flex-fill"
+          label={trans('end_date')}
           validating={this.props.validating}
           error={isArray(this.props.error) && get(this.props, 'error[1]') ? get(this.props, 'error[1]') : null}
         >

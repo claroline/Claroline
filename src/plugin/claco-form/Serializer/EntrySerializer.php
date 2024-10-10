@@ -7,12 +7,20 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Category;
+use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
+use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
+use Claroline\ClacoFormBundle\Repository\CategoryRepository;
+use Claroline\ClacoFormBundle\Repository\ClacoFormRepository;
+use Claroline\ClacoFormBundle\Repository\FieldRepository;
+use Claroline\ClacoFormBundle\Repository\KeywordRepository;
+use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\FacetManager;
 
@@ -20,42 +28,25 @@ class EntrySerializer
 {
     use SerializerTrait;
 
-    /** @var CategorySerializer */
-    private $categorySerializer;
-    /** @var CommentSerializer */
-    private $commentSerializer;
-    /** @var KeywordSerializer */
-    private $keywordSerializer;
-    /** @var UserSerializer */
-    private $userSerializer;
-    /** @var FacetManager */
-    private $facetManager;
-
-    private $clacoFormRepo;
-    private $fieldRepo;
-    private $categoryRepo;
-    private $keywordRepo;
-    private $userRepo;
+    private ClacoFormRepository $clacoFormRepo;
+    private FieldRepository $fieldRepo;
+    private CategoryRepository $categoryRepo;
+    private KeywordRepository $keywordRepo;
+    private UserRepository $userRepo;
 
     public function __construct(
         ObjectManager $om,
-        CategorySerializer $categorySerializer,
-        CommentSerializer $commentSerializer,
-        KeywordSerializer $keywordSerializer,
-        UserSerializer $userSerializer,
-        FacetManager $facetManager
+        private readonly CategorySerializer $categorySerializer,
+        private readonly CommentSerializer $commentSerializer,
+        private readonly KeywordSerializer $keywordSerializer,
+        private readonly UserSerializer $userSerializer,
+        private readonly FacetManager $facetManager
     ) {
-        $this->categorySerializer = $categorySerializer;
-        $this->commentSerializer = $commentSerializer;
-        $this->keywordSerializer = $keywordSerializer;
-        $this->userSerializer = $userSerializer;
-        $this->facetManager = $facetManager;
-
-        $this->clacoFormRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\ClacoForm');
-        $this->fieldRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\Field');
-        $this->categoryRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\Category');
-        $this->keywordRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\Keyword');
-        $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
+        $this->clacoFormRepo = $om->getRepository(ClacoForm::class);
+        $this->fieldRepo = $om->getRepository(Field::class);
+        $this->categoryRepo = $om->getRepository(Category::class);
+        $this->keywordRepo = $om->getRepository(Keyword::class);
+        $this->userRepo = $om->getRepository(User::class);
     }
 
     public function getClass(): string
@@ -93,8 +84,13 @@ class EntrySerializer
             'clacoForm' => [ // should not be exposed here
                 'id' => $entry->getClacoForm()->getUuid(),
             ],
-            'values' => $this->serializeValues($entry),
         ];
+
+        $fieldValues = $this->serializeValues($entry);
+        if (!empty($fieldValues)) {
+            // don't send an empty array, because the ui expect an object here
+            $serialized['values'] = $fieldValues;
+        }
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
@@ -130,7 +126,6 @@ class EntrySerializer
             $entry->setClacoForm($clacoForm);
         }
 
-        /* TODO: checks rights */
         if (isset($data['categories'])) {
             $this->deserializeCategories($entry, $data['categories']);
         }

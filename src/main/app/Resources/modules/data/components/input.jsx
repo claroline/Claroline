@@ -128,8 +128,10 @@ class DataInput extends Component {
           label: this.props.label,
           value: this.props.value,
           error: this.props.error,
+          required: this.props.required,
           placeholder: this.props.placeholder,
           disabled: this.props.disabled,
+          autoComplete: this.props.autoComplete,
           autoFocus: this.props.autoFocus,
           size: this.props.size,
           validating: this.props.validating,
@@ -172,6 +174,7 @@ DataInput.propTypes = {
   size: T.oneOf(['sm', 'lg']),
 
   // field state
+  autoComplete: T.string,
   autoFocus: T.bool,
   required: T.bool,
   disabled: T.bool,
