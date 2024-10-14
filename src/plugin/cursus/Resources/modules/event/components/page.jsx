@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON, URL_BUTTON, ASYNC_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ToolPage} from '#/main/core/tool'
 
@@ -82,6 +82,19 @@ const EventPage = (props) => {
           displayed: hasPermission('edit', props.event),
           group: trans('presences', {}, 'cursus'),
           target: ['apiv2_cursus_event_presence_download', {id: props.event.id, filled: 1}]
+        }, {
+          name: 'confirm-status',
+          type: ASYNC_BUTTON,
+          icon: 'fa fa-fw fa-clipboard-check',
+          label: trans('presence_validation', {}, 'presence'),
+          displayed: hasPermission('edit', props.event),
+          group: trans('validation', {}, 'presence'),
+          request: {
+            url: ['apiv2_cursus_event_presence_confirm', {id: props.event.id}],
+            request: {
+              method: 'PUT'
+            }
+          }
         }
       ]}
 

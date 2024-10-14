@@ -16,10 +16,12 @@
   "presence_confirm_title": "Presence confirmation",
   "presence_confirm_desc": "Your %event_title% event signature has been successfully recorded.",
   "presence_confirm_other": "Confirm another presence",
-  "presence_confirmation_date": "Confirmation date",
+  "presence_confirmation_date": "Validation date",
   "presence_validation_date": "Validation date by tutor",
   "presence_info": "Me, %user%, was present at the event %event_title% from %event_date_start% to %event_date_end%.",
-  "presence_validation": "Validate presence",
+  "presence_validation": "Validate status",
+  "presence_updated_by": "Status updated by",
+  "presence_updated_at": "Update date",
 
   "validate": "Validate",
   "validation": "Validation"

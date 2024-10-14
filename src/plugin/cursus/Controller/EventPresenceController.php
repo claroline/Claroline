@@ -91,34 +91,39 @@ class EventPresenceController
             return new JsonResponse(['success' => false]);
         }
 
-        $presenceData = $this->serializer->serialize($presence);
-        $presenceData['status'] = EventPresence::PRESENT;
-        $presenceData['signature'] = $signature;
+        $presence->setStatus(EventPresence::PRESENT);
+        $presence->setSignature($signature);
+        $presence->setPresenceUpdatedBy($this->tokenStorage->getToken()->getUser());
+        $presence->setPresenceUpdatedAt(new \DateTime());
 
-        $this->crud->update($presence, $presenceData);
+        $this->om->persist($presence);
+        $this->om->flush();
 
         return new JsonResponse(['success' => true]);
     }
 
     /**
-     * Confirm the status of a EventPresence for current user.
+     * Confirm the status of a EventPresence for current event.
      *
-     * @Route("/confirm", name="apiv2_cursus_event_presence_confirm", methods={"PUT"})
+     * @Route("/confirm/{id}", name="apiv2_cursus_event_presence_confirm", methods={"PUT"})
+     *
+     * @EXT\ParamConverter("event", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
-    public function confirmStatusAction(Request $request): JsonResponse
+    public function confirmStatusAction(Event $event): JsonResponse
     {
-        $data = $this->decodeRequest($request);
-        if (empty($data)) {
-            throw new InvalidDataException('Invalid data');
-        }
+        $this->checkPermission('ADMINISTRATE', $event, [], true);
 
-        $presences = $this->om->getRepository(EventPresence::class)->findBy(['uuid' => $data]);
+        $presences = $this->om->getRepository(EventPresence::class)->findBy(['event' => $event]);
+        $presencesToValidate = array_filter($presences, function (EventPresence $presence) {
+            return EventPresence::UNKNOWN !== $presence->getStatus();
+        });
+
         $this->om->startFlushSuite();
-        foreach ($presences as $presence) {
-            $this->checkPermission('ADMINISTRATE', $presence, [], true);
 
+        foreach ($presencesToValidate as $presence) {
             $this->manager->setValidationDate([$presence], new \DateTime());
         }
+
         $this->om->endFlushSuite();
 
         return new JsonResponse();
@@ -211,6 +216,9 @@ class EventPresenceController
             $this->checkPermission('EDIT', $presence, [], true);
 
             $this->manager->setStatus([$presence], $status);
+
+            $presence->setPresenceUpdatedBy($this->tokenStorage->getToken()->getUser());
+            $presence->setPresenceUpdatedAt(new \DateTime());
         }
 
         $this->om->endFlushSuite();

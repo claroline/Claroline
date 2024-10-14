@@ -103,6 +103,19 @@ const Events = (props) =>
         displayed: hasPermission('edit', rows[0]),
         group: trans('presences', {}, 'cursus'),
         target: ['apiv2_cursus_event_presence_download', {id: rows[0].id, filled: 1}]
+      }, {
+        name: 'confirm-status',
+        type: ASYNC_BUTTON,
+        icon: 'fa fa-fw fa-clipboard-check',
+        label: trans('presence_validation', {}, 'presence'),
+        displayed: hasPermission('edit', rows[0]),
+        group: trans('validation', {}, 'presence'),
+        request: {
+          url: ['apiv2_cursus_event_presence_confirm', {id: rows[0].id}],
+          request: {
+            method: 'PUT'
+          }
+        }
       }
     ].concat(props.customActions(rows))}
     delete={{
