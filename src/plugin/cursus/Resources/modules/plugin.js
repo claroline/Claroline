@@ -53,7 +53,6 @@ registry.add('ClarolineCursusBundle', {
       'mark-absent-unjustified': () => { return import(/* webpackChunkName: "training-action-presence-absent-unjustified" */ '#/plugin/cursus/actions/presence/mark-absent-unjustified') },
       'mark-absent-present'    : () => { return import(/* webpackChunkName: "training-action-presence-present" */ '#/plugin/cursus/actions/presence/mark-present') },
       'mark-unknown'           : () => { return import(/* webpackChunkName: "training-action-presence-unknown" */ '#/plugin/cursus/actions/presence/mark-unknown') },
-      'confirm-presence'       : () => { return import(/* webpackChunkName: "training-action-presence-confirm" */ '#/plugin/cursus/actions/presence/confirm-presence') },
       'add-evidence'           : () => { return import(/* webpackChunkName: "training-action-presence-add-evidence" */ '#/plugin/cursus/actions/presence/add-evidence') }
     }
   },

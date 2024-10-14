@@ -54,6 +54,8 @@ class EventPresenceSerializer
             'signature' => $eventPresence->getSignature(),
             'validation_date' => DateNormalizer::normalize($eventPresence->getValidationDate()),
             'evidences' => $eventPresence->getEvidences(),
+            'presence_updated_by' => $eventPresence->getPresenceUpdatedBy() ? $this->userSerializer->serialize($eventPresence->getPresenceUpdatedBy(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
+            'presence_updated_at' => DateNormalizer::normalize($eventPresence->getPresenceUpdatedAt()),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
@@ -86,6 +88,15 @@ class EventPresenceSerializer
 
         if (array_key_exists('evidences', $data)) {
             $eventPresence->setEvidences($data['evidences'] ?? null);
+        }
+
+        if (isset($data['presence_updated_by'])) {
+            $updatedBy = $this->om->getRepository(User::class)->findOneBy(['uuid' => $data['presence_updated_by']['id']]);
+            $eventPresence->setPresenceUpdatedBy($updatedBy);
+        }
+
+        if (isset($data['presence_updated_at'])) {
+            $eventPresence->setPresenceUpdatedAt(DateNormalizer::denormalize($data['presence_updated_at']));
         }
 
         return $eventPresence;
