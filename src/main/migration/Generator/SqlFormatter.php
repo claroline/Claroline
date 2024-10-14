@@ -20,8 +20,8 @@ use SqlFormatter as BaseFormatter;
 class SqlFormatter extends BaseFormatter
 {
     // Constants for formatting options
-    const KEYWORD_NEWLINE = 'keyword_newline';
-    const KEYWORD_TOPLEVEL = 'keyword_toplevel';
+    public const KEYWORD_NEWLINE = 'keyword_newline';
+    public const KEYWORD_TOPLEVEL = 'keyword_toplevel';
 
     /**
      * Sets the formatting options of the SQL keywords.
@@ -31,7 +31,7 @@ class SqlFormatter extends BaseFormatter
      * specified category (i.e. toplevel or newline), while new keywords or expressions
      * are directly added to it.
      */
-    public static function setKeywordFormattingOptions(array $keywords)
+    public static function setKeywordFormattingOptions(array $keywords): void
     {
         $keywordMap = [
             self::KEYWORD_NEWLINE => &self::$reserved_newline,
@@ -50,7 +50,7 @@ class SqlFormatter extends BaseFormatter
                     }
 
                     // remove the keyword from its current type collection
-                    $keywordMap[$keywordType] = array_diff($keywordMap[$keywordType], [$keyword]);
+                    $keywordMap[$keywordType] = array_diff($registeredKeywords, [$keyword]);
                 }
             }
 

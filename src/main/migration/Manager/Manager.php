@@ -14,7 +14,7 @@ namespace Claroline\MigrationBundle\Manager;
 use Claroline\MigrationBundle\Generator\Generator;
 use Claroline\MigrationBundle\Generator\Writer;
 use Claroline\MigrationBundle\Migrator\Migrator;
-use Doctrine\DBAL\Driver\PDO\MySQL\Driver;
+use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
@@ -24,18 +24,12 @@ class Manager implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    private Generator $generator;
-    private Writer $writer;
-    private Migrator $migrator;
-
     public function __construct(
-        Generator $generator,
-        Writer $writer,
-        Migrator $migrator
+        private readonly Connection $connection,
+        private readonly Generator $generator,
+        private readonly Writer $writer,
+        private readonly Migrator $migrator
     ) {
-        $this->generator = $generator;
-        $this->migrator = $migrator;
-        $this->writer = $writer;
     }
 
     /**
@@ -45,21 +39,17 @@ class Manager implements LoggerAwareInterface
     {
         $config = $this->migrator->getConfiguration($bundle);
 
-        $platforms = $this->getAvailablePlatforms();
         $versionName = $config->generateClassName();
 
         $this->log("Generating migrations classes for '{$bundle->getName()}'...");
 
-        foreach ($platforms as $driverName => $platform) {
-            $queries = $this->generator->generateMigrationQueries($bundle, $platform);
+        $queries = $this->generator->generateMigrationQueries($bundle, $this->connection->getDatabasePlatform());
 
-            if (count($queries[Generator::QUERIES_UP]) > 0 || count($queries[Generator::QUERIES_DOWN]) > 0) {
-                $this->log(" - Generating migration class for {$driverName} driver...");
-                $this->writer->writeMigrationClass($bundle, $versionName, $queries);
-            } else {
-                $this->log('Nothing to generate: database and mapping are synced');
-                break;
-            }
+        if (count($queries[Generator::QUERIES_UP]) > 0 || count($queries[Generator::QUERIES_DOWN]) > 0) {
+            $this->log('Generating migration class...');
+            $this->writer->writeMigrationClass($bundle, $versionName, $queries);
+        } else {
+            $this->log('Nothing to generate: database and mapping are synced');
         }
     }
 
@@ -95,50 +85,23 @@ class Manager implements LoggerAwareInterface
      */
     public function discardUpperMigrations(BundleInterface $bundle): void
     {
-        $drivers = array_keys($this->getAvailablePlatforms());
         $currentVersion = $this->migrator->getCurrentVersion($bundle);
 
         $this->log("Deleting migration classes above version {$currentVersion} for '{$bundle->getName()}'...");
         $hasDeleted = false;
 
-        foreach ($drivers as $driver) {
-            $deletedVersions = $this->writer->deleteUpperMigrationClasses($bundle, $currentVersion);
-            if ($deletedVersions && count($deletedVersions) > 0) {
-                $hasDeleted = true;
+        $deletedVersions = $this->writer->deleteUpperMigrationClasses($bundle, $currentVersion);
+        if ($deletedVersions && count($deletedVersions) > 0) {
+            $hasDeleted = true;
 
-                foreach ($deletedVersions as $version) {
-                    $this->log(" - Deleted {$version} for driver {$driver}");
-                }
+            foreach ($deletedVersions as $version) {
+                $this->log(" - Deleted {$version}");
             }
         }
 
         if (!$hasDeleted) {
             $this->log('Nothing to discard: there are no migrations classes above the current version');
         }
-    }
-
-    /**
-     * Returns the list of available driver platforms.
-     *
-     * Note: this method is public for testing purposes only
-     */
-    public function getAvailablePlatforms(): array
-    {
-        $platforms = [];
-
-        foreach ($this->getSupportedDrivers() as $driverName => $driverClass) {
-            $driver = new $driverClass();
-            $platforms[$driverName] = $driver->getDatabasePlatform();
-        }
-
-        return $platforms;
-    }
-
-    private function getSupportedDrivers(): array
-    {
-        return [
-            'pdo_mysql' => 'Doctrine\DBAL\Driver\PDO\MySQL\Driver',
-        ];
     }
 
     private function doMigrate(BundleInterface $bundle, $version, $direction): void

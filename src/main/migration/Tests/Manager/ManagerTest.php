@@ -19,6 +19,7 @@ use Mockery as m;
 
 class ManagerTest extends MockeryTestCase
 {
+    private $connection;
     private $generator;
     private $writer;
     private $migrator;
@@ -27,20 +28,22 @@ class ManagerTest extends MockeryTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->connection = m::mock('Doctrine\DBAL\Connection');
+        $this->writer = m::mock('Claroline\MigrationBundle\Generator\Writer');
         $this->writer = m::mock('Claroline\MigrationBundle\Generator\Writer');
         $this->generator = m::mock('Claroline\MigrationBundle\Generator\Generator');
         $this->migrator = m::mock('Claroline\MigrationBundle\Migrator\Migrator');
-        $this->manager = new Manager($this->generator, $this->writer, $this->migrator);
+        $this->manager = new Manager($this->connection, $this->generator, $this->writer, $this->migrator);
     }
 
     /**
      * @dataProvider queriesProvider
      */
-    public function testGenerateBundleMigration(array $queries, $areQueriesEmpty)
+    public function testGenerateBundleMigration(array $queries, $areQueriesEmpty): void
     {
         $manager = m::mock(
-            'Claroline\MigrationBundle\Manager\Manager[getAvailablePlatforms]',
-            [$this->generator, $this->writer, $this->migrator]
+            'Claroline\MigrationBundle\Manager\Manager',
+            [$this->connection, $this->generator, $this->writer, $this->migrator]
         );
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
         $platform = m::mock('Doctrine\DBAL\Platforms\AbstractPlatform');
@@ -55,9 +58,6 @@ class ManagerTest extends MockeryTestCase
             ->once()
             ->andReturn('VersionTest');
 
-        $manager->shouldReceive('getAvailablePlatforms')
-            ->once()
-            ->andReturn(['driver' => $platform]);
         $this->generator->shouldReceive('generateMigrationQueries')
             ->once()
             ->with($bundle, $platform)
@@ -76,14 +76,7 @@ class ManagerTest extends MockeryTestCase
         $this->assertTrue(true);
     }
 
-    public function testGetAvailablePlatforms()
-    {
-        $platforms = $this->manager->getAvailablePlatforms();
-        $this->assertContains('pdo_mysql', array_keys($platforms));
-        $this->assertInstanceOf('Doctrine\DBAL\Platforms\AbstractPlatform', $platforms['pdo_mysql']);
-    }
-
-    public function testGetBundleStatus()
+    public function testGetBundleStatus(): void
     {
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
 
@@ -107,7 +100,7 @@ class ManagerTest extends MockeryTestCase
     /**
      * @dataProvider migrationProvider
      */
-    public function testMigrate($direction, $method)
+    public function testMigrate($direction, $method): void
     {
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
         $this->migrator->shouldReceive('migrate')
@@ -124,23 +117,18 @@ class ManagerTest extends MockeryTestCase
         $this->assertTrue(true);
     }
 
-    public function testDiscardUpperMigrations()
+    public function testDiscardUpperMigrations(): void
     {
         $manager = m::mock(
-            'Claroline\MigrationBundle\Manager\Manager[getAvailablePlatforms]',
+            'Claroline\MigrationBundle\Manager\Manager',
             [$this->generator, $this->writer, $this->migrator]
         );
-        $manager->shouldReceive('getAvailablePlatforms')
-            ->once()
-            ->andReturn(['driver1' => 'd1', 'driver2' => 'd2']);
+
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
         $this->migrator->shouldReceive('getCurrentVersion')
             ->once()
             ->with($bundle)
             ->andReturn('1');
-        $this->writer->shouldReceive('deleteUpperMigrationClasses')
-            ->once()
-            ->with($bundle, '1');
         $this->writer->shouldReceive('deleteUpperMigrationClasses')
             ->once()
             ->with($bundle, '1');
@@ -152,7 +140,7 @@ class ManagerTest extends MockeryTestCase
         $this->assertTrue(true);
     }
 
-    public function queriesProvider()
+    public function queriesProvider(): array
     {
         return [
             [
@@ -172,7 +160,7 @@ class ManagerTest extends MockeryTestCase
         ];
     }
 
-    public function migrationProvider()
+    public function migrationProvider(): array
     {
         return [
             [Migrator::DIRECTION_UP, 'upgradeBundle'],

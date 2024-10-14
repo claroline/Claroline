@@ -23,7 +23,7 @@ abstract class AbstractCommand extends Command
 {
     private Manager $manager;
 
-    public function setManager(Manager $manager)
+    public function setManager(Manager $manager): void
     {
         $this->manager = $manager;
     }

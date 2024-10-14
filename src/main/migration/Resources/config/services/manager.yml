@@ -2,6 +2,7 @@ services:
     claroline.migration.manager:
         class: Claroline\MigrationBundle\Manager\Manager
         arguments:
+            - '@doctrine.dbal.default_connection'
             - '@claroline.migration.generator'
             - '@claroline.migration.writer'
             - '@claroline.migration.migrator'

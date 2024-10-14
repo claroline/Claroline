@@ -21,16 +21,13 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
  */
 class Generator
 {
-    const QUERIES_UP = 'up';
-    const QUERIES_DOWN = 'down';
+    public const QUERIES_UP = 'up';
+    public const QUERIES_DOWN = 'down';
 
     private EntityManager $em;
     private SchemaTool $schemaTool;
     private array $schemas = [];
 
-    /**
-     * Constructor.
-     */
     public function __construct(EntityManager $em, SchemaTool $tool)
     {
         $this->em = $em;
@@ -49,12 +46,14 @@ class Generator
         $bundleTables = $this->getBundleTables($bundle, $schemas['metadata']);
         $this->filterSchemas([$fromSchema, $toSchema], $bundleTables);
 
-        $upQueries = $fromSchema->getMigrateToSql($toSchema, $platform);
-        $downQueries = $fromSchema->getMigrateFromSql($toSchema, $platform);
+        $comparator = $this->em->getConnection()->createSchemaManager()->createComparator();
+
+        $upSql = $platform->getAlterSchemaSQL($comparator->compareSchemas($fromSchema, $toSchema));
+        $downSql = $platform->getAlterSchemaSQL($comparator->compareSchemas($toSchema, $fromSchema));
 
         return [
-            self::QUERIES_UP => $upQueries,
-            self::QUERIES_DOWN => $downQueries,
+            self::QUERIES_UP => $upSql,
+            self::QUERIES_DOWN => $downSql,
         ];
     }
 
