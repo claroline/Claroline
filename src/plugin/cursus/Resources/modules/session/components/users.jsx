@@ -28,8 +28,8 @@ const SessionUsers = (props) => {
     <RegistrationUsers
       {...props}
       url={props.session ?
-        ['apiv2_training_session_user_list', {id: props.course.id, sessionId: props.session.id}] :
-        ['apiv2_training_session_user_list', {id: props.course.id}]
+        ['apiv2_training_session_user_course_list', {id: props.course.id, sessionId: props.session.id}] :
+        ['apiv2_training_session_user_course_list', {id: props.course.id}]
       }
       unregisterUrl={['apiv2_training_session_user_delete']}
       session={props.session || props.course}

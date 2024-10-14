@@ -7,7 +7,6 @@ import {Tool} from '#/main/core/tool'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {Course} from '#/plugin/cursus/course/containers/main'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
-import {CourseCreation} from '#/plugin/cursus/course/components/creation'
 import {CourseEditor} from '#/plugin/cursus/course/editor/containers/main'
 
 import {EmptyCourse} from '#/plugin/cursus/course/components/empty'
@@ -21,14 +20,14 @@ const EventsTool = (props) =>
   <Tool
     {...props}
     redirect={[
-      {from: '/', exact: true, to: props.course ? '/course/' + props.course.slug : '/course'}
+      {from: '/', exact: true, to: (props.course && props.course.slug) ? '/course/' + props.course.slug : '/course'}
     ]}
     menu={[
       {
         name: 'about',
         type: LINK_BUTTON,
         label: trans('about', {}, 'platform'),
-        target: props.course ? props.path + '/course/' + props.course.slug : props.path + '/course'
+        target: props.course ? `${props.path}/course/${props.course.slug}` : `${props.path}/course`
       }, {
         name: 'registered',
         type: LINK_BUTTON,
@@ -57,7 +56,7 @@ const EventsTool = (props) =>
         path: '/new',
         onEnter: () => props.openForm(null, CourseTypes.defaultProps, props.currentContext.data),
         disabled: !props.canEdit,
-        component: CourseCreation
+        render: () => (<CourseEditor isNew={true}/>)
       }, {
         path: '/course/:courseSlug/edit',
         render: (params = {}) => (
@@ -69,25 +68,26 @@ const EventsTool = (props) =>
       }, {
         path: '/course',
         onEnter: () => {
-          if (props.course) {
+          if (props.course && props.course.slug) {
             return props.openCourse(props.course.slug)
           }
         },
         render: (params = {}) => {
-          if (props.course) {
+          if (props.course && props.course.slug) {
             return (
               <Course
                 path={props.path + '/course/' + props.course.slug}
                 slug={props.course.slug}
                 history={params.history}
-              />)
+              />
+            )
           } else {
             return (
               <EmptyCourse
                 path={props.path}
                 canEdit={props.canEdit}
                 contextType={props.contextType}
-                contextId={props.currentContext.data}
+                contextId={get(props.currentContext, 'data')}
                 openForm={props.openForm}
               />
             )

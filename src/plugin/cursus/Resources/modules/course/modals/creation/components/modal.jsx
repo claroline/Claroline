@@ -30,7 +30,7 @@ const CreationModal = (props) =>
 CreationModal.propTypes = {
   path: T.string.isRequired,
   contextType: T.string.isRequired,
-  contextId: T.object.isRequired,
+  contextId: T.string,
   openForm: T.func.isRequired,
   reset: T.func.isRequired,
   fadeModal: T.func.isRequired

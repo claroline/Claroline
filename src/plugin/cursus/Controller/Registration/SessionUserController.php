@@ -56,8 +56,8 @@ class SessionUserController extends AbstractCrudController
     /**
      * List registered users to sessions.
      *
-     * @Route("/{id}", name="list", methods={"GET"})
-     * @Route("/{id}/{sessionId}", name="apiv2_training_session_user_list", methods={"GET"})
+     * @Route("/{id}", name="course_list", methods={"GET"})
+     * @Route("/{id}/{sessionId}", name="course_list", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */

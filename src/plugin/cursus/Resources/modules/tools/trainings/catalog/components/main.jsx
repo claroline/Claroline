@@ -7,7 +7,6 @@ import {route} from '#/plugin/cursus/routing'
 import {Course} from '#/plugin/cursus/course/containers/main'
 import {CourseEditor} from '#/plugin/cursus/course/editor/containers/main'
 import {CatalogList} from '#/plugin/cursus/tools/trainings/catalog/components/list'
-import {CourseCreation} from '#/plugin/cursus/course/components/creation'
 
 const CatalogMain = (props) =>
   <Routes
@@ -27,7 +26,7 @@ const CatalogMain = (props) =>
       }, {
         path: '/new',
         disabled: !props.canEdit,
-        component: CourseCreation
+        render: () => (<CourseEditor isNew={true}/>)
       }, {
         path: '/:slug/edit',
         render: (params = {}) => (
