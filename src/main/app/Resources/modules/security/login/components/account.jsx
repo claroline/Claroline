@@ -32,6 +32,7 @@ class LoginAccount extends Component {
                 name: 'username',
                 label: trans('username_or_email'),
                 placeholder: this.props.username ? trans('username_or_email') : trans('email'),
+                autoComplete: 'username',
                 hideLabel: true,
                 type: 'string',
                 required: true

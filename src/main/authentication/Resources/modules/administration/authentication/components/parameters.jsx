@@ -41,10 +41,6 @@ const AuthenticationParameters = (props) =>
               name: 'login.internalAccount',
               type: 'boolean',
               label: trans('display_internal_account', {}, 'security')
-            }, {
-              name: 'login.showClientIp',
-              type: 'boolean',
-              label: trans('display_client_ip', {}, 'security')
             }
           ]
         }, {

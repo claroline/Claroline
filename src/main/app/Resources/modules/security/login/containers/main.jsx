@@ -18,9 +18,7 @@ const LoginMain = withReducer(selectors.STORE_NAME, reducer)(
       username: configSelectors.param(state, 'community.username'),
       resetPassword: configSelectors.param(state, 'authentication.login.changePassword'),
       internalAccount: selectors.internalAccount(state),
-      showClientIp: selectors.showClientIp(state),
-      sso: selectors.sso(state),
-      clientIp: securitySelectors.clientIp(state)
+      sso: selectors.sso(state)
     }),
     (dispatch) => ({
       login(callback) {
