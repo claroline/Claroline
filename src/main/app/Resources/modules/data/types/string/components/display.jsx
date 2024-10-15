@@ -7,14 +7,14 @@ import {trans} from '#/main/app/intl/translation'
 const StringDisplay = (props) => {
   if (isEmpty(props.data)) {
     return (
-      <div id={props.id} className="string-display text-secondary">{props.placeholder || trans('empty_value')}</div>
+      <div id={props.id} className="text-secondary" role="presentation">{props.placeholder || trans('empty_value')}</div>
     )
   }
 
   return (
-    <div id={props.id} className="string-display text-justify" style={props.long ? {whiteSpace: 'pre-wrap'} : undefined}>
+    <p id={props.id} className="text-justify mb-0" style={props.long ? {whiteSpace: 'pre-wrap'} : undefined}>
       {props.data}
-    </div>
+    </p>
   )
 }
 

@@ -37,11 +37,11 @@ registry.add('ClarolineAppBundle', {
       'locale'      : () => { return import(/* webpackChunkName: "app-data-type-locale" */       '#/main/app/data/types/locale') },
       'number'      : () => { return import(/* webpackChunkName: "app-data-type-number" */       '#/main/app/data/types/number') },
       'password'    : () => { return import(/* webpackChunkName: "app-data-type-password" */     '#/main/app/data/types/password') },
+      'phone'       : () => { return import(/* webpackChunkName: "app-data-type-phone" */        '#/main/app/data/types/phone') },
       'progression' : () => { return import(/* webpackChunkName: "app-data-type-progression" */  '#/main/app/data/types/progression') },
       'string'      : () => { return import(/* webpackChunkName: "app-data-type-string" */       '#/main/app/data/types/string') },
       'time'        : () => { return import(/* webpackChunkName: "app-data-type-time" */         '#/main/app/data/types/time') },
       'timezone'    : () => { return import(/* webpackChunkName: "app-data-type-timezone" */     '#/main/app/data/types/timezone') },
-      'translated'  : () => { return import(/* webpackChunkName: "app-data-type-translated" */   '#/main/app/data/types/translated') },
       'translation' : () => { return import(/* webpackChunkName: "app-data-type-translation" */  '#/main/app/data/types/translation') },
       'type'        : () => { return import(/* webpackChunkName: "app-data-type-type" */         '#/main/app/data/types/type') },
       'url'         : () => { return import(/* webpackChunkName: "app-data-type-url" */          '#/main/app/data/types/url') }

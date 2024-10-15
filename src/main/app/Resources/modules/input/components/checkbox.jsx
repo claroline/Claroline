@@ -16,7 +16,7 @@ const Checkbox = props =>
       onChange={e => props.onChange(e.target.checked)}
     />
 
-    <label htmlFor={props.id} className="form-check-label">
+    <label htmlFor={props.id} className="form-check-label d-block">
       {props.checked && props.labelChecked ? props.labelChecked : props.label}
     </label>
   </div>

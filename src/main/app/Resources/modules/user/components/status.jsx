@@ -37,11 +37,7 @@ const UserStatus = (props) => {
         position={props.tooltip}
       >
         <span className={classes('user-status', props.className)} role="presentation">
-          <span
-            className={classes('user-status-bullet rounded-circle', `bg-${constants.USER_STATUS_COLORS[status]}`)}
-            aria-hidden={true}
-          />
-
+          <UserStatusBullet status={status} />
           <span className="visually-hidden">{constants.USER_STATUSES[status]}</span>
         </span>
       </TooltipOverlay>
@@ -92,10 +88,7 @@ const UserStatus = (props) => {
 
   return (
     <span className={classes('user-status', props.className)} role="presentation">
-      <span
-        className={classes('user-status-bullet rounded-circle', `bg-${constants.USER_STATUS_COLORS[status]}`)}
-        aria-hidden={true}
-      />
+      <UserStatusBullet status={status} />
 
       <span className={props.noText ? 'visually-hidden' : undefined}>{constants.USER_STATUSES[status]}</span>
     </span>

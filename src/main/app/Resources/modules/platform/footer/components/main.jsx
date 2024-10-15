@@ -6,8 +6,8 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ContentHtml} from '#/main/app/content/components/html'
+import {CountryFlag} from '#/main/app/components/country-flag'
 
-import {LocaleFlag} from '#/main/app/intl/locale/components/flag'
 import {MODAL_LOCALE} from '#/main/app/modals/locale'
 import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/modals/terms-of-service'
 
@@ -57,7 +57,7 @@ const FooterMain = (props) => {
                   className="app-current-locale app-footer-btn btn btn-text-secondary"
                   type={MODAL_BUTTON}
                   modal={[MODAL_LOCALE, props.locale]}
-                  icon={<LocaleFlag className="action-icon" locale={props.locale.current} />}
+                  icon={<CountryFlag className="action-icon" countryCode={props.locale.current} />}
                   label={<span key="label" className="d-none d-md-block icon-with-text-left">{trans(props.locale.current)}</span>}
                 />
               }

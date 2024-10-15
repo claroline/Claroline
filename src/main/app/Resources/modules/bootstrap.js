@@ -17,8 +17,7 @@ bootstrap(
     availableOrganizations: initialData.availableOrganizations,
     security: {
       impersonated: initialData.impersonated,
-      currentUser: initialData.currentUser,
-      client: initialData.client
+      currentUser: initialData.currentUser
     }
   }),
   ''

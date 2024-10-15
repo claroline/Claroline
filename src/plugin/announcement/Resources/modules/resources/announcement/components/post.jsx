@@ -15,6 +15,7 @@ import {Datetime} from '#/main/app/components/date'
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 import {MODAL_ANNOUNCEMENT_SENDING} from '#/plugin/announcement/resources/announcement/modals/sending'
 import {PageHeading} from '#/main/app/page/components/heading'
+import {Badge} from '#/main/app/components/badge'
 
 const AnnouncementPost = (props) => {
   const history = useHistory()
@@ -93,7 +94,7 @@ const AnnouncementPost = (props) => {
         {!isEmpty(props.announcement.tags) &&
           <div className="mt-4" role="presentation">
             {props.announcement.tags.map(tag =>
-              <span key={tag} className="badge text-secondary-emphasis bg-secondary-subtle fs-sm lh-base">{tag}</span>
+              <Badge key={tag} variant="secondary" subtle={true} className="fs-sm lh-base">{tag}</Badge>
             )}
           </div>
         }

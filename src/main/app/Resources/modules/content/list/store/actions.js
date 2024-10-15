@@ -57,7 +57,7 @@ actions.fetchData = (listName, target, invalidate = false) => (dispatch, getStat
       url: url(target) + selectors.queryString(listState),
       success: (response, dispatch) => {
         /*if (selectors.currentPage(listState) !== response.page) {
-          // we reset current page because if we request a non existing page,
+          // we reset current page because if we request a non-existing page,
           // finder will return us the last existing one
           dispatch(actions.changePage(listName, response.page))
         }*/

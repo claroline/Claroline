@@ -24,7 +24,7 @@ const PaginationSize = props =>
     disabled={props.disabled}
   >
     {-1 !== props.pageSize ? props.pageSize : trans('all')}
-    <span className="fa fa-list ms-2" />
+    <span className="fa fa-fw fa-list ms-2" />
   </MenuButton>
 
 PaginationSize.propTypes = {

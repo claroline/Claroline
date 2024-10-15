@@ -1,49 +1,12 @@
 import React, {PureComponent} from 'react'
 import classes from 'classnames'
 
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {param} from '#/main/app/config'
-import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
-
-import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {Radio} from '#/main/app/input/components/radio'
+import {CountryFlag} from '#/main/app/components/country-flag'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-
-import {LocaleFlag} from '#/main/app/intl/locale/components/flag'
-
-class LocaleButton extends PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.onClick = this.onClick.bind(this)
-  }
-
-  onClick() {
-    this.props.onClick(this.props.locale)
-  }
-
-  render() {
-    return (
-      <Button
-        type={CALLBACK_BUTTON}
-        label={trans(this.props.locale)}
-        tooltip="bottom"
-        className={classes('btn-link locale-btn', {
-          active: this.props.active
-        })}
-        callback={this.onClick}
-      >
-        <LocaleFlag locale={this.props.locale} />
-      </Button>
-    )
-  }
-}
-
-LocaleButton.propTypes = {
-  locale: T.string.isRequired,
-  active: T.bool.isRequired,
-  onClick: T.func.isRequired
-}
 
 class LocaleInput extends PureComponent {
   constructor(props) {
@@ -73,20 +36,29 @@ class LocaleInput extends PureComponent {
   }
 
   render() {
-    let available = this.props.available
-    if (!available) {
-      available = param('locale.available')
-    }
+    const available = param('locale.available')
 
     return (
-      <div className={classes('locales', this.props.className)} role="checklist">
+      <div className={classes('locales d-flex flex-column gap-1', this.props.className)} role="presentation">
         {available.map(locale =>
-          <LocaleButton
-            key={locale}
-            locale={locale}
-            active={this.props.multiple && this.props.value ? -1 !== this.props.value.indexOf(locale) : locale === this.props.value}
-            onClick={this.onChange}
-          />
+          <div key={locale} className={classes('px-3 py-2 rounded-2', {
+            'bg-body-secondary': locale === this.props.value,
+            'bg-body-tertiary': locale !== this.props.value,
+          })} role="presentation">
+            <Radio
+              className="mb-0"
+              id={locale}
+              label={
+                <div className="d-flex flex-row justify-content-between gap-2" role="presentation">
+                  {trans(locale)}
+                  <CountryFlag countryCode={'en' === locale ? 'gb' : locale} />
+                </div>
+              }
+              value={locale}
+              checked={locale === this.props.value}
+              onChange={this.onChange}
+            />
+          </div>
         )}
       </div>
     )

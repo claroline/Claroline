@@ -1,51 +1,55 @@
-import React from 'react'
+import React, {useId} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {ThemeIcon} from '#/main/theme/components/icon'
 import {fileSize} from '#/main/app/intl'
-import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {Toolbar} from '#/main/app/action'
 
-const FileThumbnail = props =>
-  <div className={classes('file-preview gap-3', props.className)}>
-    <ThemeIcon
-      className="file-preview-icon"
-      mimeType={props.file.type || props.file.mimeType}
-      set="resources"
-      size="xs"
-    />
+const FileThumbnail = props => {
+  const labelId = useId()
 
-    <div className="file-preview-title">
-      {props.file.name || props.file.url}
-      {props.file.size && <small className="text-body-secondary">{fileSize(props.file.size)}</small>}
-    </div>
+  return (
+    <article className={classes('file-preview gap-3', props.className)} aria-labelledby={labelId}>
+      <ThemeIcon
+        className="file-preview-icon"
+        mimeType={props.file.type || props.file.mimeType}
+        set="resources"
+        size="xs"
+      />
 
-    {props.delete &&
-        <Button
-          className="file-preview-delete btn btn-text-secondary"
-          type={CALLBACK_BUTTON}
-          icon="fa fa-fw fa-times"
-          label={trans('delete', {}, 'actions')}
-          tooltip="bottom"
-          disabled={props.disabled}
-          callback={props.delete}
-        />
-    }
+      <div className="file-preview-title" id={labelId}>
+        {props.file.name || props.file.url}
+        {props.file.size && <small className="text-body-secondary">{fileSize(props.file.size)}</small>}
+      </div>
 
-    {props.download &&
-        <Button
-          className="file-preview-delete btn btn-text-secondary"
-          type={DOWNLOAD_BUTTON}
-          icon="fa fa-fw fa-download"
-          label={trans('download', {}, 'actions')}
-          tooltip="bottom"
-          disabled={props.disabled}
-          file={props.download}
-        />
-    }
-  </div>
+      <Toolbar
+        buttonName="btn btn-text-secondary p-2"
+        actions={[
+          {
+            name: 'download',
+            type: URL_BUTTON,
+            label: trans('download', {}, 'actions'),
+            disabled: props.disabled,
+            displayed: !!props.downloadUrl,
+            target: props.downloadUrl
+          }, {
+            name: 'delete',
+            type: CALLBACK_BUTTON,
+            icon: 'fa fa-fw fa-times',
+            label: trans('delete', {}, 'actions'),
+            tooltip: 'bottom',
+            disabled: props.disabled,
+            displayed: !!props.delete,
+            callback: props.delete
+          }
+        ]}
+      />
+    </article>
+  )
+}
 
 FileThumbnail.propTypes = {
   className: T.string,
@@ -58,7 +62,7 @@ FileThumbnail.propTypes = {
     url: T.string
   }).isRequired,
   delete: T.func,
-  download: T.object
+  downloadUrl: T.oneOfType([T.array, T.string])
 }
 
 FileThumbnail.defaultProps = {

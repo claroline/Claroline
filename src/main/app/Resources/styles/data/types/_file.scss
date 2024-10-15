@@ -15,7 +15,6 @@
 
     .file-preview-icon {
         flex-shrink: 0;
-        //width: map-get($icon-sizes, sm);
     }
 
     .file-preview-title {
@@ -28,11 +27,6 @@
         small {
             display: block;
         }
-    }
-
-    .file-preview-delete {
-        margin-left: auto;
-        align-self: stretch;
     }
 }
 

@@ -106,7 +106,7 @@ const EditorKeywords = () => {
                     }]
                   }, {
                     name: 'delete',
-                    label: trans('delete', 'actions'),
+                    label: trans('delete', {}, 'actions'),
                     type: CALLBACK_BUTTON,
                     callback: () => deleteKeyword(keyword)
                   }

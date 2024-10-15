@@ -1,10 +1,11 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
-import {trans} from '#/main/app/intl'
-import {Email} from '#/main/app/components/email'
 
-const EmailDisplay = (props) => {
+import {trans} from '#/main/app/intl'
+import {Phone} from '#/main/app/components/phone'
+
+const PhoneDisplay = (props) => {
   if (isEmpty(props.data)) {
     return (
       <span className="text-secondary d-block" role="presentation">{trans('empty_value')}</span>
@@ -12,14 +13,14 @@ const EmailDisplay = (props) => {
   }
 
   return (
-    <Email email={props.data} className="d-block" />
+    <Phone phone={props.data} className="d-block" />
   )
 }
 
-EmailDisplay.propTypes = {
-  data: T.string.isRequired
+PhoneDisplay.propTypes = {
+  data: T.string
 }
 
 export {
-  EmailDisplay
+  PhoneDisplay
 }

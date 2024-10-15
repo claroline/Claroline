@@ -14,7 +14,7 @@ const FormSave = (props) => {
     }) : undefined
 
     return (
-      <div className="form-pending-changes sticky-bottom d-flex align-items-center mt-auto mb-3 py-2 px-3 gap-1">
+      <div className="form-pending-changes sticky-bottom d-flex align-items-center mt-auto py-2 px-3 gap-1">
         <span className="flex-fill">
           Attention, il reste des modifications non enregistrées !
         </span>

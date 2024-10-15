@@ -1,52 +1,13 @@
 import React from 'react'
-import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {toKey} from '#/main/core/scaffolding/text'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
+import {Radio} from '#/main/app/input/components/radio'
+
 const parseValue = (value) => !isNaN(value) ? parseFloat(value) : value
-
-const Radio = props =>
-  <div
-    className={classes('form-check', {
-      'form-check-inline': props.inline/*,
-      'radio'       : !props.inline,
-      'radio-inline': props.inline,
-      'selected': props.checked,
-      'disabled': props.disabled*/
-    })}
-  >
-    <input
-      id={props.id}
-      className="form-check-input"
-      type="radio"
-      value={props.value}
-      checked={props.checked}
-      disabled={props.disabled}
-      onChange={() => props.onChange(parseValue(props.value))}
-    />
-
-    <label htmlFor={props.id} className="form-check-label">
-      {props.label}
-    </label>
-  </div>
-
-Radio.propTypes = {
-  id: T.oneOfType([T.string, T.number]).isRequired,
-  label: T.node.isRequired,
-  value: T.oneOfType([T.string, T.number]),
-  inline: T.bool,
-  checked: T.bool,
-  disabled: T.bool,
-  onChange: T.func.isRequired
-}
-
-Radio.defaultProps = {
-  checked: false,
-  disabled: false
-}
 
 /**
  * Renders a list of radio inputs.

@@ -32,7 +32,7 @@
 }
 
 .user-avatar-xl {
-    @include user-avatar-size(map-get($icon-sizes, xl), 3rem, -1rem);
+    @include user-avatar-size(map-get($icon-sizes, xl), 2.5rem, -.75rem);
 }
 
 .user-status {

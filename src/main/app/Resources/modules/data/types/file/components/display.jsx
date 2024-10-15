@@ -1,19 +1,30 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
+
 import {FileThumbnail} from '#/main/app/data/types/file/components/thumbnail'
 
-const FileDisplay = props => {
-  if (props.data) {
 
+const FileDisplay = props => {
+  if (!isEmpty(props.data)) {
     const files = Array.isArray(props.data) ? props.data : [props.data]
+
+    if (1 === files.length) {
+      const file = files[0]
+
+      return (
+        <FileThumbnail file={file} downloadUrl={file.url} />
+      )
+    }
+
     return (
-      <>
+      <ul className="list-unstyled mb-0">
         {files.map(file =>
-          <a key={file.url} href={file.url} className="mb-1 text-reset text-decoration-none">
-            <FileThumbnail file={file} />
-          </a>
+          <li key={file.url}>
+            <FileThumbnail className="mb-1" file={file} downloadUrl={file.url} />
+          </li>
         )}
-      </>
+      </ul>
     )
   }
 

@@ -1,10 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
+
 import {displayDate} from '#/main/app/intl'
 
 const Datetime = (props) =>
   <time
-    className={props.className}
+    className={classes('text-nowrap', props.className)}
     dateTime={props.value}
   >
     {displayDate(props.value, props.long, props.time)}

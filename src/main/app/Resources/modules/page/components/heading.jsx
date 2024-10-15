@@ -20,6 +20,9 @@ const PageHeading = props =>
     })} role="presentation">
       <h1 className="app-page-title m-0">
         {props.title}
+        {props.subtitle &&
+          <small className="text-body-secondary">{props.subtitle}</small>
+        }
       </h1>
 
       {props.actions instanceof Promise ?
@@ -54,6 +57,7 @@ PageHeading.propTypes = {
    */
   icon: T.element,
   title: T.oneOfType([T.string, T.element]).isRequired,
+  subtitle: T.string,
   primaryAction: T.string,
   secondaryAction: T.string,
   toolbar: T.string,

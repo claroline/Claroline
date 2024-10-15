@@ -32,17 +32,16 @@
 
   background-color: var(--#{$prefix}editor-menu-bg);
   color: var(--#{$prefix}editor-menu-color);
-  padding: map-get($spacers, 5) map-get($spacers, 3);
+  padding: map-get($spacers, 5) map-get($spacers, 4);
 
-  .nav {
-    margin-left: auto;
-    max-width: 240px;
+  nav {
+    max-width: 15rem;
   }
 }
 
 .app-editor-menu-header {
   margin-left: auto;
-  max-width: 240px;
+  max-width: 15rem;
   font-size: $label-font-size;
   color: $label-color;
   text-transform: var(--#{$prefix}label-text-transform);
@@ -53,7 +52,7 @@
 
 .app-editor-menu-separator {
   margin-left: auto;
-  max-width: 240px;
+  max-width: 15rem;
 }
 
 .app-editor-body {
@@ -61,15 +60,15 @@
   overflow-y: auto;
   flex: 1 1 auto;
   padding: 0 map-get($spacers, 3);
-  //padding: map-get($spacers, 5) map-get($spacers, 3);
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .app-editor-form {
   margin: 0; // override .content-md
   padding: map-get($spacers, 5) map-get($spacers, 3);
+  min-height: 100%;
 }
 
 .app-editor-toolbar {
@@ -93,12 +92,6 @@
   }
 }
 
-.app-editor-action {
-  .btn {
-    min-width: 20%;
-    flex-shrink: 0;
-  }
-}
 
 @if $enable-dark-mode {
   @include color-mode(dark) {

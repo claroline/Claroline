@@ -179,7 +179,8 @@ implementPropTypes(PasswordInput, DataInputTypes, {
   hideStrength: T.bool,
   disablePasswordCheck: T.bool
 }, {
-  value: ''
+  value: '',
+  autoComplete: 'new-password'
 })
 
 export {
