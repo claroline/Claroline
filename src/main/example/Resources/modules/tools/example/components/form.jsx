@@ -270,16 +270,29 @@ const ExampleForm = () =>
             }
           ]
         }, {
-          title: 'Others',
+          title: 'Contact',
           fields: [
             {
-              name: 'country',
-              label: 'Country',
-              type: 'country'
+              name: 'email',
+              label: 'Email',
+              type: 'email'
+            }, {
+              name: 'phone',
+              label: 'Phone',
+              type: 'phone'
             }, {
               name: 'address',
               label: 'Address',
               type: 'address'
+            }
+          ]
+        }, {
+          title: 'Other',
+          fields: [
+            {
+              name: 'locale',
+              label: 'Locale',
+              type: 'locale'
             }
           ]
         }

@@ -3,13 +3,12 @@ import {PropTypes as T} from 'prop-types'
 
 const PrivacyCard = props =>
   <div className="card mb-3">
-    <div className="card-body pb-0">
-      <h5 className="card-title mb-3">
+    <div className="card-body">
+      <h5 className="card-title">
         {props.title}
       </h5>
-      <p className="card-text">
-        {props.content}
-      </p>
+
+      {props.content}
     </div>
   </div>
 
