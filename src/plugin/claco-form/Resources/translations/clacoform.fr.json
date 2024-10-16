@@ -1,5 +1,4 @@
 {
-    "activate_notifications": "Activer les notifications",
     "add_choice": "Ajouter un choix",
     "addition": "Ajout",
     "all_entries": "Toutes les fiches",
@@ -20,10 +19,8 @@
     "comment_blocked_info": "Ce commentaire a été bloqué. Il n'est plus visible.",
     "comment_pending_info": "Ce commentaire doit être validé par un gestionnaire avant d'être visible.",
     "comment_to_moderate": "Commentaire à modérer",
-    "copy_a_list": "Copier une liste",
     "add_category": "Ajouter une catégorie",
     "add_keyword": "Ajouter un mot-clé",
-    "deactivate_notifications": "Désactiver les notifications",
     "default_display_mode": "Mode d'affichage par défaut",
     "delete_comment": "Supprimer le commentaire",
     "delete_comment_confirm_message": "Êtes-vous sûr(e) de vouloir supprimer ce commentaire ?",

@@ -8,7 +8,6 @@
   "ips_help": "La liste d'adresse IPs connues vous permet d'authentifier automatiquement les personnes consultant votre platforme depuis ces adresses avec les Utilisateurs choisis.",
   "define_ip_range": "Définir une plage d'adresses IP",
   "allow_change_password": "Autoriser les utilisateurs à changer leur mot de passe",
-  "display_client_ip": "Afficher l'adresse IP du client",
   "display_internal_account": "Afficher l'authentification Claroline Connect",
   "force_password_complexity": "Forcer la complexité des mots de passe utilisateur",
   "tokens_help": "Les jetons d'authentifications sont utilisés pour vous identifié lors de l'utilisation de l'API.",

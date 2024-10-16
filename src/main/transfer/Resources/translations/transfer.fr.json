@@ -25,5 +25,7 @@
     "unnamed_export": "Export sans nom",
     "export_in_progress_help": "L'export est planifié / en cours d'exécution. Veuillez revenir lorsqu'il sera terminé afin d'accéder à vos données.",
     "transfer_format_help": "Gérez le format de transfert",
-    "transfer_examples_help": "Exemples de fichiers de transfert"
+    "transfer_examples_help": "Exemples de fichiers de transfert",
+    "not_executed": "Non exécuté",
+    "line_number": "ligne %line%"
 }

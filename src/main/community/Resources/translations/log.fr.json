@@ -14,6 +14,10 @@
   "team": "Equipe",
   "user": "Utilisateur",
 
+  "user.update": "Mise à jour d'un utilisateur",
+  "user.update_desc": "Lorsqu'un utilisateur met à jour un utilisateur.",
+  "user.update_message": "a <b>modifié</b> l'utilisateur %object%.",
+
   "user.add_role": "Ajout d'un rôle",
   "user.add_role_desc": "Lorsqu'un utilisateur obtient un nouveau rôle (inscription à un espace d'activités, attribution manuelle par un gestionnaire, inscription à un groupe).",
   "user.add_role_message": "a <b>donné</b> le rôle %role% à l'utilisateur %user%.",

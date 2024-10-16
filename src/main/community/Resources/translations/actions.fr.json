@@ -1,9 +1,12 @@
 {
   "add_group": "Ajouter un groupe",
+  "add_groups": "Ajouter des groupes",
   "add_role": "Ajouter un rôle",
+  "add_roles": "Ajouter des rôles",
   "add_user": "Ajouter un utilisateur",
+  "add_users": "Ajouter des utilisateurs",
   "add_organization": "Ajouter une organisation",
-  "add_sub_organization": "Ajouter une sous-organisation",
+  "add_organizations": "Ajouter des organisations",
   "add_team": "Ajouter une équipe",
   "show_profile": "Voir le profil",
   "fill": "Remplir",

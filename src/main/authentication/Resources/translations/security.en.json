@@ -8,7 +8,6 @@
   "ips_help": "The list of known IP addresses allows you to automatically authenticate the people viewing your platform from these addresses with the chosen Users.",
   "define_ip_range": "Define an IP address range",
   "allow_change_password": "Allow users to change their password",
-  "display_client_ip": "Display client IP address",
   "display_internal_account": "Display Claroline Connect authentication",
   "force_password_complexity": "Force the complexity of user passwords",
   "user_password_reset_confirm_message": "{1} Are you sure you want to reset the passwords of this user ? | [2,Inf[ Are you sure you want to reset the passwords of these %count% users?",

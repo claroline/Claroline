@@ -25,5 +25,7 @@
     "unnamed_export": "Unnamed export",
     "export_in_progress_help": "The export is scheduled / running. Please come back when it is finished to access your data.",
     "transfer_format_help": "Manage transfer format",
-    "transfer_examples_help": "Transfer files examples"
+    "transfer_examples_help": "Transfer files examples",
+    "not_executed": "Not executed",
+    "line_number": "line %line%"
 }
