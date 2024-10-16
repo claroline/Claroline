@@ -129,6 +129,7 @@ class AttemptsChart extends Component {
           </div>
 
           <TableData
+            loaded={true}
             count={chartData.length}
             data={chartData}
             definition={[

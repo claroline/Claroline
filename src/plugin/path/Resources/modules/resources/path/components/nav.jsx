@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 
-import {scrollTo} from '#/main/app/dom/scroll'
 import {trans} from '#/main/app/intl/translation'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
 
@@ -21,10 +21,10 @@ const PathNav = props => {
   }
 
   return (
-    <nav className="path-navigation">
+    <nav className={classes('path-navigation mt-auto', props.className)}>
       {previous &&
         <LinkButton
-          className="btn btn-link btn-previous"
+          className="btn btn-link text-reset btn-previous"
           size="lg"
           target={`${props.path}/${previous.slug}`}
           onClick={props.onNavigate}
@@ -37,7 +37,6 @@ const PathNav = props => {
       {next &&
         <LinkButton
           className="btn btn-link btn-next"
-          primary={true}
           size="lg"
           target={`${props.path}/${next.slug}`}
           onClick={props.onNavigate}
@@ -50,7 +49,6 @@ const PathNav = props => {
       {!next && props.endPage &&
         <LinkButton
           className="btn btn-link btn-next"
-          primary={true}
           size="lg"
           target={`${props.path}/end`}
           onClick={props.onNavigate}
@@ -64,6 +62,7 @@ const PathNav = props => {
 }
 
 PathNav.propTypes = {
+  className: T.sting,
   path: T.string.isRequired,
   current: T.shape(
     StepTypes.propTypes

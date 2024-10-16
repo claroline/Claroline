@@ -4,7 +4,8 @@
     .left-controls,
     .right-controls {
         display: flex;
-        align-items: flex-start;
+        align-self: baseline;
+        //align-items: flex-start;
 
         .btn {
             padding-left: $btn-padding-y;

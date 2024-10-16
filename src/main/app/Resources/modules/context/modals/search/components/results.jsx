@@ -22,11 +22,11 @@ const SearchResults = (props) => {
         .map(resultType =>
           <div role="presentation" className="mt-3" key={resultType}>
             <h5 className="fs-sm text-uppercase text-body-secondary">{props.availableSearches[resultType].label}</h5>
-            <div className="d-flex flex-column gap-1" role="presentation">
+            <div className="d-flex flex-column gap-2" role="presentation">
               {props.results[resultType].map(result =>
                 createElement(props.availableSearches[resultType].component, {
                   key: result.id,
-                  size: 'sm',
+                  size: 'xs',
                   direction: 'row',
                   data: result,
                   primaryAction: {

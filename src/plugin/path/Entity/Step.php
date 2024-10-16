@@ -35,7 +35,7 @@ class Step
     /**
      * @var Collection<int, Step>
      */
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Step::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Step::class, mappedBy: 'parent', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $children;
 

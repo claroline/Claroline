@@ -103,7 +103,7 @@ class AgendaNav extends Component {
           showCurrent={false}
         />
 
-        <h5 className="agenda-menu-title h-title">
+        <h5 className="agenda-menu-title">
           {trans('events', {}, 'agenda')}
         </h5>
 
@@ -126,7 +126,7 @@ class AgendaNav extends Component {
           }))}
         />
 
-        <h5 className="agenda-menu-title h-title">
+        <h5 className="agenda-menu-title">
           {trans('agendas', {}, 'agenda')}
         </h5>
 

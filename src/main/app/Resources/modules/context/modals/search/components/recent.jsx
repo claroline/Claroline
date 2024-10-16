@@ -27,14 +27,14 @@ const SearchRecent = (props) => {
   return (
     <div className="mt-3" role="presentation">
       <h5 className="fs-sm text-uppercase text-body-secondary">{trans('Récent')}</h5>
-      <div className="d-flex flex-column gap-1" role="presentation">
+      <div className="d-flex flex-column gap-2" role="presentation">
         {history
           .sort((a, b) => a.date > b.date ? -1 : 1)
           .map(result => (
             <DataCard
               key={result.id}
               id={result.id}
-              size="sm"
+              size="xs"
               direction="row"
               title={result.name}
               contentText={result.description}

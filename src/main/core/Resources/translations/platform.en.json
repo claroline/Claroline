@@ -317,16 +317,7 @@
     "login_with_third_party": "Connect with %name%",
     "login_with_third_party_btn": "%name%",
     "logout": "Logout",
-    "logs": "tracking",
-    "logs_error_location": "The log files are located in app/logs/update-xxx.log.",
-    "mailbox": "Mailbox",
-    "mail_config_problem": "Please contact your administrator to reinitialize your password.",
     "mail_invalid": "Mail format is not valid",
-    "mail_layout": "Mail layout.",
-    "mail_layout_message_override": "You can redefine the layout used when a email is sent",
-    "mail_login": "Your Claroline's login",
-    "mail_message": "You receive this message because you asked for a new password. Please click on the link below to reset it. If you did not ask to reset your password, please ignore this message.",
-    "mail_not_available": "The email function is not available.",
     "mail_not_exist": "This email does not exist",
     "mail_options": "Email options",
     "mail_sent": "An email has been sent to your address. Check your inbox email and your spam box.",
@@ -1066,5 +1057,7 @@
     "validated": "Validated",
     "other": "Other",
     "plugins": "Plugins",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "info": "Information",
+    "warning": "Warning"
 }

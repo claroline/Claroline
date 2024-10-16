@@ -44,7 +44,7 @@ const ResourcePage = (props) => {
           target: resourcePath
         }
       ] : [], props.breadcrumb || [])}
-      poster={props.poster || get(resourceNode, 'poster')}
+      //poster={props.poster || get(resourceNode, 'poster')}
       title={props.title ?
         props.title + ' | ' + resourceNode.name :
         resourceNode.name
@@ -81,7 +81,7 @@ const ResourcePage = (props) => {
         }, basePath, currentUser, false).then(loadedActions => [].concat(loadedActions, resourceDef.actions || []))
       }}
 
-      {...omit(props, 'className', 'breadcrumb', 'poster', 'styles', 'embedded', 'showHeader', 'root', 'title', 'description')}
+      {...omit(props, 'className', 'breadcrumb', 'styles', 'embedded', 'showHeader', 'root', 'title', 'description')}
       styles={[].concat(resourceDef.styles, props.styles || [])}
     >
       {props.children}

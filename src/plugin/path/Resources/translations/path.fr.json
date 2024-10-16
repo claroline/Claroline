@@ -13,7 +13,7 @@
     "step_add": "Ajouter une étape",
     "step_add_child": "Ajouter une sous-étape",
     "step_delete_confirm": "Êtes-vous sur de vouloir supprimer cette étape (ainsi que toutes les étapes enfants associées) ?",
-    "user_progression": "statut : ",
+    "user_progression": "Statut : ",
     "user_progression_step_done": "Vous avez marqué cette étape comme étant terminée.",
     "user_progression_step_done_label": "Fait",
     "user_progression_step_seen": "Vous avez déjà vu cette étape.",

@@ -205,7 +205,7 @@ $list-controls-border-color: var(--#{$prefix}border-color-translucent) !default;
 // ---
 
 $heading-numbering-padding-y:     .125em !default;
-$heading-numbering-padding-x:     .375em !default;
+$heading-numbering-padding-x:     .5em !default;
 $heading-numbering-bg:            $learning !default;
 $heading-numbering-color:         color-contrast($heading-numbering-bg) !default;
 $heading-numbering-font-size:     null !default;

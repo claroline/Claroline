@@ -65,11 +65,10 @@
 .ordering-answer-item {
   margin: 0;
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
 
   .ordering-item-tick {
     flex-shrink: 0;
-    align-self: flex-start; // make sure tick is always in the top left corner
     margin-top: .25em; // same as checkboxes/radios
     width: 1em; // same as checkboxes/radios
     height: 1em; // same as checkboxes/radios
@@ -95,7 +94,6 @@
 
   .item-actions {
     display: flex;
-    align-self: flex-start;
     gap: $answer-item-padding;
 
     .btn {

@@ -32,7 +32,6 @@ const PlayerEndComponent = (props) => {
   return (
     <ResourceEnd
       contentText={get(props.flashcardDeck, 'end.message')}
-      feedbacks={{}}
       attempt={props.attempt}
       actions={[action]}
       details={[

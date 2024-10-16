@@ -117,7 +117,6 @@ const AttemptEndComponent = props =>
       </Fragment>
     }
     attempt={props.attempt}
-    workspace={props.workspace}
     display={{
       score: props.showAttemptScore,
       scoreMax: get(props.paper, 'total'),
@@ -170,7 +169,7 @@ const AttemptEndComponent = props =>
     ].concat(get(props.paper, 'structure.parameters.back.type') ? [
       {
         name: 'home',
-        type: URL_BUTTON, // we require an URL_BUTTON here to escape the embedded resource router
+        type: URL_BUTTON, // we require a URL_BUTTON here to escape the embedded resource router
         label: get(props.paper, 'structure.parameters.back.label') || trans('return-home', {}, 'actions'),
         target: '#'+classes({
           [desktopRoute()]: 'desktop' === get(props.paper, 'structure.parameters.back.type'),

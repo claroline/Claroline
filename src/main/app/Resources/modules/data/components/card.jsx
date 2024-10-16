@@ -110,6 +110,9 @@ const DataCard = props => {
         color={props.color}
         size={props.size}
         square={asIcon}
+        className={classes({
+          'my-2': 'xs' === props.size
+        })}
       >
         {typeof props.icon === 'string' ?
           <span className={props.icon} /> :
@@ -120,12 +123,15 @@ const DataCard = props => {
       <CardAction
         action={props.primaryAction}
         className={classes('data-card-content text-reset text-decoration-none', {
-          'text-center': 'row' !== props.orientation && asIcon
+          'text-center': 'row' !== props.orientation && asIcon,
+          'py-2': 'xs' === props.size
         })}
       >
         <Heading
           level={props.level}
-          className="data-card-title"
+          className={classes('data-card-title', {
+            'mb-0': 'xs' === props.size
+          })}
         >
           {props.title}
         </Heading>

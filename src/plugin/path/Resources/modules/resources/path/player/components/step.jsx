@@ -14,14 +14,18 @@ import {route as resourceRoute} from '#/main/core/resource/routing'
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 import {constants} from '#/plugin/path/resources/path/constants'
+import {PageSection} from '#/main/app/page'
+import isEmpty from 'lodash/isEmpty'
+import {getActions} from '#/main/community/group/utils'
+import {PageHeading} from '#/main/app/page/components/heading'
 
 const ManualProgression = props =>
-  <div className="step-manual-progression">
+  <div className="text-body-tertiary d-flex align-items-baseline mb-1" role="presentation">
     {trans('user_progression', {}, 'path')}
 
     <Button
       id="step-progression"
-      className={classes('btn btn-text-secondary fw-bold', props.status)}
+      className="btn btn-link fw-bold"
       type={MENU_BUTTON}
       label={constants.STEP_STATUS[props.status]}
       menu={{
@@ -32,7 +36,9 @@ const ManualProgression = props =>
           callback: () => props.updateProgression(props.stepId, status, false)
         }))
       }}
-    />
+    >
+      <span className="ms-2 fa fa-caret-down" aria-hidden={true} />
+    </Button>
   </div>
 
 ManualProgression.propTypes = {
@@ -42,12 +48,15 @@ ManualProgression.propTypes = {
 }
 
 const SecondaryResources = props =>
-  <div className={classes('step-secondary-resources', props.className)}>
-    <h4 className="h3">{trans('useful_links')}</h4>
+  <PageSection
+    size="md"
+    className={classes('mb-5', props.className)}
+    title={trans('useful_links')}
+  >
     {props.resources.map(resource =>
       <ResourceCard
         key={resource.id}
-        size="sm"
+        size="xs"
         orientation="row"
         primaryAction={{
           type: URL_BUTTON,
@@ -58,13 +67,13 @@ const SecondaryResources = props =>
         data={resource}
       />
     )}
-  </div>
+  </PageSection>
 
 SecondaryResources.propTypes = {
   className: T.string,
   target: T.oneOf(['_self', '_blank']),
   resources: T.arrayOf(T.shape({
-    // TODO : resource node type
+    // resource node type
   })).isRequired
 }
 
@@ -72,66 +81,69 @@ SecondaryResources.propTypes = {
  * Renders step content.
  */
 const Step = props =>
-  <section className="current-step">
-    {props.poster &&
-      <img className="step-poster img-fluid" alt={props.title} src={asset(props.poster)} />
+  <>
+    <PageHeading
+      size="md"
+      title={
+        <>
+          {props.numbering &&
+            <span className="h-numbering me-3" role="presentation">{props.numbering}</span>
+          }
+
+          {props.title}
+        </>
+      }
+      primaryAction="edit"
+      actions={!isEmpty(props.group) ? getActions([props.group], {
+        add: () => props.reload(props.group.id),
+        update: () => props.reload(props.group.id),
+        delete: () => props.reload(props.group.id)
+      }, props.path, props.currentUser) : []}
+    />
+
+    {((props.manualProgressionAllowed && props.currentUser) || props.description) &&
+      <PageSection size="md">
+        {props.manualProgressionAllowed && props.currentUser &&
+          <ManualProgression
+            status={props.progression}
+            stepId={props.id}
+            updateProgression={props.updateProgression}
+          />
+        }
+
+        {props.description &&
+          <ContentHtml className="lead mb-5">{props.description}</ContentHtml>
+        }
+
+        {(props.description && props.primaryResource) &&
+          <hr className="content-md mt-0 mb-5" aria-hidden={true} />
+        }
+      </PageSection>
     }
 
-    <h3 className="h2 h-title step-title">
-      {props.numbering &&
-        <span className="h-numbering">{props.numbering}</span>
-      }
-
-      {props.title}
-
-      {props.manualProgressionAllowed && props.currentUser &&
-        <ManualProgression
-          status={props.progression}
-          stepId={props.id}
-          updateProgression={props.updateProgression}
-        />
-      }
-    </h3>
-
-    <div className="row">
-      {(props.primaryResource || props.description) &&
-        <div className={classes('col-sm-12', {
-          'col-md-9': 0 !== props.secondaryResources.length,
-          'col-md-12': 0 === props.secondaryResources.length
-        })}>
-          {props.description &&
-            <div className="step-description card">
-              <ContentHtml className="card-body">{props.description}</ContentHtml>
-            </div>
+    {props.primaryResource &&
+      <ResourceEmbedded
+        className="step-primary-resource"
+        resourceNode={props.primaryResource}
+        showHeader={props.showResourceHeader}
+        lifecycle={{
+          play: props.disableNavigation,
+          end: () => {
+            props.enableNavigation()
+            // get updated path progression
+            props.updateProgression(props.id)
           }
+        }}
+      />
+    }
 
-          {props.primaryResource &&
-            <ResourceEmbedded
-              className="step-primary-resource"
-              resourceNode={props.primaryResource}
-              showHeader={props.showResourceHeader}
-              lifecycle={{
-                play: props.disableNavigation,
-                end: () => {
-                  props.enableNavigation()
-                  // get updated path progression
-                  props.updateProgression(props.id)
-                }
-              }}
-            />
-          }
-        </div>
-      }
-
-      {0 !== props.secondaryResources.length &&
-        <SecondaryResources
-          className="col-md-3 col-sm-12"
-          resources={props.secondaryResources}
-          target={props.secondaryResourcesTarget}
-        />
-      }
-    </div>
-  </section>
+    {0 !== props.secondaryResources.length &&
+      <SecondaryResources
+        resources={props.secondaryResources}
+        target={props.secondaryResourcesTarget}
+      />
+    }
+  </>
 
 implementPropTypes(Step, StepTypes, {
   currentUser: T.object,

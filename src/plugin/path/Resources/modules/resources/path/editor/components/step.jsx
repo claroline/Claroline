@@ -145,6 +145,10 @@ const PathEditorStep = props => {
               options: {
                 workspace: props.workspace
               }
+            }, {
+              name: 'poster',
+              type: 'image',
+              label: trans('poster'),
             }
           ]
         }

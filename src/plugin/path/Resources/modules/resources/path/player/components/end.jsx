@@ -24,7 +24,6 @@ const PlayerEnd = (props) =>
       </>
     }
     attempt={props.attempt}
-    workspace={props.workspace}
     display={{
       score: get(props.path, 'display.showScore'),
       scoreMax: get(props.path, 'score.total'),
@@ -68,7 +67,6 @@ const PlayerEnd = (props) =>
 
 PlayerEnd.propTypes = {
   basePath: T.string.isRequired,
-  resourceId: T.string.isRequired,
   path: T.shape(
     PathTypes.propTypes
   ).isRequired,

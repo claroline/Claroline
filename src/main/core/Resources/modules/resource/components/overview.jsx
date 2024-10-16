@@ -23,18 +23,20 @@ import {EvaluationJumbotron} from '#/main/evaluation/components/jumbotron'
 
 const ResourceOverview = props => {
   const resourceNode = useSelector(selectors.resourceNode)
+  const embedded = useSelector(selectors.embedded)
 
-  const description = get(resourceNode, 'meta.descriptionHtml', null) || get(resourceNode, 'meta.description', null)
+  const description = get(resourceNode, 'meta.descriptionHtml', null) /*|| get(resourceNode, 'meta.description', null)*/
 
   return (
     <ResourcePage
       primaryAction={props.primaryAction}
       actions={props.actions}
-      //root={true}
       poster={get(resourceNode, 'poster')}
     >
       {description &&
-        <PageSection size="md" className="py-5 px-4">
+        <PageSection size="md" className={classes('pb-5', {
+          'pt-5': !embedded
+        })}>
           <ContentHtml className="lead">{description}</ContentHtml>
         </PageSection>
       }
