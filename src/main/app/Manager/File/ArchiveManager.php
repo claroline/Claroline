@@ -8,7 +8,7 @@ use Claroline\AppBundle\API\Utils\FileBag;
  * Helpers to manage zip archive in the application.
  * Mostly used in the import/export features.
  */
-class ArchiveManager
+final class ArchiveManager
 {
     public function __construct(
         private readonly TempFileManager $tempFileManager
