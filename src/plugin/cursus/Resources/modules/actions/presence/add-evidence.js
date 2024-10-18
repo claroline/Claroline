@@ -11,13 +11,15 @@ export default (presences, refresher) => {
     name: 'add-evidence',
     type: MODAL_BUTTON,
     icon: 'fa fa-fw fa-file-upload',
-    label: trans('add_evidences', {}, 'presence'),
+    label: trans('add_evidence', {}, 'presence'),
     modal: [MODAL_EVIDENCE, {
       parent: processable[0],
       onSuccess: refresher.update,
       editable: true
     }],
-    displayed: 0 !== processable.length && [constants.PRESENCE_STATUS_ABSENT_UNJUSTIFIED, constants.PRESENCE_STATUS_ABSENT_JUSTIFIED].includes(processable[0].status),
+    displayed: 0 !== processable.length
+      && [constants.PRESENCE_STATUS_ABSENT_UNJUSTIFIED, constants.PRESENCE_STATUS_ABSENT_JUSTIFIED].includes(processable[0].status)
+      && (!processable[0].evidences || processable[0].evidences.length === 0),
     group: trans('validation', {}, 'presence'),
     scope: ['object']
   }

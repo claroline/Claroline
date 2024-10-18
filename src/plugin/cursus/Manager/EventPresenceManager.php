@@ -92,7 +92,7 @@ class EventPresenceManager
         return $presences;
     }
 
-    public function setValidationDate(array $presences, \DateTimeInterface $date): array
+    public function setValidationDate(array $presences, ?\DateTimeInterface $date): array
     {
         foreach ($presences as $presence) {
             $presence->setValidationDate($date);

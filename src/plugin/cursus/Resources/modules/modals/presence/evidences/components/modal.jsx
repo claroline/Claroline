@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 
 import omit from 'lodash/omit'
 import classes from 'classnames'
-import isEmpty from 'lodash/isEmpty'
+import isNull from 'lodash/isNull'
 import {trans} from '#/main/app/intl/translation'
 
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -15,28 +15,28 @@ import {actions} from '#/plugin/cursus/modals/presence/evidences/store'
 import {FileThumbnail} from '#/main/app/data/types/file/components/thumbnail'
 
 const EvidenceModalComponent = (props) => {
-  const [files, setFiles] = useState([])
+  const [file, setFile] = useState(null)
 
   return (
     <Modal
-      {...omit(props, 'parent', 'add', 'editable', 'createFiles')}
+      {...omit(props, 'parent', 'add', 'editable', 'createFile', 'onSuccess')}
       icon={classes('fa fa-fw', {
         'fa-file-upload': props.editable,
         'fa-file-lines': !props.editable
       })}
-      title={trans(props.editable ? 'add_evidences' : 'evidences', {}, 'presence')}
+      title={trans(props.editable ? 'add_evidence' : 'evidence', {}, 'presence')}
     >
       <div className="modal-body">
         {props.editable &&
           <DataInput
-            id="add-evidences-files"
+            id="add-evidence-file"
             type="file"
             label={trans('files')}
-            value={files}
-            onChange={setFiles}
+            value={file}
+            onChange={setFile}
             required={true}
             options={{
-              multiple: true,
+              multiple: false,
               autoUpload: false
             }}
           />
@@ -59,8 +59,8 @@ const EvidenceModalComponent = (props) => {
           type={CALLBACK_BUTTON}
           primary={true}
           label={trans('add', {}, 'actions')}
-          disabled={isEmpty(files)}
-          callback={() => props.createFiles(props.parent, files, () => {
+          disabled={isNull(file)}
+          callback={() => props.createFile(props.parent, file, () => {
             props.onSuccess()
             props.fadeModal()
           })}
@@ -74,15 +74,15 @@ EvidenceModalComponent.propTypes = {
   parent: T.object.isRequired,
   editable: T.bool.isRequired,
   onSuccess: T.func.isRequired,
-  createFiles: T.func.isRequired,
+  createFile: T.func.isRequired,
   fadeModal: T.func.isRequired
 }
 
 const EvidenceModal = connect(
   null,
   (dispatch) => ({
-    createFiles(parent, files, callback) {
-      dispatch(actions.createFiles(parent, files, callback))
+    createFile(parent, file, callback) {
+      dispatch(actions.createFile(parent, file, callback))
     }
   })
 )(EvidenceModalComponent)

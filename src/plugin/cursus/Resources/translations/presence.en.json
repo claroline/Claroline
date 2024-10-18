@@ -1,8 +1,18 @@
 {
-  "add_evidences": "Add evidence",
+  "add_evidence": "Add evidence",
   "evidence": "Evidence",
-  "evidences": "Evidences",
-  "evidence_count": "{0} No evidence | {1} 1 evidence | ]1,Inf[ %count% evidences",
+
+  "show_evidence": "Show evidence",
+  "evidence_added_by": "Evidence added by :",
+  "evidence_added_at": "Added at :",
+  "evidence_info": "Evidence of absence of %user%, at the event \"%event_title%\" from %event_datetime_start% to %event_datetime_end%.",
+
+  "download_evidence": "Download evidence",
+  "no_evidence": "No evidence",
+
+  "delete_evidence": "Delete evidence",
+  "delete_evidence_message": "Are you sure you want to delete this evidence?",
+
   "event_not_found": "Event not found",
   "event_not_found_desc": "This code does not correspond to any event.",
   "event_not_found_retry": "Enter again event code",
@@ -16,10 +26,12 @@
   "presence_confirm_title": "Presence confirmation",
   "presence_confirm_desc": "Your %event_title% event signature has been successfully recorded.",
   "presence_confirm_other": "Confirm another presence",
-  "presence_confirmation_date": "Confirmation date",
+  "presence_confirmation_date": "Validation date",
   "presence_validation_date": "Validation date by tutor",
   "presence_info": "Me, %user%, was present at the event %event_title% from %event_date_start% to %event_date_end%.",
-  "presence_validation": "Validate presence",
+  "presence_validation": "Validate status",
+  "presence_updated_by": "Status updated by",
+  "presence_updated_at": "Update date",
 
   "validate": "Validate",
   "validation": "Validation"

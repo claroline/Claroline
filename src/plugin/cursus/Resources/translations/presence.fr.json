@@ -1,8 +1,18 @@
 {
-  "add_evidences": "Ajouter un justificatif",
+  "add_evidence": "Ajouter un justificatif",
   "evidence": "Justificatif",
-  "evidences": "Justificatifs",
-  "evidence_count": "{0} Aucun justificatif | {1} 1 justificatif | ]1,Inf[ %count% justificatifs",
+
+  "show_evidence": "Afficher le justificatif",
+  "evidence_added_by": "Justificatif ajouté par :",
+  "evidence_added_at": "Ajouté le :",
+  "evidence_info": "Justificatif de l'absence de %user%, à la séance \"%event_title%\" du %event_datetime_start% au %event_datetime_end%.",
+
+  "download_evidence": "Télécharger le justificatif",
+  "no_evidence": "Aucun justificatif",
+
+  "delete_evidence": "Supprimer le justificatif",
+  "delete_evidence_message": "Êtes-vous sûr de vouloir supprimer ce justificatif ?",
+
   "event_not_found": "Séance introuvable",
   "event_not_found_desc": "Ce code ne correspond à aucune séance.",
   "event_not_found_retry": "Saisir à nouveau le code de la séance",
@@ -16,10 +26,12 @@
   "presence_confirm_title": "Confirmation de présence",
   "presence_confirm_desc": "Votre présence à la séance %event_title% a bien été enregistrée.",
   "presence_confirm_other": "Confirmer une autre présence",
-  "presence_confirmation_date": "Date de confirmation",
+  "presence_confirmation_date": "Date de validation",
   "presence_validation_date": "Date de validation par le formateur",
   "presence_info": "Moi, %user%, étais présent à la séance %event_title% du %event_datetime_start% au %event_datetime_end%.",
-  "presence_validation": "Confirmer la présence",
+  "presence_validation": "Valider les statuts",
+  "presence_updated_by": "Statut mis à jour par",
+  "presence_updated_at": "Date de mise à jour",
 
   "validate": "Valider",
   "validation": "Validation"

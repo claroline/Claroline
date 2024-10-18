@@ -62,6 +62,30 @@ class EventPresence
      */
     private ?array $evidences = null;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
+     * @ORM\JoinColumn(name="presence_updated_by", referencedColumnName="id", nullable=true)
+     */
+    private ?User $presenceUpdatedBy = null;
+
+    /**
+     * @ORM\Column(name="presence_updated_at", type="datetime", nullable=true)
+     */
+    private ?\DateTimeInterface $presenceUpdatedAt = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
+     * @ORM\JoinColumn(name="evidence_added_by", referencedColumnName="id", nullable=true)
+     */
+    private ?User $evidenceAddedBy = null;
+
+    /**
+     * @ORM\Column(name="evidence_added_at", type="datetime", nullable=true)
+     */
+    private ?\DateTimeInterface $evidenceAddedAt = null;
+
     public function __construct()
     {
         $this->refreshUuid();
@@ -125,5 +149,53 @@ class EventPresence
     public function setEvidences(?array $evidences): void
     {
         $this->evidences = $evidences;
+    }
+
+    public function getPresenceUpdatedBy(): ?User
+    {
+        return $this->presenceUpdatedBy;
+    }
+
+    public function setPresenceUpdatedBy(?User $user): self
+    {
+        $this->presenceUpdatedBy = $user;
+
+        return $this;
+    }
+
+    public function getPresenceUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->presenceUpdatedAt;
+    }
+
+    public function setPresenceUpdatedAt(?\DateTimeInterface $date): self
+    {
+        $this->presenceUpdatedAt = $date;
+
+        return $this;
+    }
+
+    public function getEvidenceAddedBy(): ?User
+    {
+        return $this->evidenceAddedBy;
+    }
+
+    public function setEvidenceAddedBy(?User $user): self
+    {
+        $this->evidenceAddedBy = $user;
+
+        return $this;
+    }
+
+    public function getEvidenceAddedAt(): ?\DateTimeInterface
+    {
+        return $this->evidenceAddedAt;
+    }
+
+    public function setEvidenceAddedAt(?\DateTimeInterface $date): self
+    {
+        $this->evidenceAddedAt = $date;
+
+        return $this;
     }
 }

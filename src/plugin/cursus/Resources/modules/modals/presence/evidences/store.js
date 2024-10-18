@@ -1,13 +1,13 @@
 import {API_REQUEST} from '#/main/app/api'
 export const actions = {}
 
-actions.createFiles = (presence, files, onSuccess) => {
+actions.createFile = (presence, file, onSuccess) => {
   const formData = new FormData()
-  files.forEach((file, index) => formData.append(index, file))
+  formData.append(0, file)
 
   return ({
     [API_REQUEST]: {
-      url: ['apiv2_cursus_presence_evidences_upload', {id: presence.id}],
+      url: ['apiv2_cursus_presence_evidence_upload', {id: presence.id}],
       type: 'upload',
       request: {
         method: 'POST',
