@@ -56,6 +56,8 @@ class EventPresenceSerializer
             'evidences' => $eventPresence->getEvidences(),
             'presence_updated_by' => $eventPresence->getPresenceUpdatedBy() ? $this->userSerializer->serialize($eventPresence->getPresenceUpdatedBy(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             'presence_updated_at' => DateNormalizer::normalize($eventPresence->getPresenceUpdatedAt()),
+            'evidence_added_by' => $eventPresence->getEvidenceAddedBy() ? $this->userSerializer->serialize($eventPresence->getEvidenceAddedBy(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
+            'evidence_added_at' => DateNormalizer::normalize($eventPresence->getEvidenceAddedAt()),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
@@ -97,6 +99,15 @@ class EventPresenceSerializer
 
         if (isset($data['presence_updated_at'])) {
             $eventPresence->setPresenceUpdatedAt(DateNormalizer::denormalize($data['presence_updated_at']));
+        }
+
+        if (isset($data['evidence_added_by'])) {
+            $addedBy = $this->om->getRepository(User::class)->findOneBy(['uuid' => $data['evidence_added_by']['id']]);
+            $eventPresence->setEvidenceAddedBy($addedBy);
+        }
+
+        if (isset($data['evidence_added_at'])) {
+            $eventPresence->setEvidenceAddedAt(DateNormalizer::denormalize($data['evidence_added_at']));
         }
 
         return $eventPresence;

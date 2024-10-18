@@ -3,6 +3,9 @@
   "evidence": "Evidence",
 
   "show_evidence": "Show evidence",
+  "evidence_added_by": "Evidence added by :",
+  "evidence_added_at": "Added at :",
+  "evidence_info": "Evidence of absence of %user%, at the event \"%event_title%\" from %event_datetime_start% to %event_datetime_end%.",
 
   "download_evidence": "Download evidence",
   "no_evidence": "No evidence",

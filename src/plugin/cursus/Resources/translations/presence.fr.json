@@ -3,6 +3,9 @@
   "evidence": "Justificatif",
 
   "show_evidence": "Afficher le justificatif",
+  "evidence_added_by": "Justificatif ajouté par :",
+  "evidence_added_at": "Ajouté le :",
+  "evidence_info": "Justificatif de l'absence de %user%, à la séance \"%event_title%\" du %event_datetime_start% au %event_datetime_end%.",
 
   "download_evidence": "Télécharger le justificatif",
   "no_evidence": "Aucun justificatif",

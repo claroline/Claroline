@@ -8,11 +8,12 @@ import classes from 'classnames'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action'
 import {constants} from '#/plugin/cursus/constants'
-import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {getActions, getDefaultAction} from '#/plugin/cursus/presence/utils'
+import {MODAL_EVIDENCE_ABOUT} from '#/plugin/cursus/modals/presence/about'
 
 const Presences = props => {
   const refresher = merge({
@@ -68,16 +69,16 @@ const Presences = props => {
         }, {
           name: 'evidences',
           type: 'number',
-          label: trans('evidence', {}, 'presence'),
+          label: trans('show_evidence', {}, 'presence'),
           displayed: true,
           render: (row) => {
             if (row.evidences && row.evidences.length === 1) {
               return (
                 <Button
                   className="btn btn-link"
-                  type={DOWNLOAD_BUTTON}
-                  label={trans('download_evidence', {}, 'presence')}
-                  file={{url: ['apiv2_cursus_presence_evidence_download', {id: row.id, file: row.evidences[0]}]}}
+                  type={MODAL_BUTTON}
+                  label={trans('show_evidence', {}, 'presence')}
+                  modal={[MODAL_EVIDENCE_ABOUT, {presence: row}]}
                 />
               )
             } else {

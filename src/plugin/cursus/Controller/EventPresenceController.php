@@ -291,6 +291,8 @@ class EventPresenceController
         }
 
         $eventPresence->setEvidences($evidences);
+        $eventPresence->setEvidenceAddedBy($this->tokenStorage->getToken()->getUser());
+        $eventPresence->setEvidenceAddedAt(new \DateTime());
 
         $this->om->persist($eventPresence);
         $this->om->flush();

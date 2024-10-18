@@ -74,6 +74,18 @@ class EventPresence
      */
     private ?\DateTimeInterface $presenceUpdatedAt = null;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
+     * @ORM\JoinColumn(name="evidence_added_by", referencedColumnName="id", nullable=true)
+     */
+    private ?User $evidenceAddedBy = null;
+
+    /**
+     * @ORM\Column(name="evidence_added_at", type="datetime", nullable=true)
+     */
+    private ?\DateTimeInterface $evidenceAddedAt = null;
+
     public function __construct()
     {
         $this->refreshUuid();
@@ -159,6 +171,30 @@ class EventPresence
     public function setPresenceUpdatedAt(?\DateTimeInterface $date): self
     {
         $this->presenceUpdatedAt = $date;
+
+        return $this;
+    }
+
+    public function getEvidenceAddedBy(): ?User
+    {
+        return $this->evidenceAddedBy;
+    }
+
+    public function setEvidenceAddedBy(?User $user): self
+    {
+        $this->evidenceAddedBy = $user;
+
+        return $this;
+    }
+
+    public function getEvidenceAddedAt(): ?\DateTimeInterface
+    {
+        return $this->evidenceAddedAt;
+    }
+
+    public function setEvidenceAddedAt(?\DateTimeInterface $date): self
+    {
+        $this->evidenceAddedAt = $date;
 
         return $this;
     }
