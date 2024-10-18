@@ -1,8 +1,15 @@
 {
-  "add_evidences": "Add evidence",
+  "add_evidence": "Add evidence",
   "evidence": "Evidence",
-  "evidences": "Evidences",
-  "evidence_count": "{0} No evidence | {1} 1 evidence | ]1,Inf[ %count% evidences",
+
+  "show_evidence": "Show evidence",
+
+  "download_evidence": "Download evidence",
+  "no_evidence": "No evidence",
+
+  "delete_evidence": "Delete evidence",
+  "delete_evidence_message": "Are you sure you want to delete this evidence?",
+
   "event_not_found": "Event not found",
   "event_not_found_desc": "This code does not correspond to any event.",
   "event_not_found_retry": "Enter again event code",

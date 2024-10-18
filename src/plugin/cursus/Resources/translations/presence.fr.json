@@ -1,8 +1,15 @@
 {
-  "add_evidences": "Ajouter un justificatif",
+  "add_evidence": "Ajouter un justificatif",
   "evidence": "Justificatif",
-  "evidences": "Justificatifs",
-  "evidence_count": "{0} Aucun justificatif | {1} 1 justificatif | ]1,Inf[ %count% justificatifs",
+
+  "show_evidence": "Afficher le justificatif",
+
+  "download_evidence": "Télécharger le justificatif",
+  "no_evidence": "Aucun justificatif",
+
+  "delete_evidence": "Supprimer le justificatif",
+  "delete_evidence_message": "Êtes-vous sûr de vouloir supprimer ce justificatif ?",
+
   "event_not_found": "Séance introuvable",
   "event_not_found_desc": "Ce code ne correspond à aucune séance.",
   "event_not_found_retry": "Saisir à nouveau le code de la séance",

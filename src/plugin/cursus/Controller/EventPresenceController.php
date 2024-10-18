@@ -267,7 +267,7 @@ class EventPresenceController
     }
 
     /**
-     * @Route("/{id}/evidences", name="apiv2_cursus_presence_evidences_upload", methods={"POST"})
+     * @Route("/{id}/evidences", name="apiv2_cursus_presence_evidence_upload", methods={"POST"})
      *
      * @EXT\ParamConverter("eventPresence", class="Claroline\CursusBundle\Entity\EventPresence", options={"mapping": {"id": "uuid"}})
      */
@@ -296,6 +296,23 @@ class EventPresenceController
         $this->om->flush();
 
         return new JsonResponse($this->serializer->serialize($eventPresence));
+    }
+
+    /**
+     * @Route("/{id}/evidences", name="apiv2_cursus_presence_evidence_delete", methods={"DELETE"})
+     *
+     * @EXT\ParamConverter("eventPresence", class="Claroline\CursusBundle\Entity\EventPresence", options={"mapping": {"id": "uuid"}})
+     */
+    public function deleteEvidenceAction(EventPresence $eventPresence): JsonResponse
+    {
+        $this->checkPermission('EDIT', $eventPresence, [], true);
+
+        $eventPresence->setEvidences(null);
+
+        $this->om->persist($eventPresence);
+        $this->om->flush();
+
+        return new JsonResponse(['success' => true]);
     }
 
     /**
