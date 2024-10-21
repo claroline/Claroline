@@ -19,6 +19,9 @@ const reducer = combineReducers({
       [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.FORM_NAME)]: () => true
     })
   }),
+  reported: makeListReducer(selectors.REPORT_LIST_NAME, {
+    sortBy: {property: 'lastName', direction: 1}
+  }),
   current: makeFormReducer(selectors.FORM_NAME, {}, {
     groups: makeListReducer(selectors.FORM_NAME + '.groups', {
       sortBy: {property: 'name', direction: 1}

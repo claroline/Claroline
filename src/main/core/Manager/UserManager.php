@@ -150,6 +150,14 @@ class UserManager
         return $user;
     }
 
+    public function report(User $user): void
+    {
+        $user->setReported(true);
+
+        $this->om->persist($user);
+        $this->om->flush();
+    }
+
     public function disableInactive(\DateTimeInterface $lastActivity): void
     {
         $this->messageBus->dispatch(new DisableInactiveUsers($lastActivity));

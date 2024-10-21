@@ -12,5 +12,6 @@
   "fill": "Remplir",
   "empty": "Vider",
   "show_activity": "Voir l'activité",
-  "choose_role": "Choisir le rôle auquel inscrire les utilisateurs/groupes"
+  "choose_role": "Choisir le rôle auquel inscrire les utilisateurs/groupes",
+  "report": "Signaler"
 }

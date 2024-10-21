@@ -4,6 +4,8 @@ import {selectors as baseSelectors} from '#/main/community/tools/community/store
 
 const LIST_NAME = baseSelectors.STORE_NAME + '.users.list'
 const FORM_NAME = baseSelectors.STORE_NAME + '.users.current'
+const REPORT_LIST_NAME = baseSelectors.STORE_NAME + '.users.reported'
+
 
 const users = createSelector(
   [baseSelectors.store],
@@ -18,6 +20,6 @@ const limitReached = createSelector(
 export const selectors = {
   LIST_NAME,
   FORM_NAME,
-
+  REPORT_LIST_NAME,
   limitReached
 }

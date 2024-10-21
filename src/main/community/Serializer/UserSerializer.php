@@ -125,6 +125,7 @@ class UserSerializer
                     ];
                 }, $user->getGroupRoles()),
             ),
+            'reported' => $user->isReported(),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
@@ -175,6 +176,7 @@ class UserSerializer
         $this->sipe('picture', 'setPicture', $data, $user);
         $this->sipe('thumbnail', 'setThumbnail', $data, $user);
         $this->sipe('poster', 'setPoster', $data, $user);
+        $this->sipe('reported', 'setReported', $data, $user);
 
         // don't trim the password just in case
         $this->sipe('plainPassword', 'setPlainPassword', $data, $user, false);

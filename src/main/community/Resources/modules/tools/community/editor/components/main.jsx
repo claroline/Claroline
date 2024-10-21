@@ -8,6 +8,7 @@ import {constants as toolConstants} from '#/main/core/tool/constants'
 import {EditorProfile} from '#/main/community/tools/community/editor/containers/profile'
 import {EditorParameters} from '#/main/community/tools/community/editor/containers/parameters'
 import {CommunityEditorActions} from '#/main/community/tools/community/editor/components/actions'
+import {CommunityEditorReported} from '#/main/community/tools/community/editor/components/reported'
 
 const CommunityEditor = (props) =>
   <ToolEditor
@@ -21,6 +22,11 @@ const CommunityEditor = (props) =>
         help: trans('Ajoutez des champs personnalisés pour enrichir le profil de vos utilisateurs.'),
         component: EditorProfile,
         disabled: props.contextType !== toolConstants.TOOL_DESKTOP
+      }, {
+        name: 'reported',
+        title: trans('user_reported', {}, 'community'),
+        help: trans('user_reported_help', {}, 'community'),
+        component: CommunityEditorReported
       }
     ]}
   />
