@@ -62,8 +62,6 @@
   "user_disable_confirm_message": "{1} Êtes-vous sûr de vouloir désactiver cet utilisateur ? | [2,Inf[ Êtes-vous sûr de vouloir désactiver ces %count% utilisateurs ?",
   "user_reported_confirm_title": "{1} Signalement d'un utilisateur | [2,Inf[ Signalement de plusieurs utilisateurs",
   "user_reported_confirm_message": "{1} Êtes-vous sûr de vouloir signaler cet utilisateur ? | [2,Inf[ Êtes-vous sûr de vouloir signaler ces %count% utilisateurs ?",
-  "user_reported": "Utilisateurs signalés",
-  "user_reported_help": "Liste des utilisateurs signalés.",
   "new_user": "Nouvel utilisateur",
   "user_disabled": "Utilisateur inactif",
   "disable_inactive_users": "Désactiver les utilisateurs inactifs",

@@ -19,13 +19,13 @@ const CommunityEditor = (props) =>
       {
         name: 'profile',
         title: trans('user_profile'),
-        help: trans('Ajoutez des champs personnalisés pour enrichir le profil de vos utilisateurs.'),
+        help: trans('user_profile_help', {}, 'editor'),
         component: EditorProfile,
         disabled: props.contextType !== toolConstants.TOOL_DESKTOP
       }, {
         name: 'reported',
-        title: trans('user_reported', {}, 'community'),
-        help: trans('user_reported_help', {}, 'community'),
+        title: trans('reporting', {}, 'editor'),
+        help: trans('reporting_help', {}, 'editor'),
         component: CommunityEditorReported
       }
     ]}
