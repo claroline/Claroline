@@ -226,6 +226,11 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      */
     private ?string $status = null;
 
+    /**
+     * @ORM\Column(name="reported", type="boolean")
+     */
+    private bool $reported = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -803,5 +808,15 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     public function getLastActivity(): ?\DateTimeInterface
     {
         return $this->lastActivity;
+    }
+
+    public function isReported(): bool
+    {
+        return $this->reported;
+    }
+
+    public function setReported(bool $reported): void
+    {
+        $this->reported = $reported;
     }
 }

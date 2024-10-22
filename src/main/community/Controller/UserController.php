@@ -191,6 +191,53 @@ class UserController extends AbstractCrudController
     }
 
     /**
+     * @Route("/list/reported", name="list_reported", methods={"GET"})
+     */
+    public function listReportedAction(Request $request): JsonResponse
+    {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
+        return new JsonResponse($this->crud->list(
+            User::class,
+            array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
+                'reported' => true,
+            ])]),
+            $this->getOptions()['list']
+        ));
+    }
+
+    /**
+     * @ApiDoc(
+     *     description="Report a list of users.",
+     *     queryString={
+     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
+     *     }
+     * )
+     *
+     * @Route("/report", name="report", methods={"PUT"})
+     */
+    public function reportAction(Request $request): JsonResponse
+    {
+        /** @var User[] $users */
+        $users = $this->decodeIdsString($request, User::class);
+
+        $this->om->startFlushSuite();
+
+        $processed = [];
+        foreach ($users as $user) {
+            if ($this->checkPermission('ADMINISTRATE', $user)) {
+                $this->manager->report($user);
+                $processed[] = $user;
+            }
+        }
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (User $user) {
+            return $this->serializer->serialize($user);
+        }, $processed));
+    }
+
+    /**
      * @Route("/disable_inactive", name="disable_inactive", methods={"PUT"})
      */
     public function disableInactiveAction(Request $request): JsonResponse

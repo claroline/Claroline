@@ -60,6 +60,8 @@
   "user_delete_confirm_message": "{1} Êtes-vous sûr de vouloir supprimer cet utilisateur ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs ?",
   "user_disable_confirm_title": "{1} Désactivation d'un utilisateur | [2,Inf[ Désactivation de plusieurs utilisateurs",
   "user_disable_confirm_message": "{1} Êtes-vous sûr de vouloir désactiver cet utilisateur ? | [2,Inf[ Êtes-vous sûr de vouloir désactiver ces %count% utilisateurs ?",
+  "user_reported_confirm_title": "{1} Signalement d'un utilisateur | [2,Inf[ Signalement de plusieurs utilisateurs",
+  "user_reported_confirm_message": "{1} Êtes-vous sûr de vouloir signaler cet utilisateur ? | [2,Inf[ Êtes-vous sûr de vouloir signaler ces %count% utilisateurs ?",
   "new_user": "Nouvel utilisateur",
   "user_disabled": "Utilisateur inactif",
   "disable_inactive_users": "Désactiver les utilisateurs inactifs",

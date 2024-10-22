@@ -37,7 +37,8 @@ registry.add('ClarolineCommunityBundle', {
       'password-change': () => { return import(/* webpackChunkName: "community-action-user-password-change" */ '#/main/community/actions/user/password-change') },
       'password-reset' : () => { return import(/* webpackChunkName: "community-action-user-password-reset" */  '#/main/community/actions/user/password-reset') },
       'view-as'        : () => { return import(/* webpackChunkName: "community-action-user-view-as" */         '#/main/community/actions/user/view-as') },
-      'delete'         : () => { return import(/* webpackChunkName: "community-action-user-delete" */          '#/main/community/actions/user/delete') }
+      'delete'         : () => { return import(/* webpackChunkName: "community-action-user-delete" */          '#/main/community/actions/user/delete') },
+      'report'         : () => { return import(/* webpackChunkName: "community-action-user-report" */          '#/main/community/actions/user/report') }
     },
 
     group: {

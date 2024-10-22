@@ -1,0 +1,14 @@
+{
+  "disable_inactive_users_help": "Delete all users who have had no activity on your platform since a selected date.",
+
+  "notify_users": "Users to notify",
+
+  "reporting": "Reporting",
+  "reporting_help": "Manage user reports.",
+  "report_options": "Enable notification of report",
+  "report_options_help": "Allow choose who is notified when reporting.",
+
+  "user_profile_help": "Add custom fields to enrich your users' profiles.",
+  "user_reported": "Reported users",
+  "user_reported_help": "List of reported users"
+}

@@ -1,0 +1,14 @@
+{
+  "disable_inactive_users_help": "Supprimez tous les utilisateurs n'ayant pas eu d'activité sur votre plateforme depuis une date choisie.",
+
+  "notify_users": "Utilisateurs à notifier",
+
+  "reporting": "Signalement",
+  "reporting_help": "Gérez les signalements d'utilisateurs.",
+  "report_options": "Activer la notification des signalements",
+  "report_options_help": "Permet de choisir qui est notifié lors dun signalement.",
+
+  "user_profile_help": "Ajoutez des champs personnalisés pour enrichir le profil de vos utilisateurs.",
+  "user_reported": "Utilisateurs signalés",
+  "user_reported_help": "Liste des utilisateurs signalés"
+}

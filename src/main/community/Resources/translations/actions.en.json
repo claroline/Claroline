@@ -12,5 +12,6 @@
   "fill": "Fill",
   "empty": "Empty",
   "show_activity": "Show activity",
-  "choose_role": "Choose a role for users/groups"
+  "choose_role": "Choose a role for users/groups",
+  "report": "Report"
 }

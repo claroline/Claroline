@@ -24,7 +24,7 @@ const EditorProfile = props => {
   return (
     <EditorPage
       title={trans('user_profile')}
-      help={trans('Ajoutez des champs personnalisés pour enrichir le profil de vos utilisateurs.')}
+      help={trans('user_profile_help', {}, 'editor')}
     >
       <div className="row">
         <div className="col-md-4">
@@ -113,6 +113,7 @@ EditorProfile.propTypes = {
   loaded: T.bool.isRequired,
   contextType: T.string.isRequired,
   contextId: T.string,
+  profile: T.object,
   facets: T.arrayOf(T.shape({
     id: T.string.isRequired,
     title: T.string.isRequired
