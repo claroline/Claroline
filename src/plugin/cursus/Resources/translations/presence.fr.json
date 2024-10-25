@@ -30,8 +30,8 @@
   "presence_validation_date": "Date de validation par le formateur",
   "presence_info": "Moi, %user%, étais présent à la séance %event_title% du %event_datetime_start% au %event_datetime_end%.",
   "presence_validation": "Valider les statuts",
-  "presence_updated_by": "Statut mis à jour par",
-  "presence_updated_at": "Date de mise à jour",
+  "updated_by": "Statut mis à jour par",
+  "updated_at": "Date de mise à jour",
 
   "validate": "Valider",
   "validation": "Validation"

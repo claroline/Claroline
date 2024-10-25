@@ -53,9 +53,11 @@ class EventPresenceSerializer
             'status' => $eventPresence->getStatus(),
             'signature' => $eventPresence->getSignature(),
             'validation_date' => DateNormalizer::normalize($eventPresence->getValidationDate()),
-            'evidences' => $eventPresence->getEvidences(),
-            'presence_updated_by' => $eventPresence->getPresenceUpdatedBy() ? $this->userSerializer->serialize($eventPresence->getPresenceUpdatedBy(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
-            'presence_updated_at' => DateNormalizer::normalize($eventPresence->getPresenceUpdatedAt()),
+            'evidence' => $eventPresence->getEvidence(),
+            'meta' => [
+                'updatedBy' => $eventPresence->getUpdatedBy() ? $this->userSerializer->serialize($eventPresence->getUpdatedBy(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
+                'updatedAt' => DateNormalizer::normalize($eventPresence->getUpdatedAt()),
+            ],
             'evidence_added_by' => $eventPresence->getEvidenceAddedBy() ? $this->userSerializer->serialize($eventPresence->getEvidenceAddedBy(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             'evidence_added_at' => DateNormalizer::normalize($eventPresence->getEvidenceAddedAt()),
         ];
@@ -88,17 +90,19 @@ class EventPresenceSerializer
             $eventPresence->setUser($user);
         }
 
-        if (array_key_exists('evidences', $data)) {
-            $eventPresence->setEvidences($data['evidences'] ?? null);
+        if (array_key_exists('evidence', $data)) {
+            $eventPresence->setEvidence($data['evidence'] ?? null);
         }
 
-        if (isset($data['presence_updated_by'])) {
-            $updatedBy = $this->om->getRepository(User::class)->findOneBy(['uuid' => $data['presence_updated_by']['id']]);
-            $eventPresence->setPresenceUpdatedBy($updatedBy);
-        }
+        if (isset($data['meta'])) {
+            if (isset($data['meta']['updatedBy'])) {
+                $updatedBy = $this->om->getRepository(User::class)->findOneBy(['uuid' => $data['updatedBy']['id']]);
+                $eventPresence->setUpdatedBy($updatedBy);
+            }
 
-        if (isset($data['presence_updated_at'])) {
-            $eventPresence->setPresenceUpdatedAt(DateNormalizer::denormalize($data['presence_updated_at']));
+            if (isset($data['meta']['updatedAt'])) {
+                $eventPresence->setUpdatedAt(DateNormalizer::denormalize($data['meta']['updatedAt']));
+            }
         }
 
         if (isset($data['evidence_added_by'])) {

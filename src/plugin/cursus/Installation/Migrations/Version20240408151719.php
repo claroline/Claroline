@@ -16,7 +16,7 @@ final class Version20240408151719 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_cursusbundle_presence_status 
-            ADD evidences LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json)'
+            ADD evidence LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json)'
         ");
     }
 
@@ -24,7 +24,7 @@ final class Version20240408151719 extends AbstractMigration
     {
         $this->addSql('
             ALTER TABLE claro_cursusbundle_presence_status 
-            DROP evidences
+            DROP evidence
         ');
     }
 }

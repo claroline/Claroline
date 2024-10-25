@@ -93,8 +93,8 @@ class EventPresenceController
 
         $presence->setStatus(EventPresence::PRESENT);
         $presence->setSignature($signature);
-        $presence->setPresenceUpdatedBy($this->tokenStorage->getToken()->getUser());
-        $presence->setPresenceUpdatedAt(new \DateTime());
+        $presence->setUpdatedBy($this->tokenStorage->getToken()->getUser());
+        $presence->setUpdatedAt(new \DateTime());
 
         $this->om->persist($presence);
         $this->om->flush();
@@ -217,8 +217,8 @@ class EventPresenceController
 
             $this->manager->setStatus([$presence], $status);
 
-            $presence->setPresenceUpdatedBy($this->tokenStorage->getToken()->getUser());
-            $presence->setPresenceUpdatedAt(new \DateTime());
+            $presence->setUpdatedBy($this->tokenStorage->getToken()->getUser());
+            $presence->setUpdatedAt(new \DateTime());
         }
 
         $this->om->endFlushSuite();
@@ -267,20 +267,20 @@ class EventPresenceController
     }
 
     /**
-     * @Route("/{id}/evidences", name="apiv2_cursus_presence_evidence_upload", methods={"POST"})
+     * @Route("/{id}/evidence", name="apiv2_cursus_presence_evidence_upload", methods={"POST"})
      *
      * @EXT\ParamConverter("eventPresence", class="Claroline\CursusBundle\Entity\EventPresence", options={"mapping": {"id": "uuid"}})
      */
-    public function uploadEvidences(EventPresence $eventPresence, Request $request): JsonResponse
+    public function uploadEvidence(EventPresence $eventPresence, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $eventPresence, [], true);
 
         $files = $request->files->all();
 
-        $evidences = [];
+        $evidence = [];
         foreach ($files as $index => $file) {
             $evidenceFile = $this->manager->uploadEvidence($file, $eventPresence);
-            $evidences[] = [
+            $evidence[] = [
                 'type' => $evidenceFile->getMimeType(),
                 'mimeType' => $evidenceFile->getMimeType(),
                 'name' => $evidenceFile->getFilename(),
@@ -290,7 +290,7 @@ class EventPresenceController
             ];
         }
 
-        $eventPresence->setEvidences($evidences);
+        $eventPresence->setEvidence($evidence);
         $eventPresence->setEvidenceAddedBy($this->tokenStorage->getToken()->getUser());
         $eventPresence->setEvidenceAddedAt(new \DateTime());
 
@@ -301,7 +301,7 @@ class EventPresenceController
     }
 
     /**
-     * @Route("/{id}/evidences", name="apiv2_cursus_presence_evidence_delete", methods={"DELETE"})
+     * @Route("/{id}/evidence", name="apiv2_cursus_presence_evidence_delete", methods={"DELETE"})
      *
      * @EXT\ParamConverter("eventPresence", class="Claroline\CursusBundle\Entity\EventPresence", options={"mapping": {"id": "uuid"}})
      */
@@ -309,7 +309,7 @@ class EventPresenceController
     {
         $this->checkPermission('EDIT', $eventPresence, [], true);
 
-        $eventPresence->setEvidences(null);
+        $eventPresence->setEvidence(null);
 
         $this->om->persist($eventPresence);
         $this->om->flush();
@@ -318,7 +318,7 @@ class EventPresenceController
     }
 
     /**
-     * @Route("/{id}/evidences", name="apiv2_cursus_presence_evidence_download", methods={"GET"})
+     * @Route("/{id}/evidence", name="apiv2_cursus_presence_evidence_download", methods={"GET"})
      *
      * @EXT\ParamConverter("eventPresence", class="Claroline\CursusBundle\Entity\EventPresence", options={"mapping": {"id": "uuid"}})
      */

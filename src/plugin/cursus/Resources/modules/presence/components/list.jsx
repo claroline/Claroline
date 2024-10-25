@@ -46,26 +46,22 @@ const Presences = props => {
           ),
           displayed: true
         }, {
-          name: 'presence_updated_by',
+          name: 'meta.updatedBy',
           type: 'user',
-          label: trans('presence_updated_by', {}, 'presence'),
-          displayed: true
+          label: trans('updated_by', {}, 'presence'),
+          displayed: false
         }, {
-          name: 'presence_updated_at',
+          name: 'meta.updatedAt',
           type: 'date',
-          label: trans('presence_updated_at', {}, 'presence'),
-          displayed: true,
-          options: {
-            time: true
-          }
+          label: trans('updated_at', {}, 'presence'),
+          displayed: false,
+          options: {time: true}
         },{
           name: 'validation_date',
           type: 'date',
           label: trans('presence_confirmation_date', {}, 'presence'),
           displayed: true,
-          options: {
-            time: true
-          }
+          options: {time: true}
         }, {
           name: 'evidences',
           type: 'number',

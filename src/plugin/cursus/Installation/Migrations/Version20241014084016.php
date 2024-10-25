@@ -16,16 +16,16 @@ final class Version20241014084016 extends AbstractMigration
     {
         $this->addSql('
             ALTER TABLE claro_cursusbundle_presence_status 
-            ADD presence_updated_by INT DEFAULT NULL, 
-            ADD presence_updated_at DATETIME DEFAULT NULL
+            ADD updatedBy INT DEFAULT NULL, 
+            ADD updatedAt DATETIME DEFAULT NULL
         ');
         $this->addSql('
             ALTER TABLE claro_cursusbundle_presence_status 
-            ADD CONSTRAINT FK_DFE5E1FE349A94C7 FOREIGN KEY (presence_updated_by) 
+            ADD CONSTRAINT FK_DFE5E1FE349A94C7 FOREIGN KEY (updatedBy) 
             REFERENCES claro_user (id)
         ');
         $this->addSql('
-            CREATE INDEX IDX_DFE5E1FE349A94C7 ON claro_cursusbundle_presence_status (presence_updated_by)
+            CREATE INDEX IDX_DFE5E1FE349A94C7 ON claro_cursusbundle_presence_status (updatedBy)
         ');
     }
 
@@ -40,8 +40,8 @@ final class Version20241014084016 extends AbstractMigration
         ');
         $this->addSql('
             ALTER TABLE claro_cursusbundle_presence_status 
-            DROP presence_updated_by, 
-            DROP presence_updated_at
+            DROP updatedBy, 
+            DROP updatedAt
         ');
     }
 }

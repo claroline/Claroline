@@ -30,8 +30,8 @@
   "presence_validation_date": "Validation date by tutor",
   "presence_info": "Me, %user%, was present at the event %event_title% from %event_date_start% to %event_date_end%.",
   "presence_validation": "Validate status",
-  "presence_updated_by": "Status updated by",
-  "presence_updated_at": "Update date",
+  "updated_by": "Status updated by",
+  "updated_at": "Update date",
 
   "validate": "Validate",
   "validation": "Validation"
