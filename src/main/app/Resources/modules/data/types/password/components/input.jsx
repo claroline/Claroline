@@ -30,7 +30,9 @@ class PasswordInput extends PureComponent {
   }
 
   componentDidMount() {
-    this.checkValidPassword(this.props.value)
+    if (this.props.value) {
+      this.checkValidPassword(this.props.value)
+    }
   }
 
   onChange(e) {
