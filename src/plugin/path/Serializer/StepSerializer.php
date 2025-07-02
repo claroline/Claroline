@@ -110,10 +110,14 @@ class StepSerializer
                 $secondaryResource->setOrder($index);
 
                 /** @var ResourceNode $resource */
-                $resource = $this->resourceNodeRepo->findOneBy(['uuid' => $resourceData['id']]);
-                $secondaryResource->setResource($resource);
+		$resource = $this->resourceNodeRepo->findOneBy(['uuid' => $resourceData['id']]);
+		if (!empty($resource)) {
+		    $secondaryResource = new SecondaryResource();
+                    $secondaryResource->setOrder($index);
+                    $secondaryResource->setResource($resource);
 
-                $step->addSecondaryResource($secondaryResource);
+                    $step->addSecondaryResource($secondaryResource);
+		}
             }
         }
 
