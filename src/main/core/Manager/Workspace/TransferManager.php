@@ -40,7 +40,7 @@ class TransferManager implements LoggerAwareInterface
         $archive = new \ZipArchive();
         $archive->open($archivePath);
 
-        $fp = $archive->getStreamName('workspace.json', \ZipArchive::FL_UNCHANGED);
+        $fp = $archive->getStream('workspace.json');
         $json = stream_get_contents($fp);
         fclose($fp);
 
