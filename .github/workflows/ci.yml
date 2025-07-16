@@ -92,7 +92,7 @@ jobs:
           extensions: pdo_mysql
 
       - name: "Cache composer dependencies"
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: "~/.composer/cache"
           key: composer-${{ hashFiles('**/composer.json') }}
@@ -105,7 +105,7 @@ jobs:
         run: composer install --no-interaction
 
       - name: "Cache node modules"
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: npm-${{ hashFiles('**/package.json') }}
