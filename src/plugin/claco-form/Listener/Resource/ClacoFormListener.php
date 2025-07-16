@@ -185,6 +185,9 @@ class ClacoFormListener
             }
         }
 
+        // we need to push the fields in DB to be able to import the categories conditions
+        $this->om->forceFlush();
+
         // get decoded data with new UUIDs
         $data = json_decode($rawData, true);
         if (!empty($data['categories'])) {

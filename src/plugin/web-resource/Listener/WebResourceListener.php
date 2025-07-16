@@ -93,7 +93,9 @@ class WebResourceListener
 
         $path = $this->uploadDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$webResource->getHashName();
 
-        $event->addFile($webResource->getHashName(), $path);
+        if (file_exists($path)) {
+            $event->addFile($webResource->getHashName(), $path);
+        }
     }
 
     public function onImport(ImportResourceEvent $event)
@@ -105,8 +107,11 @@ class WebResourceListener
 
         $filesPath = $this->uploadDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$webResource->getHashName();
 
-        $fileSystem = new Filesystem();
-        $fileSystem->mirror($bag->get($webResource->getHashName()), $filesPath);
+        $toCopy = $bag->get($webResource->getHashName());
+        if (file_exists($toCopy)) {
+            $fileSystem = new Filesystem();
+            $fileSystem->mirror($toCopy, $filesPath);
+        }
     }
 
     public function onDelete(DeleteResourceEvent $event)

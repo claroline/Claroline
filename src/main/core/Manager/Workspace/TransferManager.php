@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\FileManager;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Ramsey\Uuid\Uuid;
@@ -39,8 +40,20 @@ class TransferManager implements LoggerAwareInterface
         $archive = new \ZipArchive();
         $archive->open($archivePath);
 
-        $json = $archive->getFromName('workspace.json');
-        $data = json_decode($json, true);
+        $fp = $archive->getStream('workspace.json');
+        $json = stream_get_contents($fp);
+        fclose($fp);
+
+        if (empty($json)) {
+            throw new InvalidDataException('Cannot read content from "workspace.json".');
+        }
+
+        try {
+            $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            throw new InvalidDataException(sprintf('Cannot decode content from "workspace.json" : %s', $e->getMessage()));
+        }
+
         // todo : put it in an event
         $data = $this->replaceResourceIds($data);
 

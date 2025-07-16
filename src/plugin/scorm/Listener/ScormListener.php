@@ -132,8 +132,11 @@ class ScormListener
         /** @var Scorm $scorm */
         $scorm = $event->getResource();
 
-        // get the file path
-        $event->addFile($scorm->getHashName(), $this->getScormArchive($scorm));
+        $archivePath = $this->getScormArchive($scorm);
+
+        if (file_exists($archivePath)) {
+            $event->addFile($scorm->getHashName(), $archivePath);
+        }
     }
 
     public function onImport(ImportResourceEvent $event)
@@ -214,6 +217,9 @@ class ScormListener
         }
 
         $uploadArchiveLocation = $this->uploadDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$scorm->getHashName();
+        if (!file_exists($uploadArchiveLocation)) {
+            return null;
+        }
 
         if (!is_dir($this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid())) {
             mkdir($this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid());

@@ -31,7 +31,7 @@ class ArchiveManager
 
         if ($fileBag) {
             foreach ($fileBag->all() as $archPath => $realPath) {
-                if (file_exists($realPath)) {
+                if (is_file($realPath)) {
                     $archive->addFile($realPath, $archPath);
                 }
             }
