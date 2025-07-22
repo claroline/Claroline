@@ -1,6 +1,6 @@
 Claroline\InstallationBundle\ClarolineInstallationBundle = true
-Claroline\TemplateBundle\ClarolineTemplateBundle = true
 Claroline\CoreBundle\ClarolineCoreBundle = true
+Claroline\TemplateBundle\ClarolineTemplateBundle = true
 Claroline\NotificationBundle\ClarolineNotificationBundle = true
 Claroline\ThemeBundle\ClarolineThemeBundle = true
 Claroline\CommunityBundle\ClarolineCommunityBundle = true
