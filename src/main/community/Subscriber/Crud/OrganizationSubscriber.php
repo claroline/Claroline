@@ -105,7 +105,7 @@ final class OrganizationSubscriber implements EventSubscriberInterface
         }
 
         $this->messageBus->dispatch(
-            new ReassignOrganization($this->organizationManager->getDefault()),
+            new ReassignOrganization($this->organizationManager->getDefault()->getId()),
             [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]
         );
     }

@@ -8,15 +8,15 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 class ReassignOrganization implements AsyncLowMessageInterface
 {
     public function __construct(
-        private readonly Organization $organization
+        private readonly int $organizationId
     ) {
     }
 
     /**
-     * Return the organization to use as a replacement.
+     * Return the id of the organization to use as a replacement.
      */
-    public function getOrganization(): Organization
+    public function getOrganizationId(): int
     {
-        return $this->organization;
+        return $this->organizationId;
     }
 }
