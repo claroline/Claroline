@@ -41,16 +41,16 @@ class UserRepositoryTest extends RepositoryTestCase
         self::createGroup('group_2', [self::get('jane'), self::get('bill'), self::get('bob')]);
     }
 
-    public function testLoadUserByUsernameOnUnknownUsername(): void
+    public function testLoadUserByIdentifierOnUnknownUsername(): void
     {
         $this->expectException(UserNotFoundException::class);
 
-        self::$repo->loadUserByUsername('unknown_user');
+        self::$repo->loadUserByIdentifier('unknown_user');
     }
 
-    public function testLoadUserByUsername(): void
+    public function testLoadUserByIdentifier(): void
     {
-        $user = self::$repo->loadUserByUsername('john');
+        $user = self::$repo->loadUserByIdentifier('john');
         $this->assertEquals(self::get('john'), $user);
     }
 

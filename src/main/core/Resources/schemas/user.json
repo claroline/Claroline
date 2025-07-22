@@ -7,7 +7,7 @@
       "description": "The user id"
     },
     "email": {
-      "type": "string",
+      "type": ["string", "null"],
       "description": "The user email address",
       "minLength": 1
     },

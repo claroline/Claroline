@@ -34,7 +34,7 @@ class ResourceRightsRepositoryTest extends RepositoryTestCase
         self::createDirectory('dir_2', self::get('t_dir'), self::get('john'), self::get('ws_1'), self::get('dir_1'));
         self::createResourceRights(self::get('ROLE_1'), self::get('dir_1'), 3);
         self::createResourceRights(self::get('ROLE_1'), self::get('dir_2'), 1);
-        self::createResourceRights(self::get('ROLE_2'), self::get('dir_1'), 33, [self::get('t_dir')]);
+        self::createResourceRights(self::get('ROLE_2'), self::get('dir_1'), 33, ['t_dir']);
     }
 
     public function testFindMaximumRights(): void

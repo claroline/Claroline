@@ -90,8 +90,11 @@ class ResourceRightsRepository extends EntityRepository
             $query->setParameter('role_'.$key, $role);
         }
 
-        return array_reduce($query->getArrayResult(), function (array $result, array $item) {
-            return array_merge($result, $item['creatableTypes']);
-        }, []);
+        $creation = [];
+        foreach ($query->getArrayResult() as $result) {
+            $creation = array_merge($creation, $result['creatableTypes']);
+        }
+
+        return array_unique($creation);
     }
 }

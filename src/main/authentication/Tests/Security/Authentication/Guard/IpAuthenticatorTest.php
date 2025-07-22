@@ -4,41 +4,29 @@ namespace Claroline\AuthenticationBundle\Tests\Security\Authentication\Guard;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Entity\IpUser;
-use Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator;
+use Claroline\AuthenticationBundle\Security\Authentication\IpAuthenticator;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Doctrine\ORM\EntityRepository;
-use Mockery;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\NullToken;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 
 class IpAuthenticatorTest extends MockeryTestCase
 {
-    public function testSupports()
+    public function testSupports(): void
     {
         $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
 
         $this->assertTrue($authenticator->supports(new Request()));
     }
 
-    public function testGetCredentials()
+    public function testAuthenticate(): void
     {
-        $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
-
-        $request = $this->mock(Request::class);
-        $request->shouldReceive('getClientIp')->andReturn('127.0.0.1');
-
-        $this->assertSame('127.0.0.1', $authenticator->getCredentials($request));
-    }
-
-    public function testGetUser()
-    {
-        Mockery::getConfiguration()->allowMockingNonExistentMethods(true);
+        \Mockery::getConfiguration()->allowMockingNonExistentMethods(true);
 
         $user = new User();
+        $user->setUsername('john.doe');
 
         $ipUser = new IpUser();
         $ipUser->setUser($user);
@@ -50,8 +38,9 @@ class IpAuthenticatorTest extends MockeryTestCase
         $om->shouldReceive('getRepository')->with(IpUser::class)->andReturn($ipUserRepository);
 
         $authenticator = new IpAuthenticator($om);
+        $passport = $authenticator->authenticate(new Request([], [], [], [], [], ['REMOTE_ADDR' => '127.0.0.1']));
 
-        $this->assertSame($user, $authenticator->getUser('127.0.0.1', $this->mock(UserProviderInterface::class)));
+        $this->assertSame($user, $passport->getUser());
     }
 
     public function testOnAuthenticationSuccess()
@@ -59,7 +48,7 @@ class IpAuthenticatorTest extends MockeryTestCase
         $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
 
         $this->assertNull(
-            $authenticator->onAuthenticationSuccess(new Request(), new PostAuthenticationGuardToken(new User(), 'test', []), 'test')
+            $authenticator->onAuthenticationSuccess(new Request(), new NullToken(), 'test')
         );
     }
 
@@ -70,18 +59,5 @@ class IpAuthenticatorTest extends MockeryTestCase
         $this->assertNull(
             $authenticator->onAuthenticationFailure(new Request(), new AuthenticationException())
         );
-    }
-
-    public function testStart()
-    {
-        $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
-
-        $this->assertEquals(new RedirectResponse('/'), $authenticator->start(new Request()));
-    }
-
-    public function testSupportsRememberMe()
-    {
-        $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
-        $this->assertFalse($authenticator->supportsRememberMe());
     }
 }

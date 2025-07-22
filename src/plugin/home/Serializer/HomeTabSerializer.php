@@ -67,9 +67,6 @@ class HomeTabSerializer
                     return $this->roleSerializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
                 }, $homeTab->getRoles()->toArray()),
             ],
-            'display' => [
-                'color' => $homeTab->getColor(),
-            ],
 
             // TODO : should no longer be exposed here (still required by update and ws import)
             'children' => array_map(function (HomeTab $child) use ($options) {
@@ -113,8 +110,6 @@ class HomeTabSerializer
         $this->sipe('icon', 'setIcon', $data, $homeTab);
         $this->sipe('type', 'setType', $data, $homeTab);
         $this->sipe('class', 'setClass', $data, $homeTab);
-        $this->sipe('display.color', 'setColor', $data, $homeTab);
-        //$this->sipe('display.centerTitle', 'setCenterTitle', $data, $homeTab);
 
         if (isset($data['restrictions'])) {
             $this->sipe('restrictions.code', 'setAccessCode', $data, $homeTab);

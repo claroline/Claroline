@@ -29,8 +29,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Base test case for repository testing. Provides fixture methods intended to be
- * called during the test case class set up, so that all the writing operations are
- * done once per test case. Created objects are stored in a internal collection
+ * called during the test case class setup, so that all the writing operations are
+ * done once per test case. Created objects are stored in an internal collection
  * and can be retrieved in every test using a getter.
  */
 abstract class RepositoryTestCase extends WebTestCase
@@ -38,7 +38,6 @@ abstract class RepositoryTestCase extends WebTestCase
     private static $om;
     public static $client;
     private static $references;
-    private static $time;
     private static Persister $persister;
 
     public static function setUpBeforeClass(): void
@@ -73,10 +72,6 @@ abstract class RepositoryTestCase extends WebTestCase
 
     /**
      * Returns a reference previously stored by a fixture method.
-     *
-     * @param string $reference
-     *
-     * @return object
      *
      * @throws \InvalidArgumentException if the reference is not present in the collection
      */
@@ -208,7 +203,7 @@ abstract class RepositoryTestCase extends WebTestCase
             $parent->getResourceNode()
         );
         $file->setSize(123);
-        $file->setHashName($name);
+        $file->setUrl($name);
         self::create($name, $file);
     }
 
@@ -298,7 +293,7 @@ abstract class RepositoryTestCase extends WebTestCase
     {
         $eventManager = self::$om->getEventManager();
 
-        foreach ($eventManager->getListeners() as $listeners) {
+        foreach ($eventManager->getAllListeners() as $listeners) {
             foreach ($listeners as $listener) {
                 if ($listener instanceof TimestampableListener) {
                     $eventManager->removeEventSubscriber($listener);
@@ -309,9 +304,6 @@ abstract class RepositoryTestCase extends WebTestCase
 
     /**
      * Stores an entity in the reference collection.
-     *
-     * @param string $reference
-     * @param object $entity
      *
      * @throws \InvalidArgumentException if the reference is already set
      */
@@ -326,9 +318,6 @@ abstract class RepositoryTestCase extends WebTestCase
 
     /**
      * Persists an entity and stores it in the reference collection.
-     *
-     * @param string $reference
-     * @param object $entity
      */
     private static function create(string $reference, object $entity): void
     {

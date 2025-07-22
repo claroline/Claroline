@@ -13,10 +13,6 @@ const Tab = {
     class: T.string.isRequired,
     poster: T.string,
     position: T.number,
-    display: T.shape({
-      color: T.string,
-      centerTitle: T.bool
-    }),
     restrictions: T.shape({
       hidden: T.bool,
       roles: T.arrayOf(T.shape(
@@ -29,9 +25,6 @@ const Tab = {
   defaultProps: {
     icon: null,
     poster: null,
-    display: {
-      centerTitle: false
-    },
     restrictions: {
       hidden: false,
       roles: []

@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 
 /**
- * The plugin loader is used to instantiate a plugin bundle class (in order to
+ * The plugin loader is used to instantiate a plugin bundle class (to
  * perform checks, access some of its methods, etc.) while it is not yet
  * known by the application kernel.
  */

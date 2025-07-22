@@ -3,8 +3,8 @@ imports:
 
 framework:
     test: true
-    csrf_protection: false
     session:
-        handler_id: session.storage.mock_file
+        handler_id: null
+        storage_factory_id: session.storage.factory.mock_file
     profiler:
         enabled: false

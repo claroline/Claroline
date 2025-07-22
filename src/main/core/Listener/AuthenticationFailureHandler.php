@@ -40,9 +40,6 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
         $this->objectManager = $objectManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         $authData = $this->decodeRequest($request);
@@ -59,7 +56,7 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
     private function dispatchAuthenticationFailureEvent(string $username, string $message): void
     {
         try {
-            $user = $this->objectManager->getRepository(User::class)->loadUserByUsername($username);
+            $user = $this->objectManager->getRepository(User::class)->loadUserByIdentifier($username);
         } catch (\Exception $e) {
             $user = $username;
         }

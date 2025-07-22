@@ -29,14 +29,12 @@ class FixtureLoader implements LoggerAwareInterface
     private ContainerInterface $container;
     private Environment $twig;
     private ORMExecutor $executor;
-    private Loader $loader;
 
     public function __construct(ContainerInterface $container, ORMExecutor $executor, Environment $twig)
     {
         $this->container = $container;
         $this->executor = $executor;
         $this->twig = $twig;
-        $this->loader = new Loader();
     }
 
     /**
@@ -48,10 +46,10 @@ class FixtureLoader implements LoggerAwareInterface
     {
         // we must get a fresh instance of the loader (scope = prototype)
         // to avoid re-executing previously loaded fixtures
-        //$loader = $this->container->get('claroline.symfony_fixture_loader');
-        $this->loader->loadFromDirectory("{$bundle->getPath()}/Installation/DataFixtures");
+        $loader = new Loader();
+        $loader->loadFromDirectory("{$bundle->getPath()}/Installation/DataFixtures");
 
-        $fixtures = $this->loader->getFixtures();
+        $fixtures = $loader->getFixtures();
 
         $toLoad = [];
         foreach ($fixtures as $fixture) {

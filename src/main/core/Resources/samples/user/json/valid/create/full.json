@@ -14,7 +14,7 @@
         "code": "123"
     },
     "meta": {
-        "acceptedTerms": null,
+        "acceptedTerms": false,
         "lastActivity": "2017-12-06T07:02:51",
         "created": "2017-12-03T10:46:22",
         "description": "gdgf",

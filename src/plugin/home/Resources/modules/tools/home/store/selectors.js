@@ -18,7 +18,6 @@ const defaultTab = createSelector(
     title: trans('home'),
     longTitle: trans('home'),
     slug: 'default',
-    centerTitle: false,
     position: 0,
     restrictions: {
       hidden: false

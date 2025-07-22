@@ -30,6 +30,8 @@ class OrganizationVoter extends AbstractVoter
 
         switch ($attributes[0]) {
             case self::CREATE:
+            case self::ADMINISTRATE:
+            case self::DELETE:
                 if ($this->isGranted(PlatformRoles::ADMIN)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
@@ -41,12 +43,12 @@ class OrganizationVoter extends AbstractVoter
                 break;
             case self::EDIT:
             case self::PATCH:
-                if ($currentUser->hasOrganization($object, true)) {
+                if ($currentUser instanceof User
+                    && ($currentUser->hasOrganization($object, true) || $this->isToolGranted('EDIT', 'community'))
+                ) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
-                if ($currentUser instanceof User && $this->isToolGranted('EDIT', 'community')) {
-                    return VoterInterface::ACCESS_GRANTED;
-                }
+
                 break;
         }
 
@@ -60,6 +62,6 @@ class OrganizationVoter extends AbstractVoter
 
     public function getSupportedActions(): array
     {
-        return [self::CREATE, self::OPEN, self::CREATE, self::EDIT, self::PATCH];
+        return [self::CREATE, self::OPEN, self::CREATE, self::EDIT, self::ADMINISTRATE, self::PATCH];
     }
 }

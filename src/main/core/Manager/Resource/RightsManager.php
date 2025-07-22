@@ -132,9 +132,9 @@ class RightsManager
     public function isManager(ResourceNode $resourceNode): bool
     {
         $token = $this->tokenStorage->getToken();
-        $roleNames = $token->getRoleNames();
+        $roleNames = $token?->getRoleNames() ?? [];
 
-        if (!$token->getUser() instanceof User) {
+        if (!$token?->getUser() instanceof User) {
             return false;
         }
 

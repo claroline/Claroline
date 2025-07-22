@@ -64,9 +64,9 @@ class UserSerializer
         $showEmail = empty($showEmailRoles);
         if ($token && !empty($showEmailRoles)) {
             $isOwner = $token->getUser() instanceof User && $token->getUser()->getId() === $user->getId();
-            $showEmail = $isOwner || !empty(array_filter($token->getRoleNames(), function (string $role) use ($showEmailRoles) {
-                    return 'ROLE_ADMIN' === $role || in_array($role, $showEmailRoles);
-                }));
+            $showEmail = $isOwner || !empty(array_filter($token?->getRoleNames() ?? [], function (string $role) use ($showEmailRoles) {
+                return 'ROLE_ADMIN' === $role || in_array($role, $showEmailRoles);
+            }));
         }
 
         if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {

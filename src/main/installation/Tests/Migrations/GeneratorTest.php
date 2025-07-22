@@ -13,6 +13,7 @@ namespace Claroline\InstallationBundle\Tests\Migrations;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\InstallationBundle\Migrations\Generator;
+use Doctrine\DBAL\Schema\Comparator;
 use Mockery as m;
 use Mockery\MockInterface;
 
@@ -51,11 +52,18 @@ class GeneratorTest extends MockeryTestCase
         );
         $generator->shouldReceive('getSchemas')->once()->andReturn($schemas);
 
+        $platform = m::mock('Doctrine\DBAL\Platforms\AbstractPlatform');
+        $schemaManager = m::mock('Doctrine\DBAL\Schema\AbstractSchemaManager');
+        $connection = m::mock('Doctrine\DBAL\Connection');
+        $connection->shouldReceive('createSchemaManager')->once()->andReturn($schemaManager);
+        $schemaManager->shouldReceive('createComparator')->once()->andReturn(new Comparator($platform));
+        $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
+
         // data set up
         $tableA = m::mock('Doctrine\DBAL\Schema\Table');
         $tableB = m::mock('Doctrine\DBAL\Schema\Table');
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
-        $platform = m::mock('Doctrine\DBAL\Platforms\AbstractPlatform');
+
         $tableA->shouldReceive('getName')->andReturn('table_a');
         $tableB->shouldReceive('getName')->andReturn('table_b');
         $bundle->shouldReceive('getNamespace')->andReturn('Bar');
@@ -65,17 +73,22 @@ class GeneratorTest extends MockeryTestCase
         $this->entityBMetadata->shouldReceive('getTableName')->andReturn('table_b');
 
         $this->fromSchema->shouldReceive('getTables')->once()->andReturn([$tableA]);
+        $this->fromSchema->shouldReceive('getNamespaces')->andReturn(['Bar']);
+        $this->fromSchema->shouldReceive('hasNamespace')->with('Bar')->andReturn(true);
+
         $this->toSchema->shouldReceive('getTables')->once()->andReturn([$tableA, $tableB]);
+        $this->toSchema->shouldReceive('getNamespaces')->andReturn(['Bar']);
+        $this->toSchema->shouldReceive('hasNamespace')->with('Bar')->andReturn(true);
 
         // only tables belonging to the target bundle must be kept
         $this->fromSchema->shouldReceive('dropTable')->once()->with('table_a');
         $this->toSchema->shouldReceive('dropTable')->once()->with('table_a');
 
-        $this->fromSchema->shouldReceive('getMigrateToSql')
+        $platform->shouldReceive('getAlterSchemaSQL')
             ->once()
             ->with($this->toSchema, $platform)
             ->andReturn(['CREATE TABLE table_b']);
-        $this->fromSchema->shouldReceive('getMigrateFromSql')
+        $platform->shouldReceive('getAlterSchemaSQL')
             ->once()
             ->with($this->toSchema, $platform)
             ->andReturn(['DROP TABLE table_b']);

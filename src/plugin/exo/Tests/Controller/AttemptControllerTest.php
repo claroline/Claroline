@@ -8,8 +8,6 @@ use Claroline\CoreBundle\Library\Testing\RequestTrait;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Hint;
-use UJM\ExoBundle\Entity\Item\Item;
-use UJM\ExoBundle\Entity\Misc\Choice;
 use UJM\ExoBundle\Library\Attempt\PaperGenerator;
 use UJM\ExoBundle\Library\Testing\Persister;
 use UJM\ExoBundle\Manager\AttemptManager;
@@ -21,27 +19,14 @@ class AttemptControllerTest extends TransactionalTestCase
 {
     use RequestTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var PaperGenerator */
-    private $paperGenerator;
-    private ?Persister $persist = null;
-    /** @var AttemptManager */
-    private $attemptManager;
-    /** @var User */
-    private $john;
-    /** @var User */
-    private $bob;
-    /** @var Choice */
-    private $ch1;
-    /** @var Choice */
-    private $ch2;
-    /** @var Item */
-    private $qu1;
-    /** @var Hint */
-    private $hi1;
-    /** @var Exercise */
-    private $ex1;
+    private ?ObjectManager $om;
+    private ?PaperGenerator $paperGenerator;
+    private ?Persister $persist;
+    private ?AttemptManager $attemptManager;
+    private ?User $john;
+    private ?User $bob;
+    private ?Hint $hi1;
+    private ?Exercise $ex1;
 
     protected function setUp(): void
     {
@@ -55,11 +40,11 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->john = $this->persist->user('john');
         $this->bob = $this->persist->user('bob');
 
-        $this->ch1 = $this->persist->qcmChoice('ch1', 1, 1);
-        $this->ch2 = $this->persist->qcmChoice('ch2', 2, 0);
-        $this->qu1 = $this->persist->choiceQuestion('qu1', [$this->ch1, $this->ch2]);
-        $this->hi1 = $this->persist->hint($this->qu1, 'hi1');
-        $this->ex1 = $this->persist->exercise('ex1', [$this->qu1], $this->john);
+        $ch1 = $this->persist->qcmChoice('ch1', 1, 1);
+        $ch2 = $this->persist->qcmChoice('ch2', 2, 0);
+        $qu1 = $this->persist->choiceQuestion('qu1', [$ch1, $ch2]);
+        $this->hi1 = $this->persist->hint($qu1, 'hi1');
+        $this->ex1 = $this->persist->exercise('ex1', [$qu1], $this->john);
 
         // Set up Exercise permissions
         // create 'open' mask in db
@@ -76,13 +61,13 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->flush();
     }
 
-    public function testAnonymousAttempt()
+    public function testAnonymousAttempt(): void
     {
         $this->request('POST', "/exercises/{$this->ex1->getUuid()}/attempts");
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testNewAttempt()
+    public function testNewAttempt(): void
     {
         $this->request('POST', "/exercises/{$this->ex1->getUuid()}/attempts", $this->john);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -93,7 +78,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertTrue(property_exists($content, 'structure'));
     }
 
-    public function testContinueAttempt()
+    public function testContinueAttempt(): void
     {
         $this->markTestIncomplete(
             'This test has not been implemented yet.'
@@ -101,10 +86,10 @@ class AttemptControllerTest extends TransactionalTestCase
     }
 
     /**
-     * Checks that a basic user (ie not admin of the resource)
-     * Can not make a new attempt if max attempts is reached.
+     * Checks that a basic user (i.e., not admin of the resource)
+     * Cannot make a new attempt if max attempts is reached.
      */
-    public function testAttemptMaxAttemptsReached()
+    public function testAttemptMaxAttemptsReached(): void
     {
         // set exercise max attempts
         $this->ex1->setMaxAttempts(1);
@@ -125,10 +110,10 @@ class AttemptControllerTest extends TransactionalTestCase
     }
 
     /**
-     * Checks that an admin user (ie admin of the resource)
+     * Checks that an admin user (i.e., admin of the resource)
      * Can make a new attempt even if max attempts is reached.
      */
-    public function testAttemptMaxAttemptsReachedAdmin()
+    public function testAttemptMaxAttemptsReachedAdmin(): void
     {
         // set exercise max attempts
         $this->ex1->setMaxAttempts(1);
@@ -150,7 +135,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertIsObject($content);
     }
 
-    public function testAnonymousSubmit()
+    public function testAnonymousSubmit(): void
     {
         $pa1 = $this->paperGenerator->create($this->ex1, $this->john);
         $this->om->persist($pa1);
@@ -160,7 +145,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testSubmitAfterPaperEnd()
+    public function testSubmitAfterPaperEnd(): void
     {
         $pa1 = $this->paperGenerator->create($this->ex1, $this->john);
         $date = new \DateTime();
@@ -174,7 +159,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testSubmitByNotPaperUser()
+    public function testSubmitByNotPaperUser(): void
     {
         $pa1 = $this->paperGenerator->create($this->ex1, $this->john);
         $this->om->persist($pa1);
@@ -193,7 +178,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testSubmitInvalidData()
+    public function testSubmitInvalidData(): void
     {
         $this->markTestIncomplete(
             'This test has not been implemented yet. This needs to use a data provider to submit answers of all types.'
@@ -206,7 +191,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertTrue(count($content) > 0);
     }
 
-    public function testFinishPaperByNotPaperUser()
+    public function testFinishPaperByNotPaperUser(): void
     {
         $pa1 = $this->paperGenerator->create($this->ex1, $this->john);
         $this->om->persist($pa1);
@@ -216,7 +201,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testFinishPaper()
+    public function testFinishPaper(): void
     {
         $pa1 = $this->paperGenerator->create($this->ex1, $this->john);
         $this->om->persist($pa1);
@@ -236,7 +221,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertIsObject($content);
     }
 
-    public function testHint()
+    public function testHint(): void
     {
         $pa1 = $this->paperGenerator->create($this->ex1, $this->john);
 
@@ -255,7 +240,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertEquals('hi1', $hintData->value);
     }
 
-    public function testAnonymousHint()
+    public function testAnonymousHint(): void
     {
         $pa1 = $this->paperGenerator->create($this->ex1, $this->john);
         $this->om->persist($pa1);
@@ -265,7 +250,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testHintAfterPaperEnd()
+    public function testHintAfterPaperEnd(): void
     {
         $pa1 = $this->paperGenerator->create($this->ex1, $this->john);
         $date = new \DateTime();
@@ -279,7 +264,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testHintByNotPaperUser()
+    public function testHintByNotPaperUser(): void
     {
         $pa1 = $this->paperGenerator->create($this->ex1, $this->john);
         $this->om->persist($pa1);
@@ -289,7 +274,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testHintNotRelatedToPaper()
+    public function testHintNotRelatedToPaper(): void
     {
         // Create an hint not linked to paper
         $hint = $this->persist->hint($this->persist->openQuestion('question'), 'hint 2');
@@ -309,7 +294,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertTrue(count($content) > 0);
     }
 
-    public function testHintNotRelatedToQuestion()
+    public function testHintNotRelatedToQuestion(): void
     {
         // Add a new question in the exercise
         $question = $this->persist->openQuestion('open');

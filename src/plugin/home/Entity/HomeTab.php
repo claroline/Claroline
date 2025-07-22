@@ -11,7 +11,6 @@
 
 namespace Claroline\HomeBundle\Entity;
 
-use Claroline\AppBundle\Entity\Display\Color;
 use Claroline\AppBundle\Entity\Display\Hidden;
 use Claroline\AppBundle\Entity\Display\Icon;
 use Claroline\AppBundle\Entity\Display\Order;
@@ -37,7 +36,6 @@ class HomeTab
     // display
     use Order;
     use Poster;
-    use Color;
     use Icon;
     use Hidden;
     // restrictions
