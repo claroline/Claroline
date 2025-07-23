@@ -11,6 +11,7 @@ use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Manager\SequenceEvaluationManager;
@@ -159,9 +160,13 @@ class SequenceController extends AbstractCrudController
         }, $processed));
     }
 
-    #[Route(path: '/copy', name: 'copy', methods: ['POST'])]
-    public function copyAction(Request $request, #[MapQueryParameter] ?bool $copyResources = false): JsonResponse
-    {
+    #[Route(path: '/copy/{workspaceId}', name: 'copy', methods: ['POST'])]
+    public function copyAction(
+        Request $request,
+        #[MapEntity(mapping: ['workspaceId' => 'uuid'])]
+        Workspace $workspace,
+        #[MapQueryParameter] ?bool $copyResources = false
+    ): JsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         $sequenceIds = $this->decodeRequest($request);
@@ -174,7 +179,7 @@ class SequenceController extends AbstractCrudController
 
         foreach ($toCopy as $sequence) {
             if ($this->checkPermission('EDIT', $sequence)) {
-                $this->crud->copy($sequence, $options);
+                $this->crud->copy($sequence, $options, ['workspace' => $workspace]);
             }
         }
 

@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Finder\AbstractType;
 use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
 use Claroline\AppBundle\API\Finder\Type\BooleanType;
 use Claroline\AppBundle\API\Finder\Type\CreatorType;
+use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\PublicType;
 use Claroline\AppBundle\API\Finder\Type\RelatedEntityType;
@@ -31,6 +32,8 @@ class SequenceType extends AbstractType
             ->add('description', TextType::class)
             ->add('published', BooleanType::class)
             ->add('public', PublicType::class)
+            ->add('createdAt', DateType::class)
+            ->add('updatedAt', DateType::class)
             ->add('creator', CreatorType::class)
             ->add('workspace', RelatedEntityType::class)
             // for evaluations

@@ -4,6 +4,7 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {constants, declareAction} from '#/main/app/action'
 import {MODAL_SEQUENCE_COPY} from '#/main/evaluation/sequence/modals/copy'
+import {MODAL_WORKSPACES} from '#/main/core/modals/workspaces'
 
 /**
  * Creates a copy of sequences chosen by the user.
@@ -20,9 +21,16 @@ export default declareAction((sequences, refresher) => {
     icon: 'fa fa-fw fa-clone',
     label: trans('copy', {}, 'actions'),
     displayed: 0 !== processable.length,
-    modal: [MODAL_SEQUENCE_COPY, {
-      sequences: processable,
-      onCopy: () => refresher.update(processable)
+    modal: [MODAL_WORKSPACES, {
+      multiple: false,
+      selectAction: (selected) => ({
+        type: MODAL_BUTTON,
+        modal: [MODAL_SEQUENCE_COPY, {
+          workspace: selected[0],
+          sequences: processable,
+          onCopy: () => refresher.update(processable)
+        }]
+      })
     }],
     group: trans('management'),
     scope: ['object', 'collection'],

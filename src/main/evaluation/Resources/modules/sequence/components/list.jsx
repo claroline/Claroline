@@ -47,6 +47,32 @@ const SequenceList = (props) => {
           name: 'code',
           type: 'string',
           label: trans('code')
+        }, , {
+          name: 'meta.created',
+          label: trans('creation_date'),
+          type: 'date',
+          alias: 'createdAt',
+          filterable: false,
+          options: {time: true}
+        }, {
+          name: 'meta.updated',
+          label: trans('modification_date'),
+          type: 'date',
+          alias: 'updatedAt',
+          displayed: true,
+          filterable: false,
+          options: {time: true}
+        }, {
+          name: 'meta.creator',
+          label: trans('creator'),
+          type: 'user',
+          alias: 'creator',
+          sortable: false
+        }, {
+          name: 'meta.published',
+          label: trans('published'),
+          type: 'boolean',
+          alias: 'published'
         }, {
           name: 'tags',
           type: 'tag',

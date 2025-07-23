@@ -11,7 +11,8 @@ import {ConfirmModal} from '#/main/app/modals/confirm/components/modal'
 import {Sequence} from '#/main/evaluation/sequence/prop-types'
 
 const SequenceCopyModal = props => {
-  const [copyResources, setCopyResources] = useState(false)
+  let forceCopyResources = -1 !== props.sequences.findIndex((s) => s.workspace.id !== props.workspace.id)
+  const [copyResources, setCopyResources] = useState(forceCopyResources)
 
   return (
     <ConfirmModal
@@ -26,7 +27,7 @@ const SequenceCopyModal = props => {
         type: ASYNC_BUTTON,
         label: trans('copy', {}, 'actions'),
         request: {
-          url: url(['apiv2_evaluation_sequence_copy'], {
+          url: url(['apiv2_evaluation_sequence_copy', {workspaceId: props.workspace.id}], {
             copyResources: copyResources
           }),
           request: {
@@ -43,6 +44,7 @@ const SequenceCopyModal = props => {
         type="boolean"
         label={trans('sequence_copy_activities', {}, 'evaluation')}
         help={trans('sequence_copy_activities_help', {}, 'evaluation')}
+        disabled={forceCopyResources}
         value={copyResources}
         onChange={(value) => setCopyResources(value)}
       />
@@ -51,6 +53,9 @@ const SequenceCopyModal = props => {
 }
 
 SequenceCopyModal.propTypes = {
+  workspace: T.shape({
+
+  }).isRequired,
   sequences:  T.arrayOf(T.shape(
     Sequence.propTypes
   )),

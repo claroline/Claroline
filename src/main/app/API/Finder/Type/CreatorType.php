@@ -37,6 +37,10 @@ class CreatorType extends AbstractType
         if ($finder->getFilterValue()) {
             $finder->distinct(false);
         }
+
+        if ($finder->getSortValue()) {
+            $queryBuilder->addOrderBy("{$finder->getQueryPath()}.lastName", $finder->getSortValue());
+        }
     }
 
     public function getParent(): ?string

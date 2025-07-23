@@ -27,8 +27,12 @@ class CopyEvent extends CrudEvent
         return $this->copy;
     }
 
-    public function getExtra(): array
+    public function getExtra(?string $key = null): mixed
     {
+        if (!empty($key)) {
+            return $this->extra[$key];
+        }
+
         return $this->extra;
     }
 }
