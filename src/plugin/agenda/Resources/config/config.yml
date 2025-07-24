@@ -2,14 +2,3 @@ plugin:
     tools:
         - name: agenda
           icon: calendar
-
-    data_sources:
-        - name: events
-          type: list
-          context: [workspace, desktop, public]
-          tags: [event]
-
-        - name: tasks
-          type: list
-          context: [workspace, desktop, public]
-          tags: [event]

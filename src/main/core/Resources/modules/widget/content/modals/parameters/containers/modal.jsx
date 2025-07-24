@@ -8,10 +8,7 @@ import {reducer, selectors} from '#/main/core/widget/content/modals/parameters/s
 
 const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
-    (state) => ({
-      saveEnabled: selectors.saveEnabled(state),
-      formData: selectors.formData(state)
-    }),
+    null,
     (dispatch) => ({
       loadContent(data) {
         dispatch(formActions.resetForm(selectors.STORE_NAME, data, false))

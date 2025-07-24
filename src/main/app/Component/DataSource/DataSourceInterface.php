@@ -11,4 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 interface DataSourceInterface extends ComponentInterface, ContextualInterface
 {
     public function open(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): Response;
+
+    public static function getType(): string;
 }

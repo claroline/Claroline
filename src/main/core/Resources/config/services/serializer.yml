@@ -10,9 +10,6 @@ services:
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CoreBundle\API\Serializer\LocationSerializer'
 
-    Claroline\CoreBundle\API\Serializer\DataSourceSerializer:
-        tags: [claroline.serializer]
-
     Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer:
         tags: [claroline.serializer]
         arguments:

@@ -45,7 +45,6 @@ class Configuration implements ConfigurationInterface
         $pluginSection = $rootNode->children('plugin');
 
         $this->addWidgetSection($pluginSection);
-        $this->addDataSourceSection($pluginSection);
         $this->addResourceSection($pluginSection);
         $this->addToolSection($pluginSection);
         $this->addThemeSection($pluginSection);
@@ -159,27 +158,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ->end()->end();
-    }
-
-    private function addDataSourceSection(NodeBuilder $pluginSection): void
-    {
-        $pluginSection
-            ->arrayNode('data_sources')
-                ->prototype('array')
-                    ->children()
-                        ->scalarNode('name')->isRequired()->end()
-                        ->scalarNode('type')->isRequired()->end()
-                        ->arrayNode('context')
-                            ->prototype('scalar')->end()
-                            ->defaultValue(['desktop', 'workspace', 'administration'])
-                        ->end()
-                        ->arrayNode('tags')
-                            ->prototype('scalar')->end()
-                            ->defaultValue([])
-                        ->end()
-                    ->end()
-                ->end()
-            ->end();
     }
 
     private function addToolSection(NodeBuilder $pluginSection): void

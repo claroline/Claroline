@@ -105,7 +105,7 @@ class WidgetsTabParameters extends Component {
                 name: 'insert-before',
                 type: MODAL_BUTTON,
                 icon: 'fa fa-fw fa-plus',
-                label: trans('add_section_before'),
+                label: trans('add_section_before', {}, 'actions'),
                 modal: [MODAL_WIDGET_CREATION, {
                   create: (widget) => {
                     // copy array
@@ -196,7 +196,7 @@ class WidgetsTabParameters extends Component {
         <Button
           className="btn btn-primary w-100 mb-3 btn-add-section"
           type={MODAL_BUTTON}
-          label={trans('add_section')}
+          label={trans('add_section', {}, 'actions')}
           modal={[MODAL_WIDGET_CREATION, {
             create: (widget) => this.props.update('widgets',
               widgets.concat([widget]) // copy array & append element

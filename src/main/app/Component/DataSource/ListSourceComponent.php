@@ -17,6 +17,11 @@ abstract class ListSourceComponent extends DataSourceComponent
 
     abstract public static function getClass(): string;
 
+    public static function getType(): string
+    {
+        return 'list';
+    }
+
     public function setFinder(FinderFactoryInterface $finderFactory): void
     {
         $this->finderFactory = $finderFactory;

@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {PropTypes as T} from 'prop-types'
+import {useDispatch} from 'react-redux'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
@@ -12,7 +13,6 @@ import {selectors} from '#/main/core/modals/resources/store'
 import {ResourceList} from '#/main/core/resource/components/list'
 import {ModalTabbed} from '#/main/app/overlays/modal/components/tabbed'
 import {actions as listActions} from '#/main/app/content/list'
-import {useDispatch} from 'react-redux'
 
 const ResourcesModal = (props) => {
   const dispatch = useDispatch()
@@ -28,7 +28,8 @@ const ResourcesModal = (props) => {
     'selected',
     'selectAction',
     'setCurrent',
-    'filters'
+    'filters',
+    'reset'
   ]
 
   return (

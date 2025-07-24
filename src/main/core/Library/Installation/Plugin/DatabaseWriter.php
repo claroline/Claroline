@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -124,10 +123,6 @@ class DatabaseWriter implements LoggerAwareInterface
             $this->createWidget($widget, $plugin);
         }
 
-        foreach ($processedConfiguration['data_sources'] as $source) {
-            $this->createDataSource($source, $plugin);
-        }
-
         foreach ($processedConfiguration['tools'] as $tool) {
             $this->persistTool($tool, $plugin);
         }
@@ -151,10 +146,6 @@ class DatabaseWriter implements LoggerAwareInterface
 
         foreach ($processedConfiguration['widgets'] as $widgetConfiguration) {
             $this->updateWidget($widgetConfiguration, $plugin);
-        }
-
-        foreach ($processedConfiguration['data_sources'] as $sourceConfiguration) {
-            $this->updateDataSource($sourceConfiguration, $plugin);
         }
 
         foreach ($processedConfiguration['tools'] as $toolConfiguration) {
@@ -181,22 +172,6 @@ class DatabaseWriter implements LoggerAwareInterface
         foreach ($widgetsToDelete as $widget) {
             $this->logger->debug('Removing widget '.$widget->getName());
             $this->em->remove($widget);
-        }
-
-        // cleans deleted data sources
-        $installedSources = $this->em->getRepository(DataSource::class)
-            ->findBy(['plugin' => $plugin]);
-        $sourceNames = array_map(function ($source) {
-            return $source['name'];
-        }, $processedConfiguration['data_sources']);
-
-        $sourcesToDelete = array_filter($installedSources, function (DataSource $source) use ($sourceNames) {
-            return !in_array($source->getName(), $sourceNames);
-        });
-
-        foreach ($sourcesToDelete as $source) {
-            $this->logger->debug('Removing data source '.$source->getName());
-            $this->em->remove($source);
         }
 
         $mimeTypes = [];
@@ -242,42 +217,6 @@ class DatabaseWriter implements LoggerAwareInterface
         $this->em->persist($widget);
 
         return $widget;
-    }
-
-    private function createDataSource(array $sourceConfiguration, Plugin $plugin): DataSource
-    {
-        $source = new DataSource();
-        $source->setPlugin($plugin);
-
-        $this->persistDataSource($sourceConfiguration, $source);
-
-        return $source;
-    }
-
-    private function persistDataSource(array $sourceConfiguration, DataSource $source): DataSource
-    {
-        $source->setName($sourceConfiguration['name']);
-        $source->setType($sourceConfiguration['type']);
-        $source->setContext(isset($sourceConfiguration['context']) ? $sourceConfiguration['context'] : []);
-        $source->setTags(isset($sourceConfiguration['tags']) ? $sourceConfiguration['tags'] : []);
-
-        $this->em->persist($source);
-
-        return $source;
-    }
-
-    private function updateDataSource($sourceConfiguration, Plugin $plugin): DataSource
-    {
-        /** @var DataSource $source */
-        $source = $this->em
-            ->getRepository(DataSource::class)
-            ->findOneBy(['name' => $sourceConfiguration['name']]);
-
-        if (is_null($source)) {
-            return $this->createDataSource($sourceConfiguration, $plugin);
-        }
-
-        return $this->persistDataSource($sourceConfiguration, $source);
     }
 
     private function persistTool(array $toolConfiguration, Plugin $plugin): void

@@ -11,62 +11,29 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\DataSource;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
-use Claroline\CoreBundle\Repository\DataSourceRepository;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
+use Claroline\AppBundle\Component\DataSource\DataSourceInterface;
+use Claroline\AppBundle\Component\DataSource\DataSourceProvider;
 
 class DataSourceManager
 {
-    private DataSourceRepository $dataSourceRepository;
-
     public function __construct(
-        private readonly TokenStorageInterface $tokenStorage,
-        private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly ObjectManager $om,
-        private readonly PluginManager $pluginManager
+        private readonly DataSourceProvider $dataSourceProvider
     ) {
-        $this->dataSourceRepository = $om->getRepository(DataSource::class);
     }
 
     /**
      * Get the list of available sources in the platform.
-     *
-     * @param string $context
-     *
-     * @return array
      */
-    public function getAvailable(?string $context = null): array
+    public function getAvailable(string $context, ?ContextSubjectInterface $contextSubject = null): array
     {
-        $enabledPlugins = $this->pluginManager->getEnabled();
+        $available = $this->dataSourceProvider->getAvailableSources($context, $contextSubject);
 
-        return $this->dataSourceRepository->findAllAvailable($enabledPlugins, $context);
-    }
-
-    /**
-     * Loads data from a data source.
-     */
-    public function load(string $type, string $context, ?string $contextId = null, array $options = null): mixed
-    {
-        $user = null;
-        if ($this->tokenStorage->getToken()?->getUser() instanceof User) {
-            $user = $this->tokenStorage->getToken()?->getUser();
-        }
-
-        $workspace = null;
-        if (DataSource::CONTEXT_WORKSPACE === $context) {
-            $workspace = $this->om
-                ->getRepository(Workspace::class)
-                ->findOneBy(['uuid' => $contextId]);
-        }
-
-        $event = new GetDataEvent($context, $options, $user, $workspace);
-        $this->eventDispatcher->dispatch($event, 'data_source.'.$type.'.load');
-
-        return $event->getData();
+        return array_map(function (DataSourceInterface $dataSource) {
+            return [
+                'name' => $dataSource::getName(),
+                'type' => $dataSource::getType(),
+            ];
+        }, $available);
     }
 }

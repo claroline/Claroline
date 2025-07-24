@@ -38,5 +38,8 @@
   "restore_resource": "Restaurer la ressource",
   "restore_resource_desc": "Restaurez la ressource pour le rendre de nouveau accessible aux utilisateurs.",
   "move_resource": "Déplacer la ressource",
-  "move_resource_desc": "Changez le dossier de la ressource."
+  "move_resource_desc": "Changez le dossier de la ressource.",
+  "add_section": "Ajouter une section",
+  "save_section": "Enregistrer la section",
+  "add_section_before": "Insérer une section"
 }

@@ -7,10 +7,7 @@ import {actions, reducer, selectors} from '#/main/core/widget/editor/modals/crea
 
 const WidgetCreationModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
-    (state) => ({
-      widget: selectors.widget(state),
-      saveEnabled: selectors.saveEnabled(state)
-    }),
+    null,
     (dispatch) => ({
       startCreation(layout) {
         dispatch(actions.startCreation(layout))

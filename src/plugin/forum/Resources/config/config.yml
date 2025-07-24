@@ -2,9 +2,3 @@ plugin:
     resources:
         - name: claroline_forum
           class: Claroline\ForumBundle\Entity\Forum
-
-    data_sources:
-        - name: forum_messages
-          type: list
-          context: [workspace, desktop, public]
-          tags: [community]

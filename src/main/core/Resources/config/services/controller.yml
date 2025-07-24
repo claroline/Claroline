@@ -107,6 +107,7 @@ services:
     Claroline\CoreBundle\Controller\WidgetController:
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Component\Context\ContextProvider'
             - '@Claroline\CoreBundle\Manager\WidgetManager'
             - '@Claroline\CoreBundle\Manager\DataSourceManager'
 

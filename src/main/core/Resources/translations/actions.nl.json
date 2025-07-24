@@ -12,5 +12,7 @@
     "show-results": "Resultaten weergeven",
     "plan-sending": "Verzending plannen",
     "ws-register": "Aanmelden voor workspaces",
-    "show-statistics": "Statistieken weergeven"
+    "show-statistics": "Statistieken weergeven",
+    "add_section": "Een sectie toevoegen",
+    "add_section_before": "Een sectie invoegen"
 }

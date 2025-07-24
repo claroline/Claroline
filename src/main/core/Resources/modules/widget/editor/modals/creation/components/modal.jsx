@@ -8,7 +8,6 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {WidgetForm} from '#/main/core/widget/editor/components/form'
-import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 
 import {selectors} from '#/main/core/widget/editor/modals/creation/store'
 import {WidgetLayout} from '#/main/core/widget/editor/modals/creation/components/layout'
@@ -30,15 +29,6 @@ class WidgetCreationModal extends Component {
     })
   }
 
-  renderStepTitle() {
-    switch(this.state.currentStep) {
-      case 'layout':
-        return trans('new_section_select', {}, 'widget')
-      case 'parameters':
-        return trans('new_section_configure', {}, 'widget')
-    }
-  }
-
   renderStep() {
     switch(this.state.currentStep) {
       case 'layout':
@@ -53,44 +43,41 @@ class WidgetCreationModal extends Component {
       case 'parameters':
         return (
           <WidgetForm
-            level={5}
             name={selectors.STORE_NAME}
+            isNew={true}
+            onSave={(formData) => {
+              this.props.create(formData)
+              this.props.fadeModal()
+            }}
           >
             <Button
-              id="widget-section-form-save"
-              className="modal-btn"
-              variant="btn"
-              size="lg"
               type={CALLBACK_BUTTON}
-              primary={true}
-              disabled={!this.props.saveEnabled}
-              label={trans('add', {}, 'actions')}
-              htmlType="submit"
-              callback={() => {
-                this.props.create(this.props.widget)
-                this.close()
-              }}
+              label={trans('back')}
+              className="btn btn-text-body me-auto"
+              callback={() => this.changeStep('layout')}
             />
           </WidgetForm>
         )
     }
   }
 
-  close() {
-    this.props.fadeModal()
-    this.changeStep('layout')
-    this.props.reset()
-  }
-
   render() {
+    let subtitle
+    switch(this.state.currentStep) {
+      case 'layout':
+        subtitle = trans('new_section_select', {}, 'widget')
+        break;
+      case 'parameters':
+        subtitle = trans('new_section_configure', {}, 'widget')
+        break;
+    }
+
     return (
       <Modal
         {...omit(this.props, 'widget', 'saveEnabled', 'startCreation', 'create', 'reset')}
-        icon="fa fa-fw fa-plus"
         title={trans('new_section')}
-        subtitle={this.renderStepTitle()}
-        fadeModal={() => this.close()}
-        size="lg"
+        subtitle={subtitle}
+        onExited={this.props.reset}
       >
         {this.renderStep()}
       </Modal>
@@ -102,13 +89,7 @@ WidgetCreationModal.propTypes = {
   create: T.func.isRequired,
   fadeModal: T.func.isRequired,
   reset: T.func,
-
-  // from redux store
-  widget: T.shape(
-    WidgetContainerTypes.propTypes
-  ).isRequired,
-  startCreation: T.func.isRequired,
-  saveEnabled: T.bool.isRequired
+  startCreation: T.func.isRequired
 }
 
 export {

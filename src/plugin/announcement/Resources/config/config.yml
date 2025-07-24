@@ -4,9 +4,3 @@ plugin:
           icon: bullhorn
           tool_rights:
               - create
-
-    data_sources:
-        - name: announcements
-          type: list
-          context: [workspace, desktop, public]
-          tags: [community]

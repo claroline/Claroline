@@ -91,15 +91,12 @@ const Resources = props => {
             unit: trans('minutes')
           }
         }, {
-          name: 'evaluation.required',
-          label: trans('required_resource', {}, 'resource'),
+          name: 'restrictions.hidden',
+          label: trans('hidden'),
           type: 'boolean',
-          alias: 'required'
-        }, {
-          name: 'evaluation.evaluated',
-          label: trans('evaluated_resource', {}, 'resource'),
-          type: 'boolean',
-          alias: 'evaluated'
+          alias: 'hidden',
+          filterable: true,
+          displayable: false
         }, {
           name: 'tags',
           type: 'tag',

@@ -105,10 +105,7 @@ services:
 
     Claroline\CoreBundle\Manager\DataSourceManager:
         arguments:
-            - '@security.token_storage'
-            - '@event_dispatcher'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\PluginManager'
+            - '@Claroline\AppBundle\Component\DataSource\DataSourceProvider'
 
     Claroline\CoreBundle\Manager\CurlManager: ~
 

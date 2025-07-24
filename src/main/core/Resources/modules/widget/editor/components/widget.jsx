@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
 import sum from 'lodash/sum'
 import times from 'lodash/times'
@@ -148,7 +149,11 @@ const WidgetEditor = props =>
         <Heading
           level={2}
           className="widget-title"
-          align={props.widget.display ? props.widget.display.alignName : undefined}
+          align={classes({
+            'start': !props.widget.display.alignName || 'left' === props.widget.display.alignName,
+            'center': 'center' === props.widget.display.alignName,
+            'end': 'right' === props.widget.display.alignName
+          })}
           style={computeTitleStyles(props.widget)}
         >
           {props.widget.name}

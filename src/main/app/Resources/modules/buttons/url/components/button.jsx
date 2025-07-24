@@ -21,7 +21,7 @@ const UrlButton = forwardRef((props, ref) => {
 
   return (
     <a
-      {...omit(props, 'variant', 'active', 'displayed', 'primary', 'dangerous', 'size', 'target', 'confirm')}
+      {...omit(props, 'variant', 'active', 'displayed', 'primary', 'dangerous', 'size', 'target', 'confirm', 'exact')}
       role="link"
       tabIndex={props.tabIndex}
       href={!props.disabled ? target : ''}

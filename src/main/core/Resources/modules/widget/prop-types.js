@@ -2,19 +2,10 @@ import {PropTypes as T} from 'prop-types'
 
 const DataSource = {
   propTypes: {
-    id: T.string.isRequired,
-    name: T.string,
-    meta: T.shape({
-      context: T.arrayOf(T.string)
-    }),
-    tags: T.arrayOf(T.string)
+    type: T.string.isRequired,
+    name: T.string
   },
-  defaultProps: {
-    meta: {
-      exportable: false
-    },
-    tags: []
-  }
+  defaultProps: {}
 }
 
 const Widget = {

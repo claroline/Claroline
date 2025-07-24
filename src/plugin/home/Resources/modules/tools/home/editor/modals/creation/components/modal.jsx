@@ -62,9 +62,7 @@ class TabCreationModal extends Component {
                 action: {
                   type: CALLBACK_BUTTON,
                   callback: () => {
-                    const newTab = this.state.tabs.find(current => current.name === tab.name)
-
-                    this.props.startCreation(newTab, this.props.position)
+                    this.props.startCreation(tab, this.props.position)
                     this.changeStep('parameters')
                   }
                 }

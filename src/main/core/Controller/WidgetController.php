@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Entity\DataSource;
+use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Manager\DataSourceManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
@@ -27,6 +27,7 @@ class WidgetController
 {
     public function __construct(
         private readonly SerializerProvider $serializer,
+        private readonly ContextProvider $contextProvider,
         private readonly WidgetManager $widgetManager,
         private readonly DataSourceManager $dataSourceManager
     ) {
@@ -35,16 +36,17 @@ class WidgetController
     /**
      * Lists available widgets for a given context.
      */
-    #[Route(path: '/{context}', name: 'apiv2_widget_available', defaults: ['context' => null], methods: ['GET'])]
-    public function listAction(string $context = null): JsonResponse
+    #[Route(path: '/{context}/{contextId}', name: 'apiv2_widget_available', methods: ['GET'])]
+    public function listAction(string $context, string $contextId = null): JsonResponse
     {
+        $contextHandler = $this->contextProvider->getContext($context);
+        $contextSubject = $contextHandler->getObject($contextId);
+
         return new JsonResponse([
             'widgets' => array_map(function (Widget $widget) {
                 return $this->serializer->serialize($widget);
             }, $this->widgetManager->getAvailable($context)),
-            'dataSources' => array_map(function (DataSource $dataSource) {
-                return $this->serializer->serialize($dataSource);
-            }, $this->dataSourceManager->getAvailable($context)),
+            'dataSources' => $this->dataSourceManager->getAvailable($context, $contextSubject),
         ]);
     }
 }
