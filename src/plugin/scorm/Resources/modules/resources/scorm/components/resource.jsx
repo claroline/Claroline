@@ -36,6 +36,9 @@ const ScormResource = props =>
     ]}
     editor={ScormEditor}
     overviewPage={Player}
+    redirect={[
+      {from: '/play', to: '/'} // for retro-compatibility for old-routes
+    ]}
     pages={[
       {
         path: '/results',
