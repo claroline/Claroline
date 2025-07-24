@@ -176,9 +176,14 @@ class CommunityTool extends ToolComponent
     {
         $parameters = $this->serializer->serialize($workspace);
 
+        $defaultRole = null;
+        if ($workspace->getDefaultRole()) {
+            $defaultRole = $this->serializer->serialize($workspace->getDefaultRole(), [SerializerInterface::SERIALIZE_MINIMAL]);
+        }
+
         // only grab workspace props we want
         return [
-            'registration' => $parameters['registration'],
+            'registration' => array_merge($parameters, ['defaultRole' => $defaultRole]),
         ];
     }
 

@@ -39,6 +39,7 @@ const workspaceDefinition = (contextId, update) => [
         type: 'role',
         label: trans('default_role'),
         options: {
+          multiple: false,
           picker: contextId ? {
             url: ['apiv2_workspace_list_roles', {id: contextId}],
             filters: []
