@@ -18,7 +18,7 @@ const EvaluationSequenceCard = (props) =>
     icon="fa fa-route"
     primaryAction={!isEmpty(props.primaryAction) ? props.primaryAction : {
       type: URL_BUTTON,
-      target: '#'+route(props.data.sequence)
+      target: props.data.sequence ? '#'+route(props.data.sequence) : '#'
     }}
     content={get(props.data, 'sequence')}
   />

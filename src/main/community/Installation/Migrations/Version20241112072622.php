@@ -27,11 +27,6 @@ final class Version20241112072622 extends AbstractMigration
                 LEFT JOIN claro_facet AS f ON (s.facet_id = f.id)
                 WHERE s.facet_id IS NOT NULL
         ');
-
-        /*$this->addSql('
-            ALTER TABLE claro_panel_facet
-            DROP facet_id
-        ');*/
     }
 
     public function down(Schema $schema): void

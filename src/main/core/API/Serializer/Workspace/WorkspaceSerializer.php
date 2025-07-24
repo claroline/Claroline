@@ -106,10 +106,14 @@ class WorkspaceSerializer
                 'dates' => DateRangeNormalizer::normalize($workspace->getAccessibleFrom(), $workspace->getAccessibleUntil()),
                 'code' => $workspace->getAccessCode(),
             ],
-            'registration' => $this->getRegistration($workspace, $options),
+            'registration' => [
+                'validation' => $workspace->getRegistrationValidation(),
+                'selfRegistration' => $workspace->getSelfRegistration(),
+                'selfUnregistration' => $workspace->getSelfUnregistration(),
+                'maxTeams' => $workspace->getMaxTeams(),
+            ],
             'evaluation' => [
                 'successCondition' => $workspace->getSuccessCondition(),
-                // 'estimatedDuration' => $workspace->getEstimatedDuration(),
                 'scoreTotal' => $workspace->getScoreTotal(),
             ],
         ];
@@ -125,9 +129,6 @@ class WorkspaceSerializer
                 'export' => $administrate || $this->authorization->isGranted('EXPORT', $workspace),
                 'archive' => $administrate || $this->authorization->isGranted('ARCHIVE', $workspace),
             ];
-
-            // this is a huge performances bottleneck as it will check if the current user as at least one right on one ws tool
-            // $serialized['registered'] = $this->isRegistered($workspace);
         }
 
         return $serialized;
@@ -157,35 +158,6 @@ class WorkspaceSerializer
         }
 
         return $openingData;
-    }
-
-    private function getRegistration(Workspace $workspace, array $options): array
-    {
-        /*$defaultRole = null;
-        if ($workspace->getDefaultRole()) {
-            // this should use RoleSerializer, but we will get a circular reference if we do it
-            $defaultRole = [
-                'id' => $workspace->getDefaultRole()->getUuid(),
-                'name' => $workspace->getDefaultRole()->getName(),
-                'type' => $workspace->getDefaultRole()->getType(),
-                'translationKey' => $workspace->getDefaultRole()->getTranslationKey(),
-            ];
-        }*/
-
-        $serialized = [
-            'validation' => $workspace->getRegistrationValidation(),
-            'selfRegistration' => $workspace->getSelfRegistration(),
-            'selfUnregistration' => $workspace->getSelfUnregistration(),
-            // 'defaultRole' => $defaultRole,
-            'maxTeams' => $workspace->getMaxTeams(),
-        ];
-
-        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
-            // this is a huge performances bottleneck
-            // $serialized['waitingForRegistration'] = $workspace->getSelfRegistration() && $workspace->getRegistrationValidation() ? $this->waitingForRegistration($workspace) : false;
-        }
-
-        return $serialized;
     }
 
     /**
@@ -294,7 +266,6 @@ class WorkspaceSerializer
 
         if (isset($data['evaluation'])) {
             $this->sipe('evaluation.successCondition', 'setSuccessCondition', $data, $workspace);
-            // $this->sipe('evaluation.estimatedDuration', 'setEstimatedDuration', $data, $workspace);
             $this->sipe('evaluation.scoreTotal', 'setScoreTotal', $data, $workspace);
         }
 

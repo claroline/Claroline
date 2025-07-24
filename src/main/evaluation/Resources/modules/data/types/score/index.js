@@ -50,7 +50,7 @@ export default declareDataType({
   validate: (value, options) => chain(value, options, [number, inRange]),
 
   /**
-   * Custom components for scores rendering.
+   * Custom components for score rendering.
    */
   components: {
     display: ScoreDisplay,

@@ -3,10 +3,16 @@
   "resource_attempts_desc": "Permet de lister les tentatives effectuées par les utilisateurs.",
   "resource_evaluations": "Liste des évaluations des ressources",
   "resource_evaluations_desc": "Permet de lister les évaluations obtenues par les utilisateurs pour des ressources.",
-  "my_resource_evaluations": "Liste de mes évaluations des ressources",
+  "my_resource_evaluations": "Liste de mes évaluations à des ressources",
   "my_resource_evaluations_desc": "Permet de lister mes évaluations obtenues pour des ressources.",
   "workspace_evaluations": "Liste des évaluations des espaces d'activités",
   "workspace_evaluations_desc": "Permet de lister les évaluations obtenues par les utilisateurs pour des espaces d'activités.",
-  "my_workspace_evaluations": "Liste de mes évaluations des espaces d'activités",
-  "my_workspace_evaluations_desc": "Permet de lister mes évaluations obtenues pour des espaces d'activités."
+  "my_workspace_evaluations": "Liste de mes évaluations à des espaces d'activités",
+  "my_workspace_evaluations_desc": "Permet de lister mes évaluations obtenues pour des espaces d'activités.",
+  "sequences": "Liste des séquences",
+  "sequences_desc": "Permet de lister les séquences accessibles par l'utilisateur courant",
+  "sequence_evaluations": "Liste des évaluations des séquences",
+  "sequence_evaluations_desc": "Permet de lister les évaluations obtenues par les utilisateurs pour des séquences.",
+  "my_sequence_evaluations": "Liste de mes évaluations à des séquences",
+  "my_sequence_evaluations_desc": "Permet de lister mes évaluations obtenues pour des séquences."
 }

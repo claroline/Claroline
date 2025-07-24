@@ -6,8 +6,8 @@ import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {constants} from '#/main/evaluation/constants'
 import {EvaluationStatus} from '#/main/evaluation/components/status'
 
-import {EvaluationWorkspaceCard} from '#/main/evaluation/workspace/components/card'
-import {getActions, getDefaultAction} from '#/main/evaluation//workspace/utils'
+import {getEvaluationActions, getEvaluationDefaultAction} from '#/main/evaluation//sequence/utils'
+import {EvaluationSequenceCard} from '#/main/evaluation/sequence/components/card'
 
 export default (contextType, contextData, refresher, currentUser) => {
   let basePath
@@ -18,8 +18,8 @@ export default (contextType, contextData, refresher, currentUser) => {
   }
 
   return {
-    primaryAction: (user) => getDefaultAction(user, refresher, basePath, currentUser),
-    actions: (users) => getActions(users, refresher, basePath, currentUser),
+    primaryAction: (user) => getEvaluationDefaultAction(user, refresher, basePath, currentUser),
+    actions: (users) => getEvaluationActions(users, refresher, basePath, currentUser),
     definition: [
       {
         name: 'status',
@@ -31,9 +31,9 @@ export default (contextType, contextData, refresher, currentUser) => {
         displayed: true,
         render: (row) => <EvaluationStatus status={row.status} />
       }, {
-        name: 'workspace',
-        type: 'workspace',
-        label: trans('workspace', {}, 'workspace'),
+        name: 'sequence',
+        type: 'sequence',
+        label: trans('sequence', {}, 'evaluation'),
         displayed: true
       }, {
         name: 'startedAt',
@@ -72,32 +72,8 @@ export default (contextType, contextData, refresher, currentUser) => {
         label: trans('score'),
         displayed: true,
         filterable: false
-      }, {
-        name: 'workspaceTags', // for retro-compatibility
-        type: 'tag',
-        label: trans('tags'),
-        displayable: true,
-        sortable: false,
-        alias: 'workspace.tags',
-        options: {
-          objectClass: 'Claroline\\CoreBundle\\Entity\\Workspace\\Workspace'
-        }
-      }, {
-        name: 'workspace.hidden',
-        type: 'boolean',
-        label: trans('hidden'),
-        displayable: false,
-        sortable: false,
-        filterable: true
-      }, {
-        name: 'workspace.code',
-        type: 'string',
-        label: trans('code'),
-        displayable: false,
-        sortable: true,
-        filterable: false
       }
     ],
-    card: EvaluationWorkspaceCard
+    card: EvaluationSequenceCard
   }
 }

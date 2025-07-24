@@ -22,6 +22,9 @@ registry.add('ClarolineEvaluationBundle', {
       'resource_attempts'    : () => { return import(/* webpackChunkName: "evaluation-source-resource_attempts" */     '#/main/evaluation/data/sources/resource-attempts') },
       'resource_evaluations' : () => { return import(/* webpackChunkName: "evaluation-source-resource_evaluations" */  '#/main/evaluation/data/sources/resource-evaluations') },
       'my_resource_evaluations' : () => { return import(/* webpackChunkName: "evaluation-source-my_resource_evaluations" */  '#/main/evaluation/data/sources/my-resource-evaluations') },
+      'sequences': () => { return import(/* webpackChunkName: "evaluation-source-sequences" */ '#/main/evaluation/data/sources/sequences') },
+      'sequence_evaluations': () => { return import(/* webpackChunkName: "evaluation-source-sequence_evaluations" */ '#/main/evaluation/data/sources/sequence-evaluations') },
+      'my_sequence_evaluations': () => { return import(/* webpackChunkName: "evaluation-source-my_sequence_evaluations" */ '#/main/evaluation/data/sources/my-sequence-evaluations') },
       'workspace_evaluations': () => { return import(/* webpackChunkName: "evaluation-source-workspace_evaluations" */ '#/main/evaluation/data/sources/workspace-evaluations') },
       'my_workspace_evaluations': () => { return import(/* webpackChunkName: "evaluation-source-my_workspace_evaluations" */ '#/main/evaluation/data/sources/my-workspace-evaluations') }
     }

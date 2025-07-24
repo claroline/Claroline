@@ -72,7 +72,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
             $this->copy($workspace->getWorkspaceModel(), $workspace, in_array(Options::AS_MODEL, $options) || $workspace->isModel());
 
             // we need to override model values with the posted one
-            // this is not really aesthetic because this has already been done by the Crud before
+            // this is not really aesthetic because the Crud has already done this before,
             // and workspace deserialization is heavy
             $this->serializer->deserialize($data, $workspace, $options);
             if ($workspaceCode) {
@@ -90,11 +90,6 @@ class WorkspaceSubscriber implements EventSubscriberInterface
 
         $filesystem = new Filesystem();
         $filesystem->mkdir($this->manager->getStorageDirectory($workspace));
-
-        // give the creator the manager role
-        /*if (!$workspace->isModel() && !$workspace->isPersonal() && $workspace->getManagerRole() && $workspace->getCreator()) {
-            $this->crud->patch($workspace->getCreator(), 'role', 'add', [$workspace->getManagerRole()]);
-        }*/
 
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         if ($root) {
@@ -127,11 +122,6 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         /** @var Workspace $workspace */
         $workspace = $event->getCopy();
 
-        // give the creator the manager role
-        /*if (!$workspace->isModel() && $workspace->getManagerRole() && $workspace->getCreator()) {
-            $this->crud->patch($workspace->getCreator(), 'role', 'add', [$workspace->getManagerRole()]);
-        }*/
-
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         if ($root) {
             $this->resourceManager->createRights($root, [], true);
@@ -145,7 +135,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
 
         $workspace->setUpdatedAt(new \DateTime());
 
-        // rename workspace root directory when workspace name is changed
+        // rename workspace root directory when the workspace name is changed
         $oldData = $event->getOldData();
         if (!empty($oldData['name']) && $oldData['name'] !== $workspace->getName()) {
             $root = $this->resourceManager->getWorkspaceRoot($workspace);

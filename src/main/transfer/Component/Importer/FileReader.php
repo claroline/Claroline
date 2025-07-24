@@ -30,14 +30,6 @@ class FileReader implements LoggerAwareInterface
 
         $reader->open($this->filePath);
 
-        /*try {
-
-        } catch (\Exception $e) {
-            $this->logger->error('Cannot open file to import.');
-
-            return;
-        }*/
-
         foreach ($reader->getSheetIterator() as $sheet) {
             foreach ($sheet->getRowIterator() as $row) {
                 // do stuff with the row

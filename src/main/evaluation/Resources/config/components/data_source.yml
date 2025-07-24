@@ -13,6 +13,20 @@ services:
     arguments:
       - '@security.token_storage'
 
+  Claroline\EvaluationBundle\Component\DataSource\SequencesList:
+    parent: Claroline\AppBundle\Component\DataSource\ListSourceComponent
+    tags: [ 'claroline.component.data_source' ]
+
+  Claroline\EvaluationBundle\Component\DataSource\SequenceEvaluationsList:
+    parent: Claroline\AppBundle\Component\DataSource\ListSourceComponent
+    tags: [ 'claroline.component.data_source' ]
+
+  Claroline\EvaluationBundle\Component\DataSource\MySequenceEvaluationsList:
+    parent: Claroline\AppBundle\Component\DataSource\ListSourceComponent
+    tags: [ 'claroline.component.data_source' ]
+    arguments:
+      - '@security.token_storage'
+
   Claroline\EvaluationBundle\Component\DataSource\WorkspaceEvaluationsList:
     parent: Claroline\AppBundle\Component\DataSource\ListSourceComponent
     tags: [ 'claroline.component.data_source' ]

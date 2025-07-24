@@ -12,9 +12,9 @@ import {EvaluationStatus} from '#/main/evaluation/components/status'
 export default (contextType, contextData, refresher, currentUser) => {
   let basePath
   if ('workspace' === contextType) {
-    basePath = workspaceRoute(contextData, 'evaluation')
+    basePath = workspaceRoute(contextData, 'progression')
   } else {
-    basePath = toolRoute('evaluation')
+    basePath = toolRoute('progression')
   }
 
   return {
@@ -108,13 +108,6 @@ export default (contextType, contextData, refresher, currentUser) => {
         displayable: false,
         sortable: true,
         filterable: false
-      }, {
-        name: 'user.registered',
-        label: trans('user_registered', {}, 'community'),
-        type: 'boolean',
-        displayable: false,
-        sortable: false,
-        filterable: true
       }
     ],
     card: EvaluationWorkspaceCard

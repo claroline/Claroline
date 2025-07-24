@@ -4,26 +4,28 @@ namespace Claroline\EvaluationBundle\Component\DataSource;
 
 use Claroline\AppBundle\Component\DataSource\ListSourceComponent;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
-use Claroline\CoreBundle\Component\Context\WorkspaceContext;
-use Claroline\EvaluationBundle\Finder\WorkspaceEvaluationType;
+use Claroline\CoreBundle\Component\Context\PublicContext;
+use Claroline\CoreBundle\Controller\Workspace\WorkspaceController;
+use Claroline\EvaluationBundle\Finder\SequenceType;
 
-final class WorkspaceEvaluationsList extends ListSourceComponent
+final class SequencesList extends ListSourceComponent
 {
     public static function getName(): string
     {
-        return 'workspace_evaluations';
+        return 'sequences';
     }
 
     public function supportsContext(string $context): bool
     {
         return in_array($context, [
+            PublicContext::getName(),
             DesktopContext::getName(),
-            WorkspaceContext::getName(),
+            WorkspaceController::getName(),
         ]);
     }
 
     public static function getClass(): string
     {
-        return WorkspaceEvaluationType::class;
+        return SequenceType::class;
     }
 }

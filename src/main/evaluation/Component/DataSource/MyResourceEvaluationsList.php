@@ -11,7 +11,7 @@ use Claroline\EvaluationBundle\Finder\ResourceEvaluationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class MyResourceEvaluationsList extends ListSourceComponent
+final class MyResourceEvaluationsList extends ListSourceComponent
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage
