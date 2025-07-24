@@ -29,31 +29,32 @@ const SequenceOverviewContent = (props) => {
 
   return (
     <>
-      {props.userEvaluation &&
+      {(props.userEvaluation || props.actions) &&
         <PageSection
-          className="pt-5 mb-5"
+          className="mt-5 gap-4"
           title={trans('my_progression')}
           showTitle={false}
         >
-          <EvaluationProgression
-            {...props.userEvaluation}
-            target={props.path+'/progression'}
-          />
+          {props.userEvaluation &&
+            <EvaluationProgression
+              {...props.userEvaluation}
+              target={props.path+'/progression'}
+              className="mb-4"
+            />
+          }
 
-          {(get(props, 'display.feedback', false) || !isEmpty(get(props.feedbacks, 'closed'))) &&
-            <div className="mt-4" role="presentation">
-              {!isEmpty(props.userEvaluation) && get(props, 'display.feedback', false) &&
-                <EvaluationFeedback
-                  status={props.userEvaluation.status}
-                  {...props.feedbacks}
-                />
-              }
+          {props.userEvaluation && get(props, 'display.feedback', false) &&
+            <div className="mb-4" role="presentation">
+              <EvaluationFeedback
+                status={props.userEvaluation.status}
+                {...props.feedbacks}
+              />
             </div>
           }
 
           {props.actions &&
             <Toolbar
-              className="d-flex gap-1 mt-4"
+              className="d-flex gap-1"
               buttonName="btn"
               primaryName="btn-primary"
               defaultName="btn-link"
@@ -68,7 +69,7 @@ const SequenceOverviewContent = (props) => {
         <PageSection
           title={trans('about')}
           showTitle={false}
-          className="mb-5"
+          className="mt-5"
         >
           <Content
             tags={tags}
@@ -142,7 +143,7 @@ const SequenceOverview = () => {
 
   return (
     <SequencePage>
-      <PageContent poster={get(sequence, 'poster')}>
+      <PageContent poster={get(sequence, 'poster')} className="pb-5">
         <SequenceOverviewContent
           path={sequencePath}
           sequence={sequence}
@@ -169,7 +170,7 @@ const SequenceOverview = () => {
 
         {!isEmpty(sequence.steps) &&
           <PageTabbedSection
-            className="mb-5"
+            className="mt-5"
             defaultTab="content"
             tabs={[
               {

@@ -11,6 +11,7 @@ use Claroline\AppBundle\API\Finder\Type\CreatorType;
 use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\HiddenType;
+use Claroline\AppBundle\API\Finder\Type\PublicType;
 use Claroline\AppBundle\API\Finder\Type\RelatedEntityType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -34,6 +35,7 @@ class ResourceNodeType extends AbstractType
             ->add('code', TextType::class)
             ->add('description', TextType::class)
             ->add('published', BooleanType::class)
+            ->add('public', PublicType::class)
             ->add('active', BooleanType::class, [
                 'default' => true,
             ])

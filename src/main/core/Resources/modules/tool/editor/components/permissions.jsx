@@ -28,11 +28,11 @@ const ToolEditorPermissions = (props) => {
       definition={[
         {
           name: 'public',
-          title: trans('public_sequence', {}, 'evaluation'),
+          title: trans('public'),
           primary: true,
           fields: [
             {
-              name: 'meta.public',
+              name: 'data.meta.public',
               type: 'boolean',
               label: trans('make_tool_public', {}, 'tools'),
               help: trans('workspace' === props.contextType ? 'make_tool_public_workspace_help' : 'make_tool_public_help', {}, 'tools')

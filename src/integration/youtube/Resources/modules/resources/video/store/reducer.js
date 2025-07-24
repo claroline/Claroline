@@ -1,3 +1,5 @@
+import get from 'lodash/get'
+
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
@@ -7,8 +9,8 @@ const reducer = combineReducers({
   resource: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, 'youtube_video')]: (state, action) => action.resourceData.resource,
   }),
-  progression: makeReducer({}, {
-    [makeInstanceAction(RESOURCE_LOAD, 'youtube_video')]: (state, action) => action.resourceData.userEvaluation.progression
+  progression: makeReducer(null, {
+    [makeInstanceAction(RESOURCE_LOAD, 'youtube_video')]: (state, action) => get(action.resourceData, 'userEvaluation.progression', null)
   })
 })
 

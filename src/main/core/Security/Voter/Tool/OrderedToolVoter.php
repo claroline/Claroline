@@ -53,6 +53,10 @@ class OrderedToolVoter extends AbstractVoter
             return VoterInterface::ACCESS_DENIED;
         }
 
+        if (self::OPEN === $attributes[0] && $object->isPublic()) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
         if (WorkspaceContext::getName() === $object->getContextName()) {
             $wsContext = $this->contextProvider->getContext(WorkspaceContext::getName());
             if ($this->isGranted(self::ADMINISTRATE, $wsContext->getObject($object->getContextId()))) {

@@ -66,6 +66,7 @@ class ResourceNodeSerializer
                 'poster' => $resourceNode->getPoster(),
                 'meta' => [
                     'description' => $resourceNode->getDescription(),
+                    'public' => $resourceNode->isPublic(),
                     'published' => $resourceNode->isPublished(), // not required but nice to have
                     'type' => $resourceNode->getType(), // try to remove. use mimeType instead
                     'mimeType' => $resourceNode->getMimeType(),
@@ -88,6 +89,7 @@ class ResourceNodeSerializer
                 'mimeType' => $resourceNode->getMimeType(),
                 'description' => $resourceNode->getDescription(),
                 'descriptionHtml' => $resourceNode->getDescriptionHtml(),
+                'public' => $resourceNode->isPublic(),
                 'creator' => $resourceNode->getCreator() ?
                     $this->userSerializer->serialize($resourceNode->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                     null,
@@ -181,6 +183,7 @@ class ResourceNodeSerializer
 
         $resourceNode->setMimeType($mimeType);
 
+        $this->sipe('meta.public', 'setPublic', $data, $resourceNode);
         $this->sipe('meta.published', 'setPublished', $data, $resourceNode);
         $this->sipe('meta.downloadable', 'setDownloadable', $data, $resourceNode);
         $this->sipe('meta.description', 'setDescription', $data, $resourceNode);
@@ -208,7 +211,6 @@ class ResourceNodeSerializer
             // Only used to be able to directly create a node with rights. Used in transfer feature. To move later
             $this->deserializeRights($data['rights'], $resourceNode, $options);
         }
-
 
         if (isset($data['tags'])) {
             $this->deserializeTags($resourceNode, $data['tags'], $options);

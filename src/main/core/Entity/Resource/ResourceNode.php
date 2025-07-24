@@ -21,6 +21,7 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\DescriptionHtml;
+use Claroline\AppBundle\Entity\Meta\IsPublic;
 use Claroline\AppBundle\Entity\Meta\Published;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
@@ -57,6 +58,7 @@ class ResourceNode implements CrudEntityInterface
     use Creator;
     use Published;
     use HasWorkspace;
+    use IsPublic;
     // restrictions
     use Hidden;
     use AccessibleFrom;

@@ -35,22 +35,27 @@ const ResourceEditorPermissions = (props) => {
       managerOnly={true}
       definition={[
         {
-          name: 'download',
-          icon: 'fa fa-fw fa-download',
-          title: trans('download'),
+          name: 'general',
+          title: trans('general'),
           primary: true,
-          displayed: !isEmpty(props.resourceNode) && supportDownload(props.resourceNode),
           fields: [
             {
+              name: 'resourceNode.meta.public',
+              type: 'boolean',
+              label: trans('make_resource_public', {}, 'resource'),
+              help: [
+                trans('make_resource_public_help', {}, 'resource')
+              ]
+            }, {
               name: 'resourceNode.meta.downloadable',
               type: 'boolean',
+              displayed: !isEmpty(props.resourceNode) && supportDownload(props.resourceNode),
               label: trans('allow_download', {}, 'resource'),
               help: trans('allow_download_help', {}, 'resource')
             }
           ]
         }, {
           name: 'roles',
-          icon: 'fa fa-fw fa-id-badges',
           title: trans('roles'),
           description: trans('Assignez des permissions aux rôles pour personnaliser les droits des utilisateurs possédant ce rôle.'),
           primary: true,

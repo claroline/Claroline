@@ -78,6 +78,10 @@ class WorkspaceVoter extends AbstractVoter implements CacheableVoterInterface
             return VoterInterface::ACCESS_DENIED;
         }
 
+        if (self::OPEN === $attributes[0] && $object->isPublic()) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
         if (ToolPermissions::isPermission($attributes[0])) {
             $toolPerm = ToolPermissions::parsePermission($attributes[0]);
             if ($this->workspaceManager->hasAccess($object, $token, $toolPerm[0], $toolPerm[1])) {

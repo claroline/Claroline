@@ -86,7 +86,7 @@ VideoPlayer.propTypes = {
   video: T.shape(
     VideoTypes.propTypes
   ).isRequired,
-  progression: T.number.isRequired,
+  progression: T.number,
   updateProgression: T.func.isRequired,
   currentUser: T.object
 }

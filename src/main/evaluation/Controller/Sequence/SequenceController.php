@@ -81,7 +81,6 @@ class SequenceController extends AbstractCrudController
         $this->checkPermission('OPEN', $resourceNode, [], true);
 
         return new JsonResponse(
-
         );
     }
 

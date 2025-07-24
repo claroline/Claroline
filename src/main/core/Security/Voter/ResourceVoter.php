@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
+use Claroline\AppBundle\Security\Voter\VoterInterface as ClarolineVoterInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
@@ -121,6 +122,10 @@ class ResourceVoter implements VoterInterface
 
             return VoterInterface::ACCESS_DENIED;
         } elseif ($subject instanceof ResourceNode) {
+            if (ClarolineVoterInterface::OPEN === $attributes[0] && $subject->isPublic()) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+
             if (in_array($attributes[0], $this->specialActions)) {
                 throw new \Exception('A ResourceCollection class must be used for this action.');
             }

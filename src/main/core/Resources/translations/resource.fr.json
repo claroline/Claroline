@@ -93,5 +93,7 @@
     "publish_resource_help": "Temps que la ressource n'est pas publiée, elle est uniquement accessible aux utilisateurs ayant la permission \"Modifier\".",
     "allow_download": "Autoriser le téléchargement",
     "allow_download_help": "Les utilisateurs ayant la permission \"Ouvrir\" peuvent télécharger une copie locale de la ressource.",
-    "resource_history_desc": "Retrouvez toutes les modifications effectuées sur la ressource et son contenu."
+    "resource_history_desc": "Retrouvez toutes les modifications effectuées sur la ressource et son contenu.",
+    "make_resource_public": "Rendre la ressource publique",
+    "make_resource_public_help": "Les ressources publiques sont accessibles par tous les utilisateurs ayant accès à l'espace d'activités."
 }
