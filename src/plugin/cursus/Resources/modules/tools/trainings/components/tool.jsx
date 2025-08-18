@@ -105,6 +105,10 @@ const TrainingsTool = (props) =>
         disabled: !props.canRegister
       }
     ]}
+    redirect={[
+      {from: '/catalog', to: '/course', exact: true, disabled: 'desktop' !== props.contextType}, // ATTENTION: for retro-compatibility with 14.2 routes
+      {from: '/catalog/:slug', to: '/course/:slug', disabled: 'desktop' !== props.contextType} // ATTENTION: for retro-compatibility with 14.2 routes
+    ]}
     editor={TrainingsEditor}
     // dashboard={TrainingsDashboard}
   />
