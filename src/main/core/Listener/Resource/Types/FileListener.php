@@ -60,7 +60,7 @@ final class FileListener extends ResourceComponent implements DownloadableResour
 
     public function fromFile(File $file): ?array
     {
-        return [];
+        return ['meta' => ['downloadable' => true]];
     }
 
     public function requireAdapter(): bool

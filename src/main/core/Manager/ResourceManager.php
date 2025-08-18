@@ -127,7 +127,7 @@ class ResourceManager
             'resource' => $resourceData,
         ]);
         // generic event
-        $this->eventDispatcher->dispatch($createResource, ResourceEvents::getEventName(ResourceEvents::DOWNLOAD));
+        $this->eventDispatcher->dispatch($createResource, ResourceEvents::getEventName(ResourceEvents::CREATE));
         // specific event
         $this->eventDispatcher->dispatch($createResource, ResourceEvents::getEventName(ResourceEvents::CREATE, $resourceNode->getResourceType()->getName()));
 
