@@ -5,8 +5,9 @@ import classes from 'classnames'
 import {utils} from '#/plugin/exo/items/pair/utils'
 import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
+import {SolutionScore} from '#/plugin/exo/components/score'
 
-export const PairFeedback = (props) => {
+const PairFeedback = (props) => {
   const yourAnswers = utils.getYourAnswers(props.answer, props.item)
   return (
     <div className="pair-feedback row">
@@ -54,6 +55,9 @@ export const PairFeedback = (props) => {
                   id={`pair-${answer.leftItem.id}-${answer.rightItem.id}-feedback`}
                   feedback={answer.feedback}
                 />
+                {props.item.hasExpectedAnswers && props.showScore && answer.score !== '' &&
+                  <SolutionScore score={answer.score}/>
+                }
               </div>
             </li>
           )}
@@ -72,5 +76,10 @@ PairFeedback.propTypes = {
     solutions: T.arrayOf(T.object),
     hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
-  answer: T.array
+  answer: T.array,
+  showScore: T.bool
+}
+
+export {
+  PairFeedback
 }

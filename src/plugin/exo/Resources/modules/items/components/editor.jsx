@@ -1,220 +1,101 @@
-import React, {createElement} from 'react'
+import React, {createElement, useEffect, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl/translation'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {HtmlInput} from '#/main/app/data/types/html/components/input'
-import {NumberInput} from '#/main/app/data/types/number/components/input'
-import {makeId} from '#/main/app/utils/id'
+import {trans, transChoice} from '#/main/app/intl/translation'
+import {Badge} from '#/main/app/components/badge'
+import {Toolbar} from '#/main/app/action'
+import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
+import {Html} from '#/main/app/components/html'
 
-import {Item as ItemTypes, ItemType as ItemTypeTypes} from '#/plugin/exo/items/prop-types'
-
+import {Item as ItemTypes} from '#/plugin/exo/items/prop-types'
 import ScoreNone from '#/plugin/exo/scores/none'
+import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
+import {getComponent} from '#/plugin/exo/items/item-types'
+import {calculateTotal} from '#/plugin/exo/items/score'
+import {getItem} from '#/plugin/exo/items'
+import {ItemIcon} from '#/plugin/exo/items/components/icon'
 
-const ItemEditor = props => {
-  let supportedScores, currentScore, availableScores
-  if (props.definition.answerable) {
-    supportedScores = [ScoreNone].concat(props.definition.supportScores(props.item) || [])
+const ItemEditor = ({
+  id,
+  item,
+  numbering,
+  actions
+}) => {
+  const [itemDefinition, setItemDefinition] = useState(null)
+  useEffect(() => {
+    if (item.type) {
+      getItem(item.type).then(setItemDefinition)
+    }
+  }, [item.type])
 
-    currentScore = supportedScores.find(score => score.name === get(props.item, 'score.type'))
-    availableScores = supportedScores.reduce((scoreChoices, current) => Object.assign(scoreChoices, {
-      [current.name]: current.meta.label
-    }), {})
+  let totalScore
+  if (item.hasExpectedAnswers) {
+    totalScore = calculateTotal(item)
   }
 
   return (
-    <FormData
-      id={`form-${props.item.id}`}
-      className="quiz-item item-editor"
-      flush={true}
-      autoFocus={props.autoFocus}
-      embedded={props.embedded}
-      name={props.formName}
-      meta={props.meta}
-      dataPart={props.path}
-      disabled={props.disabled}
-      definition={[
-        {
-          title: trans('general'),
-          primary: true,
-          fields: [
-            {
-              name: 'content',
-              label: trans('question', {}, 'quiz'),
-              type: 'html',
-              required: true,
-              displayed: props.definition.answerable
-            }, {
-              name: 'hasExpectedAnswers',
-              label: trans('has_expected_answers', {}, 'quiz'),
-              type: 'boolean',
-              displayed: props.enableScores && props.definition.answerable,
-              help: [
-                trans('has_expected_answers_help', {}, 'quiz'),
-                trans('has_expected_answers_help_score', {}, 'quiz')
-              ],
-              onChange: (checked) => {
-                if (!checked) {
-                  props.update('score.type', ScoreNone.name)
-                }
-              }
-            }
-          ]
-        }, {
-          title: trans('custom'),
-          primary: true,
-          fill: true,
-          hideTitle: true,
-          render: () => createElement(props.definition.components.editor, {
-            formName: props.formName,
-            path: props.path,
-            disabled: props.disabled,
-            item: props.item,
-            hasAnswerScores: props.definition.answerable && props.enableScores ? currentScore.hasAnswerScores: false,
-            update: props.update
-          })
-        }, {
-          icon: 'fa fa-fw fa-circle-info',
-          title: trans('information'),
-          fields: [
-            {
-              name: 'title',
-              label: trans('title'),
-              type: 'string'
-            }, {
-              name: 'description',
-              label: trans('description'),
-              type: 'html'
-            }, {
-              name: 'tags',
-              label: trans('tags'),
-              type: 'tag'
-            }
-          ]
-        }, {
-          icon: 'fa fa-fw fa-boxes',
-          title: trans('question_objects', {}, 'quiz'),
-          displayed: props.definition.answerable,
-          fields: [
-            {
-              name: 'objects',
-              label: trans('medias'),
-              type: 'medias',
-              options: {
-                path: props.path
-              }
-            }
-          ]
-        }, {
-          icon: 'fa fa-fw fa-percentage',
-          title: trans('score'),
-          displayed: props.enableScores && props.definition.answerable && props.item.hasExpectedAnswers,
-          fields: [
-            {
-              name: 'score.type',
-              label: trans('calculation_mode', {}, 'quiz'),
-              type: 'choice',
-              required: true,
-              options: {
-                noEmpty: true,
-                condensed: true,
-                // get the list of score supported by the current type
-                choices: availableScores
-              },
-              // TODO : make it a new dataType (duplicated in quiz editor)
-              linked: currentScore ? currentScore
-                // generate the list of fields for the score type
-                .configure(get(props.item, 'score'), (prop, value) => props.update(`score.${prop}`, value))
-                .map(scoreProp => Object.assign({}, scoreProp, {
-                  name: `score.${scoreProp.name}`,
-                  // slightly ugly because I only support 1 level
-                  linked: scoreProp.linked ? scoreProp.linked.map(linkedProp => Object.assign({}, linkedProp, {
-                    name: `score.${linkedProp.name}`
-                  })) : []
-                })) : []
-            }
-          ]
-        }, {
-          id: 'help',
-          icon: 'fa fa-fw fa-circle-question',
-          title: trans('help'),
-          displayed: props.definition.answerable,
-          fields: [
-            {
-              name: 'hints',
-              label: trans('hints', {}, 'quiz'),
-              type: 'collection',
-              options: {
-                placeholder: trans('no_hint_info', {}, 'quiz'),
-                button: trans('add_hint', {}, 'quiz'),
-                defaultItem: {id: makeId(), penalty: 0},
-                render: (hint = {}, hintErrors, hintIndex) => {
-                  const HintEditor = (
-                    <div className="hint-control">
-                      <HtmlInput
-                        id={`hint-${props.item.id}-${hintIndex}-text`}
-                        className="hint-value"
-                        value={hint.value}
-                        onChange={value => props.update(`hints[${hintIndex}].value`, value)}
-                      />
-
-                      <NumberInput
-                        id={`hint-${props.item.id}-${hintIndex}-penalty`}
-                        className="hint-penalty"
-                        min={0}
-                        value={hint.penalty}
-                        onChange={value => props.update(`hints[${hintIndex}].penalty`, value)}
-                      />
-                    </div>
-                  )
-
-                  return HintEditor
-                }
-              }
-            }, {
-              name: 'feedback',
-              label: trans('feedback', {}, 'quiz'),
-              type: 'html'
-            }
-          ]
+    <div id={id} className="card quiz-item item-paper">
+      <div className="card-header d-flex align-items-center gap-2">
+        {itemDefinition &&
+          <span className="mb-0 flex-fill fw-bolder">
+            <ItemIcon name={get(itemDefinition, 'name')} className="icon-with-text-right" size="xs" />
+            {trans(get(itemDefinition, 'name'), {}, 'question_types')}
+          </span>
         }
-      ]}
-    />
+
+        {(totalScore || 0 === totalScore) ?
+          <Badge variant="primary" subtle={true} className="fs-base">
+            {transChoice('solution_score', totalScore, {score: totalScore}, 'quiz')}
+          </Badge> :
+          <Badge variant="secondary" subtle={true} className="fs-base">
+            {trans('score_none', {}, 'quiz')}
+          </Badge>
+        }
+
+        {actions &&
+          <Toolbar
+            className="me-n2"
+            buttonName="btn btn-text-body px-2"
+            actions={actions}
+            toolbar="edit more"
+            tooltip="bottom"
+          />
+        }
+      </div>
+
+      <div className="card-body">
+        <ItemMetadata
+          item={item}
+          showTitle={true}
+          numbering={numbering}
+        />
+
+        <hr className="item-content-separator my-4" />
+
+        {createElement(getComponent(item.type, 'expectedAnswer'), {
+          item: item,
+          showScore: item.hasExpectedAnswers && ScoreNone.name !== get(item, 'score.type')
+        })}
+
+        {(item.feedback && !isHtmlEmpty(item.feedback)) &&
+          <div className="item-feedback">
+            <span className="fa fa-comment" />
+            <Html>{item.feedback}</Html>
+          </div>
+        }
+      </div>
+    </div>
   )
 }
 
 ItemEditor.propTypes = {
-  embedded: T.bool,
-  meta: T.bool,
-  formName: T.string.isRequired,
-  path: T.string,
-  disabled: T.bool,
-  autoFocus: T.bool,
-  enableScores: T.bool, // used when the parent quiz disable the score
-
-  /**
-   * The item object currently edited.
-   */
+  id: T.string.isRequired,
   item: T.shape(
     ItemTypes.propTypes
   ).isRequired,
-
-  /**
-   * The definition of the item type.
-   */
-  definition: T.shape(
-    ItemTypeTypes.propTypes
-  ).isRequired,
-
-  update: T.func.isRequired
-}
-
-ItemEditor.defaultProps = {
-  embedded: false,
-  meta: false,
-  disabled: false,
-  enableScores: true
+  numbering: T.string,
+  actions: T.array
 }
 
 export {

@@ -9,7 +9,7 @@ import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/app/utils/id'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 import {NumberInput} from '#/main/app/data/types/number/components/input'
 
@@ -125,7 +125,7 @@ Choice.propTypes = {
 }
 
 const Choices = props =>
-  <Fragment>
+  <>
     <ul className={classes('choice-answer-items', props.direction)}>
       {props.choices.map(choice =>
         <Choice
@@ -150,12 +150,12 @@ const Choices = props =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="btn btn-outline-primary w-100"
+      className="btn btn-body w-100"
       icon="fa fa-fw fa-plus"
       label={trans('add_choice', {}, 'quiz')}
       callback={props.addChoice}
     />
-  </Fragment>
+  </>
 
 Choices.propTypes = {
   direction: T.oneOf(['horizontal', 'vertical']).isRequired,
@@ -279,11 +279,9 @@ const ChoiceEditor = props => {
   )
   
   return (
-    <FormData
+    <FormContent
       className="choice-item choice-editor"
-      embedded={true}
       name={props.formName}
-      dataPart={props.path}
       definition={[
         {
           title: trans('general'),

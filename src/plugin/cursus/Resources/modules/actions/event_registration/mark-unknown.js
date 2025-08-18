@@ -6,6 +6,7 @@ import {hasPermission} from '#/main/app/security'
 
 import {constants} from '#/plugin/cursus/constants'
 import {declareAction} from '#/main/app/action'
+import get from 'lodash/get'
 
 export default declareAction((registrations, refresher) => {
   const processable = registrations.filter(registration => constants.TEACHER_TYPE !== registration.type && hasPermission('edit', registration))
@@ -20,7 +21,7 @@ export default declareAction((registrations, refresher) => {
       url: ['apiv2_cursus_event_presence_update', {status: status}],
       request: {
         method: 'PUT',
-        body: JSON.stringify(processable.map(registration => registration.presence.id))
+        body: JSON.stringify(processable.map(registration => get(registration.presence, 'id')))
       },
       success: () => refresher.update(processable)
     },

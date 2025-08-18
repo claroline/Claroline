@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import union from 'lodash/union'
 
 import {trans} from '#/main/app/intl/translation'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 
 import {constants as searchConst} from '#/main/app/content/search/constants'
 import {
@@ -66,9 +66,8 @@ const ListForm = props => {
     )
 
   return (
-    <FormData
+    <FormContent
       flush={props.flush}
-      embedded={true}
       level={props.level}
       name={props.name}
       dataPart={props.dataPart}
@@ -431,7 +430,7 @@ const ListForm = props => {
               ]
             }
           ]
-        }, /*{
+        }/*, {
           id: 'list-card',
           icon: 'fa fa-fw fa-th-large',
           title: trans('cards'),

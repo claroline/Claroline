@@ -2,21 +2,21 @@ import React, {useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useSelector} from 'react-redux'
 import classes from 'classnames'
-import get from 'lodash/get'
 
 import {scrollTo} from '#/main/app/dom/scroll'
 import {trans} from '#/main/app/intl/translation'
 import {Toolbar} from '#/main/app/action'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {FormSections} from '#/main/app/content/form/components/sections'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {EditorPage} from '#/main/app/editor'
 
 import {selectors as editorSelectors} from '#/main/core/resource/editor/store'
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
-import {EditorItem} from '#/plugin/exo/resources/quiz/editor/components/item'
 import {Item as ItemTypes} from '#/plugin/exo/items/prop-types'
+import {isQuestionType} from '#/plugin/exo/items/item-types'
+import {ContentItemPlayer} from '#/plugin/exo/contents/components/content-item-player'
+import {ItemEditor} from '#/plugin/exo/items/components/editor'
 
 const QuizEditorStep = props => {
   const resourceEditorPath = useSelector(editorSelectors.path)
@@ -80,24 +80,25 @@ const QuizEditorStep = props => {
       }
 
       {0 !== props.items.length &&
-        <FormSections level={3} defaultOpened={'item'+props.currentItemId}>
+        <ul className="list-unstyled mb-0 d-flex flex-column gap-4">
           {props.items.map((item, itemIndex) =>
-            <EditorItem
-              key={item.id}
-              id={'item'+item.id}
-              formName={props.formName}
-              path={`${props.path}.items[${itemIndex}]`}
-              errors={get(props.errors, `items[${itemIndex}]`)}
-              autoFocus={props.currentItemId === item.id}
-
-              enableScores={props.hasExpectedAnswers}
-              numbering={getNumbering(props.questionNumberingType, props.index, itemIndex)}
-              item={item}
-              update={(prop, value) => props.update(prop ? `items[${itemIndex}].${prop}`:`items[${itemIndex}]`, value)}
-              actions={props.getItemActions(item, itemIndex)}
-            />
+            <li key={item.id}>
+              {!isQuestionType(item.type) ?
+                <ContentItemPlayer
+                  id={'item-'+item.id}
+                  showTitle={true}
+                  item={item}
+                /> :
+                <ItemEditor
+                  id={'item-'+item.id}
+                  item={item}
+                  numbering={getNumbering(props.questionNumberingType, props.index, itemIndex)}
+                  actions={props.getItemActions(item, itemIndex)}
+                />
+              }
+            </li>
           )}
-        </FormSections>
+        </ul>
       }
 
       <Toolbar
@@ -134,8 +135,7 @@ QuizEditorStep.propsTypes = {
   items: T.arrayOf(T.shape(
     ItemTypes.propTypes
   )),
-  errors: T.object,
-  update: T.func.isRequired
+  errors: T.object
 }
 
 QuizEditorStep.defaultProps = {

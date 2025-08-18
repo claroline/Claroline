@@ -40,8 +40,7 @@ final class PublicContext extends ContextComponent
 
     public function isAvailable(): bool
     {
-        return 'tool' === $this->config->getParameter('home.type')
-            /* && (empty($this->securityManager->getCurrentUser()) || $this->securityManager->isAdmin()) */;
+        return 'tool' === $this->config->getParameter('home.type');
     }
 
     public function getAccessErrors(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array

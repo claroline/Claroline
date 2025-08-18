@@ -11,9 +11,10 @@ import {keywords as keywordsUtils} from '#/plugin/exo/utils/keywords'
 
 // components
 import {ClozeEditor} from '#/plugin/exo/items/cloze/components/editor'
-import {ClozePaper} from '#/plugin/exo/items/cloze/components/paper'
-import {ClozePlayer} from '#/plugin/exo/items/cloze/components/player'
+import {ClozeExpectedAnswer} from '#/plugin/exo/items/cloze/components/expected-answer'
 import {ClozeFeedback} from '#/plugin/exo/items/cloze/components/feedback'
+import {ClozePlayer} from '#/plugin/exo/items/cloze/components/player'
+import {ClozeStats} from '#/plugin/exo/items/cloze/components/stats'
 
 // scores
 import ScoreSum from '#/plugin/exo/scores/sum'
@@ -21,15 +22,14 @@ import ScoreSum from '#/plugin/exo/scores/sum'
 export default {
   name: 'cloze',
   type: 'application/x.cloze+json',
-  tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
-  paper: ClozePaper,
-  player: ClozePlayer,
-  feedback: ClozeFeedback,
-
   components: {
-    editor: ClozeEditor
+    editor: ClozeEditor,
+    player: ClozePlayer,
+    feedback: ClozeFeedback,
+    expectedAnswer: ClozeExpectedAnswer,
+    stats: ClozeStats
   },
 
   /**

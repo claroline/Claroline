@@ -6,9 +6,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
-import {FormData} from '#/main/app/content/form/containers/data'
 import {FormGroup} from '#/main/app/content/form/components/group'
-import {ContentHtml} from '#/main/app/content/components/html'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 import {SCORE_SUM} from '#/plugin/exo/scores/constants'
@@ -20,6 +18,8 @@ import {utils} from '#/plugin/exo/items/set/utils'
 import {SetItemDragPreview} from '#/plugin/exo/items/set/components/set-item-drag-preview'
 import {FeedbackEditorButton} from '#/plugin/exo/buttons/feedback/components/button'
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
+import {Html} from '#/main/app/components/html'
+import {FormContent} from '#/main/app/content/form'
 
 const addItem = (items, saveCallback) => {
   const newItems = cloneDeep(items)
@@ -219,9 +219,9 @@ class Association extends Component {
       })}>
         <div className="text-fields">
           {this.props.association._itemData &&
-            <ContentHtml className="form-control">
+            <Html className="form-control">
               {this.props.association._itemData}
-            </ContentHtml>
+            </Html>
           }
 
           {!this.props.association._itemData &&
@@ -377,7 +377,7 @@ const SetList = (props) =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="btn btn-outline-primary w-100"
+      className="btn btn-body w-100"
       icon="fa fa-fw fa-plus"
       label={trans('set_add_set', {}, 'quiz')}
       callback={() => addSet(props.sets, props.onChange)}
@@ -452,6 +452,7 @@ const ItemList = (props) =>
   <FormGroup
     id="item-items"
     label={trans('items', {}, 'quiz')}
+    className="mb-4"
   >
     <ul>
       {props.items
@@ -472,7 +473,7 @@ const ItemList = (props) =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="btn btn-outline-primary w-100"
+      className="btn btn-body w-100"
       icon="fa fa-fw fa-plus"
       label={trans('set_add_item', {}, 'quiz')}
       callback={props.add}
@@ -596,7 +597,7 @@ const OddList = (props) =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="btn btn-outline-primary w-100"
+      className="btn btn-body w-100"
       icon="fa fa-fw fa-plus"
       label={trans('set_add_odd', {}, 'quiz')}
       callback={props.add}
@@ -661,11 +662,9 @@ const SetEditor = (props) => {
   )
 
   return (
-    <FormData
+    <FormContent
       className="set-item set-editor"
-      embedded={true}
       name={props.formName}
-      dataPart={props.path}
       definition={[
         {
           title: trans('general'),

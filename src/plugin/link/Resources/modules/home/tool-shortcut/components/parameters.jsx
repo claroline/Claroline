@@ -4,12 +4,11 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
 import {selectors} from '#/plugin/home/tools/home/editor/store/selectors'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 import {getFormDataPart} from '#/plugin/home/tools/home/editor/utils'
 
 const ToolShortcutTabParameters = (props) =>
-  <FormData
-    embedded={true}
+  <FormContent
     disabled={props.readOnly}
     name={selectors.FORM_NAME}
     dataPart={`${getFormDataPart(props.currentTab.id, props.tabs)}.parameters`}

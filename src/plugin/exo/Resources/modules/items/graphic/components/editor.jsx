@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import get from 'lodash/get'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
 
 import {resizeArea} from '#/plugin/exo/items/graphic/resize'
@@ -564,11 +564,9 @@ const GraphicEditor = (props) => {
   )
 
   return (
-    <FormData
+    <FormContent
       className="graphic-editor"
-      embedded={true}
       name={props.formName}
-      dataPart={props.path}
       definition={[
         {
           title: trans('general'),

@@ -2,6 +2,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {constants} from '#/plugin/exo/resources/quiz/constants'
 import {QUIZ_TYPE_DEFAULT} from '#/plugin/exo/resources/quiz/types'
+import {Item} from '#/plugin/exo/items/prop-types'
 
 const Step = {
   propTypes: {
@@ -17,9 +18,9 @@ const Step = {
       randomOrder: T.string,
       randomPick: T.string
     }),
-    items: T.arrayOf(T.shape({
-      // TODO : item types
-    }))
+    items: T.arrayOf(T.shape(
+      Item.propTypes
+    ))
   },
   defaultProps: {
     items: [],
@@ -41,7 +42,7 @@ const Quiz = {
     meta: T.shape({
 
     }),
-    score: T.shape({ // TODO : score propTypes
+    score: T.shape({
       type: T.string.isRequired
     }),
     parameters: T.shape({
@@ -60,7 +61,7 @@ const Quiz = {
 
     },
     score: {
-      type: 'sum' // TODO : use constants
+      type: 'sum'
     },
     parameters: {
       type: QUIZ_TYPE_DEFAULT,

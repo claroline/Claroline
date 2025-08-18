@@ -6,7 +6,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 import {makeId} from '#/main/app/utils/id'
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
@@ -159,7 +159,7 @@ class Item extends Component {
 
           <Button
             id={`item-${this.props.id}-delete`}
-            className="btn btn-text-body"
+            className="btn btn-text-body focus-ring"
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}
@@ -176,14 +176,14 @@ class Item extends Component {
               disabled={this.props.isDragging}
             >
               {this.props.connectDragSource(
-                <span
+                <div
                   className="btn btn-text-body cursor-move"
                   aria-labelledby={`ordering-item-${this.props.id}-drag`}
                   draggable={true}
                   role="button"
                 >
                   <span className="fa fa-fw fa-arrows" aria-hidden={true} />
-                </span>
+                </div>
               )}
             </TooltipOverlay>
           }
@@ -284,7 +284,7 @@ const OrderingItems = (props) =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="btn btn-outline-primary w-100"
+      className="btn btn-body w-100"
       icon="fa fa-fw fa-plus"
       label={trans('ordering_add_item', {}, 'quiz')}
       callback={() => addItem(props.item.items, props.item.solutions, false, props.onChange)}
@@ -326,7 +326,7 @@ const OrderingOdds = (props) =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="btn btn-outline-primary w-100"
+      className="btn btn-body w-100"
       icon="fa fa-fw fa-plus"
       label={trans('ordering_add_odd', {}, 'quiz')}
       callback={() => addItem(props.item.items, props.item.solutions, true, props.onChange)}
@@ -375,11 +375,9 @@ const OrderingEditor = props => {
   )
 
   return (
-    <FormData
+    <FormContent
       className="ordering-item ordering-editor mb-0 user-select-none"
-      embedded={true}
       name={props.formName}
-      dataPart={props.path}
       definition={[
         {
           title: trans('general'),

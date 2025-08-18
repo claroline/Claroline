@@ -1,10 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import isEmpty from 'lodash/isEmpty'
-import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 
 import {EventForm} from '#/plugin/agenda/event/containers/form'
 
@@ -15,10 +13,9 @@ const TaskForm = (props) =>
     target={(task, isNew) => isNew ? ['apiv2_task_create']: ['apiv2_task_update', {id: task.id}]}
     onSave={props.onSave}
   >
-    <FormData
+    <FormContent
       flush={props.flush}
       name={props.name}
-      embedded={true}
       definition={[
         {
           title: trans('general'),

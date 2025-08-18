@@ -2,11 +2,11 @@
 
 namespace UJM\ExoBundle\Controller;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -43,9 +43,17 @@ class PaperController
      * Administrators get the papers of all users, others get only theirs.
      */
     #[Route(path: '', name: 'exercise_paper_list', methods: ['GET'])]
-    public function listAction(#[MapEntity(mapping: ['exerciseId' => 'uuid'])] Exercise $exercise, #[CurrentUser] ?User $user, Request $request): JsonResponse
-    {
+    public function listAction(
+        #[MapEntity(mapping: ['exerciseId' => 'uuid'])]
+        Exercise $exercise,
+        #[CurrentUser]
+        ?User $user,
+        Request $request
+    ): JsonResponse {
         $this->assertHasPermission('OPEN', $exercise);
+        if (!$user) {
+            throw new AccessDeniedException();
+        }
 
         $params = $request->query->all();
 

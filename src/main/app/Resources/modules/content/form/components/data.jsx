@@ -15,7 +15,6 @@ const FormData = (props) => {
       name={props.name}
       dataPart={props.dataPart}
       className={props.className}
-      embedded={props.embedded}
       flush={props.flush}
       disabled={disabled}
       level={props.level}
@@ -78,13 +77,6 @@ FormData.propTypes = {
    * If a function is provided it's called with the current data & new flag as param.
    */
   target: T.oneOfType([T.string, T.array, T.func]),
-
-  /**
-   * Is the form embed into another ?
-   *
-   * Permits to know if we use a <form> or a <fieldset> tag.
-   */
-  embedded: T.bool,
   level: T.number,
   displayLevel: T.number,
   size: T.string,

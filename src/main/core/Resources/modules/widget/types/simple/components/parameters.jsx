@@ -2,11 +2,10 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 
 const SimpleWidgetParameters = (props) =>
-  <FormData
-    embedded={true}
+  <FormContent
     level={5}
     flush={true}
     name={props.name}

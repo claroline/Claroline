@@ -10,6 +10,7 @@ import '#/main/app/input/tinymce/langs'
  * It is customized depending on the mode you choose (minimal, classic, full).
  */
 const config = {
+  license_key: 'gpl',
   language: 'fr' === locale() ? 'fr_FR' : locale(),
   base_url: asset('packages/tinymce'),
   // convert all relatives URLs into absolute ones

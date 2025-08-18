@@ -6,12 +6,12 @@ import {trans} from '#/main/app/intl/translation'
 import {constants} from '#/plugin/exo/resources/quiz/constants'
 
 /**
- * Declares all available types of quiz.
+ * Declare all available types of quiz.
  *
  * Each type defines some default values for the quiz parameters.
- * It also allows to disable and hide some editor properties.
+ * It also allows disabling and hide some editor properties.
  *
- * defaultProps : when changing the type of quiz, if the user have replaced one of the default props
+ * defaultProps: when changing the type of quiz, if the user has replaced one of the default props
  * it will not be overridden.
  *
  * requiredProps: when changing the type quiz, the user defined values will be overridden.
@@ -21,13 +21,12 @@ const QUIZ_CONCEPTUALIZATION = 'conceptualization'
 const QUIZ_FORMATIVE         = 'formative'
 const QUIZ_SUMMATIVE         = 'summative'
 const QUIZ_CERTIFICATION     = 'evaluative'
-const QUIZ_SURVEY            = 'survey'
 const QUIZ_CUSTOM            = 'custom'
 
 const QUIZ_TYPE_DEFAULT = QUIZ_CUSTOM
 
 /**
- * Type : Conceptualization
+ * Type: Conceptualization
  */
 const conceptualizationType = {
   name: QUIZ_CONCEPTUALIZATION,
@@ -42,7 +41,7 @@ const conceptualizationType = {
 }
 
 /**
- * Type : Formative
+ * Type: Formative
  */
 const formativeType = {
   name: QUIZ_FORMATIVE,
@@ -73,7 +72,7 @@ const formativeType = {
 }
 
 /**
- * Type : Summative
+ * Type: Summative
  */
 const summativeType = {
   name: QUIZ_SUMMATIVE,
@@ -99,7 +98,7 @@ const summativeType = {
 }
 
 /**
- * Type : Certification
+ * Type: Certification
  */
 const certificationType = {
   name: QUIZ_CERTIFICATION,
@@ -128,41 +127,7 @@ const certificationType = {
 }
 
 /**
- * Type : Survey
- */
-const surveyType = {
-  name: QUIZ_SURVEY,
-  meta: {
-    icon: 'fa fa-fw fa-poll',
-    label: trans('quiz_survey', {}, 'quiz'),
-    description: trans('quiz_survey_desc', {}, 'quiz')
-  },
-  hiddenProps: [
-    'parameters.hasExpectedAnswers'
-  ],
-  disabledProps: [
-    'parameters.anonymizeAttempts'
-  ],
-
-  defaultProps: {
-    parameters: {
-      showCorrectionAt: constants.QUIZ_RESULTS_AT_NEVER
-    }
-  },
-  requiredProps: {
-    parameters: {
-      maxAttempts: 1,
-      anonymizeAttempts: true,
-      hasExpectedAnswers: false,
-      showFeedback: false,
-      showStatistics: true,
-      showCorrectionAt: constants.QUIZ_SCORE_AT_NEVER
-    }
-  }
-}
-
-/**
- * Type : Custom
+ * Type: Custom
  */
 const customType = {
   name: QUIZ_CUSTOM,
@@ -182,7 +147,6 @@ const QUIZ_TYPES = {
   [QUIZ_FORMATIVE]        : formativeType,
   [QUIZ_SUMMATIVE]        : summativeType,
   [QUIZ_CERTIFICATION]    : certificationType,
-  // [QUIZ_SURVEY]           : surveyType,
   [QUIZ_CUSTOM]           : customType
 }
 
@@ -249,7 +213,6 @@ export {
   QUIZ_FORMATIVE,
   QUIZ_SUMMATIVE,
   QUIZ_CERTIFICATION,
-  QUIZ_SURVEY,
   QUIZ_CUSTOM,
 
   configureTypeEditor,

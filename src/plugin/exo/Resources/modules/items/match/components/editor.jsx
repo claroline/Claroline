@@ -2,14 +2,16 @@ import React, {Component} from 'react'
 import classes from 'classnames'
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
+import omit from 'lodash/omit'
 
 import Popover from 'react-bootstrap/Popover'
 
+import {Overlay} from '#/main/app/overlays/components/overlay'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 import {SCORE_SUM} from '#/plugin/exo/scores/constants'
@@ -25,15 +27,6 @@ const getRightItemDeletable = (item) =>
 
 const getLeftItemDeletable = (item) =>
   (item.secondSet.length > 1 && item.firstSet.length > 1) || (item.secondSet.length === 1 && item.firstSet.length > 2)
-
-function getPopoverPosition(connectionClass, id) {
-  const containerRect =  document.getElementById('popover-place-holder-' + id).getBoundingClientRect()
-  const connectionRect =  document.querySelectorAll('.' + connectionClass)[0].getBoundingClientRect()
-  // only compute top position
-  return {
-    top:  connectionRect.top + connectionRect.height / 2 - containerRect.top
-  }
-}
 
 function drawSolutions(solutions, jsPlumbInstance) {
   for (const solution of solutions) {
@@ -63,33 +56,32 @@ class MatchLinkPopover extends Component {
     return (
       <Popover
         id={`popover-${this.props.solution.firstId}-${this.props.solution.secondId}`}
-        positionTop={this.props.popover.top}
-        className={classes('', this.props.hasExpectedAnswers && {
+        placement="bottom"
+        className={classes(this.props.className, this.props.hasExpectedAnswers && {
           'unexpected-answer' : 0 >= this.props.solution.score,
           'expected-answer' : 0 < this.props.solution.score
         })}
-        placement="bottom"
+        {...omit(this.props, 'path', 'solution', 'firstId', 'secondId', 'deletable', 'hasScore', 'hasExpectedAnswers', 'handlePopoverClose', 'handleConnectionDelete', 'update')}
       >
         <Popover.Header className="d-flex align-items-center">
           {trans('match_edit_connection', {}, 'quiz')}
 
           <Toolbar
             id={`popover-${this.props.solution.firstId}-${this.props.solution.secondId}-actions`}
-            className="popover-actions ms-auto"
+            className="popover-actions ms-auto me-n2"
+            buttonName="btn btn-text-body"
             tooltip="bottom"
             size="sm"
             actions={[
               {
                 name: 'delete',
                 type: CALLBACK_BUTTON,
-                className: 'btn btn-text-body',
                 icon: 'fa fa-fw fa-trash',
                 label: trans('delete', {}, 'actions'),
                 callback: () => this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId),
-                displayed: !this.props.deletable
+                displayed: this.props.deletable
               }, {
                 name: 'close',
-                className: 'btn btn-text-body',
                 type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-times',
                 label: trans('close', {}, 'actions'),
@@ -105,7 +97,7 @@ class MatchLinkPopover extends Component {
               <input
                 className="form-control association-score"
                 type="number"
-                value={this.props.solution.score}
+                value={this.props.solution.score || 0}
                 onChange={(e) => {
                   const newSolution = cloneDeep(this.props.solution)
                   newSolution.score = parseFloat(e.target.value)
@@ -138,14 +130,12 @@ class MatchLinkPopover extends Component {
             <HtmlInput
               id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback`}
               className="feedback-control"
-              value={this.props.solution.feedback}
-              onChange={
-                feedback => {
-                  const newSolution = cloneDeep(this.props.solution)
-                  newSolution.feedback = feedback
-                  this.props.update(this.props.path, newSolution)
-                }
-              }
+              value={this.props.solution.feedback || ''}
+              onChange={(feedback) => {
+                const newSolution = cloneDeep(this.props.solution)
+                newSolution.feedback = feedback
+                this.props.update(this.props.path, newSolution)
+              }}
             />
           }
         </Popover.Body>
@@ -155,8 +145,8 @@ class MatchLinkPopover extends Component {
 }
 
 MatchLinkPopover.propTypes = {
+  className: T.string,
   path: T.string.isRequired,
-  popover: T.object.isRequired,
   solution: T.object.isRequired,
   deletable: T.bool.isRequired,
   hasScore: T.bool.isRequired,
@@ -178,7 +168,7 @@ class MatchItem extends Component{
           <div className="left-controls">
             <Button
               id={`match-source-${this.props.item.id}-delete`}
-              className="btn-link"
+              className="btn btn-text-body"
               type={CALLBACK_BUTTON}
               icon="fa fa-fw fa-trash"
               label={trans('delete', {}, 'actions')}
@@ -204,7 +194,7 @@ class MatchItem extends Component{
           <div className="right-controls">
             <Button
               id={`match-target-${this.props.type + '_' + this.props.item.id}-delete`}
-              className="btn-link"
+              className="btn btn-text-body"
               type={CALLBACK_BUTTON}
               icon="fa fa-fw fa-trash"
               label={trans('delete', {}, 'actions')}
@@ -237,8 +227,7 @@ class MatchElements extends Component {
 
     this.state = {
       popover: {
-        visible: false,
-        top: 0
+        visible: false
       },
 
       showFeedback : false,
@@ -250,6 +239,7 @@ class MatchElements extends Component {
 
     this.jsPlumbInstance = utils.getJsPlumbInstance()
 
+    this.closePopover = this.closePopover.bind(this)
     this.handleTextEditorSwitch = this.handleTextEditorSwitch.bind(this)
     this.handleWindowResize = this.handleWindowResize.bind(this)
     this.removeConnection = this.removeConnection.bind(this)
@@ -292,7 +282,6 @@ class MatchElements extends Component {
       if (connection) {
         connection.connection.addClass(connectionClass)
       }
-      const positions = getPopoverPosition(connectionClass, this.props.item.id)
 
       const solution = {
         firstId: firstId,
@@ -307,53 +296,35 @@ class MatchElements extends Component {
 
       const solutionIndex = newItem.solutions.findIndex(solution => solution.firstId === firstId && solution.secondId === secondId)
 
-      this.setState({
-        popover: {
-          visible: true,
-          top: positions.top
-        },
-        jsPlumbConnection: connection,
-        current: solutionIndex
-      })
+      // setTimeout because otherwise the target for the link popover is not already drawn
+      window.setTimeout(() => {
+        this.setState({
+          popover: {
+            visible: true,
+            target: connection.connection.connector.path
+          },
+          jsPlumbConnection: connection,
+          current: solutionIndex
+        })
+      }, 100)
+
 
       return true
 
     })
 
     // configure connection
-    this.jsPlumbInstance.bind('click', (connection) => {
+    this.jsPlumbInstance.bind('click', (connection, e) => {
       connection.setType('selected')
 
       const firstId = connection.sourceId.replace('source_', '')
       const secondId = connection.targetId.replace('target_', '')
-      const connectionClass = 'connection-' + firstId + '-' + secondId
-      const positions = getPopoverPosition(connectionClass, this.props.item.id)
       const solutionIndex = this.props.item.solutions.findIndex(el => el.firstId === firstId && el.secondId === secondId)
 
       this.setState({
         popover: {
           visible: true,
-          top: positions.top
-        },
-        jsPlumbConnection: connection,
-        current: solutionIndex
-      })
-    })
-
-    // configure connection
-    this.jsPlumbInstance.bind('click', (connection) => {
-      connection.setType('selected')
-
-      const firstId = connection.sourceId.replace('source_', '')
-      const secondId = connection.targetId.replace('target_', '')
-      const connectionClass = 'connection-' + firstId + '-' + secondId
-      const positions = getPopoverPosition(connectionClass, this.props.item.id)
-      const solutionIndex = this.props.item.solutions.findIndex(el => el.firstId === firstId && el.secondId === secondId)
-
-      this.setState({
-        popover: {
-          visible: true,
-          top: positions.top
+          target: e.target
         },
         jsPlumbConnection: connection,
         current: solutionIndex
@@ -398,14 +369,12 @@ class MatchElements extends Component {
       if (isLeftItem) {
         this.jsPlumbInstance.addEndpoint(this.jsPlumbInstance.getSelector(selector), {
           anchor: anchor,
-          cssClass: 'endPoints',
           isSource: true,
           maxConnections: -1
         })
       } else {
         this.jsPlumbInstance.addEndpoint(this.jsPlumbInstance.getSelector(selector), {
           anchor: anchor,
-          cssClass: 'endPoints',
           isTarget: true,
           maxConnections: -1
         })
@@ -415,7 +384,7 @@ class MatchElements extends Component {
 
   removeConnection(firstId, secondId) {
     // remove jsPlumb connection
-    this.jsPlumbInstance.deleteConnection(this.state.jsPlumbConnection.connection)
+    this.jsPlumbInstance.deleteConnection(this.state.jsPlumbConnection)
     this.setState({
       popover: {
         visible: false
@@ -424,9 +393,9 @@ class MatchElements extends Component {
       current: null
     })
 
-    // remove solution from item
+    // remove the solution from item
     const newSolutions = cloneDeep(this.props.item.solutions)
-    const solutionIndex = newSolutions.findIndex(solution => solution.firstId === firstId &&solution.secondId == secondId)
+    const solutionIndex = newSolutions.findIndex(solution => solution.firstId === firstId && solution.secondId === secondId)
     if (-1 !== solutionIndex) {
       newSolutions.splice(solutionIndex, 1)
     }
@@ -473,87 +442,102 @@ class MatchElements extends Component {
 
   render() {
     return (
-      <div
-        id={`match-question-editor-id-${this.props.item.id}`}
-        className="match-items row"
-        ref={(el) => { this.container = el }}
-      >
-        <div className="item-col col-md-5 col-sm-5 col-xs-5">
-          <ul>
-            {this.props.item.firstSet.map((item, key) =>
-              <li key={'source_' + item.id}>
-                <MatchItem
-                  type="source"
-                  item={item}
-                  deletable={getLeftItemDeletable(this.props.item)}
-                  update={(prop, value) => this.props.update(`firstSet[${key}].${prop}`, value)}
-                  onMount={(type, id) => this.itemDidMount(type, id)}
-                  onUnmount={(id, elemId) => this.itemWillUnmount(true, id, elemId)}
-                  repaint={this.handleTextEditorSwitch}
+      <div className="match-editor">
+        <p className="text-body-secondary fs-sm">
+          <span className="fa fa-circle-info me-2" aria-hidden={true} />
+          {trans('match_editor_help', {}, 'quiz')}
+        </p>
+
+        <div ref={(el) => { this.container = el }} className="jtk-container position-relative">
+          <div className="match-items row">
+            <div className="item-col col-md-5 col-sm-5 col-xs-5">
+              <ul>
+                {this.props.item.firstSet.map((item, key) =>
+                  <li key={'source_' + item.id}>
+                    <MatchItem
+                      type="source"
+                      item={item}
+                      deletable={getLeftItemDeletable(this.props.item)}
+                      update={(prop, value) => this.props.update(`firstSet[${key}].${prop}`, value)}
+                      onMount={(type, id) => this.itemDidMount(type, id)}
+                      onUnmount={(id, elemId) => this.itemWillUnmount(true, id, elemId)}
+                      repaint={this.handleTextEditorSwitch}
+                    />
+                  </li>
+                )}
+              </ul>
+
+              <Button
+                type={CALLBACK_BUTTON}
+                className="btn btn-body w-100"
+                icon="fa fa-fw fa-plus"
+                label={trans('match_add_item', {}, 'quiz')}
+                callback={() => {
+                  const newItems = cloneDeep(this.props.item.firstSet)
+                  newItems.push(emptyAnswer())
+
+                  this.props.update('firstSet', newItems)
+                }}
+              />
+            </div>
+
+            <div
+              className="divide-col col-md-2 col-sm-2 col-xs-2"
+              ref={(el) => { this.popoverContainer = el }}
+            >
+              <Overlay
+                show={this.state.popover.visible && null !== this.state.current && this.props.item.solutions[this.state.current]}
+                target={this.state.popover.target}
+                placement="bottom"
+                container={this.popoverContainer}
+                rootClose={true}
+                rootCloseEvent="click"
+                onHide={this.closePopover}
+              >
+                <MatchLinkPopover
+                  handleConnectionDelete={(firstId, secondId) => this.removeConnection(firstId, secondId)}
+                  handlePopoverClose={this.closePopover}
+                  solution={this.props.item.solutions[this.state.current] || {}}
+                  deletable={this.props.item.solutions.length > 1}
+                  hasScore={this.props.hasAnswerScores}
+                  hasExpectedAnswers={this.props.item.hasExpectedAnswers}
+                  path={`solutions[${this.state.current}]`}
+                  update={this.props.update}
                 />
-              </li>
-            )}
-          </ul>
+              </Overlay>
+            </div>
 
-          <Button
-            type={CALLBACK_BUTTON}
-            className="btn btn-outline-primary w-100"
-            icon="fa fa-fw fa-plus"
-            label={trans('match_add_item', {}, 'quiz')}
-            callback={() => {
-              const newItems = cloneDeep(this.props.item.firstSet)
-              newItems.push(emptyAnswer())
+            <div className="item-col col-md-5 col-sm-5 col-xs-5">
+              <ul>
+                {this.props.item.secondSet.map((item, key) =>
+                  <li key={'target_' + item.id}>
+                    <MatchItem
+                      type="target"
+                      item={item}
+                      deletable={getRightItemDeletable(this.props.item)}
+                      update={(prop, value) => this.props.update(`secondSet[${key}].${prop}`, value)}
+                      onMount={(type, id) => this.itemDidMount(type, id)}
+                      onUnmount={(id, elemId) => this.itemWillUnmount(false, id, elemId)}
+                      repaint={this.handleTextEditorSwitch}
+                    />
+                  </li>
+                )}
+              </ul>
 
-              this.props.update('firstSet', newItems)
-            }}
-          />
-        </div>
+              <Button
+                type={CALLBACK_BUTTON}
+                className="btn btn-body w-100"
+                icon="fa fa-fw fa-plus"
+                label={trans('match_add_item', {}, 'quiz')}
+                callback={() => {
+                  const newItems = cloneDeep(this.props.item.secondSet)
+                  newItems.push(emptyAnswer())
 
-        <div id={`popover-place-holder-${this.props.item.id}`} className="divide-col col-md-2 col-sm-2 col-xs-2">
-          {this.state.popover.visible && null !== this.state.current && this.props.item.solutions[this.state.current] &&
-            <MatchLinkPopover
-              handleConnectionDelete={(firstId, secondId) => this.removeConnection(firstId, secondId)}
-              handlePopoverClose={() => this.closePopover()}
-              popover={this.state.popover}
-              solution={this.props.item.solutions[this.state.current]}
-              deletable={this.props.item.solutions.length > 1}
-              hasScore={this.props.hasAnswerScores}
-              hasExpectedAnswers={this.props.item.hasExpectedAnswers}
-              path={`solutions[${this.state.current}]`}
-              update={this.props.update}
-            />
-          }
-        </div>
-
-        <div className="item-col col-md-5 col-sm-5 col-xs-5">
-          <ul>
-            {this.props.item.secondSet.map((item, key) =>
-              <li key={'target_' + item.id}>
-                <MatchItem
-                  type="target"
-                  item={item}
-                  deletable={getRightItemDeletable(this.props.item)}
-                  update={(prop, value) => this.props.update(`secondSet[${key}].${prop}`, value)}
-                  onMount={(type, id) => this.itemDidMount(type, id)}
-                  onUnmount={(id, elemId) => this.itemWillUnmount(false, id, elemId)}
-                  repaint={this.handleTextEditorSwitch}
-                />
-              </li>
-            )}
-          </ul>
-
-          <Button
-            type={CALLBACK_BUTTON}
-            className="btn btn-outline-primary w-100"
-            icon="fa fa-fw fa-plus"
-            label={trans('match_add_item', {}, 'quiz')}
-            callback={() => {
-              const newItems = cloneDeep(this.props.item.secondSet)
-              newItems.push(emptyAnswer())
-
-              this.props.update('secondSet', newItems)
-            }}
-          />
+                  this.props.update('secondSet', newItems)
+                }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -570,11 +554,9 @@ const MatchEditor = props => {
   )
 
   return (
-    <FormData
+    <FormContent
       className="match-editor"
-      embedded={true}
       name={props.formName}
-      dataPart={props.path}
       definition={[
         {
           title: trans('general'),

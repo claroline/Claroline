@@ -10,9 +10,10 @@ import {SetItem as SetItemType} from '#/plugin/exo/items/set/prop-types'
 
 // components
 import {SetEditor} from '#/plugin/exo/items/set/components/editor'
-import {SetPaper} from '#/plugin/exo/items/set/components/paper'
-import {SetPlayer} from '#/plugin/exo/items/set/components/player'
+import {SetExpectedAnswer} from '#/plugin/exo/items/set/components/expected-answer'
 import {SetFeedback} from '#/plugin/exo/items/set/components/feedback'
+import {SetPlayer} from '#/plugin/exo/items/set/components/player'
+import {SetStats} from '#/plugin/exo/items/set/components/stats'
 
 // scores
 import ScoreSum from '#/plugin/exo/scores/sum'
@@ -20,16 +21,14 @@ import ScoreSum from '#/plugin/exo/scores/sum'
 export default {
   name: 'set',
   type: 'application/x.set+json',
-  tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
-  // old
-  paper: SetPaper,
-  player: SetPlayer,
-  feedback: SetFeedback,
-
   components: {
-    editor: SetEditor
+    editor: SetEditor,
+    player: SetPlayer,
+    feedback: SetFeedback,
+    expectedAnswer: SetExpectedAnswer,
+    stats: SetStats
   },
 
   /**

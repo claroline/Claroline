@@ -14,7 +14,8 @@ export default {
   fileUpload: true,
 
   components: {
-    editor: AudioEditor
+    editor: AudioEditor,
+    player: AudioContentPlayer
   },
 
   player: AudioContentPlayer,

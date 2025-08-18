@@ -82,6 +82,7 @@
   "sequence_pagination_all": "Une page par étape",
   "sequence_pagination_all_help": "Chaque étape est affichée sur une page différente.",
   "objective": "Objectif d'apprentissage",
+  "learner_objective": "Que vais-je apprendre ?",
   "copy_sequence_confirm_message": "{1} Êtes-vous sûr(e) de vouloir copier cette séquence ? | [2,Inf[ Êtes-vous sûr(e) de vouloir copier ces %count% séquences ?",
   "sequence_copy_activities": "Copier les activités",
   "sequence_copy_activities_help": "Toutes les activités et ressources complémentaires seront dupliquées avec la séquence.",

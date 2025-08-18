@@ -9,7 +9,7 @@ import {GridSelection} from '#/main/app/content/grid/components/selection'
 import {makeId} from '#/main/app/utils/id'
 
 import {getItems} from '#/plugin/exo/items'
-import {Icon} from '#/plugin/exo/items/components/icon'
+import {ItemIcon} from '#/plugin/exo/items/components/icon'
 
 class AddMediaModal extends Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class AddMediaModal extends Component {
           items={this.state.types.map(type => ({
             id: type.type,
             name: type.name,
-            icon: React.createElement(Icon, {
+            icon: React.createElement(ItemIcon, {
               name: type.name,
               size: 'lg'
             }),

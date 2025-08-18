@@ -1,14 +1,13 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import tinycolor from 'tinycolor2'
 import Popover from 'react-bootstrap/Popover'
 import Overlay from 'react-bootstrap/Overlay'
 
-import {ContentHtml} from '#/main/app/content/components/html'
-
 import {SHAPE_RECT} from '#/plugin/exo/items/graphic/constants'
 import {SolutionScore} from '#/plugin/exo/components/score'
+import {Html} from '#/main/app/components/html'
+import {FeedbackButton} from '#/plugin/exo/buttons/feedback/components/button'
 
 class HoverFeedback extends Component {
   constructor(props) {
@@ -37,7 +36,7 @@ class HoverFeedback extends Component {
             id={this.props.id}
             className="feedback-popover"
           >
-            <ContentHtml>{this.props.feedback}</ContentHtml>
+            <Html>{this.props.feedback}</Html>
           </Popover>
         </Overlay>
       </span>
@@ -51,41 +50,42 @@ HoverFeedback.propTypes = {
 }
 
 const AnswerTable = props =>
-  <div className="answers-table">
-    <h3 className="title">{props.title}</h3>
+  <div className="mt-4">
     {props.areas.map((area, idx) =>
-      <div key={area.id} className={classes('answer-row', {
+      <div key={area.id} className={classes('graphic-answer-item answer-item d-flex align-items-center', {
         'correct-answer': props.highlightScore && area.score > 0,
-        'incorrect-answer': props.highlightScore && area.score <= 0
+        'incorrect-answer': props.highlightScore && area.score <= 0,
+        'selected-answer': !props.highlightScore && area.score > 0,
+        'mb-0': idx === props.areas.length - 1
       })}>
-        <span className="info-block">
-          <span><strong>{idx + 1}</strong></span>
-          <span style={{
+        {props.highlightScore &&
+          <span className={classes('graphic-item-tick fa fa-fw', {
+            'fa-check': area.score > 0,
+            'fa-times': area.score <= 0
+          })}/>
+        }
+
+        <div className="flex-fill d-flex gap-2 align-items-center">
+          <span className="d-inline-block" style={{
             display: 'inline-block',
-            width: '24px',
-            height: '24px',
-            backgroundColor: tinycolor(area.color).lighten(20).toString(),
-            border: `solid 1px ${area.color}`,
-            borderRadius: area.shape === SHAPE_RECT ? 0 : '12px'
+            width: '1.5rem',
+            height: '1.5rem',
+            backgroundColor: area.color || '#000',
+            borderRadius: area.shape === SHAPE_RECT ? 0 : '50rem'
           }}/>
-          {props.highlightScore &&
-            <span className={classes('fa fa-fw', 'area-status-icon', {
-              'fa-check': area.score > 0,
-              'fa-times': area.score <= 0
-            })}/>
-          }
-        </span>
-        <span className="info-block">
-          {area.feedback &&
-            <HoverFeedback
-              id={`${area.id}-popover`}
-              feedback={area.feedback}
-            />
-          }
-          {props.showScore &&
-            <SolutionScore score={area.score} />
-          }
-        </span>
+          <strong>{idx + 1}</strong>
+        </div>
+
+        {area.feedback &&
+          <FeedbackButton
+            id={area.id}
+            feedback={area.feedback}
+          />
+        }
+
+        {props.showScore &&
+          <SolutionScore score={area.score} />
+        }
       </div>
     )}
   </div>

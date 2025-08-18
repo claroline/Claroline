@@ -16,10 +16,11 @@ const ItemType = {
     answerable: T.bool.isRequired,
 
     components: T.shape({
-      //player: T.element.isRequired,
-      editor: T.oneOfType([T.func, T.object]).isRequired
-      //paper: T.element.isRequired,
-      //statistics: T.element.isRequired
+      player: T.oneOfType([T.func, T.object]).isRequired,
+      editor: T.oneOfType([T.func, T.object]).isRequired,
+      expectedAnswer: T.oneOfType([T.func, T.object]),
+      feedback: T.oneOfType([T.func, T.object]),
+      stats: T.oneOfType([T.func, T.object])
     }),
 
     create: T.func,
@@ -85,7 +86,8 @@ const ItemEditor = {
       Item.propTypes
     ).isRequired,
     hasAnswerScores: T.bool.isRequired,
-    update: T.func.isRequired
+    update: T.func.isRequired,
+    setErrors: T.func.isRequired
   },
 
   defaultProps: {

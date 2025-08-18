@@ -12,7 +12,7 @@ class ScoreManager
      *
      * @return float|null the calculated score or null if it cannot be calculated automatically
      */
-    public function calculate(array $scoreRule, CorrectedAnswer $correctedAnswer)
+    public function calculate(array $scoreRule, CorrectedAnswer $correctedAnswer): ?float
     {
         $score = null;
 
@@ -127,10 +127,8 @@ class ScoreManager
      *
      * @param AnswerPartInterface[] $expectedAnswers
      * @param AnswerPartInterface[] $allAnswers
-     *
-     * @return float|null
      */
-    public function calculateTotal(array $scoreRule, array $expectedAnswers, array $allAnswers = [])
+    public function calculateTotal(array $scoreRule, array $expectedAnswers, ?array $allAnswers = []): ?float
     {
         $total = null;
 
@@ -168,37 +166,37 @@ class ScoreManager
 
                     switch ($rule['type']) {
                         case 'all':
-                          $score = 'global' === $rule['target'] ? $rule['points'] : $rule['points'] * $nbChoices;
-                          break;
+                            $score = 'global' === $rule['target'] ? $rule['points'] : $rule['points'] * $nbChoices;
+                            break;
                         case 'more':
-                          if ('global' === $rule['target']) {
-                              $score = $rule['count'] <= $nbChoices ? $rule['points'] : 0;
-                          } else {
-                              $score = $rule['count'] <= $nbChoices ? $rule['points'] * $nbChoices : 0;
-                          }
-                          break;
+                            if ('global' === $rule['target']) {
+                                $score = $rule['count'] <= $nbChoices ? $rule['points'] : 0;
+                            } else {
+                                $score = $rule['count'] <= $nbChoices ? $rule['points'] * $nbChoices : 0;
+                            }
+                            break;
                         case 'less':
-                          if ('global' === $rule['target']) {
-                              $score = 0 < $rule['count'] ? $rule['points'] : 0;
-                          } else {
-                              if ($rule['count'] <= $nbChoices && 0 < $rule['count']) {
-                                  $score = $rule['points'] * ($rule['count'] - 1);
-                              } elseif ($rule['count'] > $nbChoices) {
-                                  $score = $rule['points'] * $nbChoices;
-                              }
-                          }
-                          break;
+                            if ('global' === $rule['target']) {
+                                $score = 0 < $rule['count'] ? $rule['points'] : 0;
+                            } else {
+                                if ($rule['count'] <= $nbChoices && 0 < $rule['count']) {
+                                    $score = $rule['points'] * ($rule['count'] - 1);
+                                } elseif ($rule['count'] > $nbChoices) {
+                                    $score = $rule['points'] * $nbChoices;
+                                }
+                            }
+                            break;
                         case 'between':
-                          if ('global' === $rule['target']) {
-                              $score = $rule['countMin'] <= $nbChoices ? $rule['points'] : 0;
-                          } else {
-                              if ($rule['countMax'] <= $nbChoices) {
-                                  $score = $rule['points'] * $rule['countMax'];
-                              } elseif ($rule['countMin'] <= $nbChoices && $rule['countMax'] >= $nbChoices) {
-                                  $score = $rule['points'] * $nbChoices;
-                              }
-                          }
-                          break;
+                            if ('global' === $rule['target']) {
+                                $score = $rule['countMin'] <= $nbChoices ? $rule['points'] : 0;
+                            } else {
+                                if ($rule['countMax'] <= $nbChoices) {
+                                    $score = $rule['points'] * $rule['countMax'];
+                                } elseif ($rule['countMin'] <= $nbChoices && $rule['countMax'] >= $nbChoices) {
+                                    $score = $rule['points'] * $nbChoices;
+                                }
+                            }
+                            break;
                     }
                     if ($score > $max[$rule['source']]) {
                         $max[$rule['source']] = $score;
@@ -212,7 +210,6 @@ class ScoreManager
 
             default:
                 throw new \LogicException("Unknown score type '{$scoreRule['type']}'.");
-                break;
         }
 
         return $total;
@@ -220,12 +217,8 @@ class ScoreManager
 
     /**
      * Applies hint penalties to a score.
-     *
-     * @param float $score
-     *
-     * @return float
      */
-    public function applyPenalties($score, CorrectedAnswer $correctedAnswer)
+    public function applyPenalties(float $score, CorrectedAnswer $correctedAnswer): float
     {
         $penalties = $correctedAnswer->getPenalties();
         foreach ($penalties as $penalty) {

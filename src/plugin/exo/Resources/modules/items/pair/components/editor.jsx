@@ -6,7 +6,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {makeId} from '#/main/app/utils/id'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
@@ -429,7 +429,7 @@ class PairList extends Component {
 
         <Button
           type={CALLBACK_BUTTON}
-          className="btn btn-outline-primary w-100"
+          className="btn btn-body w-100"
           icon="fa fa-fw fa-plus"
           label={trans('pair_add_pair', {}, 'quiz')}
           callback={() => addPair(this.props.solutions, this.props.onChange)}
@@ -557,7 +557,7 @@ const OddList= props => {
 
       <Button
         type={CALLBACK_BUTTON}
-        className="btn btn-outline-primary w-100"
+        className="btn btn-body w-100"
         icon="fa fa-fw fa-plus"
         label={trans('set_add_odd', {}, 'quiz')}
         callback={() => addItem(props.items, props.solutions, true, props.onChange)}
@@ -633,6 +633,7 @@ const ItemList = props =>
   <FormGroup
     id="item-items"
     label={trans('items', {}, 'quiz')}
+    className="mb-4"
   >
     <ul>
       {utils.getRealItemlist(props.items, props.solutions).map((item, index) =>
@@ -649,7 +650,7 @@ const ItemList = props =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="btn btn-outline-primary w-100"
+      className="btn btn-body w-100"
       icon="fa fa-fw fa-plus"
       label={trans('set_add_item', {}, 'quiz')}
       callback={() => addItem(props.items, props.solutions, false, props.onChange)}
@@ -705,11 +706,9 @@ const PairEditor = props => {
   )
 
   return (
-    <FormData
+    <FormContent
       className="pair-item pair-editor"
-      embedded={true}
       name={props.formName}
-      dataPart={props.path}
       definition={[
         {
           title: trans('general'),

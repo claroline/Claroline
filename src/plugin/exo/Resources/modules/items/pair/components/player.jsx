@@ -6,12 +6,11 @@ import times from 'lodash/times'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
-import {ContentHtml} from '#/main/app/content/components/html'
+import {Html} from '#/main/app/components/html'
 
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {utils} from '#/plugin/exo/items/pair/utils'
 import {PairItemDragPreview} from '#/plugin/exo/items/pair/components/pair-item-drag-preview'
-
 
 let DropBox = props => props.connectDropTarget(
   <div className={classes('pair-item-placeholder drop-placeholder placeholder-md placeholder-hover', {
@@ -34,7 +33,7 @@ DropBox = makeDroppable(DropBox, 'ITEM')
 
 const PairItem = props =>
   <div className="pair-item pair-answer-item">
-    <ContentHtml className="pair-item-content">{props.item.data}</ContentHtml>
+    <Html className="pair-item-content">{props.item.data}</Html>
     {props.item.removable && props.removable &&
       <div className="item-actions" role="presentation">
         <Button
@@ -104,7 +103,7 @@ PairRowList.propTypes = {
 let Item = props => {
   const element =
     <div className={classes('pair-answer-item answer-item pair-item', {'cursor-move': props.draggable})}>
-      <ContentHtml className="pair-item-content">{props.item.data}</ContentHtml>
+      <Html className="pair-item-content">{props.item.data}</Html>
 
       {props.draggable &&
         <div className="item-actions" role="presentation">

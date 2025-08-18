@@ -215,7 +215,7 @@ const KeywordItems = props => {
 
       <Button
         type={CALLBACK_BUTTON}
-        className="add-keyword btn btn-primary w-100"
+        className="add-keyword btn btn-outline-primary w-100"
         icon="fa fa-fw fa-plus"
         label={trans('words_add_word', {}, 'quiz')}
         callback={props.addKeyword}

@@ -10,7 +10,6 @@ import {UrlForm} from '#/plugin/url/components/form'
 
 const UrlTabParameters = (props) =>
   <UrlForm
-    embedded={true}
     disabled={props.readOnly}
     name={selectors.FORM_NAME}
     dataPart={`${getFormDataPart(props.currentTab.id, props.tabs)}.parameters`}

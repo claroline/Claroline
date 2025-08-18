@@ -14,6 +14,7 @@
 
     @extend .form-control;
     padding: 0;
+    width: auto;
 
     // Customize the `:focus` state to imitate native WebKit styles.
     &.focus {

@@ -10,9 +10,10 @@ import {keywords as keywordsUtils} from '#/plugin/exo/utils/keywords'
 
 // components
 import {GridEditor} from '#/plugin/exo/items/grid/components/editor'
-import {GridPaper} from '#/plugin/exo/items/grid/components/paper'
-import {GridPlayer} from '#/plugin/exo/items/grid/components/player'
+import {GridExpectedAnswer} from '#/plugin/exo/items/grid/components/expected-answer'
 import {GridFeedback} from '#/plugin/exo/items/grid/components/feedback'
+import {GridPlayer} from '#/plugin/exo/items/grid/components/player'
+import {GridStats} from '#/plugin/exo/items/grid/components/stats'
 
 // scores
 import ScoreFixed from '#/plugin/exo/scores/fixed'
@@ -134,15 +135,14 @@ function findSolutionExpectedAnswer(solution) {
 export default {
   name: 'grid',
   type: 'application/x.grid+json',
-  tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
-  paper: GridPaper,
-  player: GridPlayer,
-  feedback: GridFeedback,
-
   components: {
-    editor: GridEditor
+    editor: GridEditor,
+    player: GridPlayer,
+    feedback: GridFeedback,
+    expectedAnswer: GridExpectedAnswer,
+    stats: GridStats
   },
 
   supportScores: () => [

@@ -9,10 +9,11 @@ import {MatchItem as MatchItemTypes} from '#/plugin/exo/items/match/prop-types'
 import {utils} from '#/plugin/exo/items/match/utils'
 
 // components
-import {MatchPaper} from '#/plugin/exo/items/match/components/paper'
-import {MatchPlayer} from '#/plugin/exo/items/match/components/player'
-import {MatchFeedback} from '#/plugin/exo/items/match/components/feedback'
 import {MatchEditor} from '#/plugin/exo/items/match/components/editor'
+import {MatchExpectedAnswer} from '#/plugin/exo/items/match/components/expected-answer'
+import {MatchFeedback} from '#/plugin/exo/items/match/components/feedback'
+import {MatchPlayer} from '#/plugin/exo/items/match/components/player'
+import {MatchStats} from '#/plugin/exo/items/match/components/stats'
 
 // scores
 import ScoreSum from '#/plugin/exo/scores/sum'
@@ -20,15 +21,14 @@ import ScoreSum from '#/plugin/exo/scores/sum'
 export default {
   name: 'match',
   type: 'application/x.match+json',
-  tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
-  paper: MatchPaper,
-  player: MatchPlayer,
-  feedback: MatchFeedback,
-
   components: {
-    editor: MatchEditor
+    editor: MatchEditor,
+    player: MatchPlayer,
+    feedback: MatchFeedback,
+    expectedAnswer: MatchExpectedAnswer,
+    stats: MatchStats
   },
 
   /**
@@ -60,32 +60,31 @@ export default {
    * @return {object} the list of item errors
    */
   validate: (item) => {
-    const errors = {}
+    const errors = {solutions: []}
 
     // penalty greater than 0 and negatives score on solutions
     if (item.penalty && item.penalty > 0 && item.solutions.length > 0 && item.solutions.filter(solution => solution.score < 0).length > 0) {
-      errors.warning = trans('match_warning_penalty_and_negative_scores', {}, 'quiz')
+      errors.solutions.push(trans('match_warning_penalty_and_negative_scores', {}, 'quiz'))
     }
-
     // at least one solution
     if (item.solutions.length === 0) {
-      errors.solutions = trans('match_no_solution', {}, 'quiz')
+      errors.solutions.push(trans('match_no_solution', {}, 'quiz'))
     } else if (undefined !== item.solutions.find(solution => notBlank(solution.score) || number(solution.score))) {
       // each solution should have a valid score
-      errors.solutions = trans('match_score_not_valid', {}, 'quiz')
+      errors.solutions.push(trans('match_score_not_valid', {}, 'quiz'))
     } else if (undefined === item.solutions.find(solution => solution.score > 0)) {
       // at least one solution with a score that is greater than 0
-      errors.solutions = trans('match_no_valid_solution', {}, 'quiz')
+      errors.solutions.push(trans('match_no_valid_solution', {}, 'quiz'))
     }
 
     // no blank item data
     if (item.firstSet.find(set => notBlank(set.data, {isHtml: true})) || item.secondSet.find(set => notBlank(set.data, {isHtml: true}))) {
-      errors.items = trans('match_item_empty_data_error', {}, 'quiz')
+      errors.solutions.push(trans('match_item_empty_data_error', {}, 'quiz'))
     }
 
     // empty penalty
     if (notBlank(item.penalty) || number(item.penalty)) {
-      errors.items = trans('match_penalty_not_valid', {}, 'quiz')
+      errors.solutions.push(trans('match_penalty_not_valid', {}, 'quiz'))
     }
 
     return errors

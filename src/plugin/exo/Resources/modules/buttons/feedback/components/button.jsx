@@ -5,9 +5,9 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
-import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, POPOVER_BUTTON} from '#/main/app/buttons'
+import {Html} from '#/main/app/components/html'
 
 /**
  * Feedback button.
@@ -58,7 +58,7 @@ const FeedbackButton = props => {
       popover={{
         className: 'feedback-popover',
         position: 'bottom',
-        content: <ContentHtml>{props.feedback}</ContentHtml>
+        content: <Html>{props.feedback}</Html>
       }}
     />
   )

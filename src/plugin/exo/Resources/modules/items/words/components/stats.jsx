@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
-import {AnswerStats} from '#/plugin/exo/items/components/stats'
+import {AnswerStats} from '#/plugin/exo/components/answer-stats'
 
 const AnswerStatsTable = (props) =>
   <Fragment>
@@ -51,7 +51,7 @@ AnswerStatsTable.propTypes = {
 }
 
 const WordsStats = (props) => {
-  const solutions = props.solutions.slice(0)
+  const solutions = props.item.solutions.slice(0)
   const halfLength = Math.ceil(solutions.length / 2)
   const leftSide = solutions.splice(0, halfLength)
   const rightSide = solutions
@@ -64,22 +64,22 @@ const WordsStats = (props) => {
           'col-md-6': 0 !== rightSide.length
         })}>
           <AnswerStatsTable
-            contentType={props.contentType}
+            contentType={props.item.contentType}
             solutions={leftSide}
             stats={props.stats}
             isCorrect={true}
-            hasExpectedAnswers={props.hasExpectedAnswers}
+            hasExpectedAnswers={props.item.hasExpectedAnswers}
           />
         </div>
 
         {0 !== rightSide.length &&
           <div className="col-md-6">
             <AnswerStatsTable
-              contentType={props.contentType}
+              contentType={props.item.contentType}
               solutions={rightSide}
               stats={props.stats}
               isCorrect={false}
-              hasExpectedAnswers={props.hasExpectedAnswers}
+              hasExpectedAnswers={props.item.hasExpectedAnswers}
             />
           </div>
         }
@@ -102,13 +102,14 @@ const WordsStats = (props) => {
 }
 
 WordsStats.propTypes = {
-  contentType: T.string.isRequired,
-  hasExpectedAnswers: T.bool.isRequired,
-  solutions: T.arrayOf(T.shape({
-    score: T.number.isRequired,
-    text: T.string.isRequired,
-    feedback: T.string
-  })),
+  item: T.shape({
+    id: T.string.isRequired,
+    title: T.string.isRequired,
+    description: T.string.isRequired,
+    solutions: T.arrayOf(T.object),
+    contentType: T.string.isRequired,
+    hasExpectedAnswers: T.bool.isRequired
+  }).isRequired,
   stats: T.shape({
     words: T.object,
     unanswered: T.number,

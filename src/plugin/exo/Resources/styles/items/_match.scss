@@ -19,24 +19,11 @@
 }
 
 .match-items {
-  /* required by jsPlumb for proper drawing */
-  position: relative;
-
   .item-col {
     ul {
       padding: 0;
       margin: 0;
       list-style-type: none;
-    }
-  }
-
-  .divide-col {
-    /* required for position computing */
-    position: relative;
-
-    .popover {
-      left: 50%;
-      transform: translateX(-50%);
     }
   }
 }
@@ -62,8 +49,6 @@
     }
 
     .popover {
-      min-width: 250px !important;
-
       .popover-title {
         > div {
           display: flex;
@@ -98,9 +83,6 @@
 }
 
 .match-player {
-  /* required to set height of children to 100% of its height */
-  display: flex;
-
   .match-items-list {
     height: 100%;
     display: flex;
@@ -123,13 +105,9 @@
   }
 }
 
-.match-association-feedback {
-  min-width: 250px;
-}
-
 .jtk-connector,
 .match-association {
-  stroke: #666;
+  stroke: var(--#{$prefix}secondary-color);
 }
 .selected-association {
   stroke: $selected-answer-color;

@@ -1,17 +1,16 @@
 import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/app/intl/translation'
-
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {WordsItem as WordsItemTypes} from '#/plugin/exo/items/words/prop-types'
 import {keywords as keywordsUtils} from '#/plugin/exo/utils/keywords'
 import {utils} from '#/plugin/exo/items/words/utils'
 
 // components
-import {WordsPaper} from '#/plugin/exo/items/words/components/paper'
-import {WordsPlayer} from '#/plugin/exo/items/words/components/player'
-import {WordsFeedback} from '#/plugin/exo/items/words/components/feedback'
 import {WordsEditor} from '#/plugin/exo/items/words/components/editor'
+import {WordsExpectedAnswer} from '#/plugin/exo/items/words/components/expected-answer'
+import {WordsFeedback} from '#/plugin/exo/items/words/components/feedback'
+import {WordsPlayer} from '#/plugin/exo/items/words/components/player'
+import {WordsStats} from '#/plugin/exo/items/words/components/stats'
 
 // scores
 import ScoreSum from '#/plugin/exo/scores/sum'
@@ -19,15 +18,14 @@ import ScoreSum from '#/plugin/exo/scores/sum'
 export default {
   name: 'words',
   type: 'application/x.words+json',
-  tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
-  paper: WordsPaper,
-  player: WordsPlayer,
-  feedback: WordsFeedback,
-
   components: {
-    editor: WordsEditor
+    editor: WordsEditor,
+    player: WordsPlayer,
+    feedback: WordsFeedback,
+    expectedAnswer: WordsExpectedAnswer,
+    stats: WordsStats
   },
 
   /**
@@ -46,7 +44,13 @@ export default {
    *
    * @return {object}
    */
-  create: (baseItem) => Object.assign(baseItem, WordsItemTypes.defaultProps),
+  create: (baseItem) => Object.assign({}, baseItem, WordsItemTypes.defaultProps, {
+    solutions: [{
+      text: '',
+      score: 1,
+      caseSensitive: false
+    }]
+  }),
 
   /**
    * Validate a words item.

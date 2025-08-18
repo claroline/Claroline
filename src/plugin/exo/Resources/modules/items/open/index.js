@@ -1,13 +1,11 @@
 import merge from 'lodash/merge'
 
-import {trans} from '#/main/app/intl/translation'
 import {notBlank, number, gteZero, chainSync} from '#/main/app/data/types/validators'
 
 import {CorrectedAnswer} from '#/plugin/exo/items/utils'
 import {OpenItem} from '#/plugin/exo/items/open/prop-types'
 
 // components
-import {OpenPaper} from '#/plugin/exo/items/open/components/paper'
 import {OpenPlayer} from '#/plugin/exo/items/open/components/player'
 import {OpenFeedback} from '#/plugin/exo/items/open/components/feedback'
 import {OpenEditor} from '#/plugin/exo/items/open/components/editor'
@@ -18,15 +16,12 @@ import ScoreManual from '#/plugin/exo/scores/manual'
 export default {
   name: 'open',
   type: 'application/x.open+json',
-  tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
-  paper: OpenPaper,
-  player: OpenPlayer,
-  feedback: OpenFeedback,
-
   components: {
-    editor: OpenEditor
+    editor: OpenEditor,
+    player: OpenPlayer,
+    feedback: OpenFeedback
   },
 
   /**
@@ -63,7 +58,7 @@ export default {
   },
 
   /**
-   * Correct an answer submitted to a open item.
+   * Correct an answer submitted to an open item.
    *
    * @return {CorrectedAnswer}
    */

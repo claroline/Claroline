@@ -1,4 +1,5 @@
 import {createSelector} from 'reselect'
+import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {now} from '#/main/app/intl/date'
@@ -9,12 +10,12 @@ const restrictions = (state) => configSelectors.param(state, 'restrictions')
 
 const restrictionDisabled = createSelector(
   [restrictions],
-  (restrictions = {}) => restrictions.disabled || false
+  (restrictions) => get(restrictions, 'disabled', false)
 )
 
 const restrictionDates = createSelector(
   [restrictions],
-  (restrictions = {}) => restrictions.dates
+  (restrictions) => get(restrictions, 'dates')
 )
 
 const unavailable = createSelector(
@@ -59,7 +60,6 @@ export const selectors = {
   version,
   helpUrl,
   unavailable,
-  disabled,
   selfRegistration,
   availableContexts,
   favoriteContexts,

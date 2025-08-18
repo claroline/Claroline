@@ -21,27 +21,26 @@ $score-input-size: 70px !default;
 
 $answer-item-bg:            var(--#{$prefix}secondary-bg) !default;
 $answer-item-border-width:  var(--#{$prefix}border-width) !default;
-$answer-item-border:        var(--#{$prefix}border-color) !default;
+$answer-item-border:        $answer-item-bg !default; // var(--#{$prefix}border-color) !default;
 $answer-item-inner-border:  var(--#{$prefix}border-color) !default;
 $answer-item-border-radius: var(--#{$prefix}border-radius-sm) !default;
-$answer-item-padding:       map-get($spacers, 2) !default;
+$answer-item-padding:       .75rem !default;
 $answer-item-margin-bottom: map-get($spacers, 2) !default;
 $answer-item-box-shadow:    none !default;
 
 $answer-item-hover-color:        var(--#{$prefix}primary-text-emphasis) !default;
 $answer-item-hover-bg:           var(--#{$prefix}primary-bg-subtle) !default;
-$answer-item-hover-border-color: var(--#{$prefix}primary-border-subtle) !default;
+$answer-item-hover-border-color: var(--#{$prefix}primary-bg-subtle) !default;
 
 // highlight expected answers in editor
 $expected-answer-color:     var(--#{$prefix}success-text-emphasis) !default;
 $expected-answer-bg:        var(--#{$prefix}success-bg-subtle) !default;
-$expected-answer-border:    var(--#{$prefix}success-border-subtle) !default;
+$expected-answer-border:    var(--#{$prefix}success) !default;
 
 // highlight unexpected answers in editor
 $unexpected-answer-color:   var(--#{$prefix}danger-text-emphasis) !default; // do not change text color in editor for readability
 $unexpected-answer-bg:      var(--#{$prefix}danger-bg-subtle) !default;
-$unexpected-answer-border:  var(--#{$prefix}danger-border-subtle) !default;
-
+$unexpected-answer-border:  var(--#{$prefix}danger) !default;
 
 // highlight correct answers given by the user (in feedback / paper)
 $correct-answer-color:      var(--#{$prefix}success-text-emphasis) !default;
@@ -56,9 +55,9 @@ $incorrect-answer-border:   $unexpected-answer-border !default;
 // highlight user selected answer (also used to show expected answer in papers)
 $selected-answer-color:     var(--#{$prefix}primary-text-emphasis) !default;
 $selected-answer-bg:        var(--#{$prefix}primary-bg-subtle) !default;
-$selected-answer-border:    var(--#{$prefix}primary-border-subtle) !default;
+$selected-answer-border:    var(--#{$prefix}primary) !default;
 
 // highlight unanswered questions in stats (in paper)
 $unanswered-answer-color:   var(--#{$prefix}warning-text-emphasis) !default;
 $unanswered-answer-bg:      var(--#{$prefix}warning-bg-subtle) !default;
-$unanswered-answer-border:  var(--#{$prefix}warning-border-subtle) !default;
+$unanswered-answer-border:  $unanswered-answer-bg !default;

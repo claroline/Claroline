@@ -1,23 +1,13 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import Popover from 'react-bootstrap/Popover'
-import Overlay from 'react-bootstrap/Overlay'
-
-import {ContentHtml} from '#/main/app/content/components/html'
 
 import {POINTER_PLACED, POINTER_CORRECT, POINTER_WRONG} from '#/plugin/exo/items/graphic/constants'
 
-const POINTER_WIDTH = 32
-const SEGMENT_WIDTH = 6
+const POINTER_WIDTH = 38
+const SEGMENT_WIDTH = 5
 
-export class Pointer extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      showFeedback: false
-    }
-  }
+class Pointer extends Component {
 
   render() {
     if (this.props.x < 0 || this.props.y < 0) {
@@ -34,7 +24,9 @@ export class Pointer extends Component {
 
     return (
       <div
-        className={classes('pointer', this.props.type)}
+        className={classes('pointer', this.props.type, {
+          'cursor-pointer': !!this.props.onClick
+        })}
         style={{
           position: 'absolute',
           width: POINTER_WIDTH + 'px',
@@ -43,6 +35,7 @@ export class Pointer extends Component {
           left: this.props.x - POINTER_WIDTH / 2,
           cursor: 'inherit'
         }}
+        onClick={this.props.onClick}
       >
         {segments.map(s =>
           <span
@@ -59,34 +52,12 @@ export class Pointer extends Component {
         )}
 
         {this.props.type !== POINTER_PLACED &&
-          <span className={classes('fa fa-fw', 'pointer-status-icon', {
-            'fa-check': this.props.type === POINTER_CORRECT,
-            'fa-times': this.props.type === POINTER_WRONG
-          })}/>
-        }
-
-        {this.props.type !== POINTER_PLACED && this.props.feedback &&
-          <span>
-            <span
-              ref={el => this.feedbackButton = el}
-              onMouseOver={() => this.setState({showFeedback: true})}
-              onMouseLeave={() => this.setState({showFeedback: false})}
-              className="fa fa-fw fa-comments pointer-feedback-btn"
-            />
-            <Overlay
-              show={this.state.showFeedback}
-              placement="top"
-              container={this}
-              target={this.feedbackButton}
-            >
-              <Popover
-                id={`${this.props.x}${this.props.y}`}
-                className="feedback-popover"
-              >
-                <ContentHtml>{this.props.feedback}</ContentHtml>
-              </Popover>
-            </Overlay>
-          </span>
+          <div className="pointer-status-icon position-absolute top-0 start-0 translate-middle">
+            <span className={classes('fa', {
+              'fa-check': this.props.type === POINTER_CORRECT,
+              'fa-times': this.props.type === POINTER_WRONG
+            })}/>
+          </div>
         }
       </div>
     )
@@ -97,5 +68,10 @@ Pointer.propTypes = {
   x: T.number.isRequired,
   y: T.number.isRequired,
   feedback: T.string,
-  type: T.oneOf([POINTER_PLACED, POINTER_CORRECT, POINTER_WRONG])
+  type: T.oneOf([POINTER_PLACED, POINTER_CORRECT, POINTER_WRONG]),
+  onClick: T.func
+}
+
+export {
+  Pointer
 }

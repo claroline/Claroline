@@ -4,7 +4,7 @@ import invariant from 'invariant'
 import get from 'lodash/get'
 
 import {FormData as FormDataComponent} from '#/main/app/content/form/components/data'
-import {actions, selectors} from '#/main/app/content/form/store'
+import {selectors} from '#/main/app/content/form/store'
 
 const FormData = connect(
   (state, ownProps) => {

@@ -3,7 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {LinkButton} from '#/main/app/buttons'
+import {DataMicro} from '#/main/app/data/components/micro'
 
 const SearchResults = (props) => {
   if (props.empty) {
@@ -22,25 +23,28 @@ const SearchResults = (props) => {
         .map(resultType =>
           <div role="presentation" className="mt-4" key={resultType}>
             <h5 className="fs-sm text-uppercase text-body-secondary">{props.availableSearches[resultType].label}</h5>
-            <div className="d-flex flex-column gap-2" role="presentation">
-              {props.results[resultType].map(result =>
-                createElement(props.availableSearches[resultType].component, {
-                  key: result.id,
-                  size: 'xs',
-                  direction: 'row',
-                  data: result,
-                  primaryAction: {
-                    type: LINK_BUTTON,
-                    label: trans('open', {}, 'actions'),
-                    target: props.availableSearches[resultType].link(result),
-                    onClick: () => {
+            <ul className="list-unstyled mb-0 border-bottom">
+              {props.results[resultType].map((result) =>
+                <li key={result.id} className="position-relative">
+                  <LinkButton
+                    className="d-block w-100 text-reset py-2 pe-3 border-top"
+                    target={props.availableSearches[resultType].link(result)}
+                    onClick={() => {
                       props.reset()
                       props.fadeModal()
+                    }}
+                  >
+                    {props.availableSearches[resultType].component ?
+                      createElement(props.availableSearches[resultType].component, {
+                        object: result
+                      }) :
+                      <DataMicro object={result} />
                     }
-                  }
-                })
+                  </LinkButton>
+                  <span className="fa fa-chevron-right text-body-tertiary position-absolute end-0 top-50 translate-middle" aria-hidden={true} />
+                </li>
               )}
-            </div>
+            </ul>
           </div>
         )}
     </>

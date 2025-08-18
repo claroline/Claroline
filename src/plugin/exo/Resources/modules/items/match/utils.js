@@ -35,7 +35,7 @@ utils.resetJsPlumb = () => {
 }
 
 utils.isPresentInSolutions = (firstId, secondId, solutions) => {
-  return solutions.findIndex(s => s.firstId == firstId && s.secondId === secondId) !== -1
+  return solutions.findIndex(s => s.firstId === firstId && s.secondId === secondId) !== -1
 }
 
 utils.findAnswer = (solution, answers) => {

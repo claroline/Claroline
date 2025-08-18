@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import tinycolor from 'tinycolor2'
 
 import {Pointer} from '#/plugin/exo/items/graphic/components/pointer'
-import {SHAPE_RECT} from '#/plugin/exo/items/graphic/constants'
 
 export class PointableImage extends Component {
   constructor(props) {
@@ -53,7 +53,7 @@ export class PointableImage extends Component {
             src={this.props.src}
             draggable={false}
             onDragStart={e => e.stopPropagation()}
-            onClick={e => this.props.onClick && this.props.onClick(e)}
+            onClick={this.props.onClick}
           />
           {this.props.pointers.map(pointer =>
             <Pointer
@@ -62,10 +62,14 @@ export class PointableImage extends Component {
               y={this.absToRel(pointer.absY)}
               type={pointer.type}
               feedback={pointer.feedback}
+              onClick={(e) => this.props.onPointerClick(pointer, e)}
             />
           )}
           {this.props.hasExpectedAnswers && this.props.areas.map(area =>
             <div
+              className={classes('pointer', this.props.type, {
+                'cursor-pointer': !!this.props.onPointerClick
+              })}
               key={area.id}
               style={{
                 position: 'absolute',
@@ -73,19 +77,19 @@ export class PointableImage extends Component {
                 left: this.absToRel(area.left),
                 width: this.absToRel(area.width),
                 height: this.absToRel(area.height),
-                border: `solid 2px ${area.color}`,
+                border: `solid 2px ${area.color || '#000000'}`,
                 borderRadius: this.absToRel(area.borderRadius),
                 backgroundColor: tinycolor(area.color).setAlpha(0.5).toRgbString()
               }}
+              onClick={(e) => this.props.onPointerClick(area, e)}
             >
               {area.number &&
                 <div
-                  className="area-number"
-                  style={{
-                    position: 'absolute',
-                    top: area.shape === SHAPE_RECT ? '-12px' : '-2px',
-                    left: area.shape === SHAPE_RECT ? '-12px' : '-2px'
-                  }}
+                  className={classes('area-number position-absolute start-0 top-0 translate-middle rounded-pill px-2 fw-bold', {
+                    'text-light': tinycolor(area.color) && tinycolor(area.color).isDark(),
+                    'text-dark': tinycolor(area.color) && tinycolor(area.color).isLight()
+                  })}
+                  style={{background: tinycolor(area.color).toRgbString()}}
                 >
                   {area.number}
                 </div>
@@ -103,6 +107,7 @@ PointableImage.propTypes = {
   absWidth: T.number.isRequired,
   onRef: T.func.isRequired,
   onClick: T.func,
+  type: T.string,
   pointers: T.arrayOf(T.shape({
     absX: T.number.isRequired,
     absY: T.number.isRequired,
@@ -119,7 +124,8 @@ PointableImage.propTypes = {
     color: T.string.isRequired,
     number: T.number
   })),
-  hasExpectedAnswers: T.bool.isRequired
+  hasExpectedAnswers: T.bool.isRequired,
+  onPointerClick: T.func
 }
 
 PointableImage.defaultProps = {

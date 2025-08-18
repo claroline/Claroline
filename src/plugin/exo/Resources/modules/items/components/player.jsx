@@ -1,20 +1,21 @@
-import React from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {ContentHtml} from '#/main/app/content/components/html'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Badge} from '#/main/app/components/badge'
+import {Html} from '#/main/app/components/html'
 
 import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
+import {getComponent} from '#/plugin/exo/items/item-types'
 
 const UsedHint = props =>
   <li className="list-group-item list-group-item-info d-flex gap-3 align-items-baseline">
-    <ContentHtml className="hint-text flex-fill">
+    <Html className="hint-text flex-fill">
       {props.value}
-    </ContentHtml>
+    </Html>
 
     {props.penalty > 0 &&
       <Badge variant="info">{transChoice('hint_penalty', props.penalty, {count: props.penalty}, 'quiz')}</Badge>
@@ -100,19 +101,24 @@ Hints.propTypes = {
 }
 
 const ItemPlayer = props =>
-  <div className="quiz-item item-player">
+  <div className={classes('quiz-item item-player', props.className)}>
     <ItemMetadata
       showTitle={props.showTitle}
       item={props.item}
       numbering={props.numbering}
     />
 
-    <hr className="item-content-separator" />
+    <hr className="item-content-separator my-4" />
 
-    {props.children}
+    {createElement(getComponent(props.item.type, 'player'), {
+      item: props.item,
+      answer: props.answer && props.answer.data ? props.answer.data : undefined,
+      disabled: !props.editable && props.answer && 0 < props.answer.tries,
+      onChange: (answerData) => props.updateAnswer(props.item.id, answerData)
+    })}
 
     {props.item.hints && 0 !== props.item.hints.length &&
-      <hr className="item-content-separator" />
+      <hr className="item-content-separator my-4" />
     }
 
     {props.item.hints && 0 !== props.item.hints.length &&
@@ -125,6 +131,7 @@ const ItemPlayer = props =>
   </div>
 
 ItemPlayer.propTypes = {
+  className: T.string,
   item: T.shape({
     id: T.string.isRequired,
     title: T.string,
@@ -132,15 +139,22 @@ ItemPlayer.propTypes = {
     content: T.string.isRequired,
     hints: T.array
   }).isRequired,
+  answer: T.shape({
+    tries: T.number,
+    data: T.any
+  }),
   showTitle: T.bool,
   showHint: T.func.isRequired,
   usedHints: T.array.isRequired,
-  children: T.node.isRequired,
-  numbering: T.any
+  editable: T.bool,
+  numbering: T.any,
+  updateAnswer: T.func.isRequired
 }
 
 ItemPlayer.defaultProps = {
   usedHints: []
 }
 
-export {ItemPlayer}
+export {
+  ItemPlayer
+}

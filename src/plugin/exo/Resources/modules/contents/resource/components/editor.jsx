@@ -4,7 +4,7 @@ import get from 'lodash/get'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
@@ -21,11 +21,9 @@ const authorizedTypes = [
 ]
 
 const ResourceEditorComponent = props =>
-  <FormData
+  <FormContent
     className="resource-item resource-editor"
-    embedded={true}
     name={props.formName}
-    dataPart={props.path}
     definition={[
       {
         title: trans('general'),

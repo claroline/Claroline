@@ -7,16 +7,9 @@ import {trans} from '#/main/app/intl/translation'
 
 import {FormSave} from '#/main/app/content/form/components/save'
 
-const FormWrapper = props => props.embedded ?
-  <fieldset
-    {...omit(props, 'embedded', 'flush', 'children')}
-    className={classes('form data-form d-flex flex-column gap-5', props.className, props.flush && 'data-form-flush')}
-  >
-    {props.children}
-  </fieldset>
-  :
+const FormWrapper = props =>
   <form
-    {...omit(props, 'embedded', 'flush', 'children')}
+    {...omit(props, 'flush', 'children')}
     className={classes('form data-form d-flex flex-column gap-5', props.className, props.flush && 'data-form-flush', !props.flush && 'content-lg')}
     onSubmit={(e) => e.preventDefault()}
   >
@@ -26,13 +19,11 @@ const FormWrapper = props => props.embedded ?
 FormWrapper.propTypes = {
   id: T.string,
   className: T.string,
-  embedded: T.bool,
   flush: T.bool,
   children: T.node.isRequired
 }
 
 FormWrapper.defaultProps = {
-  embedded: false,
   flush: false
 }
 
@@ -87,12 +78,6 @@ class Form extends Component {
 Form.propTypes = {
   id: T.string,
   className: T.string,
-  /**
-   * Is the form embed into another?
-   *
-   * Permits knowing if we use a <form> or a <fieldset> tag.
-   */
-  embedded: T.bool,
   flush: T.bool,
   disabled: T.bool,
   level: T.number,

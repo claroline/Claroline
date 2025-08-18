@@ -1,66 +1,52 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 import classes from 'classnames'
 
-import {ContentHtml} from '#/main/app/content/components/html'
-import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
-import {WarningIcon} from '#/plugin/exo/components/warning-icon'
-
-import {utils} from '#/plugin/exo/items/ordering/utils'
-import {constants} from '#/plugin/exo/items/ordering/constants'
-import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl'
 
-const OrderingAnswerFeedback = (props) =>
-  <div className={classes('ordering-answer-item answer-item', {
-    'correct-answer': props.hasExpectedAnswer && props.valid,
-    'incorrect-answer': props.hasExpectedAnswer && !props.valid,
-    'selected-answer': !props.hasExpectedAnswer
-  })}>
-    {props.hasExpectedAnswer &&
-      <WarningIcon className="ordering-item-tick" valid={props.valid}/>
-    }
-    <ContentHtml className="ordering-item-content">
-      {props.content}
-    </ContentHtml>
-
-    <Feedback
-      id={`ordering-answer-${props.id}-feedback`}
-      feedback={props.feedback}
-    />
-  </div>
-
-OrderingAnswerFeedback.propTypes = {
-  id: T.string.isRequired,
-  hasExpectedAnswer: T.bool.isRequired,
-  valid: T.bool.isRequired,
-  content: T.string.isRequired,
-  feedback: T.string
-}
+import {SCORE_SUM} from '#/plugin/exo/scores/constants'
+import {utils} from '#/plugin/exo/items/ordering/utils'
+import {constants} from '#/plugin/exo/items/ordering/constants'
+import {OrderingAnswerItem} from '#/plugin/exo/items/ordering/components/answer-item'
 
 const OrderingFeedback = props =>
   <div className={classes('ordering-feedback', props.item.direction)}>
     <div className={classes('ordering-answer-items', props.item.direction)}>
       {props.item.mode === constants.MODE_INSIDE ?
         props.answer.map((a) =>
-          <OrderingAnswerFeedback
+          <OrderingAnswerItem
             id={a.itemId}
             key={a.itemId}
-            hasExpectedAnswer={props.item.hasExpectedAnswers}
+            className={classes(props.item.hasExpectedAnswers ?
+              utils.getAnswerClass(a, props.answer, props.item.solutions, props.item.score.type) :
+              'selected-answer'
+            )}
+            hasExpectedAnswers={props.item.hasExpectedAnswers}
             valid={utils.answerIsValid(a, props.item.solutions)}
+            showScore={props.showScore && props.item.score.type === SCORE_SUM && utils.showScore(a, props.item.solutions)}
+
             content={props.item.items.find(item => item.id === a.itemId).data}
+            score={props.item.solutions.find(solution => solution.itemId === a.itemId).score}
             feedback={props.item.solutions.find(solution => solution.itemId === a.itemId).feedback}
           />
         )
         :
         props.item.solutions.filter(solution => undefined === props.answer.find(answer => answer.itemId === solution.itemId)).map((solution) =>
-          <OrderingAnswerFeedback
-            key={solution.itemId}
+          <OrderingAnswerItem
             id={solution.itemId}
-            hasExpectedAnswer={props.item.hasExpectedAnswers}
+            key={solution.itemId}
+            className={classes(props.item.hasExpectedAnswers ?
+              solution.score > 0 ? 'incorrect-answer' : 'correct-answer' :
+              undefined
+            )}
+            hasExpectedAnswers={props.item.hasExpectedAnswers}
             valid={solution.score < 1}
+            showScore={props.showScore && solution.score > 0}
+
             content={props.item.items.find(item => item.id === solution.itemId).data}
-            feedback={solution.feedback}
+            score={solution.score}
+            feedback={solution.score > 0 && solution.feedback}
           />
         )
       }
@@ -73,13 +59,20 @@ const OrderingFeedback = props =>
         }
 
         {props.answer.map((a) =>
-          <OrderingAnswerFeedback
-            key={a.itemId}
+          <OrderingAnswerItem
             id={a.itemId}
-            hasExpectedAnswer={props.item.hasExpectedAnswers}
+            key={a.itemId}
+            className={classes(props.item.hasExpectedAnswers ?
+              utils.getAnswerClass(a, props.answer, props.item.solutions, props.item.score.type) :
+              undefined
+            )}
+            hasExpectedAnswers={props.item.hasExpectedAnswers}
             valid={utils.answerIsValid(a, props.item.solutions)}
+            showScore={props.showScore && props.item.score.type === SCORE_SUM && utils.showScore(a, props.item.solutions)}
+
             content={props.item.items.find(item => item.id === a.itemId).data}
             feedback={props.item.solutions.find(solution => solution.itemId === a.itemId).feedback}
+            score={props.item.solutions.find(solution => solution.itemId === a.itemId).score}
           />
         )}
       </div>
@@ -97,7 +90,8 @@ OrderingFeedback.propTypes = {
     solutions: T.arrayOf(T.object).isRequired,
     hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
-  answer: T.array.isRequired
+  answer: T.array.isRequired,
+  showScore: T.bool
 }
 
 OrderingFeedback.defaultProps = {

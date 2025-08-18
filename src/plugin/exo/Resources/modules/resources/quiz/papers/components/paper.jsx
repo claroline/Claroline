@@ -14,40 +14,23 @@ import {UserMicro} from '#/main/core/user/components/micro'
 import {displayUsername} from '#/main/community/utils'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {ContentHtml} from '#/main/app/content/components/html'
-import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
-
-import {calculateTotal} from '#/plugin/exo/items/score'
 import {selectors as statSelectors} from '#/plugin/exo/resources/quiz/statistics/store'
-import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
+import {isQuestionType} from '#/plugin/exo/items/item-types'
 import {showScore} from '#/plugin/exo/resources/quiz/papers/restrictions'
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
-import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
 import {Paper as PaperTypes} from '#/plugin/exo/resources/quiz/papers/prop-types'
 import {actions, selectors} from '#/plugin/exo/resources/quiz/papers/store'
-import ScoreNone from '#/plugin/exo/scores/none'
-import {EvaluationScore} from '#/main/evaluation/components/score'
 import {ResourcePage} from '#/main/core/resource'
 import {PageContent} from '#/main/app/page'
-
-// TODO : show used hints
+import {Item as ItemTypes} from '#/plugin/exo/items/prop-types'
+import {ItemResult} from '#/plugin/exo/items/components/result'
 
 function getAnswer(itemId, answers) {
-  const answer = answers.find(answer => answer.questionId === itemId)
-
-  return answer && answer.data ? answer.data : undefined
+  return answers.find(answer => answer.questionId === itemId)
 }
 
-function getAnswerFeedback(itemId, answers) {
-  const answer = answers.find(answer => answer.questionId === itemId)
-
-  return answer && answer.feedback ? answer.feedback : null
-}
-
-function getAnswerScore(itemId, answers) {
-  const answer = answers.find(answer => answer.questionId === itemId)
-
-  return answer ? answer.score : undefined
+function getStats(itemId, stats = {}) {
+  return stats[itemId] ? stats[itemId] : {}
 }
 
 const PaperStep = props => {
@@ -67,37 +50,17 @@ const PaperStep = props => {
       {props.items
         .filter((item) => isQuestionType(item.type))
         .map((item, idxItem) =>
-          <div key={item.id} className="card mb-3 quiz-item item-paper">
-            <div className="card-body">
-              {props.showScore && item.hasExpectedAnswers && ScoreNone.name !== get(item, 'score.type') && getAnswerScore(item.id, props.answers) !== undefined && getAnswerScore(item.id, props.answers) !== null &&
-                <EvaluationScore className="pull-right" score={getAnswerScore(item.id, props.answers)} scoreMax={calculateTotal(item)}/>
-              }
-
-              <ItemMetadata
-                item={item}
-                showTitle={props.showQuestionTitles}
-                numbering={getNumbering(props.questionNumberingType, props.index, idxItem)}
-              />
-
-              {React.createElement(getDefinition(item.type).paper, {
-                item: item,
-                answer: getAnswer(item.id, props.answers),
-                feedback: getAnswerFeedback(item.id, props.answers),
-                showScore: item.hasExpectedAnswers && ScoreNone.name !== get(item, 'score.type') && props.showScore,
-                showExpected: props.showExpectedAnswers && item.hasExpectedAnswers,
-                showStats: !!(props.showStatistics && props.stats && props.stats[item.id]),
-                showYours: true,
-                stats: props.showStatistics && props.stats && props.stats[item.id] ? props.stats[item.id] : {}
-              })}
-
-              {(item.feedback && !isHtmlEmpty(item.feedback)) &&
-                <div className="item-feedback">
-                  <span className="fa fa-comment" />
-                  <ContentHtml>{item.feedback}</ContentHtml>
-                </div>
-              }
-            </div>
-          </div>
+          <ItemResult
+            key={item.id}
+            item={item}
+            numbering={getNumbering(props.questionNumberingType, props.index, idxItem)}
+            userAnswer={getAnswer(item.id, props.answers)}
+            stats={getStats(item.id, props.stats)}
+            showTitle={props.showQuestionTitles}
+            showScore={props.showScore}
+            showExpectedAnswers={props.showExpectedAnswers}
+            showStatistics={props.showStatistics}
+          />
         )
       }
     </Fragment>
@@ -112,10 +75,9 @@ PaperStep.propTypes = {
   index: T.number.isRequired,
   id: T.string.isRequired,
   title: T.string,
-  items: T.arrayOf(T.shape({
-    // TODO : prop types
-  })),
-
+  items: T.arrayOf(T.shape(
+    ItemTypes.propTypes
+  )),
   showScore: T.bool.isRequired,
   showExpectedAnswers: T.bool.isRequired,
   showStatistics: T.bool.isRequired,
@@ -125,7 +87,7 @@ PaperStep.propTypes = {
 
 const PaperComponent = props =>
   <ResourcePage>
-    <PageContent className="paper">
+    <PageContent className="paper container pt-4 pb-5">
       <ContentTitle
         level={3}
         displayLevel={2}

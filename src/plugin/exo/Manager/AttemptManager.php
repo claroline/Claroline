@@ -81,7 +81,7 @@ class AttemptManager
      * Checks if a user can submit answers to a paper or use hints.
      *
      * A user can submit to a paper only if it is its own and the paper is not closed (= no end).
-     * ATTENTION : As is, anonymous have access to all the other anonymous Papers !!!
+     * ATTENTION: As is, anonymous have access to all the other anonymous Papers !!!
      */
     public function canUpdate(Paper $paper, User $user = null): bool
     {

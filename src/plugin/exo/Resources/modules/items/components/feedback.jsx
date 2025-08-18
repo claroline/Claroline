@@ -1,9 +1,10 @@
-import React from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
-import {ContentHtml} from '#/main/app/content/components/html'
 import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
+import {Html} from '#/main/app/components/html'
+import {getComponent} from '#/plugin/exo/items/item-types'
 
 const ItemFeedback = props =>
   <div className="quiz-item quiz-item-feedback">
@@ -13,14 +14,18 @@ const ItemFeedback = props =>
       numbering={props.numbering}
     />
 
-    <hr className="item-content-separator" />
+    <hr className="item-content-separator my-4" />
 
-    {props.children}
+    {createElement(getComponent(props.item.type, 'feedback'), {
+      item: props.item,
+      answer: props.answer && props.answer.data ? props.answer.data : undefined,
+      showScore: false
+    })}
 
     {(props.item.feedback && !isHtmlEmpty(props.item.feedback)) &&
       <div className="item-feedback">
         <span className="fa fa-comment" />
-        <ContentHtml>{props.item.feedback}</ContentHtml>
+        <Html>{props.item.feedback}</Html>
       </div>
     }
   </div>
@@ -33,9 +38,12 @@ ItemFeedback.propTypes = {
     hints: T.array,
     feedback: T.string
   }).isRequired,
+  answer: T.shape({
+    tries: T.number,
+    data: T.any
+  }),
   showTitle: T.bool,
   usedHints: T.array.isRequired,
-  children: T.node.isRequired,
   numbering: T.string
 }
 

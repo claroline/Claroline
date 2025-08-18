@@ -3,11 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 
 const ResourceWidgetParameters = (props) =>
-  <FormData
-    embedded={true}
+  <FormContent
     flush={true}
     level={5}
     name={props.name}

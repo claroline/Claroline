@@ -40,7 +40,8 @@ ClozeFeedback.propTypes = {
     solutions: T.arrayOf(T.object),
     hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
-  answer: T.array.isRequired
+  answer: T.array.isRequired,
+  showScore: T.bool
 }
 
 ClozeFeedback.defaultProps = {

@@ -15,7 +15,7 @@ import {
  * @return {number|null}
  */
 function calculateScore(item, answer, applyHints = true) {
-  const definition = getDefinition(item.type) // TODO : use new registry
+  const definition = getDefinition(item.type)
 
   // only calculate score for answerable items
   if (definition && definition.answerable) {
@@ -44,7 +44,7 @@ function calculateScore(item, answer, applyHints = true) {
  * @return {number|null}
  */
 function calculateTotal(item) {
-  const definition = getDefinition(item.type) // TODO : use new registry
+  const definition = getDefinition(item.type)
 
   // only calculate score for answerable items
   if (definition && definition.answerable) {

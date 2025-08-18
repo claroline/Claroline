@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 
 import {EventForm as BaseEventForm} from '#/plugin/agenda/event/containers/form'
 
@@ -13,10 +13,9 @@ const EventForm = (props) =>
     target={(event, isNew) => isNew ? ['apiv2_event_create']: ['apiv2_event_update', {id: event.id}]}
     onSave={props.onSave}
   >
-    <FormData
+    <FormContent
       flush={props.flush}
       name={props.name}
-      embedded={true}
       sections={[
         {
           title: trans('general'),

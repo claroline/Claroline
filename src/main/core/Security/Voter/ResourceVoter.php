@@ -198,7 +198,7 @@ class ResourceVoter implements VoterInterface
 
         foreach ($nodes as $node) {
             if ($node->isActive()) {
-                $mask = $this->repository->findMaximumRights($token->getRoleNames(), $node);
+                $mask = $this->repository->findMaximumRights($token?->getRoleNames() ?? [], $node);
                 $type = $node->getResourceType();
                 $decoder = $this->maskManager->getDecoder($type, $action);
                 // Test if user can administrate
@@ -249,7 +249,7 @@ class ResourceVoter implements VoterInterface
         }
 
         // otherwise we need to check
-        $rightsCreation = $this->repository->findCreationRights($token->getRoleNames(), $node);
+        $rightsCreation = $this->repository->findCreationRights($token?->getRoleNames() ?? [], $node);
 
         if (!$this->canCreate($rightsCreation, $type)) {
             $errors[] = $this->translator->trans('resource_creation_wrong_type', [

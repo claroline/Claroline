@@ -4,9 +4,9 @@ import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {AnswerStats} from '#/plugin/exo/items/components/stats'
+import {AnswerStats} from '#/plugin/exo/components/answer-stats'
 
-export const AnswerStatsTable = props =>
+const AnswerStatsTable = props =>
   <div
     className="answers-table"
     style={{
@@ -138,4 +138,8 @@ AnswerStatsTable.propTypes = {
     total: T.number
   }),
   hasExpectedAnswers: T.bool.isRequired
+}
+
+export {
+  AnswerStatsTable
 }

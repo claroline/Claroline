@@ -5,8 +5,6 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store/selecto
 
 const STORE_NAME = 'resourceEditor'
 
-const store = (state) => state[STORE_NAME]
-
 /**
  * Get the path of the current resource editor.
  * Used to create additional routing in the editor.
@@ -15,6 +13,8 @@ const path = createSelector(
   [resourceSelectors.path],
   (resourcePath) => resourcePath + '/edit'
 )
+
+const loaded = resourceSelectors.loaded
 
 const data = (state) => formSelectors.data(formSelectors.form(state, STORE_NAME))
 
@@ -41,6 +41,7 @@ const rights = (state) => formSelectors.value(formSelectors.form(state, STORE_NA
 export const selectors = {
   STORE_NAME,
 
+  loaded,
   path,
   data,
   errors,

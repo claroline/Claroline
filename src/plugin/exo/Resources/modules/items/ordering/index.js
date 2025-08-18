@@ -10,9 +10,10 @@ import {OrderingItem as OrderingItemType} from '#/plugin/exo/items/ordering/prop
 
 // components
 import {OrderingEditor} from '#/plugin/exo/items/ordering/components/editor'
-import {OrderingPaper} from '#/plugin/exo/items/ordering/components/paper'
-import {OrderingPlayer} from '#/plugin/exo/items/ordering/components/player'
+import {OrderingExpectedAnswer} from '#/plugin/exo/items/ordering/components/expected-answer'
 import {OrderingFeedback} from '#/plugin/exo/items/ordering/components/feedback'
+import {OrderingPlayer} from '#/plugin/exo/items/ordering/components/player'
+import {OrderingStats} from '#/plugin/exo/items/ordering/components/stats'
 
 // scores
 import ScoreFixed from '#/plugin/exo/scores/fixed'
@@ -21,16 +22,14 @@ import ScoreSum from '#/plugin/exo/scores/sum'
 export default {
   name: 'ordering',
   type: 'application/x.ordering+json',
-  tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
-  // old
-  paper: OrderingPaper,
-  player: OrderingPlayer,
-  feedback: OrderingFeedback,
-
   components: {
-    editor: OrderingEditor
+    editor: OrderingEditor,
+    player: OrderingPlayer,
+    feedback: OrderingFeedback,
+    expectedAnswer: OrderingExpectedAnswer,
+    stats: OrderingStats
   },
 
   /**

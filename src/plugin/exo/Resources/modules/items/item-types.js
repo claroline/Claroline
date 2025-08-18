@@ -1,5 +1,4 @@
 import invariant from 'invariant'
-import mapValues from 'lodash/mapValues'
 
 import choice from '#/plugin/exo/items/choice'
 import match from '#/plugin/exo/items/match'
@@ -27,9 +26,6 @@ export function registerItemType(definition) {
     definition.question :
     true
 
-  //definition.editor.decorate = getOptionalFunction(definition.editor, 'decorate', item => item)
-  //definition.editor.validate = getOptionalFunction(definition.editor, 'validate', () => ({}))
-
   registeredTypes[definition.type] = definition
 }
 
@@ -40,21 +36,9 @@ export function registerDefaultItemTypes() {
   }
 }
 
-export function listItemMimeTypes() {
-  return Object.keys(registeredTypes)
-}
-
-export function listItemNames() {
-  let list = []
-  for(const type in registeredTypes){
-    list.push({
-      type:type,
-      name:registeredTypes[type].name
-    })
-  }
-  return list
-}
-
+/**
+ * @deprecated use new registry
+ */
 export function getDefinition(type) {
   if (!registeredTypes[type]) {
     throw new Error(`Unknown item type ${type}`)
@@ -63,13 +47,10 @@ export function getDefinition(type) {
   return registeredTypes[type]
 }
 
-export function getDecorators() {
-  return mapValues(registeredTypes, eType => eType.editor.decorate, pType => pType.player.decorate)
-}
+export function getComponent(type, componentName) {
+  const definition = getDefinition(type)
 
-// testing purposes only
-export function resetTypes() {
-  registeredTypes = {}
+  return definition.components[componentName]
 }
 
 export function isQuestionType(type) {
@@ -94,15 +75,6 @@ function assertValidItemType(definition) {
   invariant(
     typeof definition.type === 'string',
     makeError('mime type must be a string', definition)
-  )
-
-  invariant(
-    definition.player,
-    makeError('player component is mandatory', definition)
-  )
-  invariant(
-    definition.paper,
-    makeError('paper component is mandatory', definition)
   )
 }
 

@@ -6,10 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {Resource} from '#/main/core/resource'
 
-import {DragDropProvider} from '#/main/app/overlays/dnd/components/provider'
-import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
-
-import {Player}     from '#/plugin/exo/resources/quiz/player/components/player'
+import {QuizPlayer}     from '#/plugin/exo/resources/quiz/player/containers/main'
 import {AttemptEnd} from '#/plugin/exo/resources/quiz/player/components/attempt-end'
 
 import {QuizOverview}   from '#/plugin/exo/resources/quiz/containers/overview'
@@ -29,7 +26,8 @@ const QuizResource = props =>
         label: trans('start', {}, 'actions'),
         disabled: props.empty,
         displayed: props.editable,
-        target: `${props.path}/play`
+        target: `${props.path}/play`,
+        exact: true
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-flask',
@@ -37,7 +35,8 @@ const QuizResource = props =>
         displayed: props.editable,
         disabled: props.empty,
         target: `${props.path}/test`,
-        group: trans('management')
+        group: trans('management'),
+        exact: true
       }, {
         name: 'results',
         type: LINK_BUTTON,
@@ -89,13 +88,13 @@ const QuizResource = props =>
     pages={[
       {
         path: '/test',
-        component: Player,
+        component: QuizPlayer,
         disabled: !props.editable,
         onEnter: () => props.testMode(true)
       }, {
         path: '/play',
         exact: true,
-        component: Player,
+        component: QuizPlayer,
         onEnter: () => props.testMode(false)
       }, {
         path: '/play/end', // todo : declare inside player module
@@ -117,11 +116,7 @@ const QuizResource = props =>
       {from: '/', exact: true, to: '/play', disabled: props.hasOverview || props.editable},
       {from: '/', exact: true, to: '/test', disabled: props.hasOverview || !props.editable}
     ]}
-  >
-    <DragDropProvider>
-      <CustomDragLayer key="drag-layer" />
-    </DragDropProvider>
-  </Resource>
+  />
 
 QuizResource.propTypes = {
   path: T.string.isRequired,

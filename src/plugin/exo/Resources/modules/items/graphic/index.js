@@ -8,10 +8,11 @@ import {utils} from '#/plugin/exo/items/graphic/utils'
 import {MAX_IMG_SIZE} from '#/plugin/exo/items/graphic/constants'
 
 // components
-import {GraphicPaper} from '#/plugin/exo/items/graphic/components/paper'
 import {GraphicEditor} from '#/plugin/exo/items/graphic/components/editor'
-import {GraphicPlayer} from '#/plugin/exo/items/graphic/components/player'
+import {GraphicExpectedAnswer} from '#/plugin/exo/items/graphic/components/expected-answer'
 import {GraphicFeedback} from '#/plugin/exo/items/graphic/components/feedback'
+import {GraphicPlayer} from '#/plugin/exo/items/graphic/components/player'
+import {GraphicStats} from '#/plugin/exo/items/graphic/components/stats'
 
 // scores
 import ScoreSum from '#/plugin/exo/scores/sum'
@@ -19,15 +20,14 @@ import ScoreSum from '#/plugin/exo/scores/sum'
 export default {
   name: 'graphic',
   type: 'application/x.graphic+json',
-  tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
-  paper: GraphicPaper,
-  player: GraphicPlayer,
-  feedback: GraphicFeedback,
-
   components: {
-    editor: GraphicEditor
+    editor: GraphicEditor,
+    player: GraphicPlayer,
+    feedback: GraphicFeedback,
+    expectedAnswer: GraphicExpectedAnswer,
+    stats: GraphicStats
   },
 
   /**

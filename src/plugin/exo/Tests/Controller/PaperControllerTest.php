@@ -16,31 +16,20 @@ use UJM\ExoBundle\Manager\Attempt\PaperManager;
 
 /**
  * Tests the papers endpoints (list, read, delete, ...).
- *
- * @todo : do not use PaperGenerator. This is not needed to have functional papers here
  */
 class PaperControllerTest extends TransactionalTestCase
 {
     use RequestTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var PaperGenerator */
-    private $paperGenerator;
-    /** @var Persister */
-    private $persist;
-    /** @var PaperManager */
-    private $paperManager;
-    /** @var RightsManager */
-    private $rightsManager;
-    /** @var RoleManager */
-    private $roleManager;
-    /** @var User */
-    private $john;
-    /** @var User */
-    private $bob;
-    /** @var Exercise */
-    private $exercise;
+    private ?ObjectManager $om;
+    private ?PaperGenerator $paperGenerator;
+    private ?Persister $persist;
+    private ?PaperManager $paperManager;
+    private ?RightsManager $rightsManager;
+    private ?RoleManager $roleManager;
+    private ?User $john;
+    private ?User $bob;
+    private ?Exercise $exercise;
 
     protected function setUp(): void
     {
@@ -73,7 +62,7 @@ class PaperControllerTest extends TransactionalTestCase
     /**
      * A user who does not have access to the exercise MUST not have access to the papers list.
      */
-    public function testUserCannotOpenExerciseCannotOpenPapers()
+    public function testUserCannotOpenExerciseCannotOpenPapers(): void
     {
         $paper = $this->paperGenerator->create($this->exercise, $this->bob);
         $this->om->persist($paper);
@@ -91,12 +80,12 @@ class PaperControllerTest extends TransactionalTestCase
     /**
      * A user who does not have access to the exercise MUST not have access to the paper detail.
      */
-    public function testUserCannotOpenExerciseCannotOpenPaperDetail()
+    public function testUserCannotOpenExerciseCannotOpenPaperDetail(): void
     {
         $paper = $this->paperGenerator->create($this->exercise, $this->bob);
         $this->om->persist($paper);
 
-        // Removes permission
+        // Remove permission
         $this->rightsManager->update(0, $this->roleManager->getRoleByName('ROLE_ANONYMOUS'), $this->exercise->getResourceNode());
 
         $this->om->flush();
@@ -109,7 +98,7 @@ class PaperControllerTest extends TransactionalTestCase
     /**
      * An anonymous user MUST NOT have access to papers.
      */
-    public function testAnonymousPapers()
+    public function testAnonymousPapers(): void
     {
         $this->request('GET', "/exercises/{$this->exercise->getUuid()}/papers");
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
@@ -118,7 +107,7 @@ class PaperControllerTest extends TransactionalTestCase
     /**
      * A "normal" user MUST have access only to its own papers and MUST NOT see papers of other users.
      */
-    public function testUserPapers()
+    public function testUserPapers(): void
     {
         $this->markTestSkipped('Temporarily deactivated.');
         // creator of the resource is considered as administrator of the resource
@@ -143,7 +132,7 @@ class PaperControllerTest extends TransactionalTestCase
     /**
      * An "admin" user MUST have access to the papers of all the users who have passed the test.
      */
-    public function testAdminPapers()
+    public function testAdminPapers(): void
     {
         $pa1 = $this->paperGenerator->create($this->exercise, $this->john);
         $pa2 = $this->paperGenerator->create($this->exercise, $this->john);
@@ -171,7 +160,7 @@ class PaperControllerTest extends TransactionalTestCase
     /**
      * An "anonymous" user MUST have access to the detail of its own papers.
      */
-    public function testAnonymousPaper()
+    public function testAnonymousPaper(): void
     {
         // Create a paper for the anonymous
         $paper = $this->paperGenerator->create($this->exercise);
@@ -186,7 +175,7 @@ class PaperControllerTest extends TransactionalTestCase
     /**
      * A "normal" user MUST have access to the detail of its own papers.
      */
-    public function testUserPaper()
+    public function testUserPaper(): void
     {
         $this->markTestSkipped('Temporarily deactivated.');
         // Create a paper for user Bob (normal user)
@@ -205,9 +194,9 @@ class PaperControllerTest extends TransactionalTestCase
     /**
      * A "normal" user MUST NOT have access to paper detail of other users.
      */
-    public function testNonUserPaper()
+    public function testNonUserPaper(): void
     {
-        // Let me introduce you : James, the normal user who will try to access to bob's paper
+        // Let me introduce you: James, the normal user who will try to access to bob's paper
         $james = $this->persist->user('james');
 
         // Create a paper for user Bob
@@ -223,7 +212,7 @@ class PaperControllerTest extends TransactionalTestCase
     /**
      * An "admin" user MUST have access to the detail of all user papers.
      */
-    public function testAdminPaper()
+    public function testAdminPaper(): void
     {
         // Create a paper for user Bob
         $paper = $this->paperGenerator->create($this->exercise, $this->bob);
@@ -241,7 +230,7 @@ class PaperControllerTest extends TransactionalTestCase
     /**
      * A "normal" user MUST NOT be able to delete a paper.
      */
-    public function testUserDeletePaper()
+    public function testUserDeletePaper(): void
     {
         $paper = $this->paperGenerator->create($this->exercise, $this->bob);
         $this->om->persist($paper);
@@ -254,14 +243,13 @@ class PaperControllerTest extends TransactionalTestCase
     /**
      * An "admin" user MUST be able to delete a paper.
      */
-    public function testAdminDeletePaper()
+    public function testAdminDeletePaper(): void
     {
         $paper = $this->paperGenerator->create($this->exercise, $this->john);
         $this->om->persist($paper);
         $this->om->flush();
 
-        $this->request('DELETE', "/exercises/{$this->exercise->getUuid()}/papers?ids[]={$paper->getUuid()}", $this->john);
-
+        $this->request('DELETE', "/exercises/{$this->exercise->getUuid()}/papers", $this->john, [], json_encode([$paper->getUuid()]));
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
 
         // Checks the papers have really been deleted
@@ -276,7 +264,7 @@ class PaperControllerTest extends TransactionalTestCase
      * Checks the export of a paper has the correct format.
      * The paper detail MUST contain the paper itself and the list of used questions.
      */
-    private function assertIsValidPaperDetail(Paper $paper, $content)
+    private function assertIsValidPaperDetail(Paper $paper, $content): void
     {
         $this->assertInstanceOf('\stdClass', $content);
         $this->assertEquals($paper->getUuid(), $content->id);

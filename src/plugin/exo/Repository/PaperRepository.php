@@ -2,8 +2,8 @@
 
 namespace UJM\ExoBundle\Repository;
 
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Doctrine\ORM\EntityRepository;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
@@ -75,7 +75,7 @@ class PaperRepository extends EntityRepository
         return $this->getEntityManager()
             ->createQuery('
                 SELECT a
-                FROM Claroline\CoreBundle\Entity\Resource\ResourceEvaluation AS a
+                FROM Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt AS a
                 WHERE a.data LIKE :paperId
             ')
             ->setParameters([

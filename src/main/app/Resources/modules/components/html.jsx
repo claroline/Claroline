@@ -8,7 +8,7 @@ import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
  * Interprets and displays HTML content.
  */
 const Html = props => {
-  if (isHtmlEmpty(props.children)) {
+  if (!props.children || isHtmlEmpty(props.children)) {
     return null
   }
 
@@ -26,7 +26,7 @@ Html.propTypes = {
   /**
    * HTML content to display.
    */
-  children: T.string.isRequired,
+  children: T.string,
 
   /**
    * Additional classes to add to the DOM.

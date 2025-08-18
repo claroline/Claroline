@@ -1,5 +1,9 @@
 {
   "show-statistics": "Voir les statistiques",
   "show-feedback": "Voir le commentaire",
-  "show_questions_bank": "Voir la banque de questions"
+  "show_questions_bank": "Voir la banque de questions",
+  "add_content": "Ajouter un contenu",
+  "save_content": "Enregistrer le contenu",
+  "add_question": "Ajouter une question",
+  "save_question": "Enregistrer la question"
 }

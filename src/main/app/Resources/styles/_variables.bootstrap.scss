@@ -1360,7 +1360,7 @@ $placeholder-opacity-min:           .05 !default;
 // scss-docs-start card-variables
 $card-spacer-y:                     $spacer !default;
 $card-spacer-x:                     $spacer !default;
-$card-title-spacer-y:               $spacer * .5 !default;
+$card-title-spacer-y:               $spacer !default; // $spacer * .5 !default;
 $card-title-color:                  null !default;
 $card-subtitle-color:               null !default;
 $card-border-width:                 var(--#{$prefix}border-width) !default;
@@ -1451,7 +1451,7 @@ $form-feedback-tooltip-border-radius: $tooltip-border-radius !default;
 // scss-docs-start popover-variables
 $popover-font-size:                 $font-size-sm !default;
 $popover-bg:                        var(--#{$prefix}body-bg) !default;
-$popover-max-width:                 276px !default;
+$popover-max-width:                 320px !default; // 276px !default;
 $popover-border-width:              var(--#{$prefix}border-width) !default;
 $popover-border-color:              var(--#{$prefix}border-color-translucent) !default;
 $popover-border-radius:             var(--#{$prefix}border-radius-lg) !default;

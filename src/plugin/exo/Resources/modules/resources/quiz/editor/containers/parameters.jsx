@@ -1,9 +1,9 @@
 import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
-import {actions as formActions} from '#/main/app/content/form/store'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {actions as editorActions} from '#/main/core/resource/editor/store'
 
 import {QuizEditorParameters as QuizEditorParametersComponent} from '#/plugin/exo/resources/quiz/editor/components/parameters'
 import {selectors} from '#/plugin/exo/resources/quiz/editor/store'
@@ -26,8 +26,11 @@ const QuizEditorParameters = withRouter(
        * @param {string} prop  - the path of the prop to update
        * @param {*}      value - the new value to set
        */
-      update(prop, value) {
-        dispatch(formActions.updateProp(selectors.FORM_NAME, prop, value))
+      updateProp(prop, value) {
+        dispatch(editorActions.updateResource(value, prop))
+      },
+      update(value) {
+        dispatch(editorActions.updateResource(value))
       }
     })
   )(QuizEditorParametersComponent)

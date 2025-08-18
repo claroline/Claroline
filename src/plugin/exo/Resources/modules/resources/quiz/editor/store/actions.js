@@ -15,7 +15,6 @@ export const QUIZ_STEP_REMOVE = 'QUIZ_STEP_REMOVE'
 export const QUIZ_ITEM_COPY   = 'QUIZ_ITEM_COPY'
 export const QUIZ_ITEM_MOVE   = 'QUIZ_ITEM_MOVE'
 
-
 export const actions = {}
 
 actions.addStep = makeActionCreator(QUIZ_STEP_ADD, 'step')

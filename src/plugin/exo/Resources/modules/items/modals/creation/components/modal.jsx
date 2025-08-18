@@ -7,12 +7,13 @@ import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/app/utils/id'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 
-import {Icon} from '#/plugin/exo/items/components/icon'
+import {ItemIcon} from '#/plugin/exo/items/components/icon'
 
 import {Item as ItemTypes} from '#/plugin/exo/items/prop-types'
 import {getItems} from '#/plugin/exo/items'
 import {ContentMenu} from '#/main/app/content/components/menu'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_ITEM_FORM} from '#/plugin/exo/items/modals/form'
 
 class CreationModal extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class CreationModal extends Component {
     return (
       <Modal
         title={trans('new_item', {}, 'quiz')}
-        {...omit(this.props, 'create')}
+        {...omit(this.props, 'create', 'enableScores')}
         onEntering={this.loadAvailableTypes}
       >
         <div className="modal-body" role="presentation">
@@ -41,32 +42,43 @@ class CreationModal extends Component {
             className="mb-3"
             search={true}
             items={this.state.types.map(type => {
+              let newItem = merge({
+                id: makeId(),
+                type: type.type
+              }, ItemTypes.defaultProps)
+
+              if (!this.props.enableScores) {
+                newItem.hasExpectedAnswers = false
+                newItem.score = {type: 'none'}
+              }
+
+              // check if the current item type implements a callback for creation
+              // (to append some custom defaults, for example)
+              const itemDefinition = this.state.types.find(t => t.name === type.name)
+              if (itemDefinition && typeof itemDefinition.create === 'function') {
+                newItem = itemDefinition.create(newItem)
+              }
+
               return ({
                 id: type.type,
-                icon: createElement(Icon, {
+                icon: createElement(ItemIcon, {
                   name: type.name,
                   size: 'sm'
                 }),
                 label: trans(type.name, {}, 'question_types'),
                 description: trans(`${type.name}_desc`, {}, 'question_types'),
+                group: trans(type.answerable ? 'question' : 'content', {}, 'quiz'),
                 action: {
-                  type: CALLBACK_BUTTON,
-                  callback: () => {
-                    let newItem = merge({
-                      id: makeId(),
-                      type: type.type
-                    }, ItemTypes.defaultProps)
-
-                    // check if the current item type implement a callback for creation
-                    // (to append some custom defaults for example)
-                    const itemDefinition = this.state.types.find(t => t.name === type.name)
-                    if (itemDefinition && typeof itemDefinition.create === 'function') {
-                      newItem = itemDefinition.create(newItem)
+                  type: MODAL_BUTTON,
+                  modal: [MODAL_ITEM_FORM, {
+                    enableScores: this.props.enableScores,
+                    item: newItem,
+                    isNew: true,
+                    onSave: (itemData) => {
+                      this.props.fadeModal()
+                      this.props.create(itemData)
                     }
-
-                    this.props.fadeModal()
-                    this.props.create(newItem)
-                  }
+                  }]
                 }
               })
             })}
@@ -78,6 +90,7 @@ class CreationModal extends Component {
 }
 
 CreationModal.propTypes = {
+  enableScores: T.bool,
   fadeModal: T.func.isRequired,
   create: T.func.isRequired
 }

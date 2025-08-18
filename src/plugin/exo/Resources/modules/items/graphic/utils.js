@@ -42,7 +42,28 @@ function isPointInArea(area, x, y) {
   }
 }
 
+function getAreaPosition(area) {
+  if (area.shape === SHAPE_RECT) {
+    return Object.assign({}, area, {
+      top: area.coords[0].y,
+      left: area.coords[0].x,
+      width: area.coords[1].x - area.coords[0].x,
+      height: area.coords[1].y - area.coords[0].y,
+      borderRadius: 0
+    })
+  }
+
+  return Object.assign({}, area, {
+    top: area.center.y - area.radius,
+    left: area.center.x - area.radius,
+    width: area.radius * 2,
+    height: area.radius * 2,
+    borderRadius: area.radius
+  })
+}
+
 export const utils = {
   findArea,
-  isPointInArea
+  isPointInArea,
+  getAreaPosition
 }

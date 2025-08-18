@@ -5,7 +5,6 @@
 }
 
 .cloze-editor,
-.cloze-paper,
 .cloze-feedback {
   .cloze-hole {
     padding: 0; // We need to adjust how answers are rendered
@@ -36,7 +35,6 @@
   }
 }
 
-.cloze-paper,
 .cloze-feedback {
   .cloze-hole {
     padding: 0 $answer-item-padding; // We need to adjust how answers are rendered

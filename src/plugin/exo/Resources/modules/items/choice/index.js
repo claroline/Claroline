@@ -10,9 +10,10 @@ import {ChoiceItem} from '#/plugin/exo/items/choice/prop-types'
 
 // components
 import {ChoiceEditor} from '#/plugin/exo/items/choice/components/editor'
+import {ChoiceExpectedAnswer} from '#/plugin/exo/items/choice/components/expected-answer'
 import {ChoiceFeedback} from '#/plugin/exo/items/choice/components/feedback'
-import {ChoicePaper} from '#/plugin/exo/items/choice/components/paper'
 import {ChoicePlayer} from '#/plugin/exo/items/choice/components/player'
+import {ChoiceStats} from '#/plugin/exo/items/choice/components/stats'
 
 // scores
 import ScoreFixed from '#/plugin/exo/scores/fixed'
@@ -22,15 +23,14 @@ import ScoreSum from '#/plugin/exo/scores/sum'
 export default {
   name: 'choice',
   type: 'application/x.choice+json',
-  tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
-  paper: ChoicePaper,
-  player: ChoicePlayer,
-  feedback: ChoiceFeedback,
-
   components: {
-    editor: ChoiceEditor
+    editor: ChoiceEditor,
+    player: ChoicePlayer,
+    feedback: ChoiceFeedback,
+    expectedAnswer: ChoiceExpectedAnswer,
+    stats: ChoiceStats
   },
 
   /**

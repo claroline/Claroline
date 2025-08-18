@@ -3,8 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import shuffle from 'lodash/shuffle'
 
-import {ContentHtml} from '#/main/app/content/components/html'
+import {Html} from '#/main/app/components/html'
 import {utils} from '#/plugin/exo/items/match/utils'
+import {trans} from '#/main/app/intl'
 
 /* If any previous answer draw them */
 function drawAnswers(answers, jsPlumbInstance){
@@ -28,12 +29,12 @@ class MatchItem extends Component{
 
   render() {
     return (
-      <ContentHtml
+      <Html
         id={this.props.type + '_' + this.props.item.id}
         className={classes('answer-item match-item', this.props.type)}
       >
         {this.props.item.data}
-      </ContentHtml>
+      </Html>
     )
   }
 }
@@ -53,6 +54,7 @@ class MatchPlayer extends Component {
 
     this.container = null
     this.handleWindowResize = this.handleWindowResize.bind(this)
+    this.handleConnectionClick = this.handleConnectionClick.bind(this)
 
     this.state = {
       firstSet: this.randomize(props.item.firstSet, props.item.random),
@@ -68,12 +70,17 @@ class MatchPlayer extends Component {
     this.jsPlumbInstance.repaintEverything()
   }
 
+  handleConnectionClick(connection) {
+    // this will fire beforeDetach interceptor
+    this.jsPlumbInstance.deleteConnection(connection)
+  }
+
   componentDidMount() {
     this.jsPlumbInstance.setContainer(this.container)
     window.addEventListener('resize', this.handleWindowResize)
     const images =  document.images
 
-    // required to fix position of anchors after images are loaded
+    // required to fix the position of anchors after images are loaded
     for (let i = 0; i < images.length; ++i) {
       images[i].addEventListener('load', this.handleWindowResize)
     }
@@ -93,7 +100,6 @@ class MatchPlayer extends Component {
           return false
         }
 
-        //connection.connection.setType('selected')
         const firstId = connection.sourceId.replace('source_', '')
         const secondId = connection.targetId.replace('target_', '')
 
@@ -106,10 +112,7 @@ class MatchPlayer extends Component {
       })
 
       // remove jsPlumb connection
-      this.jsPlumbInstance.bind('click', (connection) => {
-        // this will fire beforeDetach interceptor
-        this.jsPlumbInstance.detach(connection)
-      })
+      this.jsPlumbInstance.bind('click', this.handleConnectionClick)
 
       // remove answer
       this.jsPlumbInstance.bind('beforeDetach', (connection) => {
@@ -146,14 +149,12 @@ class MatchPlayer extends Component {
       if (isLeftItem) {
         this.jsPlumbInstance.addEndpoint(this.jsPlumbInstance.getSelector(selector), {
           anchor: anchor,
-          cssClass: 'endPoints',
           isSource: true,
           maxConnections: -1
         })
       } else {
         this.jsPlumbInstance.addEndpoint(this.jsPlumbInstance.getSelector(selector), {
           anchor: anchor,
-          cssClass: 'endPoints',
           isTarget: true,
           maxConnections: -1
         })
@@ -163,37 +164,46 @@ class MatchPlayer extends Component {
 
   render() {
     return (
-      <div id={`match-question-player-${this.props.item.id}`} className="match-player match-items row" ref={(el) => { this.container = el }}>
-        <div className="item-col col-md-5 col-sm-5 col-xs-5">
-          <ul className="match-items-list">
-            {this.state.firstSet.map((item) =>
-              <li key={'source_' + item.id}>
-                <MatchItem
-                  onChange={this.props.onChange}
-                  onMount={(type, id) => this.itemDidMount(type, id)}
-                  item={item}
-                  type="source"
-                />
-              </li>
-            )}
-          </ul>
-        </div>
+      <div className="match-player">
+        <p className="fs-sm text-body-secondary">
+          <span className="fa fa-circle-info me-2" aria-hidden={true} />
+          {trans('match_player_help', {}, 'quiz')}
+        </p>
 
-        <div className="divide-col col-md-2 col-sm-2 col-xs-2" />
+        <div className="jtk-container position-relative" ref={(el) => { this.container = el }}>
+          <div className="match-items row">
+            <div className="item-col col-md-5 col-sm-5 col-xs-5">
+              <ul className="match-items-list">
+                {this.state.firstSet.map((item) =>
+                  <li key={'source_' + item.id}>
+                    <MatchItem
+                      onChange={this.props.onChange}
+                      onMount={(type, id) => this.itemDidMount(type, id)}
+                      item={item}
+                      type="source"
+                    />
+                  </li>
+                )}
+              </ul>
+            </div>
 
-        <div className="item-col col-md-5 col-sm-5 col-xs-5">
-          <ul className="match-items-list">
-            {this.state.secondSet.map((item) =>
-              <li key={'target_' + item.id}>
-                <MatchItem
-                  onChange={this.props.onChange}
-                  onMount={(type, id) => this.itemDidMount(type, id)}
-                  item={item}
-                  type="target"
-                />
-              </li>
-            )}
-          </ul>
+            <div className="divide-col col-md-2 col-sm-2 col-xs-2" />
+
+            <div className="item-col col-md-5 col-sm-5 col-xs-5">
+              <ul className="match-items-list">
+                {this.state.secondSet.map((item) =>
+                  <li key={'target_' + item.id}>
+                    <MatchItem
+                      onChange={this.props.onChange}
+                      onMount={(type, id) => this.itemDidMount(type, id)}
+                      item={item}
+                      type="target"
+                    />
+                  </li>
+                )}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     )

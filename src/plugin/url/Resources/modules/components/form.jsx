@@ -5,7 +5,7 @@ import omit from 'lodash/omit'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {constants} from '#/plugin/scorm/resources/scorm/constants'
@@ -30,7 +30,7 @@ class UrlForm extends Component {
 
   render() {
     return (
-      <FormData
+      <FormContent
         {...omit(this.props)}
         name={this.props.name}
         definition={[
@@ -115,7 +115,7 @@ class UrlForm extends Component {
             </table>
           </FormSection>
         </FormSections>
-      </FormData>
+      </FormContent>
     )
   }
 }

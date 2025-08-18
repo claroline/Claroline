@@ -11,7 +11,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {FormSection, FormSections} from '#/main/app/content/form/components/sections'
 
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 
 const SectionParameters = props =>
   <FormSection
@@ -32,9 +32,8 @@ const SectionParameters = props =>
       }
     ]}
   >
-    <FormData
+    <FormContent
       flush={true}
-      embedded={true}
       level={3}
       name={props.name}
       dataPart={`${props.dataPart}[${props.index}]`}

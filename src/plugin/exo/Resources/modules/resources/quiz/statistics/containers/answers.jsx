@@ -9,7 +9,9 @@ const AnswersStats = connect(
   (state) => ({
     quiz: quizSelectors.quiz(state),
     showTitles: quizSelectors.showTitles(state),
+    showQuestionTitles: quizSelectors.showQuestionTitles(state),
     numbering: quizSelectors.numbering(state),
+    questionNumbering: quizSelectors.questionNumbering(state),
     stats: selectors.statistics(state)
   })
 )(AnswersStatsComponent)

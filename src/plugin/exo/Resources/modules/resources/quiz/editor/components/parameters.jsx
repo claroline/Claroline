@@ -12,10 +12,11 @@ import {NumberInput} from '#/main/app/data/types/number/components/input'
 
 import {QuizType} from '#/plugin/exo/resources/quiz/components/type'
 import {constants} from '#/plugin/exo/resources/quiz/constants'
-import {QUIZ_TYPES, configureTypeEditor, setTypePresets} from '#/plugin/exo/resources/quiz/types'
+import {configureTypeEditor, setTypePresets} from '#/plugin/exo/resources/quiz/types'
 
 import ScoreNone from '#/plugin/exo/scores/none'
 import ScoreSum from '#/plugin/exo/scores/sum'
+import {Step} from '#/plugin/exo/resources/quiz/prop-types'
 
 const hasEnd = (quiz) => get(quiz, 'parameters.showEndPage')
 
@@ -51,11 +52,10 @@ const QuizEditorParameters = props => {
                     type={get(quiz, 'parameters.type')}
                     selectAction={(type) => ({
                       type: CALLBACK_BUTTON,
-                      callback: () => props.update(null, setTypePresets(type, quiz)),
+                      callback: () => {
+                        props.update(setTypePresets(type, quiz))
+                      },
                       confirm: {
-                        icon: 'fa fa-fw fa-warning',
-                        title: trans('change_quiz_type_confirm', {}, 'quiz'),
-                        subtitle: get(QUIZ_TYPES[get(quiz, 'parameters.type')], 'meta.label') + ' > ' + get(QUIZ_TYPES[type], 'meta.label'),
                         message: trans('change_quiz_type_message', {}, 'quiz'),
                         button: trans('change', {}, 'actions')
                       }
@@ -76,7 +76,7 @@ const QuizEditorParameters = props => {
               onChange: (value) => {
                 if (!value) {
                   // we need to change score rule
-                  props.update('score.type', ScoreNone.name)
+                  props.updateProp('score.type', ScoreNone.name)
 
                   // we need to disable expected answers on items
                   const newSteps = cloneDeep(props.steps)
@@ -87,7 +87,7 @@ const QuizEditorParameters = props => {
                     })
                   })
 
-                  props.update('steps', newSteps)
+                  props.updateProp('steps', newSteps)
                 }
               }
             }
@@ -112,10 +112,10 @@ const QuizEditorParameters = props => {
               },
               onChange: (pickingType) => {
                 if (constants.QUIZ_PICKING_TAGS === pickingType) {
-                  props.update('picking.randomPick', constants.SHUFFLE_ALWAYS)
-                  props.update('picking.pick', [])
+                  props.updateProp('picking.randomPick', constants.SHUFFLE_ALWAYS)
+                  props.updateProp('picking.pick', [])
                 } else {
-                  props.update('picking.pick', 0)
+                  props.updateProp('picking.pick', 0)
                 }
               },
               linked: [
@@ -190,7 +190,7 @@ const QuizEditorParameters = props => {
                                   [current]: current
                                 }), {})}
                                 value={pickedTag[0]}
-                                onChange={value => props.update(`picking.pick[${pickedTagIndex}][0]`, value)}
+                                onChange={value => props.updateProp(`picking.pick[${pickedTagIndex}][0]`, value)}
                               />
 
                               <NumberInput
@@ -198,7 +198,7 @@ const QuizEditorParameters = props => {
                                 size="sm"
                                 min={1}
                                 value={pickedTag[1]}
-                                onChange={value => props.update(`picking.pick[${pickedTagIndex}][1]`, value)}
+                                onChange={value => props.updateProp(`picking.pick[${pickedTagIndex}][1]`, value)}
                               />
                             </div>
                           )
@@ -242,10 +242,10 @@ const QuizEditorParameters = props => {
               calculated: (quiz) => 0 < get(quiz, 'parameters.duration') || get(quiz, 'parameters.timeLimited'),
               onChange: (checked) => {
                 if (!checked) {
-                  props.update('parameters.duration', 0)
+                  props.updateProp('parameters.duration', 0)
                 } else {
-                  props.update('parameters.duration', null) // to force user to fill the field
-                  props.update('parameters.interruptible', false)
+                  props.updateProp('parameters.duration', null) // to force user to fill the field
+                  props.updateProp('parameters.interruptible', false)
                 }
               },
               linked: [
@@ -264,7 +264,7 @@ const QuizEditorParameters = props => {
               displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers'),
               onChange: (value) => {
                 if (value) {
-                  props.update('parameters.answersEditable', false)
+                  props.updateProp('parameters.answersEditable', false)
                 }
               }
               // TODO : add help text
@@ -335,9 +335,9 @@ const QuizEditorParameters = props => {
                       calculated: (quiz) => !!get(quiz, 'parameters.back.type') || get(quiz, 'parameters.back._enabled'),
                       onChange: (enabled) => {
                         if (!enabled) {
-                          props.update('parameters.back.type', null)
-                          props.update('parameters.back.label', null)
-                          props.update('parameters.back.target', null)
+                          props.updateProp('parameters.back.type', null)
+                          props.updateProp('parameters.back.label', null)
+                          props.updateProp('parameters.back.target', null)
                         }
                       },
                       linked: [
@@ -374,11 +374,6 @@ const QuizEditorParameters = props => {
                     }
                   ]
                 }, {
-                  name: 'parameters.workspaceCertificates',
-                  type: 'boolean',
-                  label: trans('resource_end_certificates', {}, 'resource'),
-                  displayed: false /*hasEnd*/
-                }, {
                   name: 'parameters._showEndStats',
                   type: 'boolean',
                   label: trans('show_attempts_stats', {}, 'quiz'),
@@ -386,9 +381,9 @@ const QuizEditorParameters = props => {
                   calculated: (quiz) => 'none' !== get(quiz, 'parameters.endStats'),
                   onChange: (checked) => {
                     if (checked) {
-                      props.update('parameters.endStats', 'user')
+                      props.updateProp('parameters.endStats', 'user')
                     } else {
-                      props.update('parameters.endStats', 'none')
+                      props.updateProp('parameters.endStats', 'none')
                     }
                   },
                   linked: [
@@ -431,7 +426,7 @@ const QuizEditorParameters = props => {
               },
               onChange: (quizResults) => {
                 if (constants.QUIZ_RESULTS_AT_DATE !== quizResults) {
-                  props.update('parameters.correctionDate', null)
+                  props.updateProp('parameters.correctionDate', null)
                 }
               },
               linked: [
@@ -453,7 +448,7 @@ const QuizEditorParameters = props => {
               type: 'boolean'
             }, {
               name: 'parameters.showStatistics',
-              label: trans('enable_statistics', {}, 'quiz'),
+              label: trans('enable_statistics'),
               type: 'boolean',
               linked: [
                 {
@@ -473,9 +468,9 @@ const QuizEditorParameters = props => {
                   calculated: (quiz) => get(quiz, 'parameters.allPapersStatistics') ? 'all' : 'finished',
                   onChange: (mode) => {
                     if ('all' === mode) {
-                      props.update('parameters.allPapersStatistics', true)
+                      props.updateProp('parameters.allPapersStatistics', true)
                     } else {
-                      props.update('parameters.allPapersStatistics', false)
+                      props.updateProp('parameters.allPapersStatistics', false)
                     }
                   }
                 }
@@ -510,7 +505,7 @@ const QuizEditorParameters = props => {
               // TODO : make it a new dataType (duplicated in item editor)
               linked: currentScore ? currentScore
                 // generate the list of fields for the score type
-                .configure(props.score, (prop, value) => props.update(`score.${prop}`, value))
+                .configure(props.score, (prop, value) => props.updateProp(`score.${prop}`, value))
                 .map(scoreProp => Object.assign({}, scoreProp, {
                   name: `score.${scoreProp.name}`,
                   // slightly ugly because I only support 1 level
@@ -528,7 +523,7 @@ const QuizEditorParameters = props => {
                     })
                   })
 
-                  props.update('steps', newSteps)
+                  props.updateProp('steps', newSteps)
                 }
               }
             }
@@ -580,9 +575,9 @@ const QuizEditorParameters = props => {
               calculated: (quiz) => get(quiz, 'parameters._maxAttempts') || 0 < get(quiz, 'parameters.maxAttempts'),
               onChange: (restrict) => {
                 if (restrict) {
-                  props.update('parameters.maxAttempts', null)
+                  props.updateProp('parameters.maxAttempts', null)
                 } else {
-                  props.update('parameters.maxAttempts', 0)
+                  props.updateProp('parameters.maxAttempts', 0)
                 }
               },
               linked: [
@@ -618,14 +613,15 @@ QuizEditorParameters.propTypes = {
   score: T.shape({
     type: T.string.isRequired
   }),
-  steps: T.arrayOf(T.shape({
-    // TODO : prop types
-  })),
-  numberingType: T.string.isRequired,
+  steps: T.arrayOf(T.shape(
+    Step.propTypes
+  )),
+  numberingType: T.string,
   randomPick: T.string,
   tags: T.array.isRequired,
   workspace: T.object,
-  update: T.func.isRequired
+  update: T.func.isRequired,
+  updateProp: T.func.isRequired
 }
 
 export {

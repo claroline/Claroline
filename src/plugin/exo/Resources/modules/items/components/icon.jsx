@@ -4,22 +4,17 @@ import classes from 'classnames'
 
 import {asset} from '#/main/app/config/asset'
 
-const Icon = props =>
-  <svg className={classes(props.className, `item-icon item-icon-${props.size}`)}>
-    <use xlinkHref={`${asset('bundles/ujmexo/images/item-icons.svg')}#icon-quiz-${props.name}`} />
+const ItemIcon = ({className, name, size}) =>
+  <svg className={classes(className, `item-icon item-icon-${size} flex-shrink-0`)}>
+    <use xlinkHref={`${asset('bundles/ujmexo/images/item-icons.svg')}#icon-quiz-${name}`} />
   </svg>
 
-Icon.propTypes = {
+ItemIcon.propTypes = {
   className: T.string,
   name: T.string.isRequired,
-  size: T.oneOf(['sm', 'md', 'lg'])
-}
-
-Icon.defaultProps = {
-  size: 'sm'
+  size: T.oneOf(['xs', 'sm', 'md', 'lg']).isRequired
 }
 
 export {
-  Icon,
-  Icon as ItemIcon
+  ItemIcon
 }

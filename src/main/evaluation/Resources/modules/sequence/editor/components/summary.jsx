@@ -100,7 +100,7 @@ const SequenceEditorSummary = () => {
               name: 'objective',
               label: trans('objective', {}, 'evaluation'),
               type: 'html'
-            },
+            }
           ]
         }
       ]}
@@ -112,7 +112,7 @@ const SequenceEditorSummary = () => {
 
       <Button
         type={CALLBACK_BUTTON}
-        className={classes('btn btn-primary w-100 mt-3 mb-5', {
+        className={classes('btn btn-primary w-100', {
           'btn-wave': isEmpty(steps)
         })}
         label={trans('add_sequence_step', {}, 'actions')}

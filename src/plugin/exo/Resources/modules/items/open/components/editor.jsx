@@ -2,16 +2,14 @@ import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
 import {OpenItem as OpenItemTypes} from '#/plugin/exo/items/open/prop-types'
 
 const OpenEditor = (props) =>
-  <FormData
+  <FormContent
     className="open-editor"
-    embedded={true}
     name={props.formName}
-    dataPart={props.path}
     definition={[
       {
         title: trans('general'),

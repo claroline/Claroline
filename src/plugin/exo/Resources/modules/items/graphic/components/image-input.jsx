@@ -21,7 +21,7 @@ class ImageInput extends Component {
         />
         <button
           type="button"
-          className="btn btn-outline-primary btn-sm"
+          className="btn btn-body btn-sm"
           ref={button => this.button = button}
           onClick={() => this.input.click()}
         >

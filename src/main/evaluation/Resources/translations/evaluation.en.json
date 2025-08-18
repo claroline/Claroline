@@ -40,5 +40,6 @@
   "previous_step": "Next: %title%",
   "no_user_activity": "You have not started this activity yet.",
   "resources_delete_message": "{1} Are you sure you want to delete this sequence? | [2,Inf[ Are you sure you want to delete these %count% sequences?",
-  "copy_sequence_confirm_message": "{1} Are you sure you want to copy this sequence? | [2,Inf[ Are you sure you want to copy these %count% sequences?"
+  "copy_sequence_confirm_message": "{1} Are you sure you want to copy this sequence? | [2,Inf[ Are you sure you want to copy these %count% sequences?",
+  "learner_objective": "What will I learn?"
 }

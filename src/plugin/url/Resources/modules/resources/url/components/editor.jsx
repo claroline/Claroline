@@ -16,7 +16,6 @@ const UrlEditorTarget = () =>
       name={editorSelectors.STORE_NAME}
       dataPart="resource"
       updateProp={() => true}
-      embedded={true}
     />
   </EditorPage>
 

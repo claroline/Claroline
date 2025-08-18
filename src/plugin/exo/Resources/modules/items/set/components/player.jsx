@@ -8,6 +8,7 @@ import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {SetItemDragPreview} from '#/plugin/exo/items/set/components/set-item-drag-preview'
+import {Html} from '#/main/app/components/html'
 
 let DropBox = props => props.connectDropTarget(
   <div className={classes('set-drop-placeholder', {
@@ -29,9 +30,9 @@ DropBox = makeDroppable(DropBox, 'ITEM')
 
 const Association = props =>
   <div className="association answer-item set-answer-item selected">
-    <ContentHtml className="item-content">
+    <Html className="item-content">
       {props.association._itemData}
-    </ContentHtml>
+    </Html>
 
     {props.removable &&
       <Button
@@ -54,9 +55,9 @@ Association.propTypes = {
 
 const Set = props =>
   <div className="set">
-    <ContentHtml className="set-heading">
+    <Html className="set-heading h5 mb-0">
       {props.set.data}
-    </ContentHtml>
+    </Html>
 
     <ul>
       {props.associations.map(ass =>

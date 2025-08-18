@@ -15,8 +15,8 @@ final class CreateEvent extends CrudEvent
 {
     public function __construct(
         mixed $object,
-        array $options = [],
-        private readonly array $data = []
+        ?array $options = [],
+        private readonly ?array $data = []
     ) {
         parent::__construct($object, $options);
     }

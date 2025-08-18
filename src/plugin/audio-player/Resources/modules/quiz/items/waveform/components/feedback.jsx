@@ -36,11 +36,11 @@ const WaveformFeedback = props =>
           return Object.assign({}, a, {
             start: a.start,
             end: a.end,
-            score: solution ? solution.score : 0,
+            score: solution ? solution.score : -props.item.penalty,
             feedback: solution ? solution.feedback : null
           })
         })}
-        showScore={false}
+        showScore={props.item.hasExpectedAnswers && props.showScore}
         highlightScore={props.item.hasExpectedAnswers}
       />
     }
@@ -48,7 +48,8 @@ const WaveformFeedback = props =>
 
 WaveformFeedback.propTypes = {
   item: T.shape(WaveformItemType.propTypes).isRequired,
-  answer: T.array
+  answer: T.array,
+  showScore: T.bool
 }
 
 WaveformFeedback.defaultProps = {

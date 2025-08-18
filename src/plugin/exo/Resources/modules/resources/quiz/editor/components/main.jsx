@@ -2,8 +2,6 @@ import React from 'react'
 import {useSelector} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
-import {DragDropProvider} from '#/main/app/overlays/dnd/components/provider'
 import {ResourceEditor} from '#/main/core/resource/editor'
 
 import {QuizEditorParameters} from '#/plugin/exo/resources/quiz/editor/containers/parameters'
@@ -16,32 +14,29 @@ const QuizEditor = () => {
   const quiz = useSelector(selectors.quiz)
 
   return (
-    <DragDropProvider>
-      <ResourceEditor
-        styles={['claroline-distribution-plugin-exo-quiz-resource']}
-        additionalData={() => ({
-          resource: quiz
-        })}
-        appearancePage={QuizEditorAppearance}
-        pages={[
-          {
-            name: 'parameters',
-            title: trans('parameters'),
-            component: QuizEditorParameters
-          }, {
-            name: 'steps',
-            title: trans('steps', {}, 'quiz'),
-            component: QuizEditorSteps
-          }, {
-            name: 'bank',
-            title: trans('questions_bank', {}, 'quiz'),
-            component: QuizEditorBank,
-            displayed: false
-          }
-        ]}
-      />
-      <CustomDragLayer key="drag-layer" />
-    </DragDropProvider>
+    <ResourceEditor
+      styles={['claroline-distribution-plugin-exo-quiz-resource']}
+      additionalData={() => ({
+        resource: quiz
+      })}
+      appearancePage={QuizEditorAppearance}
+      pages={[
+        {
+          name: 'parameters',
+          title: trans('parameters'),
+          component: QuizEditorParameters
+        }, {
+          name: 'steps',
+          title: trans('steps', {}, 'quiz'),
+          component: QuizEditorSteps
+        }, {
+          name: 'bank',
+          title: trans('questions_bank', {}, 'quiz'),
+          component: QuizEditorBank,
+          displayed: false
+        }
+      ]}
+    />
   )
 }
 

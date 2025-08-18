@@ -15,6 +15,8 @@ import {MODAL_STEP_POSITION} from '#/plugin/exo/resources/quiz/editor/modals/ste
 import {MODAL_ITEM_IMPORT} from '#/plugin/exo/items/modals/import'
 import {MODAL_ITEM_CREATION} from '#/plugin/exo/items/modals/creation'
 import {MODAL_ITEM_POSITION} from '#/plugin/exo/resources/quiz/editor/modals/item-position'
+import {hasPermission} from '#/main/app/security'
+import {MODAL_ITEM_FORM} from '#/plugin/exo/items/modals/form'
 
 const QuizEditorSteps = (props) => {
   const resourceEditorPath = useSelector(editorSelectors.path) + '/steps'
@@ -27,19 +29,9 @@ const QuizEditorSteps = (props) => {
         icon: 'fa fa-fw fa-plus',
         label: trans('add_question_from_new', {}, 'quiz'),
         modal: [MODAL_ITEM_CREATION, {
+          enableScores: props.hasExpectedAnswers,
           create: (item) => {
-            if (!props.hasExpectedAnswers) {
-              item.hasExpectedAnswers = false
-            }
-
-            if (!props.hasExpectedAnswers || !props.score || 'none' === props.score.type) {
-              item.score = {
-                type: 'none'
-              }
-            }
-
             props.addItem(props.steps, step.id, item)
-            props.history.push(`${resourceEditorPath}/${step.slug}/${item.id}`)
           }
         }],
         primary: true
@@ -69,7 +61,7 @@ const QuizEditorSteps = (props) => {
               })
 
               props.update('items', uniqBy([].concat(step.items, items), (item) => item.id))
-              props.history.push(`${resourceEditorPath}/${step.slug}/${item.id}`)
+              props.history.push(`${resourceEditorPath}/${step.slug}/${items[items.length - 1].id}`)
             }
           })
         }]
@@ -89,11 +81,8 @@ const QuizEditorSteps = (props) => {
             id: s.id,
             title: s.title || trans('step', {number: i + 1}, 'quiz')
           })),
-          selectAction: (position) => ({
-            type: CALLBACK_BUTTON,
-            label: trans('copy', {}, 'actions'),
-            callback: () => props.copyStep(props.steps, step.id, position)
-          })
+          saveLabel: trans('copy', {}, 'actions'),
+          onSave: (position) => props.copyStep(props.steps, step.id, position)
         }]
       }, {
         name: 'move',
@@ -111,11 +100,8 @@ const QuizEditorSteps = (props) => {
             id: s.id,
             title: s.title || trans('step', {number: i + 1}, 'quiz')
           })),
-          selectAction: (position) => ({
-            type: CALLBACK_BUTTON,
-            label: trans('move', {}, 'actions'),
-            callback: () => props.moveStep(props.steps, step.id, position)
-          })
+          saveLabel: trans('move', {}, 'actions'),
+          onSave: (position) => props.moveStep(props.steps, step.id, position)
         }]
       }, {
         name: 'delete',
@@ -141,6 +127,20 @@ const QuizEditorSteps = (props) => {
   function getItemActions(step, stepIndex, item, itemIndex) {
     return [
       {
+        name: 'edit',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-pencil',
+        label: trans('edit', {}, 'actions'),
+        disabled: item.meta.protectQuestion && !hasPermission('edit', item),
+        modal: [MODAL_ITEM_FORM, {
+          enableScores: props.hasExpectedAnswers,
+          item: item,
+          onSave: (item) => {
+            props.update(`steps[${stepIndex}].items[${itemIndex}]`, item)
+          }
+        }],
+        primary: true
+      }, {
         name: 'copy',
         type: MODAL_BUTTON,
         icon: 'fa fa-fw fa-clone',
@@ -161,12 +161,10 @@ const QuizEditorSteps = (props) => {
             id: item.id,
             title: item.title || trans('item', {number: itemIndex + 1}, 'quiz')
           },
-          selectAction: (position) => ({
-            type: CALLBACK_BUTTON,
-            label: trans('copy', {}, 'actions'),
-            callback: () => props.copyItem(props.steps, item, position)
-          })
-        }]
+          saveLabel: trans('copy', {}, 'actions'),
+          onSave: (position) => props.copyItem(props.steps, item, position)
+        }],
+        group: trans('management')
       }, {
         name: 'move',
         type: MODAL_BUTTON,
@@ -188,12 +186,10 @@ const QuizEditorSteps = (props) => {
             id: item.id,
             title: item.title || trans('item', {number: itemIndex + 1}, 'quiz')
           },
-          selectAction: (position) => ({
-            type: CALLBACK_BUTTON,
-            label: trans('move', {}, 'actions'),
-            callback: () => props.moveItem(props.steps, item.id, position)
-          })
-        }]
+          saveLabel: trans('move', {}, 'actions'),
+          onSave: (position) => props.moveItem(props.steps, item.id, position)
+        }],
+        group: trans('management')
       }, {
         name: 'delete',
         type: CALLBACK_BUTTON,
@@ -250,13 +246,12 @@ const QuizEditorSteps = (props) => {
                   items={currentStep.items}
                   errors={get(props.errors, `resource.steps[${stepIndex}]`)}
                   actions={getStepActions(currentStep, stepIndex)}
-                  update={(prop, value) => props.update(`steps[${stepIndex}].${prop}`, value)}
                   getItemActions={(item, itemIndex) => getItemActions(currentStep, stepIndex, item, itemIndex)}
                 />
               )
             }
 
-            routeProps.history.push(`${props.path}/edit`)
+            routeProps.history.push(resourceEditorPath)
 
             return null
           }
@@ -267,6 +262,20 @@ const QuizEditorSteps = (props) => {
 }
 
 QuizEditorSteps.propTypes = {
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
+  location: T.shape({
+    pathname: T.string
+  }).isRequired,
+  hasExpectedAnswers: T.bool,
+  numberingType: T.string,
+  steps: T.array,
+  errors: T.object,
+  score: T.shape({
+    type: T.string.isRequired
+  }),
+  update: T.func.isRequired,
   addStep: T.func.isRequired,
   copyStep: T.func.isRequired,
   moveStep: T.func.isRequired,

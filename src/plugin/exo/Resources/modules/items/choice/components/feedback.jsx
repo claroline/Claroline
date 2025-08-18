@@ -2,12 +2,14 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {ContentHtml} from '#/main/app/content/components/html'
 import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {utils} from '#/plugin/exo/items/choice/utils'
 import {WarningIcon} from '#/plugin/exo/items/choice/components/warning-icon'
 
 import {ChoiceItem as ChoiceItemTypes} from '#/plugin/exo/items/choice/prop-types'
+import {Html} from '#/main/app/components/html'
+import {SCORE_FIXED, SCORE_RULES} from '#/plugin/exo/scores/constants'
+import {SolutionScore} from '#/plugin/exo/components/score'
 
 const ChoiceFeedback = props =>
   <div className="choice-feedback">
@@ -25,19 +27,25 @@ const ChoiceFeedback = props =>
               name={utils.answerId(props.item.id)}
               type={props.item.multiple ? 'checkbox': 'radio'}
               checked={utils.isSolutionChecked(solution, props.answer)}
-              disabled
+              disabled={true}
             />
           }
 
-          <ContentHtml className="choice-item-content">
+          <Html className="choice-item-content">
             {utils.getChoiceById(props.item.choices, solution.id).data}
-          </ContentHtml>
+          </Html>
 
           {utils.isSolutionChecked(solution, props.answer) &&
-            <Feedback
-              id={`${solution.id}-feedback`}
-              feedback={solution.feedback}
-            />
+            <>
+              <Feedback
+                id={`${solution.id}-feedback`}
+                feedback={solution.feedback}
+              />
+
+              {props.showScore && -1 === [SCORE_FIXED, SCORE_RULES].indexOf(props.item.score.type) &&
+                <SolutionScore score={solution.score} />
+              }
+            </>
           }
         </label>
       )}
@@ -48,7 +56,8 @@ ChoiceFeedback.propTypes = {
   item: T.shape(
     ChoiceItemTypes.propTypes
   ).isRequired,
-  answer: T.array
+  answer: T.array,
+  showScore: T.bool
 }
 
 export {

@@ -14,7 +14,8 @@ export default {
   fileUpload: true,
 
   components: {
-    editor: VideoEditor
+    editor: VideoEditor,
+    player: VideoContentPlayer
   },
 
   player: VideoContentPlayer,

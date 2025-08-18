@@ -12,9 +12,10 @@ import {makeId} from '#/main/app/utils/id'
 
 // components
 import {PairEditor} from '#/plugin/exo/items/pair/components/editor'
-import {PairPaper} from '#/plugin/exo/items/pair/components/paper'
-import {PairPlayer} from '#/plugin/exo/items/pair/components/player'
+import {PairExpectedAnswer} from '#/plugin/exo/items/pair/components/expected-answer'
 import {PairFeedback} from '#/plugin/exo/items/pair/components/feedback'
+import {PairPlayer} from '#/plugin/exo/items/pair/components/player'
+import {PairStats} from '#/plugin/exo/items/pair/components/stats'
 
 // scores
 import ScoreSum from '#/plugin/exo/scores/sum'
@@ -22,16 +23,14 @@ import ScoreSum from '#/plugin/exo/scores/sum'
 export default {
   name: 'pair',
   type: 'application/x.pair+json',
-  tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
-  // old
-  paper: PairPaper,
-  player: PairPlayer,
-  feedback: PairFeedback,
-
   components: {
-    editor: PairEditor
+    editor: PairEditor,
+    player: PairPlayer,
+    feedback: PairFeedback,
+    expectedAnswer: PairExpectedAnswer,
+    stats: PairStats
   },
 
   /**

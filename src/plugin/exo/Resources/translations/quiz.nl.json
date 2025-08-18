@@ -178,7 +178,6 @@
     "match_no_valid_solution": "Er moet minstens één oplossing zijn met een score groter dan 0.",
     "match_penalty_label": "Straf voor elke verkeerde associatie",
     "match_penalty_not_valid": "De straf moet een cijfer zijn dat groter is dan of gelijk is aan 0.",
-    "match_player_click_link_help": "Klik op de link voor meer informatie.",
     "match_score_not_valid": "Elke score moet een geldig cijfer zijn.",
     "match_shuffle_labels_and_proposals": "Willekeurige volgorde van items",
     "match_warning_penalty_and_negative_scores": "Het gezamenlijk gebruik van negatieve scores en een straf kan leiden tot inconsistente resultaten.",

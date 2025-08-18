@@ -1,17 +1,16 @@
 import merge from 'lodash/merge'
 import times from 'lodash/times'
 
-import {trans} from '#/main/app/intl/translation'
-
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 
 import {WaveformItem} from '#/plugin/audio-player/quiz/items/waveform/prop-types'
 
 // components
-import {WaveformPaper} from '#/plugin/audio-player/quiz/items/waveform/components/paper'
-import {WaveformPlayer} from '#/plugin/audio-player/quiz/items/waveform/components/player'
-import {WaveformFeedback} from '#/plugin/audio-player/quiz/items/waveform/components/feedback'
 import {WaveformEditor} from '#/plugin/audio-player/quiz/items/waveform/components/editor'
+import {WaveformExpectedAnswer} from '#/plugin/audio-player/quiz/items/waveform/components/expected-answer'
+import {WaveformFeedback} from '#/plugin/audio-player/quiz/items/waveform/components/feedback'
+import {WaveformPlayer} from '#/plugin/audio-player/quiz/items/waveform/components/player'
+import {WaveformStats} from '#/plugin/audio-player/quiz/items/waveform/components/stats'
 
 // scores
 import ScoreSum from '#/plugin/exo/scores/sum'
@@ -19,15 +18,14 @@ import ScoreSum from '#/plugin/exo/scores/sum'
 export default {
   name: 'waveform',
   type: 'application/x.waveform+json',
-  tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
-  paper: WaveformPaper,
-  player: WaveformPlayer,
-  feedback: WaveformFeedback,
-
   components: {
-    editor: WaveformEditor
+    editor: WaveformEditor,
+    player: WaveformPlayer,
+    feedback: WaveformFeedback,
+    expectedAnswer: WaveformExpectedAnswer,
+    stats: WaveformStats
   },
 
   /**

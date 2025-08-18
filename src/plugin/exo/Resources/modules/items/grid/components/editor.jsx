@@ -6,7 +6,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 import Overlay from 'react-bootstrap/Overlay'
 
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormContent} from '#/main/app/content/form/containers/content'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
 import {constants} from '#/plugin/exo/items/grid/constants'
 import {SCORE_SUM} from '#/plugin/exo/scores/constants'
@@ -658,11 +658,9 @@ const GridEditor = (props) => {
   
 
   return (
-    <FormData
-      className="grid-editor"
-      embedded={true}
+    <FormContent
+      className="grid-item grid-editor"
       name={props.formName}
-      dataPart={props.path}
       definition={[
         {
           title: trans('general'),

@@ -14,7 +14,8 @@ export default {
   fileUpload: true,
 
   components: {
-    editor: ResourceEditor
+    editor: ResourceEditor,
+    player: ResourceContentPlayer
   },
 
   player: ResourceContentPlayer,

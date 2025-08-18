@@ -289,7 +289,7 @@ class ClozeEditor extends Component {
 
         <Button
           type={CALLBACK_BUTTON}
-          className="btn btn-outline-primary w-100"
+          className="btn btn-body w-100"
           icon="fa fa-fw fa-plus"
           label={trans('create_cloze', {}, 'quiz')}
           callback={this.addHole}

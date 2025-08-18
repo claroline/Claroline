@@ -2,6 +2,7 @@ import React, {useCallback, useId, useMemo, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 
 import {useReducer} from '#/main/app/store/reducer'
@@ -15,6 +16,8 @@ import {
   selectors as formSelectors, Form
 } from '#/main/app/content/form'
 import {FormContent} from '#/main/app/content/form/containers/content'
+import {cleanErrors} from '#/main/app/content/form/utils'
+
 
 const FormModal = (props) => {
   // append the form reducer to the store if it is not already mounted
@@ -25,6 +28,7 @@ const FormModal = (props) => {
 
   const form = useSelector((state) => formSelectors.form(state, props.name))
   const formData = useSelector(() => formSelectors.data(form))
+  const formErrors = useSelector(() => formSelectors.errors(form))
   const hasPendingChanges = useSelector(() => formSelectors.pendingChanges(form))
   const hasErrors = useSelector(() => formSelectors.hasErrors(form))
   const saveEnabled = useSelector(() => formSelectors.saveEnabled(form))
@@ -36,6 +40,7 @@ const FormModal = (props) => {
 
   const save = useCallback((target) => {
     setSaving(true)
+
     return dispatch(formActions.save(props.name, target)).then(
       (response) => {
         setSaving(false)
@@ -55,7 +60,7 @@ const FormModal = (props) => {
   return (
     <Modal
       size="md"
-      {...omit(props, 'name', 'isNew', 'data', 'definition', 'target', 'onSave', 'onCancel', 'saveLabel')}
+      {...omit(props, 'name', 'isNew', 'data', 'definition', 'target', 'onSave', 'onCancel', 'saveLabel', 'validate')}
       onEnter={() => {
         reset(props.data, props.isNew)
         if (props.onEnter) {
@@ -119,7 +124,17 @@ const FormModal = (props) => {
               })}
               htmlType="submit"
               disabled={!saveEnabled || saving}
-              callback={() => {
+              callback={async () => {
+                if (props.validate) {
+                  const newErrors = cleanErrors(formErrors, await props.validate(formData))
+                  dispatch(formActions.setErrors(props.name, newErrors))
+                  if (!isEmpty(newErrors)) {
+                    return
+                  }
+                } else if (hasErrors) {
+                  return
+                }
+
                 if (props.target) {
                   return save(props.target).then((response) => {
                     if (props.onSave) {
@@ -187,6 +202,7 @@ FormModal.propTypes = {
   onSave: T.func,
   onCancel: T.func,
   saveLabel: T.string,
+  validate: T.func,
   children: T.any,
 
   // from modal

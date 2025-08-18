@@ -2,25 +2,25 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
+import {Html} from '#/main/app/components/html'
+
 import {utils} from '#/plugin/exo/items/set/utils'
-import {ContentHtml} from '#/main/app/content/components/html'
 import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
+import {SolutionScore} from '#/plugin/exo/components/score'
 
 const SetFeedback = props =>
   <div className="set-item set-paper row">
-    <div className="items-col col-md-5 col-sm-5 col-xs-5">
-
-    </div>
+    <div className="items-col col-md-5 col-sm-5 col-xs-5" />
 
     <div className="sets-col col-md-7 col-sm-7 col-xs-7">
       <ul>
         {props.item.sets.map((set) =>
           <li key={`your-answer-set-id-${set.id}`}>
             <div className="set">
-              <ContentHtml className="set-heading">
+              <Html className="set-heading h5 mb-0">
                 {set.data}
-              </ContentHtml>
+              </Html>
 
               <ul>
                 {props.answer && props.answer.length > 0 && utils.getSetItems(set.id, props.answer).map(answer =>
@@ -33,23 +33,33 @@ const SetFeedback = props =>
                         {props.item.hasExpectedAnswers &&
                           <WarningIcon valid={utils.isValidAnswer(answer, props.item.solutions.associations)}/>
                         }
-                        <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
+                        <Html className="item-content">
+                          {utils.getSolutionItemData(answer.itemId, props.item.items)}
+                        </Html>
                         <Feedback
                           id={`ass-${answer.itemId}-${answer.setId}-feedback`}
                           feedback={utils.getAnswerSolutionFeedback(answer, props.item.solutions.associations)}
                         />
+                        {props.item.hasExpectedAnswers && props.showScore &&
+                          <SolutionScore score={utils.getAnswerSolutionScore(answer, props.item.solutions.associations)}/>
+                        }
                       </div>
                       :
                       <div className={classes('association answer-item set-answer-item', {'incorrect-answer': props.item.hasExpectedAnswers})}>
                         {props.item.hasExpectedAnswers &&
                           <WarningIcon valid={false}/>
                         }
-                        <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
+                        <Html className="item-content">
+                          {utils.getSolutionItemData(answer.itemId, props.item.items)}
+                        </Html>
                         {utils.getAnswerOddFeedback(answer, props.item.solutions.odd) !== '' &&
-                        <Feedback
-                          id={`ass-${answer.itemId}-${answer.setId}-feedback`}
-                          feedback={utils.getAnswerOddFeedback(answer, props.item.solutions.odd)}
-                        />
+                          <Feedback
+                            id={`ass-${answer.itemId}-${answer.setId}-feedback`}
+                            feedback={utils.getAnswerOddFeedback(answer, props.item.solutions.odd)}
+                          />
+                        }
+                        {props.item.hasExpectedAnswers && props.showScore && utils.getAnswerOddScore(answer, props.item.solutions.odd) !== '' &&
+                          <SolutionScore score={utils.getAnswerOddScore(answer, props.item.solutions.odd)}/>
                         }
                       </div>
                     }
@@ -74,7 +84,8 @@ SetFeedback.propTypes = {
     solutions: T.object,
     hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
-  answer: T.array
+  answer: T.array,
+  showScore: T.bool
 }
 
 export {

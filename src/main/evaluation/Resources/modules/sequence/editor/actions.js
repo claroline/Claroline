@@ -186,11 +186,8 @@ function getStepActions(steps, step, update, navigate, isCurrent = false) {
         title: trans('copy'),
         step: step,
         steps: flatSteps,
-        selectAction: (position) => ({
-          type: CALLBACK_BUTTON,
-          label: trans('copy', {}, 'actions'),
-          callback: () => update(copyStep(steps, step.id, position))
-        })
+        saveLabel: trans('copy', {}, 'actions'),
+        onSave: (position) => update(copyStep(steps, step.id, position))
       }]
     }, {
       name: 'move',
@@ -202,11 +199,8 @@ function getStepActions(steps, step, update, navigate, isCurrent = false) {
         title: trans('movement'),
         step: step,
         steps: flatSteps,
-        selectAction: (position) => ({
-          type: CALLBACK_BUTTON,
-          label: trans('move', {}, 'actions'),
-          callback: () => update(moveStep(steps, step.id, position))
-        })
+        saveLabel: trans('move', {}, 'actions'),
+        onSave: (position) => update(moveStep(steps, step.id, position))
       }]
     }, {
       name: 'delete',

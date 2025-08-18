@@ -13,7 +13,8 @@ export default {
   answerable: false,
 
   components: {
-    editor: TextEditor
+    editor: TextEditor,
+    player: TextContentPlayer
   },
 
   player: TextContentPlayer,

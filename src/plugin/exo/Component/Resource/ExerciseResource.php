@@ -78,6 +78,12 @@ class ExerciseResource extends ResourceComponent implements EvaluatedResourceInt
     }
 
     /** @param Exercise $resource */
+    public function create(AbstractResource $resource, array $data): void
+    {
+        $resource->setScoreRule(json_encode(['type' => 'sum']));
+    }
+
+    /** @param Exercise $resource */
     public function update(AbstractResource $resource, array $data, array $previousData): ?array
     {
         // Invalidate unfinished papers

@@ -9,11 +9,17 @@ const PaperTabs = (props) =>
     id={`${props.id}-paper`}
     defaultActiveKey={!props.showExpected && !props.showYours && props.showStats ? 'third':'first'}
     mountOnEnter={true}
+    unmountOnExit={true}
   >
     {props.showYours &&
       <Tab
         eventKey="first"
-        title={<><span className="fa fa-fw fa-user" /> {trans('your_answer', {}, 'quiz')}</>}
+        title={
+          <>
+            <span className="fa fa-fw fa-user icon-with-text-right" aria-hidden={true} />
+            {trans('your_answer', {}, 'quiz')}
+          </>
+        }
       >
         {props.yours}
       </Tab>
@@ -22,7 +28,12 @@ const PaperTabs = (props) =>
     {props.showExpected &&
       <Tab
         eventKey="second"
-        title={<><span className="fa fa-fw fa-check" /> {trans('expected_answer', {}, 'quiz')}</>}
+        title={
+          <>
+            <span className="fa fa-fw fa-check icon-with-text-right" aria-hidden={true} />
+            {trans('expected_answer', {}, 'quiz')}
+          </>
+        }
       >
         {props.expected}
       </Tab>
@@ -31,7 +42,12 @@ const PaperTabs = (props) =>
     {props.showStats &&
       <Tab
         eventKey="third"
-        title={<><span className="fa fa-fw fa-bar-chart" /> {trans('stats', {}, 'quiz')}</>}
+        title={
+          <>
+            <span className="fa fa-fw fa-bar-chart icon-with-text-right" aria-hidden={true} />
+            {trans('statistics')}
+          </>
+        }
       >
         {props.stats}
       </Tab>

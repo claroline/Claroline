@@ -177,7 +177,6 @@
     "match_no_valid_solution": "At least one solution must have a score greater or equal to 0.",
     "match_penalty_label": "Penalty for any wrong association",
     "match_penalty_not_valid": "The penalty must be a number greater or equal to 0.",
-    "match_player_click_link_help": "Click the link to get more information.",
     "match_score_not_valid": "Each score must be a valid number.",
     "match_shuffle_labels_and_proposals": "Shuffle items order",
     "match_warning_penalty_and_negative_scores": "Joint use of negative scores and penalties may lead to inconsistent results.",

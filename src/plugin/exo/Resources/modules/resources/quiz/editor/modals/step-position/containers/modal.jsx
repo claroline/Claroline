@@ -9,13 +9,9 @@ import {reducer, selectors} from '#/plugin/exo/resources/quiz/editor/modals/step
 const PositionModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      positionData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
-      selectEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.STORE_NAME))
+      positionData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({
-      reset(currentPosition = {}) {
-        dispatch(formActions.update(selectors.STORE_NAME, currentPosition))
-      },
       update(prop, value) {
         dispatch(formActions.updateProp(selectors.STORE_NAME, prop, value))
       }

@@ -7,7 +7,7 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {getPlainText} from '#/main/app/data/types/html/utils'
 
 import {getItems} from '#/plugin/exo/items'
-import {Icon as ItemIcon} from '#/plugin/exo/items/components/icon'
+import {ItemIcon} from '#/plugin/exo/items/components/icon'
 
 const ItemList = props => {
   const [itemDefinitions, setItemDefinitions] = useState([])

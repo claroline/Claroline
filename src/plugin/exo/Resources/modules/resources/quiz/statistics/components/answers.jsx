@@ -4,49 +4,38 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {ContentTitle} from '#/main/app/content/components/title'
 
-import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
-import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
+import {isQuestionType} from '#/plugin/exo/items/item-types'
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
-import {NUMBERING_NONE} from '#/main/app/utils/numbering'
+import {ItemStats} from '#/plugin/exo/items/components/stats'
 
 const AnswersStats = props =>
   <div className="quiz-statistics content-lg">
     {props.quiz.steps
       .filter(step => step.items && 0 < step.items.length)
       .map((step, idx) => {
-        const numbering = getNumbering(props.numbering, idx)
-
         return (
-          <div key={idx} className="quiz-item item-paper">
+          <div key={idx} className="">
             {props.showTitles &&
               <ContentTitle
                 level={3}
                 displayLevel={2}
-                numbering={numbering}
+                numbering={getNumbering(props.numbering, idx)}
                 title={step.title || trans('step', {number: idx + 1}, 'quiz')}
               />
             }
 
-            {step.items.map((item, idxItem) => {
-              return isQuestionType(item.type) && props.stats && props.stats[item.id] &&
-                <div className="quiz-item card mb-3" key={item.id}>
-                  <div className="card-body">
-                    <ItemMetadata
-                      item={item}
-                      numbering={props.numbering !== NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}
-                    />
-
-                    {React.createElement(getDefinition(item.type).paper, {
-                      item,
-                      showYours: false,
-                      showExpected: false,
-                      showStats: true,
-                      showScore: false,
-                      stats: props.stats && props.stats[item.id] ? props.stats[item.id] : {}
-                    })}
-                  </div>
-                </div>
-            })}
+            {step.items
+              .filter(item => isQuestionType(item.type) && props.stats && props.stats[item.id])
+              .map((item, idxItem) => (
+                <ItemStats
+                  key={item.id}
+                  item={item}
+                  showTitle={props.showQuestionTitles}
+                  numbering={getNumbering(props.questionNumbering, idx, idxItem)}
+                  stats={props.stats[item.id]}
+                />
+              ))
+            }
           </div>
         )
       })
@@ -55,7 +44,9 @@ const AnswersStats = props =>
 
 AnswersStats.propTypes = {
   numbering: T.string,
+  questionNumbering: T.string,
   showTitles: T.bool,
+  showQuestionTitles: T.bool,
   quiz: T.object.isRequired,
   stats: T.object
 }

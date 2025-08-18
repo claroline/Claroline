@@ -4,7 +4,6 @@ import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {selectors} from '#/plugin/exo/resources/quiz/store/selectors'
-import {reducers as playerReducers} from '#/plugin/exo/quiz/player/reducers'
 import {reducer as editorReducer, selectors as editorSelectors} from '#/plugin/exo/resources/quiz/editor/store'
 import {reducer as playerReducer, selectors as playerSelectors} from '#/plugin/exo/resources/quiz/player/store'
 import {reducer as papersReducer, selectors as papersSelectors} from '#/plugin/exo/resources/quiz/papers/store'
@@ -13,7 +12,7 @@ import {reducer as statisticsReducer, selectors as statisticsSelectors} from '#/
 
 export const reducer = combineReducers({
   resource: makeReducer({}, {
-    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.resource || state,
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.resource || state
   }),
   lastAttempt: makeReducer(null, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.lastAttempt || state
@@ -24,11 +23,5 @@ export const reducer = combineReducers({
   [editorSelectors.STORE_NAME]: editorReducer,
   [papersSelectors.STORE_NAME]: papersReducer,
   [correctionSelectors.STORE_NAME]: correctionReducer,
-  [statisticsSelectors.STORE_NAME]: statisticsReducer,
-
-  // TODO : combine in a sub object for cleaner store
-  testMode: playerReducers.testMode,
-  currentStep: playerReducers.currentStep,
-  paper: playerReducers.paper,
-  answers: playerReducers.answers
+  [statisticsSelectors.STORE_NAME]: statisticsReducer
 })

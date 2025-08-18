@@ -2,10 +2,12 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {asset} from '#/main/app/config/asset'
-import {trans} from '#/main/app/intl/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 
 import {POINTER_PLACED} from '#/plugin/exo/items/graphic/constants'
 import {PointableImage} from '#/plugin/exo/items/graphic/components/pointable-image'
+import {Button} from '#/main/app/action'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 class GraphicPlayer extends Component {
   constructor(props) {
@@ -51,19 +53,22 @@ class GraphicPlayer extends Component {
     return (
       <div className="graphic-player">
         <div className="top-controls">
-          <span>
-            {trans('graphic_pointers_left', {}, 'quiz')}{this.state.pointersLeft}
-          </span>
-          {!this.props.disabled && this.state.pointers.length > 0 &&
-            <button
-              type="button"
-              className="btn btn-default"
-              onClick={this.onUndo}
-            >
-              <span className="fa fa-fw fa-undo"/>&nbsp;{trans('cancel', {}, 'actions')}
-            </button>
-          }
+          <p className="fs-sm text-body-secondary mb-0">
+            <span className="fa fa-circle-info me-2" aria-hidden={true} />
+            {transChoice('graphic_pointers_left', this.state.pointersLeft, {count: this.state.pointersLeft}, 'quiz')}
+          </p>
+
+          <Button
+            className="btn btn-body"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-undo"
+            label={trans('cancel', {}, 'actions')}
+            callback={this.onUndo}
+            size="sm"
+            disabled={this.props.disabled || 0 === this.state.pointers.length}
+          />
         </div>
+
         <PointableImage
           src={this.props.item.image.data || asset(this.props.item.image.url)}
           absWidth={this.props.item.image.width}

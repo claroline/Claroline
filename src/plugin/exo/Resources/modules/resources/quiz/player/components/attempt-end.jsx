@@ -17,7 +17,7 @@ import {ResourceEnd} from '#/main/core/resource/components/end'
 import {calculateScore, calculateTotal} from '#/plugin/exo/items/score'
 import {isQuestionType} from '#/plugin/exo/items/item-types'
 
-import {select as playerSelect} from '#/plugin/exo/quiz/player/selectors'
+import {selectors as playerSelect} from '#/plugin/exo/resources/quiz/player/store'
 import {showCorrection, showScore} from '#/plugin/exo/resources/quiz/papers/restrictions'
 import {AttemptsChart} from '#/plugin/exo/charts/attempts/components/chart'
 import {EvaluationScore} from '#/main/evaluation/components/score'

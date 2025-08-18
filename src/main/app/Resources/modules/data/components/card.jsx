@@ -129,12 +129,11 @@ const DataCard = props => {
         size={props.size}
         square={asIcon}
         className={classes('data-card-thumbnail', {
-          'rounded-circle': asIcon,
-          'my-2': 'xs' === props.size
+          'rounded-circle': asIcon
         })}
       >
         {typeof props.icon === 'string' ?
-          <span className={props.icon} /> :
+          <span className={props.icon} aria-hidden={true} /> :
           props.icon
         }
       </Thumbnail>
@@ -142,16 +141,14 @@ const DataCard = props => {
       <CardAction
         action={props.primaryAction}
         className={classes('data-card-content text-reset text-decoration-none focus-ring z-1', {
-          'text-center': 'row' !== props.orientation && asIcon,
-          'py-2': 'xs' === props.size
+          'text-center': 'row' !== props.orientation && asIcon
         })}
         disabled={disabled}
       >
         <Heading
           level={props.level}
           className={classes('data-card-title', {
-            'mb-0': 'xs' === props.size,
-            'mb-2': 'xs' !== props.size && 'row' === props.orientation
+            'mb-2': 'row' === props.orientation
           })}
         >
           {props.loaded ?

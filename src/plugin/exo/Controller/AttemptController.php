@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
@@ -43,8 +42,12 @@ class AttemptController
      * Also check that max attempts are not reached if needed.
      */
     #[Route(path: '', name: 'exercise_attempt_start', methods: ['POST'])]
-    public function startAction(#[MapEntity(mapping: ['exerciseId' => 'uuid'])] Exercise $exercise, #[CurrentUser] ?User $user = null): JsonResponse
-    {
+    public function startAction(
+        #[MapEntity(mapping: ['exerciseId' => 'uuid'])]
+        Exercise $exercise,
+        #[CurrentUser]
+        ?User $user = null
+    ): JsonResponse {
         $this->assertHasPermission('OPEN', $exercise);
 
         if (!$this->isAdmin($exercise) && !$this->attemptManager->canPass($exercise, $user)) {
@@ -180,17 +183,13 @@ class AttemptController
 
     private function isAdmin(Exercise $exercise): bool
     {
-        $collection = new ResourceCollection([$exercise->getResourceNode()]);
-
-        return $this->authorization->isGranted('ADMINISTRATE', $collection);
+        return $this->authorization->isGranted('ADMINISTRATE', $exercise->getResourceNode());
     }
 
     private function assertHasPermission($permission, Exercise $exercise): void
     {
-        $collection = new ResourceCollection([$exercise->getResourceNode()]);
-
-        if (!$this->authorization->isGranted($permission, $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        if (!$this->authorization->isGranted($permission, $exercise->getResourceNode())) {
+            throw new AccessDeniedException();
         }
     }
 }

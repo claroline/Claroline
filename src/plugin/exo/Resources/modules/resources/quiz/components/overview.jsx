@@ -110,10 +110,7 @@ const QuizOverview = props => {
           label: trans('start', {}, 'actions'),
           target: `${props.path}/play`,
           primary: true,
-          disabled: props.empty || (maxAttemptsReached && !props.editable),
-          /*disabledMessages: [
-            props.empty && trans('start_disabled_empty', {}, 'quiz')
-          ].filter(value => !!value)*/
+          disabled: props.empty || (maxAttemptsReached && !props.editable)
         }, {
           name: 'test',
           type: LINK_BUTTON,
