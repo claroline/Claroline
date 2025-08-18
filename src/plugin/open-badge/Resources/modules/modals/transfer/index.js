@@ -1,7 +1,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {TransferModal} from '#/plugin/open-badge/modals/transfer/containers/transfer'
+import {TransferModal} from '#/plugin/open-badge/modals/transfer/components/transfer'
 
 const MODAL_TRANSFER = 'MODAL_TRANSFER'
 

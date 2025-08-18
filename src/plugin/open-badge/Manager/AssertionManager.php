@@ -162,7 +162,12 @@ class AssertionManager
                 $this->om->persist($evidence);
             }
 
-            $assert->setNarrative($this->translator->trans('transferred', [], 'badge'));
+            // create a new evidence to let users know this badge has been transferred.
+            $transferEvidence = new Evidence();
+            $transferEvidence->setName($this->translator->trans('transferred', [], 'badge'));
+            $transferEvidence->setAssertion($assert);
+            $this->om->persist($transferEvidence);
+
             $assert->setRecipient($userTo);
             $this->om->persist($assert);
         }
