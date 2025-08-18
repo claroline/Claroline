@@ -61,7 +61,7 @@ const EmptyState = (props) => {
       }
 
       {(
-        (props.primaryAction && get(props.secondaryAction, 'displayed', true)) ||
+        (props.secondaryAction && get(props.secondaryAction, 'displayed', true)) ||
         (props.primaryAction && get(props.primaryAction, 'displayed', true))
       ) &&
         <div className="mt-5 d-flex gap-2 justify-content-center">

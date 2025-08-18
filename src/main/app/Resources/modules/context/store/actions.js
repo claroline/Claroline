@@ -21,12 +21,12 @@ export const CONTEXT_LOAD = 'CONTEXT_LOAD'
 export const CONTEXT_SET_LOADED = 'CONTEXT_SET_LOADED'
 
 /**
- * Action dispatched when the requested context can not be found.
+ * Action dispatched when the requested context cannot be found.
  */
 export const CONTEXT_NOT_FOUND = 'CONTEXT_NOT_FOUND'
 
 /**
- * Action dispatched when the user choose to open/close the context menu.
+ * Action dispatched when the user chooses to open/close the context menu.
  */
 export const CONTEXT_MENU_TOGGLE_OPEN = 'CONTEXT_MENU_TOGGLE_OPEN'
 

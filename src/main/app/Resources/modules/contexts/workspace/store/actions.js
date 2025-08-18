@@ -11,7 +11,7 @@ actions.checkAccessCode = (workspace, code) => (dispatch) => dispatch({
       method: 'POST',
       body: JSON.stringify({code: code})
     },
-    success: () => dispatch(contextActions.reload(workspace))
+    success: () => dispatch(contextActions.reload())
   }
 })
 
@@ -21,6 +21,6 @@ actions.selfRegister = (workspace) => (dispatch) => dispatch({
     request: {
       method: 'PUT'
     },
-    success: () => dispatch(contextActions.reload(workspace))
+    success: () => dispatch(contextActions.reload())
   }
 })
