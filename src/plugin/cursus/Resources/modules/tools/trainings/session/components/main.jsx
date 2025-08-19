@@ -21,8 +21,6 @@ const SessionMain = (props) => {
   const canCreateSession = useSelector(state => toolSelectors.hasPermission('edit', state))
   const course = useSelector(trainingSelectors.course)
 
-  console.log(course)
-
   return (
     <Routes
       path={`${props.path}/sessions`}
@@ -65,7 +63,7 @@ const SessionMain = (props) => {
               name={selectors.STORE_NAME+'.tutors'}
               canRegister={canRegister}
             />
-          ), [props.path, ])
+          ), [props.path, loaded])
         }, {
           path: '/:id',
           render: useCallback((routerProps) => (

@@ -1,11 +1,13 @@
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
+
 import {declareAction} from '#/main/app/action'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {trans, transChoice} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
-import get from 'lodash/get'
 
 export default declareAction((registrations, refresher) => {
-  const processable = registrations.filter(registration => hasPermission('administrate', registration))
+  const processable = registrations.filter(registration => !isEmpty(registration.session) && hasPermission('administrate', registration))
 
   return ({
     name: 'move-pending',

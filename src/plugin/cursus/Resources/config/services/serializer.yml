@@ -23,6 +23,7 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\LocationSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\TemplateBundle\Serializer\TemplateSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer'
             - '@Claroline\CursusBundle\Serializer\CourseSerializer'
 
     Claroline\CursusBundle\Serializer\EventSerializer:
@@ -51,6 +52,7 @@ services:
             - '@Claroline\CursusBundle\Serializer\SessionSerializer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\FacetManager'
+            - '@Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
 
     Claroline\CursusBundle\Serializer\Registration\EventUserSerializer:

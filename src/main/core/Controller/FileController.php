@@ -96,7 +96,6 @@ class FileController
 
     /**
      * Creates a resource from uploaded file.
-     *
      */
     #[Route(path: '/tinymce/upload', name: 'claro_tinymce_file_upload', methods: ['POST'])]
     public function uploadTinyMceAction(Request $request, #[CurrentUser] ?User $user): JsonResponse
@@ -161,7 +160,6 @@ class FileController
 
     /**
      * Saves a file.
-     *
      *
      * @deprecated only used in quiz content items. Use new file upload route instead.
      */

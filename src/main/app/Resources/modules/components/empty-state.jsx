@@ -85,6 +85,7 @@ const EmptyState = (props) => {
 }
 
 EmptyState.propTypes = {
+  icon: T.string,
   title: T.string.isRequired,
   description: T.string,
   className: T.string,

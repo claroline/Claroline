@@ -127,7 +127,6 @@ class CourseSerializer
         if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
             $serialized = array_merge_recursive($serialized, [
                 'display' => [
-                    'order' => $course->getOrder(),
                     'hideSessions' => $course->getHideSessions(),
                 ],
                 'opening' => [
@@ -176,7 +175,6 @@ class CourseSerializer
         $this->sipe('plainDescription', 'setPlainDescription', $data, $course);
         $this->sipe('poster', 'setPoster', $data, $course);
 
-        $this->sipe('display.order', 'setOrder', $data, $course);
         $this->sipe('display.hideSessions', 'setHideSessions', $data, $course);
 
         $this->sipe('restrictions.hidden', 'setHidden', $data, $course);
@@ -242,7 +240,7 @@ class CourseSerializer
             if (array_key_exists('form', $data['registration'])) {
                 $sectionIds = [];
                 foreach ($data['registration']['form'] as $section) {
-                    // check if section exists first
+                    // check if the section exists first
                     $panelFacet = $this->om->getObject($section, PanelFacet::class) ?? new PanelFacet();
                     $this->panelFacetSerializer->deserialize($section, $panelFacet, $options);
 

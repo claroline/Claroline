@@ -1,15 +1,16 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import {useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
-import {hasPermission} from '#/main/app/security'
+import {hasPermission, selectors as securitySelectors} from '#/main/app/security'
 import {CALLBACK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
-import {CourseParticipants} from '#/plugin/cursus/course/components/participants'
+import {CourseUsers} from '#/plugin/cursus/course/components/users'
 import {CourseSessions} from '#/plugin/cursus/course/components/sessions'
 import {
   canSelfRegister,
@@ -33,6 +34,7 @@ import {CourseStats} from '#/plugin/cursus/course/components/stats'
 
 const CourseDetails = (props) => {
   const history = useHistory()
+  const currentUser = useSelector(securitySelectors.currentUser)
 
   const activeSessionRegistration = props.activeSession ? getSessionRegistration(props.activeSession, props.registrations) : null
 
@@ -78,7 +80,7 @@ const CourseDetails = (props) => {
       name: 'download',
       type: URL_BUTTON,
       label: trans('download_training', {}, 'actions'),
-      target: ['apiv2_cursus_course_download_pdf', {id: props.course.id}],
+      target: ['apiv2_cursus_course_download_pdf', {id: props.course.id}]
     }
   ]
 
@@ -102,7 +104,7 @@ const CourseDetails = (props) => {
           add: () => props.reload(props.course.slug),
           update: () => props.reload(props.course.slug),
           delete: () => props.reload(props.course.slug)
-        }, props.path, props.currentUser) : []}
+        }, props.path, currentUser) : []}
       />
 
       <PageSection className="mb-5">
@@ -173,7 +175,7 @@ const CourseDetails = (props) => {
             title: trans('participants'),
             displayed: hasPermission('follow', props.course),
             render: () => (
-              <CourseParticipants
+              <CourseUsers
                 path={props.path}
                 course={props.course}
               />

@@ -3,7 +3,6 @@
 namespace Claroline\CursusBundle\Controller\Registration;
 
 use Claroline\AppBundle\API\Finder\FinderQuery;
-use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Organization\Organization;

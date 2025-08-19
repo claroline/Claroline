@@ -6,9 +6,11 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
+use Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
+use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CursusBundle\Entity\Registration\AbstractUserRegistration;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
@@ -27,6 +29,7 @@ class SessionUserSerializer extends AbstractUserSerializer
         private readonly SessionSerializer $sessionSerializer,
         private readonly ObjectManager $om,
         private readonly FacetManager $facetManager,
+        private readonly PanelFacetSerializer $panelFacetSerializer,
         private readonly WorkspaceSerializer $workspaceSerializer
     ) {
         parent::__construct($authorization, $userSerializer);
@@ -54,6 +57,13 @@ class SessionUserSerializer extends AbstractUserSerializer
             return $serialized;
         }
 
+        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options) && 0 !== $course->getPanelFacets()->count()) {
+            // get the form definition for the edition modale in lists
+            $serialized['form'] = array_map(function (PanelFacet $panelFacet) {
+                return $this->panelFacetSerializer->serialize($panelFacet);
+            }, $course->getPanelFacets()->toArray());
+        }
+
         if (0 !== $userRegistration->getFacetValues()->count()) {
             $serialized['data'] = [];
             foreach ($userRegistration->getFacetValues() as $field) {
@@ -67,9 +77,9 @@ class SessionUserSerializer extends AbstractUserSerializer
         }
 
         if ($session && $session->getWorkspace()) {
-            // only to be able to generate a link to the workspace from the user overview
-            // we do not get it through the serialized `session` because we only have the minimal representation here
-            // and, we don't want to fetch the workspace when getting the full list of registrations.
+            // Only to be able to generate a link to the workspace from the user overview,
+            // we do not get it through the serialized `session`. We only have the minimal representation here, and
+            // we don't want to fetch the workspace when getting the full list of registrations.
             $serialized['workspace'] = $this->workspaceSerializer->serialize($session->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]);
         }
 

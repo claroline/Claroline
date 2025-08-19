@@ -10,6 +10,7 @@ const CountryFilter = (props) =>
   <ChoiceSearch
     {...props}
     choices={intlConstants.REGIONS}
+    condensed={true}
   />
 
 implementPropTypes(CountryFilter, DataSearchTypes)

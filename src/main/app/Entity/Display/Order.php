@@ -6,7 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Gives an entity the ability to be ordered in a collection.
+ * Allows an entity to be ordered in a collection.
  */
 trait Order
 {

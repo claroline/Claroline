@@ -47,6 +47,7 @@ const RegistrationModal = props => {
                 key={session.id}
                 data={session}
                 primaryAction={{
+                  label: trans('open', {}, 'actions'),
                   type: CALLBACK_BUTTON,
                   callback: () => setActiveSession(session)
                 }}
@@ -60,7 +61,7 @@ const RegistrationModal = props => {
         <div className="modal-body">
           {isFull(activeSession) &&
             <Alert type="warning" title={trans('session_full', {}, 'cursus')}>
-              {trans('Vous pouvez vous inscrire en liste d\'attente ou parcourir les autres sessions.', {}, 'cursus')}
+              {trans('session_full_help', {}, 'cursus')}
             </Alert>
           }
 
@@ -133,8 +134,11 @@ const RegistrationModal = props => {
             type: MODAL_BUTTON,
             label: trans('register_waiting_list', {}, 'actions'),
             modal: [MODAL_REGISTRATION_PARAMETERS, {
-              course: props.course,
-              session: activeSession,
+              registration: {
+                course: props.course,
+                session: activeSession,
+                form: get(props.course, 'registration.form')
+              },
               onSave: (registrationData) => {
                 props.register(props.course, activeSession ? activeSession.id : null, registrationData.data)
               }
@@ -142,7 +146,7 @@ const RegistrationModal = props => {
             displayed: !isEmpty(get(props.course, 'registration.form', [])) && (
               // no session but course pending list is enabled
               (!activeSession && get(props.course, 'registration.pendingRegistrations')) ||
-              // session is full with pending list enabled
+              // session is full and the pending list enabled
               activeSession && isFull(activeSession) && get(activeSession, 'registration.pendingRegistrations')
             )
           }, {
@@ -162,8 +166,11 @@ const RegistrationModal = props => {
             label: trans('self_register', {}, 'actions'),
             onClick: props.fadeModal,
             modal: [MODAL_REGISTRATION_PARAMETERS, {
-              course: props.course,
-              session: activeSession,
+              registration: {
+                course: props.course,
+                session: activeSession,
+                form: get(props.course, 'registration.form')
+              },
               onSave: (registrationData) => {
                 props.register(props.course, activeSession ? activeSession.id : null, registrationData.data)
               }

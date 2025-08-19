@@ -12,7 +12,6 @@ export default declareAction((registrations) => ({
   label: trans('open', {}, 'actions'),
   displayed: hasPermission('open', registrations[0]),
   modal: [MODAL_REGISTRATION_ABOUT, {
-    course: registrations[0].course,
     registration: registrations[0]
   }],
   scope: ['object'],

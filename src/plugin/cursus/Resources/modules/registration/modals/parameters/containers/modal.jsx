@@ -21,7 +21,7 @@ const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
       reset(registrationData) {
         dispatch(formActions.reset(selectors.STORE_NAME, registrationData, isEmpty(registrationData) || !registrationData.id))
       },
-      save(fields, formData, isOwner, hasConfidentialRights, onSave) {
+      save(target, fields, formData, isOwner, hasConfidentialRights, onSave) {
         const errors = {
           data: {}
         }
@@ -42,7 +42,11 @@ const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(actions.submit(selectors.STORE_NAME))
 
         if (isEmpty(cleanErrors({}, errors))) {
-          onSave(formData)
+          if (target) {
+            dispatch(actions.save(selectors.STORE_NAME, target)).then(onSave)
+          } else {
+            onSave(formData)
+          }
         }
       }
     })

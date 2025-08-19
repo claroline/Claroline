@@ -133,10 +133,11 @@ const SessionShow = (props) => {
                   <SessionUsers
                     className="mt-4"
                     path={props.path}
-                    session={session}
-                    course={session.course}
                     name={selectors.STORE_NAME+'.users'}
                     url={['apiv2_training_session_user_course_list', {id: session.course.id, sessionId: session.id}]}
+                    registrationForm={get(session, 'registration.form')}
+                    confirmation={get(session, 'registration.userValidation', false)}
+                    validation={get(session, 'registration.validation', false)}
                   />
                 )
               }

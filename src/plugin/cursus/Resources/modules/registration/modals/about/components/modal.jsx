@@ -1,6 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
@@ -9,25 +9,26 @@ import {DetailsData} from '#/main/app/content/details/components/data'
 import {hasPermission} from '#/main/app/security'
 import {formatSections} from '#/main/app/content/form/parameters/utils'
 
-import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
-
 const AboutModal = props => {
-  const isManager = hasPermission('edit', props.course)
-  let allFields = []
-  get(props.course, 'registration.form', []).map(section => {
-    allFields = allFields.concat(section.fields)
-  })
+  let sections = []
+  if (!isEmpty(props.registration.form)) {
+    const isManager = hasPermission('administrate', props.registration)
+    let allFields = []
+    props.registration.form.map(section => {
+      allFields = allFields.concat(section.fields)
+    })
 
-  const sections = formatSections(get(props.course, 'registration.form', []), allFields, 'data', true, isManager, isManager)
+    sections = formatSections(props.registration.form, allFields, 'data', true, isManager, isManager)
+  }
 
   return (
     <Modal
       {...omit(props, 'registration')}
-      icon="fa fa-fw fa-circle-info"
-      title={trans('about')}
+      title={trans('registration')}
     >
       <div className="modal-body" role="presentation">
         <DetailsData
+          className="mb-3"
           flush={true}
           data={props.registration}
           definition={[
@@ -54,9 +55,6 @@ const AboutModal = props => {
   )
 }
 AboutModal.propTypes = {
-  course: T.shape(
-    CourseTypes.propTypes
-  ).isRequired,
   registration: T.object.isRequired
 }
 

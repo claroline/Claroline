@@ -1,8 +1,5 @@
-import merge from 'lodash/merge'
-
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
-import {actions as securityActions} from '#/main/app/security/store/actions'
 
 /**
  * Action dispatched when the context is opened, before we fetch the context data.

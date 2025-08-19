@@ -10,7 +10,7 @@ import {CatalogMain} from '#/plugin/cursus/tools/trainings/catalog/containers/ma
 import {SessionMain} from '#/plugin/cursus/tools/trainings/session/containers/main'
 import {TrainingsEditor} from '#/plugin/cursus/tools/trainings/editor/containers/main'
 import {TrainingsOverview} from '#/plugin/cursus/tools/trainings/components/overview'
-import {TrainingsDashboard} from '#/plugin/cursus/tools/trainings/dashboard/components/main'
+// import {TrainingsDashboard} from '#/plugin/cursus/tools/trainings/dashboard/components/main'
 
 const TrainingsTool = (props) =>
   <Tool

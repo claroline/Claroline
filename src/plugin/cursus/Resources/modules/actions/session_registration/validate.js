@@ -2,9 +2,10 @@ import {declareAction} from '#/main/app/action'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
+import isEmpty from 'lodash/isEmpty'
 
 export default declareAction((registrations, refresher) => {
-  const processable = registrations.filter(registration => !registration.validated && hasPermission('administrate', registration))
+  const processable = registrations.filter(registration => !isEmpty(registration.session) && !registration.validated && hasPermission('administrate', registration))
 
   return ({
     name: 'confirm',

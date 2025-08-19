@@ -5,21 +5,21 @@ import {now} from '#/main/app/intl/date'
 
 import {selectors as configSelectors} from '#/main/app/config/store/selectors'
 
-const restrictions = (state) => configSelectors.param(state, 'restrictions') || {}
+const restrictions = (state) => configSelectors.param(state, 'restrictions')
 
 const restrictionDisabled = createSelector(
   [restrictions],
-  (restrictions) => restrictions.disabled || false
+  (restrictions = {}) => restrictions.disabled || false
 )
 
 const restrictionDates = createSelector(
   [restrictions],
-  (restrictions) => restrictions.dates || []
+  (restrictions = {}) => restrictions.dates
 )
 
 const disabled = createSelector(
   [restrictionDates, restrictionDisabled],
-  (restrictionDates, restrictionDisabled) => {
+  (restrictionDates = [], restrictionDisabled) => {
     const started = !restrictionDates[0] || restrictionDates[0] < now(false)
     const ended   = restrictionDates[1] && restrictionDates[1] < now(false)
 

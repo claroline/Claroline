@@ -8,13 +8,15 @@ import {selectors} from '#/plugin/cursus/course/store'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {SessionUsers} from '#/plugin/cursus/session/components/users'
 
-const CourseParticipants = (props) =>
+const CourseUsers = (props) =>
   <SessionUsers
-    path={props.path}
     className="mt-4"
-    course={props.course}
+    path={props.path}
     url={['apiv2_training_session_user_course_list', {id: props.course.id}]}
     name={selectors.STORE_NAME+'.sessionUsers'}
+    registrationForm={get(props.course, 'registration.form')}
+    confirmation={get(props.course, 'registration.userValidation', false)}
+    validation={get(props.course, 'registration.validation', false)}
     customDefinition={[
       {
         name: 'session',
@@ -50,7 +52,7 @@ const CourseParticipants = (props) =>
     ]}
   />
 
-CourseParticipants.propTypes = {
+CourseUsers.propTypes = {
   path: T.string.isRequired,
   course: T.shape(
     CourseTypes.propTypes
@@ -58,5 +60,5 @@ CourseParticipants.propTypes = {
 }
 
 export {
-  CourseParticipants
+  CourseUsers
 }
