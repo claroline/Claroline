@@ -80,7 +80,7 @@ class SessionUserController extends AbstractCrudController
         if (!empty($sessionId)) {
             $finderQuery->addFilter('session', $sessionId);
         } else {
-            $finderQuery->addFilter('session.course', $course->getUuid());
+            $finderQuery->addFilter('course', $course->getUuid());
         }
 
         $options = static::getOptions();

@@ -28,6 +28,7 @@ use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,8 +59,11 @@ class FileController
     }
 
     #[Route(path: '/stream/{id}', name: 'claro_file_stream', methods: ['GET'])]
-    public function streamAction(ResourceNode $resourceNode, Request $request): BinaryFileResponse
-    {
+    public function streamAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        ResourceNode $resourceNode,
+        Request $request
+    ): BinaryFileResponse {
         return $this->stream($resourceNode, $request);
     }
 

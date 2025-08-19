@@ -451,6 +451,10 @@ class BBBManager
             }
         }
 
-        return $this->serverManager->getServer($server);
+        if ($server) {
+            return $this->serverManager->getServer($server);
+        }
+
+        return null;
     }
 }
