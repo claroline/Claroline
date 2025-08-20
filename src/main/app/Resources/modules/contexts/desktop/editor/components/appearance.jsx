@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl'
 import {ContextEditorAppearance, actions, selectors} from '#/main/app/context/editor'
 
 const DesktopEditorAppearance = () => {
-  const context = useSelector(selectors.context)
+  const context = useSelector(selectors.contextData)
   const enabledTools = useSelector(selectors.enabledTools)
 
   const dispatch = useDispatch()
