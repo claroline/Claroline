@@ -116,7 +116,7 @@ class ImageInputComponent extends PureComponent {
                 className="btn btn-warning"
                 size="sm"
                 type={CALLBACK_BUTTON}
-                callback={this.input.click}
+                callback={() => this.input.click()}
                 label={trans('replace_image', {}, 'actions')}
                 disabled={this.props.disabled}
               />
