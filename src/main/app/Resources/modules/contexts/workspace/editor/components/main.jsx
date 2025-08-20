@@ -16,11 +16,11 @@ const WorkspaceEditor = () => {
     <ContextEditor
       thumbnail={
         <Thumbnail
-          className="rounded-1"
           thumbnail={get(context, 'thumbnail')}
           name={get(context, 'name')}
-          size="sm"
+          size="md"
           loaded={!!context}
+          square={true}
         />
       }
       overviewPage={WorkspaceEditorOverview}

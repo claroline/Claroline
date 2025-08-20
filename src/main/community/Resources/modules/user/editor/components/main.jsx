@@ -37,7 +37,6 @@ const UserEditor = (props) => {
       name={selectors.FORM_NAME}
       thumbnail={
         <Thumbnail
-          className="mx-auto"
           thumbnail={get(props.formData, 'picture')}
           name={get(props.formData, 'name')}
           size="md"
@@ -72,6 +71,7 @@ const UserEditor = (props) => {
 }
 
 UserEditor.propTypes = {
+  path: T.string.isRequired,
   username: T.string.isRequired,
   formData: T.shape(
     UserTypes.propTypes
