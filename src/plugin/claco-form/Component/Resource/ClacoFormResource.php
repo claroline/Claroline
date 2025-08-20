@@ -15,25 +15,33 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
+use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
+use Claroline\ClacoFormBundle\Manager\ExportManager;
+use Claroline\CoreBundle\Component\Resource\DownloadableResourceInterface;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class ClacoFormResource extends ResourceComponent
+class ClacoFormResource extends ResourceComponent implements DownloadableResourceInterface
 {
     public function __construct(
+        private readonly AuthorizationCheckerInterface $authorization,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
         private readonly Crud $crud,
-        private readonly ClacoFormManager $clacoFormManager
+        private readonly ClacoFormManager $clacoFormManager,
+        private readonly ExportManager $exportManager,
+        private readonly TempFileManager $tempManager
     ) {
     }
 
@@ -45,24 +53,43 @@ class ClacoFormResource extends ResourceComponent
     /** @param ClacoForm $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
-        /** @var User|string $user */
-        $user = $this->tokenStorage->getToken()?->getUser();
-        $isAnon = !$user instanceof User;
-        $myEntries = $isAnon ? [] : $this->clacoFormManager->getUserEntries($resource, $user);
-        $canGeneratePdf = !$isAnon;
-
-        $categories = $resource->getCategories();
-
         return [
             'resource' => $this->serializer->serialize($resource),
             'categories' => array_map(function (Category $category) {
                 return $this->serializer->serialize($category);
-            }, $categories),
+            }, $resource->getCategories()),
 
-            'myEntriesCount' => count($myEntries),
-            // this should use the standard right system.
-            'canGeneratePdf' => $canGeneratePdf,
+            'myEntriesCount' => $this->clacoFormManager->countUserEntries($resource, $this->tokenStorage->getToken()?->getUser()),
         ];
+    }
+
+    public function create(AbstractResource $resource, array $data): void
+    {
+        $resource->getResourceNode()->setDownloadable(true);
+    }
+
+    /** @param ClacoForm $resource */
+    public function download(AbstractResource $resource, FileBag $fileBag): void
+    {
+        $entries = $this->clacoFormManager->getAllEntries($resource);
+        if (empty($entries)) {
+            return;
+        }
+
+        $exportedFile = $this->tempManager->generate();
+        $archive = new \ZipArchive();
+        $archive->open($exportedFile, \ZipArchive::CREATE);
+
+        foreach ($entries as $entry) {
+            if ($this->authorization->isGranted('OPEN', $entry)) {
+                $archive->addFromString(
+                    TextNormalizer::toKey($entry->getTitle()).'.pdf',
+                    $this->exportManager->generatePdfForEntry($entry, $this->tokenStorage->getToken()?->getUser())
+                );
+            }
+        }
+
+        $fileBag->add($resource->getName().'.zip', $exportedFile);
     }
 
     /** @param ClacoForm $resource */
@@ -93,7 +120,7 @@ class ClacoFormResource extends ResourceComponent
                 $ids[] = $category->getUuid();
             }
 
-            // removes categories which no longer exists
+            // removes categories that no longer exist
             $currentCategories = $resource->getCategories();
             foreach ($currentCategories as $currentCategory) {
                 if (!in_array($currentCategory->getUuid(), $ids)) {

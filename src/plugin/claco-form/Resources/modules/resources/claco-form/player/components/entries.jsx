@@ -74,7 +74,11 @@ const EntriesComponent = props =>
               callback: () => {
                 if (1 < rows.length) {
                   // collection
-                  rows.forEach(row => props.downloadEntryPdf(row.id))
+                  rows.forEach(row => {
+                    if (hasPermission('open', row)) {
+                      props.downloadEntryPdf(row.id)
+                    }
+                  })
                 } else {
                   // object
                   props.downloadEntryPdf(rows[0].id)

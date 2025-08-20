@@ -94,6 +94,10 @@ abstract class ResourceComponent implements ResourceInterface, EventSubscriberIn
         return [];
     }
 
+    /**
+     * Do something when a new resource is created.
+     * NB. Data is not yet flushed in the DB when called.
+     */
     public function create(AbstractResource $resource, array $data): void
     {
     }

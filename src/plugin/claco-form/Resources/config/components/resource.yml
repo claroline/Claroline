@@ -2,8 +2,11 @@ services:
   Claroline\ClacoFormBundle\Component\Resource\ClacoFormResource:
     tags: ['claroline.component.resource', 'kernel.event_subscriber']
     arguments:
+      - '@security.authorization_checker'
       - '@security.token_storage'
       - '@Claroline\AppBundle\Persistence\ObjectManager'
       - '@Claroline\AppBundle\API\SerializerProvider'
       - '@Claroline\AppBundle\API\Crud'
       - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
+      - '@Claroline\ClacoFormBundle\Manager\ExportManager'
+      - '@Claroline\AppBundle\Manager\File\TempFileManager'

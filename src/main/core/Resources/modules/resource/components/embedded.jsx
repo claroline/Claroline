@@ -82,7 +82,6 @@ const ResourceEmbedded = (props) => {
       if (root) {
         rootRef.current = undefined
         setTimeout(() => {
-          console.log("unmount")
           unmount(root)
         }, 0)
       }

@@ -21,6 +21,7 @@ use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\ClacoFormBundle\Manager\ExportManager;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -54,7 +55,7 @@ class ClacoFormController
     }
 
     /**
-     * Downloads pdf version of entry.
+     * Downloads PDF version of entry.
      */
     #[Route(path: '/entry/{entry}/pdf/download', name: 'claro_claco_form_entry_pdf_download', methods: ['GET'])]
     public function entryPdfDownloadAction(
@@ -78,13 +79,14 @@ class ClacoFormController
     /**
      * Exports entries.
      */
-    #[Route(path: '/{clacoForm}/entries/export', name: 'claro_claco_form_entries_export', methods: ['GET'])]
+    #[Route(path: '/{id}/entries/export', name: 'claro_claco_form_entries_export', methods: ['GET'])]
     public function clacoFormEntriesExportAction(
-        #[MapEntity(mapping: ['clacoForm' => 'uuid'])]
-        ClacoForm $clacoForm
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        ResourceNode $resourceNode
     ): BinaryFileResponse {
-        $this->checkPermission('EDIT', $clacoForm->getResourceNode(), [], true);
+        $this->checkPermission('FOLLOW', $resourceNode, [], true);
 
+        $clacoForm = $this->om->getRepository(ClacoForm::class)->findOneBy(['resourceNode' => $resourceNode]);
         $export = $this->exportManager->exportEntries($clacoForm);
 
         return new BinaryFileResponse($export[0], 200, [

@@ -33,7 +33,7 @@ class ExportManager
     ) {
     }
 
-    public function generatePdfForEntry(Entry $entry, User $user): ?string
+    public function generatePdfForEntry(Entry $entry, ?User $user = null): ?string
     {
         $clacoForm = $entry->getClacoForm();
         $fields = $clacoForm->getFields();

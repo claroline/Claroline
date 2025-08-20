@@ -4,8 +4,9 @@ import {registry} from '#/main/app/plugins/registry'
 
 registry.add('ClarolineClacoFormBundle', {
   actions: {
-    resource: {
-      'add-entry' : () => { return import(/* webpackChunkName: "plugin-announcement-action-add-entry" */ '#/plugin/claco-form/resources/claco-form/actions/add-entry') }
+    claroline_claco_form: {
+      'add-entry' : () => { return import(/* webpackChunkName: "plugin-claco-form-action-add-entry" */ '#/plugin/claco-form/resources/claco-form/actions/add-entry') },
+      'export-entries' : () => { return import(/* webpackChunkName: "plugin-claco-form-action-add-entry" */ '#/plugin/claco-form/resources/claco-form/actions/export-entries') }
     }
   },
 

@@ -172,9 +172,13 @@ class ClacoFormManager
         return $entry;
     }
 
-    public function getUserEntries(ClacoForm $clacoForm, User $user): array
+    public function countUserEntries(ClacoForm $clacoForm, ?User $user = null): int
     {
-        return $this->entryRepo->findBy(['clacoForm' => $clacoForm, 'user' => $user]);
+        if (!$user) {
+            return 0;
+        }
+
+        return $this->entryRepo->count(['clacoForm' => $clacoForm, 'user' => $user]);
     }
 
     public function copyClacoForm(ClacoForm $clacoForm, ClacoForm $newClacoForm): ClacoForm

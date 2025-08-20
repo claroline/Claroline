@@ -120,8 +120,6 @@ class ResourceManager
             throw new InvalidDataException(sprintf('%s is not valid', $resourceClass), $errors);
         }
 
-        $this->om->endFlushSuite();
-
         $createResource = new CreateResourceEvent($resource, [
             'resourceNode' => $nodeData,
             'resource' => $resourceData,
@@ -130,6 +128,8 @@ class ResourceManager
         $this->eventDispatcher->dispatch($createResource, ResourceEvents::getEventName(ResourceEvents::CREATE));
         // specific event
         $this->eventDispatcher->dispatch($createResource, ResourceEvents::getEventName(ResourceEvents::CREATE, $resourceNode->getResourceType()->getName()));
+
+        $this->om->endFlushSuite();
 
         // initialize resource rights
         if (!empty($nodeData['rights'])) {

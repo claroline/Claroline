@@ -13,6 +13,12 @@ export default declareResource(ClacoFormResource)
         'Créer, modifier et supprimer de nouvelles fiches'
       ]
     },
+    follow: {
+      order: 10,
+      actions: [
+        'Exporter toutes les fiches'
+      ]
+    },
     edit: {
       order: 20,
       actions: [

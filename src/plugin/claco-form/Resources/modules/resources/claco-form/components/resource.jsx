@@ -4,7 +4,7 @@ import omit from 'lodash/omit'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {Resource} from '#/main/core/resource'
 
 import {ClacoForm as ClacoFormTypes} from '#/plugin/claco-form/resources/claco-form/prop-types'
@@ -59,14 +59,6 @@ const ClacoFormResource = props =>
         label: trans('show-statistics', {}, 'actions'),
         target: `${props.path}/stats`,
         displayed: props.canEdit && props.hasStatistics
-      }, {
-        name: 'export-entries',
-        type: URL_BUTTON,
-        icon: 'fa fa-fw fa-download',
-        label: trans('export_all_entries', {}, 'clacoform'),
-        displayed: props.canAdministrate,
-        target: ['claro_claco_form_entries_export', {clacoForm: props.clacoForm.id}],
-        group: trans('transfer')
       }
     ]}
     editor={ClacoFormEditor}
