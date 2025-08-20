@@ -32,7 +32,32 @@ abstract class ListSourceComponent extends DataSourceComponent
         $this->serializer = $serializer;
     }
 
-    public function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
+    public function open(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): StreamedJsonResponse
+    {
+        $options = static::getOptions();
+        $finderQuery = $this->getQuery($context, $contextSubject, $request);
+
+        return $this->finderFactory->create(static::getClass())
+            ->submit($finderQuery)
+            ->getResult(function (object $entity) use ($options): array {
+                return $this->serializer->serialize($entity, $options);
+            })
+            ->toResponse()
+        ;
+    }
+
+    protected function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
+    {
+        $finderQuery = $this->parseRequest($request);
+
+        if ($contextSubject) {
+            $finderQuery->addFilter('workspace', $contextSubject->getContextIdentifier());
+        }
+
+        return $finderQuery;
+    }
+
+    protected function parseRequest(?Request $request = null): FinderQuery
     {
         if ($request) {
             $data = $request->query->all();
@@ -48,25 +73,7 @@ abstract class ListSourceComponent extends DataSourceComponent
             $finderQuery = new FinderQuery();
         }
 
-        if ($contextSubject) {
-            $finderQuery->addFilter('workspace', $contextSubject->getContextIdentifier());
-        }
-
         return $finderQuery;
-    }
-
-    public function open(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): StreamedJsonResponse
-    {
-        $options = static::getOptions();
-        $finderQuery = $this->getQuery($context, $contextSubject, $request);
-
-        return $this->finderFactory->create(static::getClass())
-            ->submit($finderQuery)
-            ->getResult(function (object $entity) use ($options): array {
-                return $this->serializer->serialize($entity, $options);
-            })
-            ->toResponse()
-        ;
     }
 
     protected static function getOptions(): array

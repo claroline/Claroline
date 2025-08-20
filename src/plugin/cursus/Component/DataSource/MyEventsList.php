@@ -36,7 +36,7 @@ class MyEventsList extends ListSourceComponent
         return EventType::class;
     }
 
-    public function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
+    protected function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
     {
         $finderQuery = parent::getQuery($context, $contextSubject, $request);
 

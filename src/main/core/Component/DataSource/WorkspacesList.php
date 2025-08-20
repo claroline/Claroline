@@ -33,7 +33,7 @@ final class WorkspacesList extends ListSourceComponent
         ]);
     }
 
-    public function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
+    protected function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
     {
         $query = parent::getQuery($context, $contextSubject, $request);
 

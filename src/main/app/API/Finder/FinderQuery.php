@@ -120,20 +120,18 @@ class FinderQuery
         return null;
     }
 
-    public function addFilters(array $filters, ?bool $overrideExistingValue = true): self
+    public function addFilters(array $filters): self
     {
         foreach ($filters as $filterName => $filterValue) {
-            $this->addFilter($filterName, $filterValue, $overrideExistingValue);
+            $this->addFilter($filterName, $filterValue);
         }
 
         return $this;
     }
 
-    public function addFilter(string $filterName, mixed $filterValue, ?bool $overrideExistingValue = true): self
+    public function addFilter(string $filterName, mixed $filterValue): self
     {
-        if ($overrideExistingValue || !array_key_exists($filterName, $this->filters)) {
-            $this->filters[$filterName] = $filterValue;
-        }
+        $this->filters[$filterName] = $filterValue;
 
         return $this;
     }
