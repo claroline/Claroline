@@ -3,7 +3,7 @@ import {createRoot} from 'react-dom/client'
 import merge from 'lodash/merge'
 
 // (I put it here for now because it's the root of all apps)
-// this give the source paths to webpack for dynamic loading
+// this gives the source paths to webpack for dynamic loading
 import {asset, env} from '#/main/app/config'
 
 /* eslint-disable no-undef, no-unused-vars, no-global-assign */
@@ -46,15 +46,6 @@ function mount(
     [configSelectors.STORE_NAME]: configReducer,
     [securitySelectors.STORE_NAME]: securityReducer
   }, reducers), initialData, customMiddlewares)
-
-  const appRoot = createElement(
-    Main, {
-      store: store,
-      embedded: embedded,
-      defaultPath: defaultPath
-    },
-    createElement(rootComponent)
-  )
 
   // render app
   const root = createRoot(container)

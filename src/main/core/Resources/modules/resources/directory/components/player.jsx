@@ -61,7 +61,7 @@ const DirectoryPlayer = (props) => {
         >
           <ListSource
             className="mb-5"
-            flush={true}
+            flush={!props.embedded}
             name={selectors.LIST_NAME}
             fetch={{
               url: ['apiv2_resource_list', {contextId: get(props.currentNode, 'workspace.id', null), parent: get(props.currentNode, 'id', null)}],
@@ -78,7 +78,7 @@ const DirectoryPlayer = (props) => {
                 delete: props.deleteNodes
               }, props.path, props.currentUser).then((action) => {
                 if (action) {
-                  return transformAction(action, [resourceNode], props.embedded)
+                  return transformAction(action, [resourceNode], props.path, props.embedded)
                 }
 
                 return null
@@ -87,7 +87,7 @@ const DirectoryPlayer = (props) => {
                 update: props.updateNodes,
                 delete: props.deleteNodes
               }, props.path, props.currentUser).then((actions) => actions
-                .map(action => transformAction(action, resourceNodes, props.embedded)))
+                .map(action => transformAction(action, resourceNodes, props.path, props.embedded)))
             })}
             parameters={props.listConfiguration}
           />
@@ -121,7 +121,6 @@ DirectoryPlayer.propTypes = {
   currentNode: T.shape(
     ResourceNodeTypes.propTypes
   ).isRequired,
-  listName: T.string.isRequired,
   listConfiguration: T.shape(
     ListParametersTypes.propTypes
   ),

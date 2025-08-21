@@ -1,89 +1,100 @@
-import React, {Component} from 'react'
+import React, {useCallback, useEffect, useRef} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import get from 'lodash/get'
 
 import {mount, unmount} from '#/main/app/dom/mount'
+import {Routes} from '#/main/app/router'
 
 import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {reducer as contextReducer, selectors as contextSelectors} from '#/main/app/context/store'
 import {reducer as toolReducer, selectors as toolSelectors} from '#/main/core/tool/store'
 
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceWrapper} from '#/main/core/resource/containers/wrapper'
+import {route} from '#/main/core/resource/routing'
 
-// the class is because of the use of references and lifecycle
-class ResourceEmbedded extends Component {
-  constructor(props) {
-    super(props)
+const ResourceEmbedded = (props) => {
+  const containerRef = useRef(null)
+  const rootRef = useRef(null)
 
-    this.mountedApp = null
+  const Resource = useCallback(() => (
+    <Routes
+      redirect={[
+        {from: '/', exact: true, to: route(props.resourceNode)}
+      ]}
+      routes={[
+        {
+          path: workspaceRoute(get(props.resourceNode, 'workspace'), 'resources')+'/:slug',
+          render: (routerProps) => {
+            return <ResourceWrapper slug={get(routerProps, 'match.params.slug')} embedded={true} />
+          }
+        }
+      ]}
+    />
+  ), [get(props.resourceNode, 'id')])
 
-    this.mountResource = this.mountResource.bind(this)
-  }
+  Resource.displayName = `EmbeddedResource(${props.resourceNode.meta.type})`
 
-  componentDidMount() {
-    this.mountResource()
-  }
-
-  componentWillUnmount() {
-    if (this.mountedApp) {
-      // remove old app
-      unmount(this.mountedApp)
+  useEffect(() => {
+    if (!containerRef.current || !get(props.resourceNode, 'id')) {
+      return
     }
-  }
 
-  componentDidUpdate(prevProps) {
-    // the embedded resource has changed
-    if (this.props.resourceNode.id !== prevProps.resourceNode.id) {
-      // remove old app
-      if (this.mountedApp) {
-        unmount(this.mountedApp)
-        this.mountedApp = null
+    const renderTimeout = setTimeout(() => {
+      rootRef.current = mount(containerRef.current, Resource, {
+        [contextSelectors.STORE_NAME]: contextReducer,
+        [toolSelectors.STORE_NAME]: toolReducer
+      }, {
+        [securitySelectors.STORE_NAME]: props.security,
+        [configSelectors.STORE_NAME]: props.config,
+        // mount the resource tool in the store
+        context: {
+          loaded: true,
+          type: 'workspace',
+          id: get(props.resourceNode, 'workspace.slug'),
+          data: get(props.resourceNode, 'workspace')
+        },
+        tool: {
+          loaded: true,
+          name: 'resources'
+        },
+        resources: {
+          root: props.resourceNode
+        },
+        // mount the resource in the store
+        resource: {
+          embedded: true,
+          showHeader: props.showHeader,
+          lifecycle: props.lifecycle
+        }
+      }, true)
+    }, 0)
+
+    return () => {
+      if (renderTimeout) {
+        clearTimeout(renderTimeout)
       }
 
-      setTimeout(this.mountResource, 0)
-    }
-  }
-
-  mountResource() {
-    const Resource = () =>
-      <ResourceWrapper slug={this.props.resourceNode.slug} embedded={true} />
-
-    Resource.displayName = `EmbeddedResource(${this.props.resourceNode.meta.type})`
-
-    this.mountedApp = mount(this.mountNode, Resource, {
-      [contextSelectors.STORE_NAME]: contextReducer,
-      [toolSelectors.STORE_NAME]: toolReducer
-    }, {
-      [securitySelectors.STORE_NAME]: this.props.security,
-      [configSelectors.STORE_NAME]: this.props.config,
-      // mount the resource tool in the store
-      context: {
-        loaded: true,
-        type: 'desktop'
-      },
-      tool: {
-        loaded: true,
-        name: 'resources'
-      },
-      resources: {
-        root: this.props.resourceNode
-      },
-      // mount the resource in the store
-      resource: {
-        embedded: true,
-        showHeader: this.props.showHeader,
-        lifecycle: this.props.lifecycle
+      const root = rootRef.current
+      if (root) {
+        rootRef.current = undefined
+        setTimeout(() => {
+          console.log("unmount")
+          unmount(root)
+        }, 0)
       }
-    }, true, `/desktop/resources/${this.props.resourceNode.slug}`)
-  }
+    }
+  }, [get(props.resourceNode, 'id')])
 
-  render() {
-    return (
-      <div ref={element => this.mountNode = element} className={classes('resource-container embedded-resource flex-fill d-flex flex-column', this.props.className)} />
-    )
-  }
+  return (
+    <div
+      ref={containerRef}
+      className={classes('resource-container embedded-resource flex-fill d-flex flex-column', props.className)}
+    />
+  )
 }
 
 ResourceEmbedded.propTypes = {
