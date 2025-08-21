@@ -30,6 +30,7 @@ class Updater150000 extends Updater
         $this->removeAccountContext();
 
         $this->removeTool('connection_messages');
+        $this->removeTool('templates');
 
         $this->linkWorkspacesToOrganizations();
         $this->linkLocationsToOrganizations();
