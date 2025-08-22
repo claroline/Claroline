@@ -70,6 +70,10 @@ final class Version20241218083015 extends AbstractMigration
         ');
 
         $this->addSql('
+            UPDATE innova_path SET code = uuid WHERE code IS NULL OR code = "" 
+        ');
+
+        $this->addSql('
             ALTER TABLE innova_path 
             ADD CONSTRAINT FK_CE19F05461220EA6 FOREIGN KEY (creator_id) 
             REFERENCES claro_user (id) 
