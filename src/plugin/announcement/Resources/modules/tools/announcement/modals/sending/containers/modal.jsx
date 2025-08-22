@@ -1,6 +1,4 @@
 import {connect} from 'react-redux'
-import get from 'lodash/get'
-import merge from 'lodash/merge'
 
 import {param} from '#/main/app/config'
 import {withReducer} from '#/main/app/store/components/withReducer'
@@ -25,28 +23,8 @@ const SendingModal = withReducer(selectors.STORE_NAME, reducer)(
       update(prop, value) {
         dispatch(formActions.updateProp(selectors.STORE_NAME+'.form', prop, value))
       },
-      reset(announcement, workspaceRoles) {
-        let data = merge({}, announcement)
-
-        if (!get(announcement, 'meta.notifyUsers')) {
-          data = merge(data, {
-            meta: {notifyUsers: 1}
-          })
-        }
-
-        if (!announcement.roles || 0 === announcement.roles.length) {
-          // by default select all ws roles for sending
-          data = merge({}, data, {
-            roles: workspaceRoles
-          })
-        }
-
-        dispatch(listActions.addFilter(selectors.STORE_NAME+'.receivers', 'roles', data.roles.map(role => role.id)))
-        dispatch(formActions.resetForm(selectors.STORE_NAME+'.form', data))
-        dispatch(listActions.invalidateData(selectors.STORE_NAME+'.receivers'))
-      },
-      updateReceivers(roleIds) {
-        dispatch(listActions.addFilter(selectors.STORE_NAME+'.receivers', 'roles', roleIds))
+      updateReceivers(roles) {
+        dispatch(listActions.addFilter(selectors.STORE_NAME+'.receivers', 'roles', roles.map(role => role.id), true))
         dispatch(listActions.invalidateData(selectors.STORE_NAME+'.receivers'))
       }
     })

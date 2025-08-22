@@ -128,6 +128,8 @@ const FormContent = (props) => {
           ))}
         </FormSections>
       }
+
+      {props.children}
     </div>
   )
 }
@@ -140,7 +142,7 @@ FormContent.propTypes = {
   autoFocus: T.bool,
   size: T.string,
   disabled: T.oneOfType([T.bool, T.func]),
-
+  children: T.any,
   definition: T.arrayOf(T.shape(
     DataFormSectionTypes.propTypes
   )).isRequired,

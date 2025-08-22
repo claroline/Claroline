@@ -67,7 +67,10 @@ const AnnouncementPost = (props) => {
                 label: trans('send', {}, 'actions'),
                 target: `${props.path}/${props.announcement.id}/send`,
                 modal: [MODAL_ANNOUNCEMENT_SENDING, {
-                  announcement: props.announcement
+                  announcement: props.announcement,
+                  onSend: (announcement) => {
+                    dispatch(actions.changeAnnounce(announcement))
+                  }
                 }],
                 displayed: props.editable
               }, {

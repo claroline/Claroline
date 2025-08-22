@@ -56,7 +56,12 @@ const FormModal = (props) => {
     <Modal
       size="md"
       {...omit(props, 'name', 'isNew', 'data', 'definition', 'target', 'onSave', 'onCancel', 'saveLabel')}
-      onEnter={() => reset(props.data, props.isNew)}
+      onEnter={() => {
+        reset(props.data, props.isNew)
+        if (props.onEnter) {
+          props.onEnter()
+        }
+      }}
       scrollable={true}
       centered={true}
       backdrop={hasPendingChanges ? 'static' : true}
@@ -75,7 +80,9 @@ const FormModal = (props) => {
           displayLevel={5}
           definition={props.definition}
           flush={true}
-        />
+        >
+          {props.children}
+        </FormContent>
 
         <div
           className="modal-footer flex-sm-nowrap gap-2 mt-n5"
@@ -173,16 +180,14 @@ FormModal.propTypes = {
     // a URL string
     T.string,
     // a route definition
-    T.array,
-    // a function which returns a URL or a route
-    // it receives the current form data and the isNew flag as argument.
-    // ex. (formData, isNew) => isNew ? ['api_object_create'] : ['api_object_update', {id: formData.id}]
-    // T.func // maybe no longer needed
+    T.array
   ]),
   definition: T.array,
+  onEnter: T.func,
   onSave: T.func,
   onCancel: T.func,
   saveLabel: T.string,
+  children: T.any,
 
   // from modal
   fadeModal: T.func.isRequired

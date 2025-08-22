@@ -7,11 +7,12 @@ use Claroline\AnnouncementBundle\Entity\AnnouncementParameters;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer;
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Finder\FinderQuery;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
@@ -21,7 +22,9 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -105,26 +108,16 @@ class AnnouncementController
     public function validateSendAction(
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Announcement $announcement,
-        Request $request
-    ): JsonResponse {
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery()
+    ): StreamedJsonResponse {
         $this->checkPermission('EDIT', $announcement, [], true);
 
-        $ids = isset($request->query->all()['filters']) ? $request->query->all()['filters']['roles'] : [];
+        $finderQuery->addFilter('workspace', $announcement->getWorkspace());
 
-        if (!empty($ids)) {
-            /** @var Role[] $roles */
-            $roles = $this->om->getRepository(Role::class)->findBy(['uuid' => $ids]);
-        } else {
-            $roles = $announcement->getRoles();
-        }
+        $results = $this->crud->search(User::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
 
-        $all = $request->query->all();
-        unset($all['filters']['roles']);
-        $parameters = array_merge($all, ['hiddenFilters' => ['roles' => array_map(function (Role $role) {
-            return $role->getUuid();
-        }, $roles)]]);
-
-        return new JsonResponse($this->crud->list(User::class, $parameters, [Options::SERIALIZE_MINIMAL]));
+        return $results->toResponse();
     }
 
     #[Route(path: '/{id}/pdf', name: 'claro_announcement_export_pdf', methods: ['GET'])]
