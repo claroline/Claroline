@@ -59,7 +59,7 @@ class RegistrationController
         $user = $this->crud->create(User::class, $data);
 
         $validation = $this->config->getParameter('registration.validation');
-        // auto log user if option is set and account doesn't need to be validated
+        // auto log user if option is set and their account doesn't need to be validated
         if (PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL !== $validation) {
             return $this->authenticator->login($user, $request);
         }
@@ -68,7 +68,7 @@ class RegistrationController
     }
 
     /**
-     * Fetches data for self-registration form.
+     * Fetches data for the self-registration form.
      */
     #[Route(path: '/', name: 'apiv2_user_initialize_registration', methods: ['GET'])]
     public function initializeAction(Request $request): JsonResponse
@@ -88,8 +88,7 @@ class RegistrationController
     }
 
     /**
-     * Checks if a user is allowed to register.
-     * ie: if the self registration is disabled, he can't.
+     * Checks if a user is allowed to register (i.e., if the self-registration is disabled, they can't).
      *
      * @throws AccessDeniedException
      */

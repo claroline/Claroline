@@ -32,12 +32,12 @@ const RegisterModal = props => {
         request: {
           method: 'PATCH',
           body: JSON.stringify({
-            workspaces: props.workspaces.map(workspace => workspace.id),
+            workspaces: [props.workspace.id],
             groups: props.selectedGroups.map(group => group.id),
             users: props.selectedUsers.map(user => user.id)
           })
         },
-        success: () => props.onRegister(props.workspaces, props.selectedUsers, props.selectedGroups)
+        success: () => props.onRegister([props.workspace], props.selectedUsers, props.selectedGroups)
       }
     })
   }
@@ -47,7 +47,7 @@ const RegisterModal = props => {
     type: MODAL_BUTTON,
     modal: [MODAL_ROLES, {
       title: trans('roles'),
-      url: ['apiv2_workspace_list_roles', {id: props.workspaces[0].id}],
+      url: ['apiv2_workspace_list_roles', {id: props.workspace.id}],
       filters: [],
       selectAction: registerAction
     }]
@@ -69,7 +69,7 @@ const RegisterModal = props => {
           <Tab eventKey="users" title={trans('users')}>
             <UserList
               name={selectors.STORE_NAME+'.users'}
-              url={['apiv2_user_list']}
+              url={['apiv2_workspace_list_registerable', {id: props.workspace.id}]}
               primaryAction={undefined}
               actions={undefined}
             />
@@ -89,7 +89,7 @@ const RegisterModal = props => {
       {'users' === props.mode &&
         <UserList
           name={selectors.STORE_NAME+'.users'}
-          url={['apiv2_user_list']}
+          url={['apiv2_workspace_list_registerable', {id: props.workspace.id}]}
           primaryAction={undefined}
           actions={undefined}
         />
@@ -130,7 +130,9 @@ const RegisterModal = props => {
 RegisterModal.propTypes = {
   title: T.string.isRequired,
   subtitle: T.string,
-  workspaces: T.array.isRequired,
+  workspace: T.shape({
+    id: T.string.isRequired
+  }).isRequired,
   selectedUsers: T.array.isRequired,
   selectedGroups: T.array.isRequired,
   resetGroups: T.func.isRequired,

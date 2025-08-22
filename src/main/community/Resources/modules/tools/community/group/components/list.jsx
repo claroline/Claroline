@@ -42,7 +42,7 @@ const GroupList = props =>
           modal: [MODAL_REGISTER, {
             title: trans('register_groups'),
             subtitle: trans('workspace_register_select_groups'),
-            workspaces: [props.contextData],
+            workspace: props.contextData,
             onRegister: props.registerGroups,
             mode: 'groups'
           }]

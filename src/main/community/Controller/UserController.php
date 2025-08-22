@@ -198,7 +198,7 @@ class UserController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    private function checkToolAccess(string $permission = 'OPEN', string $contextId = null): void
+    private function checkToolAccess(string $permission = 'OPEN', ?string $contextId = null): void
     {
         if ($contextId) {
             $communityTool = $this->toolManager->getOrderedTool('community', WorkspaceContext::getName(), $contextId);

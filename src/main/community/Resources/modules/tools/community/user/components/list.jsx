@@ -34,7 +34,7 @@ const UserList = props =>
           modal: [MODAL_REGISTER, {
             title: trans('register_users'),
             subtitle: trans('workspace_register_select_users'),
-            workspaces: [props.contextData],
+            workspace: props.contextData,
             onRegister: props.registerUsers,
             mode: 'users'
           }]
