@@ -58,7 +58,7 @@ class ResourceProvider extends AbstractComponentProvider
             return null;
         }
 
-        return array_merge([
+        return array_merge_recursive([
             'meta' => [
                 'type' => $urlHandler::getName(),
             ],
@@ -115,7 +115,7 @@ class ResourceProvider extends AbstractComponentProvider
         // move the file in temp to reuse it when the user will create the resource
         $tempName = $this->tempFileManager->copy($file, true);
 
-        return array_merge([
+        return array_merge_recursive([
             'name' => $resourceName,
             'meta' => [
                 'type' => $fileHandler::getName(),
