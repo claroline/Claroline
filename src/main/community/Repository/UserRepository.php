@@ -269,4 +269,39 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
             ')
             ->toIterable();
     }
+
+    public function findWithNoUserRole(?int $limit = 100): iterable
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT DISTINCT u
+                FROM Claroline\CoreBundle\Entity\User AS u
+                WHERE NOT EXISTS (
+                    SELECT r.id
+                    FROM Claroline\CoreBundle\Entity\Role AS r
+                    WHERE r.translationKey = u.username
+                      AND r.type = :roleType
+                )
+            ')
+            ->setMaxResults($limit)
+            ->setParameter('roleType', Role::USER)
+            ->toIterable();
+    }
+
+    public function countWithNoUserRole(): int
+    {
+        return (int) $this->getEntityManager()
+            ->createQuery('
+                SELECT COUNT(DISTINCT u)
+                FROM Claroline\CoreBundle\Entity\User AS u
+                WHERE NOT EXISTS (
+                    SELECT r.id
+                    FROM Claroline\CoreBundle\Entity\Role AS r
+                    WHERE r.translationKey = u.username
+                      AND r.type = :roleType
+                )
+            ')
+            ->setParameter('roleType', Role::USER)
+            ->getSingleScalarResult();
+    }
 }

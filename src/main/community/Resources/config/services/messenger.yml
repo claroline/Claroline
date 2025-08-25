@@ -11,6 +11,14 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\UserManager'
 
+    Claroline\CommunityBundle\Messenger\GenerateUserRolesHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@security.token_storage'
+            - '@messenger.default_bus'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
+
     Claroline\CommunityBundle\Messenger\ReassignGroupOrganizationHandler:
         tags: [ messenger.message_handler ]
         arguments:

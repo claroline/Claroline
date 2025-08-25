@@ -74,10 +74,10 @@ final class UserSubscriber implements EventSubscriberInterface
         // add default roles and groups
         $this->roleManager->createUserRole($user);
 
-        $defaultRole = $this->config->getParameter('registration.default_role') ?? PlatformRoles::USER;
-        $roleUser = $this->roleManager->getRoleByName($defaultRole);
-        if ($roleUser) {
-            $user->addRole($roleUser);
+        $defaultRoleName = $this->config->getParameter('registration.default_role') ?? PlatformRoles::USER;
+        $defaultRole = $this->roleManager->getRoleByName($defaultRoleName);
+        if ($defaultRole) {
+            $user->addRole($defaultRole);
         }
 
         $user->setMailNotified(

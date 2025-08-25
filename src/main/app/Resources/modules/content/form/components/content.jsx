@@ -107,11 +107,9 @@ const FormContent = (props) => {
               subtitle={section.description}
               errors={getSectionErrors(section.fields, props.errors)}
               actions={section.actions}
-              // fill={section.fill}
             >
               <FormFieldset
                 id={`${getSectionId(section, props.id)}-fieldset`}
-                mode={props.mode}
                 disabled={disabled || (typeof section.disabled === 'function' ? section.disabled(props.data) : section.disabled)}
                 fields={section.fields}
                 data={props.data}
@@ -136,6 +134,7 @@ const FormContent = (props) => {
 
 FormContent.propTypes = {
   id: T.string.isRequired,
+  className: T.string,
   level: T.number,
   displayLevel: T.number,
   flush: T.bool,

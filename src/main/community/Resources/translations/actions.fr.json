@@ -23,5 +23,7 @@
   "delete_user": "Supprimer l'utilisateur",
   "delete_user_desc": "Supprimez définitivement les données de l'utilisateur ainsi que toute son activité. Les données ne pourront pas être récupérées.",
   "disable_inactive_users": "Désactiver les utilisateurs inactifs",
-  "disable_inactive_users_desc": "Désactivez tous les utilisateurs n'ayant pas eu d'activité sur votre plateforme depuis une date choisie."
+  "disable_inactive_users_desc": "Désactivez tous les utilisateurs n'ayant pas eu d'activité sur votre plateforme depuis une date choisie.",
+  "generate_user_roles": "Générer les rôles personnels",
+  "generate_user_roles_desc": "Générez les rôles personnels pour tous les utilisateurs. Les rôles personnels permettent une gestion de droits fine par utilisateur."
 }

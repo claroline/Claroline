@@ -12,16 +12,22 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
+use Claroline\CommunityBundle\Messenger\Message\GenerateUserRoles;
 use Claroline\CommunityBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class RoleManager
 {
     private RoleRepository $roleRepo;
 
     public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly MessageBusInterface $messageBus,
         private readonly ObjectManager $om
     ) {
         $this->roleRepo = $om->getRepository(Role::class);
@@ -60,20 +66,14 @@ class RoleManager
 
     public function createUserRole(User $user): Role
     {
-        $username = $user->getUsername();
-        $roleName = 'ROLE_USER_'.strtoupper($username);
-        $role = $this->getRoleByName($roleName);
-
-        if (is_null($role)) {
-            $role = new Role();
-            $role->setName($roleName);
-            $role->setTranslationKey($username);
-            $role->setLocked(true);
-            $role->setType(Role::USER);
-            $this->om->persist($role);
-        }
+        $role = new Role();
+        $role->setName('ROLE_USER_'.strtoupper($user->getUsername()));
+        $role->setTranslationKey($user->getUsername());
+        $role->setLocked(true);
+        $role->setType(Role::USER);
 
         $user->addRole($role);
+        $this->om->persist($role);
 
         return $role;
     }
@@ -118,5 +118,13 @@ class RoleManager
     public function getUserRole(string $username): ?Role
     {
         return $this->roleRepo->findUserRoleByUsername($username);
+    }
+
+    public function generateUserRoles(): void
+    {
+        $this->messageBus->dispatch(
+            new GenerateUserRoles(),
+            [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]
+        );
     }
 }

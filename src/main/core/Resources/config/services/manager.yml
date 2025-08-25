@@ -46,6 +46,8 @@ services:
 
     Claroline\CoreBundle\Manager\RoleManager:
         arguments:
+            - '@security.token_storage'
+            - '@messenger.default_bus'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     claroline.manager.role_manager:

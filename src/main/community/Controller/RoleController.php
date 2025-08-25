@@ -12,9 +12,11 @@
 namespace Claroline\CommunityBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Controller\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -22,6 +24,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route(path: '/role', name: 'apiv2_role_')]
 class RoleController extends AbstractCrudController
@@ -32,7 +35,8 @@ class RoleController extends AbstractCrudController
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        private readonly ToolManager $toolManager
+        private readonly ToolManager $toolManager,
+        private readonly RoleManager $roleManager,
     ) {
         $this->authorization = $authorization;
     }
@@ -100,12 +104,16 @@ class RoleController extends AbstractCrudController
         return new JsonResponse();
     }
 
-    protected function getDefaultHiddenFilters(): array
+    #[Route(path: '/user', name: 'generate_user_roles', methods: ['POST'])]
+    public function generateUserRolesAction(): JsonResponse
     {
-        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+        $communityTool = $this->toolManager->getOrderedTool('community', DesktopContext::getName());
+        if (is_null($communityTool) || !$this->authorization->isGranted('ADMINISTRATE', $communityTool)) {
+            throw new AccessDeniedException(sprintf('Operation "ADMINISTRATE" cannot be done on object %s', get_class($communityTool)));
+        }
 
-        return [
-            'grantable' => true,
-        ];
+        $this->roleManager->generateUserRoles();
+
+        return new JsonResponse();
     }
 }

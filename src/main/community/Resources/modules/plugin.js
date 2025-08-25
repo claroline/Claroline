@@ -32,7 +32,8 @@ registry.add('ClarolineCommunityBundle', {
    */
   actions: {
     community: {
-      'disable-inactive': () => { return import(/* webpackChunkName: "community-action-disable-inactive" */ '#/main/community/tools/community/actions/disable-inactive') }
+      'disable-inactive': () => { return import(/* webpackChunkName: "community-action-disable-inactive" */ '#/main/community/tools/community/actions/disable-inactive') },
+      'generate-user-roles': () => { return import(/* webpackChunkName: "community-action-generate-user-roles" */ '#/main/community/tools/community/actions/generate-user-roles') }
     },
     user: {
       'open'      : () => { return import(/* webpackChunkName: "community-action-user-open" */    '#/main/community/actions/user/open') },

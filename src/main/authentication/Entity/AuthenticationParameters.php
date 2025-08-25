@@ -2,8 +2,8 @@
 
 namespace Claroline\AuthenticationBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_authentication_parameters')]
@@ -31,7 +31,7 @@ class AuthenticationParameters
     private ?string $helpMessage = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
-    private bool $changePassword = false;
+    private bool $changePassword = true;
 
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $internalAccount = true;
