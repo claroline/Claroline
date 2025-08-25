@@ -1,12 +1,12 @@
 /**
  * Platform About modal.
- * Displays information about current Claroline version
+ * Displays information about the current Claroline version.
  */
 
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {AboutModal} from '#/main/app/contexts/administration/modals/about/containers/modal'
+import {AboutModal} from '#/main/app/platform/modals/about/containers/modal'
 
 const MODAL_PLATFORM_ABOUT = 'MODAL_PLATFORM_ABOUT'
 

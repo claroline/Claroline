@@ -2,8 +2,8 @@ import {connect} from 'react-redux'
 
 import {withReducer} from '#/main/app/store/components/withReducer'
 
-import {AboutModal as AboutModalComponent} from '#/main/app/contexts/administration/modals/about/components/modal'
-import {actions, reducer, selectors} from '#/main/app/contexts/administration/modals/about/store'
+import {AboutModal as AboutModalComponent} from '#/main/app/platform/modals/about/components/modal'
+import {actions, reducer, selectors} from '#/main/app/platform/modals/about/store'
 
 const AboutModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(

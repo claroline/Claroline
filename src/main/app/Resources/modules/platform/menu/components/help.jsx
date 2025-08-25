@@ -12,17 +12,16 @@ import {Menu} from '#/main/app/overlays/menu'
 import {Html} from '#/main/app/components/html'
 import {Contact} from '#/main/app/components/contact'
 
-import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors} from '#/main/app/platform/store'
-import {route} from '#/main/app/context/routing'
 import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/modals/terms-of-service'
 import {MODAL_PRIVACY} from '#/main/privacy/modals/privacy'
+import {MODAL_PLATFORM_ABOUT} from '#/main/app/platform/modals/about'
 
 const HelpMenu = (props) => {
   const currentOrganization = useSelector(selectors.currentOrganization)
-  const availableContexts = useSelector(selectors.availableContexts)
 
-  const helpUrl = useSelector((state) => configSelectors.param(state, 'help'))
+  const version = useSelector(selectors.version)
+  const helpUrl = useSelector(selectors.helpUrl)
 
   const links = [
     {
@@ -109,7 +108,14 @@ const HelpMenu = (props) => {
           }
         </div>
 
-        <small className="text-body-secondary mt-auto">v15.0.0</small>
+        <Button
+          className="mt-auto me-auto btn btn-link text-body-secondary"
+          type={MODAL_BUTTON}
+          modal={[MODAL_PLATFORM_ABOUT]}
+          label={version}
+          size="sm"
+          onClick={props.closeMenu}
+        />
       </div>
     </Menu>
   )

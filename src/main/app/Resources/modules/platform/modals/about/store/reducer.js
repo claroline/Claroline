@@ -1,6 +1,6 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
-import {LOAD_PLATFORM_ABOUT} from '#/main/app/contexts/administration/modals/about/store/actions'
+import {LOAD_PLATFORM_ABOUT} from '#/main/app/platform/modals/about/store/actions'
 
 const reducer = combineReducers({
   version: makeReducer(null, { // we might retrieve it from global ui config

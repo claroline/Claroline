@@ -27,6 +27,10 @@ const disabled = createSelector(
   }
 )
 
+const version = (state) => configSelectors.param(state, 'version')
+
+const helpUrl = (state) => configSelectors.param(state, 'help')
+
 const unavailable = (state) => disabled(state)
 
 const selfRegistration = (state) => configSelectors.param(state, 'selfRegistration')
@@ -46,6 +50,8 @@ const isContextFavorite = (state, context) => {
 const currentOrganization = (state) => state.currentOrganization
 
 export const selectors = {
+  version,
+  helpUrl,
   unavailable,
   disabled,
   selfRegistration,
