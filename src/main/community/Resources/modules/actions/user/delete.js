@@ -36,7 +36,7 @@ export default declareAction((users, refresher) => {
       success: () => refresher.delete(processable)
     },
     group: trans('management'),
-    scope: ['object', 'collection'],
+    scope: [constants.ACTION_SCOPE_OBJECT, constants.ACTION_SCOPE_COLLECTION],
     set: [constants.ACTION_SET_LIST, constants.ACTION_SET_DETAILS, constants.ACTION_SET_ADVANCED],
     managerOnly: true,
     title: trans('delete_user', {}, 'privacy'),

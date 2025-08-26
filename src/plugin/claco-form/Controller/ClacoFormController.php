@@ -35,7 +35,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-#[Route(path: '/claco/form', options: ['expose' => true])]
+#[Route(path: '/clacoform', options: ['expose' => true])]
 class ClacoFormController
 {
     use PermissionCheckerTrait;
@@ -52,6 +52,25 @@ class ClacoFormController
         private readonly ExportManager $exportManager
     ) {
         $this->authorization = $authorization;
+    }
+
+    #[Route(path: '/{id}/stats', name: 'apiv2_clacoform_stats', methods: ['GET'])]
+    public function getStatsAction(ClacoForm $clacoForm): JsonResponse
+    {
+        $this->checkPermission('EDIT', $clacoForm, [], true);
+
+        $stats = $this->om->getRepository(ClacoForm::class)->getEntryStats($clacoForm);
+
+        return new JsonResponse([
+            'total' => $stats['total'],
+            'users' => $stats['users'],
+            'fields' => array_map(function (array $fieldStats) {
+                return [
+                    'field' => $this->serializer->serialize($fieldStats['field']),
+                    'values' => $fieldStats['values'],
+                ];
+            }, $stats['fields']),
+        ]);
     }
 
     /**

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\ClacoFormBundle\Controller\API;
+namespace Claroline\ClacoFormBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-#[Route(path: '/clacoform_entry', name: 'apiv2_clacoformentry_')]
+#[Route(path: '/clacoform/entry', name: 'apiv2_clacoformentry_')]
 class EntryController extends AbstractCrudController
 {
     use PermissionCheckerTrait;

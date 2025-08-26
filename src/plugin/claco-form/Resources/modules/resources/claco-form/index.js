@@ -16,7 +16,8 @@ export default declareResource(ClacoFormResource)
     follow: {
       order: 10,
       actions: [
-        'Exporter toutes les fiches'
+        'Exporter toutes les fiches',
+        'Réassigner les catégories automatiques des fiches'
       ]
     },
     edit: {

@@ -29,9 +29,6 @@
     "entry_addition_in_category": "Ajout d'une fiche dans la catégorie [%name%] de la base de données [%clacoform%]",
     "entry_addition_in_category_msg": "La fiche [%title%] a été ajoutée dans la catégorie [%category%] de la base de données [%clacoform%].<br><br>\nLa fiche est disponible <a href=\"%url%\">ici</a>.\n",
     "entry_addition_success_message": "La fiche a été ajoutée avec succès.",
-    "entry_categories_edition": "Modification de catégorie d'une fiche",
-    "entry_deletion": "Suppression d'une fiche",
-    "entry_deletion_msg": "La fiche [%title%] a été supprimée.",
     "entry_edition": "Modification d'une fiche",
     "entry_edition_in_category": "Modification d'une fiche de la catégorie [%name%] de la base de données [%clacoform%]",
     "entry_edition_in_category_msg": "La fiche [%title%] de la base de données [%clacoform%] de la catégorie [%category%] a été modifiée.<br><br>\nLa fiche est disponible <a href=\"%url%\">ici</a>.\n",
@@ -126,5 +123,6 @@
     "enable_moderation": "Modérer la soumission des nouvelles fiches",
     "enable_moderation_help": "Lorsque la modération est activée un gestionnaire doit manuellement publier les nouvelles fiches.",
     "entry_access_forbidden": "Accès à la fiche impossible",
-    "entry_access_forbidden_help": "Vous n'avez pas les droits nécessaires pour consulter cette fiche. Veuillez contacter un gestionnaire si vous pensez que vous devriez avoir accès à cette fiche."
+    "entry_access_forbidden_help": "Vous n'avez pas les droits nécessaires pour consulter cette fiche. Veuillez contacter un gestionnaire si vous pensez que vous devriez avoir accès à cette fiche.",
+    "category_auto_desc": "Cette catégorie est automatiquement assignée aux fiches répondant aux critères définis."
 }

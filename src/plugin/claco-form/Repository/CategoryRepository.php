@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityRepository;
 
 class CategoryRepository extends EntityRepository
 {
-    public function findAutoCategories(ClacoForm $clacoForm)
+    public function findAutoCategories(ClacoForm $clacoForm): array
     {
         return $this->getEntityManager()
             ->createQuery('

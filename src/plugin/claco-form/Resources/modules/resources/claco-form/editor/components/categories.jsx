@@ -3,13 +3,14 @@ import {useDispatch, useSelector} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button, Toolbar} from '#/main/app/action'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {EditorPage} from '#/main/app/editor'
 
 import {actions, selectors} from '#/plugin/claco-form/resources/claco-form/editor/store'
 import {MODAL_CATEGORY_FORM} from '#/plugin/claco-form/modals/category'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
 const EditorCategories = () => {
   const dispatch = useDispatch()
@@ -73,15 +74,30 @@ const EditorCategories = () => {
       {!isEmpty(categories) &&
         <ul className="list-group mb-0">
           {categories.map(category =>
-            <li key={category.id} className="list-group-item d-flex gap-3 justify-content-between align-items-center">
+            <li key={category.id} className="list-group-item d-flex gap-3 align-items-center">
+              {!isEmpty(category.fieldsValues) &&
+                <TooltipOverlay tip={trans('category_auto_desc', {}, 'clacoform')} position="bottom">
+                  <span className="fa fa-fw fa-magic-wand-sparkles me-n2" aria-hidden={true} />
+                </TooltipOverlay>
+              }
               {category.name}
 
               <Toolbar
+                className="ms-auto"
                 buttonName="btn btn-link"
-                toolbar="edit delete"
+                toolbar="recompute edit delete"
                 size="sm"
                 actions={[
                   {
+                    name: 'recompute',
+                    label: trans('recalculate', {}, 'actions'),
+                    type: ASYNC_BUTTON,
+                    displayed: !isEmpty(category.fieldsValues),
+                    request: {
+                      url: ['apiv2_clacoform_category_assign', {id: category.id}],
+                      request: {method: 'PUT'}
+                    },
+                  }, {
                     name: 'edit',
                     label: trans('edit', {}, 'actions'),
                     type: MODAL_BUTTON,

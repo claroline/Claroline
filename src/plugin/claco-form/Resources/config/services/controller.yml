@@ -2,20 +2,19 @@ services:
     _defaults:
         public: true #because controller
 
-    Claroline\ClacoFormBundle\Controller\API\ClacoFormController:
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\ClacoFormBundle\Manager\CategoryManager'
-
-    Claroline\ClacoFormBundle\Controller\API\EntryController:
+    Claroline\ClacoFormBundle\Controller\EntryController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
+
+    Claroline\ClacoFormBundle\Controller\CategoryController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\ClacoFormBundle\Manager\CategoryManager'
 
     Claroline\ClacoFormBundle\Controller\ClacoFormController:
         arguments:

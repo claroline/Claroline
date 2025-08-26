@@ -1,5 +1,7 @@
 {
   "add-entry": "Ajouter une fiche",
   "add_category": "Ajouter une catégorie",
-  "save_category": "Enregistrer la catégorie"
+  "save_category": "Enregistrer la catégorie",
+  "assign_categories": "Réassigner les catégories",
+  "assign_categories_desc": "Affectez toutes les fiches qui répondent aux critères d'association automatique des catégories. Les fiches ne remplissant plus les conditions sont retirées des catégories correspondantes."
 }
