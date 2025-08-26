@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
@@ -17,188 +17,255 @@ import {
   Entry as EntryType
 } from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {generateFromTemplate} from '#/plugin/claco-form/resources/claco-form/template'
-import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 
 import {ResourcePage} from '#/main/core/resource'
-import {PageContent, PageHeading, PageSection, PageToolbar} from '#/main/app/page'
+import {
+  PageContent,
+  PageHeading,
+  PageHeadingSkeleton,
+  PageSection,
+  PageToolbar,
+  PageToolbarSkeleton
+} from '#/main/app/page'
 import {Html} from '#/main/app/components/html'
-import {ContentPublication} from '#/main/app/content/components/publication'
-import {Tags} from '#/main/app/components/tags'
+import {ContentPublication, ContentPublicationSkeleton} from '#/main/app/content/components/publication'
+import {Tags, TagsSkeleton} from '#/main/app/components/tags'
 import {hasPermission} from '#/main/app/security'
+import {TextSkeleton} from '#/main/app/components/placeholder'
+import {EmptyState} from '#/main/app/components/empty-state'
 
-class Entry extends Component {
-  canViewMetadata() {
-    return this.props.canEdit ||
-      this.props.displayMetadata === 'all' ||
-      (this.props.displayMetadata === 'manager' && this.props.canAdministrate)
-  }
+const EntrySkeleton = ({
+  entryDefinition = [],
+  help = false,
+  metadata = false,
+  categories = false
+}) => {
+  return (
+    <ResourcePage>
+      <PageContent className="placeholder-glow">
+        <PageToolbarSkeleton toolbar="edit more" />
+        <PageHeadingSkeleton />
 
-  isFieldDisplayable(field) {
-    return isEmpty(field.restrictions.confidentiality)
-      || 'none' === field.restrictions.confidentiality
-      || this.props.canAdministrate
-      || ('owner' === field.restrictions.confidentiality && this.props.isOwner)
-  }
+        <PageSection className="mb-5">
+          {metadata &&
+            <ContentPublicationSkeleton className="mb-4" />
+          }
 
-  getSections(fields) {
-    return [
-      {
-        id: 'general',
-        title: trans('general'),
-        primary: true,
-        fields: fields
-          .filter(f => this.isFieldDisplayable(f))
-          .map(f => {
-            const params = formatField(f, fields, 'values', true)
+          {help &&
+            <div className="bg-body-tertiary p-4 rounded-3 mb-4" role="presentation">
+              <TextSkeleton className="mb-0" rows={3} />
+            </div>
+          }
 
-            switch (f.type) {
-              case 'file':
-                if (this.props.entry && this.props.entry.values && this.props.entry.values[f.id]) {
-                  params['calculated'] = (data) => Object.assign(
-                    {},
-                    data.values[f.id],
-                    {url: url(['claro_claco_form_field_value_file_download', {entry: data.id, field: f.id}])}
-                  )
-                }
-                break
-            }
+          <DetailsData
+            className="mb-4"
+            definition={entryDefinition}
+            loaded={false}
+          />
 
-            return params
-          })
-      }
-    ]
-  }
+          {categories &&
+            <TagsSkeleton />
+          }
+        </PageSection>
+      </PageContent>
+    </ResourcePage>
+  )
+}
 
-  render() {
-    if (!this.props.canViewEntry && !this.props.canEdit) {
-      return (
-        <div className="alert alert-danger">
-          {trans('unauthorized')}
-        </div>
-      )
+EntrySkeleton.propTypes = {
+  entryDefinition: T.array,
+  help: T.bool,
+  metadata: T.bool,
+  categories: T.bool
+}
+
+const Entry = (props) => {
+  const canViewMetadata = props.canEdit ||
+    props.displayMetadata === 'all' ||
+    (props.displayMetadata === 'manager' && props.canAdministrate)
+
+  const entryDefinition = [
+    {
+      id: 'general',
+      title: trans('general'),
+      primary: true,
+      fields: props.fields
+        .filter(field => isEmpty(field.restrictions.confidentiality)
+          || 'none' === field.restrictions.confidentiality
+          || props.canAdministrate
+          || ('owner' === field.restrictions.confidentiality && props.isOwner)
+        )
+        .map(f => {
+          const params = formatField(f, props.fields, 'values', true)
+
+          switch (f.type) {
+            case 'file':
+              if (props.entry && props.entry.values && props.entry.values[f.id]) {
+                params['calculated'] = (data) => Object.assign(
+                  {},
+                  data.values[f.id],
+                  {url: url(['claro_claco_form_field_value_file_download', {entry: data.id, field: f.id}])}
+                )
+              }
+              break
+          }
+
+          return params
+        })
     }
+  ]
 
+  if (isEmpty(props.entry)) {
+    return (
+      <EntrySkeleton
+        entryDefinition={entryDefinition}
+        metadata={canViewMetadata}
+        help={!!props.helpMessage}
+        categories={props.displayCategories}
+      />
+    )
+  }
+
+  if (!props.canViewEntry) {
     return (
       <ResourcePage>
-        <PageContent>
-          <PageToolbar
-            toolbar="edit more"
-            actions={[
-              {
-                name: 'edit',
-                type: LINK_BUTTON,
-                icon: 'fa fa-fw fa-pencil',
-                label: trans('edit', {}, 'actions'),
-                target: `${this.props.path}/entry/form/${this.props.entry.id}`,
-                displayed: !this.props.entry.locked && this.props.canEdit,
-                group: trans('management'),
-                primary: true
-              }, {
-                name: 'export-pdf',
-                type: CALLBACK_BUTTON,
-                icon: 'fa fa-fw fa-file-pdf',
-                label: trans('export-pdf', {}, 'actions'),
-                callback: () => this.props.downloadEntryPdf(this.props.entry.id),
-                displayed: this.props.canDownload && hasPermission('open', this.props.entry),
-                group: trans('transfer')
-              }, {
-                name: 'publish',
-                type: CALLBACK_BUTTON,
-                icon: classes('fa fa-fw', {
-                  'fa-eye-slash': 1 === this.props.entry.status,
-                  'fa-eye': 1 !== this.props.entry.status
-                }),
-                label: trans(this.props.entry.status === 1 ? 'unpublish':'publish', {}, 'actions'),
-                callback: () => this.props.switchEntryStatus(this.props.entry.id),
-                displayed: !this.props.entry.locked && this.props.canAdministrate,
-                group: trans('management')
-              }, {
-                name: 'change-owner',
-                type: MODAL_BUTTON,
-                icon: 'fa fa-fw fa-user-edit',
-                label: trans('change_owner', {}, 'actions'),
-                modal: [MODAL_USERS, {
-                  selectAction: (users) => ({
-                    type: CALLBACK_BUTTON,
-                    label: trans('change_owner', {}, 'actions'),
-                    callback: () => this.props.changeEntryOwner(users[0])
-                  })
-                }],
-                displayed: this.props.canAdministrate,
-                group: trans('management')
-              }, {
-                name: 'lock',
-                type: CALLBACK_BUTTON,
-                icon: classes('fa fa-fw', {
-                  'fa-lock': !this.props.entry.locked,
-                  'fa-unlock': this.props.entry.locked
-                }),
-                label: trans(this.props.entry.locked ? 'unlock':'lock', {}, 'actions'),
-                callback: () => this.props.switchEntryLock(this.props.entry.id),
-                displayed: this.props.canAdministrate,
-                group: trans('management')
-              }, {
-                name: 'delete',
-                type: CALLBACK_BUTTON,
-                icon: 'fa fa-fw fa-trash',
-                label: trans('delete', {}, 'actions'),
-                callback: () => this.props.deleteEntry(this.props.entry).then(() => this.props.history.push(`${this.props.path}/entries`)),
-                confirm: {
-                  title: trans('delete_entry', {}, 'clacoform'),
-                  message: trans('delete_entry_confirm_message', {title: this.props.entry.title}, 'clacoform')
-                },
-                dangerous: true,
-                displayed: !this.props.entry.locked && this.props.canAdministrate,
-                group: trans('management')
-              }
-            ]}
+        <PageContent className="d-flex flex-column">
+          <EmptyState
+            className="p-4"
+            icon="fa fa-lock"
+            title={trans('entry_access_forbidden', {}, 'clacoform')}
+            description={trans('entry_access_forbidden_help', {}, 'clacoform')}
+            secondaryAction={{
+              type: LINK_BUTTON,
+              icon: 'fa fa-arrow-left',
+              label: trans('back_home', {}, 'actions'),
+              target: props.path,
+              exact: true
+            }}
           />
-
-          <PageHeading
-            title={this.props.entry.title}
-          />
-
-          <PageSection className="mb-5">
-            {this.canViewMetadata() &&
-              <ContentPublication
-                className="mb-4"
-                user={this.props.entry.user}
-                publishedAt={get(this.props.entry, 'publicationDate')}
-              />
-            }
-
-            {this.props.helpMessage &&
-              <Html className="bg-body-tertiary p-4 rounded-3 mb-4">
-                {this.props.helpMessage}
-              </Html>
-            }
-
-            {this.props.template && this.props.useTemplate ?
-              <Html className="mb-4">
-                {generateFromTemplate(this.props.template, this.props.fields, this.props.entry, this.props.isOwner, this.props.canAdministrate)}
-              </Html> :
-              <DetailsData
-                className="mb-4"
-                name={selectors.STORE_NAME+'.entries.current'}
-                data={this.props.entry}
-                definition={this.getSections(this.props.fields)}
-              />
-            }
-
-            {((this.props.displayCategories || this.props.canAdministrate) && !isEmpty(this.props.entry.categories)) &&
-              <Tags tags={this.props.entry.categories.map(category => category.name)} />
-            }
-          </PageSection>
         </PageContent>
       </ResourcePage>
     )
   }
+
+  return (
+    <ResourcePage>
+      <PageContent>
+        <PageToolbar
+          toolbar="edit more"
+          actions={[
+            {
+              name: 'edit',
+              type: LINK_BUTTON,
+              icon: 'fa fa-fw fa-pencil',
+              label: trans('edit', {}, 'actions'),
+              target: `${props.path}/entry/form/${props.entry.id}`,
+              displayed: !props.entry.locked && props.canEdit,
+              group: trans('management'),
+              primary: true
+            }, {
+              name: 'export-pdf',
+              type: CALLBACK_BUTTON,
+              icon: 'fa fa-fw fa-file-pdf',
+              label: trans('export-pdf', {}, 'actions'),
+              callback: () => props.downloadEntryPdf(props.entry.id),
+              displayed: props.canDownload && hasPermission('open', props.entry),
+              group: trans('transfer')
+            }, {
+              name: 'publish',
+              type: CALLBACK_BUTTON,
+              icon: classes('fa fa-fw', {
+                'fa-eye-slash': 1 === props.entry.status,
+                'fa-eye': 1 !== props.entry.status
+              }),
+              label: trans(props.entry.status === 1 ? 'unpublish':'publish', {}, 'actions'),
+              callback: () => props.switchEntryStatus(props.entry.id),
+              displayed: !props.entry.locked && props.canAdministrate,
+              group: trans('management')
+            }, {
+              name: 'change-owner',
+              type: MODAL_BUTTON,
+              icon: 'fa fa-fw fa-user-edit',
+              label: trans('change_owner', {}, 'actions'),
+              modal: [MODAL_USERS, {
+                multiple: false,
+                selectAction: (users) => ({
+                  type: CALLBACK_BUTTON,
+                  label: trans('change_owner', {}, 'actions'),
+                  callback: () => props.changeEntryOwner(props.entry.id, users[0].id)
+                })
+              }],
+              displayed: props.canAdministrate,
+              group: trans('management')
+            }, {
+              name: 'lock',
+              type: CALLBACK_BUTTON,
+              icon: classes('fa fa-fw', {
+                'fa-lock': !props.entry.locked,
+                'fa-unlock': props.entry.locked
+              }),
+              label: trans(props.entry.locked ? 'unlock':'lock', {}, 'actions'),
+              callback: () => props.switchEntryLock(props.entry.id),
+              displayed: props.canAdministrate,
+              group: trans('management')
+            }, {
+              name: 'delete',
+              type: CALLBACK_BUTTON,
+              icon: 'fa fa-fw fa-trash',
+              label: trans('delete', {}, 'actions'),
+              callback: () => props.deleteEntry(props.entry).then(() => props.history.push(`${props.path}/entries`)),
+              confirm: {
+                title: trans('delete_entry', {}, 'clacoform'),
+                message: trans('delete_entry_confirm_message', {title: props.entry.title}, 'clacoform')
+              },
+              dangerous: true,
+              displayed: !props.entry.locked && props.canAdministrate,
+              group: trans('management')
+            }
+          ]}
+        />
+
+        <PageHeading
+          title={props.entry.title}
+        />
+
+        <PageSection className="mb-5">
+          {canViewMetadata &&
+            <ContentPublication
+              className="mb-4"
+              user={props.entry.user}
+              publishedAt={get(props.entry, 'publicationDate')}
+            />
+          }
+
+          {props.helpMessage &&
+            <Html className="bg-body-tertiary p-4 rounded-3 mb-4">
+              {props.helpMessage}
+            </Html>
+          }
+
+          {props.template && props.useTemplate ?
+            <Html className="mb-4">
+              {generateFromTemplate(props.template, props.fields, props.entry, props.isOwner, props.canAdministrate)}
+            </Html> :
+            <DetailsData
+              className="mb-4"
+              data={props.entry}
+              definition={entryDefinition}
+            />
+          }
+
+          {((props.displayCategories || props.canAdministrate) && !isEmpty(props.entry.categories)) &&
+            <Tags tags={props.entry.categories.map(category => category.name)} />
+          }
+        </PageSection>
+      </PageContent>
+    </ResourcePage>
+  )
 }
 
 Entry.propTypes = {
   path: T.string.isRequired,
-  clacoFormId: T.string.isRequired,
-  entryId: T.string,
   canEdit: T.bool.isRequired,
   canAdministrate: T.bool.isRequired,
   canDownload: T.bool.isRequired,

@@ -124,5 +124,7 @@
     "allow_entry_search": "Autoriser la consultation liste/recherche",
     "allow_entry_search_help": "Les utilisateurs ayant la permission \"Ouvrir\" pourront consulter les fiches soumises par les autres.",
     "enable_moderation": "Modérer la soumission des nouvelles fiches",
-    "enable_moderation_help": "Lorsque la modération est activée un gestionnaire doit manuellement publier les nouvelles fiches."
+    "enable_moderation_help": "Lorsque la modération est activée un gestionnaire doit manuellement publier les nouvelles fiches.",
+    "entry_access_forbidden": "Accès à la fiche impossible",
+    "entry_access_forbidden_help": "Vous n'avez pas les droits nécessaires pour consulter cette fiche. Veuillez contacter un gestionnaire si vous pensez que vous devriez avoir accès à cette fiche."
 }

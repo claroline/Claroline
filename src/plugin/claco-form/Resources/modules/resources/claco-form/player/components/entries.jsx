@@ -16,10 +16,6 @@ import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
 import {constants} from '#/plugin/claco-form/resources/claco-form/constants'
 import {ClacoForm as ClacoFormTypes} from '#/plugin/claco-form/resources/claco-form/prop-types'
 import entriesSource from '#/plugin/claco-form/data/sources/entries'
-import {
-  canEditEntry,
-  canManageEntry
-} from '#/plugin/claco-form/resources/claco-form/permissions'
 import {ResourcePage} from '#/main/core/resource'
 import {PageListSection} from '#/main/app/page'
 import {hasPermission} from '#/main/app/security'
@@ -51,7 +47,7 @@ const EntriesComponent = props =>
         }}
         delete={{
           url: ['apiv2_clacoformentry_delete'],
-          displayed: (rows) => rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length
+          displayed: (rows) => -1 !== rows.findIndex(e => !e.locked && hasPermission('administrate', e))
         }}
         source={merge({}, entriesSource(props.clacoForm, props.canViewMetadata, props.canEdit, props.isCategoryManager, props.path, props.currentUser), {
           actions: (rows) => [
@@ -61,7 +57,7 @@ const EntriesComponent = props =>
               icon: 'fa fa-fw fa-pencil',
               label: trans('edit', {}, 'actions'),
               target: `${props.path}/entry/form/${rows[0].id}`,
-              displayed: !rows[0].locked && canEditEntry(rows[0], props.clacoForm, props.currentUser),
+              displayed: !rows[0].locked && hasPermission('edit', rows[0]),
               scope: ['object'],
               group: trans('management'),
               primary: true
@@ -92,8 +88,10 @@ const EntriesComponent = props =>
               icon: 'fa fa-fw fa-eye',
               label: trans('publish', {}, 'actions'),
               callback: () => props.switchEntriesStatus(rows, constants.ENTRY_STATUS_PUBLISHED),
-              displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length &&
-                rows.filter(e => e.status === constants.ENTRY_STATUS_PUBLISHED).length !== rows.length,
+              displayed: -1 !== rows.findIndex(e => e.status !== constants.ENTRY_STATUS_PUBLISHED
+                && !e.locked
+                && hasPermission('administrate', e)
+              ),
               group: trans('management')
             }, {
               name: 'unpublish',
@@ -101,8 +99,10 @@ const EntriesComponent = props =>
               icon: 'fa fa-fw fa-eye-slash',
               label: trans('unpublish', {}, 'actions'),
               callback: () => props.switchEntriesStatus(rows, constants.ENTRY_STATUS_UNPUBLISHED),
-              displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length &&
-              rows.filter(e => e.status !== constants.ENTRY_STATUS_PUBLISHED).length !== rows.length,
+              displayed: -1 !== rows.findIndex(e => e.status === constants.ENTRY_STATUS_PUBLISHED
+                && !e.locked
+                && hasPermission('administrate', e)
+              ),
               group: trans('management')
             }, {
               name: 'lock',
@@ -110,7 +110,7 @@ const EntriesComponent = props =>
               icon: 'fa fa-fw fa-lock',
               label: trans('lock', {}, 'actions'),
               callback: () => props.switchEntriesLock(rows, true),
-              displayed: -1 !== rows.findIndex(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)),
+              displayed: -1 !== rows.findIndex(e => !e.locked && hasPermission('administrate', e)),
               group: trans('management')
             }, {
               name: 'unlock',
@@ -118,7 +118,7 @@ const EntriesComponent = props =>
               icon: 'fa fa-fw fa-unlock',
               label: trans('unlock', {}, 'actions'),
               callback: () => props.switchEntriesLock(rows, false),
-              displayed: -1 !== rows.findIndex(e => e.locked && canManageEntry(e, props.canEdit, props.currentUser)),
+              displayed: -1 !== rows.findIndex(e => e.locked && hasPermission('administrate', e)),
               group: trans('management')
             }
           ]

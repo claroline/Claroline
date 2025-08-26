@@ -20,14 +20,6 @@ function isEntryOwner(entry, currentUser) {
   return currentUser && entry.user && entry.user.id === currentUser.id
 }
 
-function canEditEntry(entry, clacoForm, currentUser) {
-  return canManageEntry(entry, false, currentUser) || (clacoForm.details.edition_enabled && isEntryOwner(entry, currentUser))
-}
-
-function canManageEntry(entry, canEdit = false, currentUser = null) {
-  return canEdit || isEntryManager(entry, currentUser)
-}
-
 function canViewEntryMetadata(entry, clacoForm, canEdit = false, currentUser = null) {
   return canEdit
     || 'all' === clacoForm.details.display_metadata
@@ -38,7 +30,5 @@ function canViewEntryMetadata(entry, clacoForm, canEdit = false, currentUser = n
 export {
   isEntryManager,
   isEntryOwner,
-  canEditEntry,
-  canManageEntry,
   canViewEntryMetadata
 }

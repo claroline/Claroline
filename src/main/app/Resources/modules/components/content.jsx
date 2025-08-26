@@ -4,11 +4,11 @@ import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
 import {Html} from '#/main/app/components/html'
-import {Tags} from '#/main/app/components/tags'
+import {Tags, TagsSkeleton} from '#/main/app/components/tags'
 import {ContentPublicationSkeleton} from '#/main/app/content/components/publication'
 import {TextSkeleton} from '#/main/app/components/placeholder'
 
-const ContentSkeleton = ({meta, length = 3}) =>
+const ContentSkeleton = ({meta, tags, length = 3}) =>
   <>
     {meta &&
       <div className="mb-4" role="presentation">
@@ -19,10 +19,15 @@ const ContentSkeleton = ({meta, length = 3}) =>
     {[4, 5, 3].slice(0, length).map((i) =>
       <TextSkeleton key={i} className="content-text" rows={i} />
     )}
+
+    {tags &&
+      <TagsSkeleton />
+    }
   </>
 
 ContentSkeleton.propTypes = {
   meta: T.bool,
+  tags: T.bool,
   length: T.number
 }
 

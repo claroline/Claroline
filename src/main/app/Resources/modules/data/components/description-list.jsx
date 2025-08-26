@@ -37,8 +37,7 @@ const DescriptionList = ({
 
   return (
     <dl className={classes(variant && `border-${variant} border-opacity-25`, {
-      'border-top border-bottom': bordered,
-      'placeholder-glow': !loaded
+      'border-top border-bottom': bordered
     }, className)}>
       {displayedFields.map((field, index) => {
         let value
@@ -72,18 +71,20 @@ const DescriptionList = ({
             </dt>
 
             <dd className={classes('mb-0',variant && `text-${variant}-emphasis`,  {
-              'w-75': inline,
-              'placeholder rounded-1': !loaded
+              'w-75': inline
             })}>
-              <DataDisplay
-                key={field.name}
-                type={field.type}
-                options={field.options}
-                placeholder={field.placeholder}
-                value={value}
-              >
-                {customInput}
-              </DataDisplay>
+              {!loaded ?
+                <span className={classes(index % 2 === 0 ? 'w-75':'w-50', {'placeholder rounded-1': !loaded})}>&nbsp;</span> :
+                <DataDisplay
+                  key={field.name}
+                  type={field.type}
+                  options={field.options}
+                  placeholder={field.placeholder}
+                  value={value}
+                >
+                  {customInput}
+                </DataDisplay>
+              }
             </dd>
           </div>
         )

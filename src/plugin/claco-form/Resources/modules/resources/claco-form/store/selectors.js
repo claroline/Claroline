@@ -122,42 +122,17 @@ const isCurrentEntryOwner = createSelector(
   }
 )
 
-const isCurrentEntryCategoryManager = createSelector(
-  [authenticatedUser, isAnon, currentEntry],
-  (authenticatedUser, isAnon, currentEntry) => {
-    let isManager = false
-
-    if (!isAnon && authenticatedUser && currentEntry && currentEntry.categories) {
-      currentEntry.categories.forEach(category => {
-        if (!isManager && category.managers) {
-          category.managers.forEach(manager => {
-            if (manager.id === authenticatedUser.id) {
-              isManager = true
-            }
-          })
-        }
-      })
-    }
-
-    return isManager
-  }
-)
-
 const canManageCurrentEntry = createSelector(
-  resourceSelect.resourceNode,
-  isCurrentEntryCategoryManager,
-  (resourceNode, isCurrentEntryCategoryManager) => {
-    return hasPermission('edit', resourceNode)
-      || isCurrentEntryCategoryManager
+  currentEntry,
+  (currentEntry) => {
+    return currentEntry && hasPermission('administrate', currentEntry)
   }
 )
 
 const canEditCurrentEntry = createSelector(
-  params,
-  isCurrentEntryOwner,
-  canManageCurrentEntry,
-  (params, isCurrentEntryOwner, canManageCurrentEntry) => {
-    return canManageCurrentEntry || (params && params['edition_enabled'] && (isCurrentEntryOwner))
+  currentEntry,
+  (currentEntry) => {
+    return currentEntry && hasPermission('edit', currentEntry)
   }
 )
 
@@ -173,16 +148,9 @@ const canAddEntry = createSelector(
 )
 
 const canOpenCurrentEntry = createSelector(
-  params,
   currentEntry,
-  isCurrentEntryOwner,
-  canManageCurrentEntry,
-  (params, currentEntry, isCurrentEntryOwner, canManageCurrentEntry) => {
-    return currentEntry && (
-      (params && params['search_enabled'] && currentEntry.status === 1) ||
-      isCurrentEntryOwner ||
-      canManageCurrentEntry
-    )
+  (currentEntry) => {
+    return currentEntry && hasPermission('open', currentEntry)
   }
 )
 

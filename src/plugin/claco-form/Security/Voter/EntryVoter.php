@@ -55,7 +55,7 @@ class EntryVoter extends AbstractVoter
             /** @var User|string $user */
             $user = $token->getUser();
 
-            if (($entry->getUser() === $user)
+            if (($user && $entry->getUser() === $user)
                 || $this->isEntryManager($entry, $user)
                 || ((Entry::PUBLISHED === $entry->getStatus()) && $clacoForm->getSearchEnabled())
             ) {
@@ -91,8 +91,8 @@ class EntryVoter extends AbstractVoter
         $clacoForm = $entry->getClacoForm();
         $user = $token->getUser();
 
-        if ($this->isGranted(self::EDIT, $clacoForm->getResourceNode())
-            || ($clacoForm->isEditionEnabled() && $user instanceof User && $entry->getUser()->getUuid() === $user->getUuid())
+        if (!$entry->isLocked() && ($this->isEntryManager($entry, $user)
+            || ($clacoForm->isEditionEnabled() && $user instanceof User && $entry->getUser()->getUuid() === $user->getUuid()))
         ) {
             return VoterInterface::ACCESS_GRANTED;
         }
@@ -100,7 +100,7 @@ class EntryVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    public function isEntryManager(Entry $entry, ?User $user): bool
+    private function isEntryManager(Entry $entry, ?User $user): bool
     {
         $clacoForm = $entry->getClacoForm();
 

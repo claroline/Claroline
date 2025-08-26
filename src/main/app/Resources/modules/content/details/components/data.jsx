@@ -33,6 +33,7 @@ const DetailsData = props => {
             more={primarySection.more}
             data={props.data}
             size={props.size}
+            loaded={props.loaded}
           />
         </DetailsSection>
       )}
@@ -55,6 +56,7 @@ const DetailsData = props => {
             more={section.more}
             data={props.data}
             size={props.size}
+            loaded={props.loaded}
           />
         </DetailsSection>
       )}
@@ -67,6 +69,7 @@ DetailsData.propTypes = {
   className: T.string,
   level: T.number,
   data: T.object,
+  loaded: T.bool,
   definition: T.arrayOf(T.shape(
     DataDetailsSectionTypes.propTypes
   )).isRequired
@@ -74,6 +77,7 @@ DetailsData.propTypes = {
 
 DetailsData.defaultProps = {
   level: 2,
+  loaded: true,
   data: {}
 }
 

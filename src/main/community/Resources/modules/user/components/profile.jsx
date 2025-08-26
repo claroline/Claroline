@@ -28,6 +28,44 @@ import {TextSkeleton} from '#/main/app/components/placeholder'
 const UserProfile = (props) => {
   const [profilePages, setProfilePages] = useState([])
 
+  const userDefinition = [
+    {
+      title: trans('general'),
+      primary: true,
+      fields: [
+        {
+          name: 'lastActivity',
+          type: 'date',
+          label: trans('last_activity'),
+          options: {time: true, long: true}
+        }, {
+          name: 'meta.created',
+          type: 'date',
+          label: trans('registration_date'),
+          options: {time: true, long: true}
+        }, {
+          name: 'email',
+          type: 'email',
+          label: trans('email'),
+          required: true,
+          options: {
+            unique: {
+              check: ['apiv2_user_get', {field: 'email'}]
+            }
+          }
+        }, {
+          name: 'phone',
+          type: 'phone',
+          label: trans('phone')
+        }, {
+          name: 'code',
+          type: 'string',
+          label: trans('code')
+        }
+      ]
+    }
+  ]
+
   useEffect(() => {
     getProfile().then(profilePages => setProfilePages(profilePages))
   }, [props.path])
@@ -42,7 +80,12 @@ const UserProfile = (props) => {
           />
 
           <PageSection className="mb-5">
-            <TextSkeleton />
+            <TextSkeleton className="mb-4" />
+
+            <DetailsData
+              loaded={false}
+              definition={userDefinition}
+            />
           </PageSection>
         </PageContent>
       }
@@ -67,43 +110,7 @@ const UserProfile = (props) => {
 
             <DetailsData
               data={props.user}
-              definition={[
-                {
-                  title: trans('general'),
-                  primary: true,
-                  fields: [
-                    {
-                      name: 'lastActivity',
-                      type: 'date',
-                      label: trans('last_activity'),
-                      options: {time: true, long: true}
-                    }, {
-                      name: 'meta.created',
-                      type: 'date',
-                      label: trans('registration_date'),
-                      options: {time: true, long: true}
-                    }, {
-                      name: 'email',
-                      type: 'email',
-                      label: trans('email'),
-                      required: true,
-                      options: {
-                        unique: {
-                          check: ['apiv2_user_get', {field: 'email'}]
-                        }
-                      }
-                    }, {
-                      name: 'phone',
-                      type: 'phone',
-                      label: trans('phone')
-                    }, {
-                      name: 'code',
-                      type: 'string',
-                      label: trans('code')
-                    }
-                  ]
-                }
-              ]}
+              definition={userDefinition}
             />
           </PageSection>
 

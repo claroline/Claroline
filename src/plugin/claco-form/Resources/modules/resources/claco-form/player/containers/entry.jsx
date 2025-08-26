@@ -10,10 +10,8 @@ import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
 import {Entry as EntryComponent} from '#/plugin/claco-form/resources/claco-form/player/components/entry'
 
 const Entry = withRouter(connect(
-  (state, ownProps) => ({
+  (state) => ({
     path: resourceSelectors.path(state),
-    clacoFormId: selectors.clacoForm(state).id,
-    entryId: ownProps.match.params.id || formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')).id,
     entry: formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
 
     canEdit: selectors.canEditCurrentEntry(state),
