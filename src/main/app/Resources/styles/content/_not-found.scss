@@ -19,12 +19,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
-    color: $loader-color;
-    font-family: $headings-font-family;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 15px;
+    padding: map-get($spacers, 4);
     background: $loader-bg;
     border-radius: $border-radius;
 
@@ -59,14 +54,6 @@
     margin-bottom: $spacer;
 
     border: 2px solid white;
-}
-
-.content-not-found-description {
-    font-size: $font-size-base;
-    font-weight: normal;
-    font-style: italic;
-    margin-bottom: $spacer;
-    font-family: $font-family-base;
 }
 
 .compass {

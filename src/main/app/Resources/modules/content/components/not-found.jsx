@@ -13,10 +13,10 @@ const ContentNotFound = (props) =>
       <Compass />
     </div>
 
-    {props.title || trans('not_found')}
+    <h2 className="h4 text-body-secondary mb-0">{props.title || trans('not_found')}</h2>
 
     {props.description &&
-      <p className="content-not-found-description">{props.description}</p>
+      <p className="text-body-tertiary mt-2 mb-0">{props.description}</p>
     }
 
     {props.children}

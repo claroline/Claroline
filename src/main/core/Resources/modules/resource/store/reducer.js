@@ -20,7 +20,8 @@ const reducer = combineReducers({
     [SECURITY_USER_CHANGE]: () => false,
     [RESOURCE_OPEN]: () => false,
     [RESOURCE_SET_LOADED]: (state, action) => action.loaded,
-    [RESOURCE_LOAD]: () => true
+    [RESOURCE_LOAD]: () => true,
+    [RESOURCE_NOT_FOUND]: () => true
   }),
   notFound: makeReducer(false, {
     [RESOURCE_OPEN]: () => false,
