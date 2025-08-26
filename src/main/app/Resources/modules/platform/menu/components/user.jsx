@@ -143,7 +143,7 @@ const UserMenu = (props) => {
                 type: URL_BUTTON,
                 icon: 'fa fa-fw fa-times',
                 label: trans('exit_impersonation', {}, 'actions'),
-                target: url(['claro_index', {_switch: '_exit'}])+'#'+location.pathname
+                target: url(['claro_index', {_switch: '_exit'}])+'#'+props.path
               }}
             />
           }
