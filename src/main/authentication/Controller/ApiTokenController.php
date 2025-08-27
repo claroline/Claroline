@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-#[Route(path: 'apitoken', name: 'apiv2_apitoken_')]
+#[Route(path: '/apitoken', name: 'apiv2_apitoken_')]
 class ApiTokenController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
