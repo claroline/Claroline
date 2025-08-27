@@ -15,7 +15,7 @@ export default function observe(selector, callback, containers = [document.body]
           if (node.tagName === selector.toUpperCase()) {
             videos.push(node)
           } else if (node.querySelectorAll) {
-            videos = videos.concat(node.querySelector(selector) || [])
+            videos = videos.concat(Array.from(node.querySelectorAll(selector)) || [])
           }
 
           videos.map(video => {
