@@ -12,7 +12,6 @@
 namespace Claroline\CursusBundle\Repository;
 
 use Claroline\AppBundle\Repository\UniqueValueFinder;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
@@ -48,6 +47,7 @@ class SessionRepository extends EntityRepository
                 WHERE s.course = :course
                   AND (s.endDate IS NULL OR s.endDate >= :endDate)
                   AND s.hidden = false
+                  AND s.canceled = false
             ')
             ->setParameters([
                 'course' => $course,

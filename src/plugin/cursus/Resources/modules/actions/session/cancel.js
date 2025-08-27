@@ -3,9 +3,10 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
 import {MODAL_SESSION_CANCEL} from '#/plugin/cursus/session/modals/cancel'
+import get from 'lodash/get'
 
 export default declareAction((sessions, refresher) => {
-  const processable = sessions.filter(session => hasPermission('edit', session))
+  const processable = sessions.filter(session => hasPermission('edit', session) && !get(session, 'meta.canceled', false))
 
   return {
     name: 'cancel',

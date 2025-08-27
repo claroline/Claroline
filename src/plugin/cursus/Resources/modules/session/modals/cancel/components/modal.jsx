@@ -24,7 +24,7 @@ const SessionCancelModal = props =>
     }))}
     confirmAction={{
       type: ASYNC_BUTTON,
-      label: trans('cancel', {}, 'actions'),
+      label: trans('cancel_session', {}, 'actions'),
       request: {
         url: url(['apiv2_cursus_session_cancel']),
         request: {

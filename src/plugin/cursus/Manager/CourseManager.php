@@ -44,7 +44,9 @@ class CourseManager
             // get the default session to open
             switch ($course->getSessionOpening()) {
                 case 'default':
-                    $defaultSession = $course->getDefaultSession();
+                    if ($course->getDefaultSession() && !$course->getDefaultSession()->isCanceled()) {
+                        $defaultSession = $course->getDefaultSession();
+                    }
                     break;
                 case 'first_available':
                     if (!empty($sessions)) {

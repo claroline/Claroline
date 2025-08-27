@@ -72,6 +72,14 @@ const TrainingsSessionList = (props) => {
               displayable: false,
               sortable: false,
               filterable: 'desktop' === props.contextType
+            }, {
+              name: 'meta.canceled',
+              type: 'boolean',
+              alias: 'canceled',
+              label: trans('canceled'),
+              displayable: false,
+              sortable: false,
+              filterable: true
             }
           ]}
         />

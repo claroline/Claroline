@@ -1,5 +1,5 @@
+import get from 'lodash/get'
 
-import {url} from '#/main/app/api'
 import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
@@ -13,7 +13,7 @@ export default declareAction((sessions, refresher) => {
     type: MODAL_BUTTON,
     icon: 'fa fa-fw fa-user-plus',
     label: trans('register_users'),
-    displayed: hasPermission('follow', sessions[0]),
+    displayed: hasPermission('follow', sessions[0]) && !get(sessions[0], 'meta.canceled', false),
     modal: [MODAL_USERS, {
       selectAction: (selected) => ({
         type: ASYNC_BUTTON,

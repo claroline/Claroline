@@ -30,6 +30,7 @@
   "delete_training": "Supprimer la formation",
   "delete_training_help": "Permet de supprimer définitivement la formation.",
 
+  "cancel_session": "Annuler la session",
   "cancel_session_title": "{1} Annulation d'une session | [2,Inf[ Annulation de plusieurs sessions",
   "cancel_session_message": "{1} Vous êtes sur le point d'annuler cette session : | [2,Inf[ Vous êtes sur le point d'annuler ces %count% sessions :",
   "cancel_session_reason": "Saisissez la raison de l'annulation",
