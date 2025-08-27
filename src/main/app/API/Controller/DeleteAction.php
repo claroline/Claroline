@@ -16,7 +16,7 @@ trait DeleteAction
 
     abstract protected function decodeRequest(Request $request): mixed;
 
-    #[Route(path: '/', name: 'delete', methods: ['DELETE'])]
+    #[Route(path: '', name: 'delete', methods: ['DELETE'])]
     public function deleteBulkAction(Request $request): JsonResponse
     {
         $options = static::getOptions();

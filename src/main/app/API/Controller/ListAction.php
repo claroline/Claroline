@@ -13,7 +13,7 @@ trait ListAction
 
     abstract protected function getDefaultHiddenFilters(): array;
 
-    #[Route(path: '/', name: 'list', methods: ['GET'])]
+    #[Route(path: '', name: 'list', methods: ['GET'])]
     public function listAction(
         #[MapQueryString]
         ?FinderQuery $finderQuery = new FinderQuery()

@@ -170,7 +170,7 @@ class Crud
      *
      * @throws InvalidDataException
      */
-    public function create(string|object $classOrObject, array $data = [], array $options = []): object
+    public function create(string|object $classOrObject, ?array $data = [], ?array $options = []): object
     {
         if (is_string($classOrObject)) {
             // class name received
@@ -441,8 +441,6 @@ class Crud
      * @param string $property - the property to update
      * @param mixed  $data     - the data that must be set
      * @param array  $options  - an array of options
-     *
-     * @return object
      */
     public function replace(object $object, string $property, mixed $data, array $options = []): object
     {

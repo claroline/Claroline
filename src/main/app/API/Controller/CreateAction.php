@@ -12,7 +12,7 @@ trait CreateAction
 
     abstract protected function decodeRequest(Request $request): mixed;
 
-    #[Route(path: '/', name: 'create', methods: ['POST'])]
+    #[Route(path: '', name: 'create', methods: ['POST'])]
     public function createAction(Request $request): JsonResponse
     {
         $options = static::getOptions();
