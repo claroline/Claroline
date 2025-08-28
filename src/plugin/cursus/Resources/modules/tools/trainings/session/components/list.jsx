@@ -76,7 +76,7 @@ const TrainingsSessionList = (props) => {
               name: 'meta.canceled',
               type: 'boolean',
               alias: 'canceled',
-              label: trans('canceled'),
+              label: trans('canceled', {}, 'cursus'),
               displayable: false,
               sortable: false,
               filterable: true

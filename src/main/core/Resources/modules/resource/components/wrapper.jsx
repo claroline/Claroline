@@ -7,7 +7,6 @@ import {makeCancelable} from '#/main/app/api'
 import {getResource} from '#/main/core/resource/utils'
 
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {ContentNotFound} from '#/main/app/content/components/not-found'
 import {ResourceNotFound} from '#/main/core/resource/components/not-found'
 
 const ResourceWrapper = (props) => {

@@ -1,5 +1,3 @@
-import merge from 'lodash/merge'
-
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
 import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'

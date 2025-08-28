@@ -1,4 +1,4 @@
-import {ASYNC_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl'
 import {constants, declareAction} from '#/main/app/action'
 import {hasPermission} from '#/main/app/security'

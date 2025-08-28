@@ -3,5 +3,8 @@
   "workspace": "Espace d'activités",
   "administration": "Administration",
   "desktop": "Mon Bureau",
-  "context_history_desc": "Retrouvez toutes les modifications effectuées sur l'espace."
+  "context_history_desc": "Retrouvez toutes les modifications effectuées sur l'espace.",
+  "enabled_tools": "Activés",
+  "disabled_tools": "Désactivés",
+  "tools_desc": "Choisissez et configurez les outils à activer en fonction des fonctionnalités dont vous avez besoin."
 }

@@ -192,5 +192,6 @@
     "my_registrations_to_confirm": "Mes inscriptions à confirmer",
     "my_registrations_to_confirm_desc": "Vous avez des inscriptions en attente de validation de votre part. Veuillez les confirmer pour finaliser vos inscriptions et ainsi pouvoir accéder à vos contenus de formation.",
     "my_pending_registrations": "Mes inscriptions en attente",
-    "my_pending_registrations_desc": "Vous avez des inscriptions nécessitant l'intervention d'un gestionnaire. Veuillez patientez le temps qu'un gestionnaire valide vos inscriptions ou vous propose une session de formation."
+    "my_pending_registrations_desc": "Vous avez des inscriptions nécessitant l'intervention d'un gestionnaire. Veuillez patientez le temps qu'un gestionnaire valide vos inscriptions ou vous propose une session de formation.",
+    "canceled": "Annulé"
 }

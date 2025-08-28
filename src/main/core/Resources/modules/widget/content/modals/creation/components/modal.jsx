@@ -52,7 +52,6 @@ const ContentCreationModal = props => {
             currentContext={props.currentContext}
             isNew={true}
             onSave={(formData) => {
-              console.log(formData)
               props.add(formData)
               props.fadeModal()
             }}

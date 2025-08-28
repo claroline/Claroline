@@ -1,5 +1,4 @@
 import {createSelector} from 'reselect'
-import {trans} from '#/main/app/intl'
 
 import {selectors as formSelectors} from '#/main/app/content/form/store'
 
@@ -12,13 +11,7 @@ const contextData = (state) => formSelectors.value(formSelectors.form(state, FOR
 
 const availableTools = createSelector(
   [store],
-  (store) => [].concat(store.availableTools).sort((a, b) => {
-    if (trans(a.name, {}, 'tools') > trans(b.name, {}, 'tools')) {
-      return 1
-    }
-
-    return -1
-  })
+  (store) => store.availableTools
 )
 
 const enabledTools = (state) => formSelectors.value(formSelectors.form(state, FORM_NAME), 'tools')

@@ -32,7 +32,6 @@ const DetailsData = props => {
             fields={primarySection.fields}
             more={primarySection.more}
             data={props.data}
-            size={props.size}
             loaded={props.loaded}
           />
         </DetailsSection>
@@ -55,7 +54,6 @@ const DetailsData = props => {
             fields={section.fields}
             more={section.more}
             data={props.data}
-            size={props.size}
             loaded={props.loaded}
           />
         </DetailsSection>

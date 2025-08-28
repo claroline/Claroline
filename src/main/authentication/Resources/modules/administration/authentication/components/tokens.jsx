@@ -28,6 +28,7 @@ const AuthenticationTokens = props =>
       }}
     >
       <TokenList
+        flush={true}
         className="mb-5"
         name={selectors.STORE_NAME+'.tokens'}
         definition={[
