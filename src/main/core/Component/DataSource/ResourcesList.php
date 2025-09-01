@@ -37,6 +37,11 @@ final class ResourcesList extends ListSourceComponent
             $finderQuery->addFilter('workspace', $contextSubject->getContextIdentifier());
         }
 
+        if (PublicContext::getName() === $context) {
+            $finderQuery->addFilter('workspace.public', true);
+            $finderQuery->addFilter('public', true);
+        }
+
         return $finderQuery;
     }
 
