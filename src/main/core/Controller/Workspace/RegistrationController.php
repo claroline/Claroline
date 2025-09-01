@@ -149,8 +149,8 @@ class RegistrationController
     ): JsonResponse {
         $this->checkToolAccess('FOLLOW', $workspace->getUuid());
 
-        $query = $request->query->all();
-        $users = $this->om->getRepository(User::class)->findBy(['uuid' => $query['ids']]);
+        $ids = $this->decodeRequest($request);
+        $users = $this->om->getRepository(User::class)->findBy(['uuid' => $ids]);
 
         $this->workspaceManager->unregisterUsers($users, $workspace);
 
@@ -165,8 +165,8 @@ class RegistrationController
     ): JsonResponse {
         $this->checkToolAccess('FOLLOW', $workspace->getUuid());
 
-        $query = $request->query->all();
-        $groups = $this->om->getRepository(Group::class)->findBy(['uuid' => $query['ids']]);
+        $ids = $this->decodeRequest($request);
+        $groups = $this->om->getRepository(Group::class)->findBy(['uuid' => $ids]);
 
         $this->workspaceManager->unregisterGroups($groups, $workspace);
 

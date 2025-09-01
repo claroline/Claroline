@@ -8,7 +8,7 @@ const DataMicro = (props) =>
   <div className={classes('d-flex flex-row gap-3 align-items-center text-nowrap text-truncate', props.className)} role="presentation">
     <Thumbnail
       loaded={props.loaded}
-      thumbnail={props.object.poster || props.object.thumbnail}
+      thumbnail={props.object.thumbnail || props.object.poster}
       name={props.object.name}
       size="xs"
       square={true}
@@ -22,8 +22,9 @@ DataMicro.propTypes = {
   className: T.string,
   color: T.string,
   object: T.shape({
+    name: T.string.isRequired,
     thumbnail: T.string,
-    name: T.string.isRequired
+    poster: T.string
   }).isRequired
 }
 
