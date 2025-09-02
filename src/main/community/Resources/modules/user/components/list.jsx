@@ -37,7 +37,6 @@ const UserList = (props) => {
           displayable: param('community.username'),
           displayed: param('community.username'),
           sortable: param('community.username'),
-          // filterable: param('community.username'),
           filterable: false,
           primary: param('community.username'),
           render: (user) => (
@@ -62,14 +61,14 @@ const UserList = (props) => {
           type: 'string',
           label: trans('first_name'),
           displayed: true,
-          filterable: false
+          filterable: true
         }, {
           name: 'lastName',
           type: 'string',
           label: trans('last_name'),
           displayed: true,
           primary: !param('community.username'),
-          filterable: false
+          filterable: true
         }, {
           name: 'email',
           type: 'email',
