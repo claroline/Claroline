@@ -31,7 +31,8 @@ const reducer = combineReducers({
     sortBy: {property: 'date', direction: -1},
     filters: {
       filters: [
-        {property: 'type', value: constants.LEARNER_TYPE, locked: true, hidden: true}
+        {property: 'type', value: constants.LEARNER_TYPE, locked: true, hidden: true},
+        {property: 'sessionStatus', value: 'not_ended'}
       ]
     }
   }, {
