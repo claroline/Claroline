@@ -74,8 +74,12 @@ class RoutingHelper
         return $this->indexPath().'#'.$this->workspaceFragment($workspace, $toolName);
     }
 
-    private function workspaceFragment(Workspace $workspace, string $toolName = null): string
+    private function workspaceFragment(?Workspace $workspace = null, ?string $toolName = null): string
     {
+        if (empty($workspace)) {
+            return '/workspaces';
+        }
+
         $fragment = '/workspace/'.$workspace->getSlug();
         if ($toolName) {
             $fragment .= '/'.$toolName;

@@ -137,10 +137,8 @@ class CsvAdapter implements AdapterInterface
 
     /**
      * Build an object from an array of headers and properties path.
-     *
-     * @return array
      */
-    private function addPropertyToObject(Property $property, array &$object, $value): array
+    private function addPropertyToObject(Property $property, array &$object, mixed $value): array
     {
         $propertyName = $property->getName();
         $types = !is_array($property->getType()) ? [$property->getType()] : $property->getType();

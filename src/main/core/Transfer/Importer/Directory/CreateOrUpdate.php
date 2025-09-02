@@ -58,6 +58,7 @@ class CreateOrUpdate extends AbstractImporter
 
         if (isset($data['roles'])) {
             foreach ($data['roles'] as $role) {
+                $object = null;
                 $roleKeys = array_keys($role);
                 if (in_array('translationKey', $roleKeys)) {
                     /** @var Role $object */
@@ -134,6 +135,7 @@ class CreateOrUpdate extends AbstractImporter
         }
 
         // try to update an existing node
+        $update = false;
         /** @var ResourceNode $resourceNode */
         $resourceNode = $this->om->getObject($data, ResourceNode::class, ['code', 'slug']);
         if ($resourceNode) {
@@ -142,6 +144,7 @@ class CreateOrUpdate extends AbstractImporter
                 $options[] = Options::IS_RECURSIVE;
             }
             $this->crud->update($resourceNode, $dataResourceNode, $options);
+            $update = true;
         } else {
             $resourceNode = $this->crud->create(ResourceNode::class, $dataResourceNode);
 
@@ -156,7 +159,21 @@ class CreateOrUpdate extends AbstractImporter
 
         $this->om->persist($resourceNode);
 
-        return [];
+        if ($update) {
+            return [
+                'update' => [[
+                    'data' => $data,
+                    'log' => sprintf('Directory %s updated.', $resourceNode->getName()),
+                ]],
+            ];
+        }
+
+        return [
+            'create' => [[
+                'data' => $data,
+                'log' => sprintf('Directory %s created.', $resourceNode->getName()),
+            ]],
+        ];
     }
 
     public function getSchema(?array $options = [], ?array $extra = []): array

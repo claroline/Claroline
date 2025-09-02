@@ -55,6 +55,7 @@ class Create extends AbstractImporter
 
         if (isset($data['roles'])) {
             foreach ($data['roles'] as $role) {
+                $object = null;
                 $roleKeys = array_keys($role);
                 if (in_array('translationKey', $roleKeys)) {
                     /** @var Role $object */
@@ -134,7 +135,12 @@ class Create extends AbstractImporter
         $this->om->persist($resourceNode);
         $this->om->persist($resource);
 
-        return [];
+        return [
+            'create' => [[
+                'data' => $data,
+                'log' => sprintf('Directory %s created.', $resourceNode->getName()),
+            ]],
+        ];
     }
 
     public function getSchema(?array $options = [], ?array $extra = []): array
