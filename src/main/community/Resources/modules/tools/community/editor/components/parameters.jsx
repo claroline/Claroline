@@ -40,6 +40,8 @@ const workspaceDefinition = (contextId, update) => [
         label: trans('default_role'),
         options: {
           multiple: false,
+          personal: false,
+          contextId: contextId,
           picker: contextId ? {
             url: ['apiv2_workspace_list_roles', {id: contextId}],
             filters: []
@@ -79,12 +81,16 @@ const desktopDefinition = () => [
         name: 'parameters.registration.self',
         type: 'boolean',
         label: trans('activate_self_registration'),
-        help: trans('self_registration_platform_help'),
+        help: trans('self_registration_platform_help')
       }, {
         name: 'parameters.registration.default_role',
         type: 'role',
         label: trans('default_role'),
-        required: true
+        required: true,
+        options: {
+          multiple: false,
+          personal: false
+        }
       }, {
         name: 'parameters.registration.validation',
         type: 'choice',

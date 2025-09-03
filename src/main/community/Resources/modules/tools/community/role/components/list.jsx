@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_BUTTON} from '#/main/app/buttons'
@@ -40,10 +41,10 @@ const RoleList = props =>
         flush={true}
         path={props.path}
         name={selectors.LIST_NAME}
-        url={'workspace' === props.contextType ?
-          ['apiv2_workspace_list_roles', {id: props.contextData.id}] :
-          ['apiv2_role_list']
-        }
+        url={['apiv2_role_list', {
+          roleType: 'workspace' === props.contextType ? props.contextType : constants.ROLE_PLATFORM,
+          contextId: get(props.contextData, 'id')}
+        ]}
       />
     </PageListSection>
   </ToolPage>

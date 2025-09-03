@@ -119,18 +119,19 @@ const PickerModal = (props) => {
 
 PickerModal.propTypes = {
   name: T.string.isRequired,
-  fadeModal: T.func.isRequired,
+  url: T.oneOfType([T.string, T.array]),
   multiple: T.bool,
   filters: T.array,
   sortBy: T.shape({
     property: T.string,
-    direction: T.number,
+    direction: T.number
   }),
   definition: T.arrayOf(T.object),
   card: T.func,
   selectAction: T.func,
   displayMode: T.string,
-  children: T.any
+  children: T.any,
+  fadeModal: T.func.isRequired
 }
 
 PickerModal.defaultProps = {

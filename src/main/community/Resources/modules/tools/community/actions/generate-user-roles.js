@@ -9,7 +9,7 @@ export default declareAction((tools) => ({
   type: ASYNC_BUTTON,
   label: trans('generate_user_roles', {}, 'actions'),
   request: {
-    url: ['apiv2_role_generate_user_roles'],
+    url: ['apiv2_role_generate_all_user_roles'],
     request: {method: 'POST'}
   },
   displayed: toolConstants.TOOL_DESKTOP === tools[0].contextType && hasPermission('administrate', tools[0]),

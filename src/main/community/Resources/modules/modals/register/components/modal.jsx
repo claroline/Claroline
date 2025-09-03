@@ -48,7 +48,8 @@ const RegisterModal = props => {
     modal: [MODAL_ROLES, {
       title: trans('roles'),
       url: ['apiv2_workspace_list_roles', {id: props.workspace.id}],
-      filters: [],
+      contextId: props.workspace.id,
+      personal: false,
       selectAction: registerAction
     }]
   })

@@ -14,6 +14,7 @@ import {MODAL_ROLES} from '#/main/community/modals/roles'
 import {actions} from '#/main/community/user/editor/store'
 import {OrganizationList} from '#/main/community/organization/components/list'
 import {MODAL_ORGANIZATIONS} from '#/main/community/modals/organizations'
+import {constants} from '#/main/community/constants'
 
 // easy selection for restrictions
 const restrictByDates = (workspace) => get(workspace, 'restrictions.enableDates') || !isEmpty(get(workspace, 'restrictions.dates'))
@@ -39,7 +40,6 @@ const UserEditorPermissions = () => {
           hideTitle: false,
           render: () => (
             <RoleList
-              /*path={props.path}*/
               className="mb-3"
               name={`${selectors.STORE_NAME}.roles`}
               url={['apiv2_user_list_roles', {id: currentUser.id}]}
@@ -62,6 +62,22 @@ const UserEditorPermissions = () => {
                 url: ['apiv2_user_remove_roles', {id: currentUser.id}]
               }}
               actions={undefined}
+              customDefinition={[
+                {
+                  name: 'type',
+                  type: 'choice',
+                  label: trans('type'),
+                  options: {
+                    choices: constants.ROLE_TYPES
+                  },
+                  displayed: true
+                }, {
+                  name: 'workspace',
+                  type: 'workspace',
+                  label: trans('workspace'),
+                  displayed: true
+                }
+              ]}
             />
           )
         }, {

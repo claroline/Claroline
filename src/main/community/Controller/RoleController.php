@@ -11,17 +11,23 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
+use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Controller\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -49,6 +55,25 @@ class RoleController extends AbstractCrudController
     public static function getClass(): string
     {
         return Role::class;
+    }
+
+    #[Route(path: '/{roleType<platform|workspace|user>?platform}/{contextId}', name: 'list', methods: ['GET'])]
+    public function listAction(
+        #[MapQueryString]
+        ?FinderQuery $finderQuery = new FinderQuery(),
+        ?string $roleType = Role::PLATFORM,
+        ?string $contextId = null,
+    ): StreamedJsonResponse {
+        $this->checkToolAccess('OPEN', $contextId);
+
+        if ($contextId) {
+            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $contextId]);
+            $finderQuery->addFilter('workspace', $workspace->getUuid());
+        }
+
+        $finderQuery->addFilter('type', $roleType);
+
+        return parent::listAction($finderQuery);
     }
 
     /**
@@ -104,16 +129,45 @@ class RoleController extends AbstractCrudController
         return new JsonResponse();
     }
 
-    #[Route(path: '/user', name: 'generate_user_roles', methods: ['POST'])]
-    public function generateUserRolesAction(): JsonResponse
+    #[Route(path: '/user', name: 'create_user_roles', methods: ['POST'])]
+    public function generateUserRolesAction(Request $request): JsonResponse
     {
-        $communityTool = $this->toolManager->getOrderedTool('community', DesktopContext::getName());
-        if (is_null($communityTool) || !$this->authorization->isGranted('ADMINISTRATE', $communityTool)) {
-            throw new AccessDeniedException(sprintf('Operation "ADMINISTRATE" cannot be done on object %s', get_class($communityTool)));
+        $this->checkToolAccess('OPEN');
+
+        $roles = [];
+        $data = $this->decodeRequest($request);
+
+        $this->om->startFlushSuite();
+        foreach ($data as $roleData) {
+            $roles[] = $this->crud->createOrUpdate(Role::class, $roleData);
         }
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (Role $role) {
+            return $this->serializer->serialize($role, [SerializerInterface::SERIALIZE_LIST]);
+        }, $roles), 201);
+    }
+
+    #[Route(path: '/user/all', name: 'generate_all_user_roles', methods: ['POST'])]
+    public function generateAllUserRolesAction(): JsonResponse
+    {
+        $this->checkToolAccess('ADMINISTRATE');
 
         $this->roleManager->generateUserRoles();
 
         return new JsonResponse();
+    }
+
+    private function checkToolAccess(string $permission, ?string $contextId = null): void
+    {
+        if ($contextId) {
+            $communityTool = $this->toolManager->getOrderedTool('community', WorkspaceContext::getName(), $contextId);
+        } else {
+            $communityTool = $this->toolManager->getOrderedTool('community', DesktopContext::getName());
+        }
+
+        if (is_null($communityTool) || !$this->authorization->isGranted($permission, $communityTool)) {
+            throw new AccessDeniedException(sprintf('Operation "%s" cannot be done on object %s', $permission, get_class($communityTool)));
+        }
     }
 }

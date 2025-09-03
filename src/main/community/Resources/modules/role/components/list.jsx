@@ -11,7 +11,6 @@ import {actions as listActions} from '#/main/app/content/list/store'
 
 import {getActions, getDefaultAction} from '#/main/community/role/utils'
 import {RoleCard} from '#/main/community/role/components/card'
-import {constants} from '#/main/community/constants'
 
 const RoleListComponent = props => {
   const refresher = merge({
@@ -37,25 +36,12 @@ const RoleListComponent = props => {
           label: trans('code'),
           displayed: false
         }, {
-          name: 'type',
-          type: 'choice',
-          label: trans('type'),
-          options: {
-            choices: constants.ROLE_TYPES
-          },
-          displayed: true
-        }, {
           name: 'meta.description',
           type: 'string',
           label: trans('description'),
           options: {long: true},
           displayed: true,
           sortable: false
-        }, {
-          name: 'workspace',
-          type: 'workspace',
-          label: trans('workspace'),
-          displayed: true
         }, {
           name: 'user',
           type: 'user',

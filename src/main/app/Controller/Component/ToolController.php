@@ -165,18 +165,19 @@ class ToolController
                 /** @var ToolRights $toolRights */
                 $toolRights = $this->crud->update(ToolRights::class, $right, [Crud::NO_PERMISSIONS]);
             } else {
-                /** @var ToolRights $toolRights */
-                $toolRights = $this->crud->create(ToolRights::class, $right, [Crud::NO_PERMISSIONS]);
+                $toolRights = new ToolRights();
+                $toolRights->setOrderedTool($orderedTool);
+                $this->crud->create($toolRights, $right, [Crud::NO_PERMISSIONS]);
             }
 
             $orderedTool->addRight($toolRights);
 
             // keep reference to the created/update rights, it will be used later to know the ones to delete.
-            // I don't use ToolRights id because there is a flush suite, and it is not already generated.
+            // I don't use ToolRights id because there is a flush suite, and it is not yet generated.
             $roles[] = $toolRights->getRole()->getName();
         }
 
-        // removes rights which no longer exists
+        // removes rights which no longer exist
         foreach ($existingRights as $existingRight) {
             if (!in_array($existingRight->getRole()->getName(), $roles)) {
                 $this->crud->delete($existingRight);

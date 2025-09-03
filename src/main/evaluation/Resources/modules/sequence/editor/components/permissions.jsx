@@ -55,6 +55,7 @@ const Assignments = () => {
             url: !isEmpty(workspace) ?
               ['apiv2_workspace_list_roles', {id: workspace.id}] :
               ['apiv2_role_list'],
+            contextId: workspace.id,
             selectAction: (selected) => ({
               type: CALLBACK_BUTTON,
               callback: () => updateAssignments([].concat(assignments, selected.map(role => ({

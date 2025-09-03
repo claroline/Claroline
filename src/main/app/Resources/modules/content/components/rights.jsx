@@ -11,7 +11,6 @@ import {trans}  from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MenuButton, MODAL_BUTTON} from '#/main/app/buttons'
 
-import {constants} from '#/main/community/constants'
 import {MODAL_ROLES} from '#/main/community/modals/roles'
 import {roleWorkspace} from '#/main/community/permissions'
 
@@ -133,49 +132,50 @@ const RolePermissions = props => {
       <div className="ms-auto gap-1 d-flex flex-row fs-sm">
         {allPerms.map((permission) => {
           return (
-          <TooltipOverlay key={permission} tip={(
-            <ul className="w-100 text-start mb-0 ps-2">
-              {props.permissions[permission].actions.map(action =>
-                <li key={action}>{action}</li>
-              )}
-            </ul>
-          )}>
-            {('create' !== permission || isEmpty(props.creatable)) ?
-              <div role="presentation">
-                <input
-                  className="btn-check"
-                  type="checkbox"
-                  id={`${permission}-${props.name}`}
-                  checked={props.currentPermissions[permission]}
-                  disabled={!props.editable}
-                  onChange={() => props.update(merge({}, props.currentPermissions, {[permission]: !props.currentPermissions[permission]}))}
+            <TooltipOverlay key={permission} tip={(
+              <ul className="w-100 text-start mb-0 ps-2">
+                {props.permissions[permission].actions.map(action =>
+                  <li key={action}>{action}</li>
+                )}
+              </ul>
+            )}>
+              {('create' !== permission || isEmpty(props.creatable)) ?
+                <div role="presentation">
+                  <input
+                    className="btn-check"
+                    type="checkbox"
+                    id={`${permission}-${props.name}`}
+                    checked={props.currentPermissions[permission]}
+                    disabled={!props.editable}
+                    onChange={() => props.update(merge({}, props.currentPermissions, {[permission]: !props.currentPermissions[permission]}))}
+                  />
+
+                  <label
+                    className={classes('py-1 px-2 border focus-ring btn btn-text-body btn-sm', {
+                      'border-primary text-primary-emphasis bg-primary-subtle': props.currentPermissions[permission]
+                    })}
+                    htmlFor={`${permission}-${props.name}`}
+                  >
+                    {trans(permission, {}, 'actions')}
+                  </label>
+                </div>
+                :
+                <CreatePermission
+                  key={permission}
+                  id={props.name}
+                  permission={props.currentPermissions[permission]}
+                  editable={props.editable}
+                  creatable={props.creatable}
+                  onChange={(creationPerms) => {
+                    const newPerms = merge({}, props.currentPermissions)
+                    newPerms.create = creationPerms
+
+                    props.update(newPerms)
+                  }}
                 />
-
-                <label
-                  className={classes('py-1 px-2 border focus-ring btn btn-text-body btn-sm', {
-                    'border-primary text-primary-emphasis bg-primary-subtle': props.currentPermissions[permission]
-                  })}
-                  htmlFor={`${permission}-${props.name}`}
-                >
-                  {trans(permission, {}, 'actions')}
-                </label>
-              </div>
-              :
-              <CreatePermission
-                key={permission}
-                id={props.name}
-                permission={props.currentPermissions[permission]}
-                editable={props.editable}
-                creatable={props.creatable}
-                onChange={(creationPerms) => {
-                  const newPerms = merge({}, props.currentPermissions)
-                  newPerms.create = creationPerms
-
-                  props.update(newPerms)
-                }}
-              />
-            }
-          </TooltipOverlay>)}
+              }
+            </TooltipOverlay>
+          )}
         )}
       </div>
 
@@ -232,9 +232,7 @@ const ContentRights = props => {
             url: !isEmpty(props.workspace) ?
               ['apiv2_workspace_list_roles', {id: props.workspace.id}] :
               ['apiv2_role_list'],
-            filters: !isEmpty(props.workspace) ? [] : [
-              {property: 'type', value: constants.ROLE_PLATFORM}
-            ],
+            contextId: get(props.workspace, 'id'),
             selectAction: (selectedRoles) => ({
               type: CALLBACK_BUTTON,
               callback: () => props.updateRights([].concat(props.rights, selectedRoles.map(role => ({
