@@ -74,7 +74,7 @@ class UserController extends AbstractCrudController
 
         if ($contextId) {
             $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $contextId]);
-            $finderQuery->addFilter('workspace', $workspace);
+            $finderQuery->addFilter('workspace', $workspace->getUuid());
         }
 
         return parent::listAction($finderQuery);

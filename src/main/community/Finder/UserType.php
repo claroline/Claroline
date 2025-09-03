@@ -66,7 +66,8 @@ class UserType extends AbstractType
                             FROM Claroline\CoreBundle\Entity\Role AS wsr
                             LEFT JOIN Claroline\CoreBundle\Entity\User AS wsru WITH (wsru.id = $alias.id AND wsr MEMBER OF wsru.roles)
                             LEFT JOIN Claroline\CoreBundle\Entity\Group AS wsrg WITH (wsr MEMBER OF wsrg.roles AND wsrg MEMBER OF $alias.groups)
-                            WHERE wsr.workspace = :workspace
+                            LEFT JOIN wsr.workspace AS wsrw
+                            WHERE wsrw.uuid = :workspace
                               AND (wsru IS NOT NULL OR wsrg IS NOT NULL)
                         )");
                         $queryBuilder->setParameter('workspace', $finder->getFilterValue());
