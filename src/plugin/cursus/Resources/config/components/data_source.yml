@@ -6,8 +6,6 @@ services:
   Claroline\CursusBundle\Component\DataSource\EventPresencesList:
     parent: Claroline\AppBundle\Component\DataSource\ListSourceComponent
     tags: [ 'claroline.component.data_source' ]
-    arguments:
-      - '@Claroline\AppBundle\Persistence\ObjectManager'
 
   Claroline\CursusBundle\Component\DataSource\EventsList:
     parent: Claroline\AppBundle\Component\DataSource\ListSourceComponent
