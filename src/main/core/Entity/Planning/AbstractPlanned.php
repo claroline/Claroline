@@ -10,11 +10,11 @@ use Ramsey\Uuid\Uuid as BaseUuid;
 /**
  * Define a planned object.
  *
- * Metadata are store in a linked PlannedObject to allow listing all PlannedObject at once (eg. DataSource, Agenda tool)
+ * Metadata is stored in a linked PlannedObject to list all PlannedObject at once (e.g., DataSource, Agenda tool)
  * without having to grab data from different tables.
- * Although to keep implementations simple and API structure clean, this complexity is hidden :
+ * Although to keep implementations simple and API structure clean, this complexity is hidden:
  *   - Methods of PlannedObject are wrapped in this class to avoid using AbstractPlanned::getPlannedObject()->get*()/AbstractPlanned::getPlannedObject()->set*().
- *   - When serializing a AbstractPlanned object, the custom props of the object and the props of the PlannedObject SHOULD be merged.
+ *   - When serializing an AbstractPlanned object, the custom props of the object and the props of the PlannedObject SHOULD be merged.
  * Implementations SHOULD NOT directly manipulate the PlannedObject.
  */
 #[ORM\MappedSuperclass]

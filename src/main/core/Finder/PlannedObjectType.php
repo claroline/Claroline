@@ -32,7 +32,7 @@ class PlannedObjectType extends AbstractType
             ->add('type', TextType::class, ['mode' => TextType::MODE_EXACT])
             ->add('startDate', DateType::class)
             ->add('endDate', DateType::class)
-            // ->add('location', LocationType::class)
+            ->add('location', LocationType::class)
             ->add('planning', EntityType::class, [
                 'data_class' => Planning::class,
                 'identifier' => 'objectId',

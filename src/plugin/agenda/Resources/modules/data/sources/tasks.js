@@ -32,14 +32,6 @@ export default {
         displayed: true,
         options: {time: true}
       }, {
-        name: 'afterToday',
-        type: 'boolean',
-        label: trans('after_today'),
-        displayed: false,
-        displayable: false,
-        filterable: true,
-        sortable: false
-      }, {
         name: 'meta.done',
         type: 'boolean',
         label: trans('task_done', {}, 'agenda'),

@@ -8,7 +8,6 @@ use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
 use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
-use Claroline\CoreBundle\Finder\LocationType;
 use Claroline\CoreBundle\Finder\WorkspaceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -30,7 +29,6 @@ class EventType extends AbstractType
             ->add('startDate', DateType::class)
             ->add('endDate', DateType::class)
             ->add('workspace', WorkspaceType::class)
-            ->add('location', LocationType::class)
         ;
     }
 

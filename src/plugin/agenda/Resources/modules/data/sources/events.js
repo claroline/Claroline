@@ -38,13 +38,6 @@ export default {
         displayed: true,
         options: {time: true}
       }, {
-        name: 'afterToday',
-        type: 'boolean',
-        label: trans('after_today'),
-        displayed: false,
-        filterable: true,
-        sortable: false
-      }, {
         name: 'workspace',
         type: 'workspace',
         label: trans('workspace'),
