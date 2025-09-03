@@ -13,7 +13,6 @@ namespace Claroline\MessageBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
 use Claroline\MessageBundle\Manager\MessageManager;
@@ -21,14 +20,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route(path: '/message', name: 'apiv2_message_')]
 class MessageController extends AbstractCrudController
 {
     public function __construct(
-        private readonly AuthorizationCheckerInterface $authorization,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly MessageManager $messageManager
     ) {
@@ -198,19 +194,5 @@ class MessageController extends AbstractCrudController
         return array_merge(parent::getOptions(), [
             'get' => [Options::IS_RECURSIVE],
         ]);
-    }
-
-    protected function getDefaultHiddenFilters(): array
-    {
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedException();
-        }
-
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()?->getUser();
-
-        return [
-            'user' => $user->getUuid(),
-        ];
     }
 }

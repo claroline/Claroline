@@ -94,27 +94,6 @@ class OrganizationController extends AbstractCrudController
         return new JsonResponse($this->serializer->serialize($organization));
     }
 
-    protected function getDefaultHiddenFilters(): array
-    {
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $user = $this->tokenStorage->getToken()?->getUser();
-            if ($user instanceof User) {
-                // show user organizations
-                return [
-                    'user' => $user->getUuid(),
-                ];
-            }
-
-            // only show public organizations
-            return [
-                'public' => true,
-            ];
-        }
-
-        // show all to admins
-        return [];
-    }
-
     public static function getOptions(): array
     {
         return array_merge(parent::getOptions(), [

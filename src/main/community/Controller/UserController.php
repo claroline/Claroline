@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Controller\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\Model\HasRolesTrait;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -159,32 +158,6 @@ class UserController extends AbstractCrudController
         return new JsonResponse(array_map(function (User $user) {
             return $this->serializer->serialize($user);
         }, $processed));
-    }
-
-    protected function getDefaultHiddenFilters(): array
-    {
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedException();
-        }
-
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $user = $this->tokenStorage->getToken()?->getUser();
-
-            if ($user instanceof User) {
-                // only shows users of the same organizations
-                return [
-                    'organizations' => array_map(function (Organization $organization) {
-                        return $organization->getUuid();
-                    }, $user->getOrganizations()),
-                ];
-            }
-
-            return [
-                'organizations' => [],
-            ];
-        }
-
-        return [];
     }
 
     #[Route(path: '/request-deletion', name: 'request_account_deletion', methods: ['POST'])]

@@ -11,8 +11,6 @@ trait ListAction
 {
     use CrudAction;
 
-    abstract protected function getDefaultHiddenFilters(): array;
-
     #[Route(path: '', name: 'list', methods: ['GET'])]
     public function listAction(
         #[MapQueryString]

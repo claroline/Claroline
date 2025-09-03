@@ -18,7 +18,6 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
@@ -73,34 +72,6 @@ class CourseController extends AbstractCrudController
             'create' => [Options::PERSIST_TAG],
             'update' => [Options::PERSIST_TAG],
         ]);
-    }
-
-    protected function getDefaultHiddenFilters(): array
-    {
-        $filters = [];
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            /** @var User $user */
-            $user = $this->tokenStorage->getToken()?->getUser();
-
-            // filter by organizations
-            $organizations = [];
-            if ($user instanceof User) {
-                $organizations = $user->getOrganizations();
-            }
-
-            $filters['organizations'] = array_map(function (Organization $organization) {
-                return $organization->getUuid();
-            }, $organizations);
-
-            // hide hidden trainings for non admin
-            if (!$this->checkToolAccess('EDIT')) {
-                $filters['hidden'] = false;
-            }
-        }
-
-        $filters['archived'] = false;
-
-        return $filters;
     }
 
     #[Route(path: '/archived', name: 'list_archived', methods: ['GET'])]

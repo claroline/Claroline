@@ -53,8 +53,9 @@ registry.add('ClarolineCursusBundle', {
       'cancel'        : () => { return import(/* webpackChunkName: "training-action-session-cancel" */         '#/plugin/cursus/actions/session/cancel') },
       'copy'          : () => { return import(/* webpackChunkName: "training-action-session-copy" */           '#/plugin/cursus/actions/session/copy') },
       'open-workspace': () => { return import(/* webpackChunkName: "training-action-session-open-workspace" */ '#/plugin/cursus/actions/session/open-workspace') },
+      'register-workspace': () => { return import(/* webpackChunkName: "training-action-session-register-workspace" */ '#/plugin/cursus/actions/session/register-workspace') },
       'delete'        : () => { return import(/* webpackChunkName: "training-action-session-delete" */         '#/plugin/cursus/actions/session/delete') },
-      'add-users'        : () => { return import(/* webpackChunkName: "training-action-session-add-users" */   '#/plugin/cursus/actions/session/add-users') }
+      'add-users'     : () => { return import(/* webpackChunkName: "training-action-session-add-users" */      '#/plugin/cursus/actions/session/add-users') }
     },
     training_session_registration: {
       'open'        : () => { return import(/* webpackChunkName: "training-action-session_registration-open" */         '#/plugin/cursus/actions/session_registration/open') },

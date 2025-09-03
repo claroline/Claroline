@@ -85,24 +85,24 @@ const SessionCard = props =>
       </div>
     }
     contentText={(
-      <div className={classes('d-flex gap-2', 'col' === props.orientation && 'flex-column h-100 justify-content-center')} role="presentation">
-        <div role="presentation">
+      <span className={classes('d-flex gap-2', 'col' === props.orientation && 'flex-column h-100 justify-content-center')} role="presentation">
+        <span role="presentation">
           <span className="fa fa-calendar me-2" aria-hidden={true} />
           {displayDateRange(get(props.data, 'dates[0]'), get(props.data, 'dates[1]'))}
-        </div>
+        </span>
 
         {'row' === props.orientation &&
           <span aria-hidden={true}>-</span>
         }
 
-        <div role="presentation">
+        <span role="presentation">
           <span className="fa fa-map-marker-alt me-2" aria-hidden={true} />
           {props.data.location ?
             (getAddressString(get(props.data, 'location.address'), true) || get(props.data, 'location.name')) :
             trans('online_session', {}, 'cursus')
           }
-        </div>
-      </div>
+        </span>
+      </span>
     )}
     meta={
       <AvailableSeats session={props.data} />

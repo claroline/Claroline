@@ -16,13 +16,10 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\PdfManager;
-use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
-use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Event;
@@ -55,7 +52,6 @@ class SessionController extends AbstractCrudController
         private readonly TokenStorageInterface $tokenStorage,
         private readonly TranslatorInterface $translator,
         private readonly RoutingHelper $routingHelper,
-        private readonly ToolManager $toolManager,
         private readonly SessionManager $manager,
         private readonly PdfManager $pdfManager
     ) {
@@ -75,7 +71,7 @@ class SessionController extends AbstractCrudController
     #[Route(path: '/context/{context}/{contextId}', name: 'context_list', methods: ['GET'])]
     public function listByContextAction(
         string $context,
-        string $contextId = null,
+        ?string $contextId = null,
         #[MapQueryString]
         ?FinderQuery $finderQuery = new FinderQuery()
     ): StreamedJsonResponse {
@@ -298,42 +294,21 @@ class SessionController extends AbstractCrudController
         ]);
     }
 
-    private function checkToolAccess(?string $rights = 'OPEN'): bool
-    {
-        $trainingsTool = $this->toolManager->getOrderedTool('trainings', DesktopContext::getName());
+    /**
+     * Register users to the workspace of the session.
+     */
+    #[Route(path: '/{id}/workspace', name: 'register_workspace', methods: ['POST'])]
+    public function registerToWorkspaceAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Session $session
+    ): JsonResponse {
+        $this->checkPermission('FOLLOW', $session, [], true);
 
-        if (is_null($trainingsTool) || !$this->authorization->isGranted($rights, $trainingsTool)) {
-            return false;
-        }
+        $sessionUsers = $this->om->getRepository(SessionUser::class)->findNotRegisteredToWorkspace($session);
+        $this->manager->registerUsers($sessionUsers, false);
 
-        return true;
-    }
-
-    protected function getDefaultHiddenFilters(): array
-    {
-        $filters = [];
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            /** @var User $user */
-            $user = $this->tokenStorage->getToken()?->getUser();
-
-            // filter by organization
-            $organizations = [];
-            if ($user instanceof User) {
-                $organizations = $user->getOrganizations();
-            }
-
-            $filters['organizations'] = array_map(function (Organization $organization) {
-                return $organization->getUuid();
-            }, $organizations);
-
-            // hide hidden sessions for non admin
-            if (!$this->checkToolAccess('EDIT')) {
-                $filters['hidden'] = false;
-            }
-        }
-
-        $filters['canceled'] = false;
-
-        return $filters;
+        return new JsonResponse(array_map(function (SessionUser $sessionUser) {
+            return $this->serializer->serialize($sessionUser, [SerializerInterface::SERIALIZE_MINIMAL]);
+        }, $sessionUsers), 201);
     }
 }

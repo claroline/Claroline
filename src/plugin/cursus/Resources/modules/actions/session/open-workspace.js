@@ -12,5 +12,6 @@ export default declareAction((sessions) => ({
   label: trans('open-workspace', {}, 'actions'),
   target: sessions[0].workspace ? workspaceRoute(sessions[0].workspace) : '',
   displayed: !!sessions[0].workspace && hasPermission('open', sessions[0]),
-  scope: ['object']
+  scope: ['object'],
+  exact: true
 }))

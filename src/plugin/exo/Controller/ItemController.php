@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Manager\Item\ItemManager;
@@ -83,14 +82,5 @@ class ItemController extends AbstractCrudController
         return array_merge(parent::getOptions(), [
             'list' => [Options::SERIALIZE_LIST, Transfer::INCLUDE_SOLUTIONS],
         ]);
-    }
-
-    protected function getDefaultHiddenFilters(): array
-    {
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedException();
-        }
-
-        return [];
     }
 }

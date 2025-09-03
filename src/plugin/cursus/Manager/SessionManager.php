@@ -473,10 +473,17 @@ class SessionManager
         return $processed;
     }
 
+    public function registerUsers(array $sessionUsers, ?bool $events = true): void
+    {
+        foreach ($sessionUsers as $sessionUser) {
+            $this->registerUser($sessionUser, $events);
+        }
+    }
+
     /**
      * Register the user to the linked workspace and events if the registration is fully validated (confirmed and validated).
      */
-    public function registerUser(SessionUser $sessionUser): void
+    public function registerUser(SessionUser $sessionUser, ?bool $events = true): void
     {
         $session = $sessionUser->getSession();
 
@@ -487,11 +494,13 @@ class SessionManager
                 $this->workspaceManager->registerUsers([$sessionUser->getUser()], $session->getWorkspace(), $role, [Crud::NO_PERMISSIONS]);
             }
 
-            // register to linked events
-            $events = $session->getEvents();
-            foreach ($events as $event) {
-                if (Session::REGISTRATION_AUTO === $event->getRegistrationType() && !$event->isTerminated()) {
-                    $this->sessionEventManager->addUsers($event, [$sessionUser->getUser()], $sessionUser->getType());
+            if ($events) {
+                // register to linked events
+                $events = $session->getEvents();
+                foreach ($events as $event) {
+                    if (Session::REGISTRATION_AUTO === $event->getRegistrationType() && !$event->isTerminated()) {
+                        $this->sessionEventManager->addUsers($event, [$sessionUser->getUser()], $sessionUser->getType());
+                    }
                 }
             }
         }

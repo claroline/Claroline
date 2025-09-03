@@ -75,11 +75,6 @@ abstract class AbstractCrudController
         ];
     }
 
-    protected function getDefaultHiddenFilters(): array
-    {
-        return [];
-    }
-
     /**
      * @deprecated no longer interpreted
      */

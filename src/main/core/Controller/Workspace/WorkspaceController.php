@@ -21,8 +21,6 @@ use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\CoreBundle\Controller\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\Model\HasRolesTrait;
-use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -200,21 +198,5 @@ class WorkspaceController extends AbstractCrudController
         $this->restrictionsManager->unlock($workspace, json_decode($request->getContent(), true)['code']);
 
         return new JsonResponse(null, 204);
-    }
-
-    protected function getDefaultHiddenFilters(): array
-    {
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $user = $this->tokenStorage->getToken()?->getUser();
-            if ($user instanceof User) {
-                return [
-                    'organizations' => array_map(function (Organization $organization) {
-                        return $organization->getUuid();
-                    }, $user->getOrganizations()),
-                ];
-            }
-        }
-
-        return [];
     }
 }

@@ -5,8 +5,6 @@ namespace Claroline\CursusBundle\Controller\Registration;
 use Claroline\AppBundle\API\Finder\FinderQuery;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
-use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\CursusBundle\Entity\Course;
@@ -175,28 +173,5 @@ class SessionUserController extends AbstractCrudController
         $this->om->endFlushSuite();
 
         return new JsonResponse(null, 204);
-    }
-
-    protected function getDefaultHiddenFilters(): array
-    {
-        // only list participants of the same organization
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            /** @var User $user */
-            $user = $this->tokenStorage->getToken()?->getUser();
-
-            // filter by organizations
-            $organizations = [];
-            if ($user instanceof User) {
-                $organizations = $user->getOrganizations();
-            }
-
-            return [
-                'organizations' => array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $organizations),
-            ];
-        }
-
-        return [];
     }
 }

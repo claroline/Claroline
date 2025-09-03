@@ -13,6 +13,10 @@
   "open-training": "Ouvrir la formation",
   "move-pending": "Déplacer en liste d'attente",
   "add_training_event": "Ajouter une séance",
+  "register_workspace": "Inscrire à l'espace d'activités",
+  "register_workspace_confirm": "Êtes-vous sûr(e) de vouloir inscrire les participants de la session à l'espace d'activités lié ?",
+  "register_workspace_additional_confirmed": "Seuls les utilisateurs ayant confirmés leur inscription seront inscrit.",
+  "register_workspace_additional_validated": "Seuls les utilisateurs ayant été validés par un gestionnaire seront inscrit.",
 
   "plan_training_session": "Planifier une session",
   "save_training_session": "Enregistrer la session",

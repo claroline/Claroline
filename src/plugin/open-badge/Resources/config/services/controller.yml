@@ -32,6 +32,3 @@ services:
     Claroline\OpenBadgeBundle\Controller\EvidenceController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        arguments:
-            - '@security.authorization_checker'
-            - '@security.token_storage'

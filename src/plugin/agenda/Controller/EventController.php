@@ -56,28 +56,6 @@ class EventController extends AbstractCrudController
         return 'event';
     }
 
-    protected function getDefaultHiddenFilters(): array
-    {
-        $hiddenFilters = [];
-
-        $query = $this->requestStack->getCurrentRequest()->query->all();
-
-        // get start & end date and add them to the hidden filters list
-        $hiddenFilters['inRange'] = [$query['start'] ?? null, $query['end'] ?? null];
-
-        if (!isset($query['filters']['workspaces'])) {
-            /** @var User $user */
-            $user = $this->tokenStorage->getToken()?->getUser();
-            if ($user instanceof User) {
-                $hiddenFilters['user'] = $user->getUuid();
-            } else {
-                $hiddenFilters['anonymous'] = true;
-            }
-        }
-
-        return $hiddenFilters;
-    }
-
     #[Route(path: '/{id}/ics', name: 'download_ics', methods: ['GET'])]
     public function downloadICSAction(
         #[MapEntity(mapping: ['id' => 'uuid'])]

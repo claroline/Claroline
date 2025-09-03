@@ -14,7 +14,6 @@ namespace Claroline\OpenBadgeBundle\Controller;
 use Claroline\AppBundle\API\Finder\FinderQuery;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -196,24 +195,5 @@ class BadgeClassController extends AbstractCrudController
         return new JsonResponse(array_map(function (RuleInterface $rule) {
             return $rule::getName();
         }, $rules));
-    }
-
-    protected function getDefaultHiddenFilters(): array
-    {
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $user = $this->tokenStorage->getToken()?->getUser();
-
-            if ($user instanceof User) {
-                return [
-                    'organizations' => array_map(function (Organization $organization) {
-                        return $organization->getUuid();
-                    }, $user->getOrganizations()),
-                ];
-            }
-
-            return ['organizations' => []];
-        }
-
-        return [];
     }
 }

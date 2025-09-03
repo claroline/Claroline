@@ -46,20 +46,6 @@ class ApiTokenController extends AbstractCrudController
         return 'apitoken';
     }
 
-    protected function getDefaultHiddenFilters(): array
-    {
-        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
-
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            // only list tokens of the current token for non admins
-            return [
-                'user' => $this->tokenStorage->getToken()?->getUser()->getUuid(),
-            ];
-        }
-
-        return [];
-    }
-
     /**
      * List ApiTokens for the currently logged user.
      */

@@ -226,13 +226,6 @@ class TeamController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    protected function getDefaultHiddenFilters(): array
-    {
-        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
-
-        return [];
-    }
-
     private function checkToolAccess(Workspace $workspace, string $permission): void
     {
         if (!$this->authorization->isGranted(ToolPermissions::getPermission('community', $permission), $workspace)) {

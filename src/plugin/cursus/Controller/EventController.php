@@ -16,7 +16,6 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\PdfManager;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
@@ -68,26 +67,6 @@ class EventController extends AbstractCrudController
     public function getIgnore(): array
     {
         return ['list'];
-    }
-
-    protected function getDefaultHiddenFilters(): array
-    {
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $user = $this->tokenStorage->getToken()?->getUser();
-            if ($user instanceof User) {
-                $organizations = $user->getOrganizations();
-            } else {
-                $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
-            }
-
-            return [
-                'organizations' => array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $organizations),
-            ];
-        }
-
-        return [];
     }
 
     #[Route(path: '/copy', name: 'copy', methods: ['POST'])]

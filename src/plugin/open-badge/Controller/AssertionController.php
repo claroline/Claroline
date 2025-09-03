@@ -183,20 +183,4 @@ class AssertionController extends AbstractCrudController
             throw new AccessDeniedException('badges cannot be opened');
         }
     }
-
-    protected function getDefaultHiddenFilters(): array
-    {
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedException();
-        }
-
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            // only get assertions for the badges the current user can grant
-            return [
-                'fromGrantableBadges' => true,
-            ];
-        }
-
-        return [];
-    }
 }

@@ -2,7 +2,6 @@
 
 namespace Claroline\CursusBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -114,6 +113,8 @@ class SessionSerializer
             'registration' => [
                 'selfRegistration' => $session->getPublicRegistration(),
                 'autoRegistration' => $session->getAutoRegistration(),
+                'validation' => $session->hasValidation(),
+                'userValidation' => $session->hasConfirmation(),
             ],
             'pricing' => [
                 'price' => $session->getPrice(),
@@ -139,8 +140,6 @@ class SessionSerializer
                 'course' => $this->courseSerializer->serialize($session->getCourse(), [SerializerInterface::SERIALIZE_MINIMAL]),
                 'registration' => [
                     'selfUnregistration' => $session->getPublicUnregistration(),
-                    'validation' => $session->hasValidation(),
-                    'userValidation' => $session->hasConfirmation(),
                     'mail' => $session->getRegistrationMail(),
                     'pendingRegistrations' => $session->getPendingRegistrations(),
                     'eventRegistrationType' => $session->getEventRegistrationType(),
@@ -155,10 +154,10 @@ class SessionSerializer
                     }, $session->getCourse()->getPanelFacets()->toArray()),
                 ],
                 'invitationTemplate' => $session->getInvitationTemplate() ?
-                    $this->templateSerializer->serialize($session->getInvitationTemplate(), [Options::SERIALIZE_MINIMAL]) :
+                    $this->templateSerializer->serialize($session->getInvitationTemplate(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                     null,
                 'canceledTemplate' => $session->getCanceledTemplate() ?
-                    $this->templateSerializer->serialize($session->getCanceledTemplate(), [Options::SERIALIZE_MINIMAL]) :
+                    $this->templateSerializer->serialize($session->getCanceledTemplate(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                     null,
             ]);
         }

@@ -18,19 +18,10 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route(path: '/badge_evidence', name: 'apiv2_badge_evidence_')]
 class EvidenceController extends AbstractCrudController
 {
-    public function __construct(
-        private readonly AuthorizationCheckerInterface $authorization,
-        private readonly TokenStorageInterface $tokenStorage
-    ) {
-    }
-
     public static function getClass(): string
     {
         return Evidence::class;
@@ -62,21 +53,5 @@ class EvidenceController extends AbstractCrudController
             $this->serializer->serialize($object),
             201
         );
-    }
-
-    protected function getDefaultHiddenFilters(): array
-    {
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            // anonymous cannot have badges
-            throw new AccessDeniedException();
-        }
-
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            return [
-                'recipient' => $this->tokenStorage->getToken()?->getUser()->getUuid(),
-            ];
-        }
-
-        return [];
     }
 }

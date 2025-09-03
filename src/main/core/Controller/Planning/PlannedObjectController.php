@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\Finder\FinderQuery;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Planning\PlannedObject;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
@@ -56,27 +55,5 @@ class PlannedObjectController extends AbstractCrudController
         $plannedObjects = $this->crud->search(PlannedObject::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
 
         return $plannedObjects->toResponse();
-    }
-
-    protected function getDefaultHiddenFilters(): array
-    {
-        $hiddenFilters = [];
-
-        $query = $this->requestStack->getCurrentRequest()->query->all();
-
-        // get start & end date and add them to the hidden filters list
-        $hiddenFilters['inRange'] = [$query['start'] ?? null, $query['end'] ?? null];
-
-        if (!isset($query['filters']['workspaces'])) {
-            /** @var User $user */
-            $user = $this->tokenStorage->getToken()?->getUser();
-            if ($user instanceof User) {
-                $hiddenFilters['user'] = $user->getUuid();
-            } else {
-                $hiddenFilters['anonymous'] = true;
-            }
-        }
-
-        return $hiddenFilters;
     }
 }

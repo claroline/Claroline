@@ -13,11 +13,9 @@ namespace Claroline\CommunityBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Manager\MailManager;
-use Claroline\CoreBundle\Controller\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -88,22 +86,5 @@ class GroupController extends AbstractCrudController
         $this->om->endFlushSuite();
 
         return new JsonResponse(null, 204);
-    }
-
-    protected function getDefaultHiddenFilters(): array
-    {
-        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
-
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $user = $this->tokenStorage->getToken()?->getUser();
-
-            return [
-                'organizations' => array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $user->getOrganizations()),
-            ];
-        }
-
-        return [];
     }
 }
