@@ -11,9 +11,10 @@
 
 namespace Claroline\TagBundle\Subscriber;
 
+use Claroline\AppBundle\API\Finder\Type\TagType;
+use Claroline\AppBundle\Event\Finder\BuildQueryEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\SearchObjectsEvent;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Manager\TagManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -29,19 +30,24 @@ class TagSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'objects.search' => 'onSearchObjects',
+            BuildQueryEvent::class => 'onFinderBuildQuery',
             'claroline_tag_multiple_data' => 'onTagObject',
             'claroline_retrieve_used_tags_by_class_and_ids' => 'onGetObjectTags',
         ];
     }
 
-    public function onSearchObjects(SearchObjectsEvent $event): void
+    /**
+     * Implements Tag filter for Finders.
+     * The FinderType which wants to use the filter by tags must add a placeholder in the buildFinder method:
+     *
+     *   $builder->add('tags', \Claroline\AppBundle\API\Finder\Type\TagType::class);
+     */
+    public function onFinderBuildQuery(BuildQueryEvent $event): void
     {
-        // checks if there are filters managed by tag plugin in query
-        $query = $event->getQuery();
-        $tags = $query->getFilter('tags');
-        if (!empty($tags)) {
-            $tags = is_string($tags) ? [$tags] : $tags;
+        $finder = $event->getFinder();
+
+        if ($finder->getType() instanceof TagType && !empty($finder->getFilterValue())) {
+            $tags = is_string($finder->getFilterValue()) ? [$finder->getFilterValue()] : $finder->getFilterValue();
 
             // generate query for tags filter
             $tagQueryBuilder = $this->om->createQueryBuilder();
@@ -49,10 +55,10 @@ class TagSubscriber implements EventSubscriberInterface
                 ->select('to.id')
                 ->from(TaggedObject::class, 'to')
                 ->innerJoin('to.tag', 't')
-                ->andWhere("to.objectId = {$event->getObjectAlias()}.uuid") // this makes the UUID required on tagged objects
+                ->andWhere("to.objectId = {$finder->getParent()->getAlias()}.uuid") // this makes the UUID required on tagged objects
                 ->andWhere('(t.uuid IN (:tagIds) OR t.name IN (:tagNames))')
                 ->groupBy('to.objectId')
-                ->having('COUNT(to.id) = :expectedCount'); // this permits to make a AND between tags
+                ->having('COUNT(to.id) = :expectedCount'); // this permits making a AND between tags
 
             // append subquery to the original one
             $queryBuilder = $event->getQueryBuilder();

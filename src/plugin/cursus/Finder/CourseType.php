@@ -12,6 +12,7 @@ use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\HiddenType;
 use Claroline\AppBundle\API\Finder\Type\NumericType;
 use Claroline\AppBundle\API\Finder\Type\PublicType;
+use Claroline\AppBundle\API\Finder\Type\TagType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\CommunityBundle\Finder\OrganizationType;
 use Claroline\CursusBundle\Entity\Course;
@@ -42,6 +43,7 @@ class CourseType extends AbstractType
             ->add('creator', CreatorType::class)
             ->add('createdAt', DateType::class)
             ->add('updatedAt', DateType::class)
+            ->add('tags', TagType::class)
         ;
     }
 

@@ -10,7 +10,6 @@ services:
             - '@security.authorization_checker'
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CursusBundle\Manager\CourseManager'
             - '@Claroline\AppBundle\Manager\PdfManager'
 

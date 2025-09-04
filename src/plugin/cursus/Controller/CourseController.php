@@ -17,12 +17,10 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\PdfManager;
-use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
-use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Session;
@@ -49,7 +47,6 @@ class CourseController extends AbstractCrudController
         AuthorizationCheckerInterface $authorization,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly RoutingHelper $routing,
-        private readonly ToolManager $toolManager,
         private readonly CourseManager $manager,
         private readonly PdfManager $pdfManager,
     ) {
@@ -283,16 +280,5 @@ class CourseController extends AbstractCrudController
                 ];
             }, $stats['fields']),
         ]);
-    }
-
-    private function checkToolAccess(string $rights = 'OPEN'): bool
-    {
-        $trainingsTool = $this->toolManager->getOrderedTool('trainings', DesktopContext::getName());
-
-        if (is_null($trainingsTool) || !$this->authorization->isGranted($rights, $trainingsTool)) {
-            return false;
-        }
-
-        return true;
     }
 }

@@ -14,7 +14,6 @@ use Claroline\AppBundle\API\Finder\Type\RelatedEntityType;
 use Claroline\CommunityBundle\Finder\UserType;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
-use Claroline\CursusBundle\Finder\SessionType;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

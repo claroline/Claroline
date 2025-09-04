@@ -9,6 +9,7 @@ use Claroline\AppBundle\API\Finder\Type\CreatorType;
 use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\RelatedEntityType;
+use Claroline\AppBundle\API\Finder\Type\TagType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\ForumBundle\Entity\Subject;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -34,6 +35,7 @@ class SubjectType extends AbstractType
             ->add('closed', BooleanType::class)
             ->add('createdAt', DateType::class)
             ->add('updatedAt', DateType::class)
+            ->add('tags', TagType::class)
         ;
     }
 

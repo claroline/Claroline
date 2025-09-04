@@ -11,7 +11,7 @@
 
 namespace Claroline\AppBundle\Event\Crud;
 
-class CopyEvent extends CrudEvent
+final class CopyEvent extends CrudEvent
 {
     public function __construct(
         mixed $object,

@@ -2,7 +2,7 @@
 
 namespace Claroline\AppBundle\API\Finder;
 
-use Claroline\CoreBundle\Event\SearchObjectsEvent;
+use Claroline\AppBundle\Event\Finder\BuildQueryEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -32,6 +32,11 @@ class Finder implements FinderInterface
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getType(): FinderTypeInterface
+    {
+        return $this->type->getInnerType();
     }
 
     public function getAlias(): string
@@ -121,9 +126,6 @@ class Finder implements FinderInterface
             $queryBuilder->setMaxResults($this->query->getPageSize());
         }
 
-        $event = new SearchObjectsEvent($queryBuilder, $this->getAlias(), $this->query);
-        $this->eventDispatcher->dispatch($event, 'objects.search');
-
         return new FinderResult($this->getAlias(), $this->query, $queryBuilder, $rowTransformer, $readonly);
     }
 
@@ -166,6 +168,9 @@ class Finder implements FinderInterface
             $queryBuilder->distinct();
         }
 
+        $event = new BuildQueryEvent($queryBuilder, $this, $this->options);
+        $this->eventDispatcher->dispatch($event);
+
         foreach ($this->children as $child) {
             $child->createQueryBuilder($queryBuilder);
         }
@@ -183,7 +188,7 @@ class Finder implements FinderInterface
         return $this->parent;
     }
 
-    private function setParent(FinderInterface $parent): static
+    public function setParent(FinderInterface $parent): static
     {
         $this->parent = $parent;
 

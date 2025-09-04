@@ -11,6 +11,7 @@ use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\HiddenType;
 use Claroline\AppBundle\API\Finder\Type\PublicType;
+use Claroline\AppBundle\API\Finder\Type\TagType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\CommunityBundle\Finder\OrganizationType;
 use Claroline\CommunityBundle\Finder\RoleType;
@@ -44,6 +45,7 @@ class WorkspaceType extends AbstractType
             ->add('createdAt', DateType::class)
             ->add('updatedAt', DateType::class)
             ->add('roles', RoleType::class)
+            ->add('tags', TagType::class)
         ;
     }
 

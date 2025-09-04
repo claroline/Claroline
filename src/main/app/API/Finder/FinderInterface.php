@@ -10,6 +10,8 @@ interface FinderInterface
      */
     public function getName(): string;
 
+    public function getType(): FinderTypeInterface;
+
     /**
      * Returns a unique name for the property that the finder is mapped to.
      * It's used for relationship aliases and to bind parameters to the final QueryBuilder.
@@ -64,4 +66,6 @@ interface FinderInterface
     public function isRoot(): bool;
 
     public function getParent(): ?self;
+
+    public function setParent(FinderInterface $parent): static;
 }

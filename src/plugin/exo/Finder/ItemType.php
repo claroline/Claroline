@@ -9,6 +9,7 @@ use Claroline\AppBundle\API\Finder\Type\ChoiceType;
 use Claroline\AppBundle\API\Finder\Type\CreatorType;
 use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
+use Claroline\AppBundle\API\Finder\Type\TagType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\ORM\Query\Expr\Join;
@@ -55,6 +56,7 @@ class ItemType extends AbstractType
                 'choices' => $itemTypes,
                 'default' => $itemTypes,
             ])
+            ->add('tags', TagType::class)
         ;
     }
 

@@ -13,6 +13,7 @@ use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\HiddenType;
 use Claroline\AppBundle\API\Finder\Type\PublicType;
 use Claroline\AppBundle\API\Finder\Type\RelatedEntityType;
+use Claroline\AppBundle\API\Finder\Type\TagType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\QueryBuilder;
@@ -61,6 +62,7 @@ class ResourceNodeType extends AbstractType
             ->add('evaluated', BooleanType::class)
             ->add('creationDate', DateType::class)
             ->add('modificationDate', DateType::class)
+            ->add('tags', TagType::class)
             // to remove with the path plugin
             ->add('deprecatedPath', ClosureType::class, [
                 'buildQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {

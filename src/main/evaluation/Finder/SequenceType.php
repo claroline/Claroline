@@ -10,6 +10,7 @@ use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\PublicType;
 use Claroline\AppBundle\API\Finder\Type\RelatedEntityType;
+use Claroline\AppBundle\API\Finder\Type\TagType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -36,6 +37,7 @@ class SequenceType extends AbstractType
             ->add('updatedAt', DateType::class)
             ->add('creator', CreatorType::class)
             ->add('workspace', RelatedEntityType::class)
+            ->add('tags', TagType::class)
             // for evaluations
             ->add('required', BooleanType::class)
             ->add('evaluated', BooleanType::class)
