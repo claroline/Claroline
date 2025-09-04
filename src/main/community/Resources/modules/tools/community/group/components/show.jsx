@@ -20,6 +20,7 @@ import {Group as GroupTypes} from '#/main/community/group/prop-types'
 import {selectors} from '#/main/community/tools/community/group/store/selectors'
 import {GroupPage} from '#/main/community/group/components/page'
 import {GroupActivity} from '#/main/community/group/components/activity'
+import {constants} from '#/main/community/constants'
 
 const GroupShow = (props) =>
   <GroupPage
@@ -119,6 +120,7 @@ const GroupShow = (props) =>
                     label: trans('add_roles', {}, 'actions'),
                     disabled: get(props.group, 'meta.readOnly'),
                     modal: [MODAL_ROLES, {
+                      personal: false,
                       selectAction: (selected) => ({
                         type: CALLBACK_BUTTON,
                         label: trans('add', {}, 'actions'),
@@ -142,6 +144,22 @@ const GroupShow = (props) =>
                   disabled: () => get(props.group, 'meta.readOnly')
                 }}
                 actions={undefined}
+                customDefinition={[
+                  {
+                    name: 'type',
+                    type: 'choice',
+                    label: trans('type'),
+                    options: {
+                      choices: constants.ROLE_TYPES
+                    },
+                    displayed: true
+                  }, {
+                    name: 'workspace',
+                    type: 'workspace',
+                    label: trans('workspace'),
+                    displayed: true
+                  }
+                ]}
               />
             </>
           )

@@ -51,6 +51,7 @@ const UserEditorPermissions = () => {
                 label: trans('add_roles', {}, 'actions'),
                 tooltip: 'bottom',
                 modal: [MODAL_ROLES, {
+                  personal: false,
                   selectAction: (selected) => ({
                     type: CALLBACK_BUTTON,
                     label: trans('add', {}, 'actions'),
@@ -59,7 +60,9 @@ const UserEditorPermissions = () => {
                 }]
               }}
               delete={{
-                url: ['apiv2_user_remove_roles', {id: currentUser.id}]
+                url: ['apiv2_user_remove_roles', {id: currentUser.id}],
+                icon: 'fa fa-fw fa-times',
+                label: trans('remove', {}, 'actions')
               }}
               actions={undefined}
               customDefinition={[
@@ -87,7 +90,6 @@ const UserEditorPermissions = () => {
           primary: true,
           render: () => (
             <OrganizationList
-              /*path={props.path}*/
               className="mb-3"
               name={`${selectors.STORE_NAME}.organizations`}
               url={['apiv2_user_list_organizations', {id: currentUser.id}]}
@@ -107,9 +109,11 @@ const UserEditorPermissions = () => {
                 }]
               }}
               delete={{
-                url: ['apiv2_user_remove_organizations', {id: currentUser.id}]
+                url: ['apiv2_user_remove_organizations', {id: currentUser.id}],
+                icon: 'fa fa-fw fa-times',
+                label: trans('remove', {}, 'actions')
               }}
-              actions={() => []}
+              actions={undefined}
             />
           )
         }, {
