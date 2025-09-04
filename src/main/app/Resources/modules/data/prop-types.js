@@ -20,10 +20,7 @@ const DataCard = {
     name: T.string,
     title: T.node,
     contentText: T.node,
-    display: T.arrayOf(T.oneOf([
-      'meta',
-      'description'
-    ])),
+    display: T.arrayOf(T.string),
     status: T.shape({
       variant: T.oneOf(['primary', 'secondary', 'success', 'info', 'warning', 'danger']).isRequired,
       text: T.string.isRequired

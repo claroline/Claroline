@@ -248,6 +248,9 @@ class ResourceNode implements CrudEntityInterface
         return $this->name;
     }
 
+    /**
+     * @return ResourceRights[]
+     */
     public function getRights(): Collection
     {
         return $this->rights;

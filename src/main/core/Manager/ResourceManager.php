@@ -17,7 +17,6 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CommunityBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Component\Resource\DownloadableResourceInterface;
 use Claroline\CoreBundle\Component\Resource\ResourceProvider;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -47,7 +46,6 @@ class ResourceManager
 {
     private ResourceTypeRepository $resourceTypeRepo;
     private ResourceNodeRepository $resourceNodeRepo;
-    private RoleRepository $roleRepo;
 
     public function __construct(
         private readonly AuthorizationCheckerInterface $authorization,
@@ -62,7 +60,6 @@ class ResourceManager
     ) {
         $this->resourceTypeRepo = $om->getRepository(ResourceType::class);
         $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
-        $this->roleRepo = $om->getRepository(Role::class);
     }
 
     public function createResource(ResourceNode $parent, array $data): AbstractResource
@@ -217,7 +214,7 @@ class ResourceManager
      * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
      * 'create' => array('directory', ...), 'role' => $entity))
      */
-    public function createRights(ResourceNode $node, array $rights = [], bool $withDefault = true): void
+    public function createRights(ResourceNode $node, array $rights = []): void
     {
         foreach ($rights as $data) {
             $resourceTypes = [];
@@ -226,22 +223,6 @@ class ResourceManager
             }
 
             $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes);
-        }
-
-        if ($withDefault) {
-            if (!array_key_exists('ROLE_ANONYMOUS', $rights)) {
-                /** @var Role $anonymous */
-                $anonymous = $this->roleRepo->findOneBy(['name' => 'ROLE_ANONYMOUS']);
-
-                $this->rightsManager->create(0, $anonymous, $node);
-            }
-
-            if (!array_key_exists('ROLE_USER', $rights)) {
-                /** @var Role $user */
-                $user = $this->roleRepo->findOneBy(['name' => 'ROLE_USER']);
-
-                $this->rightsManager->create(0, $user, $node);
-            }
         }
     }
 
@@ -474,7 +455,7 @@ class ResourceManager
     private function setRights(ResourceNode $node, ResourceNode $parent = null, array $rights = []): void
     {
         if (0 === count($rights) && null !== $parent) {
-            $node = $this->rightsManager->copy($parent, $node);
+            $this->rightsManager->copy($parent, $node);
         } else {
             $this->createRights($node, $rights);
         }

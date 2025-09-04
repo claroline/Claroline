@@ -18,11 +18,17 @@ services:
             - '@security.token_storage'
             - '@request_stack'
 
-    Claroline\CoreBundle\Controller\Resource\Types\FileController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
+    Claroline\CoreBundle\Controller\Resource\Types\DirectoryController:
         arguments:
             - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
+            - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
+
+    Claroline\CoreBundle\Controller\Resource\Types\FileController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
 
     Claroline\CoreBundle\Controller\Resource\ArchiveController:

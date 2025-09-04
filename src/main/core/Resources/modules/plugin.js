@@ -58,11 +58,12 @@ registry.add('ClarolineCoreBundle', {
       'restore'       : () => { return import(/* webpackChunkName: "core-action-resource-restore" */   '#/main/core/actions/resource/restore') },
       'archive'       : () => { return import(/* webpackChunkName: "core-action-resource-archive" */   '#/main/core/actions/resource/archive') },
       'unpublish'     : () => { return import(/* webpackChunkName: "core-action-resource-unpublish" */ '#/main/core/actions/resource/unpublish') },
-      'show-dashboard': () => { return import(/* webpackChunkName: "core-action-resource-dashboard" */ '#/main/core/actions/resource/show-dashboard') },
+      'show-dashboard': () => { return import(/* webpackChunkName: "core-action-resource-dashboard" */ '#/main/core/actions/resource/show-dashboard') }
     },
 
     directory: {
-      'add': () => { return import(/* webpackChunkName: "core-action-resource-add" */ '#/main/core/resources/directory/actions/add') }
+      'add': () => { return import(/* webpackChunkName: "core-action-resource-add" */ '#/main/core/resources/directory/actions/add') },
+      'apply-rights': () => { return import(/* webpackChunkName: "core-action-resource-apply-rights" */ '#/main/core/resources/directory/actions/apply-rights') }
     },
 
     workspace: {

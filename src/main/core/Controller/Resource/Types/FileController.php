@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Resource\Types;
 
-use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -22,31 +22,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-#[Route(path: 'resource_file', name: 'apiv2_resource_file_')]
-class FileController extends AbstractCrudController
+#[Route(path: '/resource_file', name: 'apiv2_resource_file_')]
+class FileController
 {
     use PermissionCheckerTrait;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
         private readonly ResourceManager $resourceManager
     ) {
         $this->authorization = $authorization;
-    }
-
-    public static function getClass(): string
-    {
-        return File::class;
-    }
-
-    public function getIgnore(): array
-    {
-        return ['create', 'list', 'deleteBulk', 'get'];
-    }
-
-    public static function getName(): string
-    {
-        return 'file';
     }
 
     #[Route(path: '/{file}/raw', name: 'raw', methods: ['GET'])]
@@ -63,6 +49,7 @@ class FileController extends AbstractCrudController
         if (empty($file)) {
             return new JsonResponse('File not found.', 500);
         }
+
         return new BinaryFileResponse($file['path'], 200, [
             'Content-Disposition' => "inline; filename={$file['filename']}",
         ]);

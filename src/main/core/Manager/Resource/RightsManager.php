@@ -81,7 +81,6 @@ class RightsManager
 
     /**
      * Copy the rights from the parent to its children.
-     * Should be removed sooner than later (see resourceNode copy).
      */
     public function copy(ResourceNode $original, ResourceNode $node): ResourceNode
     {
@@ -276,7 +275,7 @@ class RightsManager
         }
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(1, $node->getPath().'%', \PDO::PARAM_STR);
+        $stmt->bindValue(1, $node->getPath().'%');
         $stmt->executeQuery();
     }
 }

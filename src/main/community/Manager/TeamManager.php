@@ -410,7 +410,7 @@ class TeamManager
     private function applyRightsToResourceNode(ResourceNode $node, array $rights): void
     {
         $this->om->startFlushSuite();
-        $this->resourceManager->createRights($node, $rights, false);
+        $this->resourceManager->createRights($node, $rights);
 
         if ('directory' === $node->getResourceType()->getName()) {
             foreach ($node->getChildren() as $child) {

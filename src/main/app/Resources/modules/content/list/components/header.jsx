@@ -22,7 +22,6 @@ const ListHeader = props =>
     {props.filters &&
       <Search
         id={props.id + '-search'}
-        //name={props.name+'.filters'}
         {...props.filters}
         autoFocus={props.autoFocus}
         disabled={props.disabled}

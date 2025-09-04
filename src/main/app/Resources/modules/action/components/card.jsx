@@ -8,7 +8,7 @@ import {Button} from '#/main/app/action'
 import {TextSkeleton} from '#/main/app/components/placeholder'
 
 const ActionCardSkeleton = ({dangerous = false}) =>
-  <article className={classes('d-flex flex-row gap-3 p-3 align-items-start flex-wrap flex-lg-nowrap border rounded-3', {
+  <article className={classes('d-flex flex-row gap-3 p-3 align-items-start flex-wrap flex-lg-nowrap border rounded-2', {
       'border-danger': dangerous
     })}>
     <div className="flex-fill placeholder-glow" role="presentation">
@@ -28,7 +28,7 @@ const ActionCard = (props) => {
 
   return (
     <article
-      className={classes('d-flex flex-row gap-3 p-3 align-items-start flex-wrap flex-lg-nowrap border rounded-3', props.className, {
+      className={classes('d-flex flex-row gap-3 p-3 align-items-start flex-wrap flex-lg-nowrap border rounded-2', props.className, {
         'border-danger': props.dangerous
       })}
       aria-labelledby={labelId}
