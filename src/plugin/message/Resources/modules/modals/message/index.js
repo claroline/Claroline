@@ -6,7 +6,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {MessageModal} from '#/plugin/message/modals/message/containers/message'
+import {MessageModal} from '#/plugin/message/modals/message/components/modal'
 
 const MODAL_MESSAGE = 'MODAL_MESSAGE'
 
