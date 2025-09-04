@@ -118,7 +118,7 @@ class WorkspaceEvaluationController
         // no need to secure endpoint Crud will do it for us
 
         $evaluationIds = $this->decodeRequest($request);
-        $evaluations = $this->om->getRepository(WorkspaceEvaluation::class)->findOneBy([
+        $evaluations = $this->om->getRepository(WorkspaceEvaluation::class)->findBy([
             'uuid' => $evaluationIds,
         ]);
 

@@ -17,7 +17,7 @@ export default declareAction((evaluations, refresher) => {
     displayed: 0 !== processable.length,
     dangerous: true,
     confirm: {
-      message: transChoice('resource_evaluations_delete_message', processable.length, {count: '<b class="fw-bold">'+processable.length+'</b>'}, 'evaluation'),
+      message: transChoice('evaluations_delete_confirm', processable.length, {count: '<b class="fw-bold">'+processable.length+'</b>'}, 'evaluation'),
       additional: trans('irreversible_action_confirm'),
       items:  processable.map(item => ({
         thumbnail: get(item, 'user.picture'),

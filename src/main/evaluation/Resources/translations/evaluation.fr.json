@@ -89,5 +89,6 @@
   "certified_help": "L'utilisateur obtient un certificate lorsqu'il termine/réussit cette évaluation.",
   "attempt": "Tentative n°%number%",
   "attempts": "Tentatives",
-  "no_activity": "aucune activité"
+  "no_activity": "aucune activité",
+  "evaluations_delete_confirm": "{1} Êtes-vous sûr(e) de vouloir supprimer l'évaluation de cet utilisateur ? | [2,Inf[ Êtes-vous sûr(e) de vouloir supprimer les évaluations de ces %count% utilisateurs ?"
 }
