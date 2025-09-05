@@ -15,8 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class ObjectCollection extends ArrayCollection
 {
-    /** @var array */
-    private $options;
+    private array $options;
 
     public function __construct(array $objects, ?array $options = [])
     {
@@ -41,7 +40,7 @@ class ObjectCollection extends ArrayCollection
 
     public function isInstanceOf($class): bool
     {
-        //doctrine sends proxy so we have to do the check with the instanceof operator
+        // doctrine sends proxy so we have to do the check with the instanceof operator
         $rc = new \ReflectionClass($class);
         $toCheck = $rc->newInstanceWithoutConstructor();
 

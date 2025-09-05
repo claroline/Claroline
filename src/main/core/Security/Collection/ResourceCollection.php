@@ -15,39 +15,25 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 /**
  * This is the class used by the ResourceVoter to take access decisions.
- *
- * @deprecated
  */
 class ResourceCollection
 {
     /**
      * @var ResourceNode[]
      */
-    private $resources;
+    private array $resources;
 
-    /**
-     * @var array
-     */
-    private $errors;
+    private array $errors = [];
 
-    /**
-     * @var array
-     */
-    private $attributes;
+    private array $attributes;
 
-    /**
-     * ResourceCollection constructor.
-     *
-     * @param array $attributes
-     */
-    public function __construct(array $resources = [], $attributes = [])
+    public function __construct(?array $resources = [], ?array $attributes = [])
     {
         $this->resources = $resources;
         $this->attributes = $attributes;
-        $this->errors = [];
     }
 
-    public function addResource(ResourceNode $resource)
+    public function addResource(ResourceNode $resource): void
     {
         $this->resources[] = $resource;
     }
@@ -55,7 +41,7 @@ class ResourceCollection
     /**
      * @param ResourceNode[] $resources
      */
-    public function setResources(array $resources)
+    public function setResources(array $resources): void
     {
         $this->resources = $resources;
     }
@@ -63,77 +49,50 @@ class ResourceCollection
     /**
      * @return ResourceNode[]
      */
-    public function getResources()
+    public function getResources(): array
     {
         return $this->resources;
     }
 
     /**
      * Used by the ResourceVoter to set an array of errors.
-     *
-     * @param array $errors
      */
-    public function setErrors($errors)
+    public function setErrors(array $errors): void
     {
         $this->errors = $errors;
     }
 
-    /**
-     * @return array
-     */
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->errors;
     }
 
-    /**
-     * @param array $attributes
-     */
-    public function setAttributes($attributes)
+    public function setAttributes(array $attributes): void
     {
         $this->attributes = $attributes;
     }
 
-    /**
-     * @return array
-     */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
 
-    /**
-     * @param string $key
-     *
-     * @return mixed
-     */
-    public function getAttribute($key)
+    public function getAttribute(string $key): mixed
     {
-        return isset($this->attributes[$key]) ?
-          $this->attributes[$key] : null;
+        return $this->attributes[$key] ?? null;
     }
 
-    /**
-     * @param string $key
-     * @param mixed  $value
-     */
-    public function addAttribute($key, $value)
+    public function addAttribute(string $key, mixed $value): void
     {
         $this->attributes[$key] = $value;
     }
 
-    /**
-     * @param string $key
-     */
-    public function removeAttribute($key)
+    public function removeAttribute(string $key): void
     {
         unset($this->attributes[$key]);
     }
 
-    /**
-     * @return string
-     */
-    public function getErrorsForDisplay()
+    public function getErrorsForDisplay(): string
     {
         $content = '';
 

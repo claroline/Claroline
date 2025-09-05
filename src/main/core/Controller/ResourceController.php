@@ -181,7 +181,6 @@ class ResourceController
     #[Route(path: '/download', name: 'claro_resource_download', methods: ['GET'])]
     public function downloadAction(Request $request): JsonResponse|BinaryFileResponse
     {
-
         $ids = $request->query->all('ids');
         $nodes = $this->om->getRepository(ResourceNode::class)->findBy(['uuid' => $ids]);
 
@@ -298,9 +297,12 @@ class ResourceController
 
         foreach ($toCopy as $resource) {
             // checks if the current user can copy the selected resource AND can create in the target directory
-            $collection = new ResourceCollection([$destination], ['type' => $resource->getType()]);
+            $collection = new ResourceCollection([$resource], [
+                'parent' => $destination,
+                'type' => $resource->getType(),
+            ]);
 
-            if ($this->checkPermission('COPY', $resource) && $this->checkPermission('CREATE', $collection)) {
+            if ($this->checkPermission('COPY', $collection)) {
                 $processed[] = $this->crud->copy($resource, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['parent' => $destination]);
             }
         }
