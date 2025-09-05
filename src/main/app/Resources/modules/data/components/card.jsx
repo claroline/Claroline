@@ -150,7 +150,8 @@ const DataCard = props => {
         <Heading
           level={props.level}
           className={classes('data-card-title', {
-            'mb-0': 'xs' === props.size
+            'mb-0': 'xs' === props.size,
+            'mb-2': 'xs' !== props.size && 'row' === props.orientation
           })}
         >
           {props.loaded ?

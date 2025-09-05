@@ -15,7 +15,7 @@ const UrlTab = props =>
     <UrlDisplay
       url={get(props.currentTab, 'parameters.url')}
       mode={get(props.currentTab, 'parameters.mode')}
-      ratio={get(props.currentTab, 'parameters.ratio')}
+      // ratio={get(props.currentTab, 'parameters.ratio')}
     />
   </HomePage>
 

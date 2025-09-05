@@ -9,8 +9,8 @@ import {TextSkeleton} from '#/main/app/components/placeholder'
 
 const ActionCardSkeleton = ({dangerous = false}) =>
   <article className={classes('d-flex flex-row gap-3 p-3 align-items-start flex-wrap flex-lg-nowrap border rounded-2', {
-      'border-danger': dangerous
-    })}>
+    'border-danger': dangerous
+  })}>
     <div className="flex-fill placeholder-glow" role="presentation">
       <b className="placeholder rounded-1 d-flex align-items-baseline mb-2 gap-2 w-50">&nbsp;</b>
       <TextSkeleton className="card-text text-body-secondary fs-sm" rows={3} />

@@ -21,7 +21,7 @@ const config = {
   // styles
   skin: isDarkMode() ? 'oxide-dark' : 'oxide', // we provide it through theme system
   content_css: [
-    theme('bootstrap'),
+    theme('bootstrap')
   ].concat(isDarkMode() ? ['dark'] : []),
   highlight_on_focus: false,
   // plugins
@@ -88,23 +88,22 @@ const config = {
       { title: 'Heading 6', format: 'h6' }
     ]},
     { title: 'Blocks', items: [
-        { title: 'Paragraph', format: 'p' },
-        { name: 'lead', title: 'Emphasis', block: 'p', classes: [ 'lead text-body-secondary rounded-3' ] },
-        { name: 'box', title: 'Box', block: 'div', classes: [ 'p-4 bg-body-tertiary rounded-3' ], wrapper: true },
-        { name: 'card', title: 'Card', block: 'div', classes: [ 'p-4 bg-body rounded-3 border shadow-sm' ], wrapper: true },
-        { title: 'Blockquote', format: 'blockquote' },
-        { title: 'Div', format: 'div' },
-        { title: 'Pre', format: 'pre' },
-        { title: 'Address', format: 'address' }
-      ]
-    },
+      { title: 'Paragraph', format: 'p' },
+      { name: 'lead', title: 'Emphasis', block: 'p', classes: [ 'lead text-body-secondary rounded-3' ] },
+      { name: 'box', title: 'Box', block: 'div', classes: [ 'p-4 bg-body-tertiary rounded-3' ], wrapper: true },
+      { name: 'card', title: 'Card', block: 'div', classes: [ 'p-4 bg-body rounded-3 border shadow-sm' ], wrapper: true },
+      { title: 'Blockquote', format: 'blockquote' },
+      { title: 'Div', format: 'div' },
+      { title: 'Pre', format: 'pre' },
+      { title: 'Address', format: 'address' }
+    ]},
     { title: 'Alerts', items: [
       { name: 'alert-primary', title: 'Alert primary', block: 'div', classes: [ 'alert alert-primary' ], wrapper: true },
       { name: 'alert-secondary', title: 'Alert secondary', block: 'div', classes: [ 'alert alert-secondary' ], wrapper: true },
       { name: 'alert-success', title: 'Alert success', block: 'div', classes: [ 'alert alert-success' ], wrapper: true },
       { name: 'alert-info', title: 'Alert info', block: 'div', classes: [ 'alert alert-info' ], wrapper: true },
       { name: 'alert-warning', title: 'Alert warning', block: 'div', classes: [ 'alert alert-warning' ], wrapper: true },
-      { name: 'alert-danger', title: 'Alert danger', block: 'div', classes: [ 'alert alert-danger' ], wrapper: true },
+      { name: 'alert-danger', title: 'Alert danger', block: 'div', classes: [ 'alert alert-danger' ], wrapper: true }
     ]},
     { title: 'Buttons', items: [
       { name: 'btn-primary', title: 'Button primary', selector: 'a,button', classes: 'btn btn-primary', remove: 'empty'},

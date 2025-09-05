@@ -48,6 +48,7 @@ const ListHeader = props =>
 ListHeader.propTypes = {
   id: T.string.isRequired,
   flush: T.bool,
+  autoFocus: T.bool,
   name: T.string.isRequired,
   disabled: T.bool,
   display: T.shape(

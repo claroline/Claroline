@@ -23,7 +23,6 @@ class UrlDisplay extends Component {
     if ('iframe' === this.props.mode) {
       return (
         <ContentIFrame
-          className="row"
           url={this.props.url}
           ratio={this.props.ratio}
         />
