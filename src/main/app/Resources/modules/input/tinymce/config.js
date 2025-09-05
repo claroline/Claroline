@@ -120,6 +120,7 @@ const config = {
   style_formats_autohide: true,
   // The following option is used to append style formats rather than overwrite the default style formats.
   style_formats_merge: false,
+  sandbox_iframes: false,
 
   // plugins config
   quickbars_selection_toolbar: 'quicklink | blocks | bold italic underline forecolor align | removeformat',
