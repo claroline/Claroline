@@ -28,12 +28,14 @@ export default {
       }, {
         name: 'start',
         type: 'date',
+        alias: 'plannedObject.startDate',
         label: trans('start_date'),
         displayed: true,
         options: {time: true}
       }, {
         name: 'end',
         type: 'date',
+        alias: 'plannedObject.endDate',
         label: trans('end_date'),
         displayed: true,
         options: {time: true}

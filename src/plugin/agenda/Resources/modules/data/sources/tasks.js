@@ -28,6 +28,7 @@ export default {
       }, {
         name: 'start',
         type: 'date',
+        alias: 'plannedObject.startDate',
         label: trans('start_date'),
         displayed: true,
         options: {time: true}

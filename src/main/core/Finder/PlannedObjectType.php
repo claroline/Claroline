@@ -7,6 +7,8 @@ use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
 use Claroline\AppBundle\API\Finder\FinderInterface;
 use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
+use Claroline\AppBundle\API\Finder\Type\PeriodStatusType;
+use Claroline\AppBundle\API\Finder\Type\RelatedEntityType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\CoreBundle\Entity\Planning\PlannedObject;
 use Claroline\CoreBundle\Entity\Planning\Planning;
@@ -30,9 +32,10 @@ class PlannedObjectType extends AbstractType
             ->add('name', TextType::class)
             ->add('description', TextType::class)
             ->add('type', TextType::class, ['mode' => TextType::MODE_EXACT])
+            ->add('status', PeriodStatusType::class)
             ->add('startDate', DateType::class)
             ->add('endDate', DateType::class)
-            ->add('location', LocationType::class)
+            ->add('location', RelatedEntityType::class)
             ->add('planning', EntityType::class, [
                 'data_class' => Planning::class,
                 'identifier' => 'objectId',

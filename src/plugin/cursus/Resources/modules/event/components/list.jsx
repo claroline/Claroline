@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import {useDispatch, useSelector} from 'react-redux'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
-import merge from 'lodash/merge'
 
 import {selectors as securitySelectors} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
@@ -19,11 +18,11 @@ const EventList = (props) => {
   const dispatch = useDispatch()
   const currentUser = useSelector(securitySelectors.currentUser)
 
-  const refresher = useMemo(() => merge({
+  const refresher = useMemo(() => ({
     add:    () => dispatch(listActions.invalidateData(props.name)),
     update: () => dispatch(listActions.invalidateData(props.name)),
     delete: () => dispatch(listActions.invalidateData(props.name))
-  }, props.refresher || {}), [props.path])
+  }), [props.path])
 
   return (
     <ListData
@@ -34,6 +33,7 @@ const EventList = (props) => {
           name: 'status',
           type: 'choice',
           label: trans('status'),
+          alias: 'plannedObject.status',
           sortable: false,
           displayed: true,
           filterable: true,
@@ -63,7 +63,7 @@ const EventList = (props) => {
           displayed: false
         }, {
           name: 'start',
-          alias: 'startDate',
+          alias: 'plannedObject.startDate',
           type: 'date',
           label: trans('start_date'),
           displayed: true,
@@ -72,7 +72,7 @@ const EventList = (props) => {
           }
         }, {
           name: 'end',
-          alias: 'endDate',
+          alias: 'plannedObject.endDate',
           type: 'date',
           label: trans('end_date'),
           options: {
@@ -82,6 +82,7 @@ const EventList = (props) => {
         }, {
           name: 'location',
           type: 'location',
+          alias: 'plannedObject.location',
           label: trans('location'),
           placeholder: trans('online_session', {}, 'cursus'),
           displayed: true,

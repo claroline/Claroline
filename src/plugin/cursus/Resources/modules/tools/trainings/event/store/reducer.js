@@ -8,8 +8,8 @@ import {TOOL_OPEN} from '#/main/core/tool/store'
 
 export const reducer = combineReducers({
   list: makeListReducer(selectors.STORE_NAME+'.list', {
-    sortBy: {property: 'startDate', direction: -1},
-    filters: {filters: [{property: 'status', value: 'not_ended'}]}
+    sortBy: {property: 'plannedObject.startDate', direction: -1},
+    filters: {filters: [{property: 'plannedObject.status', value: 'not_ended'}]}
   }, {
     loaded: makeReducer(false, {
       [CONTEXT_OPEN]: () => false

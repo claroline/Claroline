@@ -5,9 +5,8 @@ namespace Claroline\AgendaBundle\Finder;
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\API\Finder\AbstractType;
 use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
-use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
-use Claroline\AppBundle\API\Finder\Type\TextType;
+use Claroline\CoreBundle\Finder\PlannedObjectType;
 use Claroline\CoreBundle\Finder\WorkspaceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -24,10 +23,7 @@ class EventType extends AbstractType
     public function buildFinder(FinderBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class)
-            ->add('description', TextType::class)
-            ->add('startDate', DateType::class)
-            ->add('endDate', DateType::class)
+            ->add('plannedObject', PlannedObjectType::class)
             ->add('workspace', WorkspaceType::class)
         ;
     }

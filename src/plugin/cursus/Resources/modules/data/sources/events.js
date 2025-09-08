@@ -1,3 +1,4 @@
+import {createElement} from 'react'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
@@ -6,6 +7,7 @@ import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {route as toolRoute} from '#/main/core/tool/routing'
 
 import {EventCard} from '#/plugin/cursus/event/components/card'
+import {EventStatus} from '#/plugin/cursus/components/event-status'
 
 export default {
   name: 'session-events',
@@ -19,6 +21,28 @@ export default {
     }),
     definition: [
       {
+        name: 'status',
+        type: 'choice',
+        label: trans('status'),
+        alias: 'plannedObject.status',
+        sortable: false,
+        displayed: true,
+        filterable: true,
+        order: 1,
+        options: {
+          noEmpty: true,
+          choices: {
+            not_started: trans('session_not_started', {}, 'cursus'),
+            in_progress: trans('session_in_progress', {}, 'cursus'),
+            ended: trans('session_ended', {}, 'cursus'),
+            not_ended: trans('session_not_ended', {}, 'cursus')
+          }
+        },
+        render: (row) => createElement(EventStatus, {
+          startDate: get(row, 'start'),
+          endDate: get(row, 'end')
+        })
+      }, {
         name: 'name',
         type: 'string',
         label: trans('name'),
@@ -47,13 +71,13 @@ export default {
         displayed: true
       }, {
         name: 'start',
-        alias: 'startDate',
+        alias: 'plannedObject.startDate',
         type: 'date',
         label: trans('start_date'),
         displayed: true
       }, {
         name: 'end',
-        alias: 'endDate',
+        alias: 'plannedObject.endDate',
         type: 'date',
         label: trans('end_date'),
         displayed: true

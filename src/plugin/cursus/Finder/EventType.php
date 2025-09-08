@@ -8,6 +8,7 @@ use Claroline\AppBundle\API\Finder\FinderInterface;
 use Claroline\AppBundle\API\Finder\Type\ClosureType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
+use Claroline\CoreBundle\Finder\PlannedObjectType;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Doctrine\ORM\QueryBuilder;
@@ -26,11 +27,8 @@ class EventType extends AbstractType
     public function buildFinder(FinderBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class)
             ->add('code', TextType::class)
-            ->add('description', TextType::class)
-            // ->add('startDate', DateType::class)
-            // ->add('endDate', DateType::class)
+            ->add('plannedObject', PlannedObjectType::class)
             ->add('session', SessionType::class)
             ->add('workspace', ClosureType::class, [
                 'buildQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
