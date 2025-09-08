@@ -74,26 +74,23 @@ class WorkspaceRepository extends EntityRepository
             ->getResult();
     }
 
-    /**
-     * @deprecated
-     */
     public function checkAccess(Workspace $workspace, array $roleNames, ?string $toolName = null, ?string $action = 'open'): bool
     {
         $dql = '
             SELECT COUNT(ot)
             FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
-            JOIN ot.rights AS r
-            JOIN r.role AS rr
+            LEFT JOIN ot.rights AS r
+            LEFT JOIN r.role AS rr
             WHERE ot.contextName = :contextName
             AND ot.contextId = :workspaceId
-            AND rr.name IN (:roleNames)
-            AND EXISTS (
+
+            AND (ot.public = 1 OR (rr.name IN (:roleNames) AND EXISTS (
                 SELECT d
                 FROM Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder AS d
                 WHERE d.tool = ot.name
                 AND d.name = :action
                 AND BIT_AND(r.mask, d.value) = d.value
-            )
+            )))
         ';
 
         if ($toolName) {

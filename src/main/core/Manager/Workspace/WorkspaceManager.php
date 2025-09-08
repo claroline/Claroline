@@ -53,12 +53,7 @@ class WorkspaceManager implements LoggerAwareInterface
 
     public function hasAccess(Workspace $workspace, ?TokenInterface $token, string $toolName = null, string $permission = 'open'): bool
     {
-        $roles = $token?->getRoleNames() ?? [];
-        if (!empty($roles)) {
-            return $this->workspaceRepo->checkAccess($workspace, $roles, $toolName, $permission);
-        }
-
-        return false;
+        return $this->workspaceRepo->checkAccess($workspace, $token?->getRoleNames() ?? [], $toolName, $permission);
     }
 
     public function registerUsers(array $users, Workspace $workspace, ?Role $role = null, ?array $options = []): void

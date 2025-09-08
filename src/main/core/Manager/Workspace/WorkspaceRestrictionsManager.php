@@ -86,7 +86,7 @@ class WorkspaceRestrictionsManager
      */
     public function hasRights(Workspace $workspace): bool
     {
-        // we don't simply call the auth checker because it will check all the restrictions (e.g. dates, code)
+        // we don't simply call the auth checker because it will check all the restrictions (e.g., dates, code)
         // not only the user rights
         return $this->workspaceManager->hasAccess($workspace, $this->tokenStorage->getToken());
     }
