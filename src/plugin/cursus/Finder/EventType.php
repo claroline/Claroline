@@ -20,7 +20,7 @@ class EventType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Event::class,
-            'fulltext' => ['name', 'code', 'description'],
+            'fulltext' => ['code'],
         ]);
     }
 
