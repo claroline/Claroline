@@ -159,7 +159,9 @@ class ExportManager
 
         $archive->addFromString(TextNormalizer::toKey($clacoForm->getResourceNode()->getName()).'.xls', $entryList);
         foreach ($files as $filePath => $fileName) {
-            $archive->addFile($filePath, $fileName);
+            if (file_exists($filePath)) {
+                $archive->addFile($filePath, $fileName);
+            }
         }
 
         $archive->close();
