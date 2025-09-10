@@ -130,7 +130,7 @@ class StandardRestrictions extends Component {
                     />
                   }
 
-                  {!authenticated && !this.props.errors.archived && this.props.errors.selfRegistration &&
+                  {displayWsRegistrationBtn &&
                     <small className="text-secondary">{trans('restricted_workspace.login_help', {}, 'workspace')}</small>
                   }
                 </div>

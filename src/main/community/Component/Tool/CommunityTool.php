@@ -183,7 +183,7 @@ class CommunityTool extends ToolComponent
 
         // only grab workspace props we want
         return [
-            'registration' => array_merge($parameters, ['defaultRole' => $defaultRole]),
+            'registration' => array_merge($parameters['registration'], ['defaultRole' => $defaultRole]),
         ];
     }
 
