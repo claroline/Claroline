@@ -11,14 +11,14 @@ function getDefaultAction(workspace, workspacesRefresher, path, currentUser = nu
   return getContextDefaultAction('workspace', workspace, workspacesRefresher, path, currentUser)
 }
 
-function getRestrictions(workspace, errors, managed, currentUser) {
+function getRestrictions(workspace, errors, currentUser) {
   const restrictions = getApps('restrictions.workspace')
 
   return Promise.all(
     // boot restrictions applications
     Object.keys(restrictions).map(action => restrictions[action]())
   ).then((loadedRestrictions) => loadedRestrictions
-    .map(restrictionModule => restrictionModule.default(workspace, errors, managed, currentUser))
+    .map(restrictionModule => restrictionModule.default(workspace, errors, currentUser))
     .filter(restriction => undefined === restriction.displayed || restriction.displayed)
     .sort((a, b) => {
       if (isNumber(a.order) && !isNumber(b.order)) {

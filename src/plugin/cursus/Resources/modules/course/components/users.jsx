@@ -45,10 +45,11 @@ const CourseUsers = (props) =>
             not_started: trans('session_not_started', {}, 'cursus'),
             in_progress: trans('session_in_progress', {}, 'cursus'),
             ended: trans('session_ended', {}, 'cursus'),
-            not_ended: trans('session_not_ended', {}, 'cursus')
+            not_ended: trans('session_not_ended', {}, 'cursus'),
+            canceled: trans('canceled_session', {}, 'cursus')
           }
         }
-      },
+      }
     ]}
   />
 

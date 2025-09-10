@@ -25,6 +25,7 @@ import {selectors} from '#/plugin/cursus/session/store'
 import {SessionUsers} from '#/plugin/cursus/session/components/users'
 import {AvailableSeats} from '#/plugin/cursus/components/available-seats'
 import {EventList} from '#/plugin/cursus/event/components/list'
+import {Badge} from '#/main/app/components/badge'
 
 const SessionShow = (props) => {
   const dispatch = useDispatch()
@@ -67,7 +68,12 @@ const SessionShow = (props) => {
           />
 
           <PageSection className="mb-5">
-            <AvailableSeats session={session} className="fs-base lh-base py-2 px-3 mb-4" />
+            {get(session, 'meta.canceled') ?
+              <Badge className="fs-base lh-base py-2 px-3 mb-4" subtle={true} variant="danger">
+                {trans('canceled_session', {}, 'cursus')}
+              </Badge> :
+              <AvailableSeats session={session} className="fs-base lh-base py-2 px-3 mb-4" />
+            }
             <DetailsData
               data={session}
               definition={[
@@ -117,14 +123,12 @@ const SessionShow = (props) => {
                 name: 'events',
                 title: trans('session_events', {}, 'cursus'),
                 render: () => (
-                  <>
-                    <EventList
-                      className="mt-4"
-                      path={props.path}
-                      name={selectors.STORE_NAME+'.events'}
-                      url={['apiv2_cursus_session_list_events', {id: session.id}]}
-                    />
-                  </>
+                  <EventList
+                    className="mt-4"
+                    path={props.path}
+                    name={selectors.STORE_NAME+'.events'}
+                    url={['apiv2_cursus_session_list_events', {id: session.id}]}
+                  />
                 )
               }, {
                 name: 'participants',

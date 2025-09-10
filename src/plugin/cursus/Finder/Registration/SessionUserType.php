@@ -20,6 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SessionUserType extends AbstractType
 {
     public const NO_SESSION = 'no_session';
+    public const SESSION_CANCELED = 'canceled';
     public const SESSION_NOT_STARTED = 'not_started';
     public const SESSION_IN_PROGRESS = 'in_progress';
     public const SESSION_ENDED = 'ended';
@@ -42,6 +43,14 @@ class SessionUserType extends AbstractType
                 'buildQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
                     if (null !== $finder->getFilterValue()) {
                         $queryBuilder->leftJoin($finder->getParent()->getAlias().'.session', $finder->getAlias());
+
+                        if (self::SESSION_CANCELED === $finder->getFilterValue()) {
+                            $queryBuilder->andWhere("{$finder->getAlias()}.canceled = true");
+
+                            return;
+                        } else {
+                            $queryBuilder->andWhere("{$finder->getAlias()}.canceled = false");
+                        }
 
                         switch ($finder->getFilterValue()) {
                             case self::NO_SESSION:
@@ -69,6 +78,21 @@ class SessionUserType extends AbstractType
                 },
             ])
             ->add('course', RelatedEntityType::class)
+            ->add('workspace', ClosureType::class, [
+                'buildQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
+                    if (null === $finder->getFilterValue()) {
+                        return;
+                    }
+
+                    $queryBuilder->leftJoin($finder->getParent()->getAlias().'.session', $finder->getAlias());
+                    $queryBuilder->leftJoin($finder->getAlias().'.workspace', 'sessionWs');
+                    $queryBuilder->leftJoin($finder->getParent()->getAlias().'.course', $finder->getAlias().'Course');
+                    $queryBuilder->leftJoin($finder->getAlias().'Course.workspace', 'courseWs');
+
+                    $queryBuilder->andWhere('(sessionWs.uuid = :workspace OR courseWs.uuid = :workspace)');
+                    $queryBuilder->setParameter('workspace', $finder->getFilterValue());
+                },
+            ])
             ->add('date', DateType::class)
             ->add('confirmed', BooleanType::class)
             ->add('validated', BooleanType::class)

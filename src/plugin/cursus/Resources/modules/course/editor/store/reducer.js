@@ -7,8 +7,7 @@ import {makeListReducer} from '#/main/app/content/list'
 const reducer = combineReducers({
   form: makeFormReducer(selectors.FORM_NAME),
   canceledSessions: makeListReducer(selectors.STORE_NAME+'.canceledSessions', {
-    sortBy: {property: 'startDate', direction: -1},
-    filters: {filters: [{property: 'status', value: 'not_ended'}]}
+    sortBy: {property: 'startDate', direction: -1}
   })
 })
 

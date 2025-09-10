@@ -65,14 +65,12 @@ class StandardRestrictions extends Component {
               onlyWarn={true}
               success={{
                 title: classes({
-                  [trans('restricted_workspace.you_are_manager', {}, 'workspace')]: this.props.managed,
-                  [trans('restricted_workspace.can_access', {}, 'workspace')]: !this.props.managed && authenticated,
-                  [trans('restricted_workspace.anonymous_can_access', {}, 'workspace')]: !this.props.managed && !authenticated
+                  [trans('restricted_workspace.can_access', {}, 'workspace')]: authenticated,
+                  [trans('restricted_workspace.anonymous_can_access', {}, 'workspace')]: !authenticated
                 }),
                 help: classes({
-                  [trans('restricted_workspace.manager_rights_access', {}, 'workspace')]: this.props.managed,
-                  [trans('restricted_workspace.rights_access', {}, 'workspace')]: !this.props.managed && authenticated,
-                  [trans('restricted_workspace.anonymous_rights_access', {}, 'workspace')]: !this.props.managed && !authenticated
+                  [trans('restricted_workspace.rights_access', {}, 'workspace')]: authenticated,
+                  [trans('restricted_workspace.anonymous_rights_access', {}, 'workspace')]: !authenticated
                 })
               }}
               fail={{
@@ -144,26 +142,15 @@ class StandardRestrictions extends Component {
               failed={this.props.errors.noRights}
               onlyWarn={true}
               success={{
-                title: classes({
-                  [trans('restricted_workspace.you_are_manager', {}, 'workspace')]: this.props.managed,
-                  [trans('restricted_workspace.can_access', {}, 'workspace')]: !this.props.managed
-                }),
-                help: classes({
-                  [trans('restricted_workspace.manager_rights_access', {}, 'workspace')]: this.props.managed,
-                  [trans('restricted_workspace.rights_access', {}, 'workspace')]: !this.props.managed
-                })
+                title: trans('restricted_workspace.can_access', {}, 'workspace'),
+                help: trans('restricted_workspace.rights_access', {}, 'workspace')
               }}
               fail={{
-                title: this.props.managed ?
-                  trans('restricted_workspace.you_are_manager', {}, 'workspace') :
-                  trans('restricted_workspace.pending_registration', {}, 'workspace'),
-                help: classes({
-                  [trans('restricted_workspace.wait_validation', {}, 'workspace')]: !this.props.managed,
-                  [trans('restricted_workspace.contact_manager', {
+                title: trans('restricted_workspace.pending_registration', {}, 'workspace'),
+                help: trans('restricted_workspace.wait_validation', {}, 'workspace') + ' ' +
+                  trans('restricted_workspace.contact_manager', {
                     'manager_email': this.props.workspace.contactEmail ? `(<a href="mailto:${this.props.workspace.contactEmail}">${this.props.workspace.contactEmail}</a>)` : ''
-                  }, 'workspace')]: !this.props.managed,
-                  [trans('restricted_workspace.manager_rights_access', {}, 'workspace')]: this.props.managed
-                })
+                  }, 'workspace')
               }}
             />
           }
@@ -251,7 +238,7 @@ const WorkspaceForbidden = (props) => {
   const [restrictions, setRestrictions] = useState(undefined)
 
   useEffect(() => {
-    getRestrictions(props.workspace, props.errors, props.managed).then((pluginRestrictions) => {
+    getRestrictions(props.workspace, props.errors, props.currentUser).then((pluginRestrictions) => {
       setRestrictions(pluginRestrictions)
     })
   }, [props.workspace.id])

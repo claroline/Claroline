@@ -51,7 +51,7 @@ class SessionUserController extends AbstractCrudController
         ?FinderQuery $finderQuery = new FinderQuery()
     ): StreamedJsonResponse {
         if (WorkspaceContext::getName() === $context) {
-            $finderQuery->addFilter('session.workspace', $contextId);
+            $finderQuery->addFilter('workspace', $contextId);
         }
 
         $options = static::getOptions();
