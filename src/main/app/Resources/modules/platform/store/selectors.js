@@ -17,21 +17,27 @@ const restrictionDates = createSelector(
   (restrictions = {}) => restrictions.dates
 )
 
-const disabled = createSelector(
+const unavailable = createSelector(
   [restrictionDates, restrictionDisabled],
-  (restrictionDates = [], restrictionDisabled) => {
-    const started = !restrictionDates[0] || restrictionDates[0] < now(false)
-    const ended   = restrictionDates[1] && restrictionDates[1] < now(false)
+  (restrictionDates, restrictionDisabled) => {
+    if (restrictionDisabled) {
+      return true
+    }
 
-    return restrictionDisabled || !started || ended
+    if (!isEmpty(restrictionDates)) {
+      const started = !restrictionDates[0] || restrictionDates[0] <= now(false)
+      const ended = !!restrictionDates[1] && restrictionDates[1] > now(false)
+
+      return !started || ended
+    }
+
+    return false
   }
 )
 
 const version = (state) => configSelectors.param(state, 'version')
 
 const helpUrl = (state) => configSelectors.param(state, 'help')
-
-const unavailable = (state) => disabled(state)
 
 const selfRegistration = (state) => configSelectors.param(state, 'selfRegistration')
 
