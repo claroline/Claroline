@@ -33,13 +33,13 @@ class MigrationsManagerTest extends MockeryTestCase
      */
     public function testGenerateBundleMigration(array $queries, $areQueriesEmpty): void
     {
-        $manager = m::mock(
-            'Claroline\InstallationBundle\Manager\MigrationsManager',
-            [$this->connection, $this->generator, $this->writer, $this->migrator]
-        );
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
         $platform = m::mock('Doctrine\DBAL\Platforms\AbstractPlatform');
         $bundleConfig = m::mock('Claroline\InstallationBundle\Migrations\BundleMigration');
+
+        $this->connection->shouldReceive('getDatabasePlatform')
+            ->once()
+            ->andReturn($platform);
 
         $this->migrator->shouldReceive('getConfiguration')
             ->once()
@@ -61,7 +61,7 @@ class MigrationsManagerTest extends MockeryTestCase
                 ->with($bundle, m::any(), $queries);
         }
 
-        $manager->generateBundleMigration($bundle);
+        $this->manager->generateBundleMigration($bundle);
 
         // to remove the "risky" warning
         // if the method call fails, the assertion will not be checked and the test will fail
