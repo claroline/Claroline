@@ -34,8 +34,12 @@ class IpAuthenticatorTest extends MockeryTestCase
         $ipUserRepository = $this->mock(EntityRepository::class);
         $ipUserRepository->shouldReceive('findOneBy')->with(['ip' => '127.0.0.1'])->once()->andReturn($ipUser);
 
+        $userRepository = $this->mock(EntityRepository::class);
+        $userRepository->shouldReceive('loadUserByIdentifier')->with('john.doe')->once()->andReturn($user);
+
         $om = $this->mock(ObjectManager::class);
         $om->shouldReceive('getRepository')->with(IpUser::class)->andReturn($ipUserRepository);
+        $om->shouldReceive('getRepository')->with(User::class)->andReturn($userRepository);
 
         $authenticator = new IpAuthenticator($om);
         $passport = $authenticator->authenticate(new Request([], [], [], [], [], ['REMOTE_ADDR' => '127.0.0.1']));
@@ -43,7 +47,7 @@ class IpAuthenticatorTest extends MockeryTestCase
         $this->assertSame($user, $passport->getUser());
     }
 
-    public function testOnAuthenticationSuccess()
+    public function testOnAuthenticationSuccess(): void
     {
         $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
 
@@ -52,7 +56,7 @@ class IpAuthenticatorTest extends MockeryTestCase
         );
     }
 
-    public function testOnAuthenticationFailure()
+    public function testOnAuthenticationFailure(): void
     {
         $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
 

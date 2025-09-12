@@ -39,8 +39,12 @@ class ApiTokenAuthenticatorTest extends MockeryTestCase
         $apiTokenRepository = $this->mock(EntityRepository::class);
         $apiTokenRepository->shouldReceive('findOneBy')->with(['token' => 'foo'])->once()->andReturn($apiToken);
 
+        $userRepository = $this->mock(EntityRepository::class);
+        $userRepository->shouldReceive('loadUserByIdentifier')->with('john.doe')->once()->andReturn($user);
+
         $om = $this->mock(ObjectManager::class);
         $om->shouldReceive('getRepository')->with(ApiToken::class)->andReturn($apiTokenRepository);
+        $om->shouldReceive('getRepository')->with(User::class)->andReturn($userRepository);
 
         $authenticator = new ApiTokenAuthenticator($om);
         $passport = $authenticator->authenticate(new Request(['apitoken' => 'foo']));
