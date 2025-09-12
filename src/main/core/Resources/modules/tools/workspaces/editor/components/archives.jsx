@@ -8,8 +8,8 @@ import {selectors} from '#/main/core/tools/workspaces/editor/store/selectors'
 
 const EditorArchives = () =>
   <EditorPage
-    title={trans('archives')}
-    help={trans('Retrouvez et gérez tous les espaces archivés.')}
+    title={trans('archives', {}, 'workspace')}
+    help={trans('archives_desc', {}, 'workspace')}
     managerOnly={true}
   >
     <WorkspaceList

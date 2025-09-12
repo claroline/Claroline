@@ -66,5 +66,7 @@
   "favourites" : "Favoris",
   "favourites_desc": "Retrouvez et gérez vos espaces favoris.",
   "workspace_name": "Espace d'activités : %name%",
-  "history": "Historique de navigation"
+  "history": "Historique de navigation",
+  "archives": "Espaces archivés",
+  "archives_desc": "Retrouvez et gérez tous les espaces archivés."
 }

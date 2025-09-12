@@ -33,7 +33,7 @@ export default declareAction((resourceNodes, nodesRefresher) => {
     request: {
       url: ['claro_resource_restore'],
       request: {
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify(processable.map(node => node.id))
       },
       success: nodesRefresher.update
@@ -42,6 +42,6 @@ export default declareAction((resourceNodes, nodesRefresher) => {
     set: [constants.ACTION_SET_LIST, constants.ACTION_SET_DETAILS, constants.ACTION_SET_ADVANCED],
     managerOnly: true,
     title: trans('restore_resource', {}, 'actions'),
-    description: trans('restore_resource_desc', {}, 'actions'),
+    description: trans('restore_resource_desc', {}, 'actions')
   }
 })

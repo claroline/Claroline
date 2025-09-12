@@ -104,8 +104,8 @@ class ArchiveController
 
         $this->om->endFlushSuite();
 
-        return new JsonResponse(array_map(function (ResourceNode $badge) {
-            return $this->serializer->serialize($badge);
+        return new JsonResponse(array_map(function (ResourceNode $resourceNode) {
+            return $this->serializer->serialize($resourceNode);
         }, $processed));
     }
 }

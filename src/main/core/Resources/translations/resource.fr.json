@@ -95,5 +95,7 @@
     "allow_download_help": "Les utilisateurs ayant la permission \"Ouvrir\" peuvent télécharger une copie locale de la ressource.",
     "resource_history_desc": "Retrouvez toutes les modifications effectuées sur la ressource et son contenu.",
     "make_resource_public": "Rendre la ressource publique",
-    "make_resource_public_help": "Les ressources publiques sont accessibles par tous les utilisateurs ayant accès à l'espace d'activités."
+    "make_resource_public_help": "Les ressources publiques sont accessibles par tous les utilisateurs ayant accès à l'espace d'activités.",
+    "archives": "Ressources archivées",
+    "archives_desc": "Retrouvez et gérez toutes les resources archivées."
 }
