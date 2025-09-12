@@ -111,12 +111,7 @@ final class LessonResource extends ResourceComponent implements DownloadableReso
      */
     public function copy(AbstractResource $original, AbstractResource $copy): void
     {
-        $newRoot = new Chapter();
-        $newRoot->setLesson($copy);
-        $copy->setRoot($newRoot);
-
-        $this->om->persist($newRoot);
-        $this->om->persist($copy);
+        $copy->buildRoot();
         $this->om->flush();
 
         $this->chapterManager->copyRoot($original->getRoot(), $copy->getRoot());
