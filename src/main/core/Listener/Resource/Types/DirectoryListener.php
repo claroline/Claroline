@@ -80,7 +80,7 @@ final class DirectoryListener extends ResourceComponent implements DownloadableR
     public function copy(AbstractResource $original, AbstractResource $copy): void
     {
         $resourceNode = $original->getResourceNode();
-        if (empty($resourceNode->getChildren())) {
+        if (0 === $resourceNode->getChildren()->count()) {
             return;
         }
 
