@@ -102,7 +102,7 @@ final class AnnouncementTool extends ToolComponent
 
         $this->om->startFlushSuite();
 
-        foreach ($data['posts'] as $announcementData) {
+        foreach ($data['announcements'] as $announcementData) {
             $newAnnouncement = new Announcement();
             $newAnnouncement->setWorkspace($contextSubject);
 
