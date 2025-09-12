@@ -79,7 +79,7 @@ class TeamController extends AbstractCrudController
         $this->checkPermission('OPEN', $team, [], true);
 
         $finderQuery->addFilter('teams', $team->getUuid());
-        $finderQuery->addFilter('roles', ['manager' === $role ? $team->getManagerRole()->getName() : $team->getRole()->getName()]);
+        $finderQuery->addFilter('roles', ['manager' === $role ? $team->getManagerRole()->getUuid() : $team->getRole()->getUuid()]);
 
         $users = $this->crud->search(User::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
 

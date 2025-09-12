@@ -21,6 +21,11 @@ class RelatedEntityType extends AbstractType
             ->define('sortBy')
             ->allowedTypes('null', 'string')
             ->default(null);
+
+        $resolver
+            ->define('identifier')
+            ->default('uuid')
+            ->required();
     }
 
     public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
@@ -39,13 +44,14 @@ class RelatedEntityType extends AbstractType
             if ($finder->hasFilter()) {
                 if (is_null($finder->getFilterValue())) {
                     $queryBuilder->andWhere("{$finder->getAlias()} IS NULL");
+
                     return;
                 }
 
                 if (is_array($finder->getFilterValue())) {
-                    $queryBuilder->andWhere("{$finder->getAlias()}.uuid = :{$finder->getAlias()}");
+                    $queryBuilder->andWhere("{$finder->getAlias()}.{$options['identifier']} = :{$finder->getAlias()}");
                 } else {
-                    $queryBuilder->andWhere("{$finder->getAlias()}.uuid IN (:{$finder->getAlias()})");
+                    $queryBuilder->andWhere("{$finder->getAlias()}.{$options['identifier']} IN (:{$finder->getAlias()})");
                 }
 
                 $queryBuilder->setParameter($finder->getAlias(), $finder->getFilterValue());
