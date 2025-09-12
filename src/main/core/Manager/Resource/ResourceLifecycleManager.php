@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -28,23 +27,15 @@ class ResourceLifecycleManager
     public function embed(ResourceNode $resourceNode): EmbedResourceEvent
     {
         $event = new EmbedResourceEvent($this->getResourceFromNode($resourceNode));
-        $this->eventDispatcher->dispatch($event, static::eventName('embed', $resourceNode));
+        $this->eventDispatcher->dispatch($event, ResourceEvents::getEventName(ResourceEvents::EMBED, $resourceNode->getType()));
 
         return $event;
     }
 
-    public function create(ResourceNode $resourceNode, array $data = []): CreateResourceEvent
-    {
-        $event = new CreateResourceEvent($this->getResourceFromNode($resourceNode), $data);
-        $this->eventDispatcher->dispatch($event, ResourceEvents::getEventName(ResourceEvents::CREATE, $resourceNode->getResourceType()->getName()));
-
-        return $event;
-    }
-
-    public function copy($originalResource, $copiedResource): CopyResourceEvent
+    public function copy(AbstractResource $originalResource, AbstractResource $copiedResource): CopyResourceEvent
     {
         $event = new CopyResourceEvent($originalResource, $copiedResource);
-        $this->eventDispatcher->dispatch($event, static::eventName('copy', $copiedResource->getResourceNode()));
+        $this->eventDispatcher->dispatch($event, ResourceEvents::getEventName(ResourceEvents::COPY, $copiedResource->getResourceNode()->getType()));
 
         return $event;
     }
@@ -52,23 +43,13 @@ class ResourceLifecycleManager
     public function delete(ResourceNode $resourceNode, bool $soft = true): DeleteResourceEvent
     {
         $event = new DeleteResourceEvent($this->getResourceFromNode($resourceNode), $soft);
-        $this->eventDispatcher->dispatch($event, static::eventName('delete', $resourceNode));
+        $this->eventDispatcher->dispatch($event, ResourceEvents::getEventName(ResourceEvents::DELETE, $resourceNode->getType()));
 
         return $event;
     }
 
     /**
-     * Generates the names for dispatched events.
-     */
-    private static function eventName(string $prefix, ResourceNode $resourceNode): string
-    {
-        return 'resource.'.$resourceNode->getResourceType()->getName().'.'.$prefix;
-    }
-
-    /**
      * Returns the resource linked to a node.
-     *
-     * @return AbstractResource
      */
     private function getResourceFromNode(ResourceNode $resourceNode): ?AbstractResource
     {
