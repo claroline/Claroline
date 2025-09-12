@@ -66,20 +66,26 @@ class CommunityTool extends ToolComponent
 
     public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
     {
-        $userTeams = [];
-        if ($this->tokenStorage->getToken()?->getUser() instanceof User && $context === WorkspaceContext::getName()) {
-            $userTeams = $this->teamManager->getTeamsByUserAndWorkspace($this->tokenStorage->getToken()?->getUser(), $contextSubject);
+        if ($context === WorkspaceContext::getName()) {
+            $userTeams = [];
+            if ($this->tokenStorage->getToken()?->getUser() instanceof User && $context === WorkspaceContext::getName()) {
+                $userTeams = $this->teamManager->getTeamsByUserAndWorkspace($this->tokenStorage->getToken()?->getUser(), $contextSubject);
+            }
+
+            return [
+                'userTeams' => array_map(function (Team $team) {
+                    return $this->serializer->serialize($team, [SerializerInterface::SERIALIZE_MINIMAL]);
+                }, $userTeams),
+                'parameters' => $this->getWorkspaceParameters($contextSubject),
+            ];
         }
 
         $userProfile = $this->om->getRepository(UserProfile::class)->findAll();
 
         return [
-            'userTeams' => array_map(function (Team $team) {
-                return $this->serializer->serialize($team, [SerializerInterface::SERIALIZE_MINIMAL]);
-            }, $userTeams),
             'profile' => $this->serializer->serialize($userProfile[0]),
             'usersLimitReached' => $this->userManager->hasReachedLimit(),
-            'parameters' => WorkspaceContext::getName() === $context ? $this->getWorkspaceParameters($contextSubject) : $this->getDesktopParameters(),
+            'parameters' => $this->getDesktopParameters(),
         ];
     }
 
@@ -251,7 +257,7 @@ class CommunityTool extends ToolComponent
 
         $userProfile = $userProfiles[0];
         if (!empty($profileData)) {
-            $this->crud->update($userProfile, $profileData);
+            $this->crud->update($userProfile, $profileData, [Crud::NO_PERMISSIONS]);
         }
 
         return $userProfile;
