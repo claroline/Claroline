@@ -39,8 +39,7 @@ class UserType extends AbstractType
             ->add('lastName', TextType::class)
             ->add('email', TextType::class)
             ->add('lastActivity', DateType::class)
-            ->add('createdAt', DateType::class)
-            ->add('updatedAt', DateType::class)
+            ->add('created', DateType::class)
             ->add('disabled', BooleanType::class, ['default' => $options['disabled']])
             ->add('groups', RelatedEntityType::class)
             ->add('roles', RelatedEntityType::class, [
