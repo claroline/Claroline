@@ -263,6 +263,7 @@ class SequenceSerializer
     {
         $ids = [];
         foreach ($stepsData as $stepIndex => $stepData) {
+            $step = null;
             if ($stepData['id']) {
                 $step = $sequence->getStep($stepData['id']);
             }
@@ -278,7 +279,7 @@ class SequenceSerializer
             $ids[] = $step->getUuid();
         }
 
-        // removes steps which no longer exists
+        // removes steps which no longer exist
         $currentSteps = $sequence->getRootSteps();
         foreach ($currentSteps as $currentStep) {
             if (!in_array($currentStep->getUuid(), $ids)) {
@@ -291,6 +292,7 @@ class SequenceSerializer
     {
         $ids = [];
         foreach ($assignmentsData as $assignmentData) {
+            $assignment = null;
             if (isset($assignmentData['id'])) {
                 $assignment = $sequence->getAssignment($assignmentData['id']);
             }
@@ -305,7 +307,7 @@ class SequenceSerializer
             $ids[] = $assignment->getUuid();
         }
 
-        // removes steps which no longer exists
+        // removes assignments which no longer exist
         $currentAssignments = $sequence->getAssignments();
         foreach ($currentAssignments as $currentAssignment) {
             if (!in_array($currentAssignment->getUuid(), $ids)) {

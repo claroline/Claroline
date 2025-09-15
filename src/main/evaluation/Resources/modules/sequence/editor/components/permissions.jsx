@@ -58,11 +58,16 @@ const Assignments = () => {
             contextId: workspace.id,
             selectAction: (selected) => ({
               type: CALLBACK_BUTTON,
-              callback: () => updateAssignments([].concat(assignments, selected.map(role => ({
-                role: role,
-                required: false,
-                scored: false
-              }))))
+              callback: () => {
+                // removes roles already defined in assignments
+                const toUpdate = selected.filter(s => -1 === assignments.findIndex(assignment => get(s, 'id') === get(assignment, 'role.id')))
+
+                return updateAssignments([].concat(assignments, toUpdate.map(role => ({
+                  role: role,
+                  required: false,
+                  scored: false
+                }))))
+              }
             })
           }]}
           label={trans('Ajouter des participants')}
