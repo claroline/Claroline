@@ -189,6 +189,7 @@ const ItemFormModalComponent = (props) => {
               options: {
                 placeholder: trans('no_hint_info', {}, 'quiz'),
                 button: trans('add_hint', {}, 'quiz'),
+                type: 'string',
                 defaultItem: {id: makeId(), penalty: 0},
                 render: useCallback((hint = {}, hintErrors, hintIndex) => (
                   <div className="hint-control">

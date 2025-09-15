@@ -53,8 +53,8 @@ $content-thumbnail-height: 140px;
     }
   }
   &.active, &:hover {
-    box-shadow: 0px 0px 5px 1px #66afe9;
-    border-color: #337ab7;
+    box-shadow: 0 0 5px 1px rgba($primary, .25);
+    border-color: $primary;
     .content-thumbnail-actions {
       visibility: visible;
     }

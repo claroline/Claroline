@@ -13,7 +13,7 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {selectors} from '#/plugin/exo/resources/quiz/editor/store'
 import {MODAL_ADD_MEDIA} from '#/plugin/exo/data/types/medias/modals/editor'
 import {getContentDefinition, isEditableType} from '#/plugin/exo/contents/utils'
-import {ContentThumbnail} from '#/plugin/exo/contents/components/content-thumbnail'
+import {MediaThumbnail} from '#/plugin/exo/data/types/medias/components/thumbnail'
 
 class MediasInput extends Component {
   constructor(props) {
@@ -26,31 +26,17 @@ class MediasInput extends Component {
 
   render() {
     return (
-      <div role="presentation">
+      <>
         <div className="d-flex flex-row flex-wrap gap-2">
-          {this.props.value.map((object, index) =>
-            <ContentThumbnail
+          {this.props.value.map((object) =>
+            <MediaThumbnail
               id={object.id}
-              index={index}
               key={`item-object-${object.id}-thumbnail`}
               data={object.data || object.url}
               type={object.type}
               active={this.state.currentObjectId === object.id}
               canDelete={true}
               canEdit={isEditableType(object.type)}
-              canSort={true}
-              onSort={(source, destination) => {
-                if (source !== destination) {
-                  const newValue = cloneDeep(this.props.value)
-                  const srcIndex = newValue.findIndex(o => o.id === source)
-                  const sourceObject = newValue[srcIndex]
-                  newValue.splice(srcIndex, 1)
-                  const destIndex = newValue.findIndex(o => o.id === destination)
-                  newValue.splice(destIndex, 0, sourceObject)
-                  this.props.onChange(newValue)
-                  this.setState({currentObjectId: null})
-                }
-              }}
               handleEdit={e => {
                 e.stopPropagation()
                 this.setState({currentObjectId: this.state.currentObjectId === object.id ? null : object.id})
@@ -75,7 +61,7 @@ class MediasInput extends Component {
             getContentDefinition(this.props.value.find(o => o.id === this.state.currentObjectId).type).components.editor,
             {
               formName: selectors.FORM_NAME,
-              path: `${this.props.path}.objects[${this.props.value.findIndex(o => o.id === this.state.currentObjectId)}]`
+              path: `objects[${this.props.value.findIndex(o => o.id === this.state.currentObjectId)}]`
             }
           )
         }
@@ -102,7 +88,7 @@ class MediasInput extends Component {
             }
           }]}
         />
-      </div>
+      </>
     )
   }
 }

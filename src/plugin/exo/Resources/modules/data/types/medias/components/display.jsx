@@ -1,14 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {ContentThumbnail} from '#/plugin/exo/contents/components/content-thumbnail'
+import {MediaThumbnail} from '#/plugin/exo/data/types/medias/components/thumbnail'
 
 const MediasDisplay = (props) =>
   <div className="d-flex flex-row flex-wrap gap-2">
-    {props.data.map((object, index) =>
-      <ContentThumbnail
+    {props.data.map((object) =>
+      <MediaThumbnail
         id={object.id}
-        index={index}
         key={`item-object-${object.id}-thumbnail`}
         data={object.data || object.url}
         type={object.type}
