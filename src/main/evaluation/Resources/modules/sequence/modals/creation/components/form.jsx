@@ -1,6 +1,6 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 import omit from 'lodash/omit'
 
@@ -9,7 +9,6 @@ import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {actions as formActions, Form, FormContent} from '#/main/app/content/form'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
-import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {route} from '#/main/evaluation/sequence/routing'
 import {selectors} from '#/main/evaluation/sequence/modals/creation/store'
@@ -17,10 +16,8 @@ import {selectors} from '#/main/evaluation/sequence/modals/creation/store'
 const CreationForm = (props) => {
   const history = useHistory()
 
-  const toolPath = useSelector(toolSelectors.path)
-
   const dispatch = useDispatch()
-  const reset = () => dispatch(formActions.reset(selectors.STORE_NAME, {}, true))
+  const reset = useCallback(() => dispatch(formActions.reset(selectors.STORE_NAME, {}, true)), [selectors.STORE_NAME])
 
   return (
     <Modal
@@ -86,7 +83,7 @@ const CreationForm = (props) => {
             label={trans('create_and_configure', {}, 'actions')}
             className="btn btn-link"
             callback={() => props.create().then((sequence) => {
-              history.push(route(sequence, toolPath)+'/edit')
+              history.push(route(sequence)+'/edit')
             })}
           />
           <Button
