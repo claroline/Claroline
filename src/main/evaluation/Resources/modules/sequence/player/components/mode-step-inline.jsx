@@ -10,7 +10,7 @@ import {Step} from '#/main/evaluation/sequence/player/components/step'
 import {PlayerNext} from '#/main/evaluation/sequence/player/components/next'
 
 /**
- * Sequence player when "step" (One step + all its children per page) pagination is enabled.
+ * Sequence player when "step" (One step and all its children per page) pagination is enabled.
  */
 const PlayerModeStepInline = (props) => {
   const navigationEnabled = useSelector(selectors.navigationEnabled)

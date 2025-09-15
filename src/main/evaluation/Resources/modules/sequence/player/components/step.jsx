@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useSelector} from 'react-redux'
 import classes from 'classnames'
@@ -36,6 +36,12 @@ SecondaryResources.propTypes = {
  */
 const Step = props => {
   const stepNumbering = useSelector(state => selectors.stepNumbering(state, props.step))
+
+  const onScroll = useCallback((details) => {
+    if (Position.INSIDE === details.position || Position.BEFORE === details.position) {
+      props.updateProgression(props.step.id)
+    }
+  }, [props.step.id])
 
   return (
     <>
@@ -100,11 +106,8 @@ const Step = props => {
       }
 
       <Waypoint
-        onPositionChange={(details) => {
-          if (Position.INSIDE === details.position || Position.BEFORE === details.position) {
-            props.updateProgression(props.step.id)
-          }
-        }}
+        key={props.step.id}
+        onPositionChange={onScroll}
       />
     </>
   )
