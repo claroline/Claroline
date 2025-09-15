@@ -1,6 +1,8 @@
 import {API_REQUEST} from '#/main/app/api'
 
 import {actions as resourceActions} from '#/main/core/resource/store'
+import {constants} from '#/main/evaluation/constants'
+import get from 'lodash/get'
 
 export const actions = {}
 
@@ -11,6 +13,12 @@ actions.updateProgression = (id, currentTime, totalTime) => (dispatch) => dispat
     request: {
       method: 'PUT'
     },
-    success: (response) => dispatch(resourceActions.updateUserEvaluation(response.userEvaluation))
+    success: (response) => {
+      if (constants.EVALUATION_TERMINATED_STATUSES.includes(get(response.userEvaluation, 'status'))) {
+        dispatch(resourceActions.triggerLifecycleAction('end'))
+      }
+
+      return dispatch(resourceActions.updateUserEvaluation(response.userEvaluation))
+    }
   }
 })

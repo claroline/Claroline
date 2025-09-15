@@ -65,7 +65,7 @@ const SequencePlayer = props => {
               }
             },
             // force navigation in case the user as navigated with the summary without finishing an opened resource
-            onLeave: () => props.enableNavigation,
+            onLeave: props.enableNavigation,
             render: () => {
               switch (get(props.sequence, 'display.pagination', 'all')) {
                 case 'none':
