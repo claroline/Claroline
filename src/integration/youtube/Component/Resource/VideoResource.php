@@ -14,7 +14,7 @@ use Claroline\YouTubeBundle\Manager\EvaluationManager;
 use Claroline\YouTubeBundle\Manager\YouTubeManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class VideoResource extends ResourceComponent implements EvaluatedResourceInterface, UrlAdapterInterface
+final class VideoResource extends ResourceComponent implements EvaluatedResourceInterface, UrlAdapterInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
@@ -27,6 +27,16 @@ class VideoResource extends ResourceComponent implements EvaluatedResourceInterf
     public static function getName(): string
     {
         return 'youtube_video';
+    }
+
+    public static function supportsScore(): bool
+    {
+        return false;
+    }
+
+    public static function supportsAttempts(): bool
+    {
+        return false;
     }
 
     public function supportsUrl(string $url): int

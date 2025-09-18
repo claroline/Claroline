@@ -12,7 +12,7 @@ interface ItemDefinitionInterface
     /**
      * Gets the mime type of the question.
      *
-     * It MUST have the format : application/x.{QUESTION_TYPE}+json
+     * It MUST have the format: application/x.{QUESTION_TYPE}+json
      */
     public static function getMimeType(): string;
 

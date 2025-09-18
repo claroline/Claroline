@@ -18,7 +18,6 @@ import {
 import {FormContent} from '#/main/app/content/form/containers/content'
 import {cleanErrors} from '#/main/app/content/form/utils'
 
-
 const FormModal = (props) => {
   // append the form reducer to the store if it is not already mounted
   const reducer = useMemo(() => makeFormReducer(props.name), [props.name])

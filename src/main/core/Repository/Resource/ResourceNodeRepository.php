@@ -54,8 +54,10 @@ class ResourceNodeRepository extends MaterializedPathRepository
      * @return ResourceNode|null
      *
      * @deprecated there are other methods to do it (see ObjectManager). Do not override base find().
+     *
+     * It is still used by Workspace opening parameter.
      */
-    public function find(mixed $id, LockMode|int|null $lockMode = null, int|null $lockVersion = null): object|null
+    public function find(mixed $id, LockMode|int|null $lockMode = null, ?int $lockVersion = null): ?object
     {
         $qb = $this->createQueryBuilder('n');
 

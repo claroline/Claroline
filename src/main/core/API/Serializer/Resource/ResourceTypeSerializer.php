@@ -35,7 +35,14 @@ class ResourceTypeSerializer
         $resourceHandler = $this->resourceProvider->getComponent($resourceType->getName());
 
         $download = $resourceHandler instanceof DownloadableResourceInterface;
-        $evaluation = $resourceHandler instanceof EvaluatedResourceInterface;
+        $score = false;
+        $attempts = false;
+        $evaluation = false;
+        if ($resourceHandler instanceof EvaluatedResourceInterface) {
+            $evaluation = true;
+            $score = $resourceHandler::supportsScore();
+            $attempts = $resourceHandler::supportsAttempts();
+        }
 
         $adapters = [];
         $requireAdapter = false;
@@ -56,6 +63,8 @@ class ResourceTypeSerializer
             'class' => $resourceType->getClass(),
             'enabled' => $resourceType->isEnabled(),
             'evaluation' => $evaluation,
+            'score' => $score,
+            'attempts' => $attempts,
             'downloadable' => $download,
             'adapters' => $adapters,
             'requireAdapter' => $requireAdapter,

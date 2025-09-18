@@ -1,56 +1,40 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import isEmpty from 'lodash/isEmpty'
 
-import {ActionCard} from '#/main/app/action/components/card'
 import {PageContent, PageSection} from '#/main/app/page'
+import {ActionTypes, constants, PromisedActionTypes} from '#/main/app/action'
+import {ActionMenu} from '#/main/app/action/components/menu'
 
 const DashboardActions = ({
-  actions = []
+  actions = [],
+  canAdministrate = false
 }) => {
-  const displayedActions = actions
-    .filter(action => (undefined === action.displayed || action.displayed) && !action.dangerous)
-
-  const dangerousActions = actions
-    .filter(action => (undefined === action.displayed || action.displayed)  && action.dangerous)
-
   return (
-    <PageContent>
-      <PageSection className="my-4">
-        {displayedActions.map(action =>
-          <ActionCard
-            {...action}
-            key={action.title}
-            className="mb-2"
-          />
-        )}
-
-        {!isEmpty(displayedActions) && !isEmpty(dangerousActions) &&
-          <hr className="mt-3 mb-4" aria-hidden={true} />
-        }
-
-        {dangerousActions.map((action) =>
-          <ActionCard
-            {...action}
-            key={action.title}
-            className="mb-2"
-          />
-        )}
+    <PageContent className="py-4">
+      <PageSection>
+        <ActionMenu
+          set={constants.ACTION_SET_DASHBOARD}
+          manager={canAdministrate}
+          actions={actions}
+        />
       </PageSection>
     </PageContent>
   )
 }
 
 DashboardActions.propTypes = {
-  actions: T.arrayOf(T.shape({
-    title: T.string.isRequired,
-    help: T.string.isRequired,
-    displayed: T.bool,
-    action: T.object.isRequired,
-    dangerous: T.bool
-  }))
+  canAdministrate: T.bool,
+  actions: T.oneOfType([
+    // a regular array of actions
+    T.arrayOf(T.shape(
+      ActionTypes.propTypes
+    )),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedActionTypes.propTypes
+    )
+  ])
 }
-
 
 export {
   DashboardActions

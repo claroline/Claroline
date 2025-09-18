@@ -15,7 +15,7 @@ const CourseEditor = withReducer(selectors.STORE_NAME, reducer)(
       path: toolSelectors.path(state),
       contextType: toolSelectors.contextType(state),
       course: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)),
-      canAdministrate: hasPermission('administrate', toolSelectors.toolData(state))
+      canAdministrate: hasPermission('administrate', toolSelectors.tool(state))
     }),
     (dispatch) => ({
       openForm(slug, defaultProps, workspace = null) {

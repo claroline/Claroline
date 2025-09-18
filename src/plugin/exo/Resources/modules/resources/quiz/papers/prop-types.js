@@ -2,6 +2,18 @@ import {PropTypes as T} from 'prop-types'
 
 import {Quiz} from '#/plugin/exo/resources/quiz/prop-types'
 
+const Answer = {
+  propTypes: {
+    id: T.string.isRequired,
+    questionId: T.string.isRequired,
+    tries: T.number,
+    usedHints: T.array,
+    feedback: T.string,
+    score: T.string,
+    data: T.any // type depends on the question type
+  }
+}
+
 const Paper = {
   propTypes: {
     id: T.string.isRequired,
@@ -18,9 +30,9 @@ const Paper = {
     structure: T.shape(
       Quiz.propTypes
     ),
-    answers: T.arrayOf(T.shape({
-      // TODO : answer propTypes
-    }))
+    answers: T.arrayOf(T.shape(
+      Answer.propTypes
+    ))
   },
 
   defaultProps: {
@@ -30,5 +42,6 @@ const Paper = {
 }
 
 export {
-  Paper
+  Paper,
+  Answer
 }

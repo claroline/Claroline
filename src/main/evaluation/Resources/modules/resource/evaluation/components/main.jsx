@@ -1,53 +1,63 @@
-import React, {useCallback} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+import React from 'react'
+import {useSelector} from 'react-redux'
+import get from 'lodash/get'
 
+import {trans} from '#/main/app/intl'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {Routes} from '#/main/app/router'
+import {Nav} from '#/main/app/components/nav'
 import {PageContent, PageSection} from '#/main/app/page'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {ResourceCard} from '#/main/evaluation/resource/components/card'
-import {selectors} from '#/main/evaluation/resource/evaluation/store'
+import {selectors as dashboardSelectors} from '#/main/core/resource/dashboard/store'
 
-import {EvaluationList} from '#/main/evaluation/components/list'
-import {getActions} from '#/main/evaluation/resource/utils'
-import {actions as listActions} from '#/main/app/content/list'
-import {selectors as securitySelectors} from '#/main/app/security/store'
-import {selectors as toolSelectors} from '#/main/core/tool'
+import {ResourceDashboardEvaluations} from '#/main/evaluation/resource/evaluation/components/evaluations'
+import {ResourceDashboardAttempts} from '#/main/evaluation/resource/evaluation/components/attempts'
 
-const ResourceDashboardEvaluations = () => {
-  const dispatch = useDispatch()
+const ResourceDashboardEvaluation = () => {
+  const dashboardPath = useSelector(dashboardSelectors.path)
 
-  const currentUser = useSelector(securitySelectors.currentUser)
-  const contextType = useSelector(toolSelectors.contextType)
-  const contextId = useSelector(toolSelectors.contextId)
-
-  const resourcePath = useSelector(resourceSelectors.path)
-  const resourceId = useSelector(resourceSelectors.id)
-  const hasScore = useSelector(resourceSelectors.hasScore)
-  const totalScore = useSelector(resourceSelectors.totalScore)
-
-  const invalidateList = useCallback(() => {
-    dispatch(listActions.invalidateData(selectors.STORE_NAME))
-  }, [selectors.STORE_NAME])
-
-  const evaluationsRefresher = {
-    add:    invalidateList,
-    update: invalidateList,
-    delete: invalidateList
-  }
+  const resourceNode = useSelector(resourceSelectors.resourceNode)
+  const hasAttempts = useSelector(resourceSelectors.hasAttempts)
 
   return (
     <PageContent className="py-4">
+      {hasAttempts &&
+        <Nav
+          className="nav-justified content-lg mb-4 px-4"
+          variant="bar"
+          orientation="horizontal"
+          items={[
+            {
+              name: 'evaluations',
+              type: LINK_BUTTON,
+              label: trans(get(resourceNode, 'meta.type', 'resource'), {}, 'resource'),
+              target: `${dashboardPath}/results`,
+              exact: true
+            }, {
+              name: 'attempts',
+              type: LINK_BUTTON,
+              label: trans('attempts', {}, 'evaluation'),
+              target: `${dashboardPath}/results/attempts`
+            }
+          ]}
+        />
+      }
+
       <PageSection size="full" className="d-flex flex-fill">
-        <EvaluationList
-          name={selectors.STORE_NAME}
-          contextType={contextType}
-          contextId={contextId}
-          url={['apiv2_resource_evaluation_list', {nodeId: resourceId}]}
-          primaryAction="open"
-          actions={(rows) => getActions(rows, evaluationsRefresher, resourcePath, currentUser, true)}
-          card={ResourceCard}
-          hasScore={hasScore}
-          totalScore={totalScore}
+        <Routes
+          path={dashboardPath+'/results'}
+          routes={[
+            {
+              path: '/',
+              exact: true,
+              component: ResourceDashboardEvaluations
+            }, {
+              path: '/attempts',
+              disabled: !hasAttempts,
+              component: ResourceDashboardAttempts
+            }
+          ]}
         />
       </PageSection>
     </PageContent>
@@ -55,5 +65,5 @@ const ResourceDashboardEvaluations = () => {
 }
 
 export {
-  ResourceDashboardEvaluations
+  ResourceDashboardEvaluation
 }

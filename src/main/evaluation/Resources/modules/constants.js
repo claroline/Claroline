@@ -33,7 +33,7 @@ const EVALUATION_STATUS_COLOR = {
 const EVALUATION_TERMINATED_STATUSES = [
   EVALUATION_STATUS_COMPLETED,
   EVALUATION_STATUS_FAILED,
-  EVALUATION_STATUS_PASSED,
+  EVALUATION_STATUS_PASSED
 ]
 
 const EVALUATION_STATUSES = {
@@ -41,7 +41,7 @@ const EVALUATION_STATUSES = {
   [EVALUATION_STATUS_UNKNOWN]:       trans('evaluation_unknown_status', {}, 'evaluation'),
   [EVALUATION_STATUS_INCOMPLETE]:    trans('evaluation_incomplete_status', {}, 'evaluation'),
   [EVALUATION_STATUS_COMPLETED]:     trans('evaluation_completed_status', {}, 'evaluation'),
-  // [EVALUATION_STATUS_PENDING]:       trans('evaluation_pending_status', {}, 'evaluation'),
+  [EVALUATION_STATUS_PENDING]:       trans('evaluation_pending_status', {}, 'evaluation'),
   [EVALUATION_STATUS_FAILED]:        trans('evaluation_failed_status', {}, 'evaluation'),
   [EVALUATION_STATUS_PASSED]:        trans('evaluation_passed_status', {}, 'evaluation')
 }
@@ -51,7 +51,7 @@ const EVALUATION_STATUSES_SHORT = {
   [EVALUATION_STATUS_UNKNOWN]:       trans('evaluation_unknown_short', {}, 'evaluation'),
   [EVALUATION_STATUS_INCOMPLETE]:    trans('evaluation_incomplete_short', {}, 'evaluation'),
   [EVALUATION_STATUS_COMPLETED]:     trans('evaluation_completed_short', {}, 'evaluation'),
-  // [EVALUATION_STATUS_PENDING]:       trans('evaluation_pending_short', {}, 'evaluation'),
+  [EVALUATION_STATUS_PENDING]:       trans('evaluation_pending_short', {}, 'evaluation'),
   [EVALUATION_STATUS_FAILED]:        trans('evaluation_failed_short', {}, 'evaluation'),
   [EVALUATION_STATUS_PASSED]:        trans('evaluation_passed_short', {}, 'evaluation')
 }

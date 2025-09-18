@@ -7,9 +7,10 @@ import {ContentTitle} from '#/main/app/content/components/title'
 import {isQuestionType} from '#/plugin/exo/items/item-types'
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 import {ItemStats} from '#/plugin/exo/items/components/stats'
+import {PageSection} from '#/main/app/page'
 
 const AnswersStats = props =>
-  <div className="quiz-statistics content-lg">
+  <PageSection className="quiz-statistics" size="lg">
     {props.quiz.steps
       .filter(step => step.items && 0 < step.items.length)
       .map((step, idx) => {
@@ -40,7 +41,7 @@ const AnswersStats = props =>
         )
       })
     }
-  </div>
+  </PageSection>
 
 AnswersStats.propTypes = {
   numbering: T.string,

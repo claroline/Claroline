@@ -14,7 +14,7 @@ const CommunityTool = withReducer(selectors.STORE_NAME, reducer)(
       contextData: toolSelectors.contextData(state),
       hasPendingRegistrations: selectors.hasPendingRegistrations(state),
       canRegister: selectors.canCreate(state),
-      canEdit: hasPermission('edit', toolSelectors.toolData(state))
+      canEdit: hasPermission('edit', toolSelectors.tool(state))
     })
   )(CommunityToolComponent)
 )

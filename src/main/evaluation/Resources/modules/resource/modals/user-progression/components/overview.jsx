@@ -9,8 +9,21 @@ import {EmptyState} from '#/main/app/components/empty-state'
 
 import {ResourceAttempt, ResourceEvaluation} from '#/main/evaluation/resource/prop-types'
 import {EvaluationListItem} from '#/main/evaluation/components/list-item'
+import {supportAttempts} from '#/main/core/resource/utils'
+import {MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_RESOURCE_USER_ATTEMPT} from '#/main/evaluation/resource/modals/user-attempt'
 
 const UserProgressionOverview = (props) => {
+  const hasAttempts = supportAttempts(get(props.evaluation, 'resourceNode'))
+
+  if (!hasAttempts) {
+    return (
+      <EmptyState
+        title={trans('Aucune information supplémentaire')}
+      />
+    )
+  }
+
   if (isEmpty(props.progression)) {
     return (
       <EmptyState
@@ -26,6 +39,12 @@ const UserProgressionOverview = (props) => {
           <EvaluationListItem
             title={trans('attempt', {number: index + 1}, 'evaluation')}
             evaluation={resourceAttempt}
+            primaryAction={{
+              type: MODAL_BUTTON,
+              modal: [MODAL_RESOURCE_USER_ATTEMPT, {
+                evaluation: resourceAttempt
+              }]
+            }}
           />
         </li>
       )}

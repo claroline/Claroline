@@ -37,7 +37,7 @@ abstract class AbstractEvaluationManager
             $this->updateEvaluationScore($evaluation, $data['scoreMax'], $data['score'] ?? null, $data['scoreMin'] ?? null);
 
             // checks if the user score has changed
-            // ATTENTION : never directly compare floats together !
+            // ATTENTION: never directly compare floats together!
             // @see https://www.php.net/manual/en/language.types.float.php
             // In this case, checking for changes higher than 0.001 is safe because we round
             // the result for users to 2 digits anyway

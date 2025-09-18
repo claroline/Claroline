@@ -51,8 +51,9 @@ class AnalyticsController
      * Gets statistics of chosen answers of an Exercise.
      */
     #[Route(path: '/answers', name: 'exercise_statistics', methods: ['GET'])]
-    public function getAnswersAction(#[MapEntity(mapping: ['id' => 'uuid'])] Exercise $exercise): JsonResponse
-    {
+    public function getAnswersAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])] Exercise $exercise
+    ): JsonResponse {
         if (!$exercise->hasStatistics()) {
             $this->checkPermission('FOLLOW', $exercise->getResourceNode(), [], true);
         } else {

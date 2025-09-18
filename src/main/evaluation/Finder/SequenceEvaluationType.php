@@ -4,6 +4,7 @@ namespace Claroline\EvaluationBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractType;
 use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
+use Claroline\CommunityBundle\Finder\UserType;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\SequenceEvaluation;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,6 +21,7 @@ class SequenceEvaluationType extends AbstractType
     {
         $builder
             ->add('sequence', SequenceType::class)
+            ->add('user', UserType::class)
         ;
     }
 

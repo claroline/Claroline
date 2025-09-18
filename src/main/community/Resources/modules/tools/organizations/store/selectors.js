@@ -12,7 +12,7 @@ const LIST_NAME = STORE_NAME+'.list'
 const currentId = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME)).id || null
 
 const canCreate = createSelector(
-  [toolSelectors.toolData],
+  [toolSelectors.tool],
   (tool) => hasPermission('edit', tool)
 )
 

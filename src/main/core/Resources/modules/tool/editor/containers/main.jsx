@@ -14,9 +14,9 @@ const ToolEditor = withReducer(selectors.STORE_NAME, reducer)(
       loaded: toolSelectors.loaded(state),
       path: toolSelectors.path(state),
       name: toolSelectors.name(state),
-      tool: toolSelectors.toolData(state),
+      tool: toolSelectors.tool(state),
       contextType: toolSelectors.contextType(state),
-      contextId: toolSelectors.contextId(state),
+      contextId: toolSelectors.contextId(state)
     }),
     (dispatch) => ({
       load(initialData) {

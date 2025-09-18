@@ -150,7 +150,7 @@ class GraphicDefinition extends AbstractDefinition
         }
     }
 
-    private function isPointInArea(Area $area, $x, $y): bool
+    private function isPointInArea(Area $area, float $x, float $y): bool
     {
         $coords = explode(',', $area->getValue());
 
@@ -180,7 +180,7 @@ class GraphicDefinition extends AbstractDefinition
         return $this->isPointInRect($coords, $x, $y);
     }
 
-    private function isPointInRect($coords, $x, $y): bool
+    private function isPointInRect(array $coords, float $x, float $y): bool
     {
         return
             $x >= $coords[0]
@@ -195,6 +195,10 @@ class GraphicDefinition extends AbstractDefinition
     public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         $data = json_decode($answer->getData(), true);
+        if (empty($data)) {
+            return [];
+        }
+
         $answers = [];
         foreach ($data as $point) {
             $answers[] = "[{$point['x']},{$point['y']}]";

@@ -25,13 +25,25 @@ function getTypes() {
  */
 function getType(resourceNode) {
   return param('resources.types')
-    .find(type => type.name === resourceNode.meta.type)
+    .find(type => type.name === get(resourceNode, 'meta.type'))
 }
 
 function supportEvaluation(resourceNode) {
   const resourceType = getType(resourceNode)
 
   return !!resourceType && resourceType.evaluation
+}
+
+function supportScore(resourceNode) {
+  const resourceType = getType(resourceNode)
+
+  return !!resourceType && resourceType.score
+}
+
+function supportAttempts(resourceNode) {
+  const resourceType = getType(resourceNode)
+
+  return !!resourceType && resourceType.attempts
 }
 
 function supportDownload(resourceNode) {
@@ -91,6 +103,8 @@ export {
   getType,
   getTypes,
   supportEvaluation,
+  supportScore,
+  supportAttempts,
   supportDownload,
   getActions,
   getDefaultAction

@@ -93,8 +93,8 @@ class SequenceSerializer
                 'creator' => $sequence->getCreator() ?
                     $this->userSerializer->serialize($sequence->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                     null,
-                'created' => DateNormalizer::normalize($sequence->getCreatedAt()),
-                'updated' => DateNormalizer::normalize($sequence->getUpdatedAt()),
+                'createdAt' => DateNormalizer::normalize($sequence->getCreatedAt()),
+                'updatedAt' => DateNormalizer::normalize($sequence->getUpdatedAt()),
                 'published' => $sequence->isPublished(),
             ],
             'workspace' => $serializedWorkspace,

@@ -1,4 +1,9 @@
 services:
+    Claroline\EvaluationBundle\Manager\ExportManager:
+        arguments:
+            - '@translator'
+            - '@Claroline\AppBundle\API\Finder\FinderFactory'
+
     Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager:
         arguments:
             - '@security.token_storage'

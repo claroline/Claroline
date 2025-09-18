@@ -27,7 +27,7 @@ const SequenceList = (props) => {
 
   return (
     <ListData
-      primaryAction={(row) => getDefaultAction(row, refresher, props.path, props.currentUser)}
+      primaryAction={(row) => getDefaultAction(row, refresher, props.path, currentUser)}
       actions={(rows) => getActions(rows, refresher, props.path, currentUser)}
       definition={[
         {
@@ -47,15 +47,15 @@ const SequenceList = (props) => {
           name: 'code',
           type: 'string',
           label: trans('code')
-        }, , {
-          name: 'meta.created',
+        }, {
+          name: 'meta.createdAt',
           label: trans('creation_date'),
           type: 'date',
           alias: 'createdAt',
           filterable: false,
           options: {time: true}
         }, {
-          name: 'meta.updated',
+          name: 'meta.updatedAt',
           label: trans('modification_date'),
           type: 'date',
           alias: 'updatedAt',
@@ -103,6 +103,7 @@ SequenceList.propTypes = {
   path: T.string.isRequired,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]),
+  autoload: T.bool,
   refresher: T.object,
   children: T.node
 }

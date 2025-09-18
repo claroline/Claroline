@@ -41,6 +41,16 @@ final class ImageResource extends ResourceComponent implements DownloadableResou
         return Image::class;
     }
 
+    public static function supportsScore(): bool
+    {
+        return false;
+    }
+
+    public static function supportsAttempts(): bool
+    {
+        return false;
+    }
+
     /** @param Image $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {

@@ -42,6 +42,16 @@ final class ScormResource extends ResourceComponent implements DownloadableResou
         return Scorm::class;
     }
 
+    public static function supportsScore(): bool
+    {
+        return true;
+    }
+
+    public static function supportsAttempts(): bool
+    {
+        return false;
+    }
+
     /** @param Scorm $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {

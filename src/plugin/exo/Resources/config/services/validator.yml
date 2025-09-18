@@ -16,8 +16,6 @@ services:
                 arguments:
                   - '@UJM\ExoBundle\Library\Json\JsonSchema'
 
-    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\BooleanAnswerValidator: ~
-
     UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\ChoiceAnswerValidator: ~
 
     UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\ClozeAnswerValidator: ~
@@ -44,8 +42,6 @@ services:
             - '@ujm_exo.collection.item_definitions'
 
     UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator: ~
-
-    UJM\ExoBundle\Validator\JsonSchema\Item\Type\BooleanQuestionValidator: ~
 
     UJM\ExoBundle\Validator\JsonSchema\Item\Type\ChoiceQuestionValidator: ~
 

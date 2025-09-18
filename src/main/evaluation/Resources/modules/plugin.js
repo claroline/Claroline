@@ -36,12 +36,14 @@ registry.add('ClarolineEvaluationBundle', {
       'regenerate-certificates': () => { return import(/* webpackChunkName: "evaluation-action-regenerate-certificates" */ '#/main/evaluation/tools/evaluation/actions/regenerate-certificates') },
       'init-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-init-evaluations" */ '#/main/evaluation/tools/evaluation/actions/init-evaluations') },
       'recompute-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-recompute-evaluations" */ '#/main/evaluation/tools/evaluation/actions/recompute-evaluations') },
-      'purge-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-purge-evaluations" */ '#/main/evaluation/tools/evaluation/actions/purge-evaluations') }
+      'purge-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-purge-evaluations" */ '#/main/evaluation/tools/evaluation/actions/purge-evaluations') },
+      'export-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-export-evaluations" */ '#/main/evaluation/tools/evaluation/actions/export-evaluations') }
     },
 
     resource: {
-      'recompute-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-resource-recompute-evaluations" */   '#/main/evaluation/actions/resource/recompute-evaluations') },
-      'purge-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-resource-purge-evaluations" */   '#/main/evaluation/actions/resource/purge-evaluations') }
+      //'recompute-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-resource-recompute-evaluations" */   '#/main/evaluation/actions/resource/recompute-evaluations') },
+      'purge-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-resource-purge-evaluations" */   '#/main/evaluation/actions/resource/purge-evaluations') },
+      'export-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-resource-export-evaluations" */   '#/main/evaluation/actions/resource/export-evaluations') }
     },
 
     sequence: {
@@ -54,8 +56,18 @@ registry.add('ClarolineEvaluationBundle', {
       'show-dashboard': () => { return import(/* webpackChunkName: "evaluation-action-sequence-dashboard" */   '#/main/evaluation/actions/sequence/show-dashboard') },
       'download-certificates': () => { return import(/* webpackChunkName: "evaluation-action-sequence-download-certificates" */     '#/main/evaluation/actions/sequence/download-certificates') },
       'regenerate-certificates': () => { return import(/* webpackChunkName: "evaluation-action-sequence-regenerate-certificates" */ '#/main/evaluation/actions/sequence/regenerate-certificates') },
+      'init-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-init-evaluations" */ '#/main/evaluation/actions/sequence/init-evaluations') },
       'recompute-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-recompute-evaluations" */   '#/main/evaluation/actions/sequence/recompute-evaluations') },
-      'purge-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-purge-evaluations" */   '#/main/evaluation/actions/sequence/purge-evaluations') }
+      'purge-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-purge-evaluations" */   '#/main/evaluation/actions/sequence/purge-evaluations') },
+      'export-evaluations': () => { return import(/* webpackChunkName: "evaluation-action-export-evaluations" */   '#/main/evaluation/actions/sequence/export-evaluations') }
+    },
+
+    resource_attempt: {
+      'open': () => { return import(/* webpackChunkName: "evaluation-action-resource_evaluation-open" */ '#/main/evaluation/actions/resource_attempt/open') },
+      'open-resource': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-open-resource" */ '#/main/evaluation/actions/resource_attempt/open-resource') },
+      'send-message': () => { return import(/* webpackChunkName: "evaluation-action-resource_evaluation-send-message" */ '#/main/evaluation/actions/resource_attempt/send-message') },
+      'show-profile': () => { return import(/* webpackChunkName: "evaluation-action-resource_evaluation-show-profile" */ '#/main/evaluation/actions/resource_attempt/show-profile') },
+      'delete': () => { return import(/* webpackChunkName: "evaluation-action-resource_evaluation-delete" */ '#/main/evaluation/actions/resource_attempt/delete') },
     },
 
     resource_evaluation: {
@@ -63,7 +75,8 @@ registry.add('ClarolineEvaluationBundle', {
       'open-resource': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-open-resource" */ '#/main/evaluation/actions/resource_evaluation/open-resource') },
       'send-message': () => { return import(/* webpackChunkName: "evaluation-action-resource_evaluation-send-message" */ '#/main/evaluation/actions/resource_evaluation/send-message') },
       'show-profile': () => { return import(/* webpackChunkName: "evaluation-action-resource_evaluation-show-profile" */ '#/main/evaluation/actions/resource_evaluation/show-profile') },
-      'delete': () => { return import(/* webpackChunkName: "evaluation-action-resource_evaluation-delete" */ '#/main/evaluation/actions/resource_evaluation/delete') }
+      'delete': () => { return import(/* webpackChunkName: "evaluation-action-resource_evaluation-delete" */ '#/main/evaluation/actions/resource_evaluation/delete') },
+      'give-attempt': () => { return import(/* webpackChunkName: "evaluation-action-resource_evaluation-give-attempt" */ '#/main/evaluation/actions/resource_evaluation/give-attempt') }
     },
 
     sequence_evaluation: {

@@ -1,48 +1,39 @@
-import React from 'react'
-import {PropTypes as T} from 'prop-types'
-import {useSelector} from 'react-redux'
+import React, {useMemo} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
+import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/app/intl'
-import {ASYNC_BUTTON} from '#/main/app/buttons'
-
-import {supportEvaluation} from '#/main/core/resource/utils'
-import {selectors} from '#/main/core/resource/store'
+import {hasPermission, selectors as securitySelectors} from '#/main/app/security'
+import {selectors as toolSelectors} from '#/main/core/tool'
 import {DashboardActions} from '#/main/app/dashboard/components/actions'
 
-const ResourceDashboardActions = (props) => {
+import {getActions} from '#/main/core/resource/utils'
+import {selectors, actions} from '#/main/core/resource/store'
+
+const ResourceDashboardActions = () => {
+  const dispatch = useDispatch()
+
+  const currentUser = useSelector(securitySelectors.currentUser)
+  const toolPath = useSelector(toolSelectors.path)
   const resource = useSelector(selectors.resourceNode)
+
+  const resourceActions = useMemo(() => {
+    if (!isEmpty(resource)) {
+      return getActions([resource], {
+        update: () => {
+          dispatch(actions.reload())
+        }
+      }, toolPath, currentUser)
+    }
+
+    return []
+  }, [resource])
 
   return (
     <DashboardActions
-      actions={[
-        {
-          title: trans('recompute_evaluations', {}, 'actions'),
-          help: trans('recompute_resource_evaluations_help', {}, 'actions'),
-          displayed: supportEvaluation(resource),
-          action: {
-            label: trans('recalculate', {}, 'actions'),
-            type: ASYNC_BUTTON,
-            request: {
-              url: ['apiv2_resource_evaluation_recompute', {resourceId: resource.id}],
-              request: {
-                method: 'PUT'
-              }
-            }
-          }
-        },
-      ].concat(props.actions || [])}
+      canAdministrate={hasPermission('administrate', resource)}
+      actions={resourceActions}
     />
   )
-}
-
-ResourceDashboardActions.propTypes = {
-  actions: T.arrayOf(T.shape({
-    title: T.string.isRequired,
-    help: T.string.isRequired,
-    displayed: T.bool,
-    action: T.object.isRequired,
-    dangerous: T.bool
-  }))
 }
 
 export {

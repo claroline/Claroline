@@ -3,18 +3,18 @@ import {useDispatch, useSelector} from 'react-redux'
 import classes from 'classnames'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
+import {Collapse} from 'react-bootstrap'
 
 import {trans} from '#/main/app/intl'
 import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {Html} from '#/main/app/components/html'
 import {DataMicro} from '#/main/app/data/components/micro'
 import {EditorPage} from '#/main/app/editor'
 
+import {MODAL_ROLES} from '#/main/community/modals/roles'
 import {actions, selectors} from '#/main/evaluation/sequence/editor/store'
 import {selectors as sequenceSelectors} from '#/main/evaluation/sequence/store'
-
-import {MODAL_ROLES} from '#/main/community/modals/roles'
-import {Collapse} from 'react-bootstrap'
 
 const restrictedByDates = (formData) => get(formData, 'restrictions.enableDates') || !isEmpty(get(formData, 'restrictions.dates'))
 const restrictByCode = (formData) => get(formData, 'restrictions.enableCode') || !!get(formData, 'restrictions.code')
@@ -84,51 +84,51 @@ const Assignments = () => {
 
       <Collapse in={showHelp}>
         <dl className="p-3 mb-0 bg-body-tertiary rounded-3 gap-0">
-          <dt className="text-uppercase fw-bolder fs-base text-body">Disponible</dt>
+          <dt className="text-uppercase fw-bolder fs-base text-body">{trans('sequence_available', {}, 'evaluation')}</dt>
           <dd className="mb-3">
-            <div className="py-1">
+            <div className="py-1 d-flex flex-row align-items-baseline" role="presentation">
               <span className="fa fa-fw fa-check-circle text-primary me-2" aria-hidden={true} />
-              Les utilisateurs <b>peuvent faire</b> la séquence
+              <Html>{trans('sequence_available_help', {}, 'evaluation')}</Html>
             </div>
-            <div className="py-1 text-body-secondary">
+            <div className="py-1 d-flex flex-row align-items-baseline text-body-secondary" role="presentation">
               <span className="fa fa-fw fa-times-circle text-body-tertiary me-2" aria-hidden={true} />
-              La participation à la séquence <b>n'est pas requise</b> pour progresser dans l'espace d'activités
+              <Html>{trans('sequence_not_required_help', {}, 'evaluation')}</Html>
             </div>
-            <div className="py-1 text-body-secondary">
+            <div className="py-1 d-flex flex-row align-items-baseline text-body-secondary" role="presentation">
               <span className="fa fa-fw fa-times-circle text-body-tertiary me-2" aria-hidden={true} />
-              Le score de la séquence <b>n'est pas comptabilisé</b> lors du calcul du score de l'espace d'activités
+              <Html>{trans('sequence_not_scored_help', {}, 'evaluation')}</Html>
             </div>
           </dd>
 
-          <dt className="text-uppercase fw-bolder fs-base text-body">Requis</dt>
+          <dt className="text-uppercase fw-bolder fs-base text-body">{trans('sequence_required', {}, 'evaluation')}</dt>
           <dd className="mb-3">
-            <div className="py-1">
+            <div className="py-1 d-flex flex-row align-items-baseline" role="presentation">
               <span className="fa fa-fw fa-check-circle text-primary me-2" aria-hidden={true} />
-              Les utilisateurs <b>peuvent faire</b> la séquence
+              <Html>{trans('sequence_available_help', {}, 'evaluation')}</Html>
             </div>
-            <div className="py-1">
+            <div className="py-1 d-flex flex-row align-items-baseline" role="presentation">
               <span className="fa fa-fw fa-check-circle text-primary me-2" aria-hidden={true} />
-              La participation à la séquence <b>est requise</b> pour progresser dans l'espace d'activités
+              <Html>{trans('sequence_required_help', {}, 'evaluation')}</Html>
             </div>
-            <div className="py-1 text-body-secondary">
+            <div className="py-1 d-flex flex-row align-items-baseline text-body-secondary" role="presentation">
               <span className="fa fa-fw fa-times-circle text-body-tertiary me-2" aria-hidden={true} />
-              Le score de la séquence <b>n'est pas comptabilisé</b> lors du calcul du score de l'espace d'activités
+              <Html>{trans('sequence_not_scored_help', {}, 'evaluation')}</Html>
             </div>
           </dd>
 
-          <dt className="text-uppercase fw-bolder fs-base text-body">Noté</dt>
+          <dt className="text-uppercase fw-bolder fs-base text-body">{trans('sequence_scored', {}, 'evaluation')}</dt>
           <dd className="mb-0">
-            <div className="py-1">
+            <div className="py-1 d-flex flex-row align-items-baseline" role="presentation">
               <span className="fa fa-fw fa-check-circle text-primary me-2" aria-hidden={true} />
-              Les utilisateurs <b>peuvent faire</b> la séquence
+              <Html>{trans('sequence_available_help', {}, 'evaluation')}</Html>
             </div>
-            <div className="py-1">
+            <div className="py-1 d-flex flex-row align-items-baseline" role="presentation">
               <span className="fa fa-fw fa-check-circle text-primary me-2" aria-hidden={true} />
-              La participation à la séquence <b>est requise</b> pour progresser dans l'espace d'activités
+              <Html>{trans('sequence_required_help', {}, 'evaluation')}</Html>
             </div>
-            <div className="py-1">
+            <div className="py-1 d-flex flex-row align-items-baseline" role="presentation">
               <span className="fa fa-fw fa-check-circle text-primary me-2" aria-hidden={true} />
-              Le score de la séquence <b>est comptabilisé</b> lors du calcul du score de l'espace d'activités
+              <Html>{trans('sequence_scored_help', {}, 'evaluation')}</Html>
             </div>
           </dd>
         </dl>
@@ -162,7 +162,7 @@ const Assignments = () => {
                   })}
                   htmlFor={`${get(assignment, 'role.id')}-optional`}
                 >
-                  Disponible
+                  {trans('sequence_available', {}, 'evaluation')}
                 </label>
 
                 <input
@@ -184,7 +184,7 @@ const Assignments = () => {
                   })}
                   htmlFor={`${get(assignment, 'role.id')}-required`}
                 >
-                  Requis
+                  {trans('sequence_required', {}, 'evaluation')}
                 </label>
 
                 <input
@@ -206,7 +206,7 @@ const Assignments = () => {
                   })}
                   htmlFor={`${get(assignment, 'role.id')}-scored`}
                 >
-                  Noté
+                  {trans('sequence_scored', {}, 'evaluation')}
                 </label>
               </div>
 

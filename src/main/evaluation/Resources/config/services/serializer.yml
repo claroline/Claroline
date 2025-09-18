@@ -17,6 +17,7 @@ services:
 
     Claroline\EvaluationBundle\Serializer\UserEvaluation\ResourceAttemptSerializer:
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 

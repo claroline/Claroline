@@ -8,6 +8,9 @@ import {selectors} from '#/main/evaluation/sequence/store'
 import {SequencePage} from '#/main/evaluation/sequence/components/page'
 import {SequenceDashboardActivity} from '#/main/evaluation/sequence/dashboard/components/activity'
 import {SequenceDashboardEvaluations} from '#/main/evaluation/sequence/dashboard/components/evaluations'
+import {SequenceDashboardActions} from '#/main/evaluation/sequence/dashboard/components/actions'
+import {SequenceDashboardOverview} from '#/main/evaluation/sequence/dashboard/components/overview'
+// import {SequenceDashboardStats} from '#/main/evaluation/sequence/dashboard/components/stats'
 
 const SequenceDashboard = () => {
   const sequencePath = useSelector(selectors.path)
@@ -16,27 +19,16 @@ const SequenceDashboard = () => {
     <SequencePage title={trans('dashboard')}>
       <Dashboard
         path={sequencePath+'/dashboard'}
+        overviewPage={SequenceDashboardOverview}
+        // statsPage={SequenceDashboardStats}
+        activityPage={SequenceDashboardActivity}
+        actionsPage={SequenceDashboardActions}
         pages={[
           {
-            name: 'overview',
-            icon: 'fa fa-temperature-half',
-            title: trans('overview'),
-            render: () => <></>
-          }, {
             name: 'results',
             icon: 'fa fa-award',
             title: trans('evaluation'),
             component: SequenceDashboardEvaluations
-          }, {
-            name: 'stats',
-            icon: 'fa fa-pie-chart',
-            title: trans('statistics'),
-            render: () => <></>
-          }, {
-            name: 'activity',
-            icon: 'fa fa-line-chart',
-            title: trans('activity'),
-            component: SequenceDashboardActivity
           }
         ]}
       />

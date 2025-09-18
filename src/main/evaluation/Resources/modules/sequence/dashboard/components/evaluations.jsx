@@ -1,53 +1,54 @@
-import React, {useCallback} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+import React from 'react'
+import {useSelector} from 'react-redux'
 
+import {trans} from '#/main/app/intl'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {Nav} from '#/main/app/components/nav'
+import {Routes} from '#/main/app/router'
 import {PageContent, PageSection} from '#/main/app/page'
-import {actions as listActions} from '#/main/app/content/list'
-import {selectors as securitySelectors} from '#/main/app/security/store'
-import {EvaluationList} from '#/main/evaluation/components/list'
-
-import {EvaluationSequenceCard} from '#/main/evaluation/sequence/components/card'
-import {getEvaluationActions} from '#/main/evaluation/sequence/utils'
-import {selectors as sequenceSelectors} from '#/main/evaluation/sequence/store'
 
 import {selectors} from '#/main/evaluation/sequence/dashboard/store'
-import {selectors as toolSelectors} from '#/main/core/tool'
+import {SequenceDashboardSequence} from '#/main/evaluation/sequence/dashboard/components/sequence'
+import {SequenceDashboardResources} from '#/main/evaluation/sequence/dashboard/components/resources'
 
 const SequenceDashboardEvaluations = () => {
-  const dispatch = useDispatch()
-
-  const currentUser = useSelector(securitySelectors.currentUser)
-  const contextType = useSelector(toolSelectors.contextType)
-  const contextId = useSelector(toolSelectors.contextId)
-
-  const sequencePath = useSelector(sequenceSelectors.path)
-  const sequenceId = useSelector(sequenceSelectors.id)
-  const hasScore = useSelector(sequenceSelectors.hasScore)
-  const totalScore = useSelector(sequenceSelectors.totalScore)
-
-  const invalidateList = useCallback(() => {
-    dispatch(listActions.invalidateData(selectors.STORE_NAME + '.evaluations'))
-  }, [selectors.STORE_NAME + '.evaluations'])
-
-  const evaluationsRefresher = {
-    add:    invalidateList,
-    update: invalidateList,
-    delete: invalidateList
-  }
+  const dashboardPath = useSelector(selectors.path)
 
   return (
     <PageContent className="py-4">
+      <Nav
+        className="nav-justified content-lg mb-4 px-4"
+        variant="bar"
+        orientation="horizontal"
+        items={[
+          {
+            name: 'sequence',
+            type: LINK_BUTTON,
+            label: trans('sequence', {}, 'evaluation'),
+            target: `${dashboardPath}/results`,
+            exact: true
+          }, {
+            name: 'resources',
+            type: LINK_BUTTON,
+            label: trans('resources'),
+            target: `${dashboardPath}/results/resources`
+          }
+        ]}
+      />
+
       <PageSection size="full" className="d-flex flex-fill">
-        <EvaluationList
-          name={selectors.STORE_NAME+'.evaluations'}
-          contextType={contextType}
-          contextId={contextId}
-          url={['apiv2_sequence_evaluation_list', {sequenceId: sequenceId}]}
-          primaryAction="open"
-          actions={(rows) => getEvaluationActions(rows, evaluationsRefresher, sequencePath, currentUser, true)}
-          card={EvaluationSequenceCard}
-          hasScore={hasScore}
-          totalScore={totalScore}
+        <Routes
+          path={dashboardPath+'/results'}
+          routes={[
+            {
+              path: '/',
+              exact: true,
+              component: SequenceDashboardSequence
+            }, {
+              path: '/resources',
+              component: SequenceDashboardResources
+            }
+          ]}
         />
       </PageSection>
     </PageContent>

@@ -12,6 +12,13 @@ import {getType} from '#/main/app/data/types'
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {validateProp} from '#/main/app/content/form/validator'
 
+/**
+ * Renders the form component for a registered data type. It renders:
+ * - a label
+ * - help messages
+ * - the input for the data type
+ * - validation errors
+ */
 class DataInput extends Component {
   constructor(props) {
     super(props)

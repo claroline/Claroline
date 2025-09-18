@@ -20,7 +20,7 @@ const PapersMain = props =>
         onEnter: (params) => {
           props.loadCurrentPaper(props.quizId, params.id)
 
-          if (props.showStatistics) { // TODO : replace by the one in the paper structure
+          if (props.showStatistics) {
             props.statistics(props.quizId)
           }
         },

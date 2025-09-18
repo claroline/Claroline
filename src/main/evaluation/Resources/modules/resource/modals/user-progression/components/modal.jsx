@@ -20,7 +20,7 @@ const UserProgressionModal = props => {
 
   return (
     <BaseProgressionModal
-      {...omit(props, 'evaluation', 'path', 'stepsProgression', 'fetchUserStepsProgression', 'resetUserStepsProgression')}
+      {...omit(props, 'evaluation')}
       evaluation={props.evaluation}
       name={STORE_NAME}
       title={trans('resource_name', {

@@ -13,7 +13,7 @@ const ImportTool = withReducer(selectors.STORE_NAME, reducer)(
       path: toolSelectors.path(state),
       contextData: toolSelectors.contextData(state),
       explanation: selectors.importExplanation(state),
-      canImport: hasPermission('import', toolSelectors.toolData(state))
+      canImport: hasPermission('import', toolSelectors.tool(state))
     }),
     (dispatch) => ({
       open(importFileId) {

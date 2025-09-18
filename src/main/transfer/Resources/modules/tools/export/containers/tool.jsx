@@ -13,7 +13,7 @@ const ExportTool = withReducer(selectors.STORE_NAME, reducer)(
       path: toolSelectors.path(state),
       contextData: toolSelectors.contextData(state),
       explanation: selectors.exportExplanation(state),
-      canExport: hasPermission('export', toolSelectors.toolData(state))
+      canExport: hasPermission('export', toolSelectors.tool(state))
     }),
     (dispatch) => ({
       open(exportFileId) {

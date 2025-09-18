@@ -61,18 +61,6 @@ const EvaluationList = (props) => {
           options: {time: true},
           displayed: true
         }, {
-          name: 'duration',
-          type: 'time',
-          label: trans('duration'),
-          displayed: false,
-          filterable: false
-        }, {
-          name: 'estimatedDuration',
-          type: 'time',
-          label: trans('estimated_duration'),
-          displayed: false,
-          filterable: false
-        }, {
           name: 'progression',
           label: trans('progression'),
           type: 'progression',
@@ -102,10 +90,10 @@ const EvaluationList = (props) => {
             <div className="d-inline-flex gap-2 flex-row align-items-center" role="presentation">
               <TooltipOverlay
                 id="score-help"
-                tip={trans('Le score est calculé une fois que l\'utilisateur a terminé toutes les activités à faire.', {}, 'evaluation')}
+                tip={trans('score_not_computed_yet', {}, 'evaluation')}
                 position="left"
               >
-                <span className="fa fa-fw fa-info-circle cursor-help fs-sm text-body-tertiary" />
+                <span className="fa fa-fw fa-info-circle cursor-help fs-sm text-body-tertiary" aria-hidden={true} />
               </TooltipOverlay>
 
               <EvaluationScore scoreMax={props.totalScore} />

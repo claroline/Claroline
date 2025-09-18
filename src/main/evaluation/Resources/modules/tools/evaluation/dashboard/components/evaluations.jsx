@@ -1,64 +1,65 @@
-import React, {useCallback} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+import React from 'react'
+import {useSelector} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
+import {Routes} from '#/main/app/router'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {Nav} from '#/main/app/components/nav'
 import {PageContent, PageSection} from '#/main/app/page'
-
-import {EvaluationWorkspaceCard} from '#/main/evaluation/workspace/components/card'
-import {getActions} from '#/main/evaluation/workspace/utils'
-
-import {selectors as dashboardSelectors} from '#/main/evaluation/tools/evaluation/dashboard/store/selectors'
-import {EvaluationList} from '#/main/evaluation/components/list'
 import {selectors as toolSelectors} from '#/main/core/tool'
-import {selectors as securitySelectors} from '#/main/app/security'
-import {selectors} from '#/main/evaluation/tools/evaluation/store'
-import {actions as listActions} from '#/main/app/content/list'
+import {selectors as dashboardSelectors} from '#/main/core/tool/dashboard/store'
+
+import {EvaluationDashboardWorkspaces} from '#/main/evaluation/tools/evaluation/dashboard/components/workspaces'
+import {EvaluationDashboardResources} from '#/main/evaluation/tools/evaluation/dashboard/components/resources'
+import {EvaluationDashboardSequences} from '#/main/evaluation/tools/evaluation/dashboard/components/sequences'
 
 const EvaluationDashboardEvaluations = () => {
-  const dispatch = useDispatch()
-
-  const path = useSelector(toolSelectors.path)
-  const currentUser = useSelector(securitySelectors.currentUser)
+  const dashboardPath = useSelector(dashboardSelectors.path)
   const contextType = useSelector(toolSelectors.contextType)
-  const contextId = useSelector(toolSelectors.contextId)
-  const hasScore = useSelector(selectors.hasScore)
-  const totalScore = useSelector(selectors.totalScore)
-
-  const invalidateList = useCallback(() => {
-    dispatch(listActions.invalidateData(dashboardSelectors.STORE_NAME + '.workspaceEvaluations'))
-  }, [selectors.STORE_NAME + '.workspaceEvaluations'])
-
-  const evaluationsRefresher = {
-    add:    invalidateList,
-    update: invalidateList,
-    delete: invalidateList
-  }
 
   return (
     <PageContent className="py-4">
+      <Nav
+        className="nav-justified content-lg mb-4 px-4"
+        variant="bar"
+        orientation="horizontal"
+        items={[
+          {
+            name: 'workspaces',
+            type: LINK_BUTTON,
+            label: trans('desktop' === contextType ? 'workspaces':'workspace'),
+            target: `${dashboardPath}/results`,
+            exact: true
+          }, {
+            name: 'sequences',
+            type: LINK_BUTTON,
+            label: trans('sequences', {}, 'evaluation'),
+            target: `${dashboardPath}/results/sequences`
+          }, {
+            name: 'resources',
+            type: LINK_BUTTON,
+            label: trans('resources'),
+            target: `${dashboardPath}/results/resources`
+          }
+        ]}
+      />
+
       <PageSection size="full" className="d-flex flex-fill">
-        <EvaluationList
-          name={dashboardSelectors.STORE_NAME + '.workspaceEvaluations'}
-          contextType={contextType}
-          contextId={contextId}
-          url={['apiv2_workspace_evaluation_list', {workspace: contextId}]}
-          primaryAction="open"
-          actions={(rows) => getActions(rows, evaluationsRefresher, path, currentUser, true)}
-          customDefinition={'desktop' === contextType ? [
+        <Routes
+          path={dashboardPath+'/results'}
+          routes={[
             {
-              name: 'workspace',
-              type: 'workspace',
-              label: trans('workspace'),
-              displayable: true,
-              displayed: true,
-              filterable: true,
-              sortable: true,
-              order: 2
+              path: '/',
+              exact: true,
+              component: EvaluationDashboardWorkspaces
+            }, {
+              path: '/sequences',
+              component: EvaluationDashboardSequences
+            }, {
+              path: '/resources',
+              component: EvaluationDashboardResources
             }
-          ] : []}
-          card={EvaluationWorkspaceCard}
-          hasScore={hasScore}
-          totalScore={totalScore}
+          ]}
         />
       </PageSection>
     </PageContent>

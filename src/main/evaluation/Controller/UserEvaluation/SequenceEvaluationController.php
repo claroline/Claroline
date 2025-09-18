@@ -17,16 +17,23 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Entity\Sequence\Step;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\SequenceEvaluation;
+use Claroline\EvaluationBundle\Manager\ExportManager;
 use Claroline\EvaluationBundle\Manager\SequenceEvaluationManager;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -50,18 +57,20 @@ class SequenceEvaluationController
         private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
         private readonly Crud $crud,
-        private readonly SequenceEvaluationManager $evaluationManager
+        private readonly ToolManager $toolManager,
+        private readonly SequenceEvaluationManager $evaluationManager,
+        private readonly ExportManager $exportManager,
     ) {
         $this->authorization = $authorization;
     }
 
     /**
-     * Returns the list of user evaluations for a ResourceNode.
+     * Returns the list of user evaluations for a Sequence.
      */
-    #[Route(path: '/{sequenceId}', name: 'apiv2_sequence_evaluation_list', methods: ['GET'])]
+    #[Route(path: '/{parentType}/{parentId}', name: 'apiv2_sequence_evaluation_list', requirements: ['parentType' => '(workspace|sequence)?'], methods: ['GET'])]
     public function listAction(
-        #[MapEntity(mapping: ['sequenceId' => 'uuid'])]
-        Sequence $sequence,
+        ?string $parentType = null,
+        ?string $parentId = null,
         #[MapQueryString]
         ?FinderQuery $finderQuery = new FinderQuery()
     ): StreamedJsonResponse {
@@ -69,8 +78,29 @@ class SequenceEvaluationController
             throw new AccessDeniedException();
         }
 
-        $finderQuery->addFilter('sequence', $sequence->getUuid());
-        if (!$this->checkPermission('EDIT', $sequence)) {
+        switch ($parentType) {
+            case 'sequence':
+                $sequence = $this->om->getRepository(Sequence::class)->findOneBy(['uuid' => $parentId]);
+                $manager = $this->checkPermission('FOLLOW', $sequence);
+
+                $finderQuery->addFilter('sequence', $sequence->getUuid());
+                break;
+
+            case 'workspace':
+                $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $parentId]);
+                $progressionTool = $this->toolManager->getOrderedTool('progression', WorkspaceContext::getName(), $parentId);
+                $manager = $this->checkPermission('FOLLOW', $progressionTool);
+
+                $finderQuery->addFilter('sequence.workspace', $workspace->getUuid());
+                break;
+
+            default:
+                $progressionTool = $this->toolManager->getOrderedTool('progression', DesktopContext::getName());
+                $manager = $this->checkPermission('FOLLOW', $progressionTool);
+                break;
+        }
+
+        if (!$manager) {
             // only display evaluation of the current user
             /** @var User $user */
             $user = $this->tokenStorage->getToken()?->getUser();
@@ -80,6 +110,21 @@ class SequenceEvaluationController
         $evaluations = $this->crud->search(SequenceEvaluation::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
 
         return $evaluations->toResponse();
+    }
+
+    #[Route(path: '/{sequenceId}/csv', name: 'apiv2_sequence_evaluation_csv', methods: ['GET'])]
+    public function exportCsvAction(
+        #[MapEntity(mapping: ['sequenceId' => 'uuid'])]
+        Sequence $sequence
+    ): StreamedResponse {
+        $this->checkPermission('FOLLOW', $sequence, [], true);
+
+        return new StreamedResponse(function () use ($sequence): void {
+            $this->exportManager->exportSequenceEvaluations($sequence);
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toFilename($sequence->getName()).'.csv',
+        ]);
     }
 
     /**
@@ -156,6 +201,21 @@ class SequenceEvaluationController
     }
 
     /**
+     * Initializes evaluations for all the users of a workspace.
+     */
+    #[Route(path: '/{sequenceId}/init', name: 'apiv2_sequence_evaluation_init', methods: ['PUT'])]
+    public function initializeAction(
+        #[MapEntity(mapping: ['sequenceId' => 'uuid'])]
+        Sequence $sequence
+    ): JsonResponse {
+        $this->checkPermission('FOLLOW', $sequence, [], true);
+
+        $this->evaluationManager->initializeEvaluations($sequence);
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
      * Recalculates (score, status, progression, ...) evaluations for all the users of a sequence.
      */
     #[Route(path: '/{sequenceId}/recompute', name: 'apiv2_sequence_evaluation_recompute', methods: ['PUT'])]
@@ -168,7 +228,7 @@ class SequenceEvaluationController
 
         // recompute all the sequence evaluations
         if (empty($evaluationIds)) {
-            $this->checkPermission('EDIT', $sequence, [], true);
+            $this->checkPermission('FOLLOW', $sequence, [], true);
             $this->evaluationManager->recomputeEvaluations($sequence);
 
             return new JsonResponse(null, 204);

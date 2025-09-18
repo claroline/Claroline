@@ -44,6 +44,16 @@ final class PdfResource extends ResourceComponent implements DownloadableResourc
         return Pdf::class;
     }
 
+    public static function supportsScore(): bool
+    {
+        return false;
+    }
+
+    public static function supportsAttempts(): bool
+    {
+        return false;
+    }
+
     /** @param Pdf $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {

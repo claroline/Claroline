@@ -59,7 +59,7 @@ const DescriptionList = ({
             'border-bottom': bordered && index !== displayedFields.length - 1,
             'd-flex flex-row align-items-start gap-3': inline
           })} role="presentation">
-            <dt className={classes(variant && `text-${variant}-emphasis`, {
+            <dt className={classes('text-start', variant && `text-${variant}-emphasis`, {
               'w-25 mb-0': inline
             })}>
               <span className={classes({'placeholder rounded-1': !loaded})} role="presentation">
@@ -70,7 +70,7 @@ const DescriptionList = ({
               </span>
             </dt>
 
-            <dd className={classes('mb-0',variant && `text-${variant}-emphasis`,  {
+            <dd className={classes('text-start mb-0',variant && `text-${variant}-emphasis`,  {
               'w-75': inline
             })}>
               {!loaded ?

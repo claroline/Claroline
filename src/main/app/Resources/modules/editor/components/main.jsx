@@ -119,6 +119,9 @@ Editor.propTypes = {
    * The name of the editor store we will connect to.
    */
   name: T.string.isRequired,
+  /**
+   * The API endpoint called to submit the form data.
+   */
   target: T.oneOfType([
     // a plain URL
     T.string,
@@ -138,6 +141,7 @@ Editor.propTypes = {
   canAdministrate: T.bool,
   styles: T.array,
   title: T.string.isRequired,
+  thumbnail: T.node,
   pages: T.arrayOf(T.shape({
     name: T.string.isRequired,
     title: T.string.isRequired,

@@ -10,7 +10,7 @@ const AnnouncementPost = connect(
   state => ({
     path: toolSelectors.path(state),
     announcement: selectors.detail(state),
-    editable: hasPermission('edit', toolSelectors.toolData(state))
+    editable: hasPermission('edit', toolSelectors.tool(state))
   }),
   dispatch => ({
     remove(announcePost) {

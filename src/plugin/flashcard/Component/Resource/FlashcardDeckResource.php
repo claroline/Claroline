@@ -16,7 +16,7 @@ use Claroline\FlashcardBundle\Manager\EvaluationManager;
 use Claroline\FlashcardBundle\Manager\FlashcardManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class FlashcardDeckResource extends ResourceComponent implements EvaluatedResourceInterface
+final class FlashcardDeckResource extends ResourceComponent implements EvaluatedResourceInterface
 {
     private ResourceAttemptRepository $resourceEvalRepo;
 
@@ -33,6 +33,16 @@ class FlashcardDeckResource extends ResourceComponent implements EvaluatedResour
     public static function getName(): string
     {
         return 'flashcard';
+    }
+
+    public static function supportsScore(): bool
+    {
+        return false;
+    }
+
+    public static function supportsAttempts(): bool
+    {
+        return true;
     }
 
     /** @param FlashcardDeck $resource */

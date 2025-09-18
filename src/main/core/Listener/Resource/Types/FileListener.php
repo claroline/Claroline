@@ -40,6 +40,16 @@ final class FileListener extends ResourceComponent implements DownloadableResour
         return FileResource::class;
     }
 
+    public static function supportsScore(): bool
+    {
+        return false;
+    }
+
+    public static function supportsAttempts(): bool
+    {
+        return false;
+    }
+
     /** @param FileResource $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {

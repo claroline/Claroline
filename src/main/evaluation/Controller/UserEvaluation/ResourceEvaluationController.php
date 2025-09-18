@@ -13,21 +13,28 @@ namespace Claroline\EvaluationBundle\Controller\UserEvaluation;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Finder\FinderQuery;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
+use Claroline\EvaluationBundle\Manager\ExportManager;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -36,7 +43,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * Manages user evaluations for resources {@see ResourceUserEvaluation}}.
+ * Manages user evaluations for resources {@see ResourceUserEvaluation}.
  */
 #[Route(path: '/resource_evaluation')]
 class ResourceEvaluationController
@@ -49,9 +56,10 @@ class ResourceEvaluationController
         private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
-        private readonly FinderProvider $finder,
+        private readonly ToolManager $toolManager,
         private readonly ResourceEvaluationManager $evaluationManager,
-        private readonly Crud $crud
+        private readonly Crud $crud,
+        private readonly ExportManager $exportManager,
     ) {
         $this->authorization = $authorization;
     }
@@ -59,10 +67,10 @@ class ResourceEvaluationController
     /**
      * Returns the list of user evaluations for a ResourceNode.
      */
-    #[Route(path: '/{nodeId}', name: 'apiv2_resource_evaluation_list', methods: ['GET'])]
+    #[Route(path: '/{parentType}/{parentId}', name: 'apiv2_resource_evaluation_list', requirements: ['parentType' => '(workspace|sequence|resource)?'], methods: ['GET'])]
     public function listAction(
-        #[MapEntity(mapping: ['nodeId' => 'uuid'])]
-        ResourceNode $resourceNode,
+        ?string $parentType = null,
+        ?string $parentId = null,
         #[MapQueryString]
         ?FinderQuery $finderQuery = new FinderQuery()
     ): StreamedJsonResponse {
@@ -70,8 +78,36 @@ class ResourceEvaluationController
             throw new AccessDeniedException();
         }
 
-        $finderQuery->addFilter('resourceNode', $resourceNode->getUuid());
-        if (!$this->checkPermission('EDIT', $resourceNode)) {
+        switch ($parentType) {
+            case 'resource':
+                $resourceNode = $this->om->getRepository(ResourceNode::class)->findOneBy(['uuid' => $parentId]);
+                $manager = $this->checkPermission('FOLLOW', $resourceNode);
+
+                $finderQuery->addFilter('resourceNode', $resourceNode->getUuid());
+                break;
+
+            case 'sequence':
+                $sequence = $this->om->getRepository(Sequence::class)->findOneBy(['uuid' => $parentId]);
+                $manager = $this->checkPermission('FOLLOW', $sequence);
+
+                $finderQuery->addFilter('sequence', $sequence->getUuid());
+                break;
+
+            case 'workspace':
+                $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $parentId]);
+                $progressionTool = $this->toolManager->getOrderedTool('progression', WorkspaceContext::getName(), $parentId);
+                $manager = $this->checkPermission('FOLLOW', $progressionTool);
+
+                $finderQuery->addFilter('resourceNode.workspace', $workspace->getUuid());
+                break;
+
+            default:
+                $progressionTool = $this->toolManager->getOrderedTool('progression', DesktopContext::getName());
+                $manager = $this->checkPermission('FOLLOW', $progressionTool);
+                break;
+        }
+
+        if (!$manager) {
             // only display evaluation of the current user
             /** @var User $user */
             $user = $this->tokenStorage->getToken()?->getUser();
@@ -81,6 +117,21 @@ class ResourceEvaluationController
         $evaluations = $this->crud->search(ResourceEvaluation::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
 
         return $evaluations->toResponse();
+    }
+
+    #[Route(path: '/{resourceId}/csv', name: 'apiv2_resource_evaluation_csv', methods: ['GET'])]
+    public function exportCsvAction(
+        #[MapEntity(mapping: ['resourceId' => 'uuid'])]
+        ResourceNode $resourceNode
+    ): StreamedResponse {
+        $this->checkPermission('FOLLOW', $resourceNode, [], true);
+
+        return new StreamedResponse(function () use ($resourceNode): void {
+            $this->exportManager->exportResourceEvaluations($resourceNode);
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toFilename($resourceNode->getName()).'.csv',
+        ]);
     }
 
     #[Route(path: '/{resource}/user/{user}', name: 'apiv2_resource_evaluation_get', methods: ['GET'])]
@@ -130,33 +181,22 @@ class ResourceEvaluationController
         return new JsonResponse(null, 204);
     }
 
-    #[Route(path: '/attempts/{userEvaluationId}', name: 'apiv2_resource_evaluation_list_attempts', methods: ['GET'])]
-    public function listAttemptsAction(
-        #[MapEntity(mapping: ['userEvaluationId' => 'uuid'])]
-        ResourceEvaluation $userEvaluation,
+    #[Route(path: '/attempts', name: 'apiv2_resource_evaluation_give_attempt', methods: ['PUT'])]
+    public function giveAnotherAttemptAction(
         Request $request
     ): JsonResponse {
-        $this->checkPermission('OPEN', $userEvaluation, [], true);
+        $evaluationIds = $this->decodeRequest($request);
+        $evaluations = $this->om->getRepository(ResourceEvaluation::class)->findBy([
+            'uuid' => $evaluationIds,
+        ]);
 
-        return new JsonResponse(
-            $this->finder->search(ResourceAttempt::class, array_merge($request->query->all(), ['hiddenFilters' => [
-                'resourceUserEvaluation' => $userEvaluation,
-            ]]))
-        );
-    }
+        foreach ($evaluations as $evaluation) {
+            if ($this->checkPermission('ADMINISTRATE', $evaluation)) {
+                $this->evaluationManager->giveAnotherAttempt($evaluation);
+            }
+        }
 
-    #[Route(path: '/attempts/{userEvaluationId}', name: 'apiv2_resource_evaluation_give_attempt', methods: ['PUT'])]
-    public function giveAnotherAttemptAction(
-        #[MapEntity(mapping: ['userEvaluationId' => 'uuid'])]
-        ResourceEvaluation $userEvaluation
-    ): JsonResponse {
-        $this->checkPermission('ADMINISTRATE', $userEvaluation, [], true);
-
-        $this->evaluationManager->giveAnotherAttempt($userEvaluation);
-
-        return new JsonResponse(
-            $this->serializer->serialize($userEvaluation)
-        );
+        return new JsonResponse(null, 204);
     }
 
     /**

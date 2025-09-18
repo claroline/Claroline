@@ -4,8 +4,8 @@ namespace UJM\ExoBundle\Manager\Attempt;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -148,29 +148,6 @@ class PaperManager
         }
 
         return null;
-    }
-
-    /**
-     * Returns the papers for a given exercise, in a JSON format.
-     */
-    public function serializeExercisePapers(Exercise $exercise, User $user = null): array
-    {
-        if (!empty($user)) {
-            // Load papers for of a single user
-            $papers = $this->repository->findBy([
-                'exercise' => $exercise,
-                'user' => $user,
-            ]);
-        } else {
-            // Load all papers submitted for the exercise
-            $papers = $this->repository->findBy([
-                'exercise' => $exercise,
-            ]);
-        }
-
-        return array_map(function (Paper $paper) {
-            return $this->serialize($paper);
-        }, $papers);
     }
 
     /**

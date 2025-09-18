@@ -22,6 +22,8 @@ services:
     Claroline\EvaluationBundle\Controller\Sequence\ActivityController:
         arguments:
             - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
 
     Claroline\EvaluationBundle\Controller\Sequence\SequenceController:
@@ -41,6 +43,7 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
+            - '@Claroline\EvaluationBundle\Manager\ExportManager'
 
     Claroline\EvaluationBundle\Controller\UserEvaluation\SequenceEvaluationController:
         arguments:
@@ -49,7 +52,9 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\EvaluationBundle\Manager\SequenceEvaluationManager'
+            - '@Claroline\EvaluationBundle\Manager\ExportManager'
 
     Claroline\EvaluationBundle\Controller\UserEvaluation\ResourceEvaluationController:
         arguments:
@@ -57,6 +62,15 @@ services:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\EvaluationBundle\Manager\ExportManager'
+
+    Claroline\EvaluationBundle\Controller\UserEvaluation\ResourceAttemptController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'

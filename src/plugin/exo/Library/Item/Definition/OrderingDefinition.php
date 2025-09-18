@@ -156,6 +156,10 @@ class OrderingDefinition extends AbstractDefinition
     public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         $data = json_decode($answer->getData(), true);
+        if (empty($data)) {
+            return [];
+        }
+
         $items = $question->getItems();
         $answers = [];
 

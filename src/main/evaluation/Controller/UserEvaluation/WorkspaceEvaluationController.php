@@ -22,14 +22,17 @@ use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\SequenceEvaluation;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\WorkspaceEvaluation;
+use Claroline\EvaluationBundle\Manager\ExportManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -51,16 +54,17 @@ class WorkspaceEvaluationController
         private readonly ObjectManager $om,
         private readonly Crud $crud,
         private readonly SerializerProvider $serializer,
-        private readonly WorkspaceEvaluationManager $manager
+        private readonly WorkspaceEvaluationManager $manager,
+        private readonly ExportManager $exportManager,
     ) {
         $this->authorization = $authorization;
     }
 
-    #[Route(path: '/{workspace}', name: 'apiv2_workspace_evaluation_list', methods: ['GET'])]
+    #[Route(path: '/{workspaceId}', name: 'apiv2_workspace_evaluation_list', methods: ['GET'])]
     public function listAction(
         #[MapQueryString]
         ?FinderQuery $finderQuery = new FinderQuery(),
-        #[MapEntity(mapping: ['workspace' => 'uuid'])]
+        #[MapEntity(mapping: ['workspaceId' => 'uuid'])]
         ?Workspace $workspace = null
     ): StreamedJsonResponse {
         $this->checkToolAccess('OPEN', $workspace);
@@ -79,6 +83,21 @@ class WorkspaceEvaluationController
         $evaluations = $this->crud->search(WorkspaceEvaluation::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
 
         return $evaluations->toResponse();
+    }
+
+    #[Route(path: '/{workspaceId}/csv', name: 'apiv2_workspace_evaluation_csv', methods: ['GET'])]
+    public function exportCsvAction(
+        #[MapEntity(mapping: ['workspaceId' => 'uuid'])]
+        Workspace $workspace
+    ): StreamedResponse {
+        $this->checkToolAccess('FOLLOW', $workspace);
+
+        return new StreamedResponse(function () use ($workspace): void {
+            $this->exportManager->exportWorkspaceEvaluations($workspace);
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toFilename($workspace->getName()).'.csv',
+        ]);
     }
 
     #[Route(path: '/{workspace}/user/{user}', name: 'apiv2_workspace_evaluation_get', methods: ['GET'])]

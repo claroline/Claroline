@@ -3,7 +3,7 @@ import {trans} from '#/main/app/intl'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {hasPermission} from '#/main/app/security'
 
-export default declareAction((sequences) => ({
+export default declareAction((sequences, refresher) => ({
   name: 'purge_evaluation',
   label: trans('purge_evaluations', {}, 'actions'),
   type: ASYNC_BUTTON,
@@ -15,7 +15,8 @@ export default declareAction((sequences) => ({
     url: ['apiv2_sequence_evaluation_purge', {sequenceId: sequences[0].id}],
     request: {
       method: 'DELETE'
-    }
+    },
+    success: () => refresher.update(sequences)
   },
   displayed: hasPermission('administrate', sequences[0]),
   group: trans('evaluation'),

@@ -23,7 +23,7 @@ use Claroline\LinkBundle\Entity\Resource\Shortcut;
 /**
  * Integrates the "Shortcut" resource.
  */
-class ShortcutResource extends ResourceComponent implements DownloadableResourceInterface, EvaluatedResourceInterface
+final class ShortcutResource extends ResourceComponent implements DownloadableResourceInterface, EvaluatedResourceInterface
 {
     public function __construct(
         private readonly SerializerProvider $serializer,
@@ -34,6 +34,16 @@ class ShortcutResource extends ResourceComponent implements DownloadableResource
     public static function getName(): string
     {
         return 'shortcut';
+    }
+
+    public static function supportsScore(): bool
+    {
+        return false;
+    }
+
+    public static function supportsAttempts(): bool
+    {
+        return false;
     }
 
     /** @param Shortcut $resource */

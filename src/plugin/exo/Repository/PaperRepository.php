@@ -124,7 +124,7 @@ class PaperRepository extends EntityRepository
     }
 
     /**
-     * Returns the number of annymous users associated to a given exercise.
+     * Returns the number of anonymous users associated with a given exercise.
      *
      * @return int the number of registered users
      */

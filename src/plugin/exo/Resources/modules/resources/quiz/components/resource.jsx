@@ -3,17 +3,17 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {Resource} from '#/main/core/resource'
 
-import {QuizPlayer}     from '#/plugin/exo/resources/quiz/player/containers/main'
+import {QuizPlayer} from '#/plugin/exo/resources/quiz/player/containers/main'
 import {AttemptEnd} from '#/plugin/exo/resources/quiz/player/components/attempt-end'
 
-import {QuizOverview}   from '#/plugin/exo/resources/quiz/containers/overview'
-import {QuizEditor}     from '#/plugin/exo/resources/quiz/editor/components/main'
-import {PapersMain}     from '#/plugin/exo/resources/quiz/papers/containers/main'
+import {QuizOverview} from '#/plugin/exo/resources/quiz/containers/overview'
+import {QuizEditor} from '#/plugin/exo/resources/quiz/editor/components/main'
+import {PapersMain} from '#/plugin/exo/resources/quiz/papers/containers/main'
 import {CorrectionMain} from '#/plugin/exo/resources/quiz/correction/containers/main'
-import {StatisticsMain} from '#/plugin/exo/resources/quiz/statistics/containers/main'
+import {QuizDashboard} from '#/plugin/exo/resources/quiz/dashboard/components/main'
 
 const QuizResource = props =>
   <Resource
@@ -46,45 +46,18 @@ const QuizResource = props =>
         target: `${props.path}/papers`,
         exact: true
       }, {
-        name: 'results-csv',
-        type: URL_BUTTON,
-        icon: 'fa fa-fw fa-file-csv',
-        label: trans('export_csv_results', {}, 'quiz'),
-        displayed: props.canFollow,
-        target: ['exercise_papers_export', {exerciseId: props.quizId}],
-        group: trans('transfer')
-      }, {
-        type: URL_BUTTON,
-        icon: 'fa fa-fw fa-file-csv',
-        label: trans('export_csv_answers', {}, 'quiz'),
-        displayed: props.canFollow,
-        target: ['exercise_papers_export_csv', {exerciseId: props.quizId}],
-        group: trans('transfer')
-      }, {
-        type: URL_BUTTON,
-        icon: 'fa fa-fw fa-file-code',
-        label: trans('export_json_answers', {}, 'quiz'),
-        displayed: props.canFollow,
-        target: ['exercise_papers_export_json', {exerciseId: props.quizId}],
-        group: trans('transfer')
-      }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-check-square',
         label: trans('correct', {}, 'actions'),
         displayed: props.canFollow,
         target: `${props.path}/correction`,
         group: trans('management')
-      }, {
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-bar-chart',
-        label: trans('show-statistics', {}, 'actions'),
-        displayed: props.canFollow && props.showStatistics,
-        target: `${props.path}/statistics`
       }
     ]}
 
     overviewPage={props.hasOverview ? QuizOverview : undefined}
     editor={QuizEditor}
+    dashboard={QuizDashboard}
     pages={[
       {
         path: '/test',
@@ -106,10 +79,6 @@ const QuizResource = props =>
         path: '/correction',
         component: CorrectionMain,
         disabled: !props.canFollow
-      }, {
-        path: '/statistics',
-        component: StatisticsMain,
-        disabled: !props.canFollow && !props.showStatistics
       }
     ]}
     redirect={[
@@ -124,7 +93,6 @@ QuizResource.propTypes = {
   empty: T.bool.isRequired,
   editable: T.bool.isRequired,
   canFollow: T.bool.isRequired,
-  showStatistics: T.bool.isRequired,
   registeredUser: T.bool.isRequired,
   hasOverview: T.bool.isRequired,
   testMode: T.func.isRequired

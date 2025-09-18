@@ -15,7 +15,8 @@
   "add_sequence_step": "Ajouter une étape",
   "finish_sequence": "Terminer la séquence",
   "initialize_evaluations": "Initialiser les évaluations",
-  "initialize_evaluations_help": "Générez les évaluations pour tous les utilisateurs n'ayant pas encore commencé l'espace d'activités.",
+  "initialize_workspace_evaluations_help": "Générez les évaluations pour tous les utilisateurs n'ayant pas encore commencé l'espace d'activités.",
+  "initialize_sequence_evaluations_help": "Générez les évaluations pour tous les utilisateurs n'ayant pas encore commencé la séquence.",
   "recompute_evaluations": "Recalculer les évaluations",
   "recompute_workspace_evaluations_help": "Recalculez les évaluations de tous les utilisateurs ayant commencé l'espace d'activités.",
   "recompute_sequence_evaluations_help": "Recalculez les évaluations de tous les utilisateurs ayant commencé la séquence.",
@@ -30,5 +31,9 @@
   "regenerate_sequence_certificates_help": "Générez les certificats manquants et régénérez les certificats existants pour tous les utilisateurs ayant terminé/réussi la séquence.",
   "regenerate_workspace_certificates_help": "Générez les certificats manquants et régénérez les certificats existants pour tous les utilisateurs ayant terminé/réussi l'espace d'activités.",
   "delete_sequence": "Supprimer la séquence",
-  "delete_sequence_desc": "Supprimez définitivement la séquence. Toutes les données et résultats des utilisateurs seront supprimés et ne pourront pas être récupérés."
+  "delete_sequence_desc": "Supprimez définitivement la séquence. Toutes les données et résultats des utilisateurs seront supprimés et ne pourront pas être récupérés.",
+  "export_evaluations": "Exporter les résultats",
+  "export_resource_evaluations_help": "Téléchargez les résultats obtenues par les participants de la ressource au format CSV.",
+  "export_sequence_evaluations_help": "Téléchargez les résultats obtenues par les participants de la séquence au format CSV.",
+  "export_workspace_evaluations_help": "Téléchargez les résultats obtenues par les participants de l'espace au format CSV."
 }

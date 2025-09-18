@@ -15,3 +15,6 @@ services:
 
     Claroline\EvaluationBundle\Security\Voter\ResourceEvaluationVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter
+
+    Claroline\EvaluationBundle\Security\Voter\ResourceAttemptVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter

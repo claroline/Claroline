@@ -15,7 +15,7 @@ const GroupList = connect(
     contextType: toolSelectors.contextType(state),
     contextData: toolSelectors.contextData(state),
     canRegister: communitySelectors.canCreate(state),
-    canEdit: hasPermission('edit', toolSelectors.toolData(state))
+    canEdit: hasPermission('edit', toolSelectors.tool(state))
   }),
   (dispatch) => ({
     invalidateList() {

@@ -2,7 +2,6 @@ imports:
     - { resource: services/controller.yml }
     - { resource: services/finder.yml }
     - { resource: services/library.yml }
-    - { resource: services/listener.yml }
     - { resource: services/manager.yml }
     - { resource: services/serializer.yml }
     - { resource: services/subscriber.yml }

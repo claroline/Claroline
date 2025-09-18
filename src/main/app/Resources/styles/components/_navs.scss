@@ -14,6 +14,40 @@
     }
 }
 
+.nav-bar {
+    font-size: $font-size-sm;
+    border: 1px solid var(--#{$prefix}border-color);
+    border-radius: var(--#{$prefix}border-radius-pill);
+    overflow: hidden;
+
+    .nav-item + .nav-item {
+        border-left: 1px solid var(--#{$prefix}border-color);
+    }
+
+    .nav-link {
+        transition: $btn-transition;
+
+        &.active {
+            color: var(--#{$prefix}primary);
+            background: var(--#{$prefix}primary-bg-subtle);
+
+            &::before {
+                display: inline-block;
+                margin-right: map-get($spacers, 2);
+                height: $font-size-sm;
+                width: $font-size-sm;
+                vertical-align: middle;
+                margin-bottom: .375rem; // fix alignment with text
+                content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path fill='#{$primary}' d='M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/></svg>")
+            }
+        }
+
+        &:hover:not(.active) {
+            background: var(--#{$prefix}tertiary-bg);
+        }
+    }
+}
+
 // copied from bootstrap to add some customization vars
 .app .nav-underline {
     // scss-docs-start nav-underline-css-vars

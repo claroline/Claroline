@@ -37,15 +37,15 @@ export default (contextType, contextData, refresher, currentUser) => {
         name: 'code',
         type: 'string',
         label: trans('code')
-      }, , {
-        name: 'meta.created',
+      }, {
+        name: 'meta.createdAt',
         label: trans('creation_date'),
         type: 'date',
         alias: 'createdAt',
         filterable: false,
         options: {time: true}
       }, {
-        name: 'meta.updated',
+        name: 'meta.updatedAt',
         label: trans('modification_date'),
         type: 'date',
         alias: 'updatedAt',

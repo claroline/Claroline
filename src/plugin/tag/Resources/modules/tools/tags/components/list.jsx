@@ -20,8 +20,8 @@ import {MODAL_TAG} from '#/plugin/tag/tools/tags/modals/tag'
 const TagList = () => {
   const listName = selectors.STORE_NAME + '.tags'
   const toolPath = useSelector(toolSelectors.path)
-  const canCreate = useSelector((state) => hasPermission('create', toolSelectors.toolData(state)))
-  const canEdit = useSelector((state) => hasPermission('edit', toolSelectors.toolData(state)))
+  const canCreate = useSelector((state) => hasPermission('create', toolSelectors.tool(state)))
+  const canEdit = useSelector((state) => hasPermission('edit', toolSelectors.tool(state)))
 
   const dispatch = useDispatch()
 

@@ -7,7 +7,6 @@ const STORE_NAME = 'progression'
 
 const store = (state) => get(state, STORE_NAME)
 
-
 const assignedSequences = createSelector(
   [store],
   (store) => get(store, 'current.sequences')
@@ -40,5 +39,5 @@ export const selectors = {
   currentWorkspaceEvaluation,
   currentResourceEvaluations,
   hasScore,
-  totalScore,
+  totalScore
 }

@@ -24,7 +24,7 @@ class IpUserType extends AbstractType
     {
         $builder
             ->add('ip', TextType::class)
-            ->add('user', UserType::class)
+            ->add('user', UserType::class, ['nullable' => true])
         ;
     }
 

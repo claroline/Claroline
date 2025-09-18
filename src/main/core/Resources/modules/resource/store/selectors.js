@@ -6,7 +6,7 @@ import {hasPermission} from '#/main/app/security'
 import {selectors as toolSelectors} from '#/main/core/tool/store/selectors'
 
 import {constants as baseConstants} from '#/main/evaluation/constants'
-import {supportEvaluation} from '#/main/core/resource/utils'
+import {supportAttempts, supportEvaluation, supportScore} from '#/main/core/resource/utils'
 
 const STORE_NAME = 'resource'
 const EDITOR_NAME = 'resourceEditor'
@@ -146,7 +146,7 @@ const estimatedDuration = createSelector(
 
 const hasEvaluation = createSelector(
   [resourceNode],
-  (resourceNode) => supportEvaluation(resourceNode)
+  (resourceNode) => !isEmpty(resourceNode) && supportEvaluation(resourceNode)
 )
 
 const totalScore = createSelector(
@@ -155,8 +155,13 @@ const totalScore = createSelector(
 )
 
 const hasScore = createSelector(
-  [totalScore],
-  (totalScore) => !!totalScore
+  [resourceNode, totalScore],
+  (resourceNode, totalScore) => supportScore(resourceNode) && !!totalScore
+)
+
+const hasAttempts = createSelector(
+  [resourceNode],
+  (resourceNode) => supportAttempts(resourceNode)
 )
 
 // evaluation selectors
@@ -219,6 +224,7 @@ export const selectors = {
   resourceEvaluation,
   hasEvaluation,
   hasScore,
+  hasAttempts,
   totalScore,
   evaluationStatus,
   isTerminated

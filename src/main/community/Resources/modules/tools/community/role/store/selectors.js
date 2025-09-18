@@ -17,7 +17,7 @@ const current = (state) => get(state, FORM_NAME)
 const currentId = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME)).id || null
 
 const canCreate = createSelector(
-  [toolSelectors.toolData],
+  [toolSelectors.tool],
   (tool) => hasPermission('edit', tool)
 )
 

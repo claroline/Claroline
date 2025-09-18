@@ -73,6 +73,6 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Answerable
 
     public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
-        return ['nope'];
+        return [];
     }
 }

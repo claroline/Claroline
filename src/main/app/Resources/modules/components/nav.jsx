@@ -41,7 +41,7 @@ const Nav = (props) => {
 }
 
 Nav.propTypes = {
-  variant: T.oneOf(['pills', 'underline', 'tabs']),
+  variant: T.oneOf(['pills', 'underline', 'tabs', 'bar']),
   orientation: T.oneOf(['vertical', 'horizontal']).isRequired,
   items: T.arrayOf(T.shape({
     // action types

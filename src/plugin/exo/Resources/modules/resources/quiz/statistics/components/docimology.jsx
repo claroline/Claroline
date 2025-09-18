@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
@@ -8,6 +8,7 @@ import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 import {BarChart} from '#/main/core/layout/chart/bar/components/bar-chart'
 import {PieChart} from '#/main/core/layout/chart/pie/components/pie-chart'
 import {CircularGauge} from '#/main/core/layout/chart/gauge/components/circlular-gauge'
+import {PageSection} from '#/main/app/page'
 
 const COLOR_SUCCESS = '#4F7302'
 const COLOR_WARNING = '#F0AD4E'
@@ -268,7 +269,7 @@ const Docimology = props => {
   }
 
   return (
-    <Fragment>
+    <PageSection size="full">
       <GeneralStats
         statistics={props.statistics}
       />
@@ -290,7 +291,7 @@ const Docimology = props => {
       <DiscriminationIndex
         discriminationCoefficient={props.statistics.discriminationCoefficient}
       />
-    </Fragment>
+    </PageSection>
   )
 }
 

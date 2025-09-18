@@ -91,9 +91,6 @@
             "$ref": "http://json-quiz.github.io/json-quiz/schemas/question/ordering.json"
           },
           {
-            "$ref": "http://json-quiz.github.io/json-quiz/schemas/question/boolean.json"
-          },
-          {
             "$ref": "http://json-quiz.github.io/json-quiz/schemas/question/waveform.json"
           }
         ]

@@ -21,7 +21,7 @@ use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class DropzoneResource extends ResourceComponent implements EvaluatedResourceInterface
+final class DropzoneResource extends ResourceComponent implements EvaluatedResourceInterface
 {
     public function __construct(
         private readonly string $filesDir,
@@ -34,6 +34,16 @@ class DropzoneResource extends ResourceComponent implements EvaluatedResourceInt
     public static function getName(): string
     {
         return 'claroline_dropzone';
+    }
+
+    public static function supportsScore(): bool
+    {
+        return true;
+    }
+
+    public static function supportsAttempts(): bool
+    {
+        return false;
     }
 
     /** @param Dropzone $resource */

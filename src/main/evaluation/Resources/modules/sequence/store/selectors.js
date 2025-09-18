@@ -62,6 +62,17 @@ const totalSteps = createSelector(
   (orderedSteps) => orderedSteps.length
 )
 
+const totalActivities = createSelector(
+  [orderedSteps],
+  (orderedSteps) => orderedSteps.reduce((acc, current) => {
+    if (current.primaryResource) {
+      acc++
+    }
+
+    return acc
+  }, 0)
+)
+
 const currentStepSlug = createSelector(
   [store],
   (store) => store.currentStep
@@ -152,6 +163,7 @@ export const selectors = {
   id,
   steps,
   totalSteps,
+  totalActivities,
   orderedSteps,
   empty,
   currentStep,

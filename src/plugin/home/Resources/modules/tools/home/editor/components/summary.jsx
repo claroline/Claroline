@@ -131,7 +131,6 @@ const HomeEditorSummary = () => {
         modal={[MODAL_HOME_CREATION, {
           position: tabs.length,
           create: (tab) => {
-            console.log(tab)
             createTab(null, tab)
           }
         }]}

@@ -20,14 +20,14 @@ import {EvaluationGauge} from '#/main/evaluation/components/gauge'
 import {UserEvaluation as UserEvaluationTypes} from '#/main/evaluation/prop-types'
 
 const UserProgressionInfo = ({user, title}) =>
-  <div className={classes('d-flex flex-row gap-3')} role="presentation">
+  <div className={classes('d-flex flex-row gap-3 align-items-center')} role="presentation">
     <UserAvatar
       user={user}
       size="sm"
     />
     <div className="d-flex flex-column" role="presentation">
       <LinkButton className="fw-normal text-reset fs-5" target="#">{get(user, 'name') || trans('unknown')}</LinkButton>
-      <span className="text-body-tertiary fs-sm">
+      <span className="text-body-secondary">
         {title}
       </span>
     </div>
@@ -44,9 +44,9 @@ const UserProgressionModal = props => {
     >
       <div className="d-flex flex-row" role="presentation">
         <div
-          className={classes('modal-aside bg-body-tertiary p-4 rounded-start-3 d-flex flex-column w-100',
-          `text-${constants.EVALUATION_STATUS_COLOR[get(props.evaluation, 'status')]}-emphasis`,
-          `bg-${constants.EVALUATION_STATUS_COLOR[get(props.evaluation, 'status')]}-subtle`
+          className={classes('modal-aside bg-body-tertiary p-4 rounded-start-3 d-flex flex-column flex-shrink-0 w-100',
+            `text-${constants.EVALUATION_STATUS_COLOR[get(props.evaluation, 'status')]}-emphasis`,
+            `bg-${constants.EVALUATION_STATUS_COLOR[get(props.evaluation, 'status')]}-subtle`
           )}
           style={{maxWidth: '16rem'}}
         >
@@ -182,6 +182,8 @@ const UserProgressionModal = props => {
 
 UserProgressionModal.propTypes = {
   name: T.string.isRequired,
+  // the title of the activity (e.g., workspace, sequence, resource)
+  title: T.string,
   // the api URL to fetch the user evaluation and progression
   url: T.oneOfType([T.string, T.array]).isRequired,
   evaluation: T.shape(

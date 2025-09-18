@@ -116,6 +116,7 @@ class TextNormalizer
 
         $normalizedName = str_replace('.'.$extension, '', $string);
         $normalizedName = TextNormalizer::toUtf8($normalizedName);
+        $normalizedName = TextNormalizer::stripDiacritics($normalizedName);
         $normalizedName = str_replace(['\\', ':', '.', '<', '>', '*', '?', '"'], '', $normalizedName);
 
         if ($extension) {

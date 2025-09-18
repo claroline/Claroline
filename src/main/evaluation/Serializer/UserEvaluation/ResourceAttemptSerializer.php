@@ -5,13 +5,15 @@ namespace Claroline\EvaluationBundle\Serializer\UserEvaluation;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Claroline\EvaluationBundle\Library\EvaluationOptions;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ResourceAttemptSerializer
 {
     public function __construct(
+        private readonly AuthorizationCheckerInterface $authorization,
         private readonly ResourceNodeSerializer $resourceNodeSerializer,
         private readonly UserSerializer $userSerializer
     ) {
@@ -78,6 +80,14 @@ class ResourceAttemptSerializer
 
         if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
             $resourceUserEvaluation = $evaluation->getResourceUserEvaluation();
+
+            if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+                $isAdmin = $this->authorization->isGranted('ADMINISTRATE', $evaluation);
+                $serialized['permissions'] = [
+                    'open' => $isAdmin || $this->authorization->isGranted('OPEN', $evaluation),
+                    'administrate' => $isAdmin,
+                ];
+            }
 
             $serialized = array_merge($serialized, [
                 'comment' => $evaluation->getComment(),

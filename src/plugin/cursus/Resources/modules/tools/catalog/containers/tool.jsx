@@ -12,7 +12,7 @@ const CatalogTool = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       path: toolSelectors.path(state),
-      canEdit: hasPermission('edit', toolSelectors.toolData(state))
+      canEdit: hasPermission('edit', toolSelectors.tool(state))
     }),
     (dispatch) => ({
       open(slug) {

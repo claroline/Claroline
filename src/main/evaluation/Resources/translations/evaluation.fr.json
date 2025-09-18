@@ -91,5 +91,15 @@
   "attempt": "Tentative n°%number%",
   "attempts": "Tentatives",
   "no_activity": "aucune activité",
-  "evaluations_delete_confirm": "{1} Êtes-vous sûr(e) de vouloir supprimer l'évaluation de cet utilisateur ? | [2,Inf[ Êtes-vous sûr(e) de vouloir supprimer les évaluations de ces %count% utilisateurs ?"
+  "attempts_delete_confirm": "{1} Êtes-vous sûr(e) de vouloir supprimer la tentative de cet utilisateur ? | [2,Inf[ Êtes-vous sûr(e) de vouloir supprimer les tentatives de ces %count% utilisateurs ?",
+  "evaluations_delete_confirm": "{1} Êtes-vous sûr(e) de vouloir supprimer l'évaluation de cet utilisateur ? | [2,Inf[ Êtes-vous sûr(e) de vouloir supprimer les évaluations de ces %count% utilisateurs ?",
+  "score_not_computed_yet": "Le score est calculé une fois que l'utilisateur a terminé toutes les activités à faire.",
+  "sequence_available": "Disponible",
+  "sequence_required": "Requis",
+  "sequence_scored": "Noté",
+  "sequence_available_help": "Les utilisateurs <b>peuvent faire</b> la séquence",
+  "sequence_not_required_help": "La séquence <b>ne participe pas</b> à la progression de l'espace d'activités",
+  "sequence_required_help": "La séquence <b>participe</b> à la progression de l'espace d'activités",
+  "sequence_not_scored_help": "Le score de la séquence <b>n'est pas comptabilisé</b> lors du calcul du score de l'espace d'activités",
+  "sequence_scored_help": "Le score de la séquence <b>est comptabilisé</b> lors du calcul du score de l'espace d'activités"
 }

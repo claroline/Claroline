@@ -23,7 +23,6 @@ const ContextEditorActions = () => {
   const contextTools = useSelector(selectors.enabledTools)
 
   const refresher = {
-    add: () => true,
     update: (contexts) => {
       // checks if the action has modified the current context
       const currentContext = contexts.find(context => context.id === get(contextData, 'id'))

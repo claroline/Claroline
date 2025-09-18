@@ -23,7 +23,7 @@ use UJM\ExoBundle\Repository\ExerciseRepository;
 /**
  * Listens to resource events dispatched by the core.
  */
-class ExerciseResource extends ResourceComponent implements EvaluatedResourceInterface
+final class ExerciseResource extends ResourceComponent implements EvaluatedResourceInterface
 {
     private ExerciseRepository $repository;
 
@@ -43,6 +43,16 @@ class ExerciseResource extends ResourceComponent implements EvaluatedResourceInt
     public static function getName(): string
     {
         return 'ujm_exercise';
+    }
+
+    public static function supportsScore(): bool
+    {
+        return true;
+    }
+
+    public static function supportsAttempts(): bool
+    {
+        return true;
     }
 
     /** @param Exercise $resource */

@@ -16,7 +16,7 @@ use Claroline\PeerTubeBundle\Manager\PeerTubeManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
 
-class VideoResource extends ResourceComponent implements UrlAdapterInterface, EvaluatedResourceInterface
+final class VideoResource extends ResourceComponent implements UrlAdapterInterface, EvaluatedResourceInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
@@ -30,6 +30,16 @@ class VideoResource extends ResourceComponent implements UrlAdapterInterface, Ev
     public static function getName(): string
     {
         return 'peertube_video';
+    }
+
+    public static function supportsScore(): bool
+    {
+        return false;
+    }
+
+    public static function supportsAttempts(): bool
+    {
+        return false;
     }
 
     public static function getSubscribedEvents(): array

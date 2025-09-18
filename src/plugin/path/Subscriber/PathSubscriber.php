@@ -11,11 +11,10 @@ use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
-use Claroline\EvaluationBundle\Event\EvaluationEvents;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
@@ -42,6 +41,16 @@ class PathSubscriber extends ResourceComponent implements EvaluatedResourceInter
     public static function getName(): string
     {
         return 'innova_path';
+    }
+
+    public static function supportsScore(): bool
+    {
+        return true;
+    }
+
+    public static function supportsAttempts(): bool
+    {
+        return false;
     }
 
     public static function getSubscribedEvents(): array

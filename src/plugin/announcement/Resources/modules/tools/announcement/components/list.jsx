@@ -106,6 +106,7 @@ const Announce = (props) =>
 
 Announce.propTypes = {
   className: T.string,
+  loaded: T.bool,
   path: T.string.isRequired,
   announcement: T.shape(
     AnnouncementTypes.propTypes
@@ -120,7 +121,7 @@ const AnnouncementList = () => {
   const contextPath = useSelector(contextSelectors.path)
   const toolPath = useSelector(toolSelectors.path)
   const loaded = useSelector(toolSelectors.loaded)
-  const tool = useSelector(toolSelectors.toolData)
+  const tool = useSelector(toolSelectors.tool)
   const poster = useSelector(toolSelectors.poster)
 
   const posts = useSelector(selectors.sortedPosts)

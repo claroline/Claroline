@@ -1,4 +1,11 @@
 services:
+    Claroline\EvaluationBundle\Messenger\InitializeSequenceEvaluationsHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@messenger.default_bus'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\SequenceEvaluationManager'
+
     Claroline\EvaluationBundle\Messenger\InitializeWorkspaceEvaluationsHandler:
         tags: [messenger.message_handler]
         arguments:

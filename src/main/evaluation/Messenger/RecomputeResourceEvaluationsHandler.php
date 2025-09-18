@@ -3,7 +3,7 @@
 namespace Claroline\EvaluationBundle\Messenger;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\RecomputeResourceEvaluations;
@@ -23,7 +23,7 @@ readonly class RecomputeResourceEvaluationsHandler
 
     public function __invoke(RecomputeResourceEvaluations $initMessage): void
     {
-        $resourceNode = $this->om->getRepository(Sequence::class)->find($initMessage->getResourceId());
+        $resourceNode = $this->om->getRepository(ResourceNode::class)->find($initMessage->getResourceId());
         if (empty($resourceNode) || !$this->evaluationManager->supportsEvaluation($resourceNode)) {
             return;
         }

@@ -135,8 +135,8 @@ class ChoiceDefinition extends AbstractDefinition
     public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         $data = json_decode($answer->getData(), true);
-        $answers = [];
 
+        $answers = [];
         foreach ($question->getChoices() as $choice) {
             if (is_array($data) && in_array($choice->getUuid(), $data)) {
                 $answers[] = $choice->getData();

@@ -11,7 +11,7 @@ const BadgeList = connect(
     poster: toolSelectors.poster(state),
     contextType: toolSelectors.contextType(state),
     contextId: toolSelectors.contextId(state),
-    canEdit: hasPermission('edit', toolSelectors.toolData(state))
+    canEdit: hasPermission('edit', toolSelectors.tool(state))
   })
 )(BadgeListComponent)
 

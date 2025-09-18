@@ -55,11 +55,6 @@ final class ItemType
     public const GRID = 'application/x.grid+json';
 
     /**
-     * The user has to answer to basic true / false questions.
-     */
-    public const BOOLEAN = 'application/x.boolean+json';
-
-    /**
      * The user has to sort items.
      */
     public const ORDERING = 'application/x.ordering+json';
@@ -86,7 +81,6 @@ final class ItemType
             ItemType::GRID,
             ItemType::CONTENT,
             ItemType::ORDERING,
-            ItemType::BOOLEAN,
             ItemType::WAVEFORM,
         ];
     }

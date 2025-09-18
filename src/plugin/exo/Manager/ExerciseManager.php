@@ -35,58 +35,6 @@ class ExerciseManager
             || 0 === $this->paperManager->countExercisePapers($exercise);
     }
 
-    public function exportPapersToCsv(Exercise $exercise)
-    {
-        /** @var PaperRepository $repo */
-        $repo = $this->om->getRepository(Paper::class);
-
-        $handle = fopen('php://output', 'w+');
-        $limit = 250;
-        $iteration = 0;
-        $papers = [];
-
-        fputcsv($handle, [
-            'last_name',
-            'first_name',
-            'number',
-            'start_date',
-            'end_date',
-            'status',
-            'score',
-            'total',
-        ], ';');
-
-        while (0 === $iteration || count($papers) >= $limit) {
-            $papers = $repo->findBy(['exercise' => $exercise], [], $limit, $iteration * $limit);
-            ++$iteration;
-
-            /** @var Paper $paper */
-            foreach ($papers as $paper) {
-                $user = $paper->getUser();
-                // maybe use stored score to speed up things
-                // problem is we don't have it for non-finished papers
-                $score = $this->paperManager->calculateScore($paper);
-
-                fputcsv($handle, [
-                    $user && !$paper->isAnonymized() ? $user->getLastName() : '',
-                    $user && !$paper->isAnonymized() ? $user->getFirstName() : '',
-                    $paper->getNumber(),
-                    $paper->getStart()->format('Y-m-d H:i:s'),
-                    $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : '',
-                    $paper->isInterrupted() ? 'not finished' : 'finished',
-                    $score !== floor($score) ? number_format($score, 2) : $score,
-                    $paper->getTotal(),
-                ], ';');
-            }
-
-            $this->om->clear();
-        }
-
-        fclose($handle);
-
-        return $handle;
-    }
-
     public function exportResultsToCsv(Exercise $exercise, $output = null)
     {
         /** @var PaperRepository $repo */
@@ -97,7 +45,7 @@ class ExerciseManager
 
         // get the list of titles for the csv (the headers)
         // this is an array of array because some question types will return...
-        // more than 1 title (ie cloze)
+        // more than 1 title (i.e., cloze)
         foreach ($exercise->getSteps() as $step) {
             foreach ($step->getStepQuestions() as $stepQ) {
                 $item = $stepQ->getQuestion();
@@ -127,7 +75,6 @@ class ExerciseManager
             $output = 'php://output';
         }
         $fp = fopen($output, 'w+');
-        fputcsv($fp, [$exercise->getResourceNode()->getName()], ';');
         fputcsv($fp, $flattenedTitles, ';');
 
         // this is the same reason why we use an array of array here

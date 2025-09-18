@@ -5,11 +5,16 @@ namespace UJM\ExoBundle\Controller;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -24,25 +29,29 @@ use UJM\ExoBundle\Manager\ExerciseManager;
  * Paper Controller.
  * Manages the submitted papers to an exercise.
  */
-#[Route(path: 'exercises/{exerciseId}/papers')]
+#[Route(path: '/exercises')]
 class PaperController
 {
+    use PermissionCheckerTrait;
     use RequestDecoderTrait;
 
     public function __construct(
-        private readonly AuthorizationCheckerInterface $authorization,
+        AuthorizationCheckerInterface $authorization,
         private readonly ObjectManager $om,
         private readonly FinderProvider $finder,
         private readonly PaperManager $paperManager,
         private readonly ExerciseManager $exerciseManager
     ) {
+        $this->authorization = $authorization;
     }
 
     /**
      * Returns all the papers associated with an exercise.
      * Administrators get the papers of all users, others get only theirs.
+     *
+     * @deprecated use the standard ResourceAttempt list
      */
-    #[Route(path: '', name: 'exercise_paper_list', methods: ['GET'])]
+    #[Route(path: '/{exerciseId}/papers', name: 'exercise_paper_list', methods: ['GET'])]
     public function listAction(
         #[MapEntity(mapping: ['exerciseId' => 'uuid'])]
         Exercise $exercise,
@@ -79,8 +88,10 @@ class PaperController
      * Returns one paper.
      * Also includes the complete definition and solution of each question
      * associated with the exercise.
+     *
+     * @deprecated use the standard ResourceAttempt list
      */
-    #[Route(path: '/{id}', name: 'exercise_paper_get', methods: ['GET'])]
+    #[Route(path: '/{exerciseId}/papers/{id}', name: 'exercise_paper_get', methods: ['GET'])]
     public function getAction(
         #[MapEntity(mapping: ['exerciseId' => 'uuid'])] Exercise $exercise,
         #[MapEntity(mapping: ['id' => 'uuid'])]
@@ -96,10 +107,34 @@ class PaperController
         return new JsonResponse($this->paperManager->serialize($paper));
     }
 
+    #[Route(path: '/attempt/{attemptId}', name: 'exercise_attempt_get', methods: ['GET'])]
+    public function getAttemptAction(
+        #[MapEntity(mapping: ['attemptId' => 'uuid'])]
+        ResourceAttempt $attempt
+    ): JsonResponse {
+        $this->checkPermission('OPEN', $attempt, [], true);
+
+        $paper = null;
+        if (!empty($attempt->getData())) {
+            $attemptData = $attempt->getData();
+            if (!empty($attemptData['paper']) && !empty($attemptData['paper']['id'])) {
+                $paper = $this->om->getRepository(Paper::class)->find($attemptData['paper']['id']);
+            }
+        }
+
+        if (empty($paper)) {
+            throw new NotFoundHttpException(sprintf('Cannot find attempt details for id : %s', $attempt->getUuid()));
+        }
+
+        return new JsonResponse($this->paperManager->serialize($paper));
+    }
+
     /**
      * Deletes some papers associated with an exercise.
+     *
+     * @deprecated use the standard ResourceAttempt list
      */
-    #[Route(path: '', name: 'ujm_exercise_delete_papers', methods: ['DELETE'])]
+    #[Route(path: '/{exerciseId}/papers', name: 'ujm_exercise_delete_papers', methods: ['DELETE'])]
     public function deleteAction(#[MapEntity(mapping: ['exerciseId' => 'uuid'])] Exercise $exercise, Request $request): JsonResponse
     {
         $this->assertHasPermission('FOLLOW', $exercise);
@@ -113,61 +148,22 @@ class PaperController
     }
 
     /**
-     * Exports papers into a CSV file.
-     */
-    #[Route(path: '/export/csv', name: 'exercise_papers_export', methods: ['GET'])]
-    public function exportCsvAction(#[MapEntity(mapping: ['exerciseId' => 'uuid'])] Exercise $exercise): StreamedResponse
-    {
-        $this->assertHasPermission('FOLLOW', $exercise);
-
-        return new StreamedResponse(function () use ($exercise): void {
-            $this->exerciseManager->exportPapersToCsv($exercise);
-        }, 200, [
-            'Content-Type' => 'application/force-download',
-            'Content-Disposition' => 'attachment; filename="export.csv"',
-        ]);
-    }
-
-    /**
-     * Exports papers into a json file.
-     */
-    #[Route(path: '/export/json', name: 'exercise_papers_export_json', methods: ['GET'])]
-    public function exportJsonAction(#[MapEntity(mapping: ['exerciseId' => 'uuid'])] Exercise $exercise): StreamedResponse
-    {
-        if (!$this->isAdmin($exercise)) {
-            // Only administrator or Paper Managers can export Papers
-            throw new AccessDeniedException();
-        }
-
-        $response = new StreamedResponse(function () use ($exercise): void {
-            $data = $this->paperManager->serializeExercisePapers($exercise);
-            $handle = fopen('php://output', 'w+');
-            fwrite($handle, json_encode($data, JSON_PRETTY_PRINT));
-            fclose($handle);
-        });
-
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename="statistics.json"');
-
-        return $response;
-    }
-
-    /**
      * Exports papers into a csv file.
      */
-    #[Route(path: '/export/papers/csv', name: 'exercise_papers_export_csv', methods: ['GET'])]
-    public function exportCsvAnswersAction(#[MapEntity(mapping: ['exerciseId' => 'uuid'])] Exercise $exercise): StreamedResponse
-    {
-        if (!$this->isAdmin($exercise)) {
-            // Only administrator or Paper Managers can export Papers
-            throw new AccessDeniedException();
-        }
+    #[Route(path: '/{quizId}/papers/export/papers/csv', name: 'exercise_papers_export_csv', methods: ['GET'])]
+    public function exportCsvAnswersAction(
+        #[MapEntity(mapping: ['quizId' => 'uuid'])]
+        ResourceNode $resourceNode
+    ): StreamedResponse {
+        $this->checkPermission('FOLLOW', $resourceNode, [], true);
+
+        $exercise = $this->om->getRepository(Exercise::class)->findOneBy(['resourceNode' => $resourceNode]);
 
         return new StreamedResponse(function () use ($exercise): void {
             $this->exerciseManager->exportResultsToCsv($exercise);
         }, 200, [
-            'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="'.preg_replace('/[^A-Za-z0-9_\-]/', '_', $exercise->getResourceNode()->getName()).'.csv"',
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toFilename($resourceNode->getName()).'.csv',
         ]);
     }
 

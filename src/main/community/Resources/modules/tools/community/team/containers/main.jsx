@@ -10,7 +10,7 @@ const TeamMain = connect(
   state => ({
     path: toolSelectors.path(state),
     contextData: toolSelectors.contextData(state),
-    canCreate: hasPermission('edit', toolSelectors.toolData(state))
+    canCreate: hasPermission('edit', toolSelectors.tool(state))
   }),
   dispatch => ({
     open(id) {

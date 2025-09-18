@@ -34,10 +34,10 @@ readonly class UpdateResourceEvaluationsHandler
         }
 
         foreach ($users as $user) {
-            // update method will create the evaluation if missing
+            // update method will create the evaluation if missing.
             // it also dispatches the evaluation event to let the workspace evaluation update
-            // (this is useless when the message is dispatched by the InitializeWorkspaceEvaluations)
-            // we can not do it into a flush suite because the workspace calculation requires the info to be persisted in db
+            // (this is useless when the message is dispatched by the InitializeWorkspaceEvaluations).
+            // we cannot do it into a flush suite because the workspace calculation requires the info to be persisted in db
             $this->resourceEvaluationManager->updateUserEvaluation(
                 $resourceNode,
                 $user,

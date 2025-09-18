@@ -10,7 +10,7 @@ const TeamList = connect(
     path: toolSelectors.path(state),
     poster: toolSelectors.poster(state),
     contextData: toolSelectors.contextData(state),
-    canCreate: hasPermission('edit', toolSelectors.toolData(state))
+    canCreate: hasPermission('edit', toolSelectors.tool(state))
   })
 )(TeamListComponent)
 

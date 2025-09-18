@@ -41,6 +41,16 @@ final class VideoResource extends ResourceComponent implements DownloadableResou
         return Video::class;
     }
 
+    public static function supportsScore(): bool
+    {
+        return false;
+    }
+
+    public static function supportsAttempts(): bool
+    {
+        return false;
+    }
+
     /** @param Video $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {

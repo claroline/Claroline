@@ -9,10 +9,30 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl'
 
 const Dashboard = (props) => {
-  const pages = []
+  const pages = [
+    {
+      name: 'overview',
+      icon: 'fa fa-temperature-half',
+      title: trans('overview'),
+      disabled: !props.overviewPage,
+      component: props.overviewPage
+    }
+  ]
     .concat(props.pages || [])
     .concat([
       {
+        name: 'stats',
+        icon: 'fa fa-pie-chart',
+        title: trans('statistics'),
+        disabled: !props.statsPage,
+        component: props.statsPage
+      }, {
+        name: 'activity',
+        icon: 'fa fa-line-chart',
+        title: trans('activity'),
+        disabled: !props.activityPage,
+        component: props.activityPage
+      }, {
         name: 'actions',
         icon: 'fa fa-ellipsis-h',
         title: trans('more'),
@@ -63,6 +83,9 @@ Dashboard.propTypes = {
   })),
 
   // standard pages
+  overviewPage: T.elementType,
+  statsPage: T.elementType,
+  activityPage: T.elementType,
   actionsPage: T.elementType
 }
 

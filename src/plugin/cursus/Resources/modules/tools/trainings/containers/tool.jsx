@@ -15,8 +15,8 @@ const TrainingsTool = withReducer(selectors.STORE_NAME, reducer)(
       (state) => ({
         contextType: toolSelectors.contextType(state),
         authenticated: securitySelectors.isAuthenticated(state),
-        canEdit: hasPermission('edit', toolSelectors.toolData(state)),
-        canRegister: hasPermission('follow', toolSelectors.toolData(state))
+        canEdit: hasPermission('edit', toolSelectors.tool(state)),
+        canRegister: hasPermission('follow', toolSelectors.tool(state))
       })
     )(TrainingsToolComponent)
   )

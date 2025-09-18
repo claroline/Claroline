@@ -177,8 +177,11 @@ class SetDefinition extends AbstractDefinition
     public function getCsvAnswers(AbstractItem $question, Answer $answer): array
     {
         $data = json_decode($answer->getData(), true);
-        $answers = [];
+        if (empty($data)) {
+            return [];
+        }
 
+        $answers = [];
         foreach ($data as $element) {
             $answers[] = "{$element['itemId']}: {$element['_itemData']}";
         }

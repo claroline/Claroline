@@ -8,7 +8,6 @@ const STORE_NAME = 'tool'
 const EDITOR_NAME = 'toolEditor'
 
 const store = (state) => state[STORE_NAME]
-const tool = store
 
 const loaded = createSelector(
   [store],
@@ -30,19 +29,19 @@ const path = createSelector(
   (basePath, name) => basePath + '/' + name
 )
 
-const toolData = createSelector(
+const tool = createSelector(
   [contextSelectors.tools, name],
   (tools, name) => tools.find(tool => tool.name === name) || {}
 )
 
 const poster = createSelector(
-  [toolData],
-  (toolData) => toolData.poster
+  [tool],
+  (tool) => tool.poster
 )
 
 const permissions = createSelector(
-  [toolData],
-  (toolData) => toolData.permissions
+  [tool],
+  (tool) => tool.permissions
 )
 
 const contextType = contextSelectors.type
@@ -59,7 +58,7 @@ const contextId = createSelector(
 )
 
 const hasPermission = (permission, state) => {
-  const data = toolData(state)
+  const data = tool(state)
 
   return permissionChecker(permission, data)
 }
@@ -88,7 +87,6 @@ export const selectors = {
   name,
   basePath,
   path,
-  toolData,
   poster,
   permissions,
   hasPermission,

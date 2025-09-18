@@ -292,7 +292,7 @@ import {selectors as toolSelectors} from '#/main/core/tool/store/selectors'
 toolSelectors.path(state)
 
 // retrieves information (permissions, name, poster, ...) about the tool
-toolSelectors.toolData(state)
+toolSelectors.tool(state)
 ```
 
 

@@ -19,7 +19,6 @@ const QuizResource = withReducer(selectors.STORE_NAME, reducer)(
       editable: hasPermission('edit', resourceSelectors.resourceNode(state)),
       canFollow: hasPermission('follow', resourceSelectors.resourceNode(state)),
       hasOverview: selectors.hasOverview(state),
-      showStatistics: selectors.showStatistics(state),
       registeredUser: securitySelectors.isAuthenticated(state)
     }),
     (dispatch) => ({

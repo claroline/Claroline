@@ -22,6 +22,7 @@ use Claroline\EvaluationBundle\Library\Checker\ScoreChecker;
 use Claroline\EvaluationBundle\Library\EvaluationAggregator;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\EvaluationBundle\Library\GenericEvaluation;
+use Claroline\EvaluationBundle\Messenger\Message\InitializeSequenceEvaluations;
 use Claroline\EvaluationBundle\Messenger\Message\PurgeSequenceEvaluations;
 use Claroline\EvaluationBundle\Messenger\Message\RecomputeSequenceEvaluations;
 use Claroline\EvaluationBundle\Repository\SequenceRepository;
@@ -128,6 +129,18 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
         }
 
         return $progress;
+    }
+
+    public function getRequiredResources(Sequence $sequence): array
+    {
+        $requiredResources = [];
+        foreach ($sequence->getSteps() as $step) {
+            if (!empty($step->getResource()) && $step->isRequired()) {
+                $requiredResources[] = $step->getResource();
+            }
+        }
+
+        return $requiredResources;
     }
 
     private function getStepProgression(Step $step, ?array $stepProgressions = [], ?array $resourceEvaluations = [], ?array $options = []): array
@@ -299,6 +312,17 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
 
         if ($hasChanged['status'] || $hasChanged['progression'] || $hasChanged['score']) {
             $this->eventDispatcher->dispatch(new SequenceEvaluationEvent($evaluation, $hasChanged), EvaluationEvents::SEQUENCE_EVALUATION);
+        }
+    }
+
+    public function initializeEvaluations(Sequence $sequence): void
+    {
+        $userIds = $this->om->getRepository(Sequence::class)->findRequiredUserIds($sequence);
+        if (!empty($userIds)) {
+            $this->messageBus->dispatch(
+                new InitializeSequenceEvaluations($sequence->getId(), $userIds),
+                [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]
+            );
         }
     }
 

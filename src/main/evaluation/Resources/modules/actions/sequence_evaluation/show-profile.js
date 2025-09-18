@@ -6,13 +6,12 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {route} from '#/main/community/user/routing'
 import {declareAction} from '#/main/app/action'
 
-export default declareAction((evaluations, refresher, path, currentUser) => ({
+export default declareAction((evaluations) => ({
   name: 'show-profile',
   type: LINK_BUTTON,
   icon: 'fa fa-fw fa-id-card',
   label: trans('show_profile', {}, 'actions'),
   target: route(get(evaluations[0], 'user')),
-  displayed: get(evaluations[0], 'user.id') !== get(currentUser, 'id'),
   scope: ['object'],
   group: trans('community')
 }))

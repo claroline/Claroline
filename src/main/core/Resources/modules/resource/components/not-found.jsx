@@ -15,7 +15,7 @@ import {selectors} from '#/main/core/resource/store'
 const ResourceNotFound = (props) => {
   const contextPath = useSelector(contextSelectors.path)
   const toolPath = useSelector(toolSelectors.path)
-  const toolData = useSelector(toolSelectors.toolData)
+  const toolData = useSelector(toolSelectors.tool)
   const embedded = useSelector(selectors.embedded)
 
   if (embedded) {

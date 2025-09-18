@@ -5,8 +5,9 @@ namespace Claroline\EvaluationBundle\Repository;
 use Claroline\AppBundle\Repository\UniqueValueFinder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 
 class SequenceRepository extends EntityRepository
@@ -101,6 +102,35 @@ class SequenceRepository extends EntityRepository
             ->setParameter('sequence', $sequence)
             ->setParameter('roles', $roles)
             ->getSingleScalarResult();
+    }
+
+    /**
+     * Find the users which are required to do the sequence.
+     */
+    public function findRequiredUserIds(Sequence $sequence): array
+    {
+        $results = $this->getEntityManager()
+            ->createQuery('
+                SELECT DISTINCT u.id
+                FROM Claroline\CoreBundle\Entity\User AS u
+                LEFT JOIN u.roles AS r
+                LEFT JOIN u.groups AS g
+                LEFT JOIN g.roles AS gr
+                WHERE EXISTS (
+                    SELECT a.id
+                    FROM Claroline\EvaluationBundle\Entity\Sequence\Assignment AS a
+                    WHERE a.sequence = :sequence
+                      AND (a.role = r OR a.role = gr)
+                      AND (a.required = 1 OR a.scored = 1)
+                )
+           ')
+            ->setParameter('sequence', $sequence)
+            ->setHydrationMode(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+            ->getResult();
+
+        return array_map(function (array $result) {
+            return $result['id'];
+        }, $results);
     }
 
     /**

@@ -25,7 +25,7 @@ const registration = createSelector(
 )
 
 const canCreate = createSelector(
-  [toolSelectors.toolData, toolSelectors.contextType, toolSelectors.contextData],
+  [toolSelectors.tool, toolSelectors.contextType, toolSelectors.contextData],
   (tool, contextType, contextData) => {
     const canCreate = hasPermission('follow', tool)
     if (contextType === toolConstants.TOOL_WORKSPACE) {

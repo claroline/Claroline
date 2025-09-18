@@ -9,7 +9,7 @@ import {CatalogMain as CatalogMainComponent} from '#/plugin/cursus/tools/trainin
 const CatalogMain = connect(
   (state) => ({
     path: toolSelectors.path(state),
-    canEdit: hasPermission('edit', toolSelectors.toolData(state))
+    canEdit: hasPermission('edit', toolSelectors.tool(state))
   }),
   (dispatch) => ({
     open(slug) {

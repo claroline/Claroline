@@ -25,7 +25,7 @@ const AnswerStatsTable = props => {
             <strong>{idx + 1}</strong>
           </div>
           <AnswerStats stats={{
-            value: props.stats.areas[area.id] ? props.stats.areas[area.id] : 0,
+            value: props.stats.areas && props.stats.areas[area.id] ? props.stats.areas[area.id] : 0,
             total: props.stats.total
           }} />
         </div>
@@ -37,7 +37,7 @@ const AnswerStatsTable = props => {
             {trans('other_answers', {}, 'quiz')}
           </div>
           <AnswerStats stats={{
-            value: props.stats.areas['_others'],
+            value: props.stats.areas && props.stats.areas['_others'],
             total: props.stats.total
           }} />
         </div>

@@ -18,7 +18,7 @@ const ToolPage = props => {
   const toolName = useSelector(selectors.name)
   const toolPath = useSelector(selectors.path)
   const basePath = useSelector(selectors.basePath)
-  const toolData = useSelector(selectors.toolData)
+  const toolData = useSelector(selectors.tool)
 
   const dispatch = useDispatch()
   const reload = useCallback(() => dispatch(actions.reload()), [toolName])

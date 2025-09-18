@@ -19,7 +19,7 @@ export function registerItemType(definition) {
   assertValidItemType(definition)
 
   if (registeredTypes[definition.type]) {
-    throw new Error(`${definition.type} is already registered`)
+    return
   }
 
   definition.question = typeof definition.question !== 'undefined' ?

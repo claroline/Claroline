@@ -7,4 +7,13 @@ namespace Claroline\EvaluationBundle\Component\Resource;
  */
 interface EvaluatedResourceInterface
 {
+    /**
+     * Does the resource type implement the score system?
+     */
+    public static function supportsScore(): bool;
+
+    /**
+     * Does the resource type implement the attempt system?
+     */
+    public static function supportsAttempts(): bool;
 }

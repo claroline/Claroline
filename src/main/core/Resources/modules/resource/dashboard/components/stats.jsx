@@ -1,17 +1,18 @@
 import React from 'react'
-import {useSelector} from 'react-redux'
+import {PropTypes as T} from 'prop-types'
 
 import {PageContent} from '#/main/app/page'
-import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
-const ResourceDashboardStats = () => {
-  const resourceId = useSelector(resourceSelectors.id)
-
+const ResourceDashboardStats = (props) => {
   return (
-    <PageContent>
-
+    <PageContent className="py-4">
+      {props.children}
     </PageContent>
   )
+}
+
+ResourceDashboardStats.propTypes = {
+  children: T.any
 }
 
 export {
