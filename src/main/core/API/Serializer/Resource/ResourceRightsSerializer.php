@@ -84,10 +84,10 @@ class ResourceRightsSerializer
                 // ugly hack to only get the creation right for directories (it's the only one that can handle it).
                 $creatableTypes = [];
                 if (!empty($data['permissions']) && !empty($data['permissions']['create'])) {
-                    $creatableTypes = array_filter(array_map(function (string $typeName) {
-                        return $this->om->getRepository(ResourceType::class)->findOneBy(['name' => $typeName]);
-                    }, $data['permissions']['create']), function ($type) {
-                        return !empty($type);
+                    $creatableTypes = array_filter($data['permissions']['create'], function (string $typeName) {
+                        $resourceType = $this->om->getRepository(ResourceType::class)->findOneBy(['name' => $typeName]);
+
+                        return !empty($resourceType);
                     });
                 }
 
