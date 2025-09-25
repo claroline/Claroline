@@ -31,7 +31,6 @@ class SequenceEvaluationSerializer
 
     public function serialize(SequenceEvaluation $evaluation, ?array $options = []): array
     {
-
         $progression = $evaluation->getProgression();
         if ($progression) {
             $progression = round($progression, EvaluationOptions::PROGRESSION_PRECISION);
@@ -39,6 +38,10 @@ class SequenceEvaluationSerializer
 
         $serialized = [
             'id' => $evaluation->getUuid(),
+            'meta' => [
+                'archived' => $evaluation->isArchived(),
+                'archivedAt' => DateNormalizer::normalize($evaluation->getArchivedAt()),
+            ],
             'lastActivityAt' => DateNormalizer::normalize($evaluation->getLastActivityAt()),
             'startedAt' => DateNormalizer::normalize($evaluation->getStartedAt()),
             'endedAt' => DateNormalizer::normalize($evaluation->getEndedAt()),

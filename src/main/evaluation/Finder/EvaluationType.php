@@ -4,6 +4,7 @@ namespace Claroline\EvaluationBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractType;
 use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
+use Claroline\AppBundle\API\Finder\Type\BooleanType;
 use Claroline\AppBundle\API\Finder\Type\ChoiceType;
 use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
@@ -23,6 +24,7 @@ class EvaluationType extends AbstractType
             ->add('startedAt', DateType::class)
             ->add('endedAt', DateType::class)
             ->add('lastActivityAt', DateType::class)
+            ->add('archived', BooleanType::class, ['default' => false])
         ;
     }
 

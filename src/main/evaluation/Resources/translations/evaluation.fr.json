@@ -57,6 +57,8 @@
   "enable_success_condition_score_help": "Les utilisateurs doivent obtenir un score supérieur ou égale au pourcentage du score total défini pour réussir.",
   "success_score": "Score à obtenir",
   "certification": "Certification",
+  "certificates": "Certificats",
+  "certificate": "Certificat",
   "certification_help": "Délivrez un certificat téléchargeable (au format PDF) aux utilisateurs ayant terminé ou réussi la séquence. Les certificats générés sont stockés sur votre plateforme.",
   "customize_certificate": "Personnaliser le certificat généré",
   "customize_certificate_help": "Choisissez le template utilisé par la génération des certificats PDF.",
@@ -101,5 +103,8 @@
   "sequence_not_required_help": "La séquence <b>ne participe pas</b> à la progression de l'espace d'activités",
   "sequence_required_help": "La séquence <b>participe</b> à la progression de l'espace d'activités",
   "sequence_not_scored_help": "Le score de la séquence <b>n'est pas comptabilisé</b> lors du calcul du score de l'espace d'activités",
-  "sequence_scored_help": "Le score de la séquence <b>est comptabilisé</b> lors du calcul du score de l'espace d'activités"
+  "sequence_scored_help": "Le score de la séquence <b>est comptabilisé</b> lors du calcul du score de l'espace d'activités",
+  "evaluation_archived": "Cette évaluation a été archivée le <b>%date%</b>.",
+  "users_completion": "{0,1} <b>%count%</b> utilisateur sur <b>%total%</b> ont terminé l'activité | ]1,Inf[ <b>{props.current}</b> utilisateurs sur <b>{props.total}</b> ont terminé l'activité",
+  "users_success": "{0,1} <b>%count%</b> utilisateur sur <b>%total%</b> ont terminé l'activité | ]1,Inf[ <b>{props.current}</b> utilisateurs sur <b>{props.total}</b> ont réussi l'activité"
 }

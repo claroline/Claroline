@@ -4,7 +4,6 @@ namespace Claroline\EvaluationBundle\Messenger;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Manager\SequenceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\InitializeSequenceEvaluations;

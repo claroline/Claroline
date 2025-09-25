@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\EvaluationBundle\Entity\Certificate\WorkspaceCertificate;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\SequenceEvaluation;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\WorkspaceEvaluation;
 use Claroline\EvaluationBundle\Manager\ExportManager;
@@ -42,7 +43,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * Manages user evaluations for workspaces {@see WorkspaceEvaluation}}.
  */
-#[Route(path: '/evaluations/workspace')]
+#[Route(path: '/workspace_evaluation')]
 class WorkspaceEvaluationController
 {
     use RequestDecoderTrait;
@@ -60,13 +61,20 @@ class WorkspaceEvaluationController
         $this->authorization = $authorization;
     }
 
-    #[Route(path: '/{workspaceId}', name: 'apiv2_workspace_evaluation_list', methods: ['GET'])]
+    #[Route(path: '/{parentType}/{parentId}', name: 'apiv2_workspace_evaluation_list', requirements: ['parentType' => '(workspace)+', 'parentId' => '.+'], defaults: ['parentType' => null, 'parentId' => null], methods: ['GET'])]
     public function listAction(
         #[MapQueryString]
         ?FinderQuery $finderQuery = new FinderQuery(),
-        #[MapEntity(mapping: ['workspaceId' => 'uuid'])]
-        ?Workspace $workspace = null
+        ?string $parentId = null
     ): StreamedJsonResponse {
+        $workspace = null;
+        if ($parentId) {
+            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $parentId]);
+            if (empty($workspace)) {
+                throw new NotFoundHttpException();
+            }
+        }
+
         $this->checkToolAccess('OPEN', $workspace);
 
         if (!$this->checkToolAccess('EDIT', $workspace)) {
@@ -100,25 +108,33 @@ class WorkspaceEvaluationController
         ]);
     }
 
-    #[Route(path: '/{workspace}/user/{user}', name: 'apiv2_workspace_evaluation_get', methods: ['GET'])]
+    #[Route(path: '/{evaluationId}', name: 'apiv2_workspace_evaluation_get', methods: ['GET'])]
     public function getAction(
-        #[MapEntity(mapping: ['workspace' => 'uuid'])]
-        Workspace $workspace,
-        #[MapEntity(mapping: ['user' => 'uuid'])]
-        User $user
+        #[MapEntity(mapping: ['evaluationId' => 'uuid'])]
+        WorkspaceEvaluation $workspaceEvaluation
     ): JsonResponse {
-        $workspaceEvaluation = $this->om->getRepository(WorkspaceEvaluation::class)->findOneBy([
-            'workspace' => $workspace,
-            'user' => $user,
-        ]);
-
-        if (empty($workspaceEvaluation)) {
-            throw new NotFoundHttpException();
-        }
-
         $this->checkPermission('OPEN', $workspaceEvaluation, [], true);
 
-        $evaluations = $this->om->getRepository(SequenceEvaluation::class)->findByWorkspaceAndUser($workspace, $user);
+        $workspace = $workspaceEvaluation->getWorkspace();
+
+        $certificates = [];
+        if ($workspaceEvaluation->isCertified()) {
+            $certificates = $this->om->getRepository(WorkspaceCertificate::class)->findBy([
+                'evaluation' => $workspaceEvaluation,
+            ], [
+                'obtentionDate' => 'DESC',
+                'issueDate' => 'DESC',
+            ]);
+        }
+
+        $archives = [];
+        if (!$workspaceEvaluation->isArchived()) {
+            $archives = $this->om->getRepository(WorkspaceEvaluation::class)->findBy([
+                'user' => $workspaceEvaluation->getUser(),
+                'workspace' => $workspaceEvaluation->getWorkspace(),
+                'archived' => true,
+            ]);
+        }
 
         return new JsonResponse([
             'parameters' => [
@@ -127,7 +143,13 @@ class WorkspaceEvaluationController
             'evaluation' => $this->serializer->serialize($workspaceEvaluation),
             'progression' => array_map(function (SequenceEvaluation $evaluation) {
                 return $this->serializer->serialize($evaluation);
-            }, $evaluations),
+            }, $workspaceEvaluation->getSequenceEvaluations()->toArray()),
+            'certificates' => array_map(function (WorkspaceCertificate $certificate) {
+                return $this->serializer->serialize($certificate);
+            }, $certificates),
+            'archives' => array_map(function (WorkspaceEvaluation $archivedEvaluation) {
+                return $this->serializer->serialize($archivedEvaluation);
+            }, $archives),
         ]);
     }
 
@@ -148,6 +170,23 @@ class WorkspaceEvaluationController
         return new JsonResponse(null, 204);
     }
 
+    #[Route(path: '/restart', name: 'apiv2_workspace_evaluation_archive', methods: ['PUT'])]
+    public function restartAction(Request $request): JsonResponse
+    {
+        $evaluationIds = $this->decodeRequest($request);
+        $evaluations = $this->om->getRepository(WorkspaceEvaluation::class)->findBy([
+            'uuid' => $evaluationIds,
+        ]);
+
+        foreach ($evaluations as $evaluation) {
+            if ($this->checkPermission('ADMINISTRATE', $evaluation)) {
+                $this->manager->archiveEvaluation($evaluation);
+            }
+        }
+
+        return new JsonResponse(null, 204);
+    }
+
     /**
      * Initializes evaluations for all the users of a workspace.
      */
@@ -156,7 +195,7 @@ class WorkspaceEvaluationController
         #[MapEntity(mapping: ['workspace' => 'uuid'])]
         Workspace $workspace
     ): JsonResponse {
-        $this->checkToolAccess('EDIT', $workspace);
+        $this->checkToolAccess('FOLLOW', $workspace);
 
         $this->manager->initialize($workspace);
 
@@ -176,7 +215,7 @@ class WorkspaceEvaluationController
 
         // recompute all the sequence evaluations
         if (empty($evaluationIds)) {
-            $this->checkToolAccess('EDIT', $workspace);
+            $this->checkToolAccess('FOLLOW', $workspace);
             $this->manager->recomputeEvaluations($workspace);
 
             return new JsonResponse(null, 204);

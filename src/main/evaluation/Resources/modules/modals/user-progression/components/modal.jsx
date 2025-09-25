@@ -1,41 +1,44 @@
-import React, {createElement, useState} from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {CloseButton} from 'react-bootstrap'
-import classes from 'classnames'
 import get from 'lodash/get'
+import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {useFetch} from '#/main/app/api/fetch'
-import {trans, displayDuration} from '#/main/app/intl'
-import {CALLBACK_BUTTON, LinkButton} from '#/main/app/buttons'
-import {Toolbar, ActionTypes, PromisedActionTypes, pickActionSet, constants as actionConst} from '#/main/app/action'
+import {displayDate, trans} from '#/main/app/intl'
+import {ActionTypes, PromisedActionTypes} from '#/main/app/action'
+import {Tab, Tabs} from '#/main/app/components/tabs'
 import {ModalEmpty} from '#/main/app/overlays/modal/components/empty'
-import {Nav} from '#/main/app/components/nav'
-import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
-import {DescriptionList} from '#/main/app/data/components/description-list'
-import {UserAvatar} from '#/main/app/user/components/avatar'
 
-import {constants} from '#/main/evaluation/constants'
-import {EvaluationGauge} from '#/main/evaluation/components/gauge'
 import {UserEvaluation as UserEvaluationTypes} from '#/main/evaluation/prop-types'
+import {UserProgressionInfo} from '#/main/evaluation/modals/user-progression/components/info'
+import {UserProgressionDetails} from '#/main/evaluation/modals/user-progression/components/details'
+import isEmpty from 'lodash/isEmpty'
+import {Alert} from '#/main/app/components/alert'
+import {Html} from '#/main/app/components/html'
 
-const UserProgressionInfo = ({user, title}) =>
-  <div className={classes('d-flex flex-row gap-3 align-items-center')} role="presentation">
-    <UserAvatar
-      user={user}
-      size="sm"
-    />
-    <div className="d-flex flex-column" role="presentation">
-      <LinkButton className="fw-normal text-reset fs-5" target="#">{get(user, 'name') || trans('unknown')}</LinkButton>
-      <span className="text-body-secondary">
-        {title}
-      </span>
-    </div>
-  </div>
+const UserProgressionModal = (props) => {
+  const [evaluationData] = useFetch(props.name, props.url)
 
-const UserProgressionModal = props => {
-  const [evaluationData, status] = useFetch(props.name, props.url)
-  const [section, changeSection] = useState('overview')
+  const tabs = [
+    {
+      name: 'overview',
+      title: trans('overview'),
+      displayed: !!props.overview,
+      component: props.overview
+    }, {
+      name: 'archives',
+      title: trans('Evaluations précédentes'),
+      displayed: !!props.archives && !isEmpty(evaluationData) && !isEmpty(evaluationData.archives),
+      component: props.archives
+    }, {
+      name: 'stats',
+      title: trans('statistics'),
+      displayed: !!props.stats,
+      component: props.stats
+    }
+  ].concat(props.tabs || []).filter((tab) => undefined === tab.displayed || tab.displayed)
 
   return (
     <ModalEmpty
@@ -43,91 +46,11 @@ const UserProgressionModal = props => {
       size="xl"
     >
       <div className="d-flex flex-row" role="presentation">
-        <div
-          className={classes('modal-aside bg-body-tertiary p-4 rounded-start-3 d-flex flex-column flex-shrink-0 w-100',
-            `text-${constants.EVALUATION_STATUS_COLOR[get(props.evaluation, 'status')]}-emphasis`,
-            `bg-${constants.EVALUATION_STATUS_COLOR[get(props.evaluation, 'status')]}-subtle`
-          )}
-          style={{maxWidth: '16rem'}}
-        >
-          {props.evaluation.certified &&
-            <TooltipOverlay id="certified" tip={trans('certified_help', {}, 'evaluation')} position="bottom">
-              <div className="me-auto fw-bolder mb-3 mt-n2 fs-sm ms-n2 cursor-help">
-                <span className="fa fa-certificate me-2" aria-hidden={true} />
-                {trans('certified', {}, 'evaluation')}
-              </div>
-            </TooltipOverlay>
-          }
-
-          <EvaluationGauge
-            className="mx-auto"
-            status={constants.EVALUATION_STATUS_NOT_ATTEMPTED}
-            size="lg"
-            {...props.evaluation}
-          />
-
-          {props.actions &&
-            <Toolbar
-              className="mx-auto"
-              buttonName={classes('btn btn-text-body text-reset', `focus-ring-${constants.EVALUATION_STATUS_COLOR[get(props.evaluation, 'status')]}`)}
-              tooltip="bottom"
-              actions={pickActionSet(actionConst.ACTION_SET_DETAILS, props.actions)}
-            />
-          }
-
-          <div className="d-flex flex-wrap gap-2 justify-content-center mt-3">
-            {[
-              {
-                icon: 'fa far fa-clock',
-                value: get(props.evaluation, 'duration') ? displayDuration(get(props.evaluation, 'duration')) : null,
-                label: trans('duration'),
-                displayed: !!get(props.evaluation, 'duration')
-              }, {
-                icon: 'fa far fa-clock',
-                label: trans('estimated_duration'),
-                value: get(props.evaluation, 'estimatedDuration') ? displayDuration(get(props.evaluation, 'estimatedDuration')) : '-',
-                displayed: !get(props.evaluation, 'duration')
-              }
-            ].concat(props.additional || [])
-              .filter(info => undefined === info.displayed || info.displayed)
-              .map(info =>
-                <TooltipOverlay tip={info.label} key={info.label} position="bottom">
-                  <div className="bg-body rounded-2 px-2 py-1 d-flex flex-row flex-nowrap align-items-center gap-2">
-                    <span className={info.icon} aria-hidden={true} />
-                    {info.value}
-                  </div>
-                </TooltipOverlay>
-              )
-            }
-          </div>
-
-          <DescriptionList
-            className="border-top-0 border-bottom-0 mb-0 mt-2"
-            data={props.evaluation}
-            variant={constants.EVALUATION_STATUS_COLOR[get(props.evaluation, 'status')]}
-            fields={[
-              {
-                name: 'lastActivityAt',
-                type: 'date',
-                label: trans('last_activity_at'),
-                options: {long: true, time: true},
-                placeholder: '-'
-              }, {
-                name: 'startedAt',
-                type: 'date',
-                label: trans('started_at'),
-                options: {long: true, time: true},
-                placeholder: '-'
-              }, {
-                name: 'endedAt',
-                type: 'date',
-                label: trans('ended_at'),
-                options: {long: true, time: true},
-                placeholder: '-'
-              }
-            ]}
-          />
-        </div>
+        <UserProgressionDetails
+          evaluation={props.evaluation}
+          actions={props.actions}
+          additional={props.additional}
+        />
 
         <div className="flex-fill d-flex flex-column" role="presentation">
           <div className="modal-header">
@@ -139,40 +62,25 @@ const UserProgressionModal = props => {
             <CloseButton onClick={props.fadeModal} aria-label={trans('close', {}, 'actions')} />
           </div>
 
-          <div className="modal-body d-flex flex-column pt-0">
-            <Nav
-              className="mb-4"
-              orientation="horizontal"
-              variant="underline"
-              items={[
-                {
-                  name: 'overview',
-                  type: CALLBACK_BUTTON,
-                  label: trans('overview'),
-                  active: 'overview' === section,
-                  callback: () => changeSection('overview')
-                }, {
-                  name: 'stats',
-                  type: CALLBACK_BUTTON,
-                  label: trans('statistics'),
-                  active: 'stats' === section,
-                  displayed: false,
-                  callback: () => changeSection('stats')
-                }, {
-                  name: 'activity',
-                  type: CALLBACK_BUTTON,
-                  label: trans('activity'),
-                  active: 'activity' === section,
-                  displayed: false,
-                  callback: () => changeSection('activity')
-                }
-              ]}
-            />
+          <div className="modal-body pt-0">
+            {get(props.evaluation, 'meta.archived', false) &&
+              <Alert type="danger">
+                <Html>{trans('evaluation_archived', {date: displayDate(get(props.evaluation, 'meta.archivedAt'))}, 'evaluation')}</Html>
+              </Alert>
+            }
 
-            {'succeeded' === status && createElement(props.overview, {
-              evaluation: evaluationData.evaluation,
-              progression: evaluationData.progression
-            })}
+            <Tabs className="mb-4" defaultActiveKey={tabs[0].name} variant="underline">
+              {tabs.map(tab =>
+                <Tab
+                  key={tab.name}
+                  eventKey={tab.name}
+                  title={tab.title}
+                >
+                  {tab.component && createElement(tab.component, merge({}, evaluationData, {fadeModal: props.fadeModal}))}
+                  {tab.render && tab.render()}
+                </Tab>
+              )}
+            </Tabs>
           </div>
         </div>
       </div>
@@ -204,7 +112,15 @@ UserProgressionModal.propTypes = {
     label: T.string.isRequired,
     value: T.any.isRequired
   })),
+  tabs: T.arrayOf(T.shape({
+    name: T.string.isRequired,
+    title: T.string.isRequired,
+    displayed: T.bool,
+    component: T.elementType
+  })),
   overview: T.elementType.isRequired,
+  stats: T.elementType,
+  archives: T.elementType,
   fadeModal: T.func.isRequired
 }
 

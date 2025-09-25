@@ -70,7 +70,7 @@ const StatusChart = (props) => {
     .sort((a, b) => constants.EVALUATION_STATUS_PRIORITY[a.status] - constants.EVALUATION_STATUS_PRIORITY[b.status])
 
   return (
-    <div className="card" role="presentation">
+    <div className="card mb-4" role="presentation">
       <div className="card-body p-4 d-flex flex-row align-items-center justify-content-center gap-4">
         <ResponsiveContainer height={260} width={360} className="mb-n5">
           <PieChart>

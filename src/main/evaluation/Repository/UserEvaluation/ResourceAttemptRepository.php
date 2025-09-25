@@ -26,6 +26,7 @@ class ResourceAttemptRepository extends EntityRepository
             ->where('re.status IN (:status)')
             ->andWhere('rue.user = :user')
             ->andWhere('rue.resourceNode = :resourceNode')
+            ->andWhere('rue.archived = 0')
             ->setParameter('status', [
                 EvaluationStatus::NOT_ATTEMPTED,
                 EvaluationStatus::INCOMPLETE,
@@ -45,6 +46,7 @@ class ResourceAttemptRepository extends EntityRepository
             ->join('re.resourceUserEvaluation', 'rue')
             ->andWhere('rue.user = :user')
             ->andWhere('rue.resourceNode = :resourceNode')
+            ->andWhere('re.archived = 0')
             ->orderBy('re.date', 'DESC')
             ->setMaxResults(1)
             ->setParameter('user', $user)

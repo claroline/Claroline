@@ -72,6 +72,13 @@ export default (contextType, contextData, refresher, currentUser) => {
         label: trans('score'),
         displayed: true,
         filterable: false
+      }, {
+        name: 'meta.archived',
+        alias: 'archived',
+        type: 'boolean',
+        label: trans('archive'),
+        displayable: false,
+        filterable: true
       }
     ],
     card: EvaluationSequenceCard

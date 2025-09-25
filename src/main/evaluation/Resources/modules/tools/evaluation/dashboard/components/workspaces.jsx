@@ -35,8 +35,8 @@ const EvaluationDashboardWorkspaces = () => {
       name={STORE_NAME}
       contextType={contextType}
       contextId={contextId}
-      url={['apiv2_workspace_evaluation_list', {workspaceId: contextId}]}
-      customDefinition={'desktop' === contextType ? [
+      url={['apiv2_workspace_evaluation_list', 'workspace' === contextType ? {parentType: 'workspace', parentId: contextId} : {}]}
+      customDefinition={'workspace' !== contextType ? [
         {
           name: 'workspace',
           type: 'workspace',

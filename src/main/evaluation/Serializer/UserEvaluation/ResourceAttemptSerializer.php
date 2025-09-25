@@ -43,6 +43,9 @@ class ResourceAttemptSerializer
 
         $serialized = [
             'id' => $evaluation->getUuid(),
+            'meta' => [
+                'archived' => $evaluation->isArchived(),
+            ],
             'lastActivityAt' => DateNormalizer::normalize($evaluation->getLastActivityAt()),
             'startedAt' => DateNormalizer::normalize($evaluation->getStartedAt()),
             'endedAt' => DateNormalizer::normalize($evaluation->getEndedAt()),

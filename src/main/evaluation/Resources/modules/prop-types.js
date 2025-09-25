@@ -2,9 +2,25 @@ import {PropTypes as T} from 'prop-types'
 
 import {User} from '#/main/community/user/prop-types'
 
+const Certificate = {
+  propTypes: {
+    id: T.string.isRequired,
+    obtentionDate: T.string.isRequired,
+    issueDate: T.string.isRequired,
+    language: T.string.isRequired,
+    permissions: T.shape({
+      open: T.bool,
+      administrate: T.bool
+    })
+  }
+}
+
 const UserEvaluation = {
   propTypes: {
     id: T.string.isRequired,
+    meta: T.shape({
+      archived: T.bool
+    }),
     lastActivityAt: T.string,
     startedAt: T.string,
     endedAt: T.string,
@@ -27,5 +43,6 @@ const UserEvaluation = {
 }
 
 export {
-  UserEvaluation
+  UserEvaluation,
+  Certificate
 }

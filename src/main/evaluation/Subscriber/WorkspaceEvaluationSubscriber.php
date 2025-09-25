@@ -24,9 +24,6 @@ use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\SequenceEvaluationEvent;
-use Claroline\EvaluationBundle\Event\WorkspaceEvaluationEvent;
-use Claroline\EvaluationBundle\Library\EvaluationStatus;
-use Claroline\EvaluationBundle\Manager\WorkspaceCertificateManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\InitializeWorkspaceEvaluations;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -44,8 +41,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
         private readonly TokenStorageInterface $tokenStorage,
         private readonly MessageBusInterface $messageBus,
         ObjectManager $om,
-        private readonly WorkspaceEvaluationManager $manager,
-        private readonly WorkspaceCertificateManager $certificateManager
+        private readonly WorkspaceEvaluationManager $manager
     ) {
         $this->workspaceRepo = $om->getRepository(Workspace::class);
     }
@@ -57,7 +53,6 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
             EvaluationEvents::SEQUENCE_EVALUATION => 'onSequenceEvaluate',
             CrudEvents::getEventName(CrudEvents::POST_UPDATE, Sequence::class) => 'onSequencePublicationChange',
             CrudEvents::getEventName(CrudEvents::POST_DELETE, Sequence::class) => 'onSequenceDelete',
-            EvaluationEvents::WORKSPACE_EVALUATION => 'onWorkspaceEvaluate',
         ];
     }
 
@@ -91,11 +86,15 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     public function onSequenceEvaluate(SequenceEvaluationEvent $event): void
     {
         $sequenceEvaluation = $event->getEvaluation();
+
+        $user = $sequenceEvaluation->getUser();
         $sequence = $sequenceEvaluation->getSequence();
         $workspace = $sequence->getWorkspace();
-        $user = $sequenceEvaluation->getUser();
 
-        $this->manager->computeEvaluation($workspace, $user);
+        if ($this->manager->isEvaluated($workspace)) {
+            $evaluation = $this->manager->getUserEvaluation($workspace, $user, true);
+            $this->manager->updateUserEvaluation($evaluation, $sequenceEvaluation);
+        }
     }
 
     /**
@@ -117,13 +116,6 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
 
         if (!empty($oldData['meta']) && ($oldData['meta']['published'] !== $sequence->isPublished())) {
             $this->manager->recomputeEvaluations($sequence->getWorkspace());
-        }
-    }
-
-    public function onWorkspaceEvaluate(WorkspaceEvaluationEvent $event): void
-    {
-        if ($event->hasStatusChanged() && in_array($event->getEvaluation()->getStatus(), [EvaluationStatus::COMPLETED, EvaluationStatus::PASSED])) {
-            $this->certificateManager->getCertificate($event->getEvaluation());
         }
     }
 }

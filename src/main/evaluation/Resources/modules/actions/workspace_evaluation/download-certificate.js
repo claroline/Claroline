@@ -17,7 +17,7 @@ export default declareAction((evaluations) => {
   return ({
     name: 'download-certificate',
     type: ASYNC_BUTTON,
-    icon: 'fa fa-fw fa-download',
+    icon: 'fa fa-fw fa-file-pdf',
     label: processable.length > 1
       ? trans('download_certificates', {}, 'actions')
       : trans('download_certificate', {}, 'actions'),

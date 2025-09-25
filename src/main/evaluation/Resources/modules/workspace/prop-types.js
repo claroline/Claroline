@@ -6,6 +6,9 @@ import {Workspace} from '#/main/core/workspace/prop-types'
 const WorkspaceEvaluation = {
   propTypes: {
     id: T.string.isRequired,
+    meta: T.shape({
+      archived: T.bool
+    }),
     lastActivityAt: T.string,
     startedAt: T.string,
     endedAt: T.string,

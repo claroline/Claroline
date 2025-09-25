@@ -1,3 +1,4 @@
+import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {declareAction} from '#/main/app/action'
@@ -11,6 +12,7 @@ import {constants} from '#/main/evaluation/constants'
 export default declareAction((evaluations, refresher) => {
   const processable = evaluations.filter(evaluation =>
     supportAttempts(evaluation.resourceNode)
+    && !get(evaluation, 'meta.archived', false)
     && 0 < evaluation.nbAttempts
     && hasPermission('administrate', evaluation)
     && [constants.EVALUATION_STATUS_COMPLETED, constants.EVALUATION_STATUS_PASSED, constants.EVALUATION_STATUS_FAILED].includes(evaluation.status)

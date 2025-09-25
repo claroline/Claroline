@@ -98,7 +98,18 @@ registry.add('ClarolineEvaluationBundle', {
       'download-certificate': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-certificate" */ '#/main/evaluation/actions/workspace_evaluation/download-certificate') },
       'regenerate-certificate': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-regenerate-certificate" */ '#/main/evaluation/actions/workspace_evaluation/regenerate-certificate') },
       'recompute': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-recompute" */ '#/main/evaluation/actions/workspace_evaluation/recompute') },
+      'archive': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-restart" */ '#/main/evaluation/actions/workspace_evaluation/archive') },
       'delete': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-delete" */ '#/main/evaluation/actions/workspace_evaluation/delete') }
+    },
+
+    sequence_certificate: {
+      'download': () => { return import(/* webpackChunkName: "evaluation-action-sequence_certificate-download" */ '#/main/evaluation/actions/sequence_certificate/download') },
+      'delete': () => { return import(/* webpackChunkName: "evaluation-action-sequence_certificate-delete" */ '#/main/evaluation/actions/sequence_certificate/delete') }
+    },
+
+    workspace_certificate: {
+      'download': () => { return import(/* webpackChunkName: "evaluation-action-workspace_certificate-download" */ '#/main/evaluation/actions/workspace_certificate/download') },
+      'delete': () => { return import(/* webpackChunkName: "evaluation-action-workspace_certificate-delete" */ '#/main/evaluation/actions/workspace_certificate/delete') }
     }
   },
 

@@ -16,7 +16,6 @@ services:
             - '@messenger.default_bus'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
-            - '@Claroline\EvaluationBundle\Manager\WorkspaceCertificateManager'
 
     Claroline\EvaluationBundle\Subscriber\Crud\SequenceSubscriber:
         tags: [ 'kernel.event_subscriber' ]
@@ -25,3 +24,13 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Manager\FileManager'
+
+    Claroline\EvaluationBundle\Subscriber\Certificate\WorkspaceCertificateSubscriber:
+        tags: [ 'kernel.event_subscriber' ]
+        arguments:
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceCertificateManager'
+
+    Claroline\EvaluationBundle\Subscriber\Certificate\SequenceCertificateSubscriber:
+        tags: [ 'kernel.event_subscriber' ]
+        arguments:
+            - '@Claroline\EvaluationBundle\Manager\SequenceCertificateManager'

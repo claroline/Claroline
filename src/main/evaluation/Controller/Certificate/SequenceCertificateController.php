@@ -11,10 +11,12 @@
 
 namespace Claroline\EvaluationBundle\Controller\Certificate;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\EvaluationBundle\Entity\Certificate\SequenceCertificate;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\SequenceEvaluation;
 use Claroline\EvaluationBundle\Manager\SequenceCertificateManager;
@@ -35,6 +37,7 @@ class SequenceCertificateController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         private readonly ObjectManager $om,
+        private readonly Crud $crud,
         private readonly SequenceCertificateManager $certificateManager
     ) {
         $this->authorization = $authorization;
@@ -44,7 +47,7 @@ class SequenceCertificateController
      * Download the certificates (in PDF) for a list of sequence evaluations.
      */
     #[Route(path: '/', name: 'apiv2_sequence_download_certificate', methods: ['POST'])]
-    public function downloadAction(Request $request): BinaryFileResponse
+    public function downloadForEvaluationsAction(Request $request): BinaryFileResponse
     {
         $sequenceEvaluationIds = $this->decodeRequest($request);
 
@@ -58,6 +61,35 @@ class SequenceCertificateController
         }
 
         throw new NotFoundHttpException('No sequence evaluation found.');
+    }
+
+    #[Route(path: '/{certificateId}', name: 'apiv2_sequence_certificate_download', methods: ['GET'])]
+    public function downloadAction(
+        #[MapEntity(mapping: ['certificateId' => 'uuid'])]
+        SequenceCertificate $certificate,
+    ): BinaryFileResponse {
+        $this->checkPermission('OPEN', $certificate, [], true);
+
+        $sequence = $certificate->getEvaluation()->getSequence();
+
+        return new BinaryFileResponse($this->certificateManager->getCertificateFilepath($certificate), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($sequence->getName()).'.pdf',
+        ]);
+    }
+
+    #[Route(path: '/', name: 'apiv2_sequence_certificate_delete', methods: ['DELETE'])]
+    public function deleteAction(Request $request): JsonResponse
+    {
+        // no need to secure endpoint CRUD will do it for us
+
+        $certificateIds = $this->decodeRequest($request);
+        $certificates = $this->om->getRepository(SequenceCertificate::class)->findBy(['uuid' => $certificateIds]);
+        foreach ($certificates as $certificate) {
+            $this->crud->delete($certificate);
+        }
+
+        return new JsonResponse(null, 204);
     }
 
     /**

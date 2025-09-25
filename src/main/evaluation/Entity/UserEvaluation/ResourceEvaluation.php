@@ -15,7 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Entity(repositoryClass: ResourceEvaluationRepository::class)]
 #[ORM\Table(name: 'claro_resource_user_evaluation')]
-#[ORM\UniqueConstraint(name: 'resource_user_evaluation', columns: ['resource_node', 'user_id'])]
 #[CrudEntity(finderClass: ResourceEvaluationType::class)]
 class ResourceEvaluation extends AbstractUserEvaluation
 {

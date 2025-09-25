@@ -22,6 +22,7 @@ class ResourceEvaluationRepository extends EntityRepository
         return $this->createQueryBuilder('e')
             ->where('e.status IN (:status)')
             ->andWhere('e.workspace = :resourceNode')
+            ->andWhere('e.archived = 0')
             ->setParameter('status', [
                 EvaluationStatus::NOT_ATTEMPTED,
                 EvaluationStatus::INCOMPLETE,

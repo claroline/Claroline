@@ -6,7 +6,6 @@ use Claroline\AppBundle\Repository\UniqueValueFinder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 
@@ -19,7 +18,7 @@ class SequenceRepository extends EntityRepository
      *
      * @return Sequence[]
      */
-    public function findByRequiredResource(ResourceNode $resourceNode): array
+    public function findByResource(ResourceNode $resourceNode): array
     {
         return $this->getEntityManager()
             ->createQuery('
@@ -27,14 +26,15 @@ class SequenceRepository extends EntityRepository
                 FROM Claroline\EvaluationBundle\Entity\Sequence\Sequence AS p
                 LEFT JOIN Claroline\EvaluationBundle\Entity\Sequence\Step AS s WITH (s.path = p)
                 LEFT JOIN s.resource AS n
-                WHERE s.resource = :resourceNode 
-                  AND s.required = true
+                WHERE p.published = 1
+                  AND p.archived = 0
+                  AND s.resource = :resourceNode
            ')
             ->setParameter('resourceNode', $resourceNode)
             ->getResult();
     }
 
-    public function findByRequiredResourceAndUser(ResourceNode $resourceNode, User $user): array
+    public function findByResourceAndUser(ResourceNode $resourceNode, User $user): array
     {
         $roles = $user->getRoles();
 
@@ -44,8 +44,8 @@ class SequenceRepository extends EntityRepository
                 FROM Claroline\EvaluationBundle\Entity\Sequence\Sequence AS p
                 LEFT JOIN Claroline\EvaluationBundle\Entity\Sequence\Step AS s WITH (s.path = p)
                 WHERE p.published = 1
+                  AND p.archived = 0
                   AND s.resource = :resourceNode 
-                  AND s.required = true
                   AND EXISTS (
                     SELECT a.id
                     FROM Claroline\EvaluationBundle\Entity\Sequence\Assignment AS a
@@ -131,27 +131,5 @@ class SequenceRepository extends EntityRepository
         return array_map(function (array $result) {
             return $result['id'];
         }, $results);
-    }
-
-    /**
-     * Find user evaluations for the resources embedded in a Sequence as a primary resource of a Step.
-     * NB. This is used by the evaluation system of the Sequence, other embedded resources are not needed in this case.
-     *
-     * @return ResourceEvaluation[]
-     */
-    public function findResourceEvaluations(Sequence $sequence, User $user): array
-    {
-        return $this->getEntityManager()
-            ->createQuery('
-                SELECT e
-                FROM Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation AS e
-                LEFT JOIN e.resourceNode AS n
-                LEFT JOIN Claroline\EvaluationBundle\Entity\Sequence\Step AS s WITH (s.resource = n)
-                WHERE e.user = :user
-                  AND s.path = :sequence
-           ')
-            ->setParameter('sequence', $sequence)
-            ->setParameter('user', $user)
-            ->getResult();
     }
 }

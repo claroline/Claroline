@@ -11,11 +11,13 @@
 
 namespace Claroline\EvaluationBundle\Controller\Certificate;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\EvaluationBundle\Entity\Certificate\WorkspaceCertificate;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\WorkspaceEvaluation;
 use Claroline\EvaluationBundle\Manager\WorkspaceCertificateManager;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -35,6 +37,7 @@ class WorkspaceCertificateController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         private readonly ObjectManager $om,
+        private readonly Crud $crud,
         private readonly WorkspaceCertificateManager $certificateManager
     ) {
         $this->authorization = $authorization;
@@ -58,6 +61,35 @@ class WorkspaceCertificateController
         }
 
         throw new NotFoundHttpException('No workspace evaluation found.');
+    }
+
+    #[Route(path: '/{certificateId}', name: 'apiv2_workspace_certificate_download', methods: ['GET'])]
+    public function downloadAction(
+        #[MapEntity(mapping: ['certificateId' => 'uuid'])]
+        WorkspaceCertificate $certificate,
+    ): BinaryFileResponse {
+        $this->checkPermission('OPEN', $certificate, [], true);
+
+        $workspace = $certificate->getEvaluation()->getWorkspace();
+
+        return new BinaryFileResponse($this->certificateManager->getCertificateFilepath($certificate), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($workspace->getName()).'.pdf',
+        ]);
+    }
+
+    #[Route(path: '/', name: 'apiv2_workspace_certificate_delete', methods: ['DELETE'])]
+    public function deleteAction(Request $request): JsonResponse
+    {
+        // no need to secure endpoint CRUD will do it for us
+
+        $certificateIds = $this->decodeRequest($request);
+        $certificates = $this->om->getRepository(WorkspaceCertificate::class)->findBy(['uuid' => $certificateIds]);
+        foreach ($certificates as $certificate) {
+            $this->crud->delete($certificate);
+        }
+
+        return new JsonResponse(null, 204);
     }
 
     /**

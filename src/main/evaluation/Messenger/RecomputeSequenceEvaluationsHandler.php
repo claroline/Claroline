@@ -10,7 +10,7 @@ use Claroline\EvaluationBundle\Messenger\Message\RecomputeSequenceEvaluations;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
- * Recompute WorkspaceEvaluations for a Workspace and a list of Users.
+ * Recompute SequenceEvaluations for a Workspace and a list of Users.
  */
 #[AsMessageHandler]
 readonly class RecomputeSequenceEvaluationsHandler

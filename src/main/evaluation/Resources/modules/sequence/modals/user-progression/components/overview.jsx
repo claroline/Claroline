@@ -16,6 +16,7 @@ const UserProgressionOverview = (props) => {
   if (isEmpty(props.progression)) {
     return (
       <EmptyState
+        className="py-5"
         title={trans('L\'utilisateur n\'a commencé aucune activité pour le moment')}
       />
     )

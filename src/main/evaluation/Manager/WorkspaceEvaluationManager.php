@@ -13,12 +13,12 @@ namespace Claroline\EvaluationBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\EvaluationBundle\Entity\Sequence\Assignment;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\WorkspaceEvaluation;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\SequenceEvaluation;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\WorkspaceEvaluation;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\WorkspaceEvaluationEvent;
 use Claroline\EvaluationBundle\Library\Checker\MaxFailedChecker;
@@ -45,6 +45,11 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
     ) {
     }
 
+    public function isEvaluated(Workspace $workspace): bool
+    {
+        return true;
+    }
+
     /**
      * Retrieve or create evaluation for a workspace and a user.
      */
@@ -53,6 +58,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
         $evaluation = $this->om->getRepository(WorkspaceEvaluation::class)->findOneBy([
             'workspace' => $workspace,
             'user' => $user,
+            'archived' => false,
         ]);
 
         if ($withCreation && empty($evaluation)) {
@@ -67,42 +73,20 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
         return $evaluation;
     }
 
-    public function updateUserEvaluation(Workspace $workspace, User $user, ?array $data = [], \DateTimeInterface $date = null): WorkspaceEvaluation
+    public function updateUserEvaluation(WorkspaceEvaluation $evaluation, SequenceEvaluation $sequenceEvaluation): WorkspaceEvaluation
     {
-        $this->om->startFlushSuite();
+        $evaluation->addSequenceEvaluation($sequenceEvaluation);
 
-        $evaluation = $this->getUserEvaluation($workspace, $user);
-        $hasChanged = $this->updateEvaluation($evaluation, $data, $date);
+        $this->om->persist($evaluation);
+        $this->om->flush();
 
-        $this->om->endFlushSuite();
-
-        if ($hasChanged['status'] || $hasChanged['progression'] || $hasChanged['score']) {
-            $this->eventDispatcher->dispatch(new WorkspaceEvaluationEvent($evaluation, $hasChanged), EvaluationEvents::WORKSPACE_EVALUATION);
+        // we only need to recompute the workspace evaluation if the sequence is required
+        $recompute = $this->om->getRepository(Sequence::class)->isRequired($sequenceEvaluation->getSequence(), $sequenceEvaluation->getUser());
+        if ($recompute) {
+            $this->refreshEvaluation($evaluation);
         }
 
         return $evaluation;
-    }
-
-    /**
-     * @return ResourceNode[]
-     */
-    public function getRequiredResources(Workspace $workspace): array
-    {
-        return $this->om->getRepository(ResourceNode::class)->findBy([
-            'required' => true,
-            'published' => true,
-            'active' => true,
-            'workspace' => $workspace,
-        ]);
-    }
-
-    public function getRequiredSequences(Workspace $workspace): array
-    {
-        return $this->om->getRepository(Sequence::class)->findBy([
-            'required' => true,
-            'published' => true,
-            'workspace' => $workspace,
-        ]);
     }
 
     /**
@@ -156,7 +140,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
         $aggregator = new EvaluationAggregator($conditionCheckers);
 
         foreach ($assignments as $assignment) {
-            $sequenceEvaluation = $this->sequenceEvaluationManager->getUserEvaluation($assignment->getSequence(), $user, false);
+            $sequenceEvaluation = $evaluation->getSequenceEvaluation($assignment->getSequence()->getUuid());
             if (!$sequenceEvaluation) {
                 // no evaluation, adds an empty evaluation for correct progression check
                 $sequenceEvaluation = new GenericEvaluation(0);
@@ -179,6 +163,22 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
         if ($hasChanged['status'] || $hasChanged['progression'] || $hasChanged['score']) {
             $this->eventDispatcher->dispatch(new WorkspaceEvaluationEvent($evaluation, $hasChanged), EvaluationEvents::WORKSPACE_EVALUATION);
         }
+    }
+
+    public function archiveEvaluation(WorkspaceEvaluation $evaluation): void
+    {
+        $this->om->startFlushSuite();
+
+        $evaluation->setArchived(true);
+        $evaluation->setArchivedAt(new \DateTime());
+
+        $this->om->persist($evaluation);
+
+        foreach ($evaluation->getSequenceEvaluations() as $sequenceEvaluation) {
+            $this->sequenceEvaluationManager->archiveEvaluation($sequenceEvaluation);
+        }
+
+        $this->om->endFlushSuite();
     }
 
     /**

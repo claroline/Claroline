@@ -8,6 +8,7 @@ use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Archived;
 use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Description;
@@ -50,6 +51,7 @@ class Sequence implements CrudEntityInterface
     use CreatedAt;
     use UpdatedAt;
     use Published;
+    use Archived;
     use IsPublic;
     use HasWorkspace;
     // restrictions
@@ -60,7 +62,6 @@ class Sequence implements CrudEntityInterface
     use Evaluated;
     use EvaluationFeedbacks;
     use Certified;
-
     use HasEndPage;
 
     /**
@@ -197,7 +198,7 @@ class Sequence implements CrudEntityInterface
     }
 
     /**
-     * Get root step of the sequence.
+     * Get root steps of the sequence.
      *
      * @return Step[]
      */

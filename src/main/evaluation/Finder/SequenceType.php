@@ -34,6 +34,7 @@ class SequenceType extends AbstractType
             ->add('code', TextType::class)
             ->add('description', TextType::class)
             ->add('published', BooleanType::class)
+            ->add('archived', BooleanType::class, ['default' => false])
             ->add('public', PublicType::class)
             ->add('createdAt', DateType::class)
             ->add('updatedAt', DateType::class)

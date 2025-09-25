@@ -12,6 +12,7 @@ import {UserProgressionModal as BaseProgressionModal} from '#/main/evaluation/mo
 import {getActions} from '#/main/evaluation/resource/utils'
 import {ResourceEvaluation} from '#/main/evaluation/resource/prop-types'
 import {UserProgressionOverview} from '#/main/evaluation/resource/modals/user-progression/components/overview'
+import {UserProgressionArchives} from '#/main/evaluation/resource/modals/user-progression/components/archives'
 
 const STORE_NAME = 'userResourceEvaluation'
 
@@ -27,7 +28,7 @@ const UserProgressionModal = props => {
         type: trans(get(props.evaluation, 'resourceNode.meta.type'), {}, 'resource'),
         name: get(props.evaluation, 'resourceNode.name')
       }, 'resource')}
-      url={['apiv2_resource_evaluation_get', {resource: get(props.evaluation, 'resourceNode.id'), user: get(props.evaluation, 'user.id')}]}
+      url={['apiv2_resource_evaluation_get', {evaluationId: get(props.evaluation, 'id')}]}
       actions={getActions([props.evaluation], {}, route(get(props.evaluation, 'resourceNode')), currentUser)}
       additional={[
         {
@@ -37,6 +38,7 @@ const UserProgressionModal = props => {
         }
       ]}
       overview={UserProgressionOverview}
+      archives={UserProgressionArchives}
     />
   )
 }

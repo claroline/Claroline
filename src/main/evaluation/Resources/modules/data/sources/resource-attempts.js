@@ -76,6 +76,13 @@ export default {
         },
         displayed: true,
         filterable: false
+      }, {
+        name: 'meta.archived',
+        alias: 'archived',
+        type: 'boolean',
+        label: trans('archive'),
+        displayable: false,
+        filterable: true
       }
     ]
   }

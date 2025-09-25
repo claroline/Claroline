@@ -13,6 +13,7 @@ namespace Claroline\EvaluationBundle\Entity\UserEvaluation;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\ArchivedAt;
 use Claroline\EvaluationBundle\Library\EvaluationInterface;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Doctrine\DBAL\Types\Types;
@@ -23,6 +24,7 @@ abstract class AbstractEvaluation implements EvaluationInterface
 {
     use Id;
     use Uuid;
+    use ArchivedAt;
 
     #[ORM\Column(name: 'started_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected ?\DateTimeInterface $startedAt = null;

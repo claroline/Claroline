@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\EvaluationBundle\Entity\Certificate\SequenceCertificate;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Entity\Sequence\Step;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\SequenceEvaluation;
@@ -35,7 +36,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -145,41 +145,55 @@ class SequenceEvaluationController
 
         $this->checkPermission('OPEN', $sequence, [], true);
 
-        $this->evaluationManager->update($step, $user);
+        $userEvaluation = $this->evaluationManager->getUserEvaluation($sequence, $user, false);
+        $this->evaluationManager->updateUserEvaluation($userEvaluation, $step);
 
         return new JsonResponse([
-            'evaluation' => $this->serializer->serialize(
-                $this->evaluationManager->getUserEvaluation($sequence, $user, false),
-                [SerializerInterface::SERIALIZE_MINIMAL]
-            ),
-            'progression' => $this->evaluationManager->getProgression($sequence, $user),
+            'evaluation' => $this->serializer->serialize($userEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
+            'progression' => $this->evaluationManager->getUserProgression($userEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
         ]);
     }
 
-    #[Route(path: '/{sequence}/user/{user}', name: 'apiv2_sequence_evaluation_get', methods: ['GET'])]
+    #[Route(path: '/{evaluationId}', name: 'apiv2_sequence_evaluation_get', methods: ['GET'])]
     public function geAction(
-        #[MapEntity(mapping: ['sequence' => 'uuid'])]
-        Sequence $sequence,
-        #[MapEntity(mapping: ['user' => 'uuid'])]
-        User $user
+        #[MapEntity(mapping: ['evaluationId' => 'uuid'])]
+        SequenceEvaluation $sequenceEvaluation
     ): JsonResponse {
-        $sequenceEvaluation = $this->om->getRepository(SequenceEvaluation::class)->findOneBy([
-            'sequence' => $sequence,
-            'user' => $user,
-        ]);
+        $this->checkPermission('OPEN', $sequenceEvaluation, [], true);
 
-        if (empty($sequenceEvaluation)) {
-            throw new NotFoundHttpException();
+        $sequence = $sequenceEvaluation->getSequence();
+
+        $certificates = [];
+        if ($sequenceEvaluation->isCertified()) {
+            $certificates = $this->om->getRepository(SequenceCertificate::class)->findBy([
+                'evaluation' => $sequenceEvaluation,
+            ], [
+                'obtentionDate' => 'DESC',
+                'issueDate' => 'DESC',
+            ]);
         }
 
-        $this->checkPermission('OPEN', $sequenceEvaluation, [], true);
+        $archives = [];
+        if (!$sequenceEvaluation->isArchived()) {
+            $archives = $this->om->getRepository(SequenceEvaluation::class)->findBy([
+                'user' => $sequenceEvaluation->getUser(),
+                'sequence' => $sequenceEvaluation->getSequence(),
+                'archived' => true,
+            ]);
+        }
 
         return new JsonResponse([
             'parameters' => [
                 'successCondition' => $sequence->getSuccessCondition(),
             ],
             'evaluation' => $this->serializer->serialize($sequenceEvaluation),
-            'progression' => $this->evaluationManager->getProgression($sequence, $user),
+            'progression' => $this->evaluationManager->getUserProgression($sequenceEvaluation),
+            'certificates' => array_map(function (SequenceCertificate $certificate) {
+                return $this->serializer->serialize($certificate);
+            }, $certificates),
+            'archives' => array_map(function (SequenceEvaluation $archivedEvaluation) {
+                return $this->serializer->serialize($archivedEvaluation);
+            }, $archives),
         ]);
     }
 
@@ -235,12 +249,9 @@ class SequenceEvaluationController
         }
 
         // recompute selected evaluations
-        foreach ($evaluationIds as $evaluationId) {
-            $evaluation = $this->om->getRepository(SequenceEvaluation::class)->findOneBy([
-                'uuid' => $evaluationId,
-            ]);
-
-            if ($evaluation && $this->checkPermission('ADMINISTRATE', $evaluation)) {
+        $evaluations = $this->om->getRepository(SequenceEvaluation::class)->findBy(['uuid' => $evaluationIds]);
+        foreach ($evaluations as $evaluation) {
+            if ($this->checkPermission('ADMINISTRATE', $evaluation)) {
                 $this->evaluationManager->refreshEvaluation($evaluation);
             }
         }

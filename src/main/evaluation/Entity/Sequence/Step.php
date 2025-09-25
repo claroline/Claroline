@@ -61,6 +61,9 @@ class Step
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     private ?ResourceNode $resource = null;
 
+    /**
+     * @deprecated
+     */
     #[ORM\Column(name: 'showResourceHeader', type: Types::BOOLEAN)]
     private bool $showResourceHeader = false;
 

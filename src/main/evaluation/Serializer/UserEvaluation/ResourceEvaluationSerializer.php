@@ -5,8 +5,8 @@ namespace Claroline\EvaluationBundle\Serializer\UserEvaluation;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\EvaluationBundle\Library\EvaluationOptions;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -38,6 +38,10 @@ class ResourceEvaluationSerializer
 
         $serialized = [
             'id' => $evaluation->getUuid(),
+            'meta' => [
+                'archived' => $evaluation->isArchived(),
+                'archivedAt' => DateNormalizer::normalize($evaluation->getArchivedAt()),
+            ],
             'lastActivityAt' => DateNormalizer::normalize($evaluation->getLastActivityAt()),
             'startedAt' => DateNormalizer::normalize($evaluation->getStartedAt()),
             'endedAt' => DateNormalizer::normalize($evaluation->getEndedAt()),

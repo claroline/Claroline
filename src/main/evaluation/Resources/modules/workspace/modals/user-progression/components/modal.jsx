@@ -12,6 +12,8 @@ import {route} from '#/main/evaluation/workspace/routing'
 import {getEvaluationActions} from '#/main/evaluation/workspace/utils'
 import {WorkspaceEvaluation} from '#/main/evaluation/workspace/prop-types'
 import {UserProgressionOverview} from '#/main/evaluation/workspace/modals/user-progression/components/overview'
+import {UserProgressionCertificates} from '#/main/evaluation/workspace/modals/user-progression/components/certificates'
+import {UserProgressionArchives} from '#/main/evaluation/workspace/modals/user-progression/components/archives'
 
 const STORE_NAME = 'userWorkspaceEvaluation'
 
@@ -24,9 +26,18 @@ const UserProgressionModal = props => {
       evaluation={props.evaluation}
       name={STORE_NAME}
       title={trans('workspace_name', {name: get(props.evaluation, 'workspace.name')}, 'workspace')}
-      url={['apiv2_workspace_evaluation_get', {workspace: get(props.evaluation, 'workspace.id'), user: get(props.evaluation, 'user.id')}]}
+      url={['apiv2_workspace_evaluation_get', {evaluationId: get(props.evaluation, 'id')}]}
       actions={getEvaluationActions([props.evaluation], {}, route(props.evaluation), currentUser)}
       overview={UserProgressionOverview}
+      archives={UserProgressionArchives}
+      tabs={[
+        {
+          name: 'certificates',
+          title: trans('certificates', {}, 'evaluation'),
+          displayed: !!props.evaluation.certified,
+          component: UserProgressionCertificates
+        }
+      ]}
     />
   )
 }

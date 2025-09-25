@@ -11,8 +11,9 @@ use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\EvaluationBundle\Entity\Sequence\Requirement;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Entity\Sequence\Step;
-use Claroline\EvaluationBundle\Entity\SequenceProgression;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\SequenceEvaluation;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\SequenceProgression;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\SequenceEvaluationEvent;
 use Claroline\EvaluationBundle\Library\Checker\MaxFailedChecker;
@@ -25,27 +26,20 @@ use Claroline\EvaluationBundle\Library\GenericEvaluation;
 use Claroline\EvaluationBundle\Messenger\Message\InitializeSequenceEvaluations;
 use Claroline\EvaluationBundle\Messenger\Message\PurgeSequenceEvaluations;
 use Claroline\EvaluationBundle\Messenger\Message\RecomputeSequenceEvaluations;
-use Claroline\EvaluationBundle\Repository\SequenceRepository;
-use Claroline\EvaluationBundle\Repository\UserEvaluation\SequenceProgressionRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SequenceEvaluationManager extends AbstractEvaluationManager
 {
-    private SequenceProgressionRepository $progressionRepo;
-    private SequenceRepository $sequenceRepo;
-
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
         private readonly MessageBusInterface $messageBus,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
-        private readonly ResourceEvaluationManager $resourceEvalManager
+        private readonly ResourceEvaluationManager $resourceEvaluationManager
     ) {
-        $this->progressionRepo = $this->om->getRepository(SequenceProgression::class);
-        $this->sequenceRepo = $this->om->getRepository(Sequence::class);
     }
 
     public function fulfillRequirements(Sequence $sequence, User $user): bool
@@ -80,14 +74,20 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
         return true;
     }
 
+    /**
+     * @return Sequence[]
+     */
     public function getByResource(ResourceNode $resourceNode): array
     {
-        return $this->om->getRepository(Sequence::class)->findByRequiredResource($resourceNode);
+        return $this->om->getRepository(Sequence::class)->findByResource($resourceNode);
     }
 
+    /**
+     * @return Sequence[]
+     */
     public function getByResourceAndUser(ResourceNode $resourceNode, User $user): array
     {
-        return $this->om->getRepository(Sequence::class)->findByRequiredResourceAndUser($resourceNode, $user);
+        return $this->om->getRepository(Sequence::class)->findByResourceAndUser($resourceNode, $user);
     }
 
     /**
@@ -98,6 +98,7 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
         $evaluation = $this->om->getRepository(SequenceEvaluation::class)->findOneBy([
             'sequence' => $sequence,
             'user' => $user,
+            'archived' => false,
         ]);
 
         if ($withCreation && empty($evaluation)) {
@@ -112,23 +113,16 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
         return $evaluation;
     }
 
-    public function getResourceEvaluations(Sequence $sequence, User $user): array
+    public function getUserProgression(SequenceEvaluation $evaluation, ?array $options = []): array
     {
-        return $this->sequenceRepo->findResourceEvaluations($sequence, $user);
-    }
+        $sequence = $evaluation->getSequence();
 
-    public function getProgression(Sequence $sequence, User $user, ?array $options = []): array
-    {
-        // loads all the user evaluations (step progression and resource evaluations)
-        $progression = $this->progressionRepo->findBySequenceAndUser($sequence, $user);
-        $resourceEvaluations = $this->getResourceEvaluations($sequence, $user);
-
-        $progress = [];
+        $progression = [];
         foreach ($sequence->getRootSteps() as $step) {
-            $progress = array_merge($progress, $this->getStepProgression($step, $progression, $resourceEvaluations, $options));
+            $progression = array_merge($progression, $this->getStepProgression($evaluation, $step, $options));
         }
 
-        return $progress;
+        return $progression;
     }
 
     public function getRequiredResources(Sequence $sequence): array
@@ -143,123 +137,53 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
         return $requiredResources;
     }
 
-    private function getStepProgression(Step $step, ?array $stepProgressions = [], ?array $resourceEvaluations = [], ?array $options = []): array
+    public function updateUserEvaluation(SequenceEvaluation $evaluation, Step $step, ?ResourceEvaluation $resourceEvaluation = null): SequenceProgression
     {
-        $stepEvaluation = null;
-        if (!empty($step->getResource()) && $step->isRequired()) {
-            $resourceId = $step->getResource()->getId();
-            foreach ($resourceEvaluations as $resourceEvaluation) {
-                if ($resourceEvaluation->getResourceNode()->getId() === $resourceId) {
-                    $stepEvaluation = $this->serializer->serialize($resourceEvaluation, $options);
-                    break;
-                }
-            }
-        } else {
-            foreach ($stepProgressions as $stepProgression) {
-                if ($stepProgression->getStep()->getId() === $step->getId()) {
-                    $stepEvaluation = [
-                        'id' => $stepProgression->getStep()->getUuid(),
-                        'status' => $stepProgression->getStatus(),
-                        'lastActivityAt' => DateNormalizer::normalize($stepProgression->getLastActivityAt()),
-                    ];
-                    break;
-                }
-            }
-        }
+        $user = $evaluation->getUser();
 
-        if (empty($stepEvaluation)) {
-            $stepEvaluation = [
-                'id' => $step->getUuid(),
-                'status' => EvaluationStatus::NOT_ATTEMPTED,
-            ];
-        }
-
-        $stepEvaluation['step'] = [
-            'id' => $step->getUuid(),
-            'name' => $step->getTitle(),
-        ];
-
-        if ($step->getChildren()->count() > 0) {
-            $childrenProgression = [];
-            foreach ($step->getChildren() as $child) {
-                $childrenProgression = array_merge($childrenProgression, $this->getStepProgression($child, $stepProgressions, $resourceEvaluations, $options));
-            }
-
-            return array_merge([$stepEvaluation], $childrenProgression);
-        }
-
-        return [$stepEvaluation];
-    }
-
-    /**
-     * Get all steps progressions for a user.
-     */
-    public function getStepsProgressionForUser(Sequence $sequence, User $user): array
-    {
-        $progression = $this->progressionRepo->findBySequenceAndUser($sequence, $user);
-
-        $stepsProgression = [];
-        foreach ($progression as $stepProgression) {
-            $stepsProgression[$stepProgression->getStep()->getUuid()] = $stepProgression->getStatus();
-        }
-
-        return $stepsProgression;
-    }
-
-    public function update(Step $step, User $user): SequenceProgression
-    {
         // Retrieve the current progression for this step
-        $progression = $this->progressionRepo->findOneBy([
-            'step' => $step,
-            'user' => $user,
-        ]);
-
+        $progression = $evaluation->getStepProgression($step->getUuid());
         if (empty($progression)) {
             $progression = new SequenceProgression();
             $progression->setStep($step);
             $progression->setUser($user);
         }
 
+        $evaluation->addStepProgression($progression);
         $progression->setLastActivityAt(new \DateTime());
 
+        if (!empty($resourceEvaluation)) {
+            $progression->setResourceEvaluation($resourceEvaluation);
+        }
+
         $recompute = false;
-        if (EvaluationStatus::COMPLETED !== $progression->getStatus()) {
+        if (!empty($resourceEvaluation) && ($step->isRequired() || $step->isScored())) {
             $recompute = true;
+        } elseif (EvaluationStatus::COMPLETED !== $progression->getStatus()) {
             $progression->setStatus(EvaluationStatus::COMPLETED);
+            $recompute = true;
         }
 
         $this->om->persist($progression);
         $this->om->flush();
 
         if ($recompute) {
-            // recompute sequence progression for user
-            $this->computeEvaluation($step->getSequence(), $user);
+            // recompute sequence evaluation
+            $this->refreshEvaluation($evaluation);
         }
 
         return $progression;
     }
 
-    public function computeEvaluation(Sequence $sequence, User $user): SequenceEvaluation
-    {
-        $evaluation = $this->getUserEvaluation($sequence, $user);
-        $this->refreshEvaluation($evaluation);
-
-        return $evaluation;
-    }
-
     public function refreshEvaluation(SequenceEvaluation $evaluation): void
     {
         $sequence = $evaluation->getSequence();
-        $user = $evaluation->getUser();
-
-        // load the user progression for the sequence (aka the seen/done/etc. flags on steps)
-        $stepsProgression = $this->getStepsProgressionForUser($sequence, $user);
 
         $conditionCheckers = [
             new ProgressionChecker(),
         ];
 
-        // get the success condition of the workspace if any
+        // get the success condition of the sequence if any
         $successCondition = $sequence->getSuccessCondition();
         if (!empty($successCondition)) {
             if (array_key_exists('score', $successCondition) && is_numeric($successCondition['score'])) {
@@ -278,15 +202,17 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
             }
         }
 
-        // the workspace evaluation aggregates the progression/score of all its required/scored resources
+        // the sequence evaluation aggregates the progression/score of all its steps and required resources
         $aggregator = new EvaluationAggregator($conditionCheckers);
 
         foreach ($sequence->getSteps() as $step) {
+            $stepProgression = $evaluation->getStepProgression($step->getUuid());
             if (!empty($step->getResource()) && $step->isRequired()) {
                 // the step contains a required resource, we need to get the evaluation for this resource
                 // to compute the step progression
-                $resourceEvaluation = $this->resourceEvalManager->getUserEvaluation($step->getResource(), $user, false);
-                if (!$resourceEvaluation) {
+                if (!empty($stepProgression) && !empty($stepProgression->getResourceEvaluation())) {
+                    $resourceEvaluation = $stepProgression->getResourceEvaluation();
+                } else {
                     // no evaluation, adds an empty evaluation for correct progression check
                     $resourceEvaluation = new GenericEvaluation(0);
                 }
@@ -294,7 +220,7 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
                 $aggregator->addEvaluation($resourceEvaluation, $step->isScored());
             } else {
                 // no required resource in the step, we only check if the step is seen/done
-                $stepDone = !empty($stepsProgression[$step->getUuid()]) && EvaluationStatus::COMPLETED === $stepsProgression[$step->getUuid()];
+                $stepDone = !empty($stepProgression) && EvaluationStatus::COMPLETED === $stepProgression->getStatus();
                 $aggregator->addEvaluation(new GenericEvaluation($stepDone ? 100 : 0));
             }
         }
@@ -326,6 +252,24 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
         }
     }
 
+    public function archiveEvaluation(SequenceEvaluation $evaluation): void
+    {
+        $this->om->startFlushSuite();
+
+        $evaluation->setArchived(true);
+        $evaluation->setArchivedAt(new \DateTime());
+
+        $this->om->persist($evaluation);
+
+        foreach ($evaluation->getStepProgressions() as $stepProgression) {
+            if ($stepProgression->getResourceEvaluation()) {
+                $this->resourceEvaluationManager->archiveEvaluation($stepProgression->getResourceEvaluation());
+            }
+        }
+
+        $this->om->endFlushSuite();
+    }
+
     /**
      * Recomputes all the evaluations of a sequence.
      * This is called when required resources are added/removed to update users progression and score.
@@ -345,5 +289,48 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
             new PurgeSequenceEvaluations($sequence->getId()),
             [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]
         );
+    }
+
+    private function getStepProgression(SequenceEvaluation $evaluation, Step $step, ?array $options = []): array
+    {
+        $stepProgression = $evaluation->getStepProgression($step->getUuid());
+
+        $stepEvaluation = null;
+        if (!empty($stepProgression)) {
+            if (!empty($step->getResource()) && $step->isRequired()) {
+                if (!empty($stepProgression->getResourceEvaluation())) {
+                    $stepEvaluation = $this->serializer->serialize($stepProgression->getResourceEvaluation(), $options);
+                }
+            } else {
+                $stepEvaluation = [
+                    'id' => $stepProgression->getStep()->getUuid(),
+                    'status' => $stepProgression->getStatus(),
+                    'lastActivityAt' => DateNormalizer::normalize($stepProgression->getLastActivityAt()),
+                ];
+            }
+        }
+
+        if (empty($stepEvaluation)) {
+            $stepEvaluation = [
+                'id' => $step->getUuid(),
+                'status' => EvaluationStatus::NOT_ATTEMPTED,
+            ];
+        }
+
+        $stepEvaluation['step'] = [
+            'id' => $step->getUuid(),
+            'name' => $step->getTitle(),
+        ];
+
+        if ($step->getChildren()->count() > 0) {
+            $childrenProgression = [];
+            foreach ($step->getChildren() as $child) {
+                $childrenProgression = array_merge($childrenProgression, $this->getStepProgression($evaluation, $child, $options));
+            }
+
+            return array_merge([$stepEvaluation], $childrenProgression);
+        }
+
+        return [$stepEvaluation];
     }
 }

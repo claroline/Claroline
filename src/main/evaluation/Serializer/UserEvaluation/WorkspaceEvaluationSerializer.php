@@ -9,8 +9,8 @@ use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\WorkspaceEvaluation;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\WorkspaceEvaluation;
 use Claroline\EvaluationBundle\Library\EvaluationOptions;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -55,6 +55,10 @@ class WorkspaceEvaluationSerializer
 
         $serialized = [
             'id' => $evaluation->getUuid(),
+            'meta' => [
+                'archived' => $evaluation->isArchived(),
+                'archivedAt' => DateNormalizer::normalize($evaluation->getArchivedAt()),
+            ],
             'lastActivityAt' => DateNormalizer::normalize($evaluation->getLastActivityAt()),
             'startedAt' => DateNormalizer::normalize($evaluation->getStartedAt()),
             'endedAt' => DateNormalizer::normalize($evaluation->getEndedAt()),
@@ -120,6 +124,7 @@ class WorkspaceEvaluationSerializer
             $evaluation->refreshUuid();
         }
 
+        $this->sipe('meta.archived', 'setArchived', $data, $evaluation);
         $this->sipe('status', 'setStatus', $data, $evaluation);
         $this->sipe('duration', 'setDuration', $data, $evaluation);
         $this->sipe('progression', 'setProgression', $data, $evaluation);

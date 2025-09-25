@@ -19,6 +19,7 @@ const UserProgressionOverview = (props) => {
   if (!hasAttempts) {
     return (
       <EmptyState
+        className="py-5"
         title={trans('Aucune information supplémentaire')}
       />
     )
@@ -27,6 +28,7 @@ const UserProgressionOverview = (props) => {
   if (isEmpty(props.progression)) {
     return (
       <EmptyState
+        className="py-5"
         title={trans('L\'utilisateur n\'a pas commencé l\'activité pour le moment')}
       />
     )

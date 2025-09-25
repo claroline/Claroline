@@ -185,6 +185,7 @@ class ProgressionTool extends ToolComponent
         $workspaceEvaluation = $this->om->getRepository(WorkspaceEvaluation::class)->findOneBy([
             'workspace' => $workspace,
             'user' => $this->tokenStorage->getToken()?->getUser(),
+            'archived' => false,
         ]);
 
         if (empty($workspaceEvaluation)) {

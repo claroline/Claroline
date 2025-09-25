@@ -46,11 +46,19 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         return $resourceHandler instanceof EvaluatedResourceInterface;
     }
 
+    public function supportsAttempts(ResourceNode $resourceNode): bool
+    {
+        $resourceHandler = $this->resourceProvider->getComponent($resourceNode->getResourceType()->getName());
+
+        return $resourceHandler instanceof EvaluatedResourceInterface && $resourceHandler::supportsAttempts();
+    }
+
     public function getUserEvaluation(ResourceNode $node, User $user, ?bool $withCreation = true): ?ResourceEvaluation
     {
         $evaluation = $this->om->getRepository(ResourceEvaluation::class)->findOneBy([
             'resourceNode' => $node,
             'user' => $user,
+            'archived' => false,
         ]);
 
         if ($withCreation && empty($evaluation)) {
@@ -151,6 +159,28 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
 
             $this->eventDispatcher->dispatch(new ResourceEvaluationEvent($evaluation, ['nbAttempts' => true]), EvaluationEvents::RESOURCE_EVALUATION);
         }
+    }
+
+    public function archiveEvaluation(ResourceEvaluation $evaluation): void
+    {
+        $this->om->startFlushSuite();
+
+        $evaluation->setArchived(true);
+        $evaluation->setArchivedAt(new \DateTime());
+
+        $this->om->persist($evaluation);
+
+        if ($this->supportsAttempts($evaluation->getResourceNode())) {
+            $attempts = $this->om->getRepository(ResourceAttempt::class)->findBy(['resourceUserEvaluation' => $evaluation]);
+            foreach ($attempts as $attempt) {
+                $attempt->setArchived(true);
+                $attempt->setArchivedAt(new \DateTime());
+
+                $this->om->persist($attempt);
+            }
+        }
+
+        $this->om->endFlushSuite();
     }
 
     /**

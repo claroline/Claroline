@@ -19,6 +19,14 @@ function getEvaluationDefaultAction(evaluation, refresher, path, currentUser = n
   return getPluginsDefaultAction('sequence_evaluation', evaluation, refresher, path, currentUser)
 }
 
+function getCertificateActions(evaluations, refresher, path, currentUser, withDefault = false) {
+  return getPluginsActions('sequence_certificate', evaluations, refresher, path, currentUser, withDefault)
+}
+
+function getCertificateDefaultAction(evaluation, refresher, path, currentUser = null) {
+  return getPluginsDefaultAction('sequence_certificate', evaluation, refresher, path, currentUser)
+}
+
 /**
  * Flattens a tree of steps into a one-level array.
  *
@@ -134,6 +142,8 @@ export {
   getDefaultAction,
   getEvaluationActions,
   getEvaluationDefaultAction,
+  getCertificateActions,
+  getCertificateDefaultAction,
   flattenSteps,
   getNumbering,
   getPrevious,

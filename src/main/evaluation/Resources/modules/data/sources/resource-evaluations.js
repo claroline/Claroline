@@ -90,6 +90,13 @@ export default {
         displayable: false,
         sortable: false,
         filterable: true
+      }, {
+        name: 'meta.archived',
+        alias: 'archived',
+        type: 'boolean',
+        label: trans('archive'),
+        displayable: false,
+        filterable: true
       }
     ],
     card: ResourceCard

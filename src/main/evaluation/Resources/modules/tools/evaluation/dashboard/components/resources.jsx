@@ -47,6 +47,13 @@ const EvaluationDashboardResources = () => {
           filterable: true,
           sortable: true,
           order: 2
+        }, {
+          name: 'meta.archived',
+          alias: 'archived',
+          type: 'boolean',
+          label: trans('archive'),
+          displayable: false,
+          filterable: true
         }
       ]}
     />

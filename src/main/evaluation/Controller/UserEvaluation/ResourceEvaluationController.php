@@ -36,7 +36,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -134,33 +133,37 @@ class ResourceEvaluationController
         ]);
     }
 
-    #[Route(path: '/{resource}/user/{user}', name: 'apiv2_resource_evaluation_get', methods: ['GET'])]
+    #[Route(path: '/{evaluationId}', name: 'apiv2_resource_evaluation_get', methods: ['GET'])]
     public function getAction(
-        #[MapEntity(mapping: ['resource' => 'uuid'])]
-        ResourceNode $resource,
-        #[MapEntity(mapping: ['user' => 'uuid'])]
-        User $user
+        #[MapEntity(mapping: ['evaluationId' => 'uuid'])]
+        ResourceEvaluation $resourceEvaluation
     ): JsonResponse {
-        $resourceEvaluation = $this->om->getRepository(ResourceEvaluation::class)->findOneBy([
-            'resourceNode' => $resource,
-            'user' => $user,
-        ]);
-
-        if (empty($resourceEvaluation)) {
-            throw new NotFoundHttpException();
-        }
-
         $this->checkPermission('OPEN', $resourceEvaluation, [], true);
 
-        $attempts = $this->om->getRepository(ResourceAttempt::class)->findBy([
-            'resourceUserEvaluation' => $resourceEvaluation,
-        ]);
+        $attempts = [];
+        if ($this->evaluationManager->supportsAttempts($resourceEvaluation->getResourceNode())) {
+            $attempts = $this->om->getRepository(ResourceAttempt::class)->findBy([
+                'resourceUserEvaluation' => $resourceEvaluation,
+            ]);
+        }
+
+        $archives = [];
+        if (!$resourceEvaluation->isArchived()) {
+            $archives = $this->om->getRepository(ResourceEvaluation::class)->findBy([
+                'user' => $resourceEvaluation->getUser(),
+                'resourceNode' => $resourceEvaluation->getResourceNode(),
+                'archived' => true,
+            ]);
+        }
 
         return new JsonResponse([
             'evaluation' => $this->serializer->serialize($resourceEvaluation),
             'progression' => array_map(function (ResourceAttempt $attempt) {
                 return $this->serializer->serialize($attempt);
             }, $attempts),
+            'archives' => array_map(function (ResourceEvaluation $archivedEvaluation) {
+                return $this->serializer->serialize($archivedEvaluation);
+            }, $archives),
         ]);
     }
 

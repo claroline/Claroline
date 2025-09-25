@@ -96,6 +96,13 @@ export default (contextType, contextData, refresher, currentUser) => {
         displayable: false,
         sortable: true,
         filterable: false
+      }, {
+        name: 'meta.archived',
+        alias: 'archived',
+        type: 'boolean',
+        label: trans('archive'),
+        displayable: false,
+        filterable: true
       }
     ],
     card: EvaluationWorkspaceCard

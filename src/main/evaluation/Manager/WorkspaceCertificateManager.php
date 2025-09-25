@@ -95,7 +95,7 @@ class WorkspaceCertificateManager
         return $tmpFile;
     }
 
-    private function getCertificateFilepath(WorkspaceCertificate $certificate): string
+    public function getCertificateFilepath(WorkspaceCertificate $certificate): string
     {
         $path = $this->fileManager->getDirectory();
         $path .= DIRECTORY_SEPARATOR.'certificates';

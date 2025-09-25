@@ -10,6 +10,8 @@ import {selectors} from '#/main/evaluation/sequence/store'
 import {StatusChart} from '#/main/evaluation/charts/status/components/chart'
 import {ProgressionChart} from '#/main/evaluation/charts/progression/components/chart'
 import {ScoreChart} from '#/main/evaluation/charts/score/components/chart'
+import {CompletionChart} from '#/main/evaluation/charts/components/completion'
+import {SuccessChart} from '#/main/evaluation/charts/components/success'
 
 const SequenceDashboardOverview = (props) => {
   const sequence = useSelector(selectors.sequence)
@@ -43,22 +45,14 @@ const SequenceDashboardOverview = (props) => {
 
       <PageSection size="full">
         <div className="row">
-          <div className="col-3 mb-4">
-            <div className="card">
-              <div className="card-body p-4">
-                <h6 className="page-section-title">Taux de complétion</h6>
-              </div>
-            </div>
+          <div className="col-3">
+            <CompletionChart current={30} total={50} />
           </div>
-          <div className="col-3 mb-4">
-            <div className="card">
-              <div className="card-body p-4">
-                <h6 className="page-section-title">Taux de réussite</h6>
-              </div>
-            </div>
+          <div className="col-3">
+            <SuccessChart current={10} total={20} />
           </div>
 
-          <div className="col-6 mb-4">
+          <div className="col-6">
             <StatusChart url={['apiv2_sequence_evaluation_status', {id: sequence.id}]} />
           </div>
         </div>

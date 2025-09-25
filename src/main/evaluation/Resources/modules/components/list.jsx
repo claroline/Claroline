@@ -70,16 +70,6 @@ const EvaluationList = (props) => {
             type: 'learning'
           }
         }, {
-          name: 'status',
-          type: 'choice',
-          label: trans('status'),
-          options: {
-            choices: constants.EVALUATION_STATUSES_SHORT
-          },
-          displayed: true,
-          sortable: false,
-          render: (row) => <EvaluationStatus status={row.status} />
-        }, {
           name: 'displayScore',
           type: 'score',
           alias: 'score',
@@ -101,11 +91,28 @@ const EvaluationList = (props) => {
           ),
           filterable: false
         }, {
+          name: 'status',
+          type: 'choice',
+          label: trans('status'),
+          options: {
+            choices: constants.EVALUATION_STATUSES_SHORT
+          },
+          displayed: true,
+          sortable: false,
+          render: (row) => <EvaluationStatus status={row.status} />
+        }, {
           name: 'user.disabled',
           label: trans('user_disabled', {}, 'community'),
           type: 'boolean',
           displayable: false,
           sortable: false,
+          filterable: true
+        }, {
+          name: 'meta.archived',
+          alias: 'archived',
+          type: 'boolean',
+          label: trans('archive'),
+          displayable: false,
           filterable: true
         }
       ].concat(props.customDefinition)}

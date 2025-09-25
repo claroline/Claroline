@@ -18,10 +18,19 @@ function getEvaluationDefaultAction(evaluation, refresher, path, currentUser = n
   return getPluginsDefaultAction(ACTION_SET_NAME, evaluation, refresher, path, currentUser)
 }
 
+function getCertificateActions(evaluations, refresher, path, currentUser, withDefault = false) {
+  return getPluginsActions('workspace_certificate', evaluations, refresher, path, currentUser, withDefault)
+}
+
+function getCertificateDefaultAction(evaluation, refresher, path, currentUser = null) {
+  return getPluginsDefaultAction('workspace_certificate', evaluation, refresher, path, currentUser)
+}
+
 export {
   getActions,
   getDefaultAction,
-
   getEvaluationActions,
-  getEvaluationDefaultAction
+  getEvaluationDefaultAction,
+  getCertificateActions,
+  getCertificateDefaultAction
 }

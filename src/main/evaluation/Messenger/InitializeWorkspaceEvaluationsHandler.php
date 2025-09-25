@@ -5,19 +5,19 @@ namespace Claroline\EvaluationBundle\Messenger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
+use Claroline\EvaluationBundle\Manager\SequenceEvaluationManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\InitializeWorkspaceEvaluations;
-use Claroline\EvaluationBundle\Messenger\Message\UpdateResourceEvaluations;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsMessageHandler]
 readonly class InitializeWorkspaceEvaluationsHandler
 {
     public function __construct(
-        private MessageBusInterface $messageBus,
         private ObjectManager $om,
-        private WorkspaceEvaluationManager $evaluationManager
+        private WorkspaceEvaluationManager $evaluationManager,
+        private SequenceEvaluationManager $sequenceEvaluationManager
     ) {
     }
 
@@ -45,12 +45,17 @@ readonly class InitializeWorkspaceEvaluationsHandler
 
         $this->om->endFlushSuite();
 
-        // initialize evaluations for required sequences
-        // this is not required by the code, but is a feature for managers to see users in evaluation tool/exports
+        // initialize evaluations for sequences
+        // the code does not require this, but is a feature for managers to see users in evaluation tool/exports
         // event if they have not opened the workspace yet.
-        $requiredResources = $this->evaluationManager->getRequiredResources($workspace);
-        foreach ($requiredResources as $requiredResource) {
-            $this->messageBus->dispatch(new UpdateResourceEvaluations($requiredResource->getId(), $initMessage->getUserIds()));
+        $sequences = $this->om->getRepository(Sequence::class)->findBy([
+            'published' => true,
+            'workspace' => $workspace,
+        ]);
+        if (!empty($sequences)) {
+            foreach ($sequences as $sequence) {
+                $this->sequenceEvaluationManager->initializeEvaluations($sequence);
+            }
         }
     }
 }

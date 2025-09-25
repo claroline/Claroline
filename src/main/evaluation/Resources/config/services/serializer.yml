@@ -27,10 +27,15 @@ services:
             - '@Claroline\EvaluationBundle\Serializer\Sequence\SequenceSerializer'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
-    Claroline\EvaluationBundle\Serializer\CertificateSerializer:
+    Claroline\EvaluationBundle\Serializer\Certificate\SequenceCertificateSerializer:
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-            - '@Claroline\EvaluationBundle\Serializer\UserEvaluation\WorkspaceEvaluationSerializer'
+
+    Claroline\EvaluationBundle\Serializer\Certificate\WorkspaceCertificateSerializer:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
     Claroline\EvaluationBundle\Serializer\SkillsFrameworkSerializer: ~
 

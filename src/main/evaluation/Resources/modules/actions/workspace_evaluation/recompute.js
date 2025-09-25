@@ -6,7 +6,7 @@ import {hasPermission} from '#/main/app/security'
 import {declareAction} from '#/main/app/action'
 
 export default declareAction((evaluations, refresher) => {
-  const processable = evaluations.filter(evaluation => hasPermission('administrate', evaluation))
+  const processable = evaluations.filter(evaluation => !get(evaluation, 'meta.archived', false) && hasPermission('administrate', evaluation))
 
   return ({
     name: 'recompute',

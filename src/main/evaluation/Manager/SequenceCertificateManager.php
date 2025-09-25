@@ -105,7 +105,7 @@ class SequenceCertificateManager
         return $tmpFile;
     }
 
-    private function getCertificateFilepath(SequenceCertificate $certificate): string
+    public function getCertificateFilepath(SequenceCertificate $certificate): string
     {
         $path = $this->fileManager->getDirectory();
         $path .= DIRECTORY_SEPARATOR.'sequence_certificates';

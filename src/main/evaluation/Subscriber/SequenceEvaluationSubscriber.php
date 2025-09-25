@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Claroline Connect package.
- *
- * (c) Claroline Consortium <consortium@claroline.net>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Claroline\EvaluationBundle\Subscriber;
 
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
@@ -46,11 +37,24 @@ class SequenceEvaluationSubscriber implements EventSubscriberInterface
     {
         $user = $event->getUser();
         $resourceNode = $event->getResourceNode();
+        $resourceEvaluation = $event->getEvaluation();
 
         // find sequences which use the resource and recompute the user evaluations for them
         $sequences = $this->evaluationManager->getByResourceAndUser($resourceNode, $user);
         foreach ($sequences as $sequence) {
-            $this->evaluationManager->computeEvaluation($sequence, $user);
+            $evaluation = $this->evaluationManager->getUserEvaluation($sequence, $user);
+
+            $steps = [];
+            // retrieve the steps using this resource
+            foreach ($sequence->getSteps() as $step) {
+                if ($step->isRequired() && $step->getResource() === $resourceNode) {
+                    $steps[] = $step;
+                }
+            }
+
+            foreach ($steps as $step) {
+                $this->evaluationManager->updateUserEvaluation($evaluation, $step, $resourceEvaluation);
+            }
         }
     }
 
