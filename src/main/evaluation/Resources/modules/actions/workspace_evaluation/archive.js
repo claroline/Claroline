@@ -22,9 +22,9 @@ export default declareAction((evaluations, refresher) => {
       url: ['apiv2_workspace_evaluation_archive'],
       request: {
         method: 'PUT',
-        body: JSON.stringify(processable.map(evaluation => evaluation.id)),
-        success: () => refresher.update(processable)
-      }
+        body: JSON.stringify(processable.map(evaluation => evaluation.id))
+      },
+      success: () => refresher.update(processable)
     },
     confirm: {
       message: transChoice('archive_evaluation_confirm', processable.length, {count: '<b class="fw-bold">'+processable.length+'</b>'}, 'actions'),
