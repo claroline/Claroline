@@ -22,7 +22,7 @@ const AsyncButton = forwardRef((props, ref) => {
 
   return (
     <CallbackButton
-      {...omit(props, 'request')}
+      {...omit(props, 'request', 'loader')}
       className={classes(props.className, 'position-relative')}
       ref={ref}
       callback={() => {

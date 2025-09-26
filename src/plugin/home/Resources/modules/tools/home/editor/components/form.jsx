@@ -26,9 +26,6 @@ const TabForm = (props) => {
     dispatch(formActions.setErrors(props.name, errors))
   }, [props.name])
 
-  console.log(props.currentContext)
-  console.log(get(props.currentContext, 'data.id'))
-
   return (
     <Form
       name={props.name}

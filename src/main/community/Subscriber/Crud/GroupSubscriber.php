@@ -120,10 +120,12 @@ final class GroupSubscriber implements EventSubscriberInterface
             $user = $event->getValue();
 
             foreach ($group->getEntityRoles() as $role) {
-                if (!$user->hasRole($role->getName(), false)) {
-                    if ('add' === $event->getAction()) {
+                if ('add' === $event->getAction()) {
+                    if (!$user->hasRole($role->getName(), false)) {
                         $this->dispatcher->dispatch(new AddRoleEvent([$user], $role), SecurityEvents::ADD_ROLE);
-                    } elseif ('remove' === $event->getAction()) {
+                    }
+                } elseif ('remove' === $event->getAction()) {
+                    if ($user->hasRole($role->getName(), false)) {
                         $this->dispatcher->dispatch(new RemoveRoleEvent([$user], $role), SecurityEvents::REMOVE_ROLE);
                     }
                 }

@@ -57,6 +57,8 @@ PickerButton.propTypes = {
     T.arrayOf(T.object) // multiple = true
   ]),
   label: T.string.isRequired,
+  icon: T.string,
+  help: T.string,
   onChange: T.func.isRequired,
   size: T.string,
   disabled: T.bool,

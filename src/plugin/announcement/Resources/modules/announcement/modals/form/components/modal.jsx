@@ -48,7 +48,7 @@ const AnnouncementFormModal = (props) => {
               label: trans('content'),
               required: true,
               options: {
-                workspace: props.workspace
+                workspace: get(props.announcement, 'workspace')
               }
             }, {
               name: 'tags',

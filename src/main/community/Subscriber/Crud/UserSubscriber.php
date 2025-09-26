@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -172,18 +173,20 @@ final class UserSubscriber implements EventSubscriberInterface
             $hasRoleFromGroup = $user->hasRole($role->getName(), true) && !$user->hasRole($role->getName(), false);
             if (!$hasRoleFromGroup) {
                 if ('add' === $event->getAction()) {
-                    $this->eventDispatcher->dispatch(new AddRoleEvent([$user], $role), AddRoleEvent::class);
+                    $this->eventDispatcher->dispatch(new AddRoleEvent([$user], $role), SecurityEvents::ADD_ROLE);
                 } elseif ('remove' === $event->getAction()) {
-                    $this->eventDispatcher->dispatch(new RemoveRoleEvent([$user], $role), RemoveRoleEvent::class);
+                    $this->eventDispatcher->dispatch(new RemoveRoleEvent([$user], $role), SecurityEvents::REMOVE_ROLE);
                 }
             }
         } elseif ($event->getValue() instanceof Group) {
             foreach ($event->getValue()->getEntityRoles() as $role) {
-                if (!$user->hasRole($role->getName(), false)) {
-                    if ('add' === $event->getAction()) {
-                        $this->eventDispatcher->dispatch(new AddRoleEvent([$user], $role), AddRoleEvent::class);
-                    } elseif ('remove' === $event->getAction()) {
-                        $this->eventDispatcher->dispatch(new RemoveRoleEvent([$user], $role), RemoveRoleEvent::class);
+                if ('add' === $event->getAction()) {
+                    if (!$user->hasRole($role->getName(), false)) {
+                        $this->eventDispatcher->dispatch(new AddRoleEvent([$user], $role), SecurityEvents::ADD_ROLE);
+                    }
+                } elseif ('remove' === $event->getAction()) {
+                    if ($user->hasRole($role->getName(), false)) {
+                        $this->eventDispatcher->dispatch(new RemoveRoleEvent([$user], $role), SecurityEvents::REMOVE_ROLE);
                     }
                 }
             }
