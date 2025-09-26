@@ -86,6 +86,13 @@ class EventType extends AbstractType
         ;
     }
 
+    public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
+    {
+        if ($finder->getSortValue()) {
+            $queryBuilder->addOrderBy("{$finder->getQueryPath()}_plannedObject.name", $finder->getSortValue());
+        }
+    }
+
     public function getParent(): ?string
     {
         return EntityType::class;

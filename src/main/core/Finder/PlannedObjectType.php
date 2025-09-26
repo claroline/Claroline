@@ -51,6 +51,13 @@ class PlannedObjectType extends AbstractType
         ;
     }
 
+    public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
+    {
+        if ($finder->getSortValue()) {
+            $queryBuilder->addOrderBy("{$finder->getQueryPath()}.name", $finder->getSortValue());
+        }
+    }
+
     public function getParent(): ?string
     {
         return EntityType::class;
