@@ -112,10 +112,11 @@ const UserList = props =>
             sortable: false,
             options: {
               multiple: true,
-              picker: 'workspace' === props.contextType ? {
-                url: ['apiv2_workspace_list_roles', {id: get(props.contextData, 'id')}],
-                filters: []
-              } : undefined
+              picker: {
+                personal: false,
+                contextType: props.contextType,
+                contextId: get(props.contextData, 'id')
+              }
             }
           }, {
             name: 'teams',

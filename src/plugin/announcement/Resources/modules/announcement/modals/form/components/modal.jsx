@@ -9,11 +9,9 @@ import {actions as formActions} from '#/main/app/content/form'
 import {FormModal} from '#/main/app/data/modals/form/components/modal'
 
 import {Announcement} from '#/plugin/announcement/prop-types'
-import isEmpty from 'lodash/isEmpty'
 
 const FORM_NAME = 'announcementForm'
 const restrictByDates = (announcement) => get(announcement, 'restrictions._enableDates') || (get(announcement, 'restrictions.dates') && 0 !== get(announcement, 'restrictions.dates').length)
-const restrictByRoles = (announcement) => get(announcement, 'restrictions._enableRoles') || (get(announcement, 'roles') && 0 !== get(announcement, 'roles').length)
 
 const AnnouncementFormModal = (props) => {
   const dispatch = useDispatch()
@@ -77,33 +75,6 @@ const AnnouncementFormModal = (props) => {
                   options: {
                     time: true
                   }
-                }
-              ]
-            }, {
-              name: 'restrictions._enableRoles',
-              label: trans('restrict_by_roles'),
-              help: trans('restrict_by_roles_help'),
-              type: 'boolean',
-              displayed: false,
-              calculated: restrictByRoles,
-              onChange: activated => {
-                if (!activated) {
-                  dispatch(formActions.updateProp('roles', []))
-                }
-              },
-              linked: [
-                {
-                  name: 'roles',
-                  type: 'role',
-                  label: trans('roles'),
-                  displayed: restrictByRoles,
-                  required: true,
-                  options: {
-                    multiple: true,
-                    url: !isEmpty(get(props.announcement, 'workspace.id')) ?
-                      ['apiv2_workspace_list_roles', {id: get(props.announcement, 'workspace.id')}] :
-                      ['apiv2_role_list'],
-                  },
                 }
               ]
             }

@@ -26,6 +26,9 @@ const TabForm = (props) => {
     dispatch(formActions.setErrors(props.name, errors))
   }, [props.name])
 
+  console.log(props.currentContext)
+  console.log(get(props.currentContext, 'data.id'))
+
   return (
     <Form
       name={props.name}
@@ -155,10 +158,11 @@ const TabForm = (props) => {
                     required: true,
                     options: {
                       multiple: true,
-                      picker: props.currentContext.type === 'workspace' ? {
-                        url: ['apiv2_workspace_list_roles', {id: get(props.currentContext, 'data.id')}],
-                        filters: []
-                      } : undefined
+                      picker: {
+                        personal: false,
+                        contextType: props.currentContext.type,
+                        contextId: get(props.currentContext, 'data.id')
+                      }
                     }
                   }
                 ]

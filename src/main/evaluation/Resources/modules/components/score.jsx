@@ -54,7 +54,7 @@ const EvaluationScore = ({
 EvaluationScore.propTypes = {
   style: T.object,
   score: T.number,
-  scoreMax: T.number.isRequired,
+  scoreMax: T.number,
   display: T.number,
   size: T.oneOf(['sm', 'md', 'lg']),
   className: T.string,

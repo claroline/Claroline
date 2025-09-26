@@ -52,9 +52,7 @@ const Assignments = () => {
           type={MODAL_BUTTON}
           modal={[MODAL_ROLES, {
             multiple: true,
-            url: !isEmpty(workspace) ?
-              ['apiv2_workspace_list_roles', {id: workspace.id}] :
-              ['apiv2_role_list'],
+            contextType: 'workspace',
             contextId: workspace.id,
             selectAction: (selected) => ({
               type: CALLBACK_BUTTON,

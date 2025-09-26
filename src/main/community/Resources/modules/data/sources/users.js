@@ -97,7 +97,14 @@ export default (contextType, contextData, refresher, currentUser) => {
         name: 'roles',
         type: 'role',
         label: trans('roles'),
-        options: {multiple: true},
+        options: {
+          multiple: true,
+          picker: {
+            personal: false,
+            contextType: contextType,
+            contextId: contextData ? contextData.id : null
+          }
+        },
         displayable: false,
         displayed: false,
         sortable: false,

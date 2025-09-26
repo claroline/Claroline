@@ -229,9 +229,7 @@ const ContentRights = props => {
           type={MODAL_BUTTON}
           label={trans('add_roles', {}, 'actions')}
           modal={[MODAL_ROLES, {
-            url: !isEmpty(props.workspace) ?
-              ['apiv2_workspace_list_roles', {id: props.workspace.id}] :
-              ['apiv2_role_list'],
+            contextType: !isEmpty(props.workspace) ? 'workspace' : 'desktop',
             contextId: get(props.workspace, 'id'),
             selectAction: (selectedRoles) => ({
               type: CALLBACK_BUTTON,

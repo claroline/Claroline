@@ -28,8 +28,10 @@ export default declareBadgeRule({
       label: trans('role', {}, 'community'),
       required: true,
       options: {
-        contextType: contextType,
-        contextId: contextId
+        picker: {
+          contextType: contextType,
+          contextId: contextId
+        }
       }
     }
   ]

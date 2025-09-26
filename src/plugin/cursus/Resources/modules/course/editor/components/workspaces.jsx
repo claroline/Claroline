@@ -64,8 +64,9 @@ const CourseEditorWorkspaces = (props) =>
             displayed: (course) => get(course, 'workspace', null),
             options: {
               picker: {
-                url: ['apiv2_workspace_list_roles', {id: get(props.course, 'workspace.id', null)}],
-                filters: []
+                personal: false,
+                contextType: 'workspace',
+                contextId: get(props.course, 'workspace.id', null)
               }
             },
             help: trans('tutor_role_help', {}, 'cursus')
@@ -76,8 +77,9 @@ const CourseEditorWorkspaces = (props) =>
             displayed: (course) => get(course, 'workspace', null),
             options: {
               picker: {
-                url: ['apiv2_workspace_list_roles', {id: get(props.course, 'workspace.id', null)}],
-                filters: []
+                personal: false,
+                contextType: 'workspace',
+                contextId: get(props.course, 'workspace.id', null)
               }
             },
             help: trans('learner_role_help', {}, 'cursus')

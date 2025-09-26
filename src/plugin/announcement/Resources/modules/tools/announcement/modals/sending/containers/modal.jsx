@@ -7,7 +7,7 @@ import {actions as formActions, selectors as formSelectors} from '#/main/app/con
 import {selectors as toolSelectors} from '#/main/core/tool'
 
 import {SendingModal as SendingModalComponent} from '#/plugin/announcement/tools/announcement/modals/sending/components/modal'
-import {actions, reducer, selectors} from '#/plugin/announcement/tools/announcement/modals/sending/store'
+import {reducer, selectors} from '#/plugin/announcement/tools/announcement/modals/sending/store'
 
 const SendingModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
@@ -17,9 +17,6 @@ const SendingModal = withReducer(selectors.STORE_NAME, reducer)(
       workspace: toolSelectors.contextData(state)
     }),
     (dispatch) => ({
-      send(announce) {
-        dispatch(actions.sendAnnounce(announce))
-      },
       update(prop, value) {
         dispatch(formActions.updateProp(selectors.STORE_NAME+'.form', prop, value))
       },

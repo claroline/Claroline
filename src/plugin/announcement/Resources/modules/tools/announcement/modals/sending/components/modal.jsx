@@ -71,7 +71,8 @@ const SendingModal = (props) =>
             options: {
               multiple: true,
               picker: {
-                url: ['apiv2_workspace_list_roles', {id: props.workspace.id}]
+                contextType: 'workspace',
+                contextId: props.workspace.id
               }
             },
             onChange: (roles) => props.updateReceivers(roles)

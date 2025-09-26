@@ -15,10 +15,7 @@ const PickerButton = props =>
     icon={props.icon}
     label={props.label}
     modal={[props.type, Object.assign({}, props.picker, {
-      // url: props.url,
-      title: props.title,
       subtitle: props.help,
-      // filters: props.filters,
       multiple: props.multiple,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,
@@ -55,11 +52,6 @@ PickerButton.propTypes = {
       // list filter types
     }))
   }),
-  // url: T.oneOfType([T.string, T.array]),
-  title: T.string,
-  /*filters: T.arrayOf(T.shape({
-    // list filter types
-  })),*/
   value: T.oneOfType([
     T.object, // multiple = false
     T.arrayOf(T.object) // multiple = true
@@ -80,7 +72,6 @@ const EntityInput = (props) => {
           icon="fa fa-plus"
           label={props.add}
           title={props.label}
-          {...props.picker}
           picker={props.picker}
           type={props.pickerType}
           size={props.size}
@@ -132,7 +123,7 @@ const EntityInput = (props) => {
             icon="fa fa-plus"
             label={props.add}
             title={props.label}
-            {...props.picker}
+            picker={props.picker}
             type={props.pickerType}
             size={props.size}
             value={props.value}

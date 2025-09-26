@@ -40,12 +40,11 @@ const workspaceDefinition = (contextId, update) => [
         label: trans('default_role'),
         options: {
           multiple: false,
-          personal: false,
-          contextId: contextId,
-          picker: contextId ? {
-            url: ['apiv2_workspace_list_roles', {id: contextId}],
-            filters: []
-          } : undefined
+          picker: {
+            personal: false,
+            contextType: 'workspace',
+            contextId: contextId
+          }
         }
       }, {
         name: 'parameters.registration._restrictMaxTeams',
@@ -89,7 +88,9 @@ const desktopDefinition = () => [
         required: true,
         options: {
           multiple: false,
-          personal: false
+          picker: {
+            personal: false
+          }
         }
       }, {
         name: 'parameters.registration.validation',

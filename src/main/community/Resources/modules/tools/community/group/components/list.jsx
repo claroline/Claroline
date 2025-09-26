@@ -91,10 +91,11 @@ const GroupList = props =>
             sortable: false,
             options: {
               multiple: true,
-              picker: !isEmpty(props.contextData) ? {
-                url: ['apiv2_workspace_list_roles', {id: props.contextData.id}],
-                filters: []
-              } : undefined
+              picker: {
+                personal: false,
+                contextType: props.contextType,
+                contextId: !isEmpty(props.contextData) ? props.contextData.id : null
+              }
             }
           }
         ]}

@@ -20,15 +20,17 @@ import {RoleCard} from '#/main/community/role/components/card'
 const RolesModal = (props) => {
   const dispatch = useDispatch()
 
+  const roleType = props.contextId ? 'workspace':'platform'
+
   return (
     <PickerMultipleModal
-      {...omit(props, 'personal', 'contextId')}
+      {...omit(props, 'personal', 'contextType', 'contextId')}
       icon="fa fa-fw fa-id-badge"
       tabs={[
         {
           name: 'rolePicker',
-          title: props.contextId ? trans('workspace') : trans('platform'),
-          url: props.url,
+          title: trans(roleType),
+          url: props.url ? props.url : ['apiv2_role_list', {contextId: props.contextId, roleType: roleType}],
           definition: [
             {
               name: 'translationKey',
@@ -182,13 +184,13 @@ RolesModal.propTypes = {
   title: T.string,
   selectAction: T.func.isRequired,
   multiple: T.bool,
+  contextType: T.string,
   contextId: T.string,
   personal: T.bool,
   fadeModal: T.func.isRequired
 }
 
 RolesModal.defaultProps = {
-  url: ['apiv2_role_list'],
   title: trans('roles', {}, 'community'),
   personal: true
 }

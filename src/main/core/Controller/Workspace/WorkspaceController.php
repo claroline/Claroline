@@ -20,7 +20,6 @@ use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\CoreBundle\Controller\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\Model\HasOrganizationsTrait;
-use Claroline\CoreBundle\Controller\Model\HasRolesTrait;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -46,7 +45,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class WorkspaceController extends AbstractCrudController
 {
     use HasGroupsTrait; // to remove: only the list endpoint is used
-    use HasRolesTrait; // to remove: only the list endpoint is used
     use HasOrganizationsTrait;
     use PermissionCheckerTrait;
 
