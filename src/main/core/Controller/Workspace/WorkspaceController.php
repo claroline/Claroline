@@ -20,6 +20,7 @@ use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\CoreBundle\Controller\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\Model\HasOrganizationsTrait;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -36,6 +37,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -70,16 +72,30 @@ class WorkspaceController extends AbstractCrudController
         return Workspace::class;
     }
 
-    #[Route(path: '/list/registered', name: 'list_registered', methods: ['GET'])]
+    #[Route(path: '/list/registered/{userId}', name: 'list_registered', methods: ['GET'])]
     public function listRegisteredAction(
+        ?string $userId = null,
         #[MapQueryString]
         ?FinderQuery $finderQuery = new FinderQuery()
     ): StreamedJsonResponse {
-        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+        if ($userId) {
+            // list workspace of the requested user if enough rights
+            $user = $this->om->getRepository(User::class)->findOneBy(['uuid' => $userId]);
+            if (empty($user)) {
+                throw new NotFoundHttpException();
+            }
+
+            $this->checkPermission('OPEN', $user, [], true);
+            $userRoles = $user->getRoles();
+        } else {
+            // list workspaces of the current user
+            $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+            $userRoles = $this->tokenStorage->getToken()->getRoleNames();
+        }
 
         return $this->crud
             ->search(Workspace::class, $finderQuery->addFilters([
-                'roles' => $this->tokenStorage->getToken()->getRoleNames(),
+                'roles' => $userRoles,
             ]), [SerializerInterface::SERIALIZE_LIST])
             ->toResponse();
     }

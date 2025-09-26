@@ -91,14 +91,14 @@ const RolesModal = (props) => {
             type: 'string',
             label: trans('first_name'),
             displayed: true,
-            filterable: false
+            filterable: true
           }, {
             name: 'lastName',
             type: 'string',
             label: trans('last_name'),
             displayed: true,
             primary: !param('community.username'),
-            filterable: false
+            filterable: true
           }, {
             name: 'email',
             type: 'email',
