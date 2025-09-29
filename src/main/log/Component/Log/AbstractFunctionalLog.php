@@ -3,9 +3,8 @@
 namespace Claroline\LogBundle\Component\Log;
 
 use Claroline\AppBundle\Component\ComponentInterface;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\Persistence\Proxy;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class AbstractFunctionalLog implements EventSubscriberInterface, ComponentInterface
@@ -15,16 +14,35 @@ abstract class AbstractFunctionalLog implements EventSubscriberInterface, Compon
     /**
      * Utility method to create a new log.
      *
-     * Note :
+     * Note:
      *     - If $doer is not set, the method will try to retrieve it from the TokenStorage.
-     *     - We allow to set the doer through params for some edge cases where the doer is not the current user.
+     *     - We allow setting the doer through params for some edge cases where the doer is not the current user.
      */
-    protected function log(string $message, Workspace $workspace = null, ResourceNode $resourceNode = null, User $doer = null): void
+    protected function log(string $message, ?object $object = null, User $doer = null): void
     {
         if (empty($doer)) {
             $doer = $this->getCurrentUser();
         }
 
-        $this->logManager->logFunctional(static::getName(), $message, $doer, $workspace, $resourceNode);
+        $this->logManager->logFunctional(
+            static::getName(),
+            $message,
+            $doer,
+            static::getRealClass($object),
+            $object->getUuid(),
+            $this->getContextId($object)
+        );
+    }
+
+    protected function getContextId(?object $object = null): ?string
+    {
+        return null;
+    }
+
+    private static function getRealClass(object $entity): string
+    {
+        return $entity instanceof Proxy
+            ? get_parent_class($entity)
+            : get_class($entity);
     }
 }

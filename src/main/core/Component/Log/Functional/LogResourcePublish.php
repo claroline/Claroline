@@ -3,8 +3,8 @@
 namespace Claroline\CoreBundle\Component\Log\Functional;
 
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\LogBundle\Component\Log\AbstractFunctionalLog;
 
 class LogResourcePublish extends AbstractFunctionalLog
@@ -31,9 +31,13 @@ class LogResourcePublish extends AbstractFunctionalLog
                 $this->getTranslator()->trans('resource.publish_message', [
                     '%resource%' => $resource->getName(),
                 ], 'log'),
-                $resource->getWorkspace(),
                 $resource
             );
         }
+    }
+
+    protected function getContextId(?object $object = null): ?string
+    {
+        return $object->getWorkspace()?->getContextIdentifier();
     }
 }

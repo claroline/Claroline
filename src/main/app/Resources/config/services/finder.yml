@@ -61,6 +61,9 @@ services:
     Claroline\AppBundle\API\Finder\Type\UuidType:
         tags: [ claroline.finder.type ]
 
+    Claroline\AppBundle\API\Finder\Type\ViewerType:
+        tags: [ claroline.finder.type ]
+
     # deprecated
     Claroline\AppBundle\API\Finder\AbstractFinder:
         abstract: true

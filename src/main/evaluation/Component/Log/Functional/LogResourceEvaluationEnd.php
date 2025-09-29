@@ -36,7 +36,12 @@ class LogResourceEvaluationEnd extends AbstractFunctionalLog
                 '%resource%' => $resourceNode->getName(),
             ], 'log');
 
-            $this->log($message, $resourceNode->getWorkspace(), $resourceNode, $event->getUser());
+            $this->log($message, $resourceNode, $event->getUser());
         }
+    }
+
+    protected function getContextId(?object $object = null): ?string
+    {
+        return $object->getWorkspace()?->getContextIdentifier();
     }
 }

@@ -39,7 +39,7 @@ class ActivityController
             throw new AccessDeniedException();
         }
 
-        $finderQuery->addFilter('workspace', $contextId);
+        $finderQuery->addFilter('contextId', $contextId);
 
         $logs = $this->crud->search(FunctionalLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
 

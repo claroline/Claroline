@@ -17,19 +17,6 @@ const LogsFunctional = () =>
         flush={true}
         name={selectors.FUNCTIONAL_NAME}
         url={['apiv2_logs_functional']}
-        customDefinition={[
-          {
-            name: 'workspace',
-            type: 'workspace',
-            label: trans('workspace'),
-            displayed: false
-          }, {
-            name: 'resource',
-            type: 'resource',
-            label: trans('resource'),
-            displayed: false
-          }
-        ]}
       />
     </PageListSection>
   </ToolPage>

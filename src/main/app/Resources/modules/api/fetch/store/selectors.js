@@ -6,7 +6,7 @@ const status = createSelector(
     (state) => state,
     (state, storeName) => storeName
   ],
-  (state, storeName) => get(state[storeName], 'status', {})
+  (state, storeName) => get(state, storeName+'.status', {})
 )
 
 const errorCode = createSelector(
@@ -14,7 +14,7 @@ const errorCode = createSelector(
     (state) => state,
     (state, storeName) => storeName
   ],
-  (state, storeName) => get(state[storeName], 'errorCode', null)
+  (state, storeName) => get(state, storeName+'.errorCode', null)
 )
 
 const error = createSelector(
@@ -22,7 +22,7 @@ const error = createSelector(
     (state) => state,
     (state, storeName) => storeName
   ],
-  (state, storeName) => get(state[storeName], 'error', null)
+  (state, storeName) => get(state, storeName+'.error', null)
 )
 
 const data = createSelector(
@@ -30,7 +30,7 @@ const data = createSelector(
     (state) => state,
     (state, storeName) => storeName
   ],
-  (state, storeName) => get(state[storeName], 'data', null)
+  (state, storeName) => get(state, storeName+'.data', null)
 )
 
 export const selectors = {

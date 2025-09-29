@@ -1,0 +1,4 @@
+services:
+  Claroline\AppBundle\Serializer\ViewerSerializer:
+    arguments:
+      - '@Claroline\CommunityBundle\Serializer\UserSerializer'

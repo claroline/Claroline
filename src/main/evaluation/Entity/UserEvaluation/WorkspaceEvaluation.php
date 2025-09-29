@@ -14,11 +14,12 @@ namespace Claroline\EvaluationBundle\Entity\UserEvaluation;
 use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\EvaluationBundle\Finder\WorkspaceEvaluationType;
+use Claroline\EvaluationBundle\Repository\UserEvaluation\WorkspaceEvaluationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: WorkspaceEvaluationRepository::class)]
 #[ORM\Table(name: 'claro_workspace_evaluation')]
 #[CrudEntity(finderClass: WorkspaceEvaluationType::class)]
 class WorkspaceEvaluation extends AbstractUserEvaluation

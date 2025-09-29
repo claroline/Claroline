@@ -19,11 +19,8 @@ use Claroline\CoreBundle\Repository\Tool\ToolRightsRepository;
 
 class ToolRightsManager
 {
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var ToolRightsRepository */
-    private $toolRightsRepo;
+    private ObjectManager $om;
+    private ToolRightsRepository $toolRightsRepo;
 
     /**
      * ToolRightsManager constructor.
@@ -38,7 +35,7 @@ class ToolRightsManager
     /**
      * @deprecated can be done by the ToolRightsSerializer
      */
-    public function setToolRights(OrderedTool $orderedTool, Role $role, $mask)
+    public function setToolRights(OrderedTool $orderedTool, Role $role, $mask): void
     {
         $toolRights = $this->toolRightsRepo->findOneBy(['role' => $role, 'orderedTool' => $orderedTool]);
         if (!$toolRights) {

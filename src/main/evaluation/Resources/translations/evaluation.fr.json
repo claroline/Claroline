@@ -105,6 +105,14 @@
   "sequence_not_scored_help": "Le score de la séquence <b>n'est pas comptabilisé</b> lors du calcul du score de l'espace d'activités",
   "sequence_scored_help": "Le score de la séquence <b>est comptabilisé</b> lors du calcul du score de l'espace d'activités",
   "evaluation_archived": "Cette évaluation a été archivée le <b>%date%</b>.",
-  "users_completion": "{0,1} <b>%count%</b> utilisateur sur <b>%total%</b> ont terminé l'activité | ]1,Inf[ <b>{props.current}</b> utilisateurs sur <b>{props.total}</b> ont terminé l'activité",
-  "users_success": "{0,1} <b>%count%</b> utilisateur sur <b>%total%</b> ont terminé l'activité | ]1,Inf[ <b>{props.current}</b> utilisateurs sur <b>{props.total}</b> ont réussi l'activité"
+  "users_completion": "{0,1} <b>%count%</b> utilisateur sur <b>%total%</b> ont terminé l'activité | ]1,Inf[ <b>%count%</b> utilisateurs sur <b>%total%</b> ont terminé l'activité",
+  "users_success": "{0,1} <b>%count%</b> utilisateur sur <b>%total%</b> ont terminé l'activité | ]1,Inf[ <b>%count%</b> utilisateurs sur <b>%total%</b> ont réussi l'activité",
+  "users_total": "{0,1} <b>%count%</b> utilisateur sur <b>%total%</b> | ]1,Inf[ <b>%count%</b> utilisateurs sur <b>%total%</b>",
+  "completion_rate": "Taux de complétion",
+  "success_rate": "Taux de réussite",
+  "count_activities": "{0} Aucune activité | {1} 1 activité | ]1,Inf[ %count% activités",
+  "count_success_conditions": "{0} Aucune | {1} 1 condition | ]1,Inf[ %count% conditions",
+  "users_progression": "Progression des utilisateurs",
+  "users_score": "Score des utilisateurs",
+  "avg_participant_view": "{0, 1} ~ <b>1</b> vue par participant | ]1,Inf[ ~ <b>%count%</b> vues par participant"
 }

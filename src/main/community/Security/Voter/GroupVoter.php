@@ -11,7 +11,6 @@
 
 namespace Claroline\CommunityBundle\Security\Voter;
 
-use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -32,61 +31,42 @@ class GroupVoter extends AbstractRoleSubjectVoter
     {
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
+        $admin = $this->isToolGranted(self::EDIT, 'community');
+
         switch ($attributes[0]) {
             case self::OPEN:
-                return $this->checkOpen($token, $object);
+                /** @var User $user */
+                $user = $token->getUser();
+                if ($admin || ($user instanceof User && $user->hasGroup($object))) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
+
             case self::ADMINISTRATE:
             case self::EDIT:
-                return $this->checkEdit($token, $object);
             case self::DELETE:
-                return $this->checkDelete($token, $object);
+                if ($admin) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
+
             case self::PATCH:
-                return $this->checkPatch($token, $object, $collection);
+                if (!$admin) {
+                    return VoterInterface::ACCESS_DENIED;
+                }
+
+                if (!$collection) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                if ($collection->isInstanceOf(Role::class)) {
+                    return $this->checkPatchRoles($token, $object, $collection);
+                }
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
-    }
-
-    private function checkOpen($token, Group $group): int
-    {
-        /** @var User $user */
-        $user = $token->getUser();
-        if ($user instanceof User && $user->hasGroup($group)) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
-        return VoterInterface::ACCESS_DENIED;
-    }
-
-    private function checkEdit($token, Group $group): int
-    {
-        if (!$this->isOrganizationManager($token, $group)) {
-            return VoterInterface::ACCESS_DENIED;
-        }
-
-        return VoterInterface::ACCESS_GRANTED;
-    }
-
-    private function checkPatch(TokenInterface $token, Group $group, ObjectCollection $collection = null): int
-    {
-        if (!$collection) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
-        if ($collection->isInstanceOf(Role::class)) {
-            return $this->checkPatchRoles($token, $group, $collection);
-        }
-
-        return $this->checkEdit($token, $group);
-    }
-
-    private function checkDelete($token, Group $group): int
-    {
-        if ($group->isLocked()) {
-            return VoterInterface::ACCESS_DENIED;
-        }
-
-        return $this->checkEdit($token, $group);
     }
 
     public function getSupportedActions(): array

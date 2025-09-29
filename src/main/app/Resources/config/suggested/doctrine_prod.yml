@@ -40,6 +40,12 @@ doctrine:
         controller_resolver:
             auto_mapping: false # feature is deprecated, so just disable it
 
+        dql:
+            datetime_functions:
+                day: Claroline\AppBundle\Persistence\DQL\DayFunction
+                month: Claroline\AppBundle\Persistence\DQL\MonthFunction
+                year: Claroline\AppBundle\Persistence\DQL\YearFunction
+
         metadata_cache_driver:
             type: pool
             pool: doctrine.system_cache_pool

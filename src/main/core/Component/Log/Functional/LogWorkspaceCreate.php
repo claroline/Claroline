@@ -3,8 +3,8 @@
 namespace Claroline\CoreBundle\Component\Log\Functional;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\LogBundle\Component\Log\AbstractFunctionalLog;
 
 class LogWorkspaceCreate extends AbstractFunctionalLog
@@ -29,7 +29,7 @@ class LogWorkspaceCreate extends AbstractFunctionalLog
             $this->getTranslator()->trans('workspace.create_message', [
                 '%workspace%' => $workspace->getName(),
             ], 'log'),
-            $workspace,
+            $workspace
         );
     }
 }

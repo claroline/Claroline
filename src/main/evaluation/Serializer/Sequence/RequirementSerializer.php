@@ -7,7 +7,7 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\EvaluationBundle\Entity\Sequence\Requirement;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
-use Claroline\EvaluationBundle\Repository\SequenceRepository;
+use Claroline\EvaluationBundle\Repository\Sequence\SequenceRepository;
 
 class RequirementSerializer
 {

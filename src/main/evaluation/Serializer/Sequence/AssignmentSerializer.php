@@ -10,7 +10,7 @@ use Claroline\CommunityBundle\Serializer\RoleSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\EvaluationBundle\Entity\Sequence\Assignment;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
-use Claroline\EvaluationBundle\Repository\SequenceRepository;
+use Claroline\EvaluationBundle\Repository\Sequence\SequenceRepository;
 
 class AssignmentSerializer
 {

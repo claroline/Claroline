@@ -3,8 +3,6 @@ services:
         tags: [ claroline.serializer ]
         arguments:
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
 
     Claroline\LogBundle\Serializer\MessageLogSerializer:
         tags: [ claroline.serializer ]

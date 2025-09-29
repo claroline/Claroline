@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Manager\SequenceEvaluationManager;
+use Claroline\EvaluationBundle\Manager\SequenceManager;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,6 +35,7 @@ class SequenceController extends AbstractCrudController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         private readonly TokenStorageInterface $tokenStorage,
+        private readonly SequenceManager $sequenceManager,
         private readonly SequenceEvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
@@ -92,6 +94,8 @@ class SequenceController extends AbstractCrudController
         $this->checkPermission('OPEN', $sequence, [], true);
 
         $user = $this->tokenStorage->getToken()?->getUser();
+
+        $this->sequenceManager->addView($sequence, $user);
 
         $evaluation = null;
         $progression = [];

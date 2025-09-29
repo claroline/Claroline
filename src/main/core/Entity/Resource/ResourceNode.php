@@ -23,8 +23,10 @@ use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\DescriptionHtml;
 use Claroline\AppBundle\Entity\Meta\IsPublic;
 use Claroline\AppBundle\Entity\Meta\Published;
+use Claroline\AppBundle\Entity\Meta\Views;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
+use Claroline\AppBundle\Entity\UserViewCounterInterface;
 use Claroline\CoreBundle\Finder\ResourceNodeType;
 use Claroline\CoreBundle\Model\HasWorkspace;
 use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
@@ -45,7 +47,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[CrudEntity(
     finderClass: ResourceNodeType::class
 )]
-class ResourceNode implements CrudEntityInterface
+class ResourceNode implements CrudEntityInterface, UserViewCounterInterface
 {
     // identifiers
     use Id;
@@ -59,6 +61,7 @@ class ResourceNode implements CrudEntityInterface
     use Published;
     use HasWorkspace;
     use IsPublic;
+    use Views;
     // restrictions
     use Hidden;
     use AccessibleFrom;
@@ -124,9 +127,6 @@ class ResourceNode implements CrudEntityInterface
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $accesses = [];
-
-    #[ORM\Column(name: 'views_count', type: Types::INTEGER, nullable: false, options: ['default' => 0])]
-    private int $viewsCount = 0;
 
     #[ORM\Column(length: 128, unique: true)]
     #[Gedmo\Slug(fields: ['name'])]
@@ -337,22 +337,6 @@ class ResourceNode implements CrudEntityInterface
     public function setAccesses(array $accesses): void
     {
         $this->accesses = $accesses;
-    }
-
-    /**
-     * Gets how many times a resource has been viewed.
-     */
-    public function getViewsCount(): ?int
-    {
-        return $this->viewsCount;
-    }
-
-    /**
-     * Adds one unit to the resource view count.
-     */
-    public function addView(): void
-    {
-        ++$this->viewsCount;
     }
 
     public function getSlug(): ?string

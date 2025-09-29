@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait IsPublic
 {
     #[ORM\Column(name: 'is_public', type: Types::BOOLEAN)]
-    private bool $public = false;
+    protected bool $public = false;
 
     public function isPublic(): bool
     {

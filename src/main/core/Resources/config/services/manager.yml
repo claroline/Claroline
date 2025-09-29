@@ -65,6 +65,7 @@ services:
             - '@Claroline\AppBundle\Manager\File\TempFileManager'
             - '@Claroline\CoreBundle\Component\Resource\ResourceProvider'
             - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Manager\ViewerManager'
 
     claroline.manager.resource_manager:
         alias: Claroline\CoreBundle\Manager\ResourceManager

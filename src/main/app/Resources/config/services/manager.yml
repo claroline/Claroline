@@ -33,6 +33,12 @@ services:
             - '@Claroline\AppBundle\Manager\File\TempFileManager'
             - '@Claroline\AppBundle\Manager\PlatformManager'
 
+    Claroline\AppBundle\Manager\ViewerManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Finder\FinderFactory'
+            - '@Claroline\AppBundle\Serializer\ViewerSerializer'
+
     Claroline\AppBundle\Manager\UserPreferencesManager:
         arguments:
             - '@event_dispatcher'

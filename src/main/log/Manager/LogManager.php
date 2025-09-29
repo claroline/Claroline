@@ -2,9 +2,7 @@
 
 namespace Claroline\LogBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\LogBundle\Messenger\Message\CreateFunctionalLog;
 use Claroline\LogBundle\Messenger\Message\CreateMessageLog;
 use Claroline\LogBundle\Messenger\Message\CreateOperationalLog;
@@ -39,15 +37,22 @@ class LogManager
     /**
      * Create a new functional log.
      */
-    public function logFunctional(string $action, string $message, User $doer = null, Workspace $workspace = null, ResourceNode $resourceNode = null): void
-    {
+    public function logFunctional(
+        string $action,
+        string $message,
+        ?User $doer = null,
+        ?string $objectClass = null,
+        ?string $objectId = null,
+        ?string $contextId = null,
+    ): void {
         $this->functionalLogs[] = new CreateFunctionalLog(
             new \DateTime(),
             $action,
             $message,
             $doer?->getId(),
-            $workspace?->getId(),
-            $resourceNode?->getId()
+            $objectClass,
+            $objectId,
+            $contextId
         );
     }
 
@@ -67,7 +72,7 @@ class LogManager
     public function logOperational(
         string $action,
         string $message,
-        User $doer = null,
+        ?User $doer = null,
         string $objectClass,
         string $objectId,
         string $contextName,

@@ -36,7 +36,7 @@ class LogWorkspaceEvaluationEnd extends AbstractFunctionalLog
                 '%workspace%' => $workspace->getName(),
             ], 'log');
 
-            $this->log($message, $workspace, null, $event->getUser());
+            $this->log($message, $workspace, $event->getUser());
         }
     }
 }

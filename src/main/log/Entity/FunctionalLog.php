@@ -3,41 +3,52 @@
 namespace Claroline\LogBundle\Entity;
 
 use Claroline\AppBundle\API\Attribute\CrudEntity;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\LogBundle\Finder\FunctionalLogType;
+use Claroline\LogBundle\Repository\FunctionalLogRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_log_functionnal')]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: FunctionalLogRepository::class)]
 #[CrudEntity(finderClass: FunctionalLogType::class)]
 class FunctionalLog extends AbstractLog
 {
-    #[ORM\JoinColumn(name: 'resource_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
-    private ?ResourceNode $resource = null;
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $contextId = null;
 
-    #[ORM\JoinColumn(name: 'workspace_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: Workspace::class)]
-    private ?Workspace $workspace = null;
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $objectClass = null;
 
-    public function getResource(): ?ResourceNode
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $objectId = null;
+
+    public function getContextId(): ?string
     {
-        return $this->resource;
+        return $this->contextId;
     }
 
-    public function setResource(?ResourceNode $resource): void
+    public function setContextId(?string $contextId): void
     {
-        $this->resource = $resource;
+        $this->contextId = $contextId;
     }
 
-    public function getWorkspace(): ?Workspace
+    public function getObjectClass(): ?string
     {
-        return $this->workspace;
+        return $this->objectClass;
     }
 
-    public function setWorkspace(?Workspace $workspace): void
+    public function setObjectClass(string $objectClass): void
     {
-        $this->workspace = $workspace;
+        $this->objectClass = $objectClass;
+    }
+
+    public function getObjectId(): ?string
+    {
+        return $this->objectId;
+    }
+
+    public function setObjectId(string $objectId): void
+    {
+        $this->objectId = $objectId;
     }
 }

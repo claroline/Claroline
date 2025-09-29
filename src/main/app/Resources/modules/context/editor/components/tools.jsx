@@ -5,7 +5,7 @@ import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {trans} from '#/main/app/intl'
-import {constants, pickActionSet, Toolbar, PromisedActionTypes} from '#/main/app/action'
+import {constants as actionConstants, pickActionSet, Toolbar, PromisedActionTypes} from '#/main/app/action'
 import {Thumbnail} from '#/main/app/components/thumbnail'
 import {EditorPage} from '#/main/app/editor'
 import {selectors as securitySelectors} from '#/main/app/security/store'
@@ -13,16 +13,7 @@ import {selectors as contextSelectors} from '#/main/app/context/store'
 
 import {getActions} from '#/main/core/tool/utils'
 import {selectors, actions} from '#/main/app/context/editor/store'
-
-const COLORS = [
-  'var(--bs-pink)',
-  'var(--bs-cyan)',
-  'var(--bs-purple)',
-  'var(--bs-teal)',
-  'var(--bs-orange)',
-  'var(--bs-blue)',
-  'var(--bs-indigo)'
-]
+import {constants} from '#/main/app/constants'
 
 const Tool = (props) => {
   return (
@@ -38,7 +29,7 @@ const Tool = (props) => {
             <Toolbar
               className="my-n1 mx-n2"
               buttonName="btn btn-text-body"
-              actions={pickActionSet(constants.ACTION_SET_LIST, props.actions)}
+              actions={pickActionSet(actionConstants.ACTION_SET_LIST, props.actions)}
               tooltip="bottom"
               size="sm"
               disabled={!props.id}
@@ -96,7 +87,7 @@ const Tools = (props) => {
               className={classes(!props.enabled && 'opacity-75')}
               enabled={props.enabled}
               toggle={() => props.toggleTool(tool)}
-              color={props.enabled ? COLORS[index % COLORS.length] : 'var(--bs-secondary)'}
+              color={props.enabled ? constants.COLORS[index % constants.COLORS.length] : 'var(--bs-secondary)'}
               actions={getActions([tool], {}, contextPath, currentUser, true)}
             />
           </li>

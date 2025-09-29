@@ -877,5 +877,8 @@
     "zoom_out": "Zoom arrière",
     "workspace": "Espace d'activités",
     "registration_date": "Date d'inscription",
-    "about_me": "À propos de moi"
+    "about_me": "À propos de moi",
+    "count_views": "{0} Aucune vue le <b>%date%</b> | {1} <b>1</b> vue le <b>%date%</b> | ]1,Inf[ <b>%count%</b> vues le <b>%date%</b>",
+    "count_visitors": "{0} Aucun visiteur le <b>%date%</b> | {1} <b>1</b> visiteur le <b>%date%</b> | ]1,Inf[ <b>%count%</b> visiteurs le <b>%date%</b>",
+    "count_actions": "{0} Aucune action le <b>%date%</b> | {1} <b>1</b> action le <b>%date%</b> | ]1,Inf[ <b>%count%</b> actions le <b>%date%</b>"
 }

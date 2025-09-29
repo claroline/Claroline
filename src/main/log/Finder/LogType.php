@@ -14,7 +14,7 @@ class LogType extends AbstractType
     public function buildFinder(FinderBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('event', TextType::class)
+            ->add('event', TextType::class, ['mode' => TextType::MODE_PARTIAL])
             ->add('date', DateType::class)
             ->add('doer', UserType::class)
         ;

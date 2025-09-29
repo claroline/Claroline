@@ -28,9 +28,11 @@ use Claroline\AppBundle\Entity\Meta\DescriptionHtml;
 use Claroline\AppBundle\Entity\Meta\IsPublic;
 use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\AppBundle\Entity\Meta\UpdatedAt;
+use Claroline\AppBundle\Entity\Meta\Views;
 use Claroline\AppBundle\Entity\Restriction\AccessCode;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
+use Claroline\AppBundle\Entity\UserViewCounterInterface;
 use Claroline\CommunityBundle\Model\HasOrganizations;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -50,7 +52,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     serializerClass: WorkspaceSerializer::class,
     finderClass: WorkspaceType::class
 )]
-class Workspace implements ContextSubjectInterface, CrudEntityInterface
+class Workspace implements ContextSubjectInterface, CrudEntityInterface, UserViewCounterInterface
 {
     // identifiers
     use Id;
@@ -65,6 +67,7 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
     use Creator;
     use CreatedAt;
     use UpdatedAt;
+    use Views;
     // display
     use Hidden;
     use Poster;

@@ -121,7 +121,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
      *
      * @return ResourceNode[]
      */
-    public function findDescendants(ResourceNode $resource)
+    public function findDescendants(ResourceNode $resource): array
     {
         return $this->createQueryBuilder('n')
             ->where('n.path LIKE :path_like')
@@ -130,56 +130,5 @@ class ResourceNodeRepository extends MaterializedPathRepository
             ->setParameter('path', $resource->getPath())
             ->getQuery()
             ->getResult();
-    }
-
-    public function findLastIndex(ResourceNode $node)
-    {
-        $dql = '
-            SELECT MAX(node.index)
-            FROM Claroline\CoreBundle\Entity\Resource\ResourceNode node
-            WHERE node.parent = :node';
-
-        $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('node', $node->getId());
-
-        return $query->getSingleScalarResult();
-    }
-
-    public function countActiveResources(array $workspaces = [], array $organizations = []): int
-    {
-        $qb = $this->createQueryBuilder('node')
-            ->select('COUNT(node)')
-            ->where('node.active = true');
-
-        if (!empty($workspaces)) {
-            $qb
-                ->andWhere('node.workspace IN (:workspaces)')
-                ->setParameter('workspaces', $workspaces);
-        }
-
-        if (!empty($organizations)) {
-            $qb
-                ->join('node.workspace', 'w')
-                ->join('w.organizations', 'o')
-                ->andWhere('o IN (:organizations)')
-                ->setParameter('organizations', $organizations);
-        }
-
-        return (int) $qb->getQuery()->getSingleScalarResult();
-    }
-
-    /**
-     * DO NOT USE IT !
-     * It's only here to avoid updating the updatedAt prop each time a user open a resource.
-     */
-    public function addView(ResourceNode $resourceNode): void
-    {
-        $this->getEntityManager()->createQuery('
-            UPDATE Claroline\CoreBundle\Entity\Resource\ResourceNode AS n
-            SET n.viewsCount = n.viewsCount + 1
-            WHERE UPPER(n.id) = :nodeId
-        ')
-        ->setParameter('nodeId', $resourceNode->getId())
-        ->getResult();
     }
 }

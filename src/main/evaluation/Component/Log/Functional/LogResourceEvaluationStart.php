@@ -31,10 +31,13 @@ class LogResourceEvaluationStart extends AbstractFunctionalLog
                 $this->getTranslator()->trans('evaluation.resource_start_message', [
                     '%resource%' => $resourceNode->getName(),
                 ], 'log'),
-                $resourceNode->getWorkspace(),
-                $resourceNode,
-                $event->getUser()
+                $resourceNode
             );
         }
+    }
+
+    protected function getContextId(?object $object = null): ?string
+    {
+        return $object->getWorkspace()?->getContextIdentifier();
     }
 }

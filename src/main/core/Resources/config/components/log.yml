@@ -1,18 +1,10 @@
 services:
     # Functional
-    Claroline\CoreBundle\Component\Log\Functional\LogResourceOpen:
-        parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
-        tags: [ 'claroline.component.log' ]
-
     Claroline\CoreBundle\Component\Log\Functional\LogResourcePublish:
         parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
         tags: [ 'claroline.component.log' ]
 
     Claroline\CoreBundle\Component\Log\Functional\LogWorkspaceCreate:
-        parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
-        tags: [ 'claroline.component.log' ]
-
-    Claroline\CoreBundle\Component\Log\Functional\LogWorkspaceOpen:
         parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
         tags: [ 'claroline.component.log' ]
 

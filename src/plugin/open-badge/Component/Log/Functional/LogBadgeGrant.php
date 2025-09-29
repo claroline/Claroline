@@ -29,9 +29,13 @@ class LogBadgeGrant extends AbstractFunctionalLog
             $this->getTranslator()->trans('badge.grant_message', [
                 '%badge%' => $badge->getName(),
             ], 'log'),
-            $badge->getWorkspace(),
-            null,
+            $badge,
             $user
         );
+    }
+
+    protected function getContextId(?object $object = null): ?string
+    {
+        return $object->getWorkspace()?->getContextIdentifier();
     }
 }

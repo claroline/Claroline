@@ -49,7 +49,10 @@ services:
     Claroline\CoreBundle\Controller\Resource\ActivityController:
         arguments:
             - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Manager\ViewerManager'
 
     Claroline\CoreBundle\Controller\Workspace\ArchiveController:
         arguments:

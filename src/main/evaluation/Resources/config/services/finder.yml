@@ -11,6 +11,16 @@ services:
     Claroline\EvaluationBundle\Finder\WorkspaceEvaluationType:
         tags: [ claroline.finder.type ]
 
+    Claroline\EvaluationBundle\Finder\SequenceType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\EvaluationBundle\Finder\SequenceViewType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\EvaluationBundle\Finder\SequenceEvaluationType:
+        tags: [ claroline.finder.type ]
+
+    # deprecated
     Claroline\EvaluationBundle\Finder\WorkspaceEvaluationFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]
@@ -22,9 +32,3 @@ services:
     Claroline\EvaluationBundle\Finder\ResourceUserEvaluationFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]
-
-    Claroline\EvaluationBundle\Finder\SequenceType:
-        tags: [ claroline.finder.type ]
-
-    Claroline\EvaluationBundle\Finder\SequenceEvaluationType:
-        tags: [ claroline.finder.type ]

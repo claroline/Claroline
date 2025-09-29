@@ -11,8 +11,8 @@
 
 namespace Claroline\EvaluationBundle\Security\Voter;
 
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -28,9 +28,9 @@ class ResourceEvaluationVoter extends AbstractEvaluationVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
-        $isAdmin = $this->isToolGranted(self::EDIT, 'progression')
-            || $this->isToolGranted(self::EDIT, 'progression', $object->getResourceNode()->getWorkspace())
-            || $this->isGranted(self::ADMINISTRATE, $object->getResourceNode());
+        $isAdmin = $this->isToolGranted(self::FOLLOW, 'progression')
+            || $this->isToolGranted(self::FOLLOW, 'progression', $object->getResourceNode()->getWorkspace())
+            || $this->isGranted(self::FOLLOW, $object->getResourceNode());
 
         switch ($attributes[0]) {
             case self::OPEN:

@@ -10,11 +10,16 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\AppBundle\Manager\ViewerManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceView;
+use Claroline\CoreBundle\Event\CatalogEvents\ContextEvents;
+use Claroline\CoreBundle\Event\Context\OpenContextEvent;
 use Claroline\CoreBundle\Library\Normalizer\CodeNormalizer;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\OrganizationManager;
@@ -36,13 +41,15 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         private readonly ResourceManager $resourceManager,
         private readonly OrganizationManager $organizationManager,
         private readonly WorkspaceSerializer $serializer,
-        private readonly TransferManager $transferManager
+        private readonly TransferManager $transferManager,
+        private readonly ViewerManager $viewerManager
     ) {
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
+            ContextEvents::OPEN => 'onOpen',
             CrudEvents::getEventName(CrudEvents::PRE_CREATE, Workspace::class) => 'preCreate',
             CrudEvents::getEventName(CrudEvents::POST_CREATE, Workspace::class) => 'postCreate',
             CrudEvents::getEventName(CrudEvents::PRE_UPDATE, Workspace::class) => 'preUpdate',
@@ -50,6 +57,18 @@ class WorkspaceSubscriber implements EventSubscriberInterface
             CrudEvents::getEventName(CrudEvents::POST_COPY, Workspace::class) => 'postCopy',
             CrudEvents::getEventName(CrudEvents::PRE_DELETE, Workspace::class) => 'preDelete',
         ];
+    }
+
+    public function onOpen(OpenContextEvent $event): void
+    {
+        if (WorkspaceContext::getName() !== $event->getContextType()) {
+            return;
+        }
+
+        $workspace = $event->getContextSubject();
+        $user = $this->tokenStorage->getToken()?->getUser();
+
+        $this->viewerManager->addView(WorkspaceView::class, $workspace, $user);
     }
 
     public function preCreate(CreateEvent $event): void

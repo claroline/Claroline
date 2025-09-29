@@ -19,6 +19,20 @@ Dot.propTypes = {
   ]).isRequired
 }
 
+const DotColor = (props) => {
+  return (
+    <div className={classes(props.className, 'd-inline-block p-1 rounded-circle')} aria-hidden={true} style={{background: `rgba(from ${props.color} r g b / .25)`}}>
+      <div className="p-1 rounded-circle" style={{background: props.color}} />
+    </div>
+  )
+}
+
+DotColor.propTypes = {
+  className: T.string,
+  color: T.string.isRequired
+}
+
 export {
-  Dot
+  Dot,
+  DotColor
 }

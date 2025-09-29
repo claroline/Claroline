@@ -3,19 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl'
+import {constants} from '#/main/app/constants'
 import {Button} from '#/main/app/action'
 import {Thumbnail} from '#/main/app/components/thumbnail'
 import {SearchMinimal} from '#/main/app/content/search/components/minimal'
-
-const COLORS = [
-  'var(--bs-pink)',
-  'var(--bs-cyan)',
-  'var(--bs-purple)',
-  'var(--bs-teal)',
-  'var(--bs-orange)',
-  'var(--bs-blue)',
-  'var(--bs-indigo)'
-]
 
 const ContentMenuSkeleton = ({
   className,
@@ -130,7 +121,7 @@ const ContentMenu = ({
           key={creationType.id}
           className={0 !== index ? 'mt-2' : undefined}
           autoFocus={!search && autoFocus && 0 === index}
-          color={color ? COLORS[index % COLORS.length] : undefined}
+          color={color ? constants.COLORS[index % constants.COLORS.length] : undefined}
           {...creationType}
         />
       )}
@@ -141,7 +132,7 @@ const ContentMenu = ({
           <ContentMenuItem
             key={creationType.id}
             className={0 !== index ? 'mt-2' : undefined}
-            color={color ? COLORS[unclassifiedTypes.length + index] : undefined}
+            color={color ? constants.COLORS[unclassifiedTypes.length + index] : undefined}
             {...creationType}
           />
         )

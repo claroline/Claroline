@@ -50,6 +50,7 @@ services:
             - '@Claroline\CoreBundle\Manager\OrganizationManager'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\CoreBundle\Manager\Workspace\TransferManager'
+            - '@Claroline\AppBundle\Manager\ViewerManager'
 
     Claroline\CoreBundle\Subscriber\GlobalSearchSubscriber:
         tags: [kernel.event_subscriber]

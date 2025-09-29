@@ -6,6 +6,7 @@ import {selectors as toolSelectors} from '#/main/core/tool'
 import {constants} from '#/main/evaluation/constants'
 import {route} from '#/main/evaluation/sequence'
 import {flattenSteps, getNumbering} from '#/main/evaluation/sequence/utils'
+import isEmpty from 'lodash/isEmpty'
 
 const STORE_NAME = 'evaluationSequence'
 
@@ -24,6 +25,16 @@ const sequence = createSelector(
 const workspace = createSelector(
   [sequence],
   (sequence) => sequence ? sequence.workspace : null
+)
+
+const published = createSelector(
+  [sequence],
+  (sequence) => get(sequence, 'meta.published', false)
+)
+
+const archived = createSelector(
+  [sequence],
+  (sequence) => get(sequence, 'meta.archived', false)
 )
 
 const path = createSelector(
@@ -139,9 +150,40 @@ const totalScore = createSelector(
   (sequence) => get(sequence, 'evaluation.scoreTotal', null)
 )
 
+const hasEvaluation = createSelector(
+  [],
+  () => true
+)
+
 const hasScore = createSelector(
   [totalScore],
   (totalScore) => !!totalScore
+)
+
+const successCondition = createSelector(
+  [sequence],
+  (sequence) => get(sequence, 'evaluation.successCondition', null)
+)
+
+const successScore = createSelector(
+  [sequence],
+  (sequence) => get(sequence, 'evaluation.successCondition.score', null)
+)
+
+const countSuccessCondition = createSelector(
+  [successCondition],
+  (successCondition) => {
+    if (isEmpty(successCondition)) {
+      return 0
+    }
+
+    return Object.keys(successCondition).length
+  }
+)
+
+const hasSuccessCondition = createSelector(
+  [successCondition],
+  (successCondition) => !!successCondition
 )
 
 const sequenceNumbering = createSelector(
@@ -158,6 +200,8 @@ export const selectors = {
   STORE_NAME,
 
   sequence,
+  archived,
+  published,
   workspace,
   path,
   id,
@@ -171,11 +215,18 @@ export const selectors = {
   currentStepIndex,
   allSecondaryResources,
   navigationEnabled,
+  sequenceNumbering,
+  stepNumbering,
+  // current user progression
   evaluation,
   progression,
   userFeedback,
+  // evaluations params
+  hasEvaluation,
   hasScore,
   totalScore,
-  sequenceNumbering,
-  stepNumbering
+  hasSuccessCondition,
+  countSuccessCondition,
+  successCondition,
+  successScore
 }

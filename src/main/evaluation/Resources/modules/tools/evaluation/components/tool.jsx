@@ -12,7 +12,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {EvaluationEditor} from '#/main/evaluation/tools/evaluation/editor/components/main'
 // import {EvaluationOverview} from '#/main/evaluation/tools/evaluation/components/overview'
-import {EvaluationDashboard} from '#/main/evaluation/tools/evaluation/dashboard/components/main'
+import {EvaluationDashboard} from '#/main/evaluation/tools/evaluation/dashboard/containers/main'
 import {EvaluationSequences} from '#/main/evaluation/tools/evaluation/components/sequences'
 import {SequenceShow} from '#/main/evaluation/sequence/containers/show'
 

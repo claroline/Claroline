@@ -17,9 +17,11 @@ use Claroline\AppBundle\Entity\Meta\IsPublic;
 use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\AppBundle\Entity\Meta\Published;
 use Claroline\AppBundle\Entity\Meta\UpdatedAt;
+use Claroline\AppBundle\Entity\Meta\Views;
 use Claroline\AppBundle\Entity\Restriction\AccessCode;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
+use Claroline\AppBundle\Entity\UserViewCounterInterface;
 use Claroline\CoreBundle\Entity\Resource\HasEndPage;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Model\HasWorkspace;
@@ -27,7 +29,7 @@ use Claroline\EvaluationBundle\Entity\Certified;
 use Claroline\EvaluationBundle\Entity\Evaluated;
 use Claroline\EvaluationBundle\Entity\EvaluationFeedbacks;
 use Claroline\EvaluationBundle\Finder\SequenceType;
-use Claroline\EvaluationBundle\Repository\SequenceRepository;
+use Claroline\EvaluationBundle\Repository\Sequence\SequenceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -36,7 +38,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'innova_path')]
 #[ORM\Entity(repositoryClass: SequenceRepository::class)]
 #[CrudEntity(finderClass: SequenceType::class)]
-class Sequence implements CrudEntityInterface
+class Sequence implements CrudEntityInterface, UserViewCounterInterface
 {
     // identifiers
     use Id;
@@ -54,6 +56,7 @@ class Sequence implements CrudEntityInterface
     use Archived;
     use IsPublic;
     use HasWorkspace;
+    use Views;
     // restrictions
     use AccessibleFrom;
     use AccessibleUntil;

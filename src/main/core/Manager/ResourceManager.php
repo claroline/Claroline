@@ -16,6 +16,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Manager\File\TempFileManager;
+use Claroline\AppBundle\Manager\ViewerManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Resource\DownloadableResourceInterface;
 use Claroline\CoreBundle\Component\Resource\ResourceProvider;
@@ -23,6 +24,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Resource\ResourceView;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -56,7 +58,8 @@ class ResourceManager
         private readonly ObjectManager $om,
         private readonly TempFileManager $tempManager,
         private readonly ResourceProvider $resourceProvider,
-        private readonly Crud $crud
+        private readonly Crud $crud,
+        private readonly ViewerManager $viewerManager
     ) {
         $this->resourceTypeRepo = $om->getRepository(ResourceType::class);
         $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
@@ -336,25 +339,12 @@ class ResourceManager
         return $resource;
     }
 
-    public function addView(ResourceNode $node): ResourceNode
-    {
-        $this->resourceNodeRepo->addView($node);
-
-        // we do a direct DB call to update nbViews, so we need to refresh the entity
-        $this->om->refresh($node);
-
-        return $node;
-    }
-
     public function load(ResourceNode $resourceNode, ?bool $embedded = false): ?array
     {
         $resource = $this->getResourceFromNode($resourceNode);
         $user = $this->tokenStorage->getToken()?->getUser();
 
-        // Increment view count if viewer is not creator of the resource
-        if (!($user instanceof User) || $user !== $resourceNode->getCreator()) {
-            $this->addView($resourceNode);
-        }
+        $this->viewerManager->addView(ResourceView::class, $resourceNode, $user);
 
         if ($resource) {
             // generic event

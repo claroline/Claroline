@@ -29,9 +29,13 @@ class LogBadgeRevoke extends AbstractFunctionalLog
             $this->getTranslator()->trans('badge.revoke_message', [
                 '%badge%' => $badge->getName(),
             ], 'log'),
-            $badge->getWorkspace(),
-            null,
+            $badge,
             $user
         );
+    }
+
+    protected function getContextId(?object $object = null): ?string
+    {
+        return $object->getWorkspace()?->getContextIdentifier();
     }
 }

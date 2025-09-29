@@ -52,3 +52,7 @@ services:
             - '@Claroline\AppBundle\Manager\File\TempFileManager'
             - '@Claroline\AppBundle\Manager\File\ArchiveManager'
             - '@translator'
+
+    Claroline\EvaluationBundle\Manager\SequenceManager:
+        arguments:
+            - '@Claroline\AppBundle\Manager\ViewerManager'

@@ -96,6 +96,7 @@ class SequenceSerializer
                 'createdAt' => DateNormalizer::normalize($sequence->getCreatedAt()),
                 'updatedAt' => DateNormalizer::normalize($sequence->getUpdatedAt()),
                 'published' => $sequence->isPublished(),
+                'views' => $sequence->getViews(),
             ],
             'workspace' => $serializedWorkspace,
             'display' => [

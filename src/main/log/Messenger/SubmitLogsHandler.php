@@ -3,9 +3,7 @@
 namespace Claroline\LogBundle\Messenger;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\GeoIp\GeoIpInfoProviderInterface;
 use Claroline\LogBundle\Entity\AbstractLog;
 use Claroline\LogBundle\Entity\FunctionalLog;
@@ -65,15 +63,9 @@ class SubmitLogsHandler
     {
         $logEntry = new FunctionalLog();
 
-        if ($createLog->getWorkspaceId()) {
-            $workspace = $this->om->getRepository(Workspace::class)->find($createLog->getWorkspaceId());
-            $logEntry->setWorkspace($workspace);
-        }
-
-        if ($createLog->getResourceNodeId()) {
-            $resourceNode = $this->om->getRepository(ResourceNode::class)->find($createLog->getResourceNodeId());
-            $logEntry->setResource($resourceNode);
-        }
+        $logEntry->setContextId($createLog->getContextId());
+        $logEntry->setObjectClass($createLog->getObjectClass());
+        $logEntry->setObjectId($createLog->getObjectId());
 
         return $logEntry;
     }

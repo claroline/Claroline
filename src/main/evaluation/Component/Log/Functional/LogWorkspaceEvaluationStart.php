@@ -32,7 +32,6 @@ class LogWorkspaceEvaluationStart extends AbstractFunctionalLog
                     '%workspace%' => $workspace->getName(),
                 ], 'log'),
                 $workspace,
-                null,
                 $event->getUser()
             );
         }

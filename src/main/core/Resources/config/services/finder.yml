@@ -8,13 +8,20 @@ services:
     Claroline\CoreBundle\Finder\ResourceNodeType:
         tags: [ claroline.finder.type ]
 
+    Claroline\CoreBundle\Finder\ResourceViewType:
+        tags: [ claroline.finder.type ]
+
     Claroline\CoreBundle\Finder\ToolType:
         tags: [ claroline.finder.type ]
 
     Claroline\CoreBundle\Finder\WorkspaceType:
         tags: [ claroline.finder.type ]
 
+    Claroline\CoreBundle\Finder\WorkspaceViewType:
+        tags: [ claroline.finder.type ]
 
+
+    # deprecated
     Claroline\CoreBundle\API\Finder\Planning\PlannedObjectFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]

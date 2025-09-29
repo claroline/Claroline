@@ -19,8 +19,8 @@ class WorkspaceEvaluationVoter extends AbstractEvaluationVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
-        $isAdmin = $this->isToolGranted(self::EDIT, 'progression')
-            || $this->isToolGranted(self::EDIT, 'progression', $object->getWorkspace());
+        $isAdmin = $this->isToolGranted(self::FOLLOW, 'progression')
+            || $this->isToolGranted(self::FOLLOW, 'progression', $object->getWorkspace());
 
         switch ($attributes[0]) {
             case self::OPEN:

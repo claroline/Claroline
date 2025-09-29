@@ -4,8 +4,7 @@ namespace Claroline\LogBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractType;
 use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
-use Claroline\CoreBundle\Finder\ResourceNodeType;
-use Claroline\CoreBundle\Finder\WorkspaceType;
+use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\LogBundle\Entity\FunctionalLog;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,8 +20,9 @@ class FunctionalLogType extends AbstractType
     public function buildFinder(FinderBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('workspace', WorkspaceType::class)
-            ->add('resource', ResourceNodeType::class)
+            ->add('objectClass', TextType::class, ['mode' => TextType::MODE_EXACT])
+            ->add('objectId', TextType::class, ['mode' => TextType::MODE_EXACT])
+            ->add('contextId', TextType::class, ['mode' => TextType::MODE_EXACT])
         ;
     }
 
