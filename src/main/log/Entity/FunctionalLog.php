@@ -37,7 +37,7 @@ class FunctionalLog extends AbstractLog
         return $this->objectClass;
     }
 
-    public function setObjectClass(string $objectClass): void
+    public function setObjectClass(?string $objectClass): void
     {
         $this->objectClass = $objectClass;
     }
@@ -47,7 +47,7 @@ class FunctionalLog extends AbstractLog
         return $this->objectId;
     }
 
-    public function setObjectId(string $objectId): void
+    public function setObjectId(?string $objectId): void
     {
         $this->objectId = $objectId;
     }

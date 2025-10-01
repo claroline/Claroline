@@ -14,19 +14,19 @@ class CreateFunctionalLog extends AbstractCreateLog
         string $action,
         string $details,
         int $doerId = null,
-        private readonly string $objectClass,
-        private readonly string $objectId,
+        private readonly ?string $objectClass = null,
+        private readonly ?string $objectId = null,
         private readonly ?string $contextId = null
     ) {
         parent::__construct($date, $action, $details, $doerId);
     }
 
-    public function getObjectClass(): string
+    public function getObjectClass(): ?string
     {
         return $this->objectClass;
     }
 
-    public function getObjectId(): string
+    public function getObjectId(): ?string
     {
         return $this->objectId;
     }

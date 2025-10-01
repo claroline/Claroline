@@ -24,12 +24,19 @@ abstract class AbstractFunctionalLog implements EventSubscriberInterface, Compon
             $doer = $this->getCurrentUser();
         }
 
+        $objectClass = null;
+        $objectId = null;
+        if ($object) {
+            $objectClass = static::getRealClass($object);
+            $objectId = $object->getUuid();
+        }
+
         $this->logManager->logFunctional(
             static::getName(),
             $message,
             $doer,
-            static::getRealClass($object),
-            $object->getUuid(),
+            $objectClass,
+            $objectId,
             $this->getContextId($object)
         );
     }
