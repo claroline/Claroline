@@ -57,6 +57,22 @@ class ResourceNodeType extends AbstractType
                     }
                 },
             ])
+            ->add('roles', ClosureType::class, [
+                'buildQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
+                    if (null !== $finder->getFilterValue()) {
+                        $alias = $finder->getAlias();
+                        if (!$finder->isRoot()) {
+                            $alias = $finder->getParent()->getAlias();
+                        }
+
+                        $queryBuilder->leftJoin($alias.'.rights', 'rights');
+                        $queryBuilder->join('rights.role', 'rightsr');
+                        $queryBuilder->andWhere('rightsr.name IN (:roles)');
+                        $queryBuilder->andWhere('BIT_AND(rights.mask, 1) = 1');
+                        $queryBuilder->setParameter('roles', $finder->getFilterValue());
+                    }
+                },
+            ])
             // for evaluations
             ->add('required', BooleanType::class)
             ->add('evaluated', BooleanType::class)
