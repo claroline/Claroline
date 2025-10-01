@@ -162,7 +162,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
             WHERE (uws.id IN (:workspaces) OR grws.id IN (:workspaces))
               AND u.isRemoved = false
               AND u.disabled = false
-              AND u.technical = false
         ';
         $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('workspaces', $workspaces);
