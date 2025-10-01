@@ -610,9 +610,12 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
             $ref = new UserOrganizationReference();
             $ref->setOrganization($organization);
             $ref->setUser($this);
-            $ref->setManager($managed);
 
             $this->userOrganizationReferences->add($ref);
+        }
+
+        if ($managed && !$ref->isManager()) {
+            $ref->setManager($managed);
         }
     }
 
