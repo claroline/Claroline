@@ -283,6 +283,37 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
         );
     }
 
+    /**
+     * Create missing links between the SequenceEvaluation and the evaluation for used resources
+     * and then refreshes the SequenceEvaluation scores, status, etc.
+     */
+    public function recomputeEvaluation(SequenceEvaluation $evaluation): void
+    {
+        $sequence = $evaluation->getSequence();
+        $user = $evaluation->getUser();
+        foreach ($sequence->getSteps() as $step) {
+            if ($step->getResource()) {
+                $progression = $evaluation->getStepProgression($step->getUuid());
+                $resourceEvaluation = $this->resourceEvaluationManager->getUserEvaluation($step->getResource(), $user, false);
+                if ($resourceEvaluation) {
+                    if (empty($progression)) {
+                        $progression = new SequenceProgression();
+                        $progression->setStep($step);
+                        $progression->setUser($user);
+                    }
+
+                    $evaluation->addStepProgression($progression);
+                    $progression->setLastActivityAt($resourceEvaluation->getLastActivityAt());
+                    $progression->setResourceEvaluation($resourceEvaluation);
+
+                    $this->om->persist($progression);
+                }
+            }
+        }
+
+        $this->refreshEvaluation($evaluation);
+    }
+
     public function purgeEvaluations(Sequence $sequence): void
     {
         $this->messageBus->dispatch(

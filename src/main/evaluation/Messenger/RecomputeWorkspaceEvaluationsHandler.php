@@ -3,8 +3,8 @@
 namespace Claroline\EvaluationBundle\Messenger;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\WorkspaceEvaluation;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\WorkspaceEvaluation;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\RecomputeWorkspaceEvaluations;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -33,7 +33,7 @@ readonly class RecomputeWorkspaceEvaluationsHandler
         $this->om->startFlushSuite();
 
         foreach ($evaluations as $i => $evaluation) {
-            $this->evaluationManager->refreshEvaluation($evaluation);
+            $this->evaluationManager->recomputeEvaluation($evaluation);
 
             if (0 === $i % 200) {
                 $this->om->forceFlush();

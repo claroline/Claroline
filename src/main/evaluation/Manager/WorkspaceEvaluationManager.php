@@ -194,6 +194,32 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
     }
 
     /**
+     * Create missing links between the WorkspaceEvaluation and the evaluation for sequences
+     * and then refreshes the WorkspaceEvaluation scores, status, etc.
+     */
+    public function recomputeEvaluation(WorkspaceEvaluation $evaluation): void
+    {
+        $workspace = $evaluation->getWorkspace();
+        $user = $evaluation->getUser();
+
+        // get the list of sequence the user must do to progress in the workspace
+        $assignments = $this->om->getRepository(Assignment::class)->findByWorkspaceAndUser($workspace, $user, true);
+        if (empty($assignments)) {
+            // nothing to do if there is no required sequence in the workspace
+            return;
+        }
+
+        foreach ($assignments as $assignment) {
+            $sequenceEvaluation = $this->sequenceEvaluationManager->getUserEvaluation($assignment->getSequence(), $user, false);
+            if ($sequenceEvaluation && empty($evaluation->getSequenceEvaluation($assignment->getSequence()->getUuid()))) {
+                $evaluation->addSequenceEvaluation($sequenceEvaluation);
+            }
+        }
+
+        $this->refreshEvaluation($evaluation);
+    }
+
+    /**
      * Initializes missing evaluations for a workspace.
      */
     public function initialize(Workspace $workspace): void

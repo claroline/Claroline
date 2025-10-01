@@ -33,7 +33,7 @@ readonly class RecomputeSequenceEvaluationsHandler
         $this->om->startFlushSuite();
 
         foreach ($evaluations as $i => $evaluation) {
-            $this->evaluationManager->refreshEvaluation($evaluation);
+            $this->evaluationManager->recomputeEvaluation($evaluation);
 
             if (0 === $i % 200) {
                 $this->om->forceFlush();
