@@ -31,29 +31,39 @@ class GroupVoter extends AbstractRoleSubjectVoter
     {
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
-        $admin = $this->isToolGranted(self::EDIT, 'community');
-
         switch ($attributes[0]) {
             case self::OPEN:
+                if ($this->isToolGranted(self::EDIT, 'community')
+                    || $this->isToolGranted(self::ADMINISTRATE, 'community')
+                ) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
                 /** @var User $user */
                 $user = $token->getUser();
-                if ($admin || ($user instanceof User && $user->hasGroup($object))) {
+                if ($user instanceof User && $user->hasGroup($object)) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
+
+            case self::EDIT:
+                if ($this->isToolGranted(self::EDIT, 'community')) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
                 return VoterInterface::ACCESS_DENIED;
 
             case self::ADMINISTRATE:
-            case self::EDIT:
             case self::DELETE:
-                if ($admin) {
+                if ($this->isToolGranted(self::ADMINISTRATE, 'community')) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
                 return VoterInterface::ACCESS_DENIED;
 
             case self::PATCH:
-                if (!$admin) {
+                if ($this->isToolGranted(self::EDIT, 'community')) {
                     return VoterInterface::ACCESS_DENIED;
                 }
 
