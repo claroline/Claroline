@@ -10,9 +10,15 @@ use Claroline\CoreBundle\Component\Context\PublicContext;
 use Claroline\CoreBundle\Controller\Workspace\WorkspaceController;
 use Claroline\CoreBundle\Finder\ResourceNodeType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 final class ResourcesList extends ListSourceComponent
 {
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage
+    ) {
+    }
+
     public static function getName(): string
     {
         return 'resources';
@@ -40,6 +46,9 @@ final class ResourcesList extends ListSourceComponent
         if (PublicContext::getName() === $context) {
             $finderQuery->addFilter('workspace.public', true);
             $finderQuery->addFilter('public', true);
+        } else {
+            $roleNames = $this->tokenStorage->getToken()->getRoleNames();
+            $finderQuery->addFilter('roles', $roleNames);
         }
 
         return $finderQuery;

@@ -12,6 +12,8 @@ services:
   Claroline\CoreBundle\Component\DataSource\ResourcesList:
     parent: Claroline\AppBundle\Component\DataSource\ListSourceComponent
     tags: [ 'claroline.component.data_source' ]
+    arguments:
+      - '@security.token_storage'
 
   Claroline\CoreBundle\Component\DataSource\ToolsList:
     parent: Claroline\AppBundle\Component\DataSource\ListSourceComponent
