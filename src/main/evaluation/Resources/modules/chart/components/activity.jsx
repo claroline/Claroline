@@ -21,7 +21,7 @@ const activityTypes = {
   },
   views: {
     icon: 'fa fa-fw fa-eye',
-    label: trans('views'),
+    label: trans('views')
   }
 }
 
@@ -86,6 +86,7 @@ const ActivityChart = ({className, name, activityUrl, logUrl, viewUrl}) => {
 
 ActivityChart.propTypes = {
   className: T.string,
+  name: T.string.isRequired,
   activityUrl: T.func.isRequired,
   // an API url to get the list of logs
   logUrl: T.oneOfType([T.string, T.array]).isRequired,

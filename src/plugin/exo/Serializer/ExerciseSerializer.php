@@ -57,10 +57,19 @@ class ExerciseSerializer
                 $serialized['description'] = $exercise->getOverviewMessage();
             }
 
-            $serialized['score'] = json_decode($exercise->getScoreRule(), true);
+            $scoreRule = json_decode($exercise->getScoreRule(), true);
+
+            $serialized['score'] = $scoreRule;
             $serialized['parameters'] = $this->serializeParameters($exercise);
             $serialized['picking'] = $this->serializePicking($exercise);
             $serialized['steps'] = $this->serializeSteps($exercise, $options);
+            $serialized['evaluation'] = [
+                'scoreTotal' => $this->getScoreTotal($scoreRule),
+            ];
+
+            if ($exercise->getSuccessScore()) {
+                $serialized['evaluation']['successCondition'] = ['score' => $exercise->getSuccessScore()];
+            }
         }
 
         return $serialized;
@@ -376,5 +385,26 @@ class ExerciseSerializer
         }
 
         return $sanitized;
+    }
+
+    private function getScoreTotal(array $score): int|float|null
+    {
+        $total = null;
+        switch ($score['type']) {
+            case 'sum':
+                if (isset($score['total'])) {
+                    $total = $score['total'];
+                }
+                break;
+            case 'fixed':
+                $total = $score['success'];
+                break;
+
+            case 'manual':
+                $total = $score['max'];
+                break;
+        }
+
+        return $total;
     }
 }

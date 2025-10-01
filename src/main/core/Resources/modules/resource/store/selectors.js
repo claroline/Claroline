@@ -108,6 +108,11 @@ const published = createSelector(
   (meta) => meta.published
 )
 
+const archived = createSelector(
+  [meta],
+  (meta) => !meta.active
+)
+
 const downloadable = createSelector(
   [meta],
   (meta) => meta.downloadable
@@ -141,7 +146,7 @@ const accessErrors = createSelector(
 
 const estimatedDuration = createSelector(
   [resourceNode],
-  (resourceNode) => get(resourceNode, 'evaluation.estimateDuration')
+  (resourceNode) => get(resourceNode, 'estimatedDuration')
 )
 
 const hasEvaluation = createSelector(
@@ -150,8 +155,8 @@ const hasEvaluation = createSelector(
 )
 
 const totalScore = createSelector(
-  [resourceNode],
-  (sequence) => get(sequence, 'evaluation.scoreTotal', null)
+  [resourceNode, resource],
+  (resourceNode, resource) => get(resourceNode, 'evaluation.scoreTotal', null) || get(resource, 'evaluation.scoreTotal', null)
 )
 
 const hasScore = createSelector(
@@ -162,6 +167,32 @@ const hasScore = createSelector(
 const hasAttempts = createSelector(
   [resourceNode],
   (resourceNode) => supportAttempts(resourceNode)
+)
+
+const successCondition = createSelector(
+  [resource],
+  (resource) => get(resource, 'evaluation.successCondition', null)
+)
+
+const successScore = createSelector(
+  [resource],
+  (resource) => get(resource, 'evaluation.successCondition.score', null)
+)
+
+const countSuccessCondition = createSelector(
+  [successCondition],
+  (successCondition) => {
+    if (isEmpty(successCondition)) {
+      return 0
+    }
+
+    return Object.keys(successCondition).length
+  }
+)
+
+const hasSuccessCondition = createSelector(
+  [hasEvaluation, successCondition],
+  (hasEvaluation, successCondition) => hasEvaluation &&  !!successCondition
 )
 
 // evaluation selectors
@@ -215,17 +246,23 @@ export const selectors = {
   parent,
   meta,
   published,
+  archived,
   downloadable,
   resourceType,
   mimeType,
-  // evaluation
-  estimatedDuration,
-  userEvaluation,
-  resourceEvaluation,
+  // evaluation params
   hasEvaluation,
   hasScore,
   hasAttempts,
+  hasSuccessCondition,
   totalScore,
+  countSuccessCondition,
+  successCondition,
+  successScore,
+  // current user progression
+  estimatedDuration,
+  userEvaluation,
+  resourceEvaluation,
   evaluationStatus,
   isTerminated
 }

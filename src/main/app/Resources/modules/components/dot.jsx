@@ -15,7 +15,7 @@ Dot.propTypes = {
     'success',
     'warning',
     'danger',
-    'info',
+    'info'
   ]).isRequired
 }
 

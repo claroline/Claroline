@@ -9,8 +9,7 @@ import {Thumbnail} from '#/main/app/components/thumbnail'
 import {SearchMinimal} from '#/main/app/content/search/components/minimal'
 
 const ContentMenuSkeleton = ({
-  className,
-  search
+  className
 }) => {
   return (
     <div className={className} role="presentation">
@@ -19,6 +18,7 @@ const ContentMenuSkeleton = ({
 }
 
 ContentMenuSkeleton.propTypes = {
+  className: T.string,
   search: T.bool
 }
 
@@ -95,7 +95,7 @@ const ContentMenu = ({
   const groupedTypes = {}
   for (let i=0; i < displayedTypes.length; i++) {
     const action = displayedTypes[i]
-    if (!!action.group) {
+    if (action.group) {
       if (!groupedTypes[action.group]) {
         groupedTypes[action.group] = []
       }

@@ -114,7 +114,7 @@ const DataCard = props => {
       'placeholder-glow': !props.loaded,
       'data-card-loading': !props.loaded || props.invalidated,
       'data-card-invalidated placeholder-glow': props.loaded && props.invalidated
-    })}>
+    })} title={props.title}>
       {'col' === props.orientation && props.status &&
         <Badge className="data-card-status" variant={props.status.variant}>
           {props.status.text}

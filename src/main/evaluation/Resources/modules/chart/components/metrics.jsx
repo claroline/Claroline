@@ -46,6 +46,7 @@ MetricsChartCard.propTypes = {
   primaryValue: T.any.isRequired,
   secondaryValue: T.any,
   moreLink: T.string,
+  color: T.string.isRequired,
   loaded: T.bool
 }
 
@@ -56,6 +57,7 @@ const MetricsChart = ({className, loaded = true, data = []}) => {
     <div className={classes('d-flex flex-row my-4 mx-n4', className)}>
       {metrics.map((metric, index) => (
         <MetricsChartCard
+          key={metric.title}
           {...metric}
           className={classes({'border-start': 0 !== index})}
           color={constants.COLORS[index]}

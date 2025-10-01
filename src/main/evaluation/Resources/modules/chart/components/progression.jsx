@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import get from 'lodash/get'
 import {Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis} from 'recharts'
 
@@ -32,6 +31,12 @@ const ProgressionChartMetrics = ({min = 0, max = 0, avg = 0}) => {
       </div>
     </div>
   )
+}
+
+ProgressionChartMetrics.propTypes = {
+  min: T.number,
+  max: T.number,
+  avg: T.number
 }
 
 const ProgressionChart = ({name, url, className}) => {

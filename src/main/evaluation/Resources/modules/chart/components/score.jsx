@@ -45,7 +45,8 @@ const ScoreChartMetrics = ({totalScore, min = 0, max = 0, avg = 0}) => {
 ScoreChartMetrics.propTypes = {
   totalScore: T.number.isRequired,
   min: T.number,
-  max: T.number
+  max: T.number,
+  avg: T.number
 }
 
 const ScoreChart = ({className, name, url, totalScore, successScore = null}) => {
@@ -115,7 +116,8 @@ ScoreChart.propTypes = {
   className: T.string,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]).isRequired,
-  totalScore: T.number.isRequired
+  totalScore: T.number.isRequired,
+  successScore: T.number
 }
 
 export {

@@ -36,7 +36,7 @@ const EvaluationDashboardInfo = () => {
       items={[
         {
           label: 'Score total',
-          value: totalScore ? totalScore : trans('none'),
+          value: totalScore ? totalScore : trans('none')
         }, {
           label: trans('success_conditions', {}, 'evaluation'),
           value: transChoice('count_success_conditions', totalSuccessConditions, {count: totalSuccessConditions}, 'evaluation')

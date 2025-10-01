@@ -1,11 +1,14 @@
 import {combineReducers} from '#/main/app/store/reducer'
-import {makeListReducer} from '#/main/app/content/list/store'
 
 import {selectors} from '#/main/core/resource/dashboard/store/selectors'
+import {makeFetchReducer} from '#/main/app/api/fetch/store'
+
 const reducer = combineReducers({
-  logs: makeListReducer(selectors.STORE_NAME + '.logs', {
-    sortBy: { property: 'date', direction: -1 }
-  })
+  metrics: makeFetchReducer(selectors.STORE_NAME + '.metrics'),
+  statuses: makeFetchReducer(selectors.STORE_NAME + '.statuses'),
+  completion: makeFetchReducer(selectors.STORE_NAME + '.completion'),
+  scores: makeFetchReducer(selectors.STORE_NAME + '.scores'),
+  activity: makeFetchReducer(selectors.STORE_NAME + '.activity')
 })
 
 export {

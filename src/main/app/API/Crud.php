@@ -405,7 +405,7 @@ class Crud
         }
 
         foreach ($elements as $element) {
-            // check if the element is in the collection if the object implement a has*() method
+            // check if the element is in the collection if the object implements a has*() method
             $checkerName = 'has'.ucfirst(strtolower($property));
             if (method_exists($object, $checkerName)) {
                 if ((self::COLLECTION_ADD === $action && $object->$checkerName($element))

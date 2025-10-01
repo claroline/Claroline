@@ -9,14 +9,19 @@ import {ResourcePage} from '#/main/core/resource/components/page'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {selectors} from '#/main/core/resource/dashboard/store'
-import {ResourceDashboardActivity} from '#/main/core/resource/dashboard/components/activity'
 import {ResourceDashboardEvaluation} from '#/main/evaluation/resource/evaluation'
-import {ResourceDashboardOverview} from '#/main/core/resource/dashboard/components/overview'
+import {ResourceDashboardOverview} from '#/main/core/resource/dashboard/overview/components/main'
 import {ResourceDashboardActions} from '#/main/core/resource/dashboard/components/actions'
+import {ResourceDashboardStats} from '#/main/core/resource/dashboard'
 
 const ResourceDashboard = (props) => {
   const dashboardPath = useSelector(selectors.path)
   const hasEvaluation = useSelector(resourceSelectors.hasEvaluation)
+
+  let statsPage
+  if (hasEvaluation) {
+    statsPage = ResourceDashboardStats
+  }
 
   return (
     <ResourcePage
@@ -25,8 +30,7 @@ const ResourceDashboard = (props) => {
       <Dashboard
         path={dashboardPath}
         overviewPage={props.overviewPage || ResourceDashboardOverview}
-        statsPage={props.statsPage}
-        activityPage={ResourceDashboardActivity}
+        statsPage={props.statsPage || statsPage}
         actionsPage={ResourceDashboardActions}
         pages={[
           {

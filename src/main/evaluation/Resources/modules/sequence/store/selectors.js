@@ -1,12 +1,12 @@
 import {createSelector} from 'reselect'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {selectors as toolSelectors} from '#/main/core/tool'
 
 import {constants} from '#/main/evaluation/constants'
 import {route} from '#/main/evaluation/sequence'
 import {flattenSteps, getNumbering} from '#/main/evaluation/sequence/utils'
-import isEmpty from 'lodash/isEmpty'
 
 const STORE_NAME = 'evaluationSequence'
 

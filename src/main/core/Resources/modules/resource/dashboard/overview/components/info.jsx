@@ -6,13 +6,14 @@ import {displayDate, displayDuration, trans, transChoice} from '#/main/app/intl'
 import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 import {Badge} from '#/main/app/components/badge'
 
-import {selectors} from '#/main/evaluation/sequence/store'
+import {selectors} from '#/main/core/resource/store'
 
-const SequenceDashboardInfo = () => {
-  const sequence = useSelector(selectors.sequence)
+const ResourceDashboardInfo = () => {
+  const resource = useSelector(selectors.resourceNode)
   const published = useSelector(selectors.published)
   const archived = useSelector(selectors.archived)
   const totalScore = useSelector(selectors.totalScore)
+  const estimatedDuration = useSelector(selectors.estimatedDuration)
   const totalSuccessConditions = useSelector(selectors.countSuccessCondition)
 
   let status
@@ -43,8 +44,8 @@ const SequenceDashboardInfo = () => {
       items={[
         {
           label: trans('estimated_duration'),
-          value: get(sequence, 'estimatedDuration') ?
-            displayDuration(get(sequence, 'estimatedDuration') * 60) :
+          value: estimatedDuration ?
+            displayDuration(estimatedDuration * 60) :
             trans('none')
         }, {
           label: 'Score total',
@@ -54,7 +55,7 @@ const SequenceDashboardInfo = () => {
           value: transChoice('count_success_conditions', totalSuccessConditions, {count: totalSuccessConditions}, 'evaluation')
         }, {
           label: trans('last_modification'),
-          value: displayDate(get(sequence, 'meta.updatedAt'), false, true)
+          value: displayDate(get(resource, 'meta.updatedAt'), false, true)
         }, {
           label: trans('status'),
           value: status
@@ -65,5 +66,5 @@ const SequenceDashboardInfo = () => {
 }
 
 export {
-  SequenceDashboardInfo
+  ResourceDashboardInfo
 }
