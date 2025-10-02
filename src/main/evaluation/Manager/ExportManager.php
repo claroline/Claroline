@@ -114,10 +114,9 @@ class ExportManager
         }
 
         $score = $evaluation->getScore();
-        $total = null;
+        $total = $evaluation->getScoreMax();
         if ($score || 0 === $score) {
             $score = round($score, EvaluationOptions::SCORE_PRECISION);
-            $total = $score;
         }
 
         return [
