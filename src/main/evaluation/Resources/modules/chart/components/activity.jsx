@@ -33,7 +33,7 @@ const ActivityChart = ({className, name, activityUrl, logUrl, viewUrl}) => {
     <div className={classes('d-flex flex-column', className)}>
       <div className="d-flex flex-row align-items-center gap-3 mb-4">
         <h3 className="h5 mb-0 me-auto">
-          Activité récente
+          {trans('recent_activity')}
         </h3>
 
         <MenuButton

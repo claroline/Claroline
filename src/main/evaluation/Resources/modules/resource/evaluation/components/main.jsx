@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {Routes} from '#/main/app/router'
 import {Nav} from '#/main/app/components/nav'
-import {PageContent, PageSection} from '#/main/app/page'
+import {PageContent, PageHeading, PageSection} from '#/main/app/page'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {selectors as dashboardSelectors} from '#/main/core/resource/dashboard/store'
@@ -22,6 +22,8 @@ const ResourceDashboardEvaluation = () => {
 
   return (
     <PageContent className="py-4">
+      <PageHeading title={trans('evaluation')} className="visually-hidden" level={2} />
+
       {hasAttempts &&
         <Nav
           className="nav-justified content-lg mb-4 px-4"

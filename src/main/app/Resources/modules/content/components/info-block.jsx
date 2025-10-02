@@ -1,54 +1,52 @@
-import React, {Fragment} from 'react'
+import React, {Fragment, useId} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-const ContentInfoBlock = (props) =>
-  <span className={classes('content-info-block', props.variant && `text-${props.variant}`)}>
-    {props.icon &&
-      <span className={classes('content-info-block-icon me-3', props.icon)} aria-hidden={true} />
-    }
+const ContentInfoBlock = (props) => {
+  const labelId = useId()
 
-    <h3 className={classes('content-info-block-content', props.variant && `text-${props.variant}-emphasis`)}>
-      <small className={classes('content-info-block-label mb-2', props.variant && `text-${props.variant}`)}>{props.label}</small>
-      {props.value || 0 === props.value ? props.value : '-'}
-    </h3>
-  </span>
+  return (
+    <>
+      {props.icon &&
+        <span className={classes('content-info-block-icon me-3', props.icon)} aria-hidden={true} />
+      }
+
+      <div className="content-info-block-content" role="presentation">
+        <div id={labelId} className="content-info-block-label mb-1">{props.label}</div>
+        <div className="content-info-block-value fw-bolder" aria-labelledby={labelId}>{props.value || 0 === props.value ? props.value : '-'}</div>
+      </div>
+    </>
+  )
+}
 
 ContentInfoBlock.propTypes = {
   icon: T.string,
   label: T.string.isRequired,
-  value: T.any,
-  variant: T.oneOf(['primary', 'secondary', 'success', 'warning', 'danger'])
+  value: T.any
 }
 
 const ContentInfoBlocks = (props) =>
-  <div className={classes('content-info-blocks d-flex gap-4 flex-wrap', props.className)} role="presentation">
+  <ul className={classes('content-info-blocks list-unstyled mb-0 d-flex flex-row flex-wrap', props.className)} role="presentation">
     {props.items
       .filter(item => undefined === item.displayed || item.displayed)
       .map((item, index) => (
-        <Fragment key={item.label}>
-          {0 !== index &&
-            <span className="vr" aria-hidden={true} />
-          }
+        <li key={item.label} className={classes('content-info-block px-4', {'border-start': 0 !== index})}>
           <ContentInfoBlock
             {...item}
-            variant={props.variant || item.variant}
             size={props.size}
           />
-        </Fragment>
+        </li>
       ))
     }
-  </div>
+  </ul>
 
 ContentInfoBlocks.propTypes = {
   className: T.string,
-  variant: T.oneOf(['primary', 'secondary', 'success', 'warning', 'danger']),
   items: T.arrayOf(T.shape({
     icon: T.string,
     label: T.string.isRequired,
     value: T.any,
-    displayed: T.bool,
-    variant: T.string
+    displayed: T.bool
   }))
 }
 

@@ -7,6 +7,7 @@ import {Routes} from '#/main/app/router'
 import {Toolbar} from '#/main/app/action'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl'
+import {Heading} from '#/main/app/components/heading'
 
 const Dashboard = (props) => {
   const pages = [
@@ -44,7 +45,9 @@ const Dashboard = (props) => {
 
   return (
     <>
+      <Heading level={2} displayed={false}>{trans('dashboard_menu')}</Heading>
       <Toolbar
+        role="navigation"
         className="app-dashboard-toolbar m-4 me-0"
         buttonName="btn btn-text-body fs-sm app-dashboard-btn focus-ring px-3 py-4"
         actions={pages.map(page => ({

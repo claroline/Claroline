@@ -1,12 +1,13 @@
 import React from 'react'
 import {useSelector} from 'react-redux'
 
-import {PageContent, PageSection} from '#/main/app/page'
+import {PageContent, PageHeading, PageSection} from '#/main/app/page'
 import {ProgressionChart} from '#/main/evaluation/chart/components/progression'
 import {ScoreChart} from '#/main/evaluation/chart/components/score'
 import {StatusChart} from '#/main/evaluation/chart/components/status'
 
 import {selectors} from '#/main/evaluation/tools/evaluation/dashboard/store'
+import {trans} from '#/main/app/intl'
 
 const EvaluationDashboardStats = () => {
   const workspace = useSelector(selectors.workspace)
@@ -16,6 +17,8 @@ const EvaluationDashboardStats = () => {
 
   return (
     <PageContent className="pt-4">
+      <PageHeading title={trans('statistics')} className="visually-hidden" level={2} />
+
       <PageSection size="full">
         <div className="row">
           <div className="col-6">

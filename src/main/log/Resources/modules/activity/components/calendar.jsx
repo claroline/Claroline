@@ -65,12 +65,15 @@ const ActivityCalendar = ({className, label, data = {}}) => {
               {times(diff.asWeeks() + 1, (week) => {
                 const date = moment(startRange).add(week, 'week').day(dayNum)
                 const count = get(data, date.format('YYYY-M-D'), 0)
+                const displayedValue = label(displayDate(date, true, false), count)
 
                 return (
                   <td key={week}>
                     {date <= endRange &&
-                      <TooltipOverlay tip={<Html>{label(displayDate(date, true, false), count)}</Html>}>
-                        <div className={classes('activity-calendar-day', getDayClass(count))} />
+                      <TooltipOverlay tip={<Html>{displayedValue}</Html>}>
+                        <div className={classes('activity-calendar-day', getDayClass(count))} role="presentation">
+                          <Html className="visually-hidden">{displayedValue}</Html>
+                        </div>
                       </TooltipOverlay>
                     }
                   </td>

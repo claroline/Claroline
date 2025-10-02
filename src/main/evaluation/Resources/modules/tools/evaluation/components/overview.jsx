@@ -6,7 +6,6 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 import {selectors as toolSelectors, ToolOverview} from '#/main/core/tool'
 
 import {selectors} from '#/main/evaluation/tools/evaluation/store'
-import {EvaluationJumbotron} from '#/main/evaluation/components/jumbotron'
 
 const EvaluationOverview = () => {
 
@@ -26,12 +25,6 @@ const EvaluationOverview = () => {
         <Alert type="warning">
           Vous n'avez pas de progression pour cet espace.
         </Alert>
-      }
-
-      {toolLoaded && workspaceEvaluation &&
-        <EvaluationJumbotron
-          evaluation={workspaceEvaluation}
-        />
       }
     </ToolOverview>
   )

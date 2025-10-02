@@ -2,20 +2,23 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useSelector} from 'react-redux'
 
-import {PageContent, PageSection} from '#/main/app/page'
+import {PageContent, PageHeading, PageSection} from '#/main/app/page'
 
+import {ActivityChart} from '#/main/evaluation/chart/components/activity'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
+import {selectors} from '#/main/core/resource/dashboard/store'
 import {ResourceDashboardMetrics} from '#/main/core/resource/dashboard/overview/components/metrics'
 import {ResourceDashboardInfo} from '#/main/core/resource/dashboard/overview/components/info'
-import {ActivityChart} from '#/main/evaluation/chart/components/activity'
+import {trans} from '#/main/app/intl'
 
 const ResourceDashboardOverview = ({children}) => {
   const resource = useSelector(resourceSelectors.resourceNode)
 
   return (
     <PageContent>
-      <PageSection className="my-4" size="lg">
+      <PageHeading title={trans('overview')} className="visually-hidden" level={2} />
+      <PageSection className="my-4" size="lg" title={trans('general')} level={3} showTitle={false} flush={true}>
         <ResourceDashboardInfo />
       </PageSection>
 
@@ -29,6 +32,7 @@ const ResourceDashboardOverview = ({children}) => {
         <div className="row mx-n4">
           <ActivityChart
             className="col-md-8 px-4"
+            name={selectors.STORE_NAME+'.activity'}
             activityUrl={(activityType) => ['apiv2_resource_activity', {id: resource.id, activityType: activityType}]}
             logUrl={['apiv2_resource_functional_logs', {id: resource.id}]}
             viewUrl={['apiv2_resource_views', {id: resource.id}]}

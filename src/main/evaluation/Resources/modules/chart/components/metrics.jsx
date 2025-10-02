@@ -54,7 +54,7 @@ const MetricsChart = ({className, loaded = true, data = []}) => {
   const metrics = data.filter(metric => undefined === metric.displayed || metric.displayed)
 
   return (
-    <div className={classes('d-flex flex-row my-4 mx-n4', className)}>
+    <div className={classes('d-flex flex-row my-4 mx-n4', className)} aria-busy={!loaded}>
       {metrics.map((metric, index) => (
         <MetricsChartCard
           key={metric.title}

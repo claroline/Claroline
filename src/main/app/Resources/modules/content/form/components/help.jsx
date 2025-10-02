@@ -9,13 +9,13 @@ const FormHelp = (props) => {
 
   if (Array.isArray(helps)) {
     return (
-      <ul className={classes('list-unstyled', props.className)}>
+      <div className={classes('list-unstyled', props.className)} role="presentation">
         {helps.map(help =>
-          <li key={toKey(help)} className="form-text">
+          <p key={toKey(help)} className="form-text">
             {help}
-          </li>
+          </p>
         )}
-      </ul>
+      </div>
     )
   }
 

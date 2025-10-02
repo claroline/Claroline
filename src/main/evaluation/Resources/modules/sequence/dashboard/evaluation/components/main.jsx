@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {Nav} from '#/main/app/components/nav'
 import {Routes} from '#/main/app/router'
-import {PageContent, PageSection} from '#/main/app/page'
+import {PageContent, PageHeading, PageSection} from '#/main/app/page'
 
 import {selectors} from '#/main/evaluation/sequence/dashboard/store'
 import {SequenceDashboardSequence} from '#/main/evaluation/sequence/dashboard/evaluation/components/sequence'
@@ -16,6 +16,7 @@ const SequenceDashboardEvaluation = () => {
 
   return (
     <PageContent className="py-4">
+      <PageHeading title={trans('evaluation')} className="visually-hidden" level={2} />
       <Nav
         className="nav-justified content-lg mb-4 px-4"
         variant="bar"

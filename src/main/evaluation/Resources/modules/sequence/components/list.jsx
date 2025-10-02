@@ -36,7 +36,7 @@ const SequenceList = (props) => {
           label: trans('name'),
           displayed: true,
           primary: true,
-          render: (course) => <DataMicro object={course} />
+          render: (sequence) => <DataMicro object={sequence} />
         }, {
           name: 'meta.description',
           type: 'string',

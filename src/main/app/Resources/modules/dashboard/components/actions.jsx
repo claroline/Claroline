@@ -1,9 +1,10 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {PageContent, PageSection} from '#/main/app/page'
+import {PageContent, PageHeading, PageSection} from '#/main/app/page'
 import {ActionTypes, constants, PromisedActionTypes} from '#/main/app/action'
 import {ActionMenu} from '#/main/app/action/components/menu'
+import {trans} from '#/main/app/intl'
 
 const DashboardActions = ({
   actions = [],
@@ -11,6 +12,7 @@ const DashboardActions = ({
 }) => {
   return (
     <PageContent className="py-4">
+      <PageHeading title={trans('advanced_actions', {}, 'actions')} className="visually-hidden" level={2} />
       <PageSection>
         <ActionMenu
           set={constants.ACTION_SET_DASHBOARD}

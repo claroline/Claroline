@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {ContentSizing} from '#/main/app/content/components/sizing'
+import {Heading} from '#/main/app/components/heading'
 
 const PageSection = ({
   className,
@@ -10,6 +11,7 @@ const PageSection = ({
   description,
   children,
   size = 'lg',
+  level = 2,
   showTitle = true,
   flush = false
 }) => {
@@ -22,7 +24,7 @@ const PageSection = ({
           <div className={classes('page-section-title mb-3', {
             'visually-hidden': !showTitle
           })} role="presentation">
-            <h2 className="h6 mb-0">{title}</h2>
+            <Heading className="h6 mb-0" level={level}>{title}</Heading>
             {description &&
               <p className="text-body-secondary mt-2 mb-0">{description}</p>
             }
