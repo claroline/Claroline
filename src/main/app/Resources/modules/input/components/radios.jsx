@@ -31,7 +31,6 @@ const Radios = props => {
           inline={props.inline}
           checked={null === props.value}
           onChange={() => props.onChange(null)}
-          tabIndex={0}
         />
       }
 
@@ -45,7 +44,6 @@ const Radios = props => {
           checked={parseValue(choiceValue) === props.value}
           disabled={props.disabled || -1 !== props.disabledChoices.indexOf(choiceValue)}
           onChange={props.onChange}
-          tabIndex={props.noEmpty && 0 === choiceIndex ? 0 : -1}
         />
       )}
     </>

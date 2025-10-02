@@ -22,7 +22,6 @@ const Radio = props => {
         checked={props.checked}
         disabled={props.disabled}
         onChange={() => props.onChange(parseValue(props.value))}
-        tabIndex={props.tabIndex}
         name={props.name}
       />
 
@@ -45,8 +44,7 @@ Radio.propTypes = {
   inline: T.bool,
   checked: T.bool,
   disabled: T.bool,
-  onChange: T.func.isRequired,
-  tabIndex: T.number
+  onChange: T.func.isRequired
 }
 
 Radio.defaultProps = {
