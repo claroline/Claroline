@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Component\Context\PublicContext;
 use Claroline\CoreBundle\Controller\Workspace\WorkspaceController;
 use Claroline\CoreBundle\Finder\ResourceNodeType;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -48,7 +49,9 @@ final class ResourcesList extends ListSourceComponent
             $finderQuery->addFilter('public', true);
         } else {
             $roleNames = $this->tokenStorage->getToken()->getRoleNames();
-            $finderQuery->addFilter('roles', $roleNames);
+            if (!in_array(PlatformRoles::ADMIN, $roleNames)) {
+                $finderQuery->addFilter('roles', $roleNames);
+            }
         }
 
         return $finderQuery;

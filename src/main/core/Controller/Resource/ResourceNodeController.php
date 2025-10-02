@@ -68,6 +68,8 @@ class ResourceNodeController extends AbstractCrudController
         ?string $contextId = null,
         ?string $parent = null
     ): StreamedJsonResponse {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         $finderQuery->addFilters([
             'active' => true,
             'resourceTypeEnabled' => true,
@@ -91,8 +93,8 @@ class ResourceNodeController extends AbstractCrudController
             }
         }
 
-        $roles = $this->token->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
-        if (!in_array(PlatformRoles::ADMIN, $roles) || !$finderQuery->hasFilter('parent')) {
+        $roles = $this->token->getToken()?->getRoleNames();
+        if (!in_array(PlatformRoles::ADMIN, $roles)) {
             $finderQuery->addFilter('roles', $roles);
         }
 
