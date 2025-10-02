@@ -77,7 +77,7 @@ class WorkspaceEvaluationController
 
         $this->checkToolAccess('OPEN', $workspace);
 
-        if (!$this->checkToolAccess('EDIT', $workspace)) {
+        if (!$this->checkToolAccess('FOLLOW', $workspace, false)) {
             // only display evaluation of the current user
             /** @var User $user */
             $user = $this->tokenStorage->getToken()?->getUser();
@@ -253,7 +253,7 @@ class WorkspaceEvaluationController
     /**
      * Checks user rights to access evaluation tool.
      */
-    private function checkToolAccess(string $permission, ?Workspace $workspace = null): bool
+    private function checkToolAccess(string $permission, ?Workspace $workspace = null, bool $throwException = true): bool
     {
         if (!empty($workspace)) {
             $evaluationTool = $this->om->getRepository(OrderedTool::class)->findOneByNameAndContext('progression', WorkspaceContext::getName(), $workspace->getUuid());
@@ -261,6 +261,6 @@ class WorkspaceEvaluationController
             $evaluationTool = $this->om->getRepository(OrderedTool::class)->findOneByNameAndContext('progression', DesktopContext::getName());
         }
 
-        return $this->checkPermission($permission, $evaluationTool, [], true);
+        return $this->checkPermission($permission, $evaluationTool, [], $throwException);
     }
 }
