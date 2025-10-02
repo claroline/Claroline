@@ -34,6 +34,11 @@ class SequenceVoter extends AbstractVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
+        $isAdmin = $this->isToolGranted(self::EDIT, 'progression', $object->getWorkspace());
+        if ($isAdmin) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
         switch ($attributes[0]) {
             case self::OPEN:
                 if ($this->isToolGranted(self::OPEN, 'progression', $object->getWorkspace())) {
@@ -57,13 +62,14 @@ class SequenceVoter extends AbstractVoter
             case self::ADMINISTRATE:
             case self::EDIT:
             case self::DELETE:
-                if ($this->isToolGranted(self::EDIT, 'progression', $object->getWorkspace())) {
-                    return VoterInterface::ACCESS_GRANTED;
-                }
-
                 return VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
+    }
+
+    public function getSupportedActions(): ?array
+    {
+        return [self::OPEN, self::FOLLOW, self::CREATE, self::EDIT, self::DELETE, self::ADMINISTRATE];
     }
 }

@@ -12,7 +12,7 @@ const EvaluationTool = withReducer(selectors.STORE_NAME, reducer)(
     (state) => ({
       path: toolSelectors.path(state),
       contextType: toolSelectors.contextType(state),
-      canFollow: hasPermission('edit', toolSelectors.tool(state)),
+      canFollow: hasPermission('follow', toolSelectors.tool(state)),
       assignedSequences: selectors.assignedSequences(state)
     })
   )(EvaluationToolComponent)
