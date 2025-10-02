@@ -34,7 +34,7 @@ const Radios = props => {
         />
       }
 
-      {choiceValues.map((choiceValue, choiceIndex) =>
+      {choiceValues.map((choiceValue) =>
         <Radio
           key={choiceValue}
           {...(typeof props.choices[choiceValue] === 'string' ? {label: props.choices[choiceValue]} : props.choices[choiceValue])}

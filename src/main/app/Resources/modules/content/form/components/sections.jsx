@@ -95,7 +95,7 @@ const FormToggleSection = (props) => {
         >
           <label
             className={classes('form-check-label flex-fill text-start', {
-              'text-secondary': !props.displayed
+              'text-body-secondary': !props.displayed
             }, `fs-${props.displayLevel}`)}
             htmlFor={toggleId}
           >

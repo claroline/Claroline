@@ -65,7 +65,7 @@ const PlatformForbidden = () => {
           <hr/>
 
           {!authenticated &&
-            <p className="text-secondary">
+            <p className="text-body-secondary">
               {trans('only_admin_login_help', {}, 'administration')}
             </p>
           }

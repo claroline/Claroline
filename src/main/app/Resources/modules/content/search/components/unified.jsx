@@ -162,7 +162,7 @@ const SearchUnified = (props) => {
   return (
     <form className="list-search search-unified flex-fill" action="#">
       <div className="d-flex align-items-center" role="presentation">
-        <span className="search-icon fa fa-search text-secondary" aria-hidden={true} />
+        <span className="search-icon fa fa-search text-body-secondary" aria-hidden={true} />
 
         <input
           type="text"

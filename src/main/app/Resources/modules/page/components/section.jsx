@@ -40,6 +40,7 @@ const PageSection = ({
 PageSection.propTypes = {
   className: T.string,
   size: T.oneOf(['sm', 'md', 'lg', 'xl', 'full']),
+  level: T.number,
   title: T.string,
   showTitle: T.bool,
   description: T.string,

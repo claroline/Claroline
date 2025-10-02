@@ -56,7 +56,7 @@ const Field = props => {
           label={
             <strong>
               {props.name}
-              <small className="text-secondary">
+              <small className="text-body-secondary">
                 ({types.map(type => {
                   if (props.isArray) {
                     return trans('array_of', {type: trans(type, {}, 'data')}, 'data')

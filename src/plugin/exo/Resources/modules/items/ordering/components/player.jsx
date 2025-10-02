@@ -49,7 +49,7 @@ let SortableItem = forwardRef((props, ref) => {
         }
 
         {props.sortable &&
-          <span className="cursor-move fa fa-arrows text-secondary" />
+          <span className="cursor-move fa fa-arrows text-body-secondary" />
         }
       </div>
     </div>
@@ -85,7 +85,7 @@ let DraggableItem = props => {
 
       {props.draggable &&
         <div className="item-actions" role="presentation">
-          <span className="cursor-move fa fa-arrows text-secondary" aria-hidden={true} />
+          <span className="cursor-move fa fa-arrows text-body-secondary" aria-hidden={true} />
         </div>
       }
     </div>

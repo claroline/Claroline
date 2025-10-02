@@ -36,7 +36,7 @@ const AccountHistory = () => {
               disabled: true
             }
           ]
-        },
+        }
       ]}
     >
       <hr className="m-0" aria-hidden="true" />
@@ -48,7 +48,7 @@ const AccountHistory = () => {
       {!isEmpty(user) && !me &&
         <div className="text-center" role="presentation">
           <p className="lead mb-1">{trans('history_unavailable', {}, 'history')}</p>
-          <p className="mb-0 text-secondary">{trans('history_unavailable_help', {}, 'history')}</p>
+          <p className="mb-0 text-body-secondary">{trans('history_unavailable_help', {}, 'history')}</p>
         </div>
       }
     </EditorPage>

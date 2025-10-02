@@ -107,7 +107,7 @@ let Item = props => {
 
       {props.draggable &&
         <div className="item-actions" role="presentation">
-          <span className="cursor-move fa fa-arrows text-secondary" aria-hidden={true} />
+          <span className="cursor-move fa fa-arrows text-body-secondary" aria-hidden={true} />
         </div>
       }
     </div>

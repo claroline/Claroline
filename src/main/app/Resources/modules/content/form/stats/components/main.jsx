@@ -122,7 +122,7 @@ const FormInputStats = (props) =>
             ))}
 
             <tr>
-              <td className="text-secondary fw-bold">
+              <td className="text-body-secondary fw-bold">
                 {trans('stats_no_answer')}
               </td>
               <td align="right">

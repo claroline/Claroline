@@ -114,7 +114,7 @@ class DataInput extends Component {
   renderInput() {
     if (!this.state.loaded) {
       return (
-        <div role="presentation" className="text-secondary">
+        <div role="presentation" className="text-body-secondary">
           {trans('loading')}
         </div>
       )

@@ -9,9 +9,9 @@ import {buttonClasses} from '#/main/app/buttons/utils'
 
 /**
  * URL button.
- * Renders a component that will navigate user to an url (internal or external) on click.
+ * Renders a component that will navigate user to a URL (internal or external) on click.
  *
- * IMPORTANT : if you need to navigate inside the current app, use `LinkButton` instead.
+ * IMPORTANT: if you need to navigate inside the current app, use `LinkButton` instead.
  */
 const UrlButton = forwardRef((props, ref) => {
   let target = props.target

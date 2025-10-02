@@ -33,7 +33,6 @@ const ContentInfoBlocks = (props) =>
         <li key={item.label} className={classes('content-info-block px-4', {'border-start': 0 !== index})}>
           <ContentInfoBlock
             {...item}
-            size={props.size}
           />
         </li>
       ))

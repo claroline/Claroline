@@ -12,6 +12,17 @@ $dark-bg-subtle-dark:               mix($gray-800, $black) !default;
 $learning-bg-subtle-dark:           shade-color($learning, 90%); // custom claroline
 // scss-docs-end theme-bg-subtle-dark-variables
 
+$body-color-dark:                   $gray-300 !default;
+$body-tertiary-color-dark:          rgba($body-color-dark, .5) !default;
+
+
+//
+// Forms
+//
+
+$form-switch-color-dark: $body-tertiary-color-dark !default;
+
+
 //
 // Menu
 //

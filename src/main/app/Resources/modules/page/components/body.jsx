@@ -79,12 +79,13 @@ const PageBody = ({
   children,
   embedded = false
 }) =>
-  <div className="app-page-body position-relative" role={!embedded ? 'main' : 'article'} tabIndex={-1}>
+  <div className="app-page-body position-relative" role={!embedded ? 'main' : 'article'}>
     {children}
   </div>
 
 PageBody.propTypes = {
-  children: T.any
+  children: T.any,
+  embedded: T.bool
 }
 
 export {

@@ -103,7 +103,7 @@ const EventAbout = (props) =>
       {isEmpty(get(props.event, 'location')) &&
         <div className="mb-3">
           {isEmpty(get(props.event, 'locationUrl')) &&
-            <em className="text-secondary">{trans('online_session', {}, 'cursus')}</em>
+            <em className="text-body-secondary">{trans('online_session', {}, 'cursus')}</em>
           }
 
           {!isEmpty(get(props.event, 'locationUrl')) &&

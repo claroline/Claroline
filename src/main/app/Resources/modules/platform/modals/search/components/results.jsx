@@ -11,7 +11,7 @@ const SearchResults = (props) => {
     return (
       <div className="text-center mt-4" role="presentation">
         <p className="lead mb-1">{trans('no_search_results')}</p>
-        <p className="mb-0 text-secondary">{trans('no_search_results_help')}</p>
+        <p className="mb-0 text-body-secondary">{trans('no_search_results_help')}</p>
       </div>
     )
   }

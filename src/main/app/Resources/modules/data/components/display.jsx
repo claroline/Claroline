@@ -76,7 +76,7 @@ class DataDisplay extends Component {
   render() {
     if (!this.state.loaded) {
       return (
-        <div role="presentation" className="text-secondary">
+        <div role="presentation" className="text-body-secondary">
           {trans('loading')}
         </div>
       )
@@ -133,6 +133,11 @@ DataDisplay.propTypes = {
 
   // field data
   value: T.any, // depends on the data type
+  error: T.oneOfType([
+    T.string,
+    T.arrayOf(T.string),
+    T.object
+  ]),
 
   // customization
   // It will replace the render of the input.

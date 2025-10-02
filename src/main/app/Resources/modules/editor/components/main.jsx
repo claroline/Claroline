@@ -95,7 +95,7 @@ const Editor = (props) => {
           thumbnail={props.thumbnail}
         />
 
-        <div className="app-editor-body" role="presentation" tabIndex={-1}>
+        <div className="app-editor-body" role="presentation">
           <Routes
             path={props.path}
             redirect={!isEmpty(pages) ? [
