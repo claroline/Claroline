@@ -7,7 +7,7 @@
       "description": "The badge id"
     },
     "image": {
-      "type": "string",
+      "type": ["string", "null"],
       "description": "The URL of the badge image"
     },
     "issuer": {
