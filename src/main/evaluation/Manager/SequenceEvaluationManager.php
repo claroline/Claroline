@@ -241,9 +241,9 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
         }
     }
 
-    public function initializeEvaluations(Sequence $sequence): void
+    public function initializeEvaluations(Sequence $sequence, ?bool $onlyRequired = false): void
     {
-        $userIds = $this->om->getRepository(Sequence::class)->findRequiredUserIds($sequence);
+        $userIds = $this->om->getRepository(Sequence::class)->findAssignedUserIds($sequence, $onlyRequired);
         if (!empty($userIds)) {
             $this->messageBus->dispatch(
                 new InitializeSequenceEvaluations($sequence->getId(), $userIds),

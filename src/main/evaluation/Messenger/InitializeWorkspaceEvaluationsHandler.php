@@ -28,18 +28,11 @@ readonly class InitializeWorkspaceEvaluationsHandler
             return;
         }
 
-        $users = [];
-        foreach ($initMessage->getUserIds() as $userId) {
-            $user = $this->om->getRepository(User::class)->find($userId);
-            if (!empty($user)) {
-                $users[] = $user;
-            }
-        }
-
         $this->om->startFlushSuite();
 
         // initialize workspace evaluations
-        foreach ($users as $user) {
+        foreach ($initMessage->getUserIds() as $userId) {
+            $user = $this->om->getRepository(User::class)->find($userId);
             $this->evaluationManager->getUserEvaluation($workspace, $user, true);
         }
 
@@ -54,7 +47,7 @@ readonly class InitializeWorkspaceEvaluationsHandler
         ]);
         if (!empty($sequences)) {
             foreach ($sequences as $sequence) {
-                $this->sequenceEvaluationManager->initializeEvaluations($sequence);
+                $this->sequenceEvaluationManager->initializeEvaluations($sequence, true);
             }
         }
     }

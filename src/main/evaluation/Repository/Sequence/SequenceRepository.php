@@ -107,10 +107,15 @@ class SequenceRepository extends EntityRepository
     /**
      * Find the users which are required to do the sequence.
      */
-    public function findRequiredUserIds(Sequence $sequence): array
+    public function findAssignedUserIds(Sequence $sequence, ?bool $onlyRequired = false): array
     {
+        $required = '';
+        if ($onlyRequired) {
+            $required = 'AND (a.required = 1 OR a.scored = 1)';
+        }
+
         $results = $this->getEntityManager()
-            ->createQuery('
+            ->createQuery("
                 SELECT DISTINCT u.id
                 FROM Claroline\CoreBundle\Entity\User AS u
                 LEFT JOIN u.roles AS r
@@ -121,9 +126,9 @@ class SequenceRepository extends EntityRepository
                     FROM Claroline\EvaluationBundle\Entity\Sequence\Assignment AS a
                     WHERE a.sequence = :sequence
                       AND (a.role = r OR a.role = gr)
-                      AND (a.required = 1 OR a.scored = 1)
+                      $required
                 )
-           ')
+           ")
             ->setParameter('sequence', $sequence)
             ->setHydrationMode(AbstractQuery::HYDRATE_SINGLE_SCALAR)
             ->getResult();

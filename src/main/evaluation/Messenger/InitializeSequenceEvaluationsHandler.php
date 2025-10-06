@@ -6,8 +6,8 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Manager\SequenceEvaluationManager;
+use Claroline\EvaluationBundle\Messenger\Message\InitializeResourceEvaluations;
 use Claroline\EvaluationBundle\Messenger\Message\InitializeSequenceEvaluations;
-use Claroline\EvaluationBundle\Messenger\Message\UpdateResourceEvaluations;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -28,18 +28,11 @@ readonly class InitializeSequenceEvaluationsHandler
             return;
         }
 
-        $users = [];
-        foreach ($initMessage->getUserIds() as $userId) {
-            $user = $this->om->getRepository(User::class)->find($userId);
-            if (!empty($user)) {
-                $users[] = $user;
-            }
-        }
-
         $this->om->startFlushSuite();
 
         // initialize workspace evaluations
-        foreach ($users as $user) {
+        foreach ($initMessage->getUserIds() as $userId) {
+            $user = $this->om->getRepository(User::class)->find($userId);
             $this->evaluationManager->getUserEvaluation($sequence, $user, true);
         }
 
@@ -50,7 +43,7 @@ readonly class InitializeSequenceEvaluationsHandler
         // event if they have not opened the sequence yet.
         $requiredResources = $this->evaluationManager->getRequiredResources($sequence);
         foreach ($requiredResources as $requiredResource) {
-            $this->messageBus->dispatch(new UpdateResourceEvaluations($requiredResource->getId(), $initMessage->getUserIds()));
+            $this->messageBus->dispatch(new InitializeResourceEvaluations($requiredResource->getId(), $initMessage->getUserIds()));
         }
     }
 }
