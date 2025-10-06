@@ -12,7 +12,7 @@ import {selectors} from '#/main/core/resource/dashboard/store'
 import {ResourceDashboardEvaluation} from '#/main/evaluation/resource/evaluation'
 import {ResourceDashboardOverview} from '#/main/core/resource/dashboard/overview/components/main'
 import {ResourceDashboardActions} from '#/main/core/resource/dashboard/components/actions'
-import {ResourceDashboardStats} from '#/main/core/resource/dashboard'
+import {ResourceDashboardStats} from '#/main/core/resource/dashboard/components/stats'
 
 const ResourceDashboard = (props) => {
   const dashboardPath = useSelector(selectors.path)

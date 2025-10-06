@@ -65,9 +65,12 @@ class ScormController
         $data = $this->decodeRequest($request);
         $tracking = $this->evaluationManager->updateScoTracking($sco, $user, $data);
 
-        return new JsonResponse(
-            $this->serializer->serialize($tracking)
-        );
+        $evaluation = $this->evaluationManager->getResourceUserEvaluation($scorm, $user);
+
+        return new JsonResponse([
+            'tracking' => $this->serializer->serialize($tracking),
+            'evaluation' => $this->serializer->serialize($evaluation),
+        ]);
     }
 
     #[Route(path: '/scorm/{scorm}/trackings/list', name: 'apiv2_scormscotracking_list', methods: ['GET'])]
