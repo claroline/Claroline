@@ -28,8 +28,10 @@ export default declareBadgeRule({
       label: trans('resource'),
       required: true,
       options: {
-        contextType: contextType,
-        contextId: contextId
+        picker: {
+          contextType: contextType,
+          contextId: contextId
+        }
       }
     }, {
       name: 'data.value',
