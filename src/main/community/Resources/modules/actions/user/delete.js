@@ -39,7 +39,7 @@ export default declareAction((users, refresher) => {
     scope: [constants.ACTION_SCOPE_OBJECT, constants.ACTION_SCOPE_COLLECTION],
     set: [constants.ACTION_SET_LIST, constants.ACTION_SET_DETAILS, constants.ACTION_SET_ADVANCED],
     managerOnly: true,
-    title: trans('delete_user', {}, 'privacy'),
+    title: trans('delete_user', {}, 'actions'),
     description: trans('delete_user_desc', {}, 'actions')
   }
 })

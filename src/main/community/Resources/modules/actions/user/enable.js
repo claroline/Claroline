@@ -26,7 +26,7 @@ export default declareAction((users, refresher) => {
     group: trans('management'),
     set: [constants.ACTION_SET_LIST, constants.ACTION_SET_DETAILS, constants.ACTION_SET_ADVANCED],
     managerOnly: true,
-    title: trans('enable_user', {}, 'privacy'),
+    title: trans('enable_user', {}, 'actions'),
     description: trans('enable_user_desc', {}, 'actions')
   }
 })
