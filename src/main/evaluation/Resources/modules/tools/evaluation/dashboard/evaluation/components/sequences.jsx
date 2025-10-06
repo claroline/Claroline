@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react'
 import {useSelector} from 'react-redux'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
 import {makeReducer, useReducer} from '#/main/app/store/reducer'
@@ -10,7 +11,6 @@ import {TOOL_OPEN} from '#/main/core/tool/store'
 
 import {SequenceEvaluationList} from '#/main/evaluation/sequence/components/evaluation-list'
 import {selectors as contextSelectors} from '#/main/app/context'
-import get from 'lodash/get'
 
 const STORE_NAME = 'sequenceEvaluations'
 
@@ -46,7 +46,13 @@ const EvaluationDashboardSequences = () => {
           displayed: true,
           filterable: true,
           sortable: true,
-          order: 2
+          order: 2,
+          options: {
+            picker: {
+              contextType: contextType,
+              contextId: get(contextObject, 'id')
+            }
+          }
         }
       ]}
     />

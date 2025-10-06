@@ -1,4 +1,5 @@
 import React from 'react'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {route as toolRoute} from '#/main/core/tool/routing'
@@ -34,7 +35,13 @@ export default (contextType, contextData, refresher, currentUser) => {
         name: 'sequence',
         type: 'sequence',
         label: trans('sequence', {}, 'evaluation'),
-        displayed: true
+        displayed: true,
+        options: {
+          picker: {
+            contextType: contextType,
+            contextId: get(contextData, 'id')
+          }
+        }
       }, {
         name: 'startedAt',
         label: trans('start_date'),
