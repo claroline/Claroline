@@ -99,7 +99,10 @@ const SequenceEditorSummary = () => {
             }, {
               name: 'objective',
               label: trans('objective', {}, 'evaluation'),
-              type: 'html'
+              type: 'html',
+              options: {
+                workspace: workspace
+              }
             }
           ]
         }

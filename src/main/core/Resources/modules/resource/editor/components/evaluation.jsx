@@ -4,9 +4,9 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
 import {EditorPage} from '#/main/app/editor'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 
-import {actions} from '#/main/core/resource/editor/store'
+import {actions, selectors} from '#/main/core/resource/editor/store'
 
 const enableScore = (formData) => get(formData, 'resourceNode.evaluation._enableScore') || get(formData, 'resourceNode.evaluation.scoreTotal')
 const enableSuccessCondition = (formData) => get(formData, 'resourceNode.evaluation._enableSuccess')
@@ -28,6 +28,8 @@ const ResourceEditorEvaluation = ({
 }) => {
   const dispatch = useDispatch()
   const updateProp = (propPath, propValue) => dispatch(actions.updateResourceNode(propValue, propPath))
+
+  const workspace = useSelector(selectors.workspace)
 
   return (
     <EditorPage
@@ -65,7 +67,7 @@ const ResourceEditorEvaluation = ({
               label: trans('score_total'),
               type: 'number',
               displayed: enableScore
-            },
+            }
           ]
         }, {
           title: trans('Conditions de réussite'),
@@ -135,7 +137,10 @@ const ResourceEditorEvaluation = ({
                   label: trans('end_message'),
                   type: 'html',
                   required: true,
-                  displayed: enableEndMessage
+                  displayed: enableEndMessage,
+                  options: {
+                    workspace: workspace
+                  }
                 }
               ]
             }, {
@@ -155,7 +160,10 @@ const ResourceEditorEvaluation = ({
                   label: trans('success_message'),
                   type: 'html',
                   required: true,
-                  displayed: enableSuccessMessage
+                  displayed: enableSuccessMessage,
+                  options: {
+                    workspace: workspace
+                  }
                 }
               ]
             }, {
@@ -175,7 +183,10 @@ const ResourceEditorEvaluation = ({
                   label: trans('failure_message'),
                   type: 'html',
                   required: true,
-                  displayed: enableFailureMessage
+                  displayed: enableFailureMessage,
+                  options: {
+                    workspace: workspace
+                  }
                 }
               ]
             }, {
@@ -195,7 +206,10 @@ const ResourceEditorEvaluation = ({
                   label: trans('Message de tentatives épuisées'),
                   type: 'html',
                   required: true,
-                  displayed: enableAttemptsReachedMessage
+                  displayed: enableAttemptsReachedMessage,
+                  options: {
+                    workspace: workspace
+                  }
                 }
               ]
             }
@@ -204,6 +218,10 @@ const ResourceEditorEvaluation = ({
       ]}
     />
   )
+}
+
+ResourceEditorEvaluation.propTypes = {
+  successConditions: T.bool
 }
 
 export {

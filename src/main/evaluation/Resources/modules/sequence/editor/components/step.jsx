@@ -129,7 +129,10 @@ const SequenceEditorStep = props => {
             }, {
               name: 'objective',
               label: trans('objective', {}, 'evaluation'),
-              type: 'html'
+              type: 'html',
+              options: {
+                workspace: workspace
+              }
             }, {
               name: 'secondaryResources',
               type: 'resource',

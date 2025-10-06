@@ -1,5 +1,5 @@
-//import tinymce from 'tinymce/tinymce'
 import invariant from 'invariant'
+import isEmpty from 'lodash/isEmpty'
 
 import {makeId} from '#/main/app/utils/id'
 import {url} from '#/main/app/api'
@@ -8,13 +8,12 @@ import {trans} from '#/main/app/intl/translation'
 
 import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 
-// TODO : remove placeholder on selection cancel
-
 /**
  * Opens a resource picker from a TinyMCE editor.
  */
 function openResourcePicker(editor) {
   const showModal = editor.options.get('showModal')
+  const workspace = editor.options.get('workspace')
 
   // We need to generate an anchor in the content to know where to put the resource we will pick.
   // For now, the resource picker will unmount the TinyMCE editor when shown in a modal,
@@ -23,6 +22,8 @@ function openResourcePicker(editor) {
   editor.insertContent(placeholder)
 
   showModal(MODAL_RESOURCES, {
+    contextType: !isEmpty(workspace) ? 'workspace' : 'desktop',
+    contextId: !isEmpty(workspace) ? workspace.id : null,
     selectAction: (selected) => ({
       type: CALLBACK_BUTTON,
       label: trans('select', {}, 'actions'),

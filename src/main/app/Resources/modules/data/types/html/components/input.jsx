@@ -3,7 +3,6 @@ import omit from 'lodash/omit'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
-import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -95,8 +94,8 @@ class HtmlInput extends Component {
             classic: !this.state.fullscreen && !this.state.minimal,
             full: this.state.fullscreen
           })}
-          onFocusIn={(e) => this.setState({focus: true})}
-          onFocusOut={(e) => this.setState({focus: false})}
+          onFocusIn={() => this.setState({focus: true})}
+          onFocusOut={() => this.setState({focus: false})}
         />
       </div>
     )

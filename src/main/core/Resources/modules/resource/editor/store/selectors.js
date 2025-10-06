@@ -21,6 +21,12 @@ const data = (state) => formSelectors.data(formSelectors.form(state, STORE_NAME)
 const errors = (state) => formSelectors.errors(formSelectors.form(state, STORE_NAME))
 
 /**
+ * Get the parent workspace of the resource.
+ * NB. You get the modified version of the data.
+ */
+const workspace = (state) => formSelectors.value(formSelectors.form(state, STORE_NAME), 'resourceNode.workspace')
+
+/**
  * Get currently edited resource node data.
  * NB. You get the modified version of the data.
  */
@@ -45,6 +51,7 @@ export const selectors = {
   path,
   data,
   errors,
+  workspace,
   resourceNode,
   resource,
   rights

@@ -38,7 +38,9 @@ const enableFailureMessage = (formData) => get(formData, 'evaluation._enableFail
 const SequenceEditorEvaluation = () => {
   const dispatch = useDispatch()
   const updateProp = (propPath, propValue) => dispatch(actions.update(propValue, propPath))
+
   const editedSequence = useSelector(selectors.data)
+  const workspace = useSelector(selectors.workspace)
 
   return (
     <EditorPage
@@ -229,7 +231,10 @@ const SequenceEditorEvaluation = () => {
                   label: trans('end_message', {}, 'evaluation'),
                   type: 'html',
                   required: true,
-                  displayed: enableEndMessage
+                  displayed: enableEndMessage,
+                  options: {
+                    workspace: workspace
+                  }
                 }
               ]
             }, {
@@ -250,7 +255,10 @@ const SequenceEditorEvaluation = () => {
                   label: trans('success_message', {}, 'evaluation'),
                   type: 'html',
                   required: true,
-                  displayed: enableSuccessMessage
+                  displayed: enableSuccessMessage,
+                  options: {
+                    workspace: workspace
+                  }
                 }
               ]
             }, {
@@ -271,7 +279,10 @@ const SequenceEditorEvaluation = () => {
                   label: trans('failure_message', {}, 'evaluation'),
                   type: 'html',
                   required: true,
-                  displayed: enableFailureMessage
+                  displayed: enableFailureMessage,
+                  options: {
+                    workspace: workspace
+                  }
                 }
               ]
             }
