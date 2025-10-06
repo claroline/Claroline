@@ -1,15 +1,16 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {PickerModal} from '#/main/app/data/modals/picker/components/modal'
 import {SequenceCard} from '#/main/evaluation/sequence/components/card'
 
-const SequencesModal = props =>
+const SequencesModal = (props) =>
   <PickerModal
     title={trans('sequences', {}, 'evaluation')}
-    url={['apiv2_evaluation_sequence_list']}
-    {...props}
+    url={['apiv2_evaluation_sequence_context_list', {context: props.contextType, contextId: props.contextId}]}
+    {...omit(props, 'contextType', 'contextId')}
     name="sequencesPicker"
     definition={[
       {
@@ -45,6 +46,8 @@ const SequencesModal = props =>
 SequencesModal.propTypes = {
   selectAction: T.func.isRequired,
   multiple: T.bool,
+  contextType: T.string,
+  contextId: T.string,
   // from modal
   fadeModal: T.func.isRequired
 }

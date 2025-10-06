@@ -31,8 +31,10 @@ export default declareBadgeRule({
       label: trans('sequence', {}, 'evaluation'),
       required: true,
       options: {
-        contextType: contextType,
-        contextId: contextId
+        picker: {
+          contextType: contextType,
+          contextId: contextId
+        }
       }
     }, {
       name: 'data.comparator',
