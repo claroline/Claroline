@@ -44,6 +44,8 @@ services:
 
     Claroline\CoreBundle\API\Serializer\Widget\Type\SimpleWidgetSerializer:
         tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
 
     Claroline\CoreBundle\API\Serializer\Widget\Type\ResourceWidgetSerializer:
         tags: [claroline.serializer]

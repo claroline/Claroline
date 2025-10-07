@@ -3,12 +3,17 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
-import {ContentHtml} from '#/main/app/content/components/html'
+import {Html} from '#/main/app/components/html'
 
 const SimpleWidget = props => {
-  if (props.content) {
+  let content = props.content
+  if (props.preview) {
+    content = props.contentRaw
+  }
+
+  if (content) {
     return (
-      <ContentHtml>{props.content}</ContentHtml>
+      <Html>{content}</Html>
     )
   }
 
@@ -23,7 +28,9 @@ const SimpleWidget = props => {
 
 
 SimpleWidget.propTypes = {
-  content: T.string
+  preview: T.bool,
+  content: T.string,
+  contentRaw: T.string
 }
 
 export {

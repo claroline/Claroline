@@ -84,6 +84,7 @@ const WidgetCol = props =>
       <WidgetContent
         instance={props.content}
         currentContext={props.currentContext}
+        preview={true}
       />
     }
 

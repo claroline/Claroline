@@ -59,7 +59,9 @@ class WidgetContent extends Component {
                 )}
               </Helmet>
             }
-            {createElement(WidgetApp.component)}
+            {createElement(WidgetApp.component, {
+              preview: this.props.preview
+            })}
           </div>
 
         WidgetAppComponent.displayName = `WidgetApp(${this.props.instance.type})`
@@ -86,6 +88,7 @@ WidgetContent.propTypes = {
   instance: T.shape(
     WidgetInstanceTypes.propTypes
   ).isRequired,
+  preview: T.bool,
 
   // from store (to build the embedded store)
   config: T.object,

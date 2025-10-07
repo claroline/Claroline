@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormContent} from '#/main/app/content/form/containers/content'
@@ -15,14 +16,18 @@ const SimpleWidgetParameters = (props) =>
         primary: true,
         fields: [
           {
-            name: 'parameters.content',
+            name: 'parameters.contentRaw',
             label: trans('content'),
             type: 'html',
             required: true,
             hideLabel: true,
             options: {
               minimal: false,
-              workspace: 'workspace' === props.currentContext.type ? props.currentContext.data : undefined
+              workspace: 'workspace' === props.currentContext.type ? props.currentContext.data : undefined,
+              config: {
+                plugins: ['placeholders'],
+                placeholders: get(props.instance, 'parameters.placeholders', [])
+              }
             }
           }
         ]
@@ -32,6 +37,11 @@ const SimpleWidgetParameters = (props) =>
 
 SimpleWidgetParameters.propTypes = {
   name: T.string.isRequired,
+  instance: T.shape({
+    content: T.string,
+    contentRaw: T.string,
+    placeholders: T.arrayOf(T.string),
+  }),
   currentContext: T.shape({
     type: T.string,
     data: T.object

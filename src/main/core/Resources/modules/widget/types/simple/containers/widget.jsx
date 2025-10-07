@@ -5,6 +5,7 @@ import {SimpleWidget as SimpleWidgetComponent} from '#/main/core/widget/types/si
 
 const SimpleWidget = connect(
   (state) => ({
+    contentRaw: contentSelectors.parameters(state).contentRaw,
     content: contentSelectors.parameters(state).content
   })
 )(SimpleWidgetComponent)
