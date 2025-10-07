@@ -101,7 +101,8 @@ class ClacoFormResource extends ResourceComponent implements DownloadableResourc
             $ids = [];
             foreach ($data['categories'] as $categoryData) {
                 $new = false;
-                if ($categoryData['id']) {
+                $category = null;
+                if (!empty($categoryData['id'])) {
                     $category = $resource->getCategory($categoryData['id']);
                 }
 
