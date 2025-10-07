@@ -100,10 +100,12 @@ function displayDateRange(start, end, time = false) {
   let date = displayDate(start, true)
   if (end) {
     if (moment(start).isSame(end, 'day')) {
-      date += ' | ' + trans('time_range', {
-        start: displayTime(start),
-        end: displayTime(end)
-      })
+      if (time) {
+        date += ' | ' + trans('time_range', {
+          start: displayTime(start),
+          end: displayTime(end)
+        })
+      }
     } else {
       date = trans('date_range', {
         start: displayDate(start, true, time),
