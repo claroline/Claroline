@@ -33,6 +33,8 @@ class LoginMain extends Component {
     // check if we want to show the form to log in with a claroline account
     const internalAccount = this.props.forceInternalAccount || this.props.internalAccount
 
+    const displayedSso = (this.props.sso || []).filter(sso => undefined === sso.displayed || sso.displayed)
+
     return (
       <>
         {internalAccount &&
@@ -53,7 +55,7 @@ class LoginMain extends Component {
           />
         }
 
-        {internalAccount && 0 !== this.props.sso.length &&
+        {internalAccount && 0 !== displayedSso.length &&
           <Divider
             className="my-5"
             label={trans('login_auth_or')}
@@ -61,18 +63,18 @@ class LoginMain extends Component {
           />
         }
 
-        {0 !== this.props.sso.length &&
+        {0 !== displayedSso.length &&
           <>
             <p className="lead text-center text-body-secondary mb-5 visually-hidden">
-              {transChoice(!internalAccount ? 'login_auth_sso' : 'login_auth_sso_other', this.props.sso.length)}
+              {transChoice(!internalAccount ? 'login_auth_sso' : 'login_auth_sso_other', displayedSso.length)}
             </p>
 
             <div role="presentation" className="d-grid gap-1">
-              {this.props.sso.map(sso => this.state.sso[sso.service] ?
+              {displayedSso.map(sso => this.state.sso[sso.service] ?
                 createElement(this.state.sso[sso.service].components.button, Object.assign({}, sso, {
                   key: sso.service,
                   label: sso.label || trans('login_with_third_party_btn', {name: trans(sso.service, {}, 'oauth')}),
-                  primary: 1 === this.props.sso.length
+                  primary: 1 === displayedSso.length
                 })) : null
               )}
             </div>
