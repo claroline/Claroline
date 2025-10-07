@@ -1,8 +1,9 @@
 import React, {useState, useEffect, createElement} from 'react'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
+import get from 'lodash/get'
 
-import {makeCancelable} from '#/main/app/api'
+import {API_REQUEST, makeCancelable} from '#/main/app/api'
 import {Routes, Redirect} from '#/main/app/router'
 import {getContexts} from '#/main/app/context/registry'
 import {selectors as securitySelectors} from '#/main/app/security/store'
@@ -16,6 +17,26 @@ import {PlatformLogin} from '#/main/app/platform/components/login'
 import {PlatformMenu} from '#/main/app/platform/menu'
 import {selectors} from '#/main/app/platform/store'
 import {UserEditor} from '#/main/community/user/editor'
+
+const ResourceRedirect = (props) => {
+  const dispatch = useDispatch()
+  const [resourceNode, setResourceNode] = useState(null)
+
+  useEffect(() => {
+    if (props.match.params.slug) {
+      dispatch({[API_REQUEST]: {
+        url: ['apiv2_resource_get', {field: 'slug', id: props.match.params.slug}],
+        success: (response) => setResourceNode(response)
+      }})
+    }
+  }, [get(props, 'match.params.slug')])
+
+  if (resourceNode) {
+    return <Redirect to={`/workspace/${get(resourceNode, 'workspace.slug')}/resources/${resourceNode.slug}`} />
+  }
+
+  return null
+}
 
 const Platform = () => {
   const history = useHistory()
@@ -58,7 +79,7 @@ const Platform = () => {
       redirect={[
         {from: '/', exact: true, to: '/unavailable', disabled: !unavailable},
 
-        // disable registration and redirect user if no self registration or the user is already authenticated
+        // disable registration and redirect user if no self-registration or the user is already authenticated
         {from: '/registration', to: '/', disabled: selfRegistration || !authenticated},
         {from: '/login', exact: true, to: '/', disabled: !authenticated},
 
@@ -66,12 +87,12 @@ const Platform = () => {
         {from: '/', exact: true, to: '/public', disabled: -1 === availableContexts.findIndex(c => 'public' === c.name) || authenticated},
         {from: '/', exact: true, to: '/desktop', disabled: !authenticated},
 
-        // for retro-compatibility. DO NOT REMOVE !
+        // For retro-compatibility. DO NOT REMOVE!
         {from: '/home', to: '/public'}
       ]}
       routes={[
-        // for retro-compatibility. DO NOT REMOVE !
-        // NB. I don't use the standard `redirect` prop, because we can not catch params.
+        // For retro-compatibility. DO NOT REMOVE!
+        // NB. I don't use the standard `redirect` prop, because we cannot catch params.
         // We use location pathname to keep params not handled by this route (ex. tool path)
         {
           path: '/desktop/workspaces/open/:slug',
@@ -81,6 +102,11 @@ const Platform = () => {
               `/workspace/${routerProps.match.params.slug}`
             )} />
           )
+        },
+        // For retro-compatibility <15.0. DO NOT REMOVE!
+        {
+          path: '/desktop/resources/:slug',
+          component: ResourceRedirect
         }
       ].concat(appContexts.map(appContext => ({
         path: appContext.path,

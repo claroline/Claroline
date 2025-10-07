@@ -74,9 +74,9 @@ const Sequence = {
 const SequenceEvaluation = {
   propTypes: {
     id: T.string.isRequired,
-    meta: {
+    meta: T.shape({
       archived: T.bool
-    },
+    }),
     lastActivityAt: T.string,
     startedAt: T.string,
     endedAt: T.string,

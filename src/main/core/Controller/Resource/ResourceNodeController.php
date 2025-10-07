@@ -61,7 +61,10 @@ class ResourceNodeController extends AbstractCrudController
         }, $resourceNode->getRights()->toArray()));
     }
 
-    #[Route(path: '/{contextId}/{parent}', name: 'list', defaults: ['contextId' => null, 'parent' => null], methods: ['GET'])]
+    /**
+     * NB. The /list prefix is here to avoid a collision with GET endpoint /{field}/{id}.
+     */
+    #[Route(path: '/list/{contextId}/{parent}', name: 'list', defaults: ['contextId' => null, 'parent' => null], methods: ['GET'])]
     public function listAction(
         #[MapQueryString]
         ?FinderQuery $finderQuery = new FinderQuery(),
