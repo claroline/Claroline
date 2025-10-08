@@ -8,18 +8,19 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {PageContent, PageHeading, PageHeadingSkeleton, PageSection} from '#/main/app/page'
-import {Content, ContentSkeleton} from '#/main/app/components/content'
 import {Html} from '#/main/app/components/html'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {PageContent, PageHeading, PageHeadingSkeleton, PageSection, PageToolbar} from '#/main/app/page'
+import {Content, ContentSkeleton} from '#/main/app/components/content'
+import {ContentPublication} from '#/main/app/content/components/publication'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {Chapter as ChapterTypes} from '#/plugin/lesson/resources/lesson/prop-types'
 import {actions, selectors} from '#/plugin/lesson/resources/lesson/store'
 import {MODAL_PAGE_HISTORY} from '#/plugin/lesson/resources/lesson/modals/history'
 import {LessonPlayerNavSkeleton} from '#/plugin/lesson/resources/lesson/player/components/nav'
-import {ContentPublication} from '#/main/app/content/components/publication'
-import {PageToolbar} from '#/main/app/page/components/toolbar'
+
+import {MODAL_PAGE_POSITION} from '#/plugin/lesson/resources/lesson/modals/position'
 
 const Chapter = props => {
   const history = useHistory()
@@ -31,6 +32,8 @@ const Chapter = props => {
   const embedded = useSelector(resourceSelectors.embedded)
 
   const lesson = useSelector(selectors.lesson)
+  const root = useSelector(selectors.root)
+  const pages = useSelector(selectors.pages)
   const showNavigation = useSelector(selectors.showNavigation)
   const showMeta = useSelector(selectors.showMeta)
 
@@ -39,9 +42,12 @@ const Chapter = props => {
   }, [lesson.id, props.chapter.slug])
 
   const deleteChapter = useCallback(() => {
-    dispatch(actions.deleteChapter(lesson.id, props.chapter.slug)).then(() => {
-      history.push(props.path+'/'+(props.chapter.previousSlug ? props.chapter.previousSlug : ''))
-    })
+    history.push(props.path+'/'+(props.chapter.previousSlug ? props.chapter.previousSlug : ''))
+    dispatch(actions.deleteChapter(lesson.id, props.chapter.slug))
+  }, [lesson.id, props.chapter.slug])
+
+  const moveChapter = useCallback((position) => {
+    dispatch(actions.moveChapter(lesson.id, props.chapter.slug, position))
   }, [lesson.id, props.chapter.slug])
 
   if (isEmpty(props.chapter)) {
@@ -96,12 +102,20 @@ const Chapter = props => {
             displayed: canEdit
           }, {
             name: 'move',
-            type: CALLBACK_BUTTON,
+            type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-arrows',
             label: trans('move', {}, 'actions'),
-            callback: () => true,
+            modal: [MODAL_PAGE_POSITION, {
+              icon: 'fa fa-fw fa-arrows',
+              title: trans('movement'),
+              root: root,
+              page: props.chapter,
+              pages: pages,
+              saveLabel: trans('move', {}, 'actions'),
+              onSave: moveChapter
+            }],
             group: trans('management'),
-            displayed: canEdit
+            displayed: 1 !== pages.length && canEdit
           }, {
             name: 'show-history',
             type: MODAL_BUTTON,

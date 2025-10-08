@@ -3,7 +3,7 @@
 namespace Icap\LessonBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -32,9 +32,8 @@ class ChapterController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         private readonly ObjectManager $om,
-        private readonly FinderProvider $finder,
         private readonly Crud $crud,
-        private readonly ChapterSerializer $chapterSerializer,
+        private readonly SerializerProvider $serializer,
         private readonly ChapterManager $chapterManager,
         private readonly PdfManager $pdfManager
     ) {
@@ -48,21 +47,6 @@ class ChapterController
     public static function getName(): string
     {
         return 'chapter';
-    }
-
-    #[Route(path: '/', name: 'apiv2_lesson_chapter_list', methods: ['GET'])]
-    public function searchAction(#[MapEntity(mapping: ['lessonId' => 'uuid'])] Lesson $lesson, Request $request): JsonResponse
-    {
-        $this->checkPermission('OPEN', $lesson->getResourceNode(), [], true);
-
-        $query = $request->query->all();
-        $query['hiddenFilters'] = ['lesson' => $lesson->getUuid()];
-
-        $internalNotes = $this->checkPermission('VIEW_INTERNAL_NOTES', $lesson->getResourceNode());
-
-        return new JsonResponse(
-            $this->finder->search(Chapter::class, $query, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : [])
-        );
     }
 
     /**
@@ -84,18 +68,18 @@ class ChapterController
 
         $internalNotes = $this->checkPermission('VIEW_INTERNAL_NOTES', $lesson->getResourceNode());
 
-        return new JsonResponse($this->chapterSerializer->serialize($chapter, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : []));
+        return new JsonResponse($this->serializer->serialize($chapter, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : []));
     }
 
     /**
      * Create a new chapter.
      */
-    #[Route(path: '/{slug}', name: 'apiv2_lesson_chapter_create', methods: ['POST'])]
+    #[Route(path: '/{parentSlug}', name: 'apiv2_lesson_chapter_create', methods: ['POST'])]
     public function createAction(
         Request $request,
         #[MapEntity(mapping: ['lessonId' => 'uuid'])]
         Lesson $lesson,
-        #[MapEntity(mapping: ['slug' => 'slug'])]
+        #[MapEntity(mapping: ['parentSlug' => 'slug'])]
         ?Chapter $parent = null
     ): JsonResponse {
         $this->checkPermission('EDIT', $lesson->getResourceNode(), [], true);
@@ -103,7 +87,9 @@ class ChapterController
         $newChapter = $this->chapterManager->createChapter($lesson, json_decode($request->getContent(), true), $parent, [Crud::NO_PERMISSIONS]);
         $internalNotes = $this->checkPermission('VIEW_INTERNAL_NOTES', $lesson->getResourceNode());
 
-        return new JsonResponse($this->chapterSerializer->serialize($newChapter, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : []));
+        return new JsonResponse(
+            $this->serializer->serialize($newChapter, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : [])
+        );
     }
 
     /**
@@ -122,7 +108,7 @@ class ChapterController
         $this->chapterManager->updateChapter($chapter, json_decode($request->getContent(), true));
         $internalNotes = $this->checkPermission('VIEW_INTERNAL_NOTES', $lesson->getResourceNode());
 
-        return new JsonResponse($this->chapterSerializer->serialize($chapter, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : []));
+        return new JsonResponse($this->serializer->serialize($chapter, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : []));
     }
 
     /**
@@ -139,9 +125,34 @@ class ChapterController
 
         $this->crud->delete($chapter, [Crud::NO_PERMISSIONS]);
 
-        return new JsonResponse([
-            'tree' => $this->chapterManager->serializeChapterTree($lesson),
-        ]);
+        $internalNotes = $this->authorization->isGranted('VIEW_INTERNAL_NOTES', $lesson->getResourceNode());
+        $chapters = $this->om->getRepository(Chapter::class)->getChildren($lesson->getRoot(), false, null, 'ASC', true);
+
+        // return the full chapters list for now to avoid having to recompute previousSlug/nextSlug in UI
+        return new JsonResponse(array_map(function (Chapter $chapter) use ($internalNotes) {
+            return $this->serializer->serialize($chapter, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : []);
+        }, $chapters));
+    }
+
+    #[Route(path: '/{slug}/move', name: 'apiv2_lesson_chapter_move', methods: ['PUT'])]
+    public function moveAction(
+        #[MapEntity(mapping: ['lessonId' => 'uuid'])]
+        Lesson $lesson,
+        #[MapEntity(mapping: ['slug' => 'slug'])]
+        Chapter $chapter,
+        Request $request
+    ): JsonResponse {
+        $this->checkPermission('EDIT', $lesson->getResourceNode(), [], true);
+
+        $this->chapterManager->moveChapter($chapter, json_decode($request->getContent(), true));
+
+        $internalNotes = $this->authorization->isGranted('VIEW_INTERNAL_NOTES', $lesson->getResourceNode());
+        $chapters = $this->om->getRepository(Chapter::class)->getChildren($lesson->getRoot(), false, null, 'ASC', true);
+
+        // return the full chapters list for now to avoid having to recompute previousSlug/nextSlug in UI
+        return new JsonResponse(array_map(function (Chapter $chapter) use ($internalNotes) {
+            return $this->serializer->serialize($chapter, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : []);
+        }, $chapters));
     }
 
     #[Route(path: '/{chapter}/pdf', name: 'icap_lesson_chapter_export_pdf', methods: ['GET'])]

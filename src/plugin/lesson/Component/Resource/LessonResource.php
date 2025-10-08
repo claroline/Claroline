@@ -27,7 +27,6 @@ final class LessonResource extends ResourceComponent implements DownloadableReso
         private readonly AuthorizationCheckerInterface $authorization,
         private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
-        private readonly Crud $crud,
         private readonly PlaceholderManager $placeholderManager,
         private readonly ChapterManager $chapterManager,
         private readonly PdfManager $pdfManager,
@@ -46,8 +45,6 @@ final class LessonResource extends ResourceComponent implements DownloadableReso
         $chapters = $this->om->getRepository(Chapter::class)->getChildren($resource->getRoot(), false, null, 'ASC', true);
 
         return [
-            'resource' => $this->serializer->serialize($resource),
-            'tree' => $this->chapterManager->serializeChapterTree($resource),
             'placeholders' => $this->placeholderManager->getAvailablePlaceholders(),
             'chapters' => array_map(function (Chapter $chapter) use ($internalNotes) {
                 return $this->serializer->serialize($chapter, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : []);
@@ -79,30 +76,6 @@ final class LessonResource extends ResourceComponent implements DownloadableReso
         }
 
         $this->om->endFlushSuite();
-    }
-
-    public function update(AbstractResource $resource, array $data, array $previousData): ?array
-    {
-        $chapters = [];
-        if (!empty($data['chapters'])) {
-            $this->om->startFlushSuite();
-
-            foreach ($data['chapters'] as $chapterData) {
-                $chapters[] = $this->crud->createOrUpdate(Chapter::class, $chapterData);
-            }
-
-            // TODO : remove deleted chapters
-
-            $this->om->endFlushSuite();
-        }
-
-        return [
-            'resource' => $this->serializer->serialize($resource),
-            'placeholders' => $this->placeholderManager->getAvailablePlaceholders(),
-            'chapters' => array_map(function (Chapter $chapter) {
-                return $this->serializer->serialize($chapter);
-            }, $chapters),
-        ];
     }
 
     /**
@@ -156,25 +129,6 @@ final class LessonResource extends ResourceComponent implements DownloadableReso
         }
 
         $this->om->endFlushSuite();
-    }
-
-    private function importChapter(Lesson $lesson, array $data = []): Chapter
-    {
-        $chapter = new Chapter();
-        $chapter->setTitle($data['title']);
-        $chapter->setText($data['text']);
-
-        if (isset($data['children'])) {
-            foreach ($data['children'] as $child) {
-                $childChap = $this->importChapter($lesson, $child);
-                $childChap->setParent($chapter);
-            }
-        }
-
-        $chapter->setLesson($lesson);
-        $this->om->persist($chapter);
-
-        return $chapter;
     }
 
     public function supportsFile(File $file): int

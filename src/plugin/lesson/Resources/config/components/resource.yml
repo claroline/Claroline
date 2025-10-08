@@ -5,7 +5,6 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
             - '@Icap\LessonBundle\Manager\ChapterManager'
             - '@Icap\LessonBundle\Manager\PdfManager'

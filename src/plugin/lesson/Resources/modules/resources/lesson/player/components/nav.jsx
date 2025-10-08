@@ -6,6 +6,8 @@ import {trans} from '#/main/app/intl/translation'
 import {LinkButton} from '#/main/app/buttons'
 
 import {selectors} from '#/plugin/lesson/resources/lesson/store'
+import {Chapter} from '#/plugin/lesson/resources/lesson/prop-types'
+import {getNumbering} from '#/plugin/lesson/resources/lesson/utils'
 
 const LessonPlayerNavSkeleton = () => {
   return (
@@ -31,20 +33,28 @@ const LessonPlayerNavSkeleton = () => {
   )
 }
 
-const LessonPlayerNav = (props) => {
-  const nextPath = useSelector(selectors.nextPath)
-  const nextTitle = useSelector(selectors.nextTitle)
+const LessonPlayerNav = ({path, previousPage = null, nextPage = null}) => {
+  const showOverview = useSelector(selectors.showOverview)
+  const tree = useSelector(selectors.tree)
+  const lessonNumbering = useSelector(selectors.numbering)
 
-  const previousPath = useSelector(selectors.previousPath)
-  const previousTitle = useSelector(selectors.previousTitle)
+  let previousNumbering
+  if (previousPage) {
+    previousNumbering = getNumbering(lessonNumbering, tree.children, previousPage)
+  }
 
-  if (previousPath || nextPath) {
+  let nextNumbering
+  if (nextPage) {
+    previousNumbering = getNumbering(lessonNumbering, tree.children, nextPage)
+  }
+
+  if (showOverview || previousPage || nextPage) {
     return (
       <nav className="d-flex flex-row content-lg px-2 mt-auto pb-5">
-        {previousPath &&
+        {previousPage &&
           <LinkButton
             className="btn btn-text-body focus-ring w-50 text-start d-flex flex-row align-items-center gap-4 justify-content-start"
-            target={props.path+previousPath}
+            target={path+'/'+previousPage.slug}
             exact={true}
           >
             <span className="fa fa-chevron-left fs-lg" aria-hidden={true} />
@@ -52,21 +62,44 @@ const LessonPlayerNav = (props) => {
             <div className="d-flex flex-column overflow-hidden flex-fill align-items-start" role="presentation">
               <b>{trans('previous')}</b>
               <span className="text-truncate fs-sm w-100" role="presentation">
-                {previousTitle}
+                {previousNumbering ?
+                  previousNumbering + ' ' + previousPage.title :
+                  previousPage.title
+                }
               </span>
             </div>
           </LinkButton>
         }
 
-        {nextPath &&
+        {(!previousPage && showOverview) &&
+          <LinkButton
+            className="btn btn-text-body focus-ring w-50 text-start d-flex flex-row align-items-center gap-4 justify-content-start"
+            target={path}
+            exact={true}
+          >
+            <span className="fa fa-chevron-left fs-lg" aria-hidden={true} />
+
+            <div className="d-flex flex-column overflow-hidden flex-fill align-items-start" role="presentation">
+              <b>{trans('previous')}</b>
+              <span className="text-truncate fs-sm w-100" role="presentation">
+                {trans('resource_overview', {}, 'resource')}
+              </span>
+            </div>
+          </LinkButton>
+        }
+
+        {nextPage &&
           <LinkButton
             className="btn btn-text-body focus-ring w-50 text-end d-flex flex-row align-items-center gap-4 justify-content-end ms-auto"
-            target={props.path+nextPath}
+            target={path+'/'+nextPage.slug}
           >
             <div className="d-flex flex-column overflow-hidden flex-fill align-items-end" role="presentation">
               <b>{trans('next')}</b>
               <span className="text-truncate fs-sm w-100" role="presentation">
-                {nextTitle}
+                {nextNumbering ?
+                  nextNumbering + ' ' + nextPage.title :
+                  nextPage.title
+                }
               </span>
             </div>
 
@@ -81,7 +114,9 @@ const LessonPlayerNav = (props) => {
 }
 
 LessonPlayerNav.propTypes = {
-  path: T.string.isRequired
+  path: T.string.isRequired,
+  nextPage: T.shape(Chapter.propTypes),
+  previousPage: T.shape(Chapter.propTypes)
 }
 
 export {

@@ -8,7 +8,6 @@ use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Repository\ChapterRepository;
-use Icap\LessonBundle\Serializer\ChapterSerializer;
 
 class ChapterManager
 {
@@ -16,8 +15,7 @@ class ChapterManager
 
     public function __construct(
         private readonly ObjectManager $om,
-        private readonly Crud $crud,
-        private readonly ChapterSerializer $chapterSerializer
+        private readonly Crud $crud
     ) {
         $this->chapterRepository = $om->getRepository(Chapter::class);
     }
@@ -32,13 +30,6 @@ class ChapterManager
         $rootCopy->setInternalNote($rootOriginal->getInternalNote());
 
         $this->copyChildren($rootOriginal, $rootCopy);
-    }
-
-    public function serializeChapterTree(Lesson $lesson): array
-    {
-        $tree = $this->om->getRepository(Chapter::class)->buildChapterTree($lesson->getRoot());
-
-        return $this->chapterSerializer->serializeChapterTree($tree[0]);
     }
 
     /**
@@ -61,53 +52,40 @@ class ChapterManager
      */
     public function updateChapter(Chapter $chapter, ?array $data = []): void
     {
-        $newParent = $this->chapterRepository->findOneBy(['slug' => $data['parentSlug']]);
-
         $this->crud->update($chapter, $data);
-
-        // Should the chapter be moved ?
-        if (isset($data['move'])) {
-            $this->insertChapterInPlace($chapter, $newParent, $data);
-        } else {
-            $this->om->persist($chapter);
-            $this->om->flush();
-        }
     }
 
-    private function insertChapterInPlace(Chapter $chapter, ?Chapter $parent = null, ?array $data = []): void
+    public function moveChapter(Chapter $chapter, array $positionData): void
     {
-        $position = $data['position'];
-        $sibling = $data['order']['sibling'];
-        $subchapter = $data['order']['subchapter'];
+        if ($positionData['parent']) {
+            $parent = $this->chapterRepository->findOneBy(['slug' => $positionData['parent']]);
+        } else {
+            $parent = $chapter->getLesson()->getRoot();
+        }
 
-        switch ($position) {
-            case 'subchapter':
-                switch ($subchapter) {
-                    case 'first':
-                        $this->chapterRepository->persistAsFirstChildOf($chapter, $parent);
-                        break;
-                    case 'last':
-                    default:
-                        $this->chapterRepository->persistAsLastChildOf($chapter, $parent);
-                        break;
+        $order = $positionData['order'];
+
+        switch ($order) {
+            case 'first':
+                $this->chapterRepository->persistAsFirstChildOf($chapter, $parent);
+                break;
+
+            case 'before':
+                $nextChapter = $this->chapterRepository->findOneBy(['slug' => $positionData['page']]);
+                if ($nextChapter) {
+                    $this->chapterRepository->persistAsPrevSiblingOf($chapter, $nextChapter);
                 }
                 break;
-            case 'sibling':
-            default:
-                switch ($sibling) {
-                    case 'before':
-                        $previousChapter = $this->chapterRepository->getPreviousSibling($parent);
-                        if ($previousChapter) {
-                            $this->chapterRepository->persistAsNextSiblingOf($chapter, $previousChapter);
-                        } else {
-                            $this->chapterRepository->persistAsFirstChildOf($chapter, $parent->getParent());
-                        }
-                        break;
-                    case 'after':
-                    default:
-                        $this->chapterRepository->persistAsNextSiblingOf($chapter, $parent);
-                        break;
+
+            case 'after':
+                $previousChapter = $this->chapterRepository->findOneBy(['slug' => $positionData['page']]);
+                if ($previousChapter) {
+                    $this->chapterRepository->persistAsNextSiblingOf($chapter, $previousChapter);
                 }
+                break;
+
+            case 'last':
+                $this->chapterRepository->persistAsLastChildOf($chapter, $parent);
                 break;
         }
 

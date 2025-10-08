@@ -37,14 +37,15 @@ const PlayerModeInline = (props) => {
       }
 
       {pages.map(page => (
-        <Chapter
-          key={page.id}
-          path={props.path}
-          level={page.level}
-          title={true}
-          numbering={getNumbering(numbering, tree.children, page)}
-          chapter={page}
-        />
+        <div key={page.id} id={'page-'+page.id} role="presentation">
+          <Chapter
+            path={props.path}
+            level={page.level}
+            title={true}
+            numbering={getNumbering(numbering, tree.children, page)}
+            chapter={page}
+          />
+        </div>
       ))}
     </PageContent>
   )

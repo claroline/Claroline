@@ -40,7 +40,7 @@ SimpleWidgetParameters.propTypes = {
   instance: T.shape({
     content: T.string,
     contentRaw: T.string,
-    placeholders: T.arrayOf(T.string),
+    placeholders: T.arrayOf(T.string)
   }),
   currentContext: T.shape({
     type: T.string,

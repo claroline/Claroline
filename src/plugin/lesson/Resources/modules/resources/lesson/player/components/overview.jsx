@@ -56,7 +56,7 @@ const LessonPlayerOverview = () => {
 
       {isEmpty(chapters) &&
         <EmptyState
-          className="px-4"
+          className="px-4 pb-5"
           icon="fa fa-file-lines"
           title={trans('no_page', {}, 'lesson')}
           description={trans(canAdd ? 'no_page_manager_help' : 'no_page_help', {}, 'lesson')}

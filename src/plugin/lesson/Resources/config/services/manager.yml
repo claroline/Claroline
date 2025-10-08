@@ -3,7 +3,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
-            - '@Icap\LessonBundle\Serializer\ChapterSerializer'
 
     Icap\LessonBundle\Manager\PdfManager:
         arguments:

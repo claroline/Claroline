@@ -13,7 +13,7 @@ const LessonEditorAppearance = () =>
       {
         name: 'lesson-display',
         icon: 'fa fa-fw fa-desktop',
-        title: trans('display_parameters'),
+        title: trans('pages'),
         primary: true,
         hideTitle: true,
         fields: [

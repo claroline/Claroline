@@ -1,106 +1,113 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import isEmpty from 'lodash/isEmpty'
+import {useDispatch, useSelector} from 'react-redux'
+import {useHistory} from 'react-router-dom'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 
-import {withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {PageContent} from '#/main/app/page'
-import {selectors as formSelectors} from '#/main/app/content/form/store'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {FormData, selectors as formSelectors} from '#/main/app/content/form'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {actions, selectors} from '#/plugin/lesson/resources/lesson/store'
 
-import {selectors} from '#/plugin/lesson/resources/lesson/store'
+const ChapterForm = () => {
+  const history = useHistory()
+  const dispatch = useDispatch()
 
-const ChapterFormComponent = props =>
-  <PageContent className={classes('d-flex flex-column', {
-    'mx-n4': props.embedded
-  })}>
-    <FormData
-      className="my-5 px-4 flex-fill"
-      level={3}
-      displayLevel={2}
-      name={selectors.CHAPTER_EDIT_FORM_NAME}
-      buttons={true}
-      target={!props.isNew ? ['apiv2_lesson_chapter_update', {
-        lessonId: props.lesson.id,
-        slug: props.slug
-      }] : ['apiv2_lesson_chapter_create', {
-        lessonId: props.lesson.id,
-        slug: props.parentSlug
-      }]}
-      definition={[
-        {
-          id: 'chapter',
-          title: trans('general'),
-          primary: true,
-          fields: [
-            {
-              name: 'poster',
-              type: 'poster',
-              label: trans('poster'),
-              hideLabel: true
-            }, {
-              name: 'title',
-              type: 'string',
-              required: true,
-              label: trans('title')
-            }, {
-              name: 'contentRaw',
-              type: 'html',
-              label: trans('content'),
-              recommended: true,
-              options: {
-                workspace: props.workspace,
-                minRows: 10,
-                config: {
-                  plugins: ['placeholders'],
-                  placeholders: props.placeholders
-                }
-              }
-            }, {
-              name: '_internalNote',
-              type: 'boolean',
-              label: trans('add_internal_note', {}, 'lesson'),
-              help: trans('internal_note_visibility_help', {}, 'lesson'),
-              displayed: props.internalNotes,
-              calculated: (pageData) => !isEmpty(pageData.internalNote) || pageData._internalNote,
-              linked: [
-                {
-                  name: 'internalNote',
-                  type: 'html',
-                  label: trans('text'),
-                  displayed: (pageData) => props.internalNotes  && (!isEmpty(pageData.internalNote) || pageData._internalNote),
-                  options: {
-                    workspace: props.workspace,
-                    minRows: 10
+  const path = useSelector(resourceSelectors.path)
+  const workspace = useSelector(resourceSelectors.workspace)
+  const embedded = useSelector(resourceSelectors.embedded)
+  const lesson = useSelector(selectors.lesson)
+  const placeholders = useSelector(selectors.placeholders)
+  const internalNotes = useSelector((state) => hasPermission('view_internal_notes', resourceSelectors.resourceNode(state)))
+
+  const isNew = useSelector((state) => formSelectors.isNew(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)))
+  const formData = useSelector((state) => formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)))
+
+  return (
+    <PageContent className={classes('d-flex flex-column', {
+      'mx-n4': embedded
+    })}>
+      <FormData
+        className="my-5 px-4 flex-fill"
+        level={3}
+        displayLevel={2}
+        name={selectors.CHAPTER_EDIT_FORM_NAME}
+        buttons={true}
+        target={!isNew ? ['apiv2_lesson_chapter_update', {
+          lessonId: lesson.id,
+          slug: formData.slug
+        }] : ['apiv2_lesson_chapter_create', {
+          lessonId: lesson.id,
+          parentSlug: formData.parentSlug
+        }]}
+        onSave={(formPage) => {
+          if (isNew) {
+            dispatch(actions.addPage(formPage))
+          } else {
+            dispatch(actions.updatePage(formPage))
+          }
+
+          history.push(path+'/'+formPage.slug)
+        }}
+        definition={[
+          {
+            id: 'chapter',
+            title: trans('general'),
+            primary: true,
+            fields: [
+              {
+                name: 'poster',
+                type: 'poster',
+                label: trans('poster'),
+                hideLabel: true
+              }, {
+                name: 'title',
+                type: 'string',
+                required: true,
+                label: trans('title')
+              }, {
+                name: 'contentRaw',
+                type: 'html',
+                label: trans('content'),
+                recommended: true,
+                options: {
+                  workspace: workspace,
+                  minRows: 10,
+                  config: {
+                    plugins: ['placeholders'],
+                    placeholders: placeholders
                   }
                 }
-              ]
-            }
-          ]
-        }
-      ]}
-    />
-  </PageContent>
-
-const ChapterForm = withRouter(connect(
-  state => ({
-    path: resourceSelectors.path(state),
-    workspace: resourceSelectors.workspace(state),
-    embedded: resourceSelectors.embedded(state),
-    lesson: selectors.lesson(state),
-    chapter: selectors.chapter(state),
-    placeholders: selectors.placeholders(state),
-    internalNotes: hasPermission('view_internal_notes', resourceSelectors.resourceNode(state)),
-    isNew: formSelectors.isNew(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)),
-    slug: formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).slug || null,
-    parentSlug: formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).parentSlug || null,
-    hasParentSlug: !!formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).parentSlug,
-  })
-)(ChapterFormComponent))
+              }, {
+                name: '_internalNote',
+                type: 'boolean',
+                label: trans('add_internal_note', {}, 'lesson'),
+                help: trans('internal_note_visibility_help', {}, 'lesson'),
+                displayed: internalNotes,
+                calculated: (pageData) => !isEmpty(pageData.internalNote) || pageData._internalNote,
+                linked: [
+                  {
+                    name: 'internalNote',
+                    type: 'html',
+                    label: trans('text'),
+                    displayed: (pageData) => internalNotes  && (!isEmpty(pageData.internalNote) || pageData._internalNote),
+                    options: {
+                      workspace: workspace,
+                      minRows: 10
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]}
+      />
+    </PageContent>
+  )
+}
 
 export {
   ChapterForm

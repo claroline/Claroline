@@ -47,7 +47,7 @@
         max-width: 100%; // avoids user images to overflow their container
     }
 
-    p:last-child {
+    *:last-child {
         margin-bottom: 0;
     }
 

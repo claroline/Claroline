@@ -89,14 +89,6 @@ class ChapterSerializer
         return $serialized;
     }
 
-    /**
-     * Serializes a chapter tree, returned from Gedmo tree extension.
-     */
-    public function serializeChapterTree($tree): array
-    {
-        return $this->serializeChapterTreeNode($tree);
-    }
-
     public function deserialize(array $data, Chapter $chapter, ?array $options = []): Chapter
     {
         if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
@@ -131,23 +123,5 @@ class ChapterSerializer
         }
 
         return $chapter;
-    }
-
-    private function serializeChapterTreeNode(array $node): array
-    {
-        $children = [];
-
-        if (!empty($node['__children'])) {
-            foreach ($node['__children'] as $child) {
-                $children[] = $this->serializeChapterTreeNode($child);
-            }
-        }
-
-        return [
-            'id' => $node['uuid'],
-            'title' => $node['title'],
-            'slug' => $node['slug'],
-            'children' => $children,
-        ];
     }
 }

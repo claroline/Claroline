@@ -1,59 +1,54 @@
-import cloneDeep from 'lodash/cloneDeep'
-
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
-import {FORM_SUBMIT_SUCCESS, FORM_RESET} from '#/main/app/content/form/store/actions'
 
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {selectors} from '#/plugin/lesson/resources/lesson/store/selectors'
 import {
-  CHAPTER_LOAD,
-  CHAPTER_RESET,
-  TREE_LOADED,
-  CHAPTER_DELETED
+  LESSON_PAGE_ADD,
+  LESSON_PAGE_UPDATE, LESSON_PAGES_REFRESH,
+  LESSON_SET_CURRENT_PAGE
 } from '#/plugin/lesson/resources/lesson/store/actions'
+import cloneDeep from 'lodash/cloneDeep'
 
 const reducer = combineReducers({
-  resource: makeReducer({}, {
-    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.resource
-  }),
-  chapter: makeReducer(null, {
-    [CHAPTER_LOAD]: (state, action) => action.chapter,
-    [CHAPTER_RESET]: () => ({}),
-    [CHAPTER_DELETED]: () => null
+  currentPage: makeReducer(null, {
+    [LESSON_SET_CURRENT_PAGE]: (state, action) => action.pageSlug
   }),
   chapters: makeReducer([], {
-    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.chapters
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.chapters || state,
+    [LESSON_PAGES_REFRESH]: (state, action) => action.pages || state,
+    [LESSON_PAGE_ADD]: (state, action) => {
+      const newState = cloneDeep(state)
+
+      const previousPos = state.findIndex(page => page.slug === action.page.previousSlug)
+
+      newState[previousPos].nextSlug = action.page.slug
+
+      if (newState[previousPos + 1]) {
+        newState[previousPos + 1].previousSlug = action.page.slug
+      }
+
+      newState.splice(previousPos + 1, 0, action.page)
+
+      return newState
+    },
+    [LESSON_PAGE_UPDATE]: (state, action) => {
+      const newState = cloneDeep(state)
+
+      const pos = state.findIndex(page => page.slug === action.page.slug)
+      if (-1 !== pos) {
+        newState[pos] = action.page
+      }
+
+      return newState
+    }
   }),
   placeholders: makeReducer([], {
-    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.placeholders
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.placeholders || state
   }),
-  chapter_form: makeFormReducer(selectors.CHAPTER_EDIT_FORM_NAME, {}, {
-    data: makeReducer({}, {
-      [CHAPTER_LOAD]: (state, action) => Object.assign(cloneDeep(state), action.chapter),
-      [FORM_RESET + '/' + selectors.STORE_NAME + '.chapter_form']: (state, action) => Object.assign({
-        position: 'subchapter',
-        order: {
-          sibling: 'before',
-          subchapter: 'last'
-        },
-        parentSlug: state.parentSlug
-      }, action.data || {})
-    })
-  }),
-  tree: combineReducers({
-    invalidated: makeReducer(false, {
-      [TREE_LOADED]: () => false,
-      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.chapter_form']: () => true
-    }),
-    data: makeReducer({}, {
-      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.tree,
-      [TREE_LOADED]: (state, action) => action.tree,
-      [CHAPTER_DELETED]: (state, action) => action.tree
-    })
-  })
+  chapter_form: makeFormReducer(selectors.CHAPTER_EDIT_FORM_NAME)
 })
 
 export {

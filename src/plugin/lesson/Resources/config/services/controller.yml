@@ -6,8 +6,7 @@ services:
         arguments:
           - '@security.authorization_checker'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\API\Crud'
-          - '@Icap\LessonBundle\Serializer\ChapterSerializer'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@Icap\LessonBundle\Manager\ChapterManager'
           - '@Icap\LessonBundle\Manager\PdfManager'

@@ -1,4 +1,0 @@
-services:
-    Icap\LessonBundle\Finder\ChapterFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]

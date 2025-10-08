@@ -40,7 +40,7 @@ const reducer = combineReducers({
   }),
 
   /**
-   * Manages the ResourceNode of the resource.
+   * Manages the custom AbstractResource of the resource.
    */
   resource: makeReducer(null, {
     [RESOURCE_LOAD]: (state, action) => action.resourceData.resource || null

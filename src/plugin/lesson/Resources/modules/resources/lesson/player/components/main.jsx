@@ -1,9 +1,11 @@
 import React, {useCallback} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
+import {useHistory} from 'react-router-dom'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {hasPermission} from '#/main/app/security'
+import {scrollTo} from '#/main/app/dom/scroll'
 import {Routes} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {PageAside} from '#/main/app/page'
@@ -17,8 +19,10 @@ import {LessonPlayerOverview} from '#/plugin/lesson/resources/lesson/player/comp
 import {PlayerModeSimple} from '#/plugin/lesson/resources/lesson/player/components/mode-simple'
 import {PlayerModeInline} from '#/plugin/lesson/resources/lesson/player/components/mode-inline'
 import {PlayerModePage} from '#/plugin/lesson/resources/lesson/player/components/mode-page'
+import {PlayerModePageInline} from '#/plugin/lesson/resources/lesson/player/components/mode-page-inline'
 
 const LessonPlayer = () => {
+  const history = useHistory()
   const dispatch = useDispatch()
 
   const resourcePath = useSelector(resourceSelectors.path)
@@ -42,8 +46,9 @@ const LessonPlayer = () => {
   }, [lesson.id, root ? root.slug : null])
 
   const editChapter = useCallback((chapterSlug) => {
-    dispatch(actions.editChapter(lesson.id, chapterSlug))
-  }, [lesson.id])
+    const chapter = pages.find(page => chapterSlug === page.slug)
+    dispatch(actions.editChapter(lesson.id, chapter))
+  }, [lesson.id, pages])
 
   function getPageSummary(page) {
     const numbering = getNumbering(lessonNumbering, tree.children, page)
@@ -86,7 +91,6 @@ const LessonPlayer = () => {
             exact: true
           }, {
             path: '/new/:parentSlug?',
-            // exact: true,
             onEnter: (params) => createChapter(params.parentSlug),
             component: ChapterForm,
             disabled: !canAdd
@@ -96,6 +100,11 @@ const LessonPlayer = () => {
               const page = pages.find(page => params.slug === page.slug)
               if (page) {
                 loadChapter(page)
+                setTimeout(() => {
+                  scrollTo('#page-'+page.id)
+                }, 0)
+              } else {
+                history.replace(resourcePath)
               }
             },
             exact: true,
@@ -113,7 +122,12 @@ const LessonPlayer = () => {
                       path={resourcePath}
                     />
                   )
-                case 'page':
+                case 'step':
+                  return (
+                    <PlayerModePageInline
+                      path={resourcePath}
+                    />
+                  )
                 case 'all':
                 default:
                   return (
