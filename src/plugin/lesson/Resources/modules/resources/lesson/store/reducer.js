@@ -6,6 +6,7 @@ import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {selectors} from '#/plugin/lesson/resources/lesson/store/selectors'
 import {
+  LESSON_SEARCH,
   LESSON_PAGE_ADD,
   LESSON_PAGE_UPDATE, LESSON_PAGES_REFRESH,
   LESSON_SET_CURRENT_PAGE
@@ -13,6 +14,9 @@ import {
 import cloneDeep from 'lodash/cloneDeep'
 
 const reducer = combineReducers({
+  currentSearch: makeReducer('', {
+    [LESSON_SEARCH]: (state, action) => action.search
+  }),
   currentPage: makeReducer(null, {
     [LESSON_SET_CURRENT_PAGE]: (state, action) => action.pageSlug
   }),

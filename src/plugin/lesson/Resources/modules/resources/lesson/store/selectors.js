@@ -12,6 +12,11 @@ const store = (state) => state[STORE_NAME]
 
 const lesson = resourceSelectors.resource
 
+const currentSearch = createSelector(
+  [store],
+  (store) => store.currentSearch
+)
+
 const placeholders = createSelector(
   [store],
   (store) => store.placeholders
@@ -129,6 +134,7 @@ export const selectors = {
   CHAPTER_EDIT_FORM_NAME,
 
   lesson,
+  currentSearch,
   placeholders,
   root,
   tree,

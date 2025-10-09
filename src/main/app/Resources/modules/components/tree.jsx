@@ -63,14 +63,17 @@ const TreeItem = ({
 
       {expanded && !isEmpty(item.children) &&
         <ul className="list-unstyled ps-4">
-          {item.children.map(child =>
-            <TreeItem
-              key={child.id}
-              item={child}
-              size={size}
-              onClick={onClick}
-            />
-          )}
+          {item.children
+            .filter(child => undefined === child.displayed || child.displayed)
+            .map(child =>
+              <TreeItem
+                key={child.id}
+                item={child}
+                size={size}
+                onClick={onClick}
+              />
+            )
+          }
         </ul>
       }
     </li>
@@ -89,14 +92,17 @@ const Tree = ({
 
   return (
     <ul className={classes('list-unstyled', className)}>
-      {items.map(item =>
-        <TreeItem
-          key={item.id}
-          item={item}
-          size={size}
-          onClick={onClick}
-        />
-      )}
+      {items
+        .filter(item => undefined === item.displayed || item.displayed)
+        .map(item =>
+          <TreeItem
+            key={item.id}
+            item={item}
+            size={size}
+            onClick={onClick}
+          />
+        )
+      }
     </ul>
   )
 }
@@ -106,8 +112,9 @@ Tree.propTypes = {
   size: T.oneOf(['sm']),
   items: T.arrayOf(T.shape({
     id: T.string.isRequired,
-    label: T.string.isRequired,
-    children: T.array
+    label: T.oneOfType([T.string, T.node]).isRequired,
+    children: T.array,
+    displayed: T.bool
   })),
   onClick: T.func
 }

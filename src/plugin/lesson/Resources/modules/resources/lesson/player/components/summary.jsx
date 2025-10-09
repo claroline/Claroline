@@ -1,5 +1,7 @@
-import React, {useState} from 'react'
+import React from 'react'
+import {useDispatch, useSelector} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
 import {Button} from '#/main/app/action'
@@ -7,8 +9,54 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {Tree} from '#/main/app/components/tree'
 import {SearchMinimal} from '#/main/app/content/search/components/minimal'
 
+import {actions, selectors} from '#/plugin/lesson/resources/lesson/store'
+import {getNumbering, highlightSearch, matchSearch} from '#/plugin/lesson/resources/lesson/utils'
+import {Html} from '#/main/app/components/html'
+
+function isPageDisplayed(page, currentSearch) {
+  if (matchSearch(page, currentSearch)) {
+    return true
+  }
+
+  if (page.children) {
+    for (let i = 0; i < page.children.length; i++) {
+      if (isPageDisplayed(page.children[i], currentSearch)) {
+        return true
+      }
+    }
+  }
+
+  return false
+}
+
 const PlayerSummary = (props) => {
-  const [search, setSearch] = useState(null)
+  const dispatch = useDispatch()
+
+  const currentSearch = useSelector(selectors.currentSearch)
+  const lessonNumbering = useSelector(selectors.numbering)
+  const tree = useSelector(selectors.tree)
+
+  function getPageSummary(page) {
+    const numbering = getNumbering(lessonNumbering, tree.children, page)
+
+    return {
+      id: page.id,
+      type: LINK_BUTTON,
+      label: (
+        <Html>
+          {numbering ?
+            numbering + ' ' + highlightSearch(page.title, currentSearch) :
+            highlightSearch(page.title, currentSearch)
+          }
+        </Html>
+      ),
+      target: `${props.path}/${page.slug}`,
+      displayed: isPageDisplayed(page, currentSearch),
+      children: page.children ? page.children.map(getPageSummary) : []
+    }
+  }
+
+  const summary = get(tree, 'children', []).map(getPageSummary)
 
   return (
     <div className="d-flex flex-column h-100" role="presentation">
@@ -18,8 +66,8 @@ const PlayerSummary = (props) => {
 
       <SearchMinimal
         className="mb-3"
-        search={search}
-        onSearch={(searchStr) => setSearch(searchStr)}
+        search={currentSearch}
+        onSearch={(searchStr) => dispatch(actions.search(searchStr))}
       />
 
       {props.showOverview &&
@@ -36,7 +84,7 @@ const PlayerSummary = (props) => {
 
       <Tree
         className="mx-n1"
-        items={props.summary}
+        items={summary}
         onClick={props.autoClose}
       />
 
@@ -57,7 +105,6 @@ const PlayerSummary = (props) => {
 PlayerSummary.propTypes = {
   path: T.string.isRequired,
   title: T.string.isRequired,
-  summary: T.array,
   showOverview: T.bool.isRequired,
   canAdd: T.bool.isRequired,
   // from aside

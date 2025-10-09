@@ -1,11 +1,11 @@
 import {API_REQUEST} from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
-import {actions as listActions} from '#/main/app/content/list/store/actions'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {actions as resourceActions} from '#/main/core/resource/store'
 
 import {selectors} from '#/plugin/lesson/resources/lesson/store/selectors'
 
+export const LESSON_SEARCH = 'LESSON_SEARCH'
 export const LESSON_SET_CURRENT_PAGE = 'LESSON_SET_CURRENT_PAGE'
 export const LESSON_PAGE_ADD = 'LESSON_PAGE_ADD'
 export const LESSON_PAGE_UPDATE = 'LESSON_PAGE_UPDATE'
@@ -13,20 +13,11 @@ export const LESSON_PAGES_REFRESH = 'LESSON_PAGES_REFRESH'
 
 export const actions = {}
 
+actions.search = makeActionCreator(LESSON_SEARCH, 'search')
 actions.setCurrentPage = makeActionCreator(LESSON_SET_CURRENT_PAGE, 'pageSlug')
 actions.addPage = makeActionCreator(LESSON_PAGE_ADD, 'page')
 actions.updatePage = makeActionCreator(LESSON_PAGE_UPDATE, 'page')
 actions.refreshPages = makeActionCreator(LESSON_PAGES_REFRESH, 'pages')
-
-actions.search = (searchStr, internalNotes = false) => (dispatch) => {
-  if (internalNotes) {
-    dispatch(listActions.resetFilters(selectors.LIST_NAME, [{property: 'contentAndNote', value: searchStr}]))
-  } else {
-    dispatch(listActions.resetFilters(selectors.LIST_NAME, [{property: 'content', value: searchStr}]))
-  }
-
-  dispatch(listActions.invalidateData(selectors.LIST_NAME))
-}
 
 actions.loadChapter = (chapter) => dispatch => {
   dispatch(actions.setCurrentPage(chapter.slug))

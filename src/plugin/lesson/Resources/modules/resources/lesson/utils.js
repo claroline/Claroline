@@ -1,3 +1,5 @@
+import isEmpty from 'lodash/isEmpty'
+
 import {NUMBERING_LITERAL, NUMBERING_NUMERIC} from '#/main/app/utils/numbering'
 
 /**
@@ -43,6 +45,28 @@ function getNumbering(type, chapters, chapter) {
   }
 }
 
+function matchSearch(page, search) {
+  if (!search) {
+    return true
+  }
+
+  const regex = new RegExp(search+'(?!([^<]+)?>)', 'gi')
+
+  return -1 !== page.title.search(regex)
+    || (!isEmpty(page.content) && -1 !== page.content.search(regex))
+    || (!isEmpty(page.internalNote) && -1 !== page.internalNote.search(regex))
+}
+
+function highlightSearch(text, search) {
+  if (!search) {
+    return text
+  }
+
+  return text.replace(new RegExp(search+'(?!([^<]+)?>)', 'gi'), '<mark class="text-highlight p-0">$&</mark>')
+}
+
 export {
-  getNumbering
+  getNumbering,
+  matchSearch,
+  highlightSearch
 }

@@ -13,43 +13,6 @@ class ChapterRepository extends NestedTreeRepository
         return $this->childrenHierarchy($chapter, false, [], $includeChapter);
     }
 
-    public function buildChapterTree(Chapter $chapter): array
-    {
-        $queryBuilder = $this->createQueryBuilder('chapter')
-            ->select('chapter.uuid, chapter.level, chapter.title, chapter.slug, chapter.text, chapter.poster, chapter.customNumbering')
-            ->andWhere('chapter.root = :rootId')
-            ->orderBy('chapter.root, chapter.left', 'ASC')
-            ->setParameter('rootId', $chapter->getId());
-
-        return $this->buildTree($queryBuilder->getQuery()->getArrayResult(), ['decorate' => false]);
-    }
-
-    public function getNextSibling(Chapter $chapter): ?Chapter
-    {
-        try {
-            return $this->getNextSiblingsQueryBuilder($chapter)
-                ->setFirstResult(0)
-                ->setMaxResults(1)
-                ->getQuery()
-                ->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    public function getPreviousSibling(Chapter $chapter): ?Chapter
-    {
-        try {
-            return $this->getPrevSiblingsQueryBuilder($chapter)
-                ->setFirstResult(0)
-                ->setMaxResults(1)
-                ->getQuery()
-                ->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
     public function getNextChapter(Chapter $chapter): ?Chapter
     {
         try {

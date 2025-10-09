@@ -7,14 +7,12 @@ import isEmpty from 'lodash/isEmpty'
 import {hasPermission} from '#/main/app/security'
 import {scrollTo} from '#/main/app/dom/scroll'
 import {Routes} from '#/main/app/router'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {PageAside} from '#/main/app/page'
 import {ResourcePage, selectors as resourceSelectors} from '#/main/core/resource'
 
 import {ChapterForm} from '#/plugin/lesson/resources/lesson/player/components/chapter-form'
 import {PlayerSummary} from '#/plugin/lesson/resources/lesson/player/components/summary'
 import {actions, selectors} from '#/plugin/lesson/resources/lesson/store'
-import {getNumbering} from '#/plugin/lesson/resources/lesson/utils'
 import {LessonPlayerOverview} from '#/plugin/lesson/resources/lesson/player/components/overview'
 import {PlayerModeSimple} from '#/plugin/lesson/resources/lesson/player/components/mode-simple'
 import {PlayerModeInline} from '#/plugin/lesson/resources/lesson/player/components/mode-inline'
@@ -32,8 +30,6 @@ const LessonPlayer = () => {
   const lesson = useSelector(selectors.lesson)
   const root = useSelector(selectors.root)
   const pages = useSelector(selectors.pages)
-  const tree = useSelector(selectors.tree)
-  const lessonNumbering = useSelector(selectors.numbering)
   const showOverview = useSelector(selectors.showOverview)
   const canAdd = useSelector((state) => hasPermission('edit', resourceSelectors.resourceNode(state)))
 
@@ -50,20 +46,6 @@ const LessonPlayer = () => {
     dispatch(actions.editChapter(lesson.id, chapter))
   }, [lesson.id, pages])
 
-  function getPageSummary(page) {
-    const numbering = getNumbering(lessonNumbering, tree.children, page)
-
-    return {
-      id: page.id,
-      type: LINK_BUTTON,
-      label: numbering ?
-        numbering + ' ' + page.title :
-        page.title,
-      target: `${resourcePath}/${page.slug}`,
-      children: page.children ? page.children.map(getPageSummary) : []
-    }
-  }
-
   return (
     <ResourcePage>
       {!embedded && 1 < pages.length &&
@@ -71,7 +53,6 @@ const LessonPlayer = () => {
           <PlayerSummary
             path={resourcePath}
             title={resourceName}
-            summary={get(tree, 'children', []).map(getPageSummary)}
             showOverview={showOverview}
             canAdd={canAdd}
           />

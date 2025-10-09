@@ -21,6 +21,7 @@ import {MODAL_PAGE_HISTORY} from '#/plugin/lesson/resources/lesson/modals/histor
 import {LessonPlayerNavSkeleton} from '#/plugin/lesson/resources/lesson/player/components/nav'
 
 import {MODAL_PAGE_POSITION} from '#/plugin/lesson/resources/lesson/modals/position'
+import {highlightSearch} from '#/plugin/lesson/resources/lesson/utils'
 
 const Chapter = props => {
   const history = useHistory()
@@ -36,6 +37,7 @@ const Chapter = props => {
   const pages = useSelector(selectors.pages)
   const showNavigation = useSelector(selectors.showNavigation)
   const showMeta = useSelector(selectors.showMeta)
+  const currentSearch = useSelector(selectors.currentSearch)
 
   const downloadChapter = useCallback(() => {
     dispatch(actions.downloadChapterPdf(lesson.id, props.chapter.id))
@@ -144,10 +146,14 @@ const Chapter = props => {
 
       {props.title &&
         <PageHeading
-          title={props.numbering ?
-            props.numbering + ' ' + props.chapter.title :
-            props.chapter.title
-          }
+          title={(
+            <Html>
+              {props.numbering ?
+                props.numbering + ' ' + highlightSearch(props.chapter.title, currentSearch) :
+                highlightSearch(props.chapter.title, currentSearch)
+              }
+            </Html>
+          )}
           level={props.level}
           poster={props.poster}
         />
@@ -164,7 +170,7 @@ const Chapter = props => {
             undefined
           }
         >
-          {props.chapter.content}
+          {highlightSearch(props.chapter.content, currentSearch)}
         </Content>
       </PageSection>
 
@@ -175,7 +181,7 @@ const Chapter = props => {
           <div className="bg-body-tertiary rounded-3 p-4" role="presentation">
             <h2 className="h5">{trans('internal_note')}</h2>
             <Html className="content-text">
-              {props.chapter.internalNote}
+              {highlightSearch(props.chapter.internalNote, currentSearch)}
             </Html>
           </div>
         </PageSection>
