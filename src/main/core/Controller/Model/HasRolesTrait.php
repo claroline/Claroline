@@ -30,7 +30,6 @@ trait HasRolesTrait
             $this->crud->list(Role::class, array_merge($request->query->all(), [
                 'hiddenFilters' => [
                     static::getName() => [$id],
-                    'grantable' => true,
                 ],
             ]))
         );
