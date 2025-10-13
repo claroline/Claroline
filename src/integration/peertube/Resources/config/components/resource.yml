@@ -2,8 +2,5 @@ services:
     Claroline\PeerTubeBundle\Component\Resource\VideoResource:
         tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
-            - '@security.token_storage'
             - '@twig'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\PeerTubeBundle\Manager\EvaluationManager'
             - '@Claroline\PeerTubeBundle\Manager\PeerTubeManager'

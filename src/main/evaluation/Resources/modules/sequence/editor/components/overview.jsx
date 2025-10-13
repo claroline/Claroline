@@ -54,6 +54,14 @@ const SequenceEditorOverview = () => {
                 minRows: 2
               }
             }, {
+              name: 'resourceNode.estimatedDuration',
+              label: trans('estimated_duration'),
+              type: 'number',
+              options: {
+                unit: trans('minutes')
+              },
+              help: trans('sequence_estimated_duration_help', {}, 'evaluation')
+            }, {
               name: 'meta.descriptionHtml',
               label: trans('description_long'),
               type: 'html',

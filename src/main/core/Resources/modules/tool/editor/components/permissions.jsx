@@ -43,7 +43,6 @@ const ToolEditorPermissions = (props) => {
           ]
         }, {
           name: 'roles',
-          icon: 'fa fa-fw fa-id-badges',
           title: trans('roles'),
           description: trans('Assignez des permissions aux rôles pour personnaliser les droits des utilisateurs possédant ce rôle.'),
           primary: true,

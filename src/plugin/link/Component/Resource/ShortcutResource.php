@@ -11,7 +11,6 @@
 
 namespace Claroline\LinkBundle\Component\Resource;
 
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\CoreBundle\Component\Resource\DownloadableResourceInterface;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
@@ -26,7 +25,6 @@ use Claroline\LinkBundle\Entity\Resource\Shortcut;
 final class ShortcutResource extends ResourceComponent implements DownloadableResourceInterface, EvaluatedResourceInterface
 {
     public function __construct(
-        private readonly SerializerProvider $serializer,
         private readonly ResourceManager $resourceManager
     ) {
     }
@@ -47,27 +45,11 @@ final class ShortcutResource extends ResourceComponent implements DownloadableRe
     }
 
     /** @param Shortcut $resource */
-    public function open(AbstractResource $resource, bool $embedded = false): ?array
-    {
-        return [
-            'resource' => $this->serializer->serialize($resource),
-        ];
-    }
-
-    /** @param Shortcut $resource */
     public function download(AbstractResource $resource, FileBag $fileBag): void
     {
         // forward download to the target resource
         if ($resource->getTarget()) {
             $this->resourceManager->download([$resource->getTarget()], $fileBag);
         }
-    }
-
-    /** @param Shortcut $resource */
-    public function update(AbstractResource $resource, array $data, array $previousData): ?array
-    {
-        return [
-            'resource' => $this->serializer->serialize($resource),
-        ];
     }
 }

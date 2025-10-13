@@ -6,6 +6,9 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Store evaluation parameters for evaluated resources.
+ */
 #[ORM\Entity]
 #[ORM\Table(name: 'claro_evaluation_resource_parameters')]
 class ResourceParameters extends AbstractEvaluationParameters
@@ -17,7 +20,7 @@ class ResourceParameters extends AbstractEvaluationParameters
     /**
      * How many times a user can retry the evaluation.
      */
-    #[ORM\Column(name: 'max_attempts', type: 'integer')]
+    #[ORM\Column(name: 'max_attempts', type: 'integer', nullable: true)]
     private ?int $maxAttempts = null;
 
     /**

@@ -11,27 +11,21 @@
 
 namespace Claroline\BigBlueButtonBundle\Component\Resource;
 
-use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\BigBlueButtonBundle\Entity\BBB;
 use Claroline\BigBlueButtonBundle\Manager\BBBManager;
-use Claroline\BigBlueButtonBundle\Manager\EvaluationManager;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 final class BBBResource extends ResourceComponent implements EvaluatedResourceInterface
 {
     public function __construct(
-        private readonly TokenStorageInterface $tokenStorage,
         private readonly PlatformConfigurationHandler $config,
         private readonly SerializerProvider $serializer,
-        private readonly BBBManager $bbbManager,
-        private readonly EvaluationManager $evaluationManager
+        private readonly BBBManager $bbbManager
     ) {
     }
 
@@ -71,28 +65,12 @@ final class BBBResource extends ResourceComponent implements EvaluatedResourceIn
             }
         }
 
-        $userEvaluation = null;
-        if ($this->tokenStorage->getToken()?->getUser() instanceof User) {
-            $attempt = $this->evaluationManager->update($resource->getResourceNode(), $this->tokenStorage->getToken()?->getUser());
-            $userEvaluation = $attempt->getResourceUserEvaluation();
-        }
-
         return [
-            'resource' => $this->serializer->serialize($resource),
-            'userEvaluation' => $this->serializer->serialize($userEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
             'servers' => $this->bbbManager->getServers(),
             'allowRecords' => $allowRecords,
             'canStart' => $canStart,
             'joinStatus' => $joinStatus,
             'lastRecording' => $lastRecording,
-        ];
-    }
-
-    /** @param BBB $resource */
-    public function update(AbstractResource $resource, array $data, array $previousData): ?array
-    {
-        return [
-            'resource' => $this->serializer->serialize($resource),
         ];
     }
 

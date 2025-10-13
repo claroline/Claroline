@@ -6,7 +6,7 @@ import get from 'lodash/get'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 
 import {EvaluationListItem} from '#/main/evaluation/components/list-item'
-import {MODAL_USER_PROGRESSION} from '#/main/evaluation/workspace/modals/user-progression'
+import {MODAL_WORKSPACE_USER_PROGRESSION} from '#/main/evaluation/workspace/modals/user-progression/constants'
 import {WorkspaceEvaluation} from '#/main/evaluation/workspace/prop-types'
 
 const UserProgressionArchives = (props) => {
@@ -19,7 +19,7 @@ const UserProgressionArchives = (props) => {
             evaluation={evaluation}
             primaryAction={{
               type: MODAL_BUTTON,
-              modal: [MODAL_USER_PROGRESSION, {
+              modal: [MODAL_WORKSPACE_USER_PROGRESSION, {
                 evaluation: evaluation
               }],
               onClick: props.fadeModal

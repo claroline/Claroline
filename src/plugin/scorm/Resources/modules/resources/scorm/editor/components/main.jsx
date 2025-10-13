@@ -10,7 +10,7 @@ const ScormEditor = () =>
   <ResourceEditor
     overviewPage={ScormEditorOverview}
     appearancePage={ScormEditorAppearance}
-    evaluationPage={ScormEditorEvaluation}
+    // evaluationPage={ScormEditorEvaluation}
   />
 
 export {

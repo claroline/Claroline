@@ -2,17 +2,17 @@ import React, {createElement, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {displayDate, displayDuration, trans} from '#/main/app/intl'
 import {precision} from '#/main/app/intl/number'
+import {Button} from '#/main/app/action'
 import {Badge} from '#/main/app/components/badge'
 
 import {EvaluationScore} from '#/main/evaluation/components/score'
 import {EvaluationStatus} from '#/main/evaluation/components/status'
 import {constants} from '#/main/evaluation/constants'
 import {UserEvaluation} from '#/main/evaluation/prop-types'
-import isEmpty from 'lodash/isEmpty'
-import {Button} from '#/main/app/action'
 
 const EvaluationListItem = ({
   title,

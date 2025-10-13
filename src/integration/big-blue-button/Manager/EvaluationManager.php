@@ -6,6 +6,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\EvaluationBundle\Repository\UserEvaluation\ResourceAttemptRepository;
@@ -19,6 +20,11 @@ class EvaluationManager
         private readonly ResourceEvaluationManager $resourceEvalManager
     ) {
         $this->attemptRepository = $om->getRepository(ResourceAttempt::class);
+    }
+
+    public function getResourceUserEvaluation(ResourceNode $node, User $user): ?ResourceEvaluation
+    {
+        return $this->resourceEvalManager->getUserEvaluation($node, $user);
     }
 
     /**

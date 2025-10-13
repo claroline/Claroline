@@ -20,7 +20,7 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\EvaluationBundle\Entity\Certificate\WorkspaceCertificate;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\WorkspaceEvaluation;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
-use Claroline\EvaluationBundle\Manager\WorkspaceCertificateManager;
+use Claroline\EvaluationBundle\Manager\Certificate\WorkspaceCertificateManager;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;

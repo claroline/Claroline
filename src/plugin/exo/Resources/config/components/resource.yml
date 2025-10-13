@@ -8,5 +8,4 @@ services:
             - '@UJM\ExoBundle\Manager\ExerciseManager'
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
             - '@UJM\ExoBundle\Manager\AttemptManager'
-            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'

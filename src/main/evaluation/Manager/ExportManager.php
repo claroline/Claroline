@@ -120,8 +120,8 @@ class ExportManager
         }
 
         return [
-            $user && !$evaluation->isAnonymized() ? $user->getLastName() : '',
-            $user && !$evaluation->isAnonymized() ? $user->getFirstName() : '',
+            $user ? $user->getLastName() : '',
+            $user ? $user->getFirstName() : '',
             DateNormalizer::normalize($evaluation->getStartedAt()),
             DateNormalizer::normalize($evaluation->getEndedAt()),
             DateNormalizer::normalize($evaluation->getLastActivityAt()),

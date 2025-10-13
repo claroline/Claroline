@@ -2,6 +2,24 @@ services:
     _defaults:
         tags: [ claroline.serializer ]
 
+    # Evaluation parameters
+    Claroline\EvaluationBundle\Serializer\Parameters\ResourceParametersSerializer:
+        arguments:
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+
+    Claroline\EvaluationBundle\Serializer\Parameters\SequenceParametersSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\TemplateBundle\Serializer\TemplateSerializer'
+            - '@Claroline\EvaluationBundle\Serializer\Sequence\SequenceSerializer'
+
+    Claroline\EvaluationBundle\Serializer\Parameters\WorkspaceParametersSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\TemplateBundle\Serializer\TemplateSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+
+    # User evaluations
     Claroline\EvaluationBundle\Serializer\UserEvaluation\WorkspaceEvaluationSerializer:
         arguments:
             - '@security.authorization_checker'
@@ -27,6 +45,7 @@ services:
             - '@Claroline\EvaluationBundle\Serializer\Sequence\SequenceSerializer'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
+    # Certificates
     Claroline\EvaluationBundle\Serializer\Certificate\SequenceCertificateSerializer:
         arguments:
             - '@security.authorization_checker'
@@ -36,8 +55,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-
-    Claroline\EvaluationBundle\Serializer\SkillsFrameworkSerializer: ~
 
     # Sequences
     Claroline\EvaluationBundle\Serializer\Sequence\SequenceSerializer:
@@ -66,3 +83,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CommunityBundle\Serializer\RoleSerializer'
+
+    # Skills
+    Claroline\EvaluationBundle\Serializer\SkillsFrameworkSerializer: ~

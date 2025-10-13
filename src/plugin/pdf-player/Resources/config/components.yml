@@ -2,8 +2,5 @@ services:
     Claroline\PdfPlayerBundle\Component\Resource\PdfResource:
         tags: [ 'claroline.component.resource', 'kernel.event_subscriber' ]
         arguments:
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\FileManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\PdfPlayerBundle\Manager\EvaluationManager'

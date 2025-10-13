@@ -29,7 +29,7 @@ const UserProgressionModal = (props) => {
       component: props.overview
     }, {
       name: 'archives',
-      title: trans('Evaluations précédentes'),
+      title: trans('previous_evaluations', {}, 'evaluation'),
       displayed: !!props.archives && !isEmpty(evaluationData) && !isEmpty(evaluationData.archives),
       component: props.archives
     }, {

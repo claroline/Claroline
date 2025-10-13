@@ -81,7 +81,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Updates WorkspaceEvaluation each time a user is evaluated for a Resource.
+     * Updates WorkspaceEvaluation each time a user is evaluated for a Sequence.
      */
     public function onSequenceEvaluate(SequenceEvaluationEvent $event): void
     {
@@ -92,7 +92,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
         $workspace = $sequence->getWorkspace();
 
         if ($this->manager->isEvaluated($workspace)) {
-            $evaluation = $this->manager->getUserEvaluation($workspace, $user, true);
+            $evaluation = $this->manager->getUserEvaluation($workspace, $user);
             $this->manager->updateUserEvaluation($evaluation, $sequenceEvaluation);
         }
     }

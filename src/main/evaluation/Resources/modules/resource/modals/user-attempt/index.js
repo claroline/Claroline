@@ -5,8 +5,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 import {UserAttemptModal} from '#/main/evaluation/resource/modals/user-attempt/components/modal'
-
-const MODAL_RESOURCE_USER_ATTEMPT = 'MODAL_RESOURCE_USER_ATTEMPT'
+import {MODAL_RESOURCE_USER_ATTEMPT} from '#/main/evaluation/resource/modals/user-attempt/constants'
 
 registry.add(MODAL_RESOURCE_USER_ATTEMPT, UserAttemptModal)
 

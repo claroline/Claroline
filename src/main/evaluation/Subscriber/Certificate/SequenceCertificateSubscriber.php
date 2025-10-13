@@ -17,7 +17,7 @@ use Claroline\EvaluationBundle\Entity\Certificate\SequenceCertificate;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\SequenceEvaluationEvent;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
-use Claroline\EvaluationBundle\Manager\SequenceCertificateManager;
+use Claroline\EvaluationBundle\Manager\Certificate\SequenceCertificateManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**

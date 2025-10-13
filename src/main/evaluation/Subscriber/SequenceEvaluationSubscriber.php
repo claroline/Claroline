@@ -42,6 +42,10 @@ class SequenceEvaluationSubscriber implements EventSubscriberInterface
         // find sequences which use the resource and recompute the user evaluations for them
         $sequences = $this->evaluationManager->getByResourceAndUser($resourceNode, $user);
         foreach ($sequences as $sequence) {
+            if (!$this->evaluationManager->isEvaluated($sequence)) {
+                continue;
+            }
+
             $evaluation = $this->evaluationManager->getUserEvaluation($sequence, $user);
 
             $steps = [];
@@ -70,6 +74,10 @@ class SequenceEvaluationSubscriber implements EventSubscriberInterface
             // find sequences which use the resource and recompute the user evaluations for them
             $sequences = $this->evaluationManager->getByResource($resourceNode);
             foreach ($sequences as $sequence) {
+                if (!$this->evaluationManager->isEvaluated($sequence)) {
+                    continue;
+                }
+
                 $this->evaluationManager->recomputeEvaluations($sequence);
             }
         }
@@ -85,6 +93,10 @@ class SequenceEvaluationSubscriber implements EventSubscriberInterface
             // find sequences which use the resource and recompute the user evaluations for them
             $sequences = $this->evaluationManager->getByResource($resourceNode);
             foreach ($sequences as $sequence) {
+                if (!$this->evaluationManager->isEvaluated($sequence)) {
+                    continue;
+                }
+
                 $this->evaluationManager->recomputeEvaluations($sequence);
             }
         }

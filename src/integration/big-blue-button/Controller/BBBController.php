@@ -19,6 +19,8 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BigBlueButtonBundle\Entity\BBB;
 use Claroline\BigBlueButtonBundle\Entity\Recording;
 use Claroline\BigBlueButtonBundle\Manager\BBBManager;
+use Claroline\BigBlueButtonBundle\Manager\EvaluationManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -29,6 +31,7 @@ use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: '/bbb/{id}')]
@@ -39,9 +42,11 @@ class BBBController
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
         private readonly Crud $crud,
         private readonly BBBManager $bbbManager,
+        private readonly EvaluationManager $evaluationManager,
         private readonly UrlGeneratorInterface $router,
         private readonly RoutingHelper $routingHelper
     ) {
@@ -74,6 +79,11 @@ class BBBController
         if (empty($errors)) {
             $url = $this->bbbManager->getMeetingUrl($bbb, $moderator, $username);
             if ($url) {
+                $user = $this->tokenStorage->getToken()?->getUser();
+                if ($user instanceof User) {
+                    $this->evaluationManager->update($bbb->getResourceNode(), $user);
+                }
+
                 return new RedirectResponse($url);
             }
         }

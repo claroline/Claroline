@@ -14,7 +14,7 @@ import {getActions} from '#/main/core/resource/utils'
 import {selectors, actions} from '#/main/core/resource/store'
 import {route} from '#/main/core/resource/routing'
 import {EvaluationShortcut} from '#/main/evaluation/components/shortcut'
-import {MODAL_USER_PROGRESSION} from '#/main/evaluation/resource/modals/user-progression'
+import {MODAL_RESOURCE_USER_PROGRESSION} from '#/main/evaluation/resource/modals/user-progression'
 import {pickAction} from '#/main/app/action'
 import {trans} from '#/main/app/intl'
 
@@ -98,7 +98,7 @@ const ResourcePage = (props) => {
           <EvaluationShortcut
             className="my-auto"
             evaluation={merge({}, userEvaluation, {user: currentUser, resourceNode: resourceNode})}
-            modal={MODAL_USER_PROGRESSION}
+            modal={MODAL_RESOURCE_USER_PROGRESSION}
           />
         ),
         nav: resourceDef.menu,

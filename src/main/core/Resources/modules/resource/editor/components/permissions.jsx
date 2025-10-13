@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
+import {useDispatch, useSelector} from 'react-redux'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
@@ -8,25 +9,29 @@ import {param} from '#/main/app/config'
 import {EditorPage} from '#/main/app/editor'
 import {ContentRights} from '#/main/app/content/components/rights'
 
-import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {supportDownload, getResource} from '#/main/core/resource/utils'
+import {actions, selectors} from '#/main/core/resource/editor/store'
 
 const restrictedByDates = (formData) => get(formData, 'resourceNode.restrictions.enableDates') || !isEmpty(get(formData, 'resourceNode.restrictions.dates'))
 const restrictedByCode = (formData) => get(formData, 'resourceNode.restrictions.enableCode') || !!get(formData, 'resourceNode.restrictions.code')
 
 const ResourceEditorPermissions = (props) => {
+  const dispatch = useDispatch()
   const [permissions, setPermissions] = useState({})
 
+  const resourceNode = useSelector(selectors.resourceNode)
+  const rights = useSelector(selectors.rights)
+
   useEffect(() => {
-    if (!isEmpty(props.resourceNode)) {
-      // load tool configuration to get the list of implemented permissions
-      getResource(get(props.resourceNode, 'meta.type')).then((resourceModule) => {
+    if (!isEmpty(resourceNode)) {
+      // load resource configuration to get the list of implemented permissions
+      getResource(get(resourceNode, 'meta.type')).then((resourceModule) => {
         setPermissions(resourceModule.default.permissions)
       })
 
-      props.loadRights(props.resourceNode)
+      dispatch(actions.fetchRights(resourceNode))
     }
-  }, [get(props.resourceNode, 'id')])
+  }, [get(resourceNode, 'id')])
 
   return (
     <EditorPage
@@ -50,7 +55,7 @@ const ResourceEditorPermissions = (props) => {
             }, {
               name: 'resourceNode.meta.downloadable',
               type: 'boolean',
-              displayed: !isEmpty(props.resourceNode) && supportDownload(props.resourceNode),
+              displayed: !isEmpty(resourceNode) && supportDownload(resourceNode),
               label: trans('allow_download', {}, 'resource'),
               help: trans('allow_download_help', {}, 'resource')
             }
@@ -60,20 +65,19 @@ const ResourceEditorPermissions = (props) => {
           title: trans('roles'),
           description: trans('Assignez des permissions aux rôles pour personnaliser les droits des utilisateurs possédant ce rôle.'),
           primary: true,
-          render: () => props.rights && (
+          render: () => rights && (
             <ContentRights
-              workspace={props.resourceNode.workspace}
+              workspace={resourceNode.workspace}
               permissions={permissions}
               creatable={param('resources.types').reduce((resourceTypes, current) => Object.assign(resourceTypes, {
                 [current.name]: trans(current.name, {}, 'resource')
               }), {})}
-              rights={props.rights}
-              updateRights={props.updateRights}
+              rights={rights}
+              updateRights={(perms) => dispatch(actions.updateRights(perms))}
             />
           )
         }, {
           name: 'restrictions',
-          icon: 'fa fa-fw fa-key',
           title: trans('access_restrictions'),
           description: trans('Ajoutez des conditions d\'accès supplémentaires à vos contenus. Les utilisateurs ayant la permission "Administrer" ne sont pas affectés.'),
           primary: true,
@@ -86,7 +90,7 @@ const ResourceEditorPermissions = (props) => {
               calculated: restrictedByDates,
               onChange: activated => {
                 if (!activated) {
-                  props.updateResourceNode('restrictions.dates', [])
+                  dispatch(actions.updateResourceNode('restrictions.dates', []))
                 }
               },
               linked: [
@@ -109,7 +113,7 @@ const ResourceEditorPermissions = (props) => {
               calculated: restrictedByCode,
               onChange: activated => {
                 if (!activated) {
-                  props.updateResourceNode('restrictions.code', '')
+                  dispatch(actions.updateResourceNode('restrictions.code', ''))
                 }
               },
               linked: [
@@ -133,13 +137,7 @@ const ResourceEditorPermissions = (props) => {
 }
 
 ResourceEditorPermissions.propTypes = {
-  definition: T.array,
-  resourceNode: T.shape(
-    ResourceNodeTypes.propTypes
-  ).isRequired,
-  updateResourceNode: T.func.isRequired,
-  updateRights: T.func.isRequired,
-  loadRights: T.func.isRequired
+  definition: T.array
 }
 
 export {

@@ -150,7 +150,6 @@ const SequenceOverview = () => {
           actions={actions}
           userEvaluation={userEvaluation}
           display={{
-            score: get(sequence, 'display.showScore'),
             scoreMax: get(sequence, 'evaluation.scoreTotal'),
             feedback: !!get(sequence, 'evaluation.successMessage') || !!get(sequence, 'evaluation.failureMessage')
           }}

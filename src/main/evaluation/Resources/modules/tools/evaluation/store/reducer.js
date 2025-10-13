@@ -7,6 +7,14 @@ import {CONTEXT_OPEN} from '#/main/app/context/store/actions'
 import {makeInstanceAction} from '#/main/app/store/actions'
 
 const reducer = combineReducers({
+  /**
+   * Evaluation parameters for the current workspace.
+   * NB. only available in the workspace context.
+   */
+  evaluation: makeReducer(null, {
+    [CONTEXT_OPEN]: () => null,
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.evaluation || null
+  }),
   current: combineReducers({
     sequences: makeReducer([], {
       [CONTEXT_OPEN]: () => [],

@@ -22,14 +22,19 @@ const currentResourceEvaluations = createSelector(
   (store) => get(store, 'current.resourceEvaluations')
 )
 
+const evaluation = createSelector(
+  [store],
+  (store) => store.evaluation
+)
+
 const totalScore = createSelector(
-  [contextSelectors.data],
-  (contextData) => get(contextData, 'evaluation.scoreTotal', null)
+  [evaluation],
+  (evaluation) => get(evaluation, 'scoreTotal', null)
 )
 
 const hasScore = createSelector(
-  [contextSelectors.type, totalScore],
-  (contextType, contextScore) => 'desktop' === contextType || !!contextScore
+  [evaluation],
+  (evaluation) =>  get(evaluation, 'score', null)
 )
 
 export const selectors = {
@@ -38,6 +43,7 @@ export const selectors = {
   assignedSequences,
   currentWorkspaceEvaluation,
   currentResourceEvaluations,
+  evaluation,
   hasScore,
   totalScore
 }

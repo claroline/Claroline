@@ -17,12 +17,6 @@ abstract class AbstractEvaluationParameters
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $scored = false;
 
-    /**
-     * If true, the users who pass the evaluation are anonymized in results.
-     */
-    #[ORM\Column(type: Types::BOOLEAN)]
-    private bool $anonymized = false;
-
     #[ORM\Column(name: 'score_total', type: Types::FLOAT, nullable: true)]
     private ?float $scoreTotal = 100;
 
@@ -53,16 +47,6 @@ abstract class AbstractEvaluationParameters
     public function setScored(bool $scored): void
     {
         $this->scored = $scored;
-    }
-
-    public function isAnonymized(): bool
-    {
-        return $this->anonymized;
-    }
-
-    public function setAnonymized(bool $anonymized): void
-    {
-        $this->anonymized = $anonymized;
     }
 
     public function getScoreTotal(): ?float

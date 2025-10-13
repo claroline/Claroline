@@ -12,6 +12,7 @@ import {selectors} from '#/main/core/resource/editor/store'
 
 const ResourceEditorOverview = (props) => {
   const workspace = useSelector(selectors.workspace)
+
   return (
     <EditorPage
       title={trans('overview')}
@@ -76,7 +77,7 @@ const ResourceEditorOverview = (props) => {
               options: {
                 unit: trans('minutes')
               },
-              help: trans('Estimez le temps nécessaire à la consultation du contenu ou à la réalisation de l\'activité.')
+              help: trans('estimated_duration_help', {}, 'resource')
             }, {
               name: 'resourceNode.meta.descriptionHtml',
               label: trans('description_long'),

@@ -29,7 +29,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Component\Resource\ResourceProvider'
 
-    Claroline\EvaluationBundle\Manager\SequenceCertificateManager:
+    Claroline\EvaluationBundle\Manager\Certificate\SequenceCertificateManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\PdfManager'
@@ -41,7 +41,7 @@ services:
             - '@Claroline\AppBundle\Manager\File\ArchiveManager'
             - '@translator'
 
-    Claroline\EvaluationBundle\Manager\WorkspaceCertificateManager:
+    Claroline\EvaluationBundle\Manager\Certificate\WorkspaceCertificateManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\PdfManager'
@@ -56,3 +56,7 @@ services:
     Claroline\EvaluationBundle\Manager\SequenceManager:
         arguments:
             - '@Claroline\AppBundle\Manager\ViewerManager'
+
+    Claroline\EvaluationBundle\Manager\SequenceRequirementManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

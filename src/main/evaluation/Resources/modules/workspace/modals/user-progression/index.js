@@ -5,11 +5,10 @@
 import {registry} from '#/main/app/modals/registry'
 
 import {UserProgressionModal} from '#/main/evaluation/workspace/modals/user-progression/components/modal'
+import {MODAL_WORKSPACE_USER_PROGRESSION} from '#/main/evaluation/workspace/modals/user-progression/constants'
 
-const MODAL_USER_PROGRESSION = 'MODAL_WORKSPACE_USER_PROGRESSION'
-
-registry.add(MODAL_USER_PROGRESSION, UserProgressionModal)
+registry.add(MODAL_WORKSPACE_USER_PROGRESSION, UserProgressionModal)
 
 export {
-  MODAL_USER_PROGRESSION
+  MODAL_WORKSPACE_USER_PROGRESSION
 }

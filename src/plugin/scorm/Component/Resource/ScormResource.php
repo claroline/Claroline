@@ -2,7 +2,6 @@
 
 namespace Claroline\ScormBundle\Component\Resource;
 
-use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -55,24 +54,16 @@ final class ScormResource extends ResourceComponent implements DownloadableResou
     /** @param Scorm $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
-        $evaluation = null;
         $tracking = [];
 
         /** @var User $user */
         $user = $this->tokenStorage->getToken()?->getUser();
         if ($user instanceof User) {
-            // retrieve user progression
-            $evaluation = $this->serializer->serialize(
-                $this->evaluationManager->getResourceUserEvaluation($resource, $user),
-                [SerializerInterface::SERIALIZE_MINIMAL]
-            );
-
             // retrieve progression for each sco in the scorm
             $tracking = $this->evaluationManager->generateScosTrackings($resource->getRootScos(), $user);
         }
 
         return [
-            'userEvaluation' => $evaluation,
             'trackings' => $tracking,
         ];
     }

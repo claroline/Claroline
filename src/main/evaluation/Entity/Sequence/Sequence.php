@@ -282,11 +282,17 @@ class Sequence implements CrudEntityInterface, UserViewCounterInterface
         $this->scoreTotal = $scoreTotal;
     }
 
+    /**
+     * @deprecated
+     */
     public function getShowScore(): bool
     {
         return $this->showScore;
     }
 
+    /**
+     * @deprecated
+     */
     public function setShowScore($showScore): void
     {
         $this->showScore = $showScore;

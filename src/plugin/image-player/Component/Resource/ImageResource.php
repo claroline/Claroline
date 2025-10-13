@@ -2,7 +2,6 @@
 
 namespace Claroline\ImagePlayerBundle\Component\Resource;
 
-use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Resource\DownloadableResourceInterface;
@@ -56,16 +55,11 @@ final class ImageResource extends ResourceComponent implements DownloadableResou
     {
         $user = $this->tokenStorage->getToken()?->getUser();
 
-        $userEvaluation = null;
         if ($user instanceof User) {
-            $userEvaluation = $this->evaluationManager->update($resource->getResourceNode(), $user);
+            $this->evaluationManager->update($resource->getResourceNode(), $user);
         }
 
-        return [
-            'userEvaluation' => $userEvaluation ?
-                $this->serializer->serialize($userEvaluation, [SerializerInterface::SERIALIZE_MINIMAL])
-                : null,
-        ];
+        return [];
     }
 
     public function supportsFile(File $file): int

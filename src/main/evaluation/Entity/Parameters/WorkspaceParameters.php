@@ -6,6 +6,9 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\EvaluationBundle\Entity\Certified;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Store evaluation parameters for evaluated workspaces.
+ */
 #[ORM\Entity]
 #[ORM\Table(name: 'claro_evaluation_workspace_parameters')]
 class WorkspaceParameters extends AbstractEvaluationParameters

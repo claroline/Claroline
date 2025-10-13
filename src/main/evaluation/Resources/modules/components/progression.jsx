@@ -42,7 +42,7 @@ const EvaluationProgression = ({className, modal, evaluation = {}}) => {
           </div>
 
           {evaluation.status && ![constants.EVALUATION_STATUS_NOT_ATTEMPTED, constants.EVALUATION_STATUS_UNKNOWN].includes(evaluation.status) &&
-            <ModalButton modal={[modal, {evaluation: evaluation}]} className="btn btn-link ms-auto">
+            <ModalButton modal={[modal, {evaluation: evaluation}]} className="btn btn-link ms-auto me-n3 mb-n3">
               {trans('see_detail', {}, 'actions')}
               <span className="ms-2 fa fa-arrow-right" aria-hidden={true} />
             </ModalButton>

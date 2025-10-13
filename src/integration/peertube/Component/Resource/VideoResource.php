@@ -2,27 +2,19 @@
 
 namespace Claroline\PeerTubeBundle\Component\Resource;
 
-use Claroline\AppBundle\API\Serializer\SerializerInterface;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Component\Resource\UrlAdapterInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
 use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Claroline\PeerTubeBundle\Entity\Video;
-use Claroline\PeerTubeBundle\Manager\EvaluationManager;
 use Claroline\PeerTubeBundle\Manager\PeerTubeManager;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
 
 final class VideoResource extends ResourceComponent implements UrlAdapterInterface, EvaluatedResourceInterface
 {
     public function __construct(
-        private readonly TokenStorageInterface $tokenStorage,
         private readonly Environment $templating,
-        private readonly SerializerProvider $serializer,
-        private readonly EvaluationManager $evaluationManager,
         private readonly PeerTubeManager $peerTubeManager
     ) {
     }
@@ -50,20 +42,6 @@ final class VideoResource extends ResourceComponent implements UrlAdapterInterfa
     }
 
     /** @param Video $resource */
-    public function open(AbstractResource $resource, bool $embedded = false): ?array
-    {
-        $user = $this->tokenStorage->getToken()?->getUser();
-
-        return [
-            'resource' => $this->serializer->serialize($resource),
-            'userEvaluation' => $user instanceof User ? $this->serializer->serialize(
-                $this->evaluationManager->getResourceUserEvaluation($resource->getResourceNode(), $user),
-                [SerializerInterface::SERIALIZE_MINIMAL]
-            ) : null,
-        ];
-    }
-
-    /** @param Video $resource */
     public function create(AbstractResource $resource, array $data): void
     {
         $this->peerTubeManager->handleThumbnailForVideo($resource);
@@ -74,9 +52,7 @@ final class VideoResource extends ResourceComponent implements UrlAdapterInterfa
     {
         $this->peerTubeManager->handleThumbnailForVideo($resource);
 
-        return [
-            'resource' => $this->serializer->serialize($resource),
-        ];
+        return [];
     }
 
     public function onEmbed(EmbedResourceEvent $event): void

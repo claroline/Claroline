@@ -11,7 +11,7 @@ import {supportEvaluation} from '#/main/core/resource/utils'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {ResourceEditorAppearance} from '#/main/core/resource/editor/components/appearance'
 import {ResourceEditorOverview} from '#/main/core/resource/editor/components/overview'
-import {ResourceEditorPermissions} from '#/main/core/resource/editor/containers/permissions'
+import {ResourceEditorPermissions} from '#/main/core/resource/editor/components/permissions'
 import {ResourceEditorHistory} from '#/main/core/resource/editor/components/history'
 import {ResourceEditorEvaluation} from '#/main/core/resource/editor/components/evaluation'
 import {ResourceEditorActions} from '#/main/core/resource/editor/components/actions'
@@ -44,7 +44,8 @@ const ResourceEditor = ({
     if (resourceLoaded) {
       const initialData = Object.assign({}, additionalData() || {}, {
         resourceNode: resourceNode,
-        resource: resource
+        resource: resource,
+        evaluation: resourceNode.evaluation
       })
       dispatch(actions.reset(initialData))
     }

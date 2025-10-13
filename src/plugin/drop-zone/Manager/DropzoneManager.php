@@ -122,7 +122,6 @@ class DropzoneManager
         }
 
         return [
-            'resource' => $this->serializer->serialize($dropzone),
             'myDrop' => $mySerializedDrop,
             'nbCorrections' => count($finishedPeerDrops),
             'userEvaluation' => $this->serializer->serialize($userEvaluation, [Options::SERIALIZE_MINIMAL]),

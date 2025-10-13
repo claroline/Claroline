@@ -4,7 +4,6 @@ import {ResourceEditorEvaluation} from '#/main/core/resource/editor'
 
 const ScormEditorEvaluation = () =>
   <ResourceEditorEvaluation
-    successConditions={false}
   />
 
 export {

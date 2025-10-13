@@ -9,7 +9,7 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 import {EmptyState} from '#/main/app/components/empty-state'
 
 import {EvaluationListItem} from '#/main/evaluation/components/list-item'
-import {MODAL_USER_PROGRESSION} from '#/main/evaluation/resource/modals/user-progression'
+import {MODAL_RESOURCE_USER_PROGRESSION} from '#/main/evaluation/resource/modals/user-progression/constants'
 import {ResourceEvaluation} from '#/main/evaluation/resource/prop-types'
 
 const UserProgressionOverview = (props) => {
@@ -31,7 +31,7 @@ const UserProgressionOverview = (props) => {
             evaluation={stepEvaluation}
             primaryAction={stepEvaluation.resourceNode ? {
               type: MODAL_BUTTON,
-              modal: [MODAL_USER_PROGRESSION, {
+              modal: [MODAL_RESOURCE_USER_PROGRESSION, {
                 evaluation: stepEvaluation
               }]
             } : undefined}

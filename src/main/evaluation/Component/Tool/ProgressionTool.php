@@ -16,10 +16,12 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\EvaluationBundle\Entity\Parameters\WorkspaceParameters;
 use Claroline\EvaluationBundle\Entity\Sequence\Assignment;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\WorkspaceEvaluation;
 use Claroline\EvaluationBundle\Library\EvaluationOptions;
+use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ProgressionTool extends ToolComponent
@@ -28,7 +30,8 @@ class ProgressionTool extends ToolComponent
         private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
-        private readonly Crud $crud
+        private readonly Crud $crud,
+        private readonly WorkspaceEvaluationManager $evaluationManager,
     ) {
     }
 
@@ -53,11 +56,10 @@ class ProgressionTool extends ToolComponent
     public function getStatus(string $context, ?ContextSubjectInterface $contextSubject = null): ?string
     {
         $user = $this->tokenStorage->getToken()?->getUser();
-        if (!$user instanceof User) {
-            return null;
-        }
-
-        if (empty($contextSubject)) {
+        if (!$user instanceof User
+            || empty($contextSubject)
+            || !$this->evaluationManager->isEvaluated($contextSubject)
+        ) {
             return null;
         }
 
@@ -72,15 +74,28 @@ class ProgressionTool extends ToolComponent
 
     public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
     {
-        $workspaceEvaluation = null;
+        $user = $this->tokenStorage->getToken()?->getUser();
 
-        if (empty($contextSubject)) {
-            return [];
+        if (DesktopContext::getName() === $context) {
+            $evaluations = [];
+            if ($user instanceof User) {
+                $evaluations = $this->om->getRepository(WorkspaceEvaluation::class)->findBy(['workspace' => $tool]);
+            }
+
+            return [
+                'evaluations' => array_map(function (WorkspaceEvaluation $evaluation) {
+                    return $this->serializer->serialize($evaluation);
+                }, $evaluations),
+            ];
         }
 
-        $user = $this->tokenStorage->getToken()?->getUser();
+        $workspaceEvaluation = null;
+        $evaluationParameters = $this->evaluationManager->getParameters($contextSubject);
         if ($user instanceof User) {
-            $workspaceEvaluation = $this->getUserEvaluation($contextSubject);
+            if (!empty($evaluationParameters)) {
+                $workspaceEvaluation = $this->getUserEvaluation($contextSubject);
+            }
+
             $assignments = $this->om->getRepository(Assignment::class)->findByWorkspaceAndUser($contextSubject, $user);
 
             $sequences = array_map(function (Assignment $assignment) {
@@ -98,17 +113,18 @@ class ProgressionTool extends ToolComponent
             'sequences' => array_map(function (Sequence $sequence) {
                 return $this->serializer->serialize($sequence, [SerializerInterface::SERIALIZE_MINIMAL]);
             }, $sequences),
+            'evaluation' => $evaluationParameters ? $this->serializer->serialize($evaluationParameters, [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             'workspaceEvaluation' => $workspaceEvaluation ? $this->serializer->serialize($workspaceEvaluation) : null,
         ];
     }
 
     public function configure(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array
     {
-        if (!empty($configData['evaluation'])) {
-            $this->crud->update($contextSubject, ['evaluation' => $configData['evaluation']], [Crud::NO_PERMISSIONS]);
+        if (WorkspaceContext::getName() === $context && array_key_exists('evaluation', $configData)) {
+            $evaluationParameters = $this->manageEvaluationParameters($contextSubject, $configData['evaluation']);
 
             return [
-                'evaluation' => $configData['evaluation'],
+                'evaluation' => $this->serializer->serialize($evaluationParameters, [SerializerInterface::SERIALIZE_MINIMAL]),
             ];
         }
 
@@ -128,6 +144,7 @@ class ProgressionTool extends ToolComponent
                     $fileBag->add($sequence->getPoster(), $sequence->getPoster());
                 }
 
+                // TODO : export evaluation parameters for sequence
                 return $this->serializer->serialize($sequence, [SerializerInterface::SERIALIZE_TRANSFER]);
             }, $sequences),
         ];
@@ -152,6 +169,7 @@ class ProgressionTool extends ToolComponent
                 unset($sequenceData['assignments']);
             }
 
+            // TODO : import evaluation parameters for sequence
             $this->crud->create($newSequence, $sequenceData, [
                 Crud::NO_PERMISSIONS, // the core has already checked this before forwarding the import
                 Crud::NO_VALIDATION,
@@ -202,5 +220,25 @@ class ProgressionTool extends ToolComponent
         }
 
         return $workspaceEvaluation;
+    }
+
+    private function manageEvaluationParameters(Workspace $workspace, ?array $evaluationParameters = null): ?WorkspaceParameters
+    {
+        $parameters = $this->om->getRepository(WorkspaceParameters::class)->findOneBy(['workspace' => $workspace]);
+        if (empty($evaluationParameters)) {
+            $this->crud->delete($parameters);
+
+            return null;
+        }
+
+        if ($parameters) {
+            $this->crud->update($parameters, $evaluationParameters);
+        } else {
+            $parameters = new WorkspaceParameters();
+            $parameters->setWorkspace($workspace);
+            $this->crud->create($parameters, $evaluationParameters);
+        }
+
+        return $parameters;
     }
 }

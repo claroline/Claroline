@@ -1,20 +1,22 @@
 import React from 'react'
 import {useSelector} from 'react-redux'
-import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
-import {ToolEditor, selectors as toolSelectors} from '#/main/core/tool'
+import {ToolEditor} from '#/main/core/tool'
 
+import {selectors} from '#/main/evaluation/tools/evaluation/store'
 import {EvaluationEditorOverview} from '#/main/evaluation/tools/evaluation/editor/components/overview'
 import {EvaluationEditorSkill} from '#/main/evaluation/tools/evaluation/editor/skill/containers/main'
 
 const EvaluationEditor = () => {
-  const contextData = useSelector(toolSelectors.contextData)
+  const evaluationParameters = useSelector(selectors.evaluation)
+
+  console.log(evaluationParameters)
 
   return (
     <ToolEditor
       additionalData={() => ({
-        evaluation: get(contextData, 'evaluation')
+        evaluation: evaluationParameters
       })}
       overviewPage={EvaluationEditorOverview}
       pages={[

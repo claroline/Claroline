@@ -7,14 +7,14 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\EvaluationBundle\Manager\SequenceCertificateManager'
+            - '@Claroline\EvaluationBundle\Manager\Certificate\SequenceCertificateManager'
 
     Claroline\EvaluationBundle\Controller\Certificate\WorkspaceCertificateController:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\EvaluationBundle\Manager\WorkspaceCertificateManager'
+            - '@Claroline\EvaluationBundle\Manager\Certificate\WorkspaceCertificateManager'
 
     Claroline\EvaluationBundle\Controller\SkillsFrameworkController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

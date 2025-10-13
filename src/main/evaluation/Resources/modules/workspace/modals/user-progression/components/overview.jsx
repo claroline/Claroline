@@ -9,7 +9,7 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 import {EmptyState} from '#/main/app/components/empty-state'
 
 import {EvaluationListItem} from '#/main/evaluation/components/list-item'
-import {MODAL_USER_PROGRESSION} from '#/main/evaluation/sequence/modals/user-progression'
+import {MODAL_SEQUENCE_USER_PROGRESSION} from '#/main/evaluation/sequence/modals/user-progression/constants'
 import {SequenceEvaluation} from '#/main/evaluation/sequence/prop-types'
 
 const UserProgressionOverview = (props) => {
@@ -31,7 +31,7 @@ const UserProgressionOverview = (props) => {
             evaluation={sequenceEvaluation}
             primaryAction={{
               type: MODAL_BUTTON,
-              modal: [MODAL_USER_PROGRESSION, {
+              modal: [MODAL_SEQUENCE_USER_PROGRESSION, {
                 evaluation: sequenceEvaluation
               }]
             }}

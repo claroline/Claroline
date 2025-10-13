@@ -118,6 +118,16 @@ const navigationEnabled = createSelector(
   (store) => store.navigationEnabled
 )
 
+const sequenceNumbering = createSelector(
+  [sequence],
+  (sequence) => get(sequence, 'display.numbering', 'none')
+)
+
+const stepNumbering = createSelector(
+  [steps, sequenceNumbering, (state, currentStep) => currentStep],
+  (steps, sequenceNumbering, currentStep) => getNumbering(sequenceNumbering, steps, currentStep)
+)
+
 const evaluation = createSelector(
   [data],
   (data) => data.userEvaluation
@@ -194,16 +204,6 @@ const countSuccessCondition = createSelector(
 const hasSuccessCondition = createSelector(
   [successCondition],
   (successCondition) => !!successCondition
-)
-
-const sequenceNumbering = createSelector(
-  [sequence],
-  (sequence) => get(sequence, 'display.numbering', 'none')
-)
-
-const stepNumbering = createSelector(
-  [steps, sequenceNumbering, (state, currentStep) => currentStep],
-  (steps, sequenceNumbering, currentStep) => getNumbering(sequenceNumbering, steps, currentStep)
 )
 
 export const selectors = {

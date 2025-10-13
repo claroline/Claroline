@@ -20,7 +20,7 @@ use Claroline\EvaluationBundle\Entity\Certificate\SequenceCertificate;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\SequenceEvaluation;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
-use Claroline\EvaluationBundle\Manager\SequenceCertificateManager;
+use Claroline\EvaluationBundle\Manager\Certificate\SequenceCertificateManager;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;

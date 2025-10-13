@@ -8,7 +8,7 @@ import {ResourceEditorAppearance} from '#/main/core/resource/editor/components/a
 import {ResourceEditorEvaluation} from '#/main/core/resource/editor/components/evaluation'
 import {ResourceEditorHistory} from '#/main/core/resource/editor/components/history'
 import {ResourceEditorOverview} from '#/main/core/resource/editor/components/overview'
-import {ResourceEditorPermissions} from '#/main/core/resource/editor/containers/permissions'
+import {ResourceEditorPermissions} from '#/main/core/resource/editor/components/permissions'
 
 // store
 import {selectors, actions} from '#/main/core/resource/editor/store'

@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Component\Resource;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -10,7 +9,6 @@ use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
-use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
@@ -34,7 +32,6 @@ final class ExerciseResource extends ResourceComponent implements EvaluatedResou
         private readonly ExerciseManager $exerciseManager,
         private readonly PaperManager $paperManager,
         private readonly AttemptManager $attemptManager,
-        private readonly ResourceEvaluationManager $resourceEvalManager,
         ObjectManager $om
     ) {
         $this->repository = $om->getRepository(Exercise::class);
@@ -69,21 +66,13 @@ final class ExerciseResource extends ResourceComponent implements EvaluatedResou
 
         // fetch additional user data
         $lastAttempt = null;
-        $userEvaluation = null;
         if ($currentUser instanceof User) {
             $lastAttempt = $this->attemptManager->getLastPaper($resource, $currentUser);
-
-            $userEvaluation = $this->serializer->serialize(
-                $this->resourceEvalManager->getUserEvaluation($resource->getResourceNode(), $currentUser),
-                [Options::SERIALIZE_MINIMAL]
-            );
         }
 
         return [
             'resource' => $this->serializer->serialize($resource, $options),
-            // user data
             'lastAttempt' => $lastAttempt ? $this->paperManager->serialize($lastAttempt) : null,
-            'userEvaluation' => $userEvaluation,
         ];
     }
 
