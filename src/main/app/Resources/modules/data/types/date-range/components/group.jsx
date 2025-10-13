@@ -11,7 +11,7 @@ import {FormHelp} from '#/main/app/content/form/components/help'
 import {getValidationClassName} from '#/main/app/content/form/validator'
 
 /**
- * Overrides default form group to let each range part render its own errors
+ * Overrides the default form group to let each range part render its own errors
  */
 const DateRangeGroup = props => {
   const error = typeof props.error === 'string' ? props.error : undefined

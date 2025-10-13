@@ -21,6 +21,7 @@ const Radio = props => {
         value={props.value}
         checked={props.checked}
         disabled={props.disabled}
+        aria-checked={props.checked}
         onChange={() => props.onChange(parseValue(props.value))}
         name={props.name}
       />

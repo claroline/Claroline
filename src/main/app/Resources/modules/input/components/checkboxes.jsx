@@ -10,7 +10,7 @@ import {Checkbox} from '#/main/app/input/components/checkbox'
 const parseValue = (value) => !isNaN(value) ? parseFloat(value) : value
 
 /**
- * Renders a list of radios checkbox inputs.
+ * Renders a list of checkbox inputs.
  */
 const Checkboxes = props => {
   const choiceValues = Object.keys(props.choices)

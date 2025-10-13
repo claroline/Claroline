@@ -34,6 +34,7 @@ class BooleanInput extends PureComponent {
           checked={this.props.value}
           disabled={this.props.disabled}
           onChange={this.onChange}
+          aria-checked={this.props.value}
           role="switch"
         />
       </div>

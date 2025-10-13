@@ -16,6 +16,7 @@ const Checkbox = props => {
         type="checkbox"
         checked={props.checked}
         disabled={props.disabled}
+        aria-checked={props.checked}
         onChange={e => props.onChange(e.target.checked)}
       />
 
