@@ -50,11 +50,14 @@ function matchSearch(page, search) {
     return true
   }
 
+  console.log(page)
+
   const regex = new RegExp(search+'(?!([^<]+)?>)', 'gi')
 
   return -1 !== page.title.search(regex)
     || (!isEmpty(page.content) && -1 !== page.content.search(regex))
     || (!isEmpty(page.internalNote) && -1 !== page.internalNote.search(regex))
+    || (!isEmpty(page.tags) && -1 !== page.tags.findIndex((tag) => -1 !== tag.search(regex)))
 }
 
 function highlightSearch(text, search) {

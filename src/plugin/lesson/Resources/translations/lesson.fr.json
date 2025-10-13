@@ -17,9 +17,10 @@
     "show_navigation": "Afficher la navigation",
     "show_navigation_help": "Affichez des boutons \"Précédent\" et \"Suivant\" pour naviguer facilement entre les pages.",
     "show_metadata": "Afficher les meta-données des pages",
-    "show_metadata_help": "Affichez le créateur et la date de dernière modification des pages de la Connaissance.",
+    "show_metadata_help": "Affichez le créateur, la date de dernière modification et les tags des pages de la Connaissance.",
     "new_page": "Nouvelle page",
     "no_page": "Aucune page",
     "no_page_help": "Il n'y a actuellement aucun contenu à consulter dans cette connaissance.",
-    "no_page_manager_help": "Créez une nouvelle page pour commencer à ajouter du contenu à votre connaissance."
+    "no_page_manager_help": "Créez une nouvelle page pour commencer à ajouter du contenu à votre connaissance.",
+    "internal_note": "Note interne"
 }

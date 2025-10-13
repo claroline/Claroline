@@ -18,6 +18,12 @@ const Chapter = {
     slug: T.string.isRequired,
     title: T.string,
     poster: T.string,
+    meta: T.shape({
+      creator: T.object,
+      createdAt: T.string,
+      updatedAt: T.string
+    }),
+    tags: T.array,
     content: T.string,
     contentRaw: T.string,
     internalNote: T.string,

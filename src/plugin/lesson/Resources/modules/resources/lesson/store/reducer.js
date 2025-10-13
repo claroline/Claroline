@@ -52,7 +52,7 @@ const reducer = combineReducers({
   placeholders: makeReducer([], {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.placeholders || state
   }),
-  chapter_form: makeFormReducer(selectors.CHAPTER_EDIT_FORM_NAME)
+  chapterForm: makeFormReducer(selectors.CHAPTER_FORM_NAME)
 })
 
 export {

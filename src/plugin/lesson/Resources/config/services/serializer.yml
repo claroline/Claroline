@@ -7,5 +7,6 @@ services:
     Icap\LessonBundle\Serializer\ChapterSerializer:
         arguments:
            - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@event_dispatcher'
            - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
            - '@Claroline\CommunityBundle\Serializer\UserSerializer'

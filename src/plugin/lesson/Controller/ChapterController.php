@@ -3,6 +3,7 @@
 namespace Icap\LessonBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
@@ -84,7 +85,7 @@ class ChapterController
     ): JsonResponse {
         $this->checkPermission('EDIT', $lesson->getResourceNode(), [], true);
 
-        $newChapter = $this->chapterManager->createChapter($lesson, json_decode($request->getContent(), true), $parent, [Crud::NO_PERMISSIONS]);
+        $newChapter = $this->chapterManager->createChapter($lesson, json_decode($request->getContent(), true), $parent, [Crud::NO_PERMISSIONS, Options::PERSIST_TAG]);
         $internalNotes = $this->checkPermission('VIEW_INTERNAL_NOTES', $lesson->getResourceNode());
 
         return new JsonResponse(
@@ -96,7 +97,7 @@ class ChapterController
      * Update an existing chapter.
      */
     #[Route(path: '/{slug}', name: 'apiv2_lesson_chapter_update', methods: ['PUT'])]
-    public function editAction(
+    public function updateAction(
         Request $request,
         #[MapEntity(mapping: ['lessonId' => 'uuid'])]
         Lesson $lesson,
@@ -105,7 +106,7 @@ class ChapterController
     ): JsonResponse {
         $this->checkPermission('EDIT', $lesson->getResourceNode(), [], true);
 
-        $this->chapterManager->updateChapter($chapter, json_decode($request->getContent(), true));
+        $this->crud->update($chapter, json_decode($request->getContent(), true), [Options::PERSIST_TAG]);
         $internalNotes = $this->checkPermission('VIEW_INTERNAL_NOTES', $lesson->getResourceNode());
 
         return new JsonResponse($this->serializer->serialize($chapter, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : []));

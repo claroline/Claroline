@@ -47,14 +47,6 @@ class ChapterManager
         return $newChapter;
     }
 
-    /**
-     * @throws InvalidDataException
-     */
-    public function updateChapter(Chapter $chapter, ?array $data = []): void
-    {
-        $this->crud->update($chapter, $data);
-    }
-
     public function moveChapter(Chapter $chapter, array $positionData): void
     {
         if ($positionData['parent']) {

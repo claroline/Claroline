@@ -2,15 +2,18 @@
 
 namespace Icap\LessonBundle\Serializer;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\Template\PlaceholderManager;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Repository\ChapterRepository;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ChapterSerializer
 {
@@ -22,6 +25,7 @@ class ChapterSerializer
 
     public function __construct(
         private readonly ObjectManager $om,
+        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly PlaceholderManager $placeholderManager,
         private readonly UserSerializer $userSerializer
     ) {
@@ -77,6 +81,7 @@ class ChapterSerializer
                 'updatedAt' => DateNormalizer::normalize($chapter->getUpdatedAt()),
                 'creator' => $chapter->getCreator() ? $this->userSerializer->serialize($chapter->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             ],
+            'tags' => $this->serializeTags($chapter),
             'parentSlug' => $chapter->getParent()?->getSlug(),
             'previousSlug' => $previousChapter?->getSlug(),
             'nextSlug' => $nextChapter?->getSlug(),
@@ -122,6 +127,41 @@ class ChapterSerializer
             }
         }
 
+        if (isset($data['tags'])) {
+            $this->deserializeTags($chapter, $data['tags'], $options);
+        }
+
         return $chapter;
+    }
+
+    private function serializeTags(Chapter $chapter): array
+    {
+        $event = new GenericDataEvent([
+            'class' => Chapter::class,
+            'ids' => [$chapter->getUuid()],
+        ]);
+
+        $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
+
+        return $event->getResponse() ?? [];
+    }
+
+    private function deserializeTags(Chapter $chapter, array $tags = [], array $options = []): void
+    {
+        if (in_array(Options::PERSIST_TAG, $options)) {
+            $event = new GenericDataEvent([
+                'tags' => $tags,
+                'data' => [
+                    [
+                        'class' => Chapter::class,
+                        'id' => $chapter->getUuid(),
+                        'name' => $chapter->getTitle(),
+                    ],
+                ],
+                'replace' => true,
+            ]);
+
+            $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
+        }
     }
 }

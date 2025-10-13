@@ -7,7 +7,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {PageContent} from '#/main/app/page'
-import {FormData, selectors as formSelectors} from '#/main/app/content/form'
+import {FormData, selectors as formSelectors, actions as formActions} from '#/main/app/content/form'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {actions, selectors} from '#/plugin/lesson/resources/lesson/store'
@@ -23,8 +23,8 @@ const ChapterForm = () => {
   const placeholders = useSelector(selectors.placeholders)
   const internalNotes = useSelector((state) => hasPermission('view_internal_notes', resourceSelectors.resourceNode(state)))
 
-  const isNew = useSelector((state) => formSelectors.isNew(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)))
-  const formData = useSelector((state) => formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)))
+  const isNew = useSelector((state) => formSelectors.isNew(formSelectors.form(state, selectors.CHAPTER_FORM_NAME)))
+  const formData = useSelector((state) => formSelectors.data(formSelectors.form(state, selectors.CHAPTER_FORM_NAME)))
 
   return (
     <PageContent className={classes('d-flex flex-column', {
@@ -33,8 +33,8 @@ const ChapterForm = () => {
       <FormData
         className="my-5 px-4 flex-fill"
         level={3}
-        displayLevel={2}
-        name={selectors.CHAPTER_EDIT_FORM_NAME}
+        displayLevel={5}
+        name={selectors.CHAPTER_FORM_NAME}
         buttons={true}
         target={!isNew ? ['apiv2_lesson_chapter_update', {
           lessonId: lesson.id,
@@ -54,7 +54,6 @@ const ChapterForm = () => {
         }}
         definition={[
           {
-            id: 'chapter',
             title: trans('general'),
             primary: true,
             fields: [
@@ -82,17 +81,26 @@ const ChapterForm = () => {
                   }
                 }
               }, {
+                name: 'tags',
+                label: trans('tags'),
+                type: 'tag'
+              }, {
                 name: '_internalNote',
                 type: 'boolean',
                 label: trans('add_internal_note', {}, 'lesson'),
                 help: trans('internal_note_visibility_help', {}, 'lesson'),
                 displayed: internalNotes,
                 calculated: (pageData) => !isEmpty(pageData.internalNote) || pageData._internalNote,
+                onChange: (enabled) => {
+                  if (!enabled) {
+                    dispatch(formActions.updateProp(selectors.CHAPTER_FORM_NAME, 'internalNote', null))
+                  }
+                },
                 linked: [
                   {
                     name: 'internalNote',
                     type: 'html',
-                    label: trans('text'),
+                    label: trans('internal_note', {}, 'lesson'),
                     displayed: (pageData) => internalNotes  && (!isEmpty(pageData.internalNote) || pageData._internalNote),
                     options: {
                       workspace: workspace,

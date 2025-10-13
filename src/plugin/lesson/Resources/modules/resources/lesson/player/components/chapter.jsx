@@ -165,10 +165,11 @@ const Chapter = props => {
           meta={showMeta ?
             <ContentPublication
               user={get(props.chapter, 'meta.creator', {})}
-              publishedAt={get(props.chapter, 'meta.createdAt')}
+              publishedAt={get(props.chapter, 'meta.updatedAt')}
             /> :
             undefined
           }
+          tags={showMeta ? get(props.chapter, 'tags') : undefined}
         >
           {highlightSearch(props.chapter.content, currentSearch)}
         </Content>

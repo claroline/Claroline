@@ -34,11 +34,11 @@ actions.loadChapter = (chapter) => dispatch => {
 }
 
 actions.editChapter = (lessonId, chapter) => dispatch => {
-  dispatch(formActions.resetForm(selectors.CHAPTER_EDIT_FORM_NAME, chapter, false))
+  dispatch(formActions.resetForm(selectors.CHAPTER_FORM_NAME, chapter, false))
   dispatch(actions.setCurrentPage(chapter.slug))
 }
 
-actions.createChapter = (lessonId, parentChapterSlug) => formActions.resetForm(selectors.CHAPTER_EDIT_FORM_NAME, {parentSlug: parentChapterSlug}, true)
+actions.createChapter = (lessonId, parentChapterSlug) => formActions.resetForm(selectors.CHAPTER_FORM_NAME, {parentSlug: parentChapterSlug}, true)
 
 actions.deleteChapter = (lessonId, chapterSlug) => (dispatch) => dispatch({
   [API_REQUEST]: {

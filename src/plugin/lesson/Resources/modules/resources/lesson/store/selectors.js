@@ -4,9 +4,8 @@ import get from 'lodash/get'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 const STORE_NAME = 'icap_lesson'
-const LIST_NAME = STORE_NAME + '.chapters'
 
-const CHAPTER_EDIT_FORM_NAME = STORE_NAME + '.chapter_form'
+const CHAPTER_FORM_NAME = STORE_NAME + '.chapterForm'
 
 const store = (state) => state[STORE_NAME]
 
@@ -35,10 +34,7 @@ const tree = createSelector(
       elements.forEach(elem => {
         // build a tree node for this element
         const treeNode = {
-          id: elem.id,
-          level: elem.level,
-          slug: elem.slug,
-          title: elem.title,
+          ...elem,
           children: []
         }
         // add it to the parent children array
@@ -130,8 +126,7 @@ const previousPage = createSelector(
 
 export const selectors = {
   STORE_NAME,
-  LIST_NAME,
-  CHAPTER_EDIT_FORM_NAME,
+  CHAPTER_FORM_NAME,
 
   lesson,
   currentSearch,
