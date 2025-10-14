@@ -39,7 +39,8 @@ class BadgeClassVoter extends AbstractVoter
         switch ($attributes[0]) {
             case self::OPEN:
                 // has open rights on the tool
-                if ($this->isToolGranted(self::OPEN, 'badges', $object->getWorkspace() ?? null)) {
+                if ($this->isToolGranted(self::OPEN, 'badges', null)
+                    || ($object->getWorkspace() && $this->isToolGranted(self::OPEN, 'badges', $object->getWorkspace()))) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -49,7 +50,8 @@ class BadgeClassVoter extends AbstractVoter
             case self::EDIT:
             case self::DELETE:
                 // has edit rights on the tool
-                if ($this->isToolGranted(self::EDIT, 'badges', $object->getWorkspace() ?? null)) {
+                if ($this->isToolGranted(self::EDIT, 'badges', null)
+                    || ($object->getWorkspace() && $this->isToolGranted(self::EDIT, 'badges', $object->getWorkspace()))) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -57,7 +59,8 @@ class BadgeClassVoter extends AbstractVoter
 
             case self::ADMINISTRATE:
                 // has edit rights on the tool
-                if ($this->isToolGranted(self::ADMINISTRATE, 'badges', $object->getWorkspace() ?? null)) {
+                if ($this->isToolGranted(self::ADMINISTRATE, 'badges', null)
+                    || ($object->getWorkspace() && $this->isToolGranted(self::ADMINISTRATE, 'badges', $object->getWorkspace()))) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -65,12 +68,13 @@ class BadgeClassVoter extends AbstractVoter
 
             case self::FOLLOW:
                 // has grant rights on the tool
-                if ($this->isToolGranted(self::FOLLOW, 'badges', $object->getWorkspace() ?? null)) {
+                if ($this->isToolGranted(self::FOLLOW, 'badges', null)
+                    || ($object->getWorkspace() && $this->isToolGranted(self::FOLLOW, 'badges', $object->getWorkspace()))) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
                 // the badge is configured to allow users which own the badge to grant it
-                // and current user own the badge
+                // and the current user owns the badge
                 if ($token->getUser() instanceof User && $object->hasIssuingPeer()) {
                     $assertion = $this->om->getRepository(Assertion::class)->findOneBy(['badge' => $object, 'recipient' => $token->getUser()]);
                     if ($assertion) {
