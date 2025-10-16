@@ -97,6 +97,7 @@ class WorkspaceSerializer
                 'created' => DateNormalizer::normalize($workspace->getCreatedAt()),
                 'updated' => DateNormalizer::normalize($workspace->getUpdatedAt()),
                 'creator' => $workspace->getCreator() ? $this->userSerializer->serialize($workspace->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
+                'views' => $workspace->getViews(),
             ],
             'contactEmail' => $workspace->getContactEmail(),
             'tags' => $this->serializeTags($workspace),
