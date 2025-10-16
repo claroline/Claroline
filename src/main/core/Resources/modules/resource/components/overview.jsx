@@ -17,9 +17,9 @@ import {selectors} from '#/main/core/resource/store'
 
 import {EvaluationFeedback} from '#/main/evaluation/components/feedback'
 import {EvaluationProgression} from '#/main/evaluation/components/progression'
+import {MODAL_USER_PROGRESSION} from '#/main/evaluation/resource/modals/user-progression'
 
 const ResourceOverview = props => {
-  const path = useSelector(selectors.path)
   const resourceNode = useSelector(selectors.resourceNode)
   const showHeader = useSelector(selectors.showHeader)
   const embedded = useSelector(selectors.embedded)
@@ -40,8 +40,8 @@ const ResourceOverview = props => {
             {userEvaluation &&
               <EvaluationProgression
                 className="mb-4"
-                {...userEvaluation}
-                target={path+'/progression'}
+                evaluation={userEvaluation}
+                modal={MODAL_USER_PROGRESSION}
               />
             }
 

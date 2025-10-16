@@ -20,6 +20,7 @@ import {constants} from '#/main/evaluation/constants'
 import {Content} from '#/main/app/components/content'
 import {SequenceResources} from '#/main/evaluation/sequence/components/resources'
 import {SequenceObjective} from '#/main/evaluation/sequence/components/objective'
+import {MODAL_USER_PROGRESSION} from '#/main/evaluation/sequence/modals/user-progression'
 
 const SequenceOverviewContent = (props) => {
   const description = get(props.sequence, 'meta.descriptionHtml', null)
@@ -37,9 +38,9 @@ const SequenceOverviewContent = (props) => {
         >
           {props.userEvaluation &&
             <EvaluationProgression
-              {...props.userEvaluation}
-              target={props.path+'/progression'}
               className="mb-4"
+              evaluation={props.userEvaluation}
+              modal={MODAL_USER_PROGRESSION}
             />
           }
 
@@ -145,7 +146,6 @@ const SequenceOverview = () => {
     <SequencePage>
       <PageContent poster={get(sequence, 'poster')} className="pb-5">
         <SequenceOverviewContent
-          path={sequencePath}
           sequence={sequence}
           actions={actions}
           userEvaluation={userEvaluation}
@@ -189,7 +189,7 @@ const SequenceOverview = () => {
                 displayed: !isEmpty(allSecondaryResources),
                 render: () =>
                   <>
-                  <p className="mt-4 text-body-secondary fs-sm">Retrouvez toutes les ressources complémentaires proposées au cours de la séquence.</p>
+                    <p className="mt-4 text-body-secondary fs-sm">Retrouvez toutes les ressources complémentaires proposées au cours de la séquence.</p>
                     <SequenceResources
                       resources={allSecondaryResources}
                     />
