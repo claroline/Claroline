@@ -29,6 +29,7 @@ const LocationDisplay = (props) => {
 }
 
 LocationDisplay.propTypes = {
+  multiple: T.bool,
   data: T.oneOfType([
     T.shape(
       LocationTypes.propTypes

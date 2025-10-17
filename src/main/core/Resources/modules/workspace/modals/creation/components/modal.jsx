@@ -28,6 +28,8 @@ const CreationModal = (props) => {
         <CreationType
           startCreation={props.startCreation}
           changeStep={setCurrentStep}
+          onCreate={props.onCreate}
+          fadeModal={props.fadeModal}
         />
       )
       break
@@ -54,9 +56,9 @@ const CreationModal = (props) => {
 
   return (
     <Modal
-      {...omit(props, 'create', 'onCreate', 'startCreation', 'reset')}
+      {...omit(props, 'model', 'create', 'onCreate', 'startCreation', 'reset')}
       title={trans('new_workspace', {}, 'workspace')}
-      subtitle={trans('L\'espace d\'activités est au coeur de votre formation.')}
+      subtitle={trans('new_workspace_desc', {}, 'workspace')}
       centered={true}
       onExited={props.reset}
     >
@@ -66,10 +68,13 @@ const CreationModal = (props) => {
 }
 
 CreationModal.propTypes = {
+  model: T.bool,
   startCreation: T.func.isRequired,
   create: T.func.isRequired,
   onCreate: T.func,
-  reset: T.func.isRequired
+  reset: T.func.isRequired,
+  // from modal
+  fadeModal: T.func.isRequired
 }
 
 export {

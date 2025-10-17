@@ -39,6 +39,11 @@ class Finder implements FinderInterface
         return $this->type->getInnerType();
     }
 
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
     public function getAlias(): string
     {
         if (null !== $this->parent) {

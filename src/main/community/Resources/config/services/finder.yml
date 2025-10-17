@@ -6,6 +6,7 @@ services:
         tags: [ claroline.finder.type ]
         arguments:
             - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CommunityBundle\Finder\RoleType:
         tags: [ claroline.finder.type ]

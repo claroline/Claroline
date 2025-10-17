@@ -16,35 +16,35 @@ const ModelExplain = ({show = false}) =>
   <Collapse in={show}>
     <div className="flex-row bg-body-tertiary rounded-3 p-3 gap-0">
       <div className="flex-fill">
-        <b className="d-block text-uppercase mb-3">Les modèles copient :</b>
+        <b className="d-block text-uppercase mb-3">{trans('models_copy', {}, 'workspace')}</b>
 
         <ul className="list-unstyled mb-0 d-grid gap-2">
           <li>
             <span className="fa fa-fw fa-check-circle text-success me-2" aria-hidden={true} />
-            Contenus et ressources
+            {trans('models_copy_content', {}, 'workspace')}
           </li>
           <li>
             <span className="fa fa-fw fa-check-circle text-success me-2" aria-hidden={true} />
-            Rôles et permissions
+            {trans('models_copy_roles', {}, 'workspace')}
           </li>
           <li>
             <span className="fa fa-fw fa-check-circle text-success me-2" aria-hidden={true} />
-            Paramètres de l'espace et des outils
+            {trans('models_copy_parameters', {}, 'workspace')}
           </li>
         </ul>
       </div>
 
       <div className="flex-fill">
-        <b className="d-block text-uppercase mb-3">Les modèles ne copient pas :</b>
+        <b className="d-block text-uppercase mb-3">{trans('models_dont_copy', {}, 'workspace')}</b>
 
         <ul className="list-unstyled mb-0 d-grid gap-2">
           <li>
             <span className="fa fa-fw fa-times-circle text-danger me-2" aria-hidden={true} />
-            Membres (utilisateurs et groupes)
+            {trans('models_dont_copy_members', {}, 'workspace')}
           </li>
           <li>
             <span className="fa fa-fw fa-times-circle text-danger me-2" aria-hidden={true} />
-            Activité des membres
+            {trans('models_dont_copy_activity', {}, 'workspace')}
           </li>
         </ul>
       </div>
@@ -67,6 +67,7 @@ const EditorModels = () => {
             type={MODAL_BUTTON}
             label={trans('add_workspace_model', {}, 'actions')}
             modal={[MODAL_WORKSPACE_CREATION, {
+              model: true,
               onCreate: () => dispatch(listActions.invalidateData(selectors.MODELS_LIST_NAME))
             }]}
           />

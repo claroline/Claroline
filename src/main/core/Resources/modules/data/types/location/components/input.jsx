@@ -16,12 +16,13 @@ const LocationInput = (props) =>
   />
 
 implementPropTypes(LocationInput, DataInputTypes, {
+  multiple: T.bool,
   value: T.oneOfType([
     T.shape(LocationTypes.propTypes),
     T.arrayOf(
       T.shape(LocationTypes.propTypes)
     )
-  ]),
+  ])
 })
 
 export {

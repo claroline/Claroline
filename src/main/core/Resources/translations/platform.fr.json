@@ -76,7 +76,6 @@
     "correction": "Correction",
     "country": "Pays",
     "create": "Créer",
-    "create_from_model": "Créer à partir du modèle",
     "creation_date": "Date de création",
     "creator": "Créateur",
     "cron_not_configured_msg": "Cron doit être configuré pour pouvoir utiliser cet outil.",

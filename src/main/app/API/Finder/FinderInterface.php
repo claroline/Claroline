@@ -12,6 +12,8 @@ interface FinderInterface
 
     public function getType(): FinderTypeInterface;
 
+    public function getOptions(): array;
+
     /**
      * Returns a unique name for the property that the finder is mapped to.
      * It's used for relationship aliases and to bind parameters to the final QueryBuilder.

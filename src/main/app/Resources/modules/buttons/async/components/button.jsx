@@ -22,10 +22,10 @@ const AsyncButton = forwardRef((props, ref) => {
 
   return (
     <CallbackButton
-      {...omit(props, 'request', 'loader')}
+      {...omit(props, 'request', 'loader', 'onClick')}
       className={classes(props.className, 'position-relative')}
       ref={ref}
-      callback={() => {
+      callback={(e) => {
         if (loading) {
           return false
         }
@@ -36,6 +36,9 @@ const AsyncButton = forwardRef((props, ref) => {
           [apiConst.API_REQUEST]: props.request
         }).then(() => {
           setLoading(false)
+          if (props.onClick) {
+            props.onClick(e)
+          }
         })
       }}
     >

@@ -68,5 +68,17 @@
   "workspace_name": "Espace d'activités : %name%",
   "history": "Historique de navigation",
   "archives": "Espaces archivés",
-  "archives_desc": "Retrouvez et gérez tous les espaces archivés."
+  "archives_desc": "Retrouvez et gérez tous les espaces archivés.",
+  "add_from_another_organization_desc": "Sélectionnez un ou plusieurs espaces existant dans une autre organization pour les rendre accessible aux membres de l'organisation <b>%organization%</b>.",
+  "add_to_organization_desc": "Sélectionnez le(s) espace(s) d'activités que vous souhaitez ajouter à l'organisation.",
+  "select_workspaces_to_copy": "Sélectionnez le(s) espace(s) d'activités que vous souhaitez copier.",
+  "new_workspace_desc": "L'espace d'activités est au coeur de votre formation.",
+  "new_workspace_from_model_desc": "Sélectionnez le modèle à utiliser pour préconfigurer votre nouvel espace.",
+  "models_copy": "Les modèles copient :",
+  "models_copy_content": "Contenus et ressources",
+  "models_copy_roles": "Rôles et permissions",
+  "models_copy_parameters": "Paramètres de l'espace et des outils",
+  "models_dont_copy": "Les modèles ne copient pas :",
+  "models_dont_copy_members": "Membres (utilisateurs et groupes)",
+  "models_dont_copy_activity": "Activité des membres"
 }

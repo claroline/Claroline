@@ -16,12 +16,12 @@ const UserCreationModal = (props) => {
     case 'start':
       StepComponent = (
         <CreationStart
-          contextId={props.contextId}
-          changeStep={setCurrentStep}
           startCreation={() => {
             props.startCreation()
             setCurrentStep('info')
           }}
+          onCreate={props.onCreate}
+          fadeModal={props.fadeModal}
         />
       )
       break
