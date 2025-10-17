@@ -1,7 +1,5 @@
 import {PropTypes as T} from 'prop-types'
-import merge from 'lodash/merge'
 
-import {File as FileType} from '#/main/core/files/prop-types'
 import {User as UserType} from '#/main/community/prop-types'
 
 const Comment = {
@@ -41,14 +39,22 @@ const Section = {
   }
 }
 
-const Audio = merge({}, FileType, {
+const Audio = {
   propTypes: {
+    hashName: T.string.isRequired,
+    size: T.number.isRequired,
+    url: T.string.isRequired,
+    autoDownload: T.bool,
     sectionsType: T.string.isRequired,
     rateControl: T.bool.isRequired,
     description: T.string,
     sections: T.arrayOf(T.shape(Section.propTypes))
+  },
+  defaultProps: {
+    size: 0,
+    autoDownload: false
   }
-})
+}
 
 export {
   Audio,

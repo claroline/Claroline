@@ -3,20 +3,16 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
-import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {Button} from '#/main/app/action/components/button'
-import {Toolbar} from '#/main/app/action/components/toolbar'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {ContentHtml} from '#/main/app/content/components/html'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {Html} from '#/main/app/components/html'
 import {Checkbox} from '#/main/app/input/components/checkbox'
-import {route as toolRoute} from '#/main/core/tool/routing'
 
 import {User as UserTypes} from '#/main/community/prop-types'
-import {getActions} from '#/main/core/desktop'
 import {constants} from '#/main/core/administration/connection-messages/constants'
 import {ConnectionMessage as ConnectionMessageTypes} from '#/main/core/administration/connection-messages/prop-types'
 
@@ -71,8 +67,6 @@ class ConnectionModal extends Component {
     const message = this.props.messages[this.state.current] || {}
     const slide = get(message, `slides[${this.state.currentSlide}]`)
 
-    const desktopActions = getActions(this.props.currentUser)
-
     return (
       <Modal
         {...omit(this.props, 'messages', 'currentUser', 'discard', 'noDiscard')}
@@ -94,41 +88,9 @@ class ConnectionModal extends Component {
         {(slide.content || !isEmpty(slide.shortcuts)) &&
           <div className="modal-body">
             {slide.content &&
-              <ContentHtml>
+              <Html>
                 {slide.content}
-              </ContentHtml>
-            }
-
-            {!isEmpty(slide.shortcuts) &&
-              <h4>{trans('useful_links')}</h4>
-            }
-
-            {!isEmpty(slide.shortcuts) &&
-              <Toolbar
-                id={`slide-shortcuts-${slide.id}`}
-                className="list-group"
-                buttonName="list-group-item"
-                actions={desktopActions.then(actions => {
-                  return slide.shortcuts
-                    .map(shortcut => {
-                      if ('tool' === shortcut.type) {
-                        return {
-                          name: shortcut.name,
-                          type: LINK_BUTTON,
-                          //icon: `fa fa-fw fa-${tool.icon}`,
-                          label: trans('open-tool', {tool: trans(shortcut.name, {}, 'tools')}, 'actions'),
-                          target: toolRoute(shortcut.name)
-                        }
-                      } else {
-                        return actions.find(action => action.name === shortcut.name)
-                      }
-                    })
-                    .filter(link => !!link)
-                    .map(shortcut => merge({}, shortcut, {
-                      onClick: () => this.props.fadeModal()
-                    }))
-                })}
-              />
+              </Html>
             }
           </div>
         }
