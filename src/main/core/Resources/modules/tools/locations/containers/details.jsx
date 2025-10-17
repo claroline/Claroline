@@ -7,7 +7,6 @@ import {selectors} from '#/main/core/tools/locations//store'
 
 const LocationDetails = connect(
   (state) => ({
-    path: toolSelectors.path(state),
     location: selectors.currentLocation(state)
   })
 )(LocationDetailsComponent)

@@ -1,27 +1,24 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl'
+import {FormModal} from '#/main/app/data/modals/form/components/modal'
 
-import {FormData} from '#/main/app/content/form/containers/data'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {Location as LocationTypes} from '#/main/core/data/types/location/prop-types'
 
-import {selectors} from '#/main/core/tools/locations//store'
-
-const LocationForm = props =>
-  <FormData
-    level={3}
-    name={`${selectors.STORE_NAME}.current`}
-    buttons={true}
-    target={(location, isNew) => isNew ?
+const LocationFormModal = (props) =>
+  <FormModal
+    {...omit(props, 'location')}
+    name="locationForm"
+    title={trans(props.isNew ? 'new_location' : 'location', {}, 'location')}
+    subtitle={props.isNew ? trans('new_location_desc', {}, 'location') : undefined}
+    target={props.isNew ?
       ['apiv2_location_create'] :
-      ['apiv2_location_update', {id: location.id}]
+      ['apiv2_location_update', {id: props.location.id}]
     }
-    cancel={{
-      type: LINK_BUTTON,
-      target: props.path,
-      exact: true
-    }}
+    data={props.location}
+    saveLabel={trans(props.isNew ? 'add_location' : 'save_location', {}, 'actions')}
     definition={[
       {
         title: trans('general'),
@@ -45,7 +42,8 @@ const LocationForm = props =>
         ]
       }, {
         title: trans('contact_information'),
-        icon: 'fa fa-fw fa-id-card',
+        primary: true,
+        hideTitle: true,
         fields: [
           {
             name: 'phone',
@@ -61,10 +59,14 @@ const LocationForm = props =>
     ]}
   />
 
-LocationForm.propTypes = {
-  path: T.string.isRequired
+LocationFormModal.propTypes = {
+  isNew: T.bool,
+  location: T.shape(
+    LocationTypes.propTypes
+  ),
+  onSave: T.func
 }
 
 export {
-  LocationForm
+  LocationFormModal
 }

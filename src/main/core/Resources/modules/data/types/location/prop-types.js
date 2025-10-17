@@ -4,8 +4,8 @@ const Location = {
   propTypes: {
     id: T.string,
     name: T.string,
+    poster: T.string,
     meta: T.shape({
-      type: T.number,
       description: T.string
     }),
     phone: T.string,
@@ -16,10 +16,6 @@ const Location = {
       city: T.string,
       state: T.string,
       country: T.string
-    }),
-    gps: T.shape({
-      latitude: T.number,
-      longitude: T.number
     })
   },
   defaultProps: {}

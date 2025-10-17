@@ -5,14 +5,13 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
+import {Thumbnail} from '#/main/app/components/thumbnail'
 import {ToolPage} from '#/main/core/tool'
+import {PageContent, PageHeading, PageToolbar, PageToolbarSkeleton, PageHeadingSkeleton} from '#/main/app/page'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {getActions} from '#/main/community/group/utils'
 import {Group as GroupTypes} from '#/main/community/group/prop-types'
-import {PageHeading, PageHeadingSkeleton} from '#/main/app/page/components/heading'
-import {Thumbnail} from '#/main/app/components/thumbnail'
-import {PageContent, PageToolbar, PageToolbarSkeleton} from '#/main/app/page'
 
 const Group = (props) =>
   <ToolPage

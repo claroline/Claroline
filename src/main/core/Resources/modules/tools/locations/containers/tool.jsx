@@ -12,8 +12,8 @@ const LocationsTool = withReducer(selectors.STORE_NAME, reducer)(
       path: toolSelectors.path(state)
     }),
     (dispatch) => ({
-      open(id = null) {
-        dispatch(actions.open(id))
+      openLocation(id) {
+        dispatch(actions.openLocation(id))
       }
     })
   )(LocationsToolComponent)

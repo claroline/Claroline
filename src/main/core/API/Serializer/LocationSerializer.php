@@ -40,7 +40,9 @@ class LocationSerializer
                 'id' => $location->getUuid(),
                 'name' => $location->getName(),
                 'poster' => $location->getPoster(),
-
+                'meta' => [
+                    'description' => $location->getDescription(),
+                ],
                 'address' => [
                     'street1' => $location->getAddressStreet1(),
                     'street2' => $location->getAddressStreet2(),

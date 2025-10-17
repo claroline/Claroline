@@ -9,6 +9,7 @@ import {CONTEXT_OPEN} from '#/main/app/context/store/actions'
 import {TOOL_OPEN} from '#/main/core/tool/store/actions'
 
 import {selectors} from '#/main/core/tools/locations/store/selectors'
+import {LOCATION_LOAD} from '#/main/core/tools/locations/store/actions'
 
 const reducer = combineReducers({
   list: makeListReducer(selectors.STORE_NAME+'.list', {}, {
@@ -16,11 +17,12 @@ const reducer = combineReducers({
       [CONTEXT_OPEN]: () => false
     }),
     invalidated: makeReducer(false, {
-      [TOOL_OPEN]: () => true,
-      [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.STORE_NAME+'.current')]: () => true
+      [TOOL_OPEN]: () => true
     })
   }),
-  current: makeFormReducer(selectors.STORE_NAME+'.current')
+  current: makeReducer(null, {
+    [LOCATION_LOAD]: (state, action) => action.location
+  })
 })
 
 export {

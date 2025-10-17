@@ -6,6 +6,10 @@
       "type": "string",
       "description": "The location id"
     },
+    "name": {
+      "type": "string",
+      "description": "The location name"
+    },
     "phone": {
       "type": ["null", "string"],
       "description": "The location phone"
@@ -42,6 +46,6 @@
   },
   "claroline": {
     "requiredAtCreation": ["name"],
-    "ids":  ["id", "name"]
+    "ids":  ["id"]
   }
 }

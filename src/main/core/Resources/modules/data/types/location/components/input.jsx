@@ -5,7 +5,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {EntityInput} from '#/main/app/data/types/entity'
 
-import {Location as LocationTypes} from '#/main/community/prop-types'
+import {Location as LocationTypes} from '#/main/core/data/types/location/prop-types'
 import {MODAL_LOCATIONS} from '#/main/core/modals/locations'
 
 const LocationInput = (props) =>

@@ -3,9 +3,8 @@ import {PropTypes as T} from 'prop-types'
 
 import {Tool} from '#/main/core/tool'
 
-import {LocationList} from '#/main/core/tools/locations/containers/list'
-import {LocationNew} from '#/main/core/tools/locations/containers/new'
-import {LocationDetails} from '#/main/core/tools/locations/containers/details'
+import {LocationList} from '#/main/core/tools/locations/components/list'
+import {LocationShow} from '#/main/core/tools/locations/components/show'
 
 const LocationsTool = (props) =>
   <Tool
@@ -16,19 +15,15 @@ const LocationsTool = (props) =>
         exact: true,
         component: LocationList
       }, {
-        path: '/new',
-        component: LocationNew,
-        onEnter: () => props.open(null)
-      }, {
         path: '/:id',
-        component: LocationDetails,
-        onEnter: (params) => props.open(params.id)
+        component: LocationShow,
+        onEnter: (params) => props.openLocation(params.id)
       }
     ]}
   />
 
 LocationsTool.propTypes = {
-  open: T.func.isRequired
+  openLocation: T.func.isRequired
 }
 
 export {

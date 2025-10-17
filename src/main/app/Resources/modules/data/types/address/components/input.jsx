@@ -12,7 +12,7 @@ import {FormFieldset} from '#/main/app/content/form/components/fieldset'
 import {Address as AddressTypes} from '#/main/app/data/types/address/prop-types'
 
 const AddressInput = props =>
-  <div className={classes('address-control bg-body-tertiary p-3 rounded-3', props.className)} role="presentation">
+  <div className={classes('address-control border p-3 rounded-3 data-form-section', props.className)} role="presentation">
     <FormFieldset
       {...omit(props, 'value', 'error', 'onChange', 'onError')}
       data={props.value}
@@ -29,13 +29,11 @@ const AddressInput = props =>
           name: 'street1',
           label: trans('address_street'),
           type: 'string',
-          required: -1 !== props.requiredParts.indexOf('street1')
-        }, {
-          name: 'street2',
-          label: trans('address_street'),
-          hideLabel: true,
-          type: 'string',
-          required: -1 !== props.requiredParts.indexOf('street2')
+          required: -1 !== props.requiredParts.indexOf('street'),
+          options: {
+            long: true,
+            minRows: 2
+          }
         }, {
           name: 'postalCode',
           label: trans('address_postal_code'),
@@ -68,8 +66,7 @@ implementPropTypes(AddressInput, DataInputTypes, {
     AddressTypes.propTypes
   ),
   requiredParts: T.arrayOf(T.oneOf([
-    'street1',
-    'street2',
+    'street',
     'postalCode',
     'city',
     'state',

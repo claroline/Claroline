@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {EntityDisplay} from '#/main/app/data/types/entity'
 
-import {Location as LocationTypes} from '#/main/community/prop-types'
+import {Location as LocationTypes} from '#/main/core/data/types/location/prop-types'
 import {Address} from '#/main/app/components/address'
 
 const LocationDisplay = (props) => {

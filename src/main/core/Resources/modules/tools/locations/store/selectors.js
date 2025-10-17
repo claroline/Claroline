@@ -1,8 +1,13 @@
-import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
+import {createSelector} from 'reselect'
 
 const STORE_NAME = 'locations'
 
-const currentLocation = (state) => formSelectors.originalData(formSelectors.form(state, STORE_NAME+'.current'))
+const store = (state) => state[STORE_NAME]
+
+const currentLocation = createSelector(
+  [store],
+  (store) => store.current
+)
 
 export const selectors = {
   STORE_NAME,

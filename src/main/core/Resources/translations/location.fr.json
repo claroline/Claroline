@@ -1,5 +1,7 @@
 {
   "new_location": "Nouveau lieu",
+  "new_location_desc": "Ajoutez des lieux pour pouvoir les utiliser lors de la planification de vos évènements en présentiel.",
   "location_name": "Lieu : %name%",
-  "no_location": "Aucun lieu."
+  "no_location": "Aucun lieu.",
+  "location": "Lieu"
 }
