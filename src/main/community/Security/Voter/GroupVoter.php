@@ -64,7 +64,7 @@ class GroupVoter extends AbstractRoleSubjectVoter
 
             case self::PATCH:
                 if ($this->isToolGranted(self::EDIT, 'community')) {
-                    return VoterInterface::ACCESS_DENIED;
+                    return VoterInterface::ACCESS_GRANTED;
                 }
 
                 if (!$collection) {
