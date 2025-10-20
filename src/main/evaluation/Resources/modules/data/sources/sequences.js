@@ -7,8 +7,9 @@ import {route as toolRoute} from '#/main/core/tool'
 
 import {getActions, getDefaultAction} from '#/main/evaluation/sequence/utils'
 import {SequenceCard} from '#/main/evaluation/sequence/components/card'
+import {declareDataSource} from '#/main/app/data/sources'
 
-export default (contextType, contextData, refresher, currentUser) => {
+export default declareDataSource((contextType, contextData, refresher, currentUser) => {
   let basePath
   if ('workspace' === contextType) {
     basePath = workspaceRoute(contextData, 'progression')
@@ -75,4 +76,4 @@ export default (contextType, contextData, refresher, currentUser) => {
     ],
     card: SequenceCard
   }
-}
+})

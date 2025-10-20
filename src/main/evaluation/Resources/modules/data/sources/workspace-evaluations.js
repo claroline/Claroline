@@ -3,13 +3,14 @@ import React from 'react'
 import {trans} from '#/main/app/intl/translation'
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
+import {declareDataSource} from '#/main/app/data/sources'
 
 import {constants} from '#/main/evaluation/constants'
 import {EvaluationWorkspaceCard} from '#/main/evaluation/workspace/components/card'
 import {getActions, getDefaultAction} from '#/main/evaluation/workspace/utils'
 import {EvaluationStatus} from '#/main/evaluation/components/status'
 
-export default (contextType, contextData, refresher, currentUser) => {
+export default declareDataSource((contextType, contextData, refresher, currentUser) => {
   let basePath
   if ('workspace' === contextType) {
     basePath = workspaceRoute(contextData, 'progression')
@@ -118,4 +119,4 @@ export default (contextType, contextData, refresher, currentUser) => {
     ],
     card: EvaluationWorkspaceCard
   }
-}
+})

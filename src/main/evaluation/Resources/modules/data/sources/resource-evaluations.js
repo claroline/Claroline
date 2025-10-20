@@ -7,8 +7,9 @@ import {constants} from '#/main/evaluation/constants'
 import {route} from '#/main/core/resource/routing'
 import {ResourceCard} from '#/main/evaluation/resource/components/card'
 import {EvaluationStatus} from '#/main/evaluation/components/status'
+import {declareDataSource} from '#/main/app/data/sources'
 
-export default {
+export default declareDataSource({
   name: 'resource_evaluations',
   parameters: {
     primaryAction: (evaluation) => ({
@@ -101,4 +102,4 @@ export default {
     ],
     card: ResourceCard
   }
-}
+})

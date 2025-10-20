@@ -5,11 +5,12 @@ import {route as toolRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {constants} from '#/main/evaluation/constants'
 import {EvaluationStatus} from '#/main/evaluation/components/status'
+import {declareDataSource} from '#/main/app/data/sources'
 
 import {EvaluationWorkspaceCard} from '#/main/evaluation/workspace/components/card'
 import {getActions, getDefaultAction} from '#/main/evaluation//workspace/utils'
 
-export default (contextType, contextData, refresher, currentUser) => {
+export default declareDataSource((contextType, contextData, refresher, currentUser) => {
   let basePath
   if ('workspace' === contextType) {
     basePath = workspaceRoute(contextData, 'progression')
@@ -102,8 +103,15 @@ export default (contextType, contextData, refresher, currentUser) => {
         label: trans('archive'),
         displayable: false,
         filterable: true
+      }, {
+        name: 'user.registered',
+        label: trans('user_registered', {}, 'community'),
+        type: 'boolean',
+        displayable: false,
+        sortable: false,
+        filterable: true
       }
     ],
     card: EvaluationWorkspaceCard
   }
-}
+})

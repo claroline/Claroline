@@ -4,8 +4,9 @@ import {trans} from '#/main/app/intl/translation'
 
 import {constants} from '#/main/evaluation/constants'
 import {EvaluationStatus} from '#/main/evaluation/components/status'
+import {declareDataSource} from '#/main/app/data/sources'
 
-export default {
+export default declareDataSource({
   name: 'resource_attempts',
   parameters: {
     definition: [
@@ -86,4 +87,4 @@ export default {
       }
     ]
   }
-}
+})

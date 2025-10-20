@@ -32,6 +32,16 @@ function getSource(sourceName, contextType, contextData, refresher, currentUser)
     })
 }
 
+/**
+ * Declare a new data source to the application.
+ *
+ * NB. DataSource MUST be registered in the `plugin.js` file of its plugin.
+ */
+function declareDataSource(sourceDefinition) {
+  return sourceDefinition
+}
+
 export {
-  getSource
+  getSource,
+  declareDataSource
 }

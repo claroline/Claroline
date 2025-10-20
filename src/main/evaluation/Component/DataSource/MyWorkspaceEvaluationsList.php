@@ -36,6 +36,10 @@ final class MyWorkspaceEvaluationsList extends ListSourceComponent
     {
         $finderQuery = parent::getQuery($context, $contextSubject, $request);
 
+        if ($finderQuery->hasFilter('user.registered')) {
+            $finderQuery->addFilter('workspace.roles', $this->tokenStorage->getToken()->getRoleNames());
+        }
+
         $finderQuery->addFilter('user', $this->tokenStorage->getToken()?->getUser()->getUuid());
 
         return $finderQuery;
