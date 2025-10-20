@@ -71,5 +71,5 @@
   "user_registered": "Utilisateur inscrit",
   "change_organization_help": "Changez d'organisation pour voir les contenus associés à cette organisation",
   "user_history_desc": "Retrouvez toutes les modifications effectuées sur l'utilisateur.",
-  "add_from_another_organization_desc": "Sélectionnez un utilisateur existant dans une autre organization."
+  "add_from_another_organization_desc": "Sélectionnez un ou plusieurs utilisateurs existant dans une autre organization pour leur donner accès au contenu de l'organisation <b>%organization%</b>."
 }

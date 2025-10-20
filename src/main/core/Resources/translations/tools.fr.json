@@ -16,6 +16,7 @@
     "locations": "Lieux",
     "tool_history_desc": "Retrouvez toutes les modifications effectuées sur l'outil et son contenu.",
     "make_tool_public": "Rendre l'outil public",
-    "make_tool_public_help": "Les outils publics sont accessibles par tous les utilisateurs de la plateforme.",
-    "make_tool_public_workspace_help": "Les outils publics sont accessibles par tous les membres de l'espace d'activités."
+    "make_tool_public_help": "Les outils publics sont accessibles à tous les utilisateurs inscrits à la plateforme.",
+    "make_tool_public_workspace_help": "Les outils publics sont accessibles à tous les utilisateurs inscrits à l'espace d'activités.",
+    "make_tool_public_workspace_warning": "<b>Attention :</b> Si l'espace d'activités est également public alors les outils publics sont accessibles sans inscription et sans connexion."
 }

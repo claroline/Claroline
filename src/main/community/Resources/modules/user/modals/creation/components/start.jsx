@@ -32,7 +32,7 @@ const CreationStart = (props) => {
             id: 'create-from-organization',
             icon: 'building',
             label: trans('add_from_another_organization', {}, 'actions'),
-            description: trans('add_from_another_organization_desc', {}, 'community'),
+            description: trans('add_from_another_organization_desc', {organization: currentOrganization.name}, 'community'),
             action: {
               type: MODAL_BUTTON,
               modal: [MODAL_USERS, {

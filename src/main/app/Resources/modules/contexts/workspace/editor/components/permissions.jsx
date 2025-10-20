@@ -41,7 +41,8 @@ const WorkspaceEditorPermissions = () => {
               type: 'boolean',
               label: trans('make_workspace_public', {}, 'workspace'),
               help: [
-                trans('make_workspace_public_help', {}, 'workspace')
+                trans('make_workspace_public_help', {}, 'workspace'),
+                trans('make_workspace_public_warning', {}, 'workspace')
               ]
             }
           ]

@@ -3,26 +3,27 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {toKey} from '#/main/app/utils/text'
+import {Html} from '#/main/app/components/html'
 
 const FormHelp = (props) => {
   const helps = Array.isArray(props.help) && 1 === props.help.length ? props.help[0] : props.help
 
   if (Array.isArray(helps)) {
     return (
-      <div className={classes('list-unstyled', props.className)} role="presentation">
+      <div className={props.className} role="presentation">
         {helps.map(help =>
-          <p key={toKey(help)} className="form-text">
+          <Html as="p" key={toKey(help)} className="form-text mb-0">
             {help}
-          </p>
+          </Html>
         )}
       </div>
     )
   }
 
   return (
-    <p className={classes('form-text', props.className)}>
+    <Html as="p" className={classes('form-text', props.className)}>
       {helps}
-    </p>
+    </Html>
   )
 }
 

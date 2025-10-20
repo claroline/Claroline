@@ -35,7 +35,10 @@ const ToolEditorPermissions = (props) => {
               name: 'data.meta.public',
               type: 'boolean',
               label: trans('make_tool_public', {}, 'tools'),
-              help: trans('workspace' === props.contextType ? 'make_tool_public_workspace_help' : 'make_tool_public_help', {}, 'tools')
+              help: 'workspace' === props.contextType ? [
+                trans('make_tool_public_workspace_help', {}, 'tools'),
+                trans('make_tool_public_workspace_warning', {}, 'tools')
+              ] : trans('make_tool_public_help', {}, 'tools')
             }
           ]
         }, {

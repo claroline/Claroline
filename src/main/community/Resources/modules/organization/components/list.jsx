@@ -55,7 +55,8 @@ const OrganizationListComponent = props => {
           name: 'meta.public',
           alias: 'public',
           type: 'boolean',
-          label: trans('public')
+          label: trans('public'),
+          displayed: true
         }
       ].concat(props.customDefinition)}
 

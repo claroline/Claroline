@@ -44,7 +44,8 @@ const ResourceEditorPermissions = (props) => {
               type: 'boolean',
               label: trans('make_resource_public', {}, 'resource'),
               help: [
-                trans('make_resource_public_help', {}, 'resource')
+                trans('make_resource_public_help', {}, 'resource'),
+                trans('make_resource_public_warning', {}, 'resource')
               ]
             }, {
               name: 'resourceNode.meta.downloadable',
@@ -132,6 +133,7 @@ const ResourceEditorPermissions = (props) => {
 }
 
 ResourceEditorPermissions.propTypes = {
+  definition: T.array,
   resourceNode: T.shape(
     ResourceNodeTypes.propTypes
   ).isRequired,
