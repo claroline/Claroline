@@ -15,7 +15,8 @@ services:
         arguments:
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
 
-    Claroline\AuthenticationBundle\Subscriber\AuthenticationParametersSubscriber:
+    Claroline\AuthenticationBundle\Subscriber\PlatformSubscriber:
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'
+            - '@Claroline\AuthenticationBundle\Manager\OAuthManager'

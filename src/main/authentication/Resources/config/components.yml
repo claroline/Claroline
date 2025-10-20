@@ -1,4 +1,5 @@
 imports:
     - { resource: components/log.yml }
+    - { resource: components/oauth.yml }
     - { resource: components/template.yml }
     - { resource: components/tool.yml }

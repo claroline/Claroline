@@ -1,5 +1,0 @@
-services:
-    Claroline\CoreBundle\Security\UserChecker:
-        arguments:
-            - '@translator'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

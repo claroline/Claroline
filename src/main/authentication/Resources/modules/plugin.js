@@ -30,5 +30,11 @@ registry.add('ClarolineAuthenticationBundle', {
     group: {
       'password-reset': () => { return import(/* webpackChunkName: "auth-action-group-password-reset" */ '#/main/authentication/actions/group/password-reset') }
     }
+  },
+  sso: {
+    'oauth2': () => { return import(/* webpackChunkName: "authentication-sso-oauth2" */ '#/main/authentication/sso/oauth2') }
+  },
+  oauth: {
+    'generic': () => { return import(/* webpackChunkName: "authentication-oauth-generic" */ '#/main/authentication/oauth/generic') }
   }
 })

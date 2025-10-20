@@ -1,7 +1,4 @@
 services:
-    _defaults:
-        public: true # should not be public
-
     Claroline\AuthenticationBundle\Manager\MailManager:
         arguments:
             - '@router'
@@ -14,3 +11,11 @@ services:
     Claroline\AuthenticationBundle\Manager\AuthenticationManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\AuthenticationBundle\Manager\OAuthManager:
+        arguments:
+            - '@logger'
+            - '@router'
+            - '@Claroline\AuthenticationBundle\Component\OAuth\OAuth2Provider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'

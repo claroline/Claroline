@@ -24,7 +24,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * A tool MUST:
  *   - be declared as a symfony service and tagged with "claroline.component.tool".
- *   - implement the ToolInterface interface (or the AbstractTool class in most cases).
+ *   - implement the ToolInterface interface (or the ToolComponent class in most cases).
  */
 class ToolProvider extends AbstractComponentProvider
 {
@@ -77,6 +77,7 @@ class ToolProvider extends AbstractComponentProvider
      */
     public function getEnabledTools(string $context, ?ContextSubjectInterface $contextSubject = null): array
     {
+        // TODO : check if the tool component is effectively enabled to avoid UI errors
         return $this->orderedToolRepo->findByContext($context, $contextSubject?->getContextIdentifier());
     }
 

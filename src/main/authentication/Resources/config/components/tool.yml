@@ -5,3 +5,4 @@ services:
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'
+            - '@Claroline\AuthenticationBundle\Manager\OAuthManager'

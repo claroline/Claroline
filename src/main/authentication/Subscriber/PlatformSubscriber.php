@@ -6,13 +6,18 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\Client\ConfigureEvent;
 use Claroline\AppBundle\Event\ClientEvents;
 use Claroline\AuthenticationBundle\Manager\AuthenticationManager;
+use Claroline\AuthenticationBundle\Manager\OAuthManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class AuthenticationParametersSubscriber implements EventSubscriberInterface
+/**
+ * Expose authentication parameters to the platform client.
+ */
+class PlatformSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly SerializerProvider $serializer,
-        private readonly AuthenticationManager $authenticationManager
+        private readonly AuthenticationManager $authenticationManager,
+        private readonly OAuthManager $oauthManager,
     ) {
     }
 
@@ -28,8 +33,12 @@ class AuthenticationParametersSubscriber implements EventSubscriberInterface
         $authenticationParameters = $this->authenticationManager->getParameters();
         $serializedParameters = $this->serializer->serialize($authenticationParameters);
 
+        $oauthButtons = $this->oauthManager->getDisplayedButtons();
+
         $event->setParameters([
-            'authentication' => $serializedParameters,
+            'authentication' => array_merge($serializedParameters, [
+                'sso' => $oauthButtons,
+            ]),
         ]);
     }
 }

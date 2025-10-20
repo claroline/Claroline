@@ -9,28 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Security;
+namespace Claroline\AuthenticationBundle\Security;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserChecker implements UserCheckerInterface
 {
-    /** @var TranslatorInterface */
-    protected $translator;
-    /** @var PlatformConfigurationHandler */
-    protected $config;
-
     public function __construct(
-        TranslatorInterface $translator,
-        PlatformConfigurationHandler $config
+        protected readonly TranslatorInterface $translator,
+        protected readonly PlatformConfigurationHandler $config
     ) {
-        $this->translator = $translator;
-        $this->config = $config;
     }
 
     public function checkPreAuth(UserInterface $user): void
@@ -44,7 +37,7 @@ class UserChecker implements UserCheckerInterface
                 '%support_email%' => $this->config->getParameter('help.support_email') ?? '',
             ], 'security');
 
-            throw new AccessDeniedException($message);
+            throw new CustomUserMessageAccountStatusException($message);
         }
     }
 
@@ -59,7 +52,7 @@ class UserChecker implements UserCheckerInterface
                 '%support_email%' => $this->config->getParameter('help.support_email') ?? '',
             ], 'security');
 
-            throw new AccessDeniedException($message);
+            throw new CustomUserMessageAccountStatusException($message);
         }
     }
 }

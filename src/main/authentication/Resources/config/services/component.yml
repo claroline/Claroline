@@ -1,0 +1,14 @@
+# Declare all services required for the management of Claroline Components (e.g., tools, resources, widgets).
+services:
+    # OAuth2
+    Claroline\AuthenticationBundle\Component\OAuth\OAuth2Provider:
+        lazy: true
+        arguments:
+            - !tagged_iterator claroline.component.oauth2
+
+    claroline.provider.oauth2:
+        alias: Claroline\AuthenticationBundle\Component\OAuth\OAuth2Provider
+        public: true
+
+    Claroline\AuthenticationBundle\Component\OAuth\OAuth2Component:
+        abstract: true

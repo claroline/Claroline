@@ -4,7 +4,7 @@ namespace Claroline\AuthenticationBundle\Tests\Security\Authentication\Guard;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Entity\IpUser;
-use Claroline\AuthenticationBundle\Security\Authentication\IpAuthenticator;
+use Claroline\AuthenticationBundle\Security\Authenticator\IpAuthenticator;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Doctrine\ORM\EntityRepository;
@@ -14,11 +14,18 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class IpAuthenticatorTest extends MockeryTestCase
 {
+    public function testNoSupportIfNoIp(): void
+    {
+        $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
+
+        $this->assertFalse($authenticator->supports(new Request()));
+    }
+
     public function testSupports(): void
     {
         $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
 
-        $this->assertTrue($authenticator->supports(new Request()));
+        $this->assertTrue($authenticator->supports(new Request([], [], [], [], [], ['REMOTE_ADDR' => '127.0.0.1'])));
     }
 
     public function testAuthenticate(): void

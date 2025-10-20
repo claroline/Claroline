@@ -185,7 +185,7 @@ DataInput.propTypes = {
   id: T.string.isRequired,
   className: T.string,
   type: T.string.isRequired,
-  label: T.string.isRequired,
+  label: T.string,
   icon: T.string,
   hideLabel: T.bool,
   options: T.object, // depends on the data type

@@ -1,0 +1,4 @@
+services:
+  Claroline\AuthenticationBundle\Component\OAuth\GenericOAuth2:
+    parent: Claroline\AuthenticationBundle\Component\OAuth\OAuth2Component
+    tags: [ 'claroline.component.oauth2' ]

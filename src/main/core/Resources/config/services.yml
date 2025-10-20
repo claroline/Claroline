@@ -1,5 +1,4 @@
 imports:
-    - { resource: services/checker.yml }
     - { resource: services/command.yml }
     - { resource: services/component.yml }
     - { resource: services/configuration.yml }
@@ -22,15 +21,7 @@ imports:
     - { resource: services/voter.yml }
 
 services:
-    Claroline\CoreBundle\Listener\AuthenticationFailureHandler:
-        parent: security.authentication.failure_handler
-        calls:
-            - method: setDispatcher
-              arguments:
-                - '@event_dispatcher'
-            - method: setObjectManager
-              arguments:
-                - '@Claroline\AppBundle\Persistence\ObjectManager'
+
 
     # array injection with annotations is not supported
     claroline.plugin.validator:

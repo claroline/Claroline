@@ -11,8 +11,8 @@ import {Html} from '#/main/app/components/html'
 import {DataInput} from '#/main/app/data/components/input'
 
 /**
- * ATTENTION : as it's only to be used in the FormData component, the `fields` are not defaulted by the component.
- * You should consider apply `createFieldsetDefinition` on your fields list before using it.
+ * ATTENTION: as it's only to be used in the FormData component, the `fields` are not defaulted by the component.
+ * You should consider apply `createFieldsetDefinition` on your list of fields before using it.
  */
 class FormFieldset extends Component {
   constructor(props) {
@@ -123,8 +123,6 @@ class FormFieldset extends Component {
       <>
         {this.renderHelp()}
         {this.renderFields(this.props.fields)}
-
-        {this.props.children}
       </>
     )
   }
@@ -141,8 +139,7 @@ FormFieldset.propTypes = {
     // fields propTypes
   })).isRequired,
   setErrors: T.func.isRequired,
-  updateProp: T.func.isRequired,
-  children: T.node
+  updateProp: T.func.isRequired
 }
 
 FormFieldset.defaultProps = {

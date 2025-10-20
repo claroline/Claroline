@@ -86,9 +86,19 @@ class MessageSerializer
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $receivers = $message->getReceivers();
 
-            $users = $this->userRepo->findByUsernames($receivers['users']);
-            $groups = $this->groupRepo->findBy(['name' => $receivers['groups']]);
-            $workspaces = $this->workspaceRepo->findBy(['code' => $receivers['workspaces']]);
+            $users = [];
+            if (!empty($receivers['users'])) {
+                $users = $this->userRepo->findByUsernames($receivers['users']);
+            }
+
+            $groups = [];
+            if (!empty($receivers['groups'])) {
+                $groups = $this->groupRepo->findBy(['name' => $receivers['groups']]);
+            }
+            $workspaces = [];
+            if (!empty($receivers['workspaces'])) {
+                $workspaces = $this->workspaceRepo->findBy(['code' => $receivers['workspaces']]);
+            }
 
             $data['receivers'] = [
                 'users' => array_map(function (User $user) {

@@ -2,11 +2,11 @@ import {getApps} from '#/main/app/plugins'
 import isEmpty from 'lodash/isEmpty'
 
 // memoize loaded context as a small performance optimization
-// apps defined in plugins can not change at runtime.
+// apps defined in plugins cannot change at runtime.
 let loadedContexts = []
 
 /**
- * Get contexts definitions in the plugin registry.
+ * Get context definitions in the plugin registry.
  */
 function getContexts() {
   if (!isEmpty(loadedContexts)) {

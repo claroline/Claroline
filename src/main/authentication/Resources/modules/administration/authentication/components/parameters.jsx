@@ -9,6 +9,7 @@ import {ToolPage} from '#/main/core/tool'
 
 import {selectors} from '#/main/authentication/administration/authentication/store'
 import {PageContent} from '#/main/app/page'
+import {AuthenticationOauth} from '#/main/authentication/administration/authentication/components/oauth'
 
 const displayPasswordValidation = (data) => get(data, 'password._forceComplexity')
   || get(data, 'password.minLength')
@@ -19,8 +20,9 @@ const displayPasswordValidation = (data) => get(data, 'password._forceComplexity
 
 const AuthenticationParameters = (props) =>
   <ToolPage title={trans('parameters')}>
-    <PageContent>
+    <PageContent className="pt-5 d-flex flex-column">
       <FormData
+        className="flex-fill mb-5"
         name={selectors.FORM_NAME}
         target={['apiv2_authentication_parameters_update']}
         buttons={true}
@@ -31,36 +33,38 @@ const AuthenticationParameters = (props) =>
         }}
         definition={[
           {
-            icon: 'fa fa-fw fa-sign-in',
-            title: trans('login'),
-            defaultOpened: true,
+            title: trans('Authentification par mot de passe'),
+            description: trans('Autorisez les utilisateurs à se connecter à votre plateforme avec les identifiants (nom d\'utilisateur ou email) et mots de passe définis pour leur compte.'),
+            primary: true,
+            hideTitle: false,
+            enabled: true,
+            onToggle: () => {
+
+            },
             fields: [
-              {
+              /*{
                 name: 'login.helpMessage',
                 type: 'html',
                 label: trans('message')
-              }, {
+              }, */{
                 name: 'login.internalAccount',
                 type: 'boolean',
-                label: trans('display_internal_account', {}, 'security')
-              }
-            ]
-          }, {
-            icon: 'fa fa-fw fa-lock',
-            title: trans('password'),
-            fields: [
-              {
+                label: trans('display_on_login_page', {}, 'security'),
+                help: trans('Affichez le formulaire de connexion (identifiant et mot de passe) sur la page de connexion de la plateforme.')
+              }, {
                 name: 'login.changePassword',
                 type: 'boolean',
-                label: trans('allow_change_password', {}, 'security')
+                label: trans('allow_change_password', {}, 'security'),
+                help: trans('Autorisez les utilisateurs à modifier leur mot de passe depuis les paramètres de leur compte.', {}, 'security')
               }, {
                 name: 'password._forceComplexity',
                 type: 'boolean',
                 label: trans('force_password_complexity', {}, 'security'),
+                help: trans('Définissez des règles de validation pour la création de nouveaux mots de passe.', {}, 'security'),
                 calculated: displayPasswordValidation,
                 onChange: (value) => {
                   if (!value) {
-                    props.update('password.minLength', 0)
+                    props.update('password.minLength', null)
                     props.update('password.requireLowercase', false)
                     props.update('password.requireUppercase', false)
                     props.update('password.requireNumber', false)
@@ -97,6 +101,38 @@ const AuthenticationParameters = (props) =>
                 ]
               }
             ]
+          }, {
+            title: trans('Authentification par application externe'),
+            description: trans('Autorisez les utilisateurs à se connecter à votre plateforme en utilisant un service d\'authentification externe.'),
+            primary: true,
+            hideTitle: false,
+            component: AuthenticationOauth
+          }, {
+            title: trans('Authentification par Jetons'),
+            description: trans('Générez des jetons d\'authentification.'),
+            primary: true,
+            hideTitle: false,
+            enabled: true,
+            displayed: false,
+            onToggle: () => {
+
+            },
+            render: () => {
+              return 'placeholder'
+            }
+          }, {
+            title: trans('Authentification par IPs'),
+            description: trans('Authentifiez automatiquement les utilisateurs lorsqu\'ils accèdent à la plateforme depuis l\'une des ips autorisées.'),
+            primary: true,
+            hideTitle: false,
+            enabled: true,
+            displayed: false,
+            onToggle: () => {
+
+            },
+            render: () => {
+              return 'placeholder'
+            }
           }
         ]}
       />

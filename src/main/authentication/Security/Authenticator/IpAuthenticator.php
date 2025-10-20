@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\AuthenticationBundle\Security\Authentication;
+namespace Claroline\AuthenticationBundle\Security\Authenticator;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Entity\IpUser;
@@ -17,7 +17,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 /**
- * Manages authentication of users with white listed IPs.
+ * Manages authentication of users with white-listed IPs.
  */
 class IpAuthenticator extends AbstractAuthenticator
 {
@@ -28,6 +28,10 @@ class IpAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
+        if (empty($request->getClientIp())) {
+            return false;
+        }
+
         return true;
     }
 

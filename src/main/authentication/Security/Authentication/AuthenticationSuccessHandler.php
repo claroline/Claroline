@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Listener;
+namespace Claroline\AuthenticationBundle\Security\Authentication;
 
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
-class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInterface
+class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\AuthenticationBundle\Security\Authentication;
+namespace Claroline\AuthenticationBundle\Security\Authenticator;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Entity\ApiToken;

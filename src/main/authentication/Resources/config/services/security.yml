@@ -1,15 +1,45 @@
 services:
-    # Authenticators
+    Claroline\AuthenticationBundle\Security\UserChecker:
+        arguments:
+            - '@translator'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
     Claroline\AuthenticationBundle\Security\Authentication\Authenticator:
         arguments:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Listener\AuthenticationSuccessListener'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\AuthenticationSuccessHandler'
 
-    Claroline\AuthenticationBundle\Security\Authentication\IpAuthenticator:
+    # Authentication handlers
+    Claroline\AuthenticationBundle\Security\Authentication\AuthenticationSuccessHandler:
+        arguments:
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
+            - '@Claroline\AppBundle\Manager\PlatformManager'
+            - '@Claroline\AppBundle\Component\Context\ContextProvider'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+            - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
+            - '@Claroline\AppBundle\Manager\ClientManager'
+
+    Claroline\AuthenticationBundle\Security\Authentication\AuthenticationFailureHandler:
+        arguments:
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
+
+    # Authenticators
+    Claroline\AuthenticationBundle\Security\Authenticator\OAuth2Authenticator:
+        arguments:
+            - '@security.http_utils'
+            - '@Claroline\AuthenticationBundle\Manager\OAuthManager'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\AuthenticationSuccessHandler'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\AuthenticationFailureHandler'
+
+    Claroline\AuthenticationBundle\Security\Authenticator\IpAuthenticator:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
-    Claroline\AuthenticationBundle\Security\Authentication\ApiTokenAuthenticator:
+    Claroline\AuthenticationBundle\Security\Authenticator\ApiTokenAuthenticator:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

@@ -1,5 +1,5 @@
 {
-  "Bad credentials.": "Votre identifiant ou votre mot de passe est incorrect.",
+  "Invalid credentials.": "Votre identifiant ou votre mot de passe est incorrect.",
   "The presented password is invalid.": "Votre identifiant ou votre mot de passe est incorrect.",
   "password_strength.very_weak": "Très faible",
   "password_strength.weak": "Faible",

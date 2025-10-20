@@ -19,6 +19,17 @@ const WorkspaceEditorAppearance = () => {
     <ContextEditorAppearance
       definition={[
         {
+          icon: 'fa fa-fw fa-desktop',
+          title: trans('display_parameters'),
+          primary: true,
+          fields: [
+            {
+              name: 'data.thumbnail',
+              label: trans('thumbnail'),
+              type: 'image'
+            }
+          ]
+        }, {
           title: trans('advanced'),
           primary: true,
           hideTitle: true,

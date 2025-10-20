@@ -51,7 +51,9 @@ function createFormDefinition(sections, locked = [], data) {
       const defaultedSection = merge({}, DataFormSection.defaultProps, section)
       if (isFieldDisplayed(defaultedSection, data)) {
         // section has fields and is displayed keep it
-        defaultedSection.fields = createFieldsetDefinition(defaultedSection.fields, locked, data)
+        if (!isEmpty(defaultedSection.fields)) {
+          defaultedSection.fields = createFieldsetDefinition(defaultedSection.fields, locked, data)
+        }
 
         if (0 !== defaultedSection.fields.length || defaultedSection.component || defaultedSection.render) {
           return defaultedSection

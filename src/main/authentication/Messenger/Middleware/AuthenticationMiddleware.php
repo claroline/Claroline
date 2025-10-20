@@ -11,11 +11,11 @@ use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 
 /**
- * Will read the AuthenticationStamp to know which user as called the messenger in order to refresh its token.
+ * Will read the AuthenticationStamp to know which user as called the messenger to refresh its token.
  * Without the AuthenticationStamp, the app will automatically populate the token with
  * the default claroline admin like in console command (it uses the same event).
  *
- * ATTENTION : Messenger gets a fresh ObjectManager, so the user stored in token is not known and will throw errors
+ * ATTENTION: Messenger gets a fresh ObjectManager, so the user stored in token is not known and will throw errors
  * if used in entities (most likely when setting the creator of new entities).
  */
 class AuthenticationMiddleware implements MiddlewareInterface

@@ -12,5 +12,11 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
+    Claroline\AuthenticationBundle\Serializer\OAuthClientSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CommunityBundle\Serializer\OrganizationSerializer'
+
     Claroline\AuthenticationBundle\Serializer\AuthenticationParametersSerializer:
         tags: [ claroline.serializer ]

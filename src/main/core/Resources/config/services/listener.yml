@@ -55,14 +55,3 @@ services:
         tags:
             - { name: kernel.event_listener, event: console.command, method: setDefaultUser, priority: 17 }
             - { name: kernel.event_listener, event: console.command, method: setLocale, priority: 16 }
-
-    Claroline\CoreBundle\Listener\AuthenticationSuccessListener:
-        arguments:
-            - '@event_dispatcher'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\Library\RoutingHelper'
-            - '@Claroline\AppBundle\Manager\PlatformManager'
-            - '@Claroline\AppBundle\Component\Context\ContextProvider'
-            - '@Claroline\CoreBundle\Manager\UserManager'
-            - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
-            - '@Claroline\AppBundle\Manager\ClientManager'

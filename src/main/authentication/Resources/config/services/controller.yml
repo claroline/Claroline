@@ -21,3 +21,16 @@ services:
             - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.authorization_checker'
+
+    # OAuth 2 integration
+    Claroline\AuthenticationBundle\Controller\OAuth2\ClientController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+
+    Claroline\AuthenticationBundle\Controller\OAuth2\AuthenticationController:
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AuthenticationBundle\Manager\OAuthManager'

@@ -41,24 +41,25 @@ const FormContent = (props) => {
               displayLevel={props.displayLevel}
               className={primarySection.className}
               title={primarySection.title}
-              hideTitle={0 === index || primarySection.hideTitle}
+              hideTitle={(0 === index && undefined === primarySection.hideTitle) || primarySection.hideTitle}
               description={primarySection.description}
               actions={primarySection.actions}
             >
-              <FormFieldset
-                id={getSectionId(primarySection, props.id)}
-                disabled={disabled || (typeof primarySection.disabled === 'function' ? primarySection.disabled(props.data) : primarySection.disabled)}
-                fields={primarySection.fields}
-                data={props.data}
-                errors={props.errors}
-                help={primarySection.help}
-                updateProp={props.updateProp}
-                setErrors={props.setErrors}
-                size={props.size}
-              >
-                {primarySection.component && createElement(primarySection.component)}
-                {!primarySection.component && primarySection.render && primarySection.render(props.data, props.errors)}
-              </FormFieldset>
+              {!isEmpty(primarySection.fields) &&
+                <FormFieldset
+                  id={getSectionId(primarySection, props.id)}
+                  disabled={disabled || (typeof primarySection.disabled === 'function' ? primarySection.disabled(props.data) : primarySection.disabled)}
+                  fields={primarySection.fields}
+                  data={props.data}
+                  errors={props.errors}
+                  help={primarySection.help}
+                  updateProp={props.updateProp}
+                  setErrors={props.setErrors}
+                  size={props.size}
+                />
+              }
+              {primarySection.component && createElement(primarySection.component)}
+              {!primarySection.component && primarySection.render && primarySection.render(props.data, props.errors)}
             </FormPrimarySection> :
             <FormToggleSection
               level={props.level}
@@ -71,20 +72,21 @@ const FormContent = (props) => {
               displayed={typeof primarySection.enabled === 'function' ? !!primarySection.enabled(props.data) : primarySection.enabled}
               onToggle={primarySection.onToggle}
             >
-              <FormFieldset
-                id={getSectionId(primarySection, props.id)}
-                disabled={disabled || (typeof primarySection.disabled === 'function' ? primarySection.disabled(props.data) : primarySection.disabled)}
-                fields={primarySection.fields}
-                data={props.data}
-                errors={props.errors}
-                help={primarySection.help}
-                updateProp={props.updateProp}
-                setErrors={props.setErrors}
-                size={props.size}
-              >
-                {primarySection.component && createElement(primarySection.component)}
-                {!primarySection.component && primarySection.render && primarySection.render(props.data, props.errors)}
-              </FormFieldset>
+              {!isEmpty(primarySection.fields) &&
+                <FormFieldset
+                  id={getSectionId(primarySection, props.id)}
+                  disabled={disabled || (typeof primarySection.disabled === 'function' ? primarySection.disabled(props.data) : primarySection.disabled)}
+                  fields={primarySection.fields}
+                  data={props.data}
+                  errors={props.errors}
+                  help={primarySection.help}
+                  updateProp={props.updateProp}
+                  setErrors={props.setErrors}
+                  size={props.size}
+                />
+              }
+              {primarySection.component && createElement(primarySection.component)}
+              {!primarySection.component && primarySection.render && primarySection.render(props.data, props.errors)}
             </FormToggleSection>
           }
         </Fragment>
@@ -108,20 +110,22 @@ const FormContent = (props) => {
               errors={getSectionErrors(section.fields, props.errors)}
               actions={section.actions}
             >
-              <FormFieldset
-                id={`${getSectionId(section, props.id)}-fieldset`}
-                disabled={disabled || (typeof section.disabled === 'function' ? section.disabled(props.data) : section.disabled)}
-                fields={section.fields}
-                data={props.data}
-                errors={props.errors}
-                help={section.help}
-                updateProp={props.updateProp}
-                setErrors={props.setErrors}
-                size={props.size}
-              >
-                {section.component && createElement(section.component)}
-                {!section.component && section.render && section.render(props.data, props.errors)}
-              </FormFieldset>
+              {!isEmpty(section.fields) &&
+                <FormFieldset
+                  id={`${getSectionId(section, props.id)}-fieldset`}
+                  disabled={disabled || (typeof section.disabled === 'function' ? section.disabled(props.data) : section.disabled)}
+                  fields={section.fields}
+                  data={props.data}
+                  errors={props.errors}
+                  help={section.help}
+                  updateProp={props.updateProp}
+                  setErrors={props.setErrors}
+                  size={props.size}
+                />
+              }
+
+              {section.component && createElement(section.component)}
+              {!section.component && section.render && section.render(props.data, props.errors)}
             </FormSection>
           ))}
         </FormSections>
@@ -156,6 +160,7 @@ FormContent.propTypes = {
 
 FormContent.defaultProps = {
   level: 2,
+  displayLevel: 5,
   disabled: false,
   flush: false,
   data: {}

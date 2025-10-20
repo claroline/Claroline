@@ -38,3 +38,4 @@ Claroline\YouTubeBundle\ClarolineYouTubeBundle = true
 Claroline\LogBundle\ClarolineLogBundle=true
 Claroline\PrivacyBundle\ClarolinePrivacyBundle=true
 Claroline\FlashcardBundle\ClarolineFlashcardBundle=true
+Claroline\GitHubBundle\ClarolineGitHubBundle=false

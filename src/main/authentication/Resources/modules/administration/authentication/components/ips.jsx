@@ -21,8 +21,7 @@ const AuthenticationIps = props =>
       addAction={{
         name: 'add-ip',
         type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-plus',
-        tooltip: 'bottom',
+        icon: 'fa fa-plus',
         label: trans('add_ip', {}, 'security'),
         primary: true,
         modal: [MODAL_IP_FORM, {
@@ -45,7 +44,7 @@ const AuthenticationIps = props =>
             label: trans('user'),
             type: 'user',
             displayed: true
-          },
+          }
         ]}
       />
     </PageListSection>

@@ -59,7 +59,7 @@ const ToolMain = (props) => {
             label: trans('parameters'),
             tooltip: 'bottom',
             target: toolPath+'/edit',
-            displayed: canEdit
+            displayed: canEdit && 'administration' !== contextType
           }
         ]),
         actions: props.actions,

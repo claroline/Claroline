@@ -91,7 +91,7 @@ const CollectionInput = props =>
     }
 
     <Button
-      className="btn btn-link btn-add text-start ms-n3 mt-3"
+      className="btn btn-link btn-add text-start ms-n2 mt-2"
       type={CALLBACK_BUTTON}
       icon="fa fa-fw fa-plus"
       label={props.button}

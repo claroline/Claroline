@@ -13,7 +13,6 @@ namespace Claroline\AuthenticationBundle\Security\Authentication;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Listener\AuthenticationSuccessListener;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,14 +23,14 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Allows to manually manage user authentication and token.
+ * Allows manually managing user authentication and token.
  */
 class Authenticator
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
-        private readonly AuthenticationSuccessListener $authenticationHandler
+        private readonly AuthenticationSuccessHandler $authenticationHandler
     ) {
     }
 

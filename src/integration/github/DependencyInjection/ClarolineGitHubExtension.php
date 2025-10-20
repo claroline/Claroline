@@ -1,0 +1,27 @@
+<?php
+
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Claroline\GitHubBundle\DependencyInjection;
+
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
+class ClarolineGitHubExtension extends Extension
+{
+    public function load(array $configs, ContainerBuilder $container): void
+    {
+        $locator = new FileLocator(__DIR__.'/../Resources/config');
+        $loader = new YamlFileLoader($container, $locator);
+        $loader->load('components.yml');
+    }
+}

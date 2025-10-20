@@ -5,7 +5,9 @@ namespace Claroline\AuthenticationBundle\Component\Tool;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\Tool\ToolComponent;
+use Claroline\AuthenticationBundle\Entity\OAuthClient;
 use Claroline\AuthenticationBundle\Manager\AuthenticationManager;
+use Claroline\AuthenticationBundle\Manager\OAuthManager;
 use Claroline\CoreBundle\Component\Context\AdministrationContext;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 
@@ -13,7 +15,8 @@ class AuthenticationTool extends ToolComponent
 {
     public function __construct(
         private readonly SerializerProvider $serializer,
-        private readonly AuthenticationManager $authenticationManager
+        private readonly AuthenticationManager $authenticationManager,
+        private readonly OAuthManager $oauthManager,
     ) {
     }
 
@@ -43,6 +46,10 @@ class AuthenticationTool extends ToolComponent
             'authentication' => $this->serializer->serialize(
                 $this->authenticationManager->getParameters()
             ),
+            'oauthProviders' => $this->oauthManager->getAvailableProviders(),
+            'oauthClients' => array_map(function (OAuthClient $client) {
+                return $this->serializer->serialize($client);
+            }, $this->oauthManager->getAvailableClients()),
         ];
     }
 }

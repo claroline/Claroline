@@ -1,5 +1,5 @@
 {
-  "Bad credentials.": "Your username or password is incorrect.",
+  "Invalid credentials.": "Your username or password is incorrect.",
 
   "password_strength.very_weak": "Very weak",
   "password_strength.weak": "Weak",
