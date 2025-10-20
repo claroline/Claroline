@@ -23,7 +23,7 @@ const ExportEditor = (props) => {
     <Editor
       path={props.path + (props.isNew ? '/new' : '/edit')}
       styles={['claroline-distribution-main-transfer-transfer-tool']}
-      title={get(props.formData, 'name', trans('export', {}, 'transfer'))}
+      title={get(props.formData, 'name') || trans('export', {}, 'transfer')}
       name={selectors.FORM_NAME}
       target={(formData, isNew) => isNew ? ['apiv2_transfer_export_create']: ['apiv2_transfer_export_update', {id: props.formData.id}]}
       onSave={(response) => {
@@ -71,7 +71,7 @@ ExportEditor.propTypes = {
   pages: T.array,
   history: T.object,
   contextData: T.object,
-  isNew: T.bool.isRequired,
+  isNew: T.bool,
   onSave: T.func.isRequired,
   resetForm: T.func.isRequired,
   updateProp: T.func.isRequired,

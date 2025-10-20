@@ -37,9 +37,17 @@ abstract class AbstractEvaluationListExporter extends AbstractListExporter
                     'type' => 'string',
                     'description' => $this->translator->trans('The evaluation id', [], 'schema'),
                 ], [
-                    'name' => 'date',
+                    'name' => 'lastActivityAt',
                     'type' => 'date',
-                    'description' => $this->translator->trans('The evaluation date', [], 'schema'),
+                    'description' => $this->translator->trans('The user last activity for the evaluation', [], 'schema'),
+                ], [
+                    'name' => 'startedAt',
+                    'type' => 'date',
+                    'description' => $this->translator->trans('The date on which the user began the evaluation', [], 'schema'),
+                ], [
+                    'name' => 'endedAt',
+                    'type' => 'date',
+                    'description' => $this->translator->trans('The date on which the user completed the evaluation', [], 'schema'),
                 ], [
                     'name' => 'status',
                     'type' => 'string',
