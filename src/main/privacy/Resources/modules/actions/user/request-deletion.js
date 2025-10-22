@@ -7,7 +7,7 @@ export default declareAction((users, refresher, path, currentUser) => ({
   type: ASYNC_BUTTON,
   label: trans('request_deletion', {}, 'actions'),
   request: {
-    url: ['apiv2_user_request_account_deletion'],
+    url: ['apiv2_request_account_deletion'],
     request: {method: 'POST', type: actionConstants.ACTION_SEND},
     messages: {
       pending: {

@@ -8,6 +8,7 @@ use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\PrivacyBundle\Manager\MailManager;
 use Claroline\PrivacyBundle\Manager\PrivacyManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +25,8 @@ class PrivacyController extends AbstractSecurityController
         private readonly PlatformConfigurationHandler $config,
         private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
-        private readonly PrivacyManager $manager
+        private readonly PrivacyManager $manager,
+        private readonly MailManager $mailManager
     ) {
     }
 
@@ -97,5 +99,15 @@ class PrivacyController extends AbstractSecurityController
         return new JsonResponse(
             $this->serializer->serialize($updatedPrivacyParameters)
         );
+    }
+
+    #[Route(path: '/request-deletion', name: 'apiv2_request_account_deletion', methods: ['POST'])]
+    public function requestAccountDeletionAction(#[CurrentUser] ?User $currentUser): JsonResponse
+    {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
+        $this->mailManager->sendRequestToDPO($currentUser);
+
+        return new JsonResponse(null, 204);
     }
 }

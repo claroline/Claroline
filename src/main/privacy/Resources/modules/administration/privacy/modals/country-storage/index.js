@@ -1,13 +1,13 @@
 /**
- * Terms of service modal.
+ * Country storage modal.
  *
- * Displays the platform terms of service.
+ * Displays a form to modify the country storage of the platform data.
  */
 
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {CountryStorageModal} from '#/main/privacy/administration/privacy/modals/country-storage/containers/modal'
+import {CountryStorageModal} from '#/main/privacy/administration/privacy/modals/country-storage/components/modal'
 
 const MODAL_COUNTRY_STORAGE = 'MODAL_COUNTRY_STORAGE'
 

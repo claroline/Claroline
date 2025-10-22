@@ -160,17 +160,6 @@ class UserController extends AbstractCrudController
         }, $processed));
     }
 
-    #[Route(path: '/request-deletion', name: 'request_account_deletion', methods: ['POST'])]
-    public function requestAccountDeletionAction(): JsonResponse
-    {
-        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
-
-        $user = $this->tokenStorage->getToken()?->getUser();
-        $this->mailManager->sendRequestToDPO($user);
-
-        return new JsonResponse(null, 204);
-    }
-
     private function checkToolAccess(string $permission = 'OPEN', ?string $contextId = null): void
     {
         if ($contextId) {

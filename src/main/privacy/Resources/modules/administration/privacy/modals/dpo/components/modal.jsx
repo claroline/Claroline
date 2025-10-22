@@ -3,67 +3,57 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {Button} from '#/main/app/action'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {Modal} from '#/main/app/overlays/modal/components/modal'
-import {selectors} from '#/main/privacy/administration/privacy/store'
+import {FormModal} from '#/main/app/data/modals/form/components/modal'
 
 const DpoModal = props =>
-  <Modal
-    {...omit(props, 'formData', 'saveEnabled', 'save')}
+  <FormModal
+    {...omit(props, 'dpo')}
     icon="fa fa-fw fa-user-shield"
     title={trans('dpo',{},'privacy')}
-    size="lg"
-  >
-    <FormData
-      level={5}
-      flush={true}
-      name={selectors.FORM_NAME}
-      definition={[
-        {
-          title: trans('dpo', {}, 'privacy'),
-          fields: [
-            {
-              name: 'dpo.name',
-              label: trans('name'),
-              type: 'string'
-            }, {
-              name: 'dpo.email',
-              label: trans('email'),
-              type: 'email'
-            }, {
-              name: 'dpo.phone',
-              label: trans('phone'),
-              type: 'string'
-            }, {
-              name: 'dpo.address',
-              label: trans('address'),
-              type: 'address'
-            }
-          ]
-        }
-      ]}
-    />
-    <Button
-      className="modal-btn"
-      variant="btn"
-      size="lg"
-      type={CALLBACK_BUTTON}
-      label={trans('save', {}, 'actions')}
-      callback={() => {
-        props.save(props.formData)
-        props.fadeModal()
-      }}
-      primary={true}
-    />
-  </Modal>
+    name="dpoForm"
+    isNew={false}
+    target={['apiv2_privacy_update']}
+    data={{dpo: props.dpo}}
+    definition={[
+      {
+        title: trans('dpo', {}, 'privacy'),
+        fields: [
+          {
+            name: 'dpo.name',
+            label: trans('name'),
+            type: 'string'
+          }, {
+            name: 'dpo.email',
+            label: trans('email'),
+            type: 'email'
+          }, {
+            name: 'dpo.phone',
+            label: trans('phone'),
+            type: 'string'
+          }, {
+            name: 'dpo.address',
+            label: trans('address'),
+            type: 'address'
+          }
+        ]
+      }
+    ]}
+  />
 
 DpoModal.propTypes = {
-  save: T.func.isRequired,
-  saveEnabled: T.bool.isRequired,
-  fadeModal: T.func.isRequired,
-  formData: T.object.isRequired
+  dpo: T.shape({
+    name: T.string,
+    email: T.string,
+    address: T.shape({
+      street1: T.string,
+      street2: T.string,
+      postalCode: T.string,
+      city: T.string,
+      state: T.string,
+      country: T.string
+    }),
+    phone: T.string
+  })
 }
 
 export {

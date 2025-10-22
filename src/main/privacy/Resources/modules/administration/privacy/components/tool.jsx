@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import {useDispatch} from 'react-redux'
 
 import {Button} from '#/main/app/action'
 import {MODAL_BUTTON} from '#/main/app/buttons'
@@ -8,6 +9,7 @@ import {trans}from '#/main/app/intl/translation'
 import {ToolPage} from '#/main/core/tool'
 import {Alert} from '#/main/app/components/alert'
 import {ContentSizing} from '#/main/app/content/components/sizing'
+import {PageContent} from '#/main/app/page'
 import {Tool} from '#/main/core/tool'
 
 import {PrivacySummary} from '#/main/privacy/components/summary'
@@ -15,9 +17,11 @@ import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/modals/terms-of-service'
 import {MODAL_DPO} from '#/main/privacy/administration/privacy/modals/dpo'
 import {MODAL_COUNTRY_STORAGE} from '#/main/privacy/administration/privacy/modals/country-storage'
 import {MODAL_TOS_EDITOR} from '#/main/privacy/administration/privacy/modals/terms-of-service'
-import {PageContent} from '#/main/app/page'
+import {actions} from '#/main/privacy/administration/privacy/store'
 
 const PrivacyTool = (props) => {
+  const dispatch = useDispatch()
+
   const isDpoFilled = props.parameters.dpo && props.parameters.dpo.name &&
     props.parameters.dpo.email && props.parameters.dpo.address.street1 &&
     props.parameters.dpo.address.postalCode &&
@@ -29,16 +33,17 @@ const PrivacyTool = (props) => {
       {...props}
     >
       <ToolPage>
-        <PageContent>
+        <PageContent className="py-5">
           <ContentSizing size="lg">
             <PrivacySummary
+              className="mb-4"
               dpo={props.parameters.dpo || {}}
               countryStorage={props.parameters.countryStorage}
             />
 
             {get(props.parameters, 'tos.enabled') &&
               <Button
-                className="btn btn-lg btn-primary w-100 mb-3"
+                className="btn btn-lg btn-primary w-100 mb-4"
                 type={MODAL_BUTTON}
                 label={trans('terms_of_service_show', {}, 'privacy')}
                 modal={[MODAL_TERMS_OF_SERVICE]}
@@ -61,7 +66,10 @@ const PrivacyTool = (props) => {
                     trans('edit', {}, 'actions') :
                     trans('terms_of_service_activation', {}, 'privacy')
                   }
-                  modal={[MODAL_TOS_EDITOR]}
+                  modal={[MODAL_TOS_EDITOR, {
+                    tos: props.parameters.tos,
+                    onSave: (updatedData) => dispatch(actions.loadPrivacyParameters(updatedData))
+                  }]}
                 />
               </div>
             </Alert>
@@ -79,7 +87,10 @@ const PrivacyTool = (props) => {
                   className={`btn btn-${isDpoFilled ? 'success' : 'danger'}`}
                   type={MODAL_BUTTON}
                   label={trans('edit', {}, 'actions')}
-                  modal={[MODAL_DPO]}
+                  modal={[MODAL_DPO, {
+                    dpo: props.parameters.dpo,
+                    onSave: (updatedData) => dispatch(actions.loadPrivacyParameters(updatedData))
+                  }]}
                 />
               </div>
             </Alert>
@@ -97,7 +108,10 @@ const PrivacyTool = (props) => {
                   className={`btn btn-${props.parameters.countryStorage ? 'success' : 'danger'}`}
                   type={MODAL_BUTTON}
                   label={trans('edit', {}, 'actions')}
-                  modal={[MODAL_COUNTRY_STORAGE]}
+                  modal={[MODAL_COUNTRY_STORAGE, {
+                    countryStorage: props.parameters.countryStorage,
+                    onSave: (updatedData) => dispatch(actions.loadPrivacyParameters(updatedData))
+                  }]}
                 />
               </div>
             </Alert>
@@ -129,13 +143,6 @@ PrivacyTool.propTypes = {
     }),
     countryStorage: T.string
   })
-}
-
-PrivacyTool.defaultProps = {
-  parameters: {
-    dpo: {},
-    tos: {}
-  }
 }
 
 export {

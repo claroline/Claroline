@@ -1,6 +1,8 @@
 {
   "terms_of_service": "Conditions d'utilisation",
   "terms_of_service_desc": "Template utilisé pour les conditions d'utilisation",
+  "request_account_deletion": "Demande de suppression de compte",
+  "request_account_deletion_desc": "Template utilisé lorsqu'une demande de suppression de compte est envoyé au DPO de la plateforme",
   "privacy": "Politique de confidentialité",
   "privacy_desc": "Template utilisé pour la politique de confidentialité",
   "country_storage_desc": "Pays de stockage des données",

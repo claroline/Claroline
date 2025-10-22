@@ -38,6 +38,7 @@ const Privacy = () => {
     return (
       <>
         <PrivacySummary
+          className="mb-4"
           dpo={privacy.dpo}
           countryStorage={privacy.countryStorage}
         />

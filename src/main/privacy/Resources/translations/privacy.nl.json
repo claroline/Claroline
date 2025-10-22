@@ -10,10 +10,6 @@
   "export_data": "Mijn gegevens exporteren",
   "request_deletion": "Verzoek tot verwijdering van mijn account",
   "delete_account_message": "Weet u zeker dat u wilt verzoeken om uw account te verwijderen?",
-  "account_deletion": {
-    "subject": "Verzoek tot accountverwijdering",
-    "body": "De gebruiker %name% <br/> ID : %id% <br/> wil zijn account verwijderen. Gelieve de nodige maatregelen te treffen.<br/><hr/>"
-  },
   "terms_of_service": "Gebruiksvoorwaarden",
   "terms_of_service_accept": "Accepteer de gebruiksvoorwaarden",
   "terms_of_service_refuse": "Weiger de gebruiksvoorwaarden",

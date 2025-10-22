@@ -9,5 +9,10 @@ registry.add('ClarolinePrivacyBundle', {
   account: {
     'tos'   : () => { return import(/* webpackChunkName: "main-privacy-account-privacy" */ '#/main/privacy/account/tos') },
     'privacy'   : () => { return import(/* webpackChunkName: "main-privacy-account-privacy" */ '#/main/privacy/account/privacy') }
+  },
+  actions: {
+    user: {
+      'request-deletion': () => { return import(/* webpackChunkName: "privacy-action-user-request-deletion" */ '#/main/privacy/actions/user/request-deletion') }
+    }
   }
 })

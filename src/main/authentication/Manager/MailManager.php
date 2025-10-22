@@ -104,18 +104,4 @@ class MailManager
 
         return $this->mailManager->send($subject, $body, [$user], null, [], true);
     }
-
-    // TODO : move in Privacy plugin when available
-    public function sendRequestToDPO(User $user): bool
-    {
-        $name = $user->getFullName();
-        $idUser = $user->getId();
-        $dpoEmail = $this->config->getParameter('privacy.dpo.email');
-        $locale = $user->getLocale();
-
-        $subject = $this->translator->trans('account_deletion.subject', [], 'privacy', $locale);
-        $body = $this->translator->trans('account_deletion.body', ['%name%' => $name, '%id%' => $idUser], 'privacy', $locale);
-
-        return $this->mailManager->send($subject, $body, [], null, ['to' => [$dpoEmail]]);
-    }
 }

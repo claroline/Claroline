@@ -8,13 +8,10 @@ use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 
 class PrivacyManager
 {
-    private ObjectManager $om;
-    private TemplateManager $templateManager;
-
-    public function __construct(ObjectManager $om, TemplateManager $templateManager)
-    {
-        $this->om = $om;
-        $this->templateManager = $templateManager;
+    public function __construct(
+        private readonly ObjectManager $om,
+        private readonly TemplateManager $templateManager
+    ) {
     }
 
     public function getParameters(): PrivacyParameters

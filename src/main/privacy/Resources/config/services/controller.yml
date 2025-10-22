@@ -11,3 +11,4 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
+            - '@Claroline\PrivacyBundle\Manager\MailManager'

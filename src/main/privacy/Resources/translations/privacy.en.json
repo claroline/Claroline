@@ -13,10 +13,6 @@
   "export_data": "Export data",
   "request_deletion" : "Request deletion of my account",
   "delete_account_message" : "Are you sure you want to request the deletion of your account?",
-  "account_deletion": {
-    "subject": "Account deletion request",
-    "body": "User %name% <br/> ID: %id% <br/> wishes to delete their account. Please take the appropriate measures.<br/><hr/>"
-  },
 
   "terms_of_service": "Terms of service",
   "terms_of_service_accept": "Accept terms of service",

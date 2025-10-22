@@ -2,6 +2,13 @@ services:
     _defaults:
         public: true # should not be public
 
+    Claroline\PrivacyBundle\Manager\MailManager:
+        arguments:
+            - '@Claroline\CoreBundle\Manager\MailManager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
+
     Claroline\PrivacyBundle\Manager\PrivacyManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
