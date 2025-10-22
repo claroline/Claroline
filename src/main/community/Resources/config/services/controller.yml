@@ -22,6 +22,7 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
+            - '@Claroline\CoreBundle\Manager\OrganizationManager'
 
     Claroline\CommunityBundle\Controller\ProfileController:
         arguments:

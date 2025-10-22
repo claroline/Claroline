@@ -126,5 +126,6 @@
   "add_to_organization": "Ajouter à l'organisation",
   "add_from_another_organization": "Ajouter depuis une autre organization",
   "import_archive": "Importer une archive",
-  "import_archive_desc": "Déposez une archive (.zip) générée à partir d'une autre plateforme compatible."
+  "import_archive_desc": "Déposez une archive (.zip) générée à partir d'une autre plateforme compatible.",
+  "set_default": "Définir par défaut"
 }

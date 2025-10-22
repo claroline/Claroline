@@ -52,6 +52,7 @@ class OrganizationSerializer
                 'code' => $organization->getCode(),
                 'thumbnail' => $organization->getThumbnail(),
                 'meta' => [
+                    'public' => $organization->isPublic(),
                     'description' => $organization->getDescription(),
                 ],
             ];
@@ -85,11 +86,12 @@ class OrganizationSerializer
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
-            $edit = $this->authorization->isGranted('EDIT', $organization);
+            $administrate = $this->authorization->isGranted('ADMINISTRATE', $organization);
             $serialized['permissions'] = [
-                'open' => $edit || $this->authorization->isGranted('OPEN', $organization),
-                'edit' => $edit,
-                'delete' => $edit,
+                'open' => $administrate || $this->authorization->isGranted('OPEN', $organization),
+                'edit' => $administrate || $this->authorization->isGranted('EDIT', $organization),
+                'administrate' => $administrate,
+                'delete' => $administrate,
             ];
         }
 

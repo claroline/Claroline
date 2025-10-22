@@ -56,6 +56,20 @@ class OrganizationManager
         return false;
     }
 
+    public function setDefault(Organization $organization): void
+    {
+        // remove default flag from previous default
+        $default = $this->getDefault(false);
+        $default->setDefault(false);
+        $this->om->persist($default);
+
+        // set organization as default
+        $organization->setDefault(true);
+        $this->om->persist($organization);
+
+        $this->om->flush();
+    }
+
     public function getDefault(?bool $createIfEmpty = false): ?Organization
     {
         $defaultOrganization = $this->om

@@ -16,10 +16,12 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\OrganizationManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -31,7 +33,8 @@ class OrganizationController extends AbstractCrudController
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        private readonly TokenStorageInterface $tokenStorage
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly OrganizationManager $organizationManager,
     ) {
         $this->authorization = $authorization;
     }
@@ -92,6 +95,25 @@ class OrganizationController extends AbstractCrudController
         $this->crud->patch($organization, 'manager', Crud::COLLECTION_REMOVE, $users);
 
         return new JsonResponse($this->serializer->serialize($organization));
+    }
+
+    /**
+     * Set the default organization of the platform.
+     */
+    #[Route(path: '/set_default', name: 'set_default', methods: ['PUT'])]
+    public function setDefaultAction(Request $request): JsonResponse
+    {
+        $newDefaultId = $this->decodeRequest($request);
+        $organization = $this->om->getRepository(Organization::class)->findOneBy(['uuid' => $newDefaultId]);
+        if (!$organization) {
+            throw new NotFoundHttpException('Organization cannot be found.');
+        }
+
+        $this->checkPermission('ADMINISTRATE', $organization, [], true);
+
+        $this->organizationManager->setDefault($organization);
+
+        return new JsonResponse(null, 204);
     }
 
     public static function getOptions(): array

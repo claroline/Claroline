@@ -34,12 +34,17 @@ const AsyncButton = forwardRef((props, ref) => {
 
         return dispatch({
           [apiConst.API_REQUEST]: props.request
-        }).then(() => {
-          setLoading(false)
-          if (props.onClick) {
-            props.onClick(e)
-          }
-        })
+        }).then(
+          // success
+          () => {
+            setLoading(false)
+            if (props.onClick) {
+              props.onClick(e)
+            }
+          },
+          // error
+          () => setLoading(false)
+        )
       }}
     >
       {loading ?

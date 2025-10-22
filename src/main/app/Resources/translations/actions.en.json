@@ -111,5 +111,6 @@
   "close_context_menu": "Close workspace menu",
   "change_owner": "Change owner",
   "remove_filters": "Clear filters",
-  "transfer": "Transfer"
+  "transfer": "Transfer",
+  "set_default": "Set as default"
 }

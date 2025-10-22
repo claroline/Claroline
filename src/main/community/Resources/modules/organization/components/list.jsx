@@ -1,17 +1,18 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import omit from 'lodash/omit'
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
-import {ListData} from '#/main/app/content/list/containers/data'
+import {Badge} from '#/main/app/components/badge'
+import {DataMicro} from '#/main/app/data/components/micro'
+import {ListData, actions as listActions, constants as listConst} from '#/main/app/content/list'
 import {selectors as securitySelectors} from '#/main/app/security/store'
-import {actions as listActions} from '#/main/app/content/list/store'
 
 import {getActions, getDefaultAction} from '#/main/community/organization/utils'
 import {OrganizationCard} from '#/main/community/organization/components/card'
-import {DataMicro} from '#/main/app/data/components/micro'
 
 const OrganizationListComponent = props => {
   const refresher = merge({
@@ -31,7 +32,16 @@ const OrganizationListComponent = props => {
           label: trans('name'),
           displayed: true,
           primary: true,
-          render: (organization) => <DataMicro object={organization} />
+          render: (organization) => {
+            return (
+              <div className="d-flex align-items-center" role="presentation">
+                <DataMicro object={organization}/>
+                {get(organization, 'meta.default') &&
+                  <Badge className="ms-2 top-0" variant="primary">{trans('default')}</Badge>
+                }
+              </div>
+            )
+          }
         }, {
           name: 'code',
           type: 'string',
@@ -46,7 +56,10 @@ const OrganizationListComponent = props => {
         }, {
           name: 'meta.default',
           type: 'boolean',
-          label: trans('default')
+          label: trans('default'),
+          displayable: false,
+          sortable: false,
+          filterable: true
         }, {
           name: 'email',
           type: 'email',
@@ -59,6 +72,10 @@ const OrganizationListComponent = props => {
           displayed: true
         }
       ].concat(props.customDefinition)}
+      card={OrganizationCard}
+      display={{
+        current: listConst.DISPLAY_LIST
+      }}
 
       {...omit(props, 'path', 'url', 'autoload', 'customDefinition', 'customActions', 'refresher', 'invalidate')}
 
@@ -67,7 +84,6 @@ const OrganizationListComponent = props => {
         url: props.url,
         autoload: props.autoload
       }}
-      card={OrganizationCard}
     />
   )
 }

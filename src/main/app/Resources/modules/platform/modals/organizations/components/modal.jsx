@@ -20,7 +20,7 @@ const OrganizationsModal = (props) => {
             <OrganizationCard
               key={organization.id}
               size="sm"
-              direction="row"
+              orientation="row"
               data={organization}
               primaryAction={{
                 type: CALLBACK_BUTTON,
