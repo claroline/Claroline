@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -23,7 +24,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Manages emails sent by the authentication system (eg. password reset).
+ * Manages emails sent by the authentication system (e.g., password reset).
  */
 class MailManager
 {
@@ -113,8 +114,7 @@ class MailManager
         $locale = $user->getLocale();
 
         $subject = $this->translator->trans('account_deletion.subject', [], 'privacy', $locale);
-        $content = $this->translator->trans('account_deletion.body', ['%name%' => $name, '%id%' => $idUser], 'privacy', $locale);
-        $body = $this->templateManager->getTemplate('email_layout', ['content' => $content], $locale);
+        $body = $this->translator->trans('account_deletion.body', ['%name%' => $name, '%id%' => $idUser], 'privacy', $locale);
 
         return $this->mailManager->send($subject, $body, [], null, ['to' => [$dpoEmail]]);
     }

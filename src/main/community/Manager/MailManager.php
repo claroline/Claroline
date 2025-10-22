@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -27,7 +28,7 @@ class MailManager
     }
 
     /**
-     * Send a message when new user is created.
+     * Send a message when a new user is created.
      */
     public function sendCreationMessage(User $user): bool
     {
@@ -50,7 +51,7 @@ class MailManager
     }
 
     /**
-     * Send a message when new user is created, and it needs to validate its registration.
+     * Send a message when a new user is created, and it needs to validate its registration.
      */
     public function sendEnableAccountMessage(User $user): bool
     {

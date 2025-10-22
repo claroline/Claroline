@@ -13,9 +13,7 @@ const config = {
   license_key: 'gpl',
   language: 'fr' === locale() ? 'fr_FR' : locale(),
   base_url: asset('packages/tinymce'),
-  // convert all relatives URLs into absolute ones
-  // this is required for templates to work
-  relative_urls: false,
+  relative_urls: true,
 
   body_id: isDarkMode() ? 'data-bs-theme="dark"' : 'data-bs-theme="light"',
 
