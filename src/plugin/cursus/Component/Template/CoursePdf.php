@@ -20,6 +20,8 @@ final class CoursePdf extends PdfComponent
             'course_code',
             'course_description',
             'course_poster',
+            'course_price',
+            'course_price_description',
             'course_default_duration',
             'course_public_registration',
         ];

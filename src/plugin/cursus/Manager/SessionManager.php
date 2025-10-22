@@ -75,15 +75,27 @@ class SessionManager
 
     public function generateFromTemplate(Session $session, string $locale): string
     {
+        $course = $session->getCourse();
+        $location = $session->getLocation();
+
         $placeholders = array_merge([
-            'session_url' => $this->routingHelper->desktopUrl('trainings').'/course/'.$session->getCourse()->getSlug().'/'.$session->getUuid(),
+            'course_name' => $course->getName(),
+            'course_code' => $course->getCode(),
+            'course_description' => $course->getDescription(),
+            'course_price' => $course->getPrice(),
+            'course_price_description' => $course->getPriceDescription(),
+
+            'session_url' => $this->routingHelper->desktopUrl('trainings').'/course/'.$course->getSlug().'/'.$session->getUuid(),
             'session_name' => $session->getName(),
             'session_code' => $session->getCode(),
             'session_description' => $session->getDescription(),
             'session_poster' => $session->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$session->getPoster().'" style="max-width: 100%;" />' : '',
             'session_public_registration' => $this->translator->trans($session->getPublicRegistration() ? 'yes' : 'no', [], 'platform'),
             'session_max_users' => $session->getMaxUsers(),
-            'workspace_url' => $this->routingHelper->workspaceUrl($session->getWorkspace()),
+            'session_price' => $session->getPrice(),
+            'session_price_description' => $session->getPriceDescription(),
+            'location' => $location ? nl2br($location->getName().PHP_EOL.$location->getAddress()) : $this->translator->trans('online_session', [], 'cursus'),
+            'workspace_url' => !empty($session->getWorkspace()) ? $this->routingHelper->workspaceUrl($session->getWorkspace()) : '',
         ],
             $this->templateManager->formatDatePlaceholder('session_start', $session->getStartDate()),
             $this->templateManager->formatDatePlaceholder('session_end', $session->getEndDate()),

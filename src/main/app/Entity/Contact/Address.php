@@ -26,14 +26,18 @@ trait Address
 
     public function getAddress(): string
     {
-        return trim(join(PHP_EOL, [
-            $this->addressStreet1 ?? '',
-            $this->addressStreet2 ?? '',
-            $this->addressCity ?? '',
-            $this->addressState ?? '',
-            $this->addressPostalCode ?? '',
-            $this->addressCountry ?? '',
-        ]));
+        $addressParts = array_filter([
+            $this->addressStreet1,
+            $this->addressStreet2,
+            $this->addressCity,
+            $this->addressState,
+            $this->addressPostalCode,
+            $this->addressCountry,
+        ], function (?string $addressPart) {
+            return !empty($addressPart);
+        });
+
+        return join(PHP_EOL, $addressParts);
     }
 
     public function getAddressStreet1(): ?string

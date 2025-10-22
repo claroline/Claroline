@@ -19,11 +19,15 @@ final class SessionPdf extends PdfComponent
             'course_name',
             'course_code',
             'course_description',
+            'course_price',
+            'course_price_description',
             'session_url',
             'session_name',
             'session_code',
             'session_description',
             'session_poster',
+            'session_price',
+            'session_price_description',
             'session_public_registration',
             'session_max_users',
             'session_start_datetime_utc',
@@ -38,6 +42,8 @@ final class SessionPdf extends PdfComponent
             'session_end_datetime',
             'session_end_date',
             'session_end_time',
+            'location',
+            'workspace_url',
         ];
     }
 

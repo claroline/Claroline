@@ -73,6 +73,8 @@ class CourseManager
             'course_code' => $course->getCode(),
             'course_description' => $course->getDescription(),
             'course_poster' => $course->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$course->getPoster().'" style="max-width: 100%;"/>' : '',
+            'course_price' => $course->getPrice(),
+            'course_price_description' => $course->getPriceDescription(),
             'course_default_duration' => $course->getDefaultSessionDuration(),
             'course_public_registration' => $this->translator->trans($course->getPublicRegistration() ? 'yes' : 'no', [], 'platform'),
         ];
