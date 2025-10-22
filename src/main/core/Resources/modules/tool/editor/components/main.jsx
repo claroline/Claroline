@@ -37,7 +37,7 @@ const ToolEditor = (props) => {
       canAdministrate={hasPermission('administrate', props.tool)}
       overviewPage={props.children ? (() => props.children) : props.overviewPage}
       appearancePage={props.appearancePage}
-      historyPage={props.historyPage}
+      // historyPage={props.historyPage}
       permissionsPage={props.permissionsPage}
       actionsPage={ToolEditorActions}
       pages={props.pages || []}
@@ -56,12 +56,12 @@ ToolEditor.propTypes = {
   pages: T.arrayOf(T.shape({
 
   })),
-
+  styles: T.array,
   /**
    * A func that returns some data to add to the Editor store on initialization.
    */
   additionalData: T.func,
-
+  children: T.node,
   // from store
   loaded: T.bool.isRequired,
   path: T.string.isRequired,
