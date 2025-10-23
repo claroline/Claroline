@@ -1,13 +1,17 @@
+import isEmpty from 'lodash/isEmpty'
+
 import {trans} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {hasPermission} from '#/main/app/security'
-import isEmpty from 'lodash/isEmpty'
 import {declareAction} from '#/main/app/action'
+
+import {constants} from '#/main/evaluation/constants'
 
 export default declareAction((evaluations) => {
   const processable = evaluations.filter(evaluation =>
     !!evaluation.certified
     && hasPermission('administrate', evaluation)
+    && constants.EVALUATION_TERMINATED_STATUSES.includes(evaluation.status)
   )
 
   return ({
