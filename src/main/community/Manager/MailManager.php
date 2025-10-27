@@ -42,7 +42,7 @@ class MailManager
             'email' => $user->getEmail(),
             'validation_mail' => $this->router->generate('claro_security_validate_email', [
                 'hash' => $user->getEmailValidationHash(),
-            ]),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
         ];
         $subject = $this->templateManager->getTemplate('user_registration', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('user_registration', $placeholders, $locale);
@@ -64,7 +64,7 @@ class MailManager
             'email' => $user->getEmail(),
             'user_activation_link' => $this->router->generate('claro_security_activate_user', [
                 'hash' => $user->getResetPasswordHash(),
-            ]),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
         ];
         $subject = $this->templateManager->getTemplate('user_activation', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('user_activation', $placeholders, $locale);

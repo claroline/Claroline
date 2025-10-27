@@ -14,14 +14,12 @@ namespace Claroline\AuthenticationBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\ForgotPasswordEvent;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager as BaseMailManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Manages emails sent by the authentication system (e.g., password reset).
@@ -29,10 +27,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class MailManager
 {
     public function __construct(
-        private readonly TranslatorInterface $translator,
         private readonly UrlGeneratorInterface $router,
         private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly PlatformConfigurationHandler $config,
         private readonly BaseMailManager $mailManager,
         private readonly LocaleManager $localeManager,
         private readonly TemplateManager $templateManager,
@@ -60,7 +56,7 @@ class MailManager
 
         $this->userManager->initializePassword($user); // should not be done here (only manage email sending here)
 
-        $placeholders['password_reset_link'] = "#/newpassword/{$user->getResetPasswordHash()}";
+        $placeholders['password_reset_link'] = $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL)."#/newpassword/{$user->getResetPasswordHash()}";
 
         $subject = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale);
@@ -78,7 +74,7 @@ class MailManager
             'last_name' => $user->getLastName(),
             'username' => $user->getUsername(),
             'email' => $user->getEmail(),
-            'password_initialization_link' => "#/newpassword/{$user->getResetPasswordHash()}",
+            'password_initialization_link' => $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL)."#/newpassword/{$user->getResetPasswordHash()}",
         ];
         $subject = $this->templateManager->getTemplate('password_initialization', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('password_initialization', $placeholders, $locale);
@@ -95,7 +91,8 @@ class MailManager
             'username' => $user->getUsername(),
             'validation_mail' => $this->router->generate(
                 'claro_security_validate_email',
-                ['hash' => $user->getEmailValidationHash()]
+                ['hash' => $user->getEmailValidationHash()],
+                UrlGeneratorInterface::ABSOLUTE_URL
             ),
         ];
 

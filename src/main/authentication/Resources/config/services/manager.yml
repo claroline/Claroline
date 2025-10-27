@@ -4,10 +4,8 @@ services:
 
     Claroline\AuthenticationBundle\Manager\MailManager:
         arguments:
-            - '@translator'
             - '@router'
             - '@event_dispatcher'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\CoreBundle\Manager\MailManager'
             - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
