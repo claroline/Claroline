@@ -14,6 +14,7 @@ use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Location;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CursusBundle\Entity\Course;
@@ -181,6 +182,15 @@ class SessionSerializer
 
             $session->setStartDate($dates[0]);
             $session->setEndDate($dates[1]);
+        }
+
+        if (isset($data['workspace'])) {
+            $workspace = null;
+            if (!empty($data['workspace']['id'])) {
+                $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['workspace']['id']]);
+            }
+
+            $session->setWorkspace($workspace);
         }
 
         if (isset($data['registration'])) {

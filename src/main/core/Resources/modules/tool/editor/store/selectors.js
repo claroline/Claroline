@@ -11,6 +11,7 @@ const tool = createSelector(
   (formData) => formData.data
 )
 
+// reexport context selectors to simplify imports in implementations
 const contextType = baseSelectors.contextType
 const contextData = baseSelectors.contextData
 

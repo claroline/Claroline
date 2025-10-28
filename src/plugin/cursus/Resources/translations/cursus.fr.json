@@ -11,7 +11,6 @@
     "public_course": "Formation publique",
     "make_course_public": "Rendre la formation publique",
     "make_course_public_help": "Les formations publiques sont accessibles par les anonymes.",
-
     "create_mode_workspace": "Créer une formation avec espace d'activités",
     "create_mode_workspace_desc": "Toutes les sessions de la formation se déroule dans le même espace d'activités.",
     "create_mode_model": "Créer une formation avec modèle d'espace d'activités",
@@ -25,7 +24,6 @@
     "create_mode_existing": "Sélectionner une formation existante",
     "create_mode_existing_desc": "Sélectionnez une formation existante.",
     "create_mode_group_existing": "A partir d'un contenu existant",
-
     "catalog": "Catalogue",
     "course": "Formation",
     "courses": "Formations",
@@ -39,16 +37,12 @@
     "course_type_model": "Utiliser un modèle d'espace d'activités pour générer un nouvel espace pour chaque session de la formation.",
     "course_type_workspace": "Utiliser le même espace d'activités pour toutes les sessions de la formation.",
     "course_workspaces_help": "Rattachez un espace d'activités à votre formation pour gérer et partager vos contenus avec les utilisateurs inscrits.",
-
     "course_archived_info": "Formation archivée",
     "course_archived_info_help": "Cette formation est archivée.",
-
     "archived_trainings_help": "Gérez les formations archivées.",
     "canceled_session": "Session annulée",
     "canceled_sessions": "Sessions annulées",
     "canceled_sessions_help": "Liste des sessions annulées.",
-
-
     "my_courses": "Mes formations",
     "new_course": "Nouvelle formation",
     "new_course_desc": "Ajoutez une formation à votre catalogue pour la proposer à vos utilisateurs",
@@ -194,5 +188,7 @@
     "my_registrations_to_confirm_desc": "Vous avez des inscriptions en attente de validation de votre part. Veuillez les confirmer pour finaliser vos inscriptions et ainsi pouvoir accéder à vos contenus de formation.",
     "my_pending_registrations": "Mes inscriptions en attente",
     "my_pending_registrations_desc": "Vous avez des inscriptions nécessitant l'intervention d'un gestionnaire. Veuillez patientez le temps qu'un gestionnaire valide vos inscriptions ou vous propose une session de formation.",
-    "canceled": "Annulé"
+    "canceled": "Annulé",
+    "session_workspace_model_help": "Un nouvel espace sera automatiquement généré à partir du modèle défini dans la formation lors la création de la session.",
+    "session_workspace_course_help": "La session sera automatiquement rattachée à l'espace de la formation lors de la création."
 }

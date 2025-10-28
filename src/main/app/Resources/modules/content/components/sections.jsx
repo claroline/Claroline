@@ -20,14 +20,14 @@ const Section = (props) =>
     <Accordion.Header as={`h${props.level}`}>
       {(typeof props.icon === 'string') &&
         <span
-          className={classes('icon-with-text-right', props.icon)}
+          className={classes('me-3 flex-shrink-0 lh-base align-self-baseline', props.icon)}
           aria-hidden={true}
         />
       }
 
       {typeof props.icon !== 'string' && props.icon}
 
-      <span role="presentation" className="flex-fill">
+      <span role="presentation" className="flex-fill fw-bolder lh-base">
         {props.title}
         {props.subtitle &&
           <small>{props.subtitle}</small>

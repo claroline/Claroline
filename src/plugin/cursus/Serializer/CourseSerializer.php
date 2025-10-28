@@ -110,6 +110,9 @@ class CourseSerializer
             'restrictions' => [
                 'hidden' => $course->isHidden(),
             ],
+            'workspace' => $course->getWorkspace() ?
+                $this->workspaceSerializer->serialize($course->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]) :
+                null,
             'tags' => $this->serializeTags($course),
         ];
 
@@ -152,9 +155,6 @@ class CourseSerializer
                 'organizations' => array_map(function (Organization $organization) {
                     return $this->orgaSerializer->serialize($organization, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $course->getOrganizations()->toArray()),
-                'workspace' => $course->getWorkspace() ?
-                    $this->workspaceSerializer->serialize($course->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]) :
-                    null,
             ]);
         }
 

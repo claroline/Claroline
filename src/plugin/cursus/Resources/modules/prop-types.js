@@ -70,6 +70,7 @@ const Session = {
     name: T.string,
     description: T.string,
     plainDescription: T.string,
+    dates: T.arrayOf(T.string),
     course: T.shape(
       Course.propTypes
     ),
@@ -80,8 +81,8 @@ const Session = {
       default: T.bool
     }),
     restrictions: T.shape({
-      users: T.number,
-      dates: T.arrayOf(T.string)
+      hidden: T.bool,
+      users: T.number
     }),
     participants: T.shape({
       tutors: T.number,

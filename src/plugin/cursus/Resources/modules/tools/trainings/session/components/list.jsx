@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
@@ -28,7 +29,9 @@ const TrainingsSessionList = (props) => {
             course: props.course,
             onSave: props.invalidateList
           }],
-          displayed: !isEmpty(props.course) && props.canCreateSession
+          // we can only create sessions from a workspace if the course does not define a model to generate a
+          // new workspace for each session
+          displayed: !isEmpty(props.course) && !get(props.course, 'workspace.meta.model') && props.canCreateSession
         } : {
           name: 'plan-session',
           type: MODAL_BUTTON,

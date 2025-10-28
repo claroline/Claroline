@@ -1,45 +1,66 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import omit from 'lodash/omit'
+import {useSelector} from 'react-redux'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
+import omit from 'lodash/omit'
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
+import {selectors as formSelectors} from '#/main/app/content/form'
 import {FormModal} from '#/main/app/data/modals/form/components/modal'
 
 import {constants} from '#/plugin/cursus/constants'
 import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 
+const FORM_NAME = 'trainingSessionForm'
+
 const SessionFormModal = props => {
-  let formData
+  let isNew = true
+  let session
+  let courseWorkspace
+  let workspaceHelp
   if (props.session) {
-    formData = props.session
+    session = props.session
+    isNew = false
   } else {
-    formData = merge(
+    if (get(props.course, 'workspace')) {
+      courseWorkspace = get(props.course, 'workspace')
+      if (get(courseWorkspace, 'meta.model')) {
+        workspaceHelp = trans('session_workspace_model_help', {}, 'cursus')
+      } else {
+        workspaceHelp = trans('session_workspace_course_help', {}, 'cursus')
+      }
+    }
+
+    session = merge(
       {
+        workspace: !get(courseWorkspace, 'meta.model') ? courseWorkspace : null,
         course: {
           id: props.course.id,
           name: props.course.name,
           code: props.course.code,
           slug: props.course.slug
         }
-      }, SessionTypes.defaultProps, omit(props.course, 'id', 'description')
+      }, SessionTypes.defaultProps, omit(props.course, ['id', 'description', 'workspace', 'restrictions'].concat(get(courseWorkspace, 'meta.model') ? ['registration.tutorRole', 'registration.learnerRole'] : []))
     )
   }
+
+  const formData = useSelector((state) => formSelectors.data(formSelectors.form(state, FORM_NAME)))
 
   return (
     <FormModal
       {...omit(props, 'session', 'course')}
-      name="trainingSessionForm"
-      title={trans(!props.session ? 'new_session' : 'session', {}, 'cursus')}
-      subtitle={!props.session ? trans('new_session_desc', {course: props.course.name}, 'cursus') : undefined}
-      target={!props.session ?
+      name={FORM_NAME}
+      title={trans(isNew ? 'new_session' : 'session', {}, 'cursus')}
+      subtitle={isNew ? trans('new_session_desc', {course: props.course.name}, 'cursus') : undefined}
+      target={isNew ?
         ['apiv2_cursus_session_create'] :
         ['apiv2_cursus_session_update', {id: props.session.id}]
       }
-      isNew={!props.session}
-      data={formData}
-      saveLabel={trans(!props.session ? 'plan_training_session' : 'save_training_session', {}, 'actions')}
+      isNew={isNew}
+      data={session}
+      saveLabel={trans(isNew ? 'plan_training_session' : 'save_training_session', {}, 'actions')}
       definition={[
         {
           title: trans('general'),
@@ -59,7 +80,7 @@ const SessionFormModal = props => {
           ]
         }, {
           icon: 'fa fa-fw fa-circle-info',
-          title: trans('information'),
+          title: trans('further_information'),
           fields: [
             {
               name: 'description',
@@ -105,7 +126,7 @@ const SessionFormModal = props => {
             }
           ]
         }, {
-          icon: 'fa fa-fw fa-sign-in',
+          icon: 'fa fa-fw fa-user-plus',
           title: trans('registration'),
           fields: [
             {
@@ -122,26 +143,41 @@ const SessionFormModal = props => {
         }, {
           icon: 'fa fa-fw fa-book',
           title: trans('workspace', {}, 'workspace'),
-          displayed: (session) => get(session, 'workspace', null),
+          description: trans('course_workspaces_help', {}, 'cursus'),
+          displayed: isNew || !!get(formData, 'workspace', null),
+          help: workspaceHelp,
           fields: [
             {
               name: 'workspace',
               type: 'workspace',
-              label: trans('workspace'),
-              disabled: true,
-              required: true
+              label: trans(get(courseWorkspace, 'meta.model') ? 'workspace_model' : 'workspace', {}, 'workspace'),
+              disabled: !isNew || !isEmpty(courseWorkspace),
+              required: !isEmpty(courseWorkspace),
+              calculated: () => courseWorkspace ? courseWorkspace : get(formData, 'workspace', null)
             }, {
               name: 'registration.tutorRole',
               type: 'role',
               label: trans('tutor_role', {}, 'cursus'),
-              disabled: true,
-              required: true
+              help: trans('tutor_role_help', {}, 'cursus'),
+              displayed: !!get(formData, 'workspace', null),
+              options: {
+                picker: {
+                  personal: false,
+                  contextType: 'workspace',
+                  contextId: get(formData, 'workspace.id', null)
+                }
+              }
             }, {
               name: 'registration.learnerRole',
               type: 'role',
               label: trans('learner_role', {}, 'cursus'),
-              disabled: true,
-              required: true
+              help: trans('learner_role_help', {}, 'cursus'),
+              displayed: !!get(formData, 'workspace', null),
+              picker: {
+                personal: false,
+                contextType: 'workspace',
+                contextId: get(formData, 'workspace.id', null)
+              }
             }
           ]
         }

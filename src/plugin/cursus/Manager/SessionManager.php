@@ -346,7 +346,7 @@ class SessionManager
             'session_description' => $session->getDescription(),
             'session_trainers' => $trainersList,
             'workspace_url' => $workspace ? $this->routingHelper->workspaceUrl($workspace) : '',
-            'registration_confirmation_url' => $this->router->generate('apiv2_cursus_session_self_confirm', ['id' => $session->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL), // TODO
+            'registration_confirmation_url' => $this->router->generate('apiv2_cursus_session_self_confirm', ['id' => $session->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL),
         ],
             $this->templateManager->formatDatePlaceholder('session_start', $session->getStartDate()),
             $this->templateManager->formatDatePlaceholder('session_end', $session->getEndDate()),

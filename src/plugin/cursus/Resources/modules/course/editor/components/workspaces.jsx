@@ -61,6 +61,7 @@ const CourseEditorWorkspaces = (props) =>
             name: 'registration.tutorRole',
             type: 'role',
             label: trans('tutor_role', {}, 'cursus'),
+            help: trans('tutor_role_help', {}, 'cursus'),
             displayed: (course) => get(course, 'workspace', null),
             options: {
               picker: {
@@ -68,12 +69,12 @@ const CourseEditorWorkspaces = (props) =>
                 contextType: 'workspace',
                 contextId: get(props.course, 'workspace.id', null)
               }
-            },
-            help: trans('tutor_role_help', {}, 'cursus')
+            }
           }, {
             name: 'registration.learnerRole',
             type: 'role',
             label: trans('learner_role', {}, 'cursus'),
+            help: trans('learner_role_help', {}, 'cursus'),
             displayed: (course) => get(course, 'workspace', null),
             options: {
               picker: {
@@ -81,8 +82,7 @@ const CourseEditorWorkspaces = (props) =>
                 contextType: 'workspace',
                 contextId: get(props.course, 'workspace.id', null)
               }
-            },
-            help: trans('learner_role_help', {}, 'cursus')
+            }
           }
         ]
       }
