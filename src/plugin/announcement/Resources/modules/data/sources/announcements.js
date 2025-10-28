@@ -5,11 +5,12 @@ import {trans} from '#/main/app/intl/translation'
 import {route} from '#/main/app/context/routing'
 
 import {AnnouncementCard} from '#/plugin/announcement/announcement/components/card'
+import {declareDataSource} from '#/main/app/data/sources'
 
-export default (contextType, contextData) => ({
+export default declareDataSource(() => ({
   primaryAction: (announcement) => ({
     type: URL_BUTTON,
-    target: `#${route(contextType, get(contextData, 'id'), 'announcement')}/${announcement.id}`
+    target: `#${route('workspace', get(announcement, 'workspace.slug'), 'announcement')}/${announcement.id}`
   }),
   definition: [
     {
@@ -53,4 +54,4 @@ export default (contextType, contextData) => ({
     }
   ],
   card: AnnouncementCard
-})
+}))
