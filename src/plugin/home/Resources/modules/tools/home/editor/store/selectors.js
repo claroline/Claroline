@@ -1,7 +1,7 @@
+import {createSelector} from 'reselect'
 
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 import {selectors as baseSelectors} from '#/main/core/tool/editor/store/selectors'
-import {createSelector} from 'reselect'
 
 const FORM_NAME = baseSelectors.STORE_NAME
 

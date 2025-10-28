@@ -11,9 +11,9 @@ const EVALUATION_STATUSES = {
   [baseConst.EVALUATION_STATUS_PASSED]:        trans('evaluation_passed_status', {}, 'sequence')
 }
 
-const PAGINATION_NONE = 'none';
-const PAGINATION_STEP = 'step';
-const PAGINATION_ALL = 'all';
+const PAGINATION_NONE = 'none'
+const PAGINATION_STEP = 'step'
+const PAGINATION_ALL = 'all'
 
 const PAGINATIONS = {
   [PAGINATION_NONE]: {

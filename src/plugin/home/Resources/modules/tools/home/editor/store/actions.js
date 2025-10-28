@@ -7,8 +7,6 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {getFormDataPart, getTabParent, getTabPath} from '#/plugin/home/tools/home/editor/utils'
 import {selectors} from '#/plugin/home/tools/home/editor/store/selectors'
 
-export const HOME_MOVE_TAB = 'HOME_MOVE_TAB'
-
 // action creators
 export const actions = {}
 
