@@ -55,7 +55,7 @@ const id = createSelector(
 
 const steps = createSelector(
   [sequence],
-  (sequence) => sequence.steps || []
+  (sequence) => sequence && sequence.steps ? sequence.steps : []
 )
 
 const empty = createSelector(
@@ -105,7 +105,6 @@ const currentStep = createSelector(
   (currentStepIndex, orderedSteps) => orderedSteps[currentStepIndex]
 )
 
-
 const allSecondaryResources = createSelector(
   [orderedSteps],
   (orderedSteps) => orderedSteps.reduce((secondaryResources, current) => current.secondaryResources ?
@@ -129,6 +128,17 @@ const progression = createSelector(
   (data) => data.progression
 )
 
+const firstStepNotDone = createSelector(
+  [orderedSteps, progression],
+  (orderedSteps= [], progression = []) => {
+    return orderedSteps.find(step => {
+      let stepProgression = progression.find(p => get(p, 'step.id') === step.id)
+
+      return !stepProgression || !constants.EVALUATION_TERMINATED_STATUSES.includes(stepProgression.status)
+    })
+  }
+)
+
 const userFeedback = createSelector(
   [sequence, evaluation],
   (sequence, evaluation) => {
@@ -136,9 +146,9 @@ const userFeedback = createSelector(
       case constants.EVALUATION_STATUS_COMPLETED:
         return get(sequence, 'evaluation.endMessage', null)
       case constants.EVALUATION_STATUS_PASSED:
-        return get(sequence, 'evaluation.successMessage', null) || get(sequence, 'evaluation.endMessage', null)
+        return get(sequence, 'evaluation.successMessage', null)
       case constants.EVALUATION_STATUS_FAILED:
-        return get(sequence, 'evaluation.failedMessage', null) || get(sequence, 'evaluation.endMessage', null)
+        return get(sequence, 'evaluation.failureMessage', null)
       default:
         return null
     }
@@ -221,6 +231,7 @@ export const selectors = {
   evaluation,
   progression,
   userFeedback,
+  firstStepNotDone,
   // evaluations params
   hasEvaluation,
   hasScore,

@@ -7,8 +7,7 @@ import {scrollTo} from '#/main/app/dom/scroll'
 import {Routes} from '#/main/app/router'
 import {PageAside} from '#/main/app/page'
 
-import {SequenceEvaluation as SequenceEvaluationTypes} from '#/main/evaluation/sequence/prop-types'
-import {Sequence as SequenceTypes, Step as StepTypes} from '#/main/evaluation/sequence/prop-types'
+import {Sequence as SequenceTypes, Step as StepTypes, SequenceEvaluation as SequenceEvaluationTypes} from '#/main/evaluation/sequence/prop-types'
 import {SequencePage} from '#/main/evaluation/sequence/components/page'
 import {route} from '#/main/evaluation/sequence/routing'
 
@@ -59,7 +58,7 @@ const SequencePlayer = props => {
                 props.setCurrentStep(step.slug)
                 setTimeout(() => {
                   scrollTo('#step-'+step.id)
-                }, 0)
+                }, 100)
               } else {
                 history.replace(basePath)
               }

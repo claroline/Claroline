@@ -4,8 +4,11 @@ import classes from 'classnames'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
-import {ASYNC_BUTTON, CALLBACK_BUTTON, LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {PageContent, PageSection} from '#/main/app/page'
+import {Toolbar} from '#/main/app/action'
+import {Html} from '#/main/app/components/html'
+import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
 import {route as desktopRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {route as resourceRoute} from '#/main/core/resource/routing'
@@ -13,9 +16,8 @@ import {route as resourceRoute} from '#/main/core/resource/routing'
 import {constants} from '#/main/evaluation/constants'
 import {selectors} from '#/main/evaluation/sequence/store'
 import {EvaluationGauge} from '#/main/evaluation/components/gauge'
-import {Toolbar} from '#/main/app/action'
-import {Html} from '#/main/app/components/html'
-import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
+import {constants as sequenceConst} from '#/main/evaluation/sequence/constants'
+import {MODAL_USER_PROGRESSION} from '#/main/evaluation/sequence/modals/user-progression'
 
 const PlayerEnd = () => {
   const path = useSelector(selectors.path)
@@ -39,11 +41,12 @@ const PlayerEnd = () => {
 
       <PageSection className="py-4 text-center">
         <h2 className="visually-hidden">{trans('messages')}</h2>
-        <p className="h4 mb-0">Félicitations vous avez terminé la séquence.</p>
-        {!isHtmlEmpty(userFeedback) &&
-          <Html className="content-text mt-3">
+
+        {!isHtmlEmpty(userFeedback) ?
+          <Html className="content-text h4 mb-0">
             {userFeedback}
-          </Html>
+          </Html> :
+          <p className="h4 mb-0">{sequenceConst.EVALUATION_STATUSES[userEvaluation.status || constants.EVALUATION_STATUS_UNKNOWN]}</p>
         }
       </PageSection>
 
@@ -58,11 +61,11 @@ const PlayerEnd = () => {
           actions={[
             {
               name: 'finish',
-              type: CALLBACK_BUTTON,
+              type: LINK_BUTTON,
               displayed: !!userEvaluation && constants.EVALUATION_STATUS_INCOMPLETE === userEvaluation.status,
               icon: 'fa fa-fw fa-arrow-rotate-left me-0 mb-3 fs-2',
               label: trans('finish', {}, 'actions'),
-              callback: () => true,
+              target: `${path}/continue`,
               primary: true
             }, {
               name: 'restart',
@@ -88,10 +91,13 @@ const PlayerEnd = () => {
               displayed: !!userEvaluation && !!userEvaluation.certified && [constants.EVALUATION_STATUS_PASSED, constants.EVALUATION_STATUS_COMPLETED].includes(userEvaluation.status)
             }, {
               name: 'show-results',
-              type: LINK_BUTTON,
+              type: MODAL_BUTTON,
               icon: 'fa fa-fw fa-check-double me-0 mb-3 fs-2',
               label: trans('show-results', {}, 'actions'),
-              target: `${path}/progression`
+              displayed: !!userEvaluation,
+              modal: [MODAL_USER_PROGRESSION, {
+                evaluation: userEvaluation
+              }]
             }, {
               name: 'home',
               type: URL_BUTTON, // we require a URL_BUTTON here to escape the embedded resource router

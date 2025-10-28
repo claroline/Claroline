@@ -115,7 +115,7 @@ const SequenceOverview = () => {
       name: 'continue',
       type: LINK_BUTTON,
       label: trans('continue', {}, 'actions'),
-      target: `${sequencePath}/play`,
+      target: `${sequencePath}/continue`,
       primary: true,
       disabled: isEmpty(sequence.steps),
       displayed: !!userEvaluation && constants.EVALUATION_STATUS_INCOMPLETE === userEvaluation.status

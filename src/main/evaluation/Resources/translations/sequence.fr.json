@@ -1,0 +1,8 @@
+{
+  "evaluation_not_attempted_status": "Vous n'avez pas commencé l'espace d'activités.",
+  "evaluation_unknown_status": "Nous ne connaissons pas votre progression dans cet espace d'activités.",
+  "evaluation_incomplete_status": "Vous n'avez pas encore terminé la séquence.",
+  "evaluation_failed_status": "Malheureusement vous n'avez pas réussi la séquence.",
+  "evaluation_completed_status": "Félicitations ! Vous avez terminé la séquence.",
+  "evaluation_passed_status": "Félicitations ! Vous avez réussi la séquence."
+}
