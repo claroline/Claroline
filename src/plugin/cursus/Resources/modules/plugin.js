@@ -32,7 +32,7 @@ registry.add('ClarolineCursusBundle', {
   },
 
   events: {
-    'training_event': () => { return import(/* webpackChunkName: "training-events-event" */ '#/plugin/cursus/events/event') }
+    'training_event': () => { return import(/* webpackChunkName: "training-events-event" */ '#/plugin/cursus/events/training-event') }
   },
 
   actions: {

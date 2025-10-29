@@ -6,15 +6,13 @@ import merge from 'lodash/merge'
 
 import {selectors as securitySelectors} from '#/main/app/security'
 import {trans} from '#/main/app/intl'
-import {constants} from '#/plugin/cursus/constants'
 import {Button} from '#/main/app/action'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 import {Badge} from '#/main/app/components/badge'
-
-import {RegistrationUsers} from '#/plugin/cursus/registration/components/users'
-
 import {actions as listActions} from '#/main/app/content/list'
 
+import {constants} from '#/plugin/cursus/constants'
+import {RegistrationUsers} from '#/plugin/cursus/registration/components/users'
 import {getRegistrationActions, getRegistrationDefaultAction} from '#/plugin/cursus/event/utils'
 import {MODAL_EVIDENCE_ABOUT} from '#/plugin/cursus/presence/modals/about'
 
@@ -48,13 +46,13 @@ const EventUsers = (props) => {
           ),
           displayed: true,
           filterable: false,
-          sortable: false,
+          sortable: false
         }, {
           name: 'presence.meta.updatedBy',
           type: 'user',
           label: trans('updated_by', {}, 'presence'),
           filterable: false,
-          sortable: false,
+          sortable: false
         }, {
           name: 'presence.meta.updatedAt',
           type: 'date',
@@ -103,7 +101,12 @@ EventUsers.propTypes = {
   name: T.string.isRequired,
   customDefinition: T.arrayOf(T.shape({
     // data list prop types
-  }))
+  })),
+  refresher: T.shape({
+    add: T.func,
+    update: T.func,
+    delete: T.func
+  })
 }
 
 export {

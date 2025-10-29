@@ -13,7 +13,6 @@ use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -29,13 +28,11 @@ class OAuthManager implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     public function __construct(
-        LoggerInterface $logger,
         private readonly RouterInterface $router,
         private readonly OAuth2Provider $oauthProvider,
         private readonly ObjectManager $om,
         private readonly Crud $crud,
     ) {
-        $this->logger = $logger;
     }
 
     /**
@@ -162,8 +159,6 @@ class OAuthManager implements LoggerAwareInterface
 
         $this->om->endFlushSuite();
 
-        $this->logger->debug(sprintf('Authenticated with %s', $client->getServiceProvider()));
-
         // we don't need to pass the `$userLoader` param to UserBadge because it uses the default UserProvider
         // we do it for tests isolation
         return new SelfValidatingPassport(new UserBadge($user->getUserIdentifier(), function (string $userIdentifier): ?UserInterface {
@@ -256,7 +251,7 @@ class OAuthManager implements LoggerAwareInterface
 
         $normalizedData = [];
         foreach ($fieldsMapping as $localKey => $ownerKey) {
-            $normalizedData[$localKey] = $resourceOwnerData[$ownerKey];
+            $normalizedData[$localKey] = isset($resourceOwnerData[$ownerKey]) ? $resourceOwnerData[$ownerKey] : null;
         }
 
         if (empty($normalizedData['firstName']) || empty($normalizedData['lastName'])) {

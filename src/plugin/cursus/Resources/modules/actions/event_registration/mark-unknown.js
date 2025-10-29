@@ -18,7 +18,7 @@ export default declareAction((registrations, refresher) => {
     icon: 'fa fa-fw fa-check-double',
     label: trans('presence_set_status', {}, 'cursus'),
     request: {
-      url: ['apiv2_cursus_event_presence_update', {status: status}],
+      url: ['apiv2_training_event_presence_update', {status: status}],
       request: {
         method: 'PUT',
         body: JSON.stringify(processable.map(registration => get(registration.presence, 'id')))

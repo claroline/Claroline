@@ -1,11 +1,12 @@
 
 import {hasPermission} from '#/main/app/security/permissions'
+import {declareEvent} from '#/plugin/agenda/event'
 
-import {TaskAbout} from '#/plugin/agenda/events/task/containers/about'
-import {TaskDetails} from '#/plugin/agenda/events/task/containers/details'
-import {TaskForm} from '#/plugin/agenda/events/task/components/form'
+import {TaskFormModal} from '#/plugin/agenda/events/task/modals/form/components/modal'
+import {TaskAboutModal} from '#/plugin/agenda/events/task/modals/about/components/modal'
+import {TaskShow} from '#/plugin/agenda/events/task/components/show'
 
-export default {
+export default declareEvent({
   name: 'task',
   icon: 'fa fa-fw fa-tasks',
   canCreate: (contextType, contextData, contextTools) => {
@@ -17,8 +18,10 @@ export default {
     return false
   },
   components: {
-    about: TaskAbout,
-    details: TaskDetails,
-    form: TaskForm
+    show: TaskShow
+  },
+  modals: {
+    about: TaskAboutModal,
+    form: TaskFormModal
   }
-}
+})

@@ -9,7 +9,7 @@ export default declareAction((events) => ({
   icon: 'fa fa-fw fa-calendar',
   label: trans('export-ics', {}, 'actions'),
   displayed: hasPermission('open', events[0]),
-  target: ['apiv2_cursus_event_download_ics', {id: events[0].id}],
+  target: ['apiv2_training_event_download_ics', {id: events[0].id}],
   scope: ['object'],
   group: trans('transfer')
 }))

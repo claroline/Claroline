@@ -1,6 +1,6 @@
 import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {CloseButton} from 'react-bootstrap'
+import CloseButton from 'react-bootstrap/CloseButton'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'

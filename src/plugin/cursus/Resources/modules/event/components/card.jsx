@@ -28,7 +28,7 @@ const EventCard = props =>
       <div className={classes('d-flex gap-2', 'col' === props.orientation && 'flex-column h-100 justify-content-center')} role="presentation">
         <div role="presentation">
           <span className="fa fa-calendar me-2" aria-hidden={true} />
-          {displayDateRange(get(props.data, 'start'), get(props.data, 'end'))}
+          {displayDateRange(get(props.data, 'start'), get(props.data, 'end'), true)}
         </div>
 
         {'row' === props.orientation &&

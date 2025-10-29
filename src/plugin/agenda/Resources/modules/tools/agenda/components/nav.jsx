@@ -13,7 +13,7 @@ import {ColorChart} from '#/main/theme/color/containers/color-chart'
 
 import {MODAL_WORKSPACES} from '#/main/core/modals/workspaces'
 
-import {getEvents} from '#/plugin/agenda/events'
+import {getEvents} from '#/plugin/agenda/event/registry'
 import {route} from '#/plugin/agenda/tools/agenda/routing'
 
 const PlanningMenu = forwardRef((props, ref) =>

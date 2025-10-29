@@ -5,8 +5,9 @@ import {trans} from '#/main/app/intl/translation'
 import {route} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {EventCard} from '#/plugin/agenda/event/components/card'
+import {declareDataSource} from '#/main/app/data/sources'
 
-export default {
+export default declareDataSource({
   name: 'events',
   parameters: {
     primaryAction: (event) => ({
@@ -50,4 +51,4 @@ export default {
     ],
     card: EventCard
   }
-}
+})

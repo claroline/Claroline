@@ -44,6 +44,7 @@ const permissions = createSelector(
   (tool) => tool.permissions
 )
 
+const contextPath = contextSelectors.path
 const contextType = contextSelectors.type
 
 const contextData = createSelector(
@@ -91,6 +92,7 @@ export const selectors = {
   permissions,
   hasPermission,
   context,
+  contextPath,
   contextType,
   contextData,
   contextId,

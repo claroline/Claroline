@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {getEvent} from '#/plugin/agenda/events'
+import {getEvent} from '#/plugin/agenda/event/registry'
 
 class EventIcon extends Component {
   constructor(props) {

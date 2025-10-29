@@ -38,7 +38,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[Route(path: '/cursus_event', name: 'apiv2_cursus_event_')]
+#[Route(path: '/training_event', name: 'apiv2_training_event_')]
 class EventController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
@@ -56,7 +56,7 @@ class EventController extends AbstractCrudController
 
     public static function getName(): string
     {
-        return 'cursus_event';
+        return 'training_event';
     }
 
     public static function getClass(): string
@@ -126,7 +126,7 @@ class EventController extends AbstractCrudController
             ]);
 
             if ($userRegistration) {
-                $registration = ['users' => [$this->serializer->serialize($userRegistration)]];
+                $registration = $this->serializer->serialize($userRegistration);
             }
         }
 

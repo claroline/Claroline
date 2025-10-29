@@ -8,8 +8,8 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
-use Claroline\TemplateBundle\Entity\Template;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\TemplateBundle\Entity\Template;
 use Claroline\TemplateBundle\Serializer\TemplateSerializer;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -46,6 +46,7 @@ class EventSerializer
         return array_merge_recursive($this->plannedObjectSerializer->serialize($event->getPlannedObject(), $options), [
             'workspace' => $event->getWorkspace() ? $this->workspaceSerializer->serialize($event->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
             'permissions' => [
+                'open' => $this->authorization->isGranted('OPEN', $event),
                 'edit' => $this->authorization->isGranted('EDIT', $event),
                 'delete' => $this->authorization->isGranted('DELETE', $event),
             ],

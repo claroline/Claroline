@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {Tool} from '#/main/core/tool'
 
-import {AgendaEvent} from '#/plugin/agenda/tools/agenda/containers/event'
+import {AgendaEvent} from '#/plugin/agenda/tools/agenda/components/event'
 import {AgendaCalendar} from '#/plugin/agenda/tools/agenda/containers/calendar'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl'
@@ -59,6 +59,7 @@ const AgendaTool = (props) =>
   />
 
 AgendaTool.propTypes = {
+  path: T.string.isRequired,
   loadEvent: T.func.isRequired
 }
 

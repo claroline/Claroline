@@ -15,7 +15,7 @@ import {
   PageToolbar,
   PageToolbarSkeleton
 } from '#/main/app/page'
-import {ToolPage} from '#/main/core/tool'
+import {route, ToolPage} from '#/main/core/tool'
 import {DetailsData} from '#/main/app/content/details'
 import {Content} from '#/main/app/components/content'
 
@@ -30,13 +30,13 @@ const EventShow = (props) => {
   const history = useHistory()
 
   const currentUser = useSelector(securitySelectors.currentUser)
-  const [event] = useFetch(selectors.STORE_NAME, ['apiv2_cursus_event_get', {id: props.id}])
+  const [event] = useFetch(selectors.STORE_NAME, ['apiv2_training_event_get', {id: props.id}])
 
   return (
     <ToolPage
       className="event-page"
       title={trans('event_name', {name: get(event, 'name', trans('loading'))}, 'cursus')}
-      description={get(event, 'meta.description')}
+      description={get(event, 'description')}
     >
       {!event &&
         <PageContent className="placeholder-glow">
@@ -53,7 +53,7 @@ const EventShow = (props) => {
               add: () => dispatch(fetchActions.invalidate(selectors.STORE_NAME)),
               update: () => dispatch(fetchActions.invalidate(selectors.STORE_NAME)),
               delete: () => {
-                history.push(props.path+'/events')
+                history.push(route('trainings', props.path)+'/events')
                 dispatch(fetchActions.invalidate(selectors.STORE_NAME))
               }
             }, props.path, currentUser)}
@@ -79,7 +79,8 @@ const EventShow = (props) => {
                       name: 'dates',
                       type: 'date-range',
                       label: trans('date'),
-                      calculated: (data) => [data.start ?? null, data.end ?? null]
+                      calculated: (data) => [data.start || null, data.end || null],
+                      options: {time: true}
                     }, {
                       name: 'location',
                       type: 'location',
@@ -106,11 +107,11 @@ const EventShow = (props) => {
               {
                 name: 'about',
                 title: trans('about'),
-                displayed: !!get(event, 'meta.description'),
+                displayed: !!get(event, 'description'),
                 render: () => (
                   <div className="mt-4" role="presentation">
                     <Content>
-                      {get(event, 'meta.description')}
+                      {get(event, 'description')}
                     </Content>
                   </div>
                 )

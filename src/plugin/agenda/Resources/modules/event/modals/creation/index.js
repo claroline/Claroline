@@ -5,7 +5,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {EventCreationModal} from '#/plugin/agenda/event/modals/creation/containers/modal'
+import {EventCreationModal} from '#/plugin/agenda/event/modals/creation/components/modal'
 
 const MODAL_EVENT_CREATION = 'MODAL_EVENT_CREATION'
 

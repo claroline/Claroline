@@ -8,7 +8,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans, now} from '#/main/app/intl'
 import {LinkButton, ModalButton} from '#/main/app/buttons'
-import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+import {EmptyState} from '#/main/app/components/empty-state'
 
 import {CalendarView} from '#/plugin/agenda/tools/agenda/views/components/calendar'
 import {Event as EventTypes} from '#/plugin/agenda/prop-types'
@@ -109,15 +109,16 @@ const AgendaViewSchedule = (props) => {
       loadEvents={props.loadEvents}
     >
       {isEmpty(schedule) &&
-        <ContentPlaceholder
-          style={{marginTop: 20}}
+        <EmptyState
+          className="p-4 mx-auto"
+          icon="fa fa-calendar"
           title={trans('no_event', {}, 'agenda')}
           size="lg"
         />
       }
 
       {!isEmpty(schedule) &&
-        <div className="agenda-schedule">
+        <div className="agenda-schedule flex-fill">
           {Object.keys(schedule)
             .sort((a, b) => a < b ? -1 : 1)
             .map(date => {

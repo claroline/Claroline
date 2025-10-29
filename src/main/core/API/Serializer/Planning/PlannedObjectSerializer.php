@@ -33,9 +33,9 @@ class PlannedObjectSerializer
                 'start' => $plannedObject->getStartDate() ? DateNormalizer::normalize($plannedObject->getStartDate()) : null,
                 'end' => $plannedObject->getEndDate() ? DateNormalizer::normalize($plannedObject->getEndDate()) : null,
                 'poster' => $plannedObject->getPoster(),
+                'description' => $plannedObject->getDescription(),
                 'meta' => [
                     'type' => $plannedObject->getType(),
-                    'description' => $plannedObject->getDescription(),
                 ],
                 'display' => [
                     'color' => $plannedObject->getColor(),
@@ -49,8 +49,8 @@ class PlannedObjectSerializer
             'start' => $plannedObject->getStartDate() ? DateNormalizer::normalize($plannedObject->getStartDate()) : null,
             'end' => $plannedObject->getEndDate() ? DateNormalizer::normalize($plannedObject->getEndDate()) : null,
             'poster' => $plannedObject->getPoster(),
+            'description' => $plannedObject->getDescription(),
             'meta' => [
-                'description' => $plannedObject->getDescription(),
                 'type' => $plannedObject->getType(),
                 'creator' => $plannedObject->getCreator() ? $this->userSerializer->serialize($plannedObject->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
                 'created' => DateNormalizer::normalize($plannedObject->getCreatedAt()),

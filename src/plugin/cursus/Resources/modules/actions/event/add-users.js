@@ -18,7 +18,7 @@ export default declareAction((events, refresher) => {
         type: ASYNC_BUTTON,
         label: trans('register', {}, 'actions'),
         request: {
-          url: ['apiv2_cursus_event_add_users', {id: events[0].id, type: constants.LEARNER_TYPE}],
+          url: ['apiv2_training_event_add_users', {id: events[0].id, type: constants.LEARNER_TYPE}],
           request: {
             method: 'PATCH',
             body: JSON.stringify(selected.map(user => user.id))

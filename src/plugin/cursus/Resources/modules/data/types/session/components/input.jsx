@@ -11,7 +11,7 @@ const SessionInput = props =>
   <EntityInput
     {...props}
     pickerType={MODAL_TRAINING_SESSIONS}
-    add={trans(props.multiple ? 'add_sessions' : 'add_session', {}, 'actions')}
+    add={trans(props.multiple ? 'add_training_sessions' : 'add_training_session', {}, 'actions')}
   />
 
 implementPropTypes(SessionInput, EntityInput.propTypes, {

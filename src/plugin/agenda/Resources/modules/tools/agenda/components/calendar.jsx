@@ -17,6 +17,7 @@ import {AGENDA_VIEWS} from '#/plugin/agenda/tools/agenda/views'
 import {Toolbar} from '#/main/app/action'
 import {Heading} from '#/main/app/components/heading'
 import {PageContent} from '#/main/app/page'
+import {ButtonSticky} from '#/main/app/button'
 
 const AgendaCalendar = (props) => {
   const currentView = AGENDA_VIEWS[props.view]
@@ -73,21 +74,6 @@ const AgendaCalendar = (props) => {
                 target: route(props.path, props.view, now()),
                 tooltip: null,
                 activeClassName: null
-              }, {
-                name: 'add',
-                type: MODAL_BUTTON,
-                //icon: 'fa fa-fw fa-plus',
-                label: trans('add-event', {}, 'actions'),
-                modal: [MODAL_EVENT_CREATION, {
-                  event: {
-                    start: now(false),
-                    workspace: !isEmpty(props.contextData) ? props.contextData : null
-                  },
-                  onSave: (event) => props.reload(event, true)
-                }],
-                displayed: !isEmpty(props.currentUser),
-                primary: true,
-                tooltip: null
               }
             ]}
           />
@@ -130,12 +116,28 @@ const AgendaCalendar = (props) => {
                 range: currentRange,
                 previous: currentView.previous,
                 next: currentView.next,
-                create: (event) => props.create(event, props.contextData, props.currentUser),
                 events: props.events,
+                create: props.create,
                 reload: props.reload
               })
             }
           ]}
+        />
+
+        <ButtonSticky
+          {...{
+            name: 'add',
+            type: MODAL_BUTTON,
+            icon: 'fa fa-fw fa-plus',
+            label: trans('add_event', {}, 'actions'),
+            modal: [MODAL_EVENT_CREATION, {
+              onCreate: (event) => props.reload(event, true)
+            }],
+            displayed: !isEmpty(props.currentUser),
+            primary: true,
+            tooltip: null
+          }}
+          className="mt-4 me-4"
         />
       </PageContent>
     </ToolPage>
@@ -144,9 +146,6 @@ const AgendaCalendar = (props) => {
 
 AgendaCalendar.propTypes = {
   path: T.string.isRequired,
-  contextData: T.shape({
-    id: T.string
-  }),
   currentUser: T.object,
 
   view: T.oneOf([

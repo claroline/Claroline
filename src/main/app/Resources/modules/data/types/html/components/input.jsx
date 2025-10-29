@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import omit from 'lodash/omit'
 import classes from 'classnames'
+import CloseButton from 'react-bootstrap/CloseButton'
 
 import {trans} from '#/main/app/intl/translation'
 import {Toolbar} from '#/main/app/action/components/toolbar'
@@ -11,7 +12,6 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {TinymceEditor} from '#/main/app/input/tinymce/components/editor'
 import {getValidationClassName} from '#/main/app/content/form/validator'
-import {CloseButton} from 'react-bootstrap'
 
 class HtmlInput extends Component {
   constructor(props) {

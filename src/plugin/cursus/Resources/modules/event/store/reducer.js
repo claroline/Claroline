@@ -1,11 +1,11 @@
 import {makeReducer} from '#/main/app/store/reducer'
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeListReducer} from '#/main/app/content/list/store/reducer'
+import {makeFetchReducer} from '#/main/app/api/fetch/store'
+import {API_FETCH_INVALIDATE} from '#/main/app/api/fetch/store/actions'
 
 import {selectors} from '#/plugin/cursus/event/store/selectors'
-import {makeFetchReducer} from '#/main/app/api/fetch/store'
 import {constants} from '#/plugin/cursus/constants'
-import {API_FETCH_INVALIDATE} from '#/main/app/api/fetch/store/actions'
 
 export const reducer = makeFetchReducer(selectors.STORE_NAME, {}, {
   users: makeListReducer(selectors.STORE_NAME+'.users', {

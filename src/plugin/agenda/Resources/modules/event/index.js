@@ -1,12 +1,6 @@
 
 import {route} from '#/plugin/agenda/event/routing'
-
-function declareEvent(EventComponent, additional) {
-  return {
-    component: EventComponent,
-    ...additional
-  }
-}
+import {declareEvent} from '#/plugin/agenda/event/registry'
 
 export {
   route,

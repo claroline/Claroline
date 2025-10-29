@@ -144,7 +144,10 @@ const reducer = combineReducers({
     [AGENDA_LOAD_EVENT]: (state, action) => action.event
   }),
 
-  list: makeListReducer(selectors.STORE_NAME+'.list', {}, {
+  list: makeListReducer(selectors.STORE_NAME+'.list', {
+    sortBy: {property: 'startDate', direction: 1},
+    filters: {filters: [{property: 'status', value: 'not_ended'}]}
+  }, {
     loaded: makeReducer(false, {
       [CONTEXT_OPEN]: () => false
     }),

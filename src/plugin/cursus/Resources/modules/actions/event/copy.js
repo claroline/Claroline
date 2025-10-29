@@ -22,7 +22,7 @@ export default declareAction((events, refresher) => {
       }))
     },
     request: {
-      url: url(['apiv2_cursus_event_copy']),
+      url: url(['apiv2_training_event_copy']),
       request: {
         method: 'POST',
         body: JSON.stringify(processable.map(row => row.id))

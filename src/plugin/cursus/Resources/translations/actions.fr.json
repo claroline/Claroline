@@ -18,6 +18,8 @@
   "register_workspace_additional_confirmed": "Seuls les utilisateurs ayant confirmés leur inscription seront inscrit.",
   "register_workspace_additional_validated": "Seuls les utilisateurs ayant été validés par un gestionnaire seront inscrit.",
 
+  "add_training_session": "Ajouter une session",
+  "add_training_sessions": "Ajouter des sessions",
   "plan_training_session": "Planifier une session",
   "save_training_session": "Enregistrer la session",
   "plan_training_event": "Planifier une séance",

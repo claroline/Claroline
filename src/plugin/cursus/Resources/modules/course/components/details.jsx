@@ -72,15 +72,17 @@ const CourseDetails = (props) => {
         }
       },
       displayed: (isFullyRegistered(activeSessionRegistration)
-          || get(props.activeSession, 'registration.autoRegistration')
-          || hasPermission('edit', props.course))
+        || get(props.activeSession, 'registration.autoRegistration')
+        || hasPermission('edit', props.course))
         && !isEmpty(getInfo(props.course, props.activeSession, 'workspace')),
       primary: !selfRegistration
     }, {
       name: 'download',
       type: URL_BUTTON,
       label: trans('download_training', {}, 'actions'),
-      target: ['apiv2_cursus_course_download_pdf', {id: props.course.id}]
+      target: !isEmpty(props.activeSession) ?
+        ['apiv2_cursus_session_download_pdf', {id: props.activeSession.id}] :
+        ['apiv2_cursus_course_download_pdf', {id: props.course.id}]
     }
   ]
 

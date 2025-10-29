@@ -12,7 +12,6 @@
 namespace Claroline\CursusBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
@@ -49,7 +48,6 @@ class EventManager
     {
         return $this->eventUserRepo->findBySessionAndUser($session, $user);
     }
-
 
     public function generateFromTemplate(Event $event, string $locale): string
     {

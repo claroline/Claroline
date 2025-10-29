@@ -16,17 +16,9 @@
         border-bottom-left-radius: $border-radius-sm;
     }
 
-    &.event-start-out-range {
-
-    }
-
     &.event-end {
         margin-right: 5px;
         border-top-right-radius: $border-radius-sm;
         border-bottom-right-radius: $border-radius-sm;
-    }
-
-    &.event-end-out-range {
-
     }
 }

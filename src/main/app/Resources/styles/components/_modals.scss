@@ -3,22 +3,22 @@
  */
 
 .modal-poster {
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    min-height: 160px; // TODO : adapt height according to modal size
-    align-items: flex-end;
+    @include border-top-radius(var(--#{$prefix}modal-inner-border-radius));
 
+    --#{$prefix}aspect-ratio: 25%;
+}
+
+.btn-modal {
+    box-sizing: content-box;
+    padding: calc(var(--#{$prefix}modal-header-padding-y) * .5) calc(var(--#{$prefix}modal-header-padding-x) * .5);
+    width: $btn-close-width;
+    height: $btn-close-height;
+}
+
+.modal-toolbar {
+    margin: calc(-.5 * var(--#{$prefix}modal-header-padding-y)) calc(-.5 * var(--#{$prefix}modal-header-padding-x)) calc(-.5 * var(--#{$prefix}modal-header-padding-y)) auto;
     .btn-close {
-        align-self: flex-start;
-
-        @include text-movie-subtitles();
-    }
-
-    // use movie subtitles styles to make title always readable
-    .modal-title,
-    .modal-title small {
-        @include text-movie-subtitles();
+        margin: 0;
     }
 }
 

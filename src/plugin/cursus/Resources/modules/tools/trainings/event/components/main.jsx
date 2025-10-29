@@ -19,13 +19,13 @@ const EventMain = (props) =>
         exact: true,
         render: useCallback(() => (
           <EventsList
-            path={props.path}
+            path={props.contextPath}
             contextType={props.contextType}
             contextId={props.contextId}
             invalidateList={props.invalidateList}
             canEdit={props.canEdit}
           />
-        ),[props.path, props.authenticated, props.canEdit, props.canRegister]),
+        ),[props.path, props.authenticated, props.canEdit, props.canRegister])
       }, {
         path: '/participants',
         render: useCallback(() => (
@@ -55,7 +55,7 @@ const EventMain = (props) =>
       }, {
         path: '/:id',
         render: useCallback((routerProps) => (
-          <EventShow path={props.path} id={routerProps.match.params.id} />
+          <EventShow path={props.contextPath} id={routerProps.match.params.id} />
         ), [props.path])
       }
     ]}
@@ -63,6 +63,7 @@ const EventMain = (props) =>
 
 EventMain.propTypes = {
   path: T.string.isRequired,
+  contextPath: T.string.isRequired,
   contextType: T.string.isRequired,
   contextId: T.string,
   authenticated: T.bool.isRequired,

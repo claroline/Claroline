@@ -2,6 +2,7 @@ import React, {useId} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
+import CloseButton from 'react-bootstrap/CloseButton'
 
 import {trans} from '#/main/app/intl'
 import {Button} from '#/main/app/action'
@@ -13,7 +14,6 @@ import {PlatformMenuUser} from '#/main/app/platform/menu/components/user'
 
 import {Menu} from '#/main/app/overlays/menu'
 import {ContextHistory} from '#/main/app/context/components/history'
-import {CloseButton} from 'react-bootstrap'
 import {PlatformMenuQuickAccess} from '#/main/app/platform/menu/components/quick-access'
 import {PlatformMenuHelp} from '#/main/app/platform/menu/components/help'
 import {PlatformMenuGlobal} from '#/main/app/platform/menu/components/global'
@@ -64,7 +64,7 @@ const AllContexts = () => {
         />
       </div>
     </Menu>
-  );
+  )
 }
 
 const PlatformMenu = (props) => {
@@ -127,7 +127,7 @@ const PlatformMenu = (props) => {
               </li>
             ))}
 
-            {/*<li>
+            {false && <li>
               <Button
                 type={MENU_BUTTON}
                 className="app-context-btn focus-ring"
@@ -142,7 +142,7 @@ const PlatformMenu = (props) => {
                   )
                 }}
               />
-            </li>*/}
+            </li>}
           </ul>
         </>
       }

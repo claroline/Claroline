@@ -1,9 +1,13 @@
 {
-  "add-event": "Ajouter un évènement",
   "change-calendar-view": "Changer le mode de vue",
   "add_agenda": "Ajouter un agenda",
   "send_invitation": "Envoyer une invitation",
   "add_participants": "Ajouter des participants",
   "mark-as-done": "Marquer comme terminée",
-  "mark-as-todo": "Marquer comme non terminée"
+  "mark-as-todo": "Marquer comme non terminée",
+  "add_event": "Planifier un évènement",
+  "save_event": "Enregistrer l'évènement",
+  "send_invitations": "Envoyer les invitations",
+  "add_task": "Ajouter une tâche",
+  "save_task": "Enregistrer la tâche"
 }

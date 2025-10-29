@@ -1,66 +1,29 @@
-import React, {Component, createElement} from 'react'
-import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
+import React from 'react'
+import {useSelector} from 'react-redux'
 
-import {ContentLoader} from '#/main/app/content/components/loader'
+import {PageContent, PageHeadingSkeleton, PageToolbarSkeleton} from '#/main/app/page'
+import {ToolPage} from '#/main/core/tool'
 
-import {Event as EventTypes} from '#/plugin/agenda/prop-types'
-import {getEvent} from '#/plugin/agenda/events'
+import {EventShow} from '#/plugin/agenda/event/components/show'
+import {selectors} from '#/plugin/agenda/tools/agenda/store'
 
-class AgendaEvent extends Component {
-  constructor(props) {
-    super(props)
+const AgendaEvent = () => {
+  const event = useSelector(selectors.currentEvent)
 
-    this.state = {
-      customDetails: null
-    }
+  if (!event) {
+    return (
+      <ToolPage className="event-page">
+        <PageContent className="placeholder-glow">
+          <PageToolbarSkeleton toolbar="edit more" />
+          <PageHeadingSkeleton icon={true} />
+        </PageContent>
+      </ToolPage>
+    )
   }
 
-  componentDidMount() {
-    if (this.props.event) {
-      getEvent(this.props.event.meta.type).then((eventApp) => {
-        this.setState({customDetails: get(eventApp, 'components.details', null)})
-      })
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.event && (!prevProps.event || this.props.event.id !== prevProps.event.id)) {
-      getEvent(this.props.event.meta.type).then((eventApp) => {
-        this.setState({customDetails: get(eventApp, 'components.details', null)})
-      })
-    }
-  }
-
-  render() {
-    if (!this.props.event) {
-      return (
-        <ContentLoader
-          size="lg"
-          description="Nous chargeons votre évènement..."
-        />
-      )
-    }
-
-    if (this.state.customDetails) {
-      return createElement(this.state.customDetails, {
-        path: this.props.path + '/events',
-        event: this.props.event,
-        reload: this.props.reload
-      })
-    }
-
-    return null
-  }
-}
-
-
-AgendaEvent.propTypes = {
-  path: T.string.isRequired,
-  event: T.shape(
-    EventTypes.propTypes
-  ),
-  reload: T.func.isRequired
+  return (
+    <EventShow event={event} />
+  )
 }
 
 export {

@@ -1,17 +1,38 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {ListData} from '#/main/app/content/list/containers/data'
+import {ListData, constants as listConst} from '#/main/app/content/list'
 
 import {EventCard} from '#/plugin/agenda/event/components/card'
 import {EventIcon} from '#/plugin/agenda/event/components/icon'
+
+import {EventStatus} from '#/plugin/agenda/event/components/status'
 
 const EventList = (props) =>
   <ListData
     definition={[
       {
+        name: 'status',
+        type: 'choice',
+        label: trans('status'),
+        sortable: false,
+        displayed: true,
+        filterable: true,
+        order: 1,
+        options: {
+          noEmpty: true,
+          choices: {
+            not_started: trans('not_started'),
+            in_progress: trans('in_progress'),
+            ended: trans('ended'),
+            not_ended: trans('not_ended')
+          }
+        },
+        render: (row) => <EventStatus startDate={get(row, 'start')} endDate={get(row, 'end')} />
+      }, {
         name: 'name',
         type: 'string',
         label: trans('name'),
@@ -23,17 +44,7 @@ const EventList = (props) =>
             {event.name}
           </div>
         )
-      }, /*{
-        name: 'meta.type',
-        type: 'type',
-        label: trans('type'),
-        displayed: true,
-        calculated: (event) => ({
-          icon: <EventIcon type={event.meta.type} />,
-          name: trans(event.meta.type, {}, 'event'),
-          description: trans(`${event.meta.type}_desc`, {}, 'event')
-        })
-      }, */{
+      }, {
         name: 'description',
         type: 'html',
         label: trans('description'),
@@ -62,6 +73,9 @@ const EventList = (props) =>
       autoload: props.autoload
     }}
     card={EventCard}
+    display={{
+      current: listConst.DISPLAY_LIST
+    }}
   />
 
 EventList.propTypes = {

@@ -5,11 +5,9 @@
     flex-direction: column;
 
     .day {
-        flex: 1;
-        flex-shrink: 0;
         display: flex;
         align-items: baseline;
-        padding: 10px;
+        padding: map-get($spacers, 2);
         border-bottom: 1px solid $agenda-grid-border;
 
         .day-name {
@@ -28,8 +26,7 @@
             border-radius: 50%;
 
             background: transparent;
-            //border: 1px solid transparent;
-            font-weight: bold;
+            font-weight: bolder;
 
             font-size: $font-size-lg;
         }
@@ -37,14 +34,7 @@
         &.now .day-number {
             color: color-contrast($primary);
             background: $primary;
-            //border-color: $primary;
         }
-
-        /*&.selected .day-number {
-            color: white;
-            background: $primary;
-            border-color: $primary;
-        }*/
 
         .day-events {
             flex: 1;

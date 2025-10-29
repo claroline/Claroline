@@ -9,7 +9,7 @@ export default declareAction((events) => ({
   icon: 'fa fa-fw fa-border-all',
   label: trans('export-presences-filled', {}, 'cursus'),
   displayed: hasPermission('edit', events[0]),
-  target: ['apiv2_cursus_event_presence_download', {id: events[0].id, filled: 1}],
+  target: ['apiv2_training_event_presence_download', {id: events[0].id, filled: 1}],
   group: trans('transfer'),
   scope: ['object']
 }))

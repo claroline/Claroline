@@ -1,6 +1,7 @@
 import React, {cloneElement, useId, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {CloseButton, Collapse} from 'react-bootstrap'
+import CloseButton from 'react-bootstrap/CloseButton'
+import Collapse from 'react-bootstrap/Collapse'
 
 import {trans} from '#/main/app/intl'
 import {Button} from '#/main/app/action'

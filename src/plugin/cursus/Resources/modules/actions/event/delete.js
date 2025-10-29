@@ -23,7 +23,7 @@ export default declareAction((events, refresher) => {
       }))
     },
     request: {
-      url: ['apiv2_cursus_event_delete'],
+      url: ['apiv2_training_event_delete'],
       request: {
         method: 'DELETE',
         body: JSON.stringify(processable.map(event => event.id))

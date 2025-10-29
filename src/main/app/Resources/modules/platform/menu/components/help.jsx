@@ -1,7 +1,7 @@
 import React, {useId, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useSelector} from 'react-redux'
-import {CloseButton} from 'react-bootstrap'
+import CloseButton from 'react-bootstrap/CloseButton'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'

@@ -58,7 +58,7 @@ actions.setEventSigned = makeActionCreator(EVENT_SIGNED, 'eventSigned')
 
 actions.getEventByCode = (code = null) => ({
   [API_REQUEST]: {
-    url: ['apiv2_cursus_event_presence_check', {code: code}],
+    url: ['apiv2_training_event_presence_check', {code: code}],
     success: (response, dispatch) => {
       if (typeof response.status !== 'undefined' && constants.PRESENCE_STATUS_PRESENT === response.status) {
         dispatch(actions.setEventSigned(true))
@@ -77,7 +77,7 @@ actions.getEventByCode = (code = null) => ({
 
 actions.signPresence = (event, signature) => ({
   [API_REQUEST]: {
-    url: ['apiv2_cursus_event_presence_sign'],
+    url: ['apiv2_training_event_presence_sign'],
     silent: true,
     request: {
       method: 'PUT',

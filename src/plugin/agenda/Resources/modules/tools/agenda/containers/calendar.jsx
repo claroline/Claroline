@@ -1,7 +1,4 @@
 import {connect} from 'react-redux'
-import isEmpty from 'lodash/isEmpty'
-import merge from 'lodash/merge'
-import moment from 'moment'
 
 import {withRouter} from '#/main/app/router'
 import {selectors as securitySelectors} from '#/main/app/security/store'
@@ -16,7 +13,6 @@ const AgendaCalendar = withRouter(
   connect(
     (state) => ({
       path: toolSelectors.path(state),
-      contextData: toolSelectors.contextData(state),
       currentUser: securitySelectors.currentUser(state),
 
       view: selectors.view(state),
@@ -32,19 +28,10 @@ const AgendaCalendar = withRouter(
       load(rangeDates) {
         return dispatch(actions.fetch(rangeDates))
       },
-      create(event, context, user) {
-        const end = moment(event.start, 'YYYY-MM-DDThh:mm:ss')
-        // default event duration to 1 hour
-        end.add(1, 'h')
+      create(event) {
         dispatch(modalActions.showModal(MODAL_EVENT_CREATION, {
-          event: merge({}, event, {
-            workspace: !isEmpty(context) ? context : null,
-            end: end.format('YYYY-MM-DDThh:mm:ss'),
-            meta: {
-              creator: user
-            }
-          }),
-          onSave: (newEvent) => dispatch(actions.reload(newEvent, true))
+          event: event,
+          onCreate: (newEvent) => dispatch(actions.reload(newEvent, true))
         }))
       },
       reload(event, all = false) {

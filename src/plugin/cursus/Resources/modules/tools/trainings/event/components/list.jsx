@@ -28,6 +28,7 @@ const EventsList = (props) =>
             label: trans('plan_training_event', {}, 'actions'),
             modal: [MODAL_TRAINING_EVENT_FORM, {
               session: selected[0],
+              isNew: true,
               onSave: props.invalidateList
             }]
           })
@@ -40,7 +41,7 @@ const EventsList = (props) =>
         flush={true}
         path={props.path}
         name={selectors.STORE_NAME+'.list'}
-        url={['apiv2_cursus_event_list', {workspace: props.contextId}]}
+        url={['apiv2_training_event_list', {workspace: props.contextId}]}
         customDefinition={[
           {
             name: 'session',

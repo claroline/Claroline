@@ -24,7 +24,7 @@ const TrainingsEventUsers = (props) => {
           type: MODAL_BUTTON,
           label: trans('register_users'),
           modal: [MODAL_TRAINING_EVENTS, {
-            url: ['apiv2_cursus_event_list', {workspace: props.contextId}],
+            url: ['apiv2_training_event_list', {workspace: props.contextId}],
             multiple: false,
             selectAction: (selectedEvents) => ({
               type: MODAL_BUTTON,
@@ -34,7 +34,7 @@ const TrainingsEventUsers = (props) => {
                   type: ASYNC_BUTTON,
                   label: trans('register', {}, 'actions'),
                   request: {
-                    url: ['apiv2_cursus_event_add_users', {id: selectedEvents[0].id, type: props.type}],
+                    url: ['apiv2_training_event_add_users', {id: selectedEvents[0].id, type: props.type}],
                     request: {
                       method: 'PATCH',
                       body: JSON.stringify(selected.map(user => user.id))
@@ -87,7 +87,7 @@ const TrainingsEventUsers = (props) => {
                   not_ended: trans('session_not_ended', {}, 'cursus')
                 }
               }
-            },
+            }
           ]}
         />
       </PageContentList>

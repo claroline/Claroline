@@ -10,7 +10,7 @@ export default declareAction((events, refresher) => ({
   label: trans('presence_validation', {}, 'presence'),
   displayed: hasPermission('edit', events[0]),
   request: {
-    url: ['apiv2_cursus_event_presence_confirm', {id: events[0].id}],
+    url: ['apiv2_training_event_presence_confirm', {id: events[0].id}],
     request: {
       method: 'PUT'
     },

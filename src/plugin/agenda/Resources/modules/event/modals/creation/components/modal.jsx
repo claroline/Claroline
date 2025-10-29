@@ -1,134 +1,92 @@
-import React, {Component} from 'react'
+import React, {useEffect, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
+import {useSelector} from 'react-redux'
+import moment from 'moment'
 import omit from 'lodash/omit'
+import merge from 'lodash/merge'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, now} from '#/main/app/intl'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
-import {GridSelection} from '#/main/app/content/grid/components/selection'
+import {ContentMenu} from '#/main/app/content/components/menu'
+import {MODAL_BUTTON} from '#/main/app/buttons'
 
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {Event as EventTypes} from '#/plugin/agenda/prop-types'
-import {getEvents} from '#/plugin/agenda/events'
-import {EventParameters} from '#/plugin/agenda/event/components/parameters'
-import {selectors} from '#/plugin/agenda/event/modals/creation/store'
+import {getEvents} from '#/plugin/agenda/event/registry'
+import {MODAL_EVENT_FORM} from '#/plugin/agenda/event/modals/form'
 
-class EventCreationModal extends Component {
-  constructor(props) {
-    super(props)
+const EventCreationModal = (props) => {
+  const [eventTypes, setEventTypes] = useState([])
 
-    this.state = {
-      currentStep: 'type',
-      types: [],
-      loaded: false
-    }
+  const contextType = useSelector(toolSelectors.contextType)
+  const contextData = useSelector(toolSelectors.contextData)
+  const contextTools = useSelector(toolSelectors.contextTools)
 
-    this.changeStep = this.changeStep.bind(this)
-    this.close = this.close.bind(this)
-  }
+  useEffect(() => {
+    getEvents().then((events) => setEventTypes(events.filter(event => {
+      if (event.canCreate) {
+        return event.canCreate(contextType, contextData, contextTools)
+      }
 
-  componentDidMount() {
-    getEvents().then((events) => this.setState({
-      types: events.filter(event => {
-        if (event.canCreate) {
-          return event.canCreate(this.props.contextType, this.props.contextData, this.props.contextTools)
-        }
+      return true
+    })))
+  }, [contextType, contextData, contextTools])
 
-        return true
-      }),
-      loaded: true
-    }))
-  }
+  // initialize the form with default values
+  const start = props.event && props.event.start ? props.event.start : now(false)
+  const end = moment(start, 'YYYY-MM-DDThh:mm:ss')
+  // default event duration to 1 hour
+  end.add(1, 'h')
 
-  changeStep(step) {
-    this.setState({
-      currentStep: step
-    })
-  }
-
-  renderStepTitle() {
-    switch (this.state.currentStep) {
-      case 'type':
-        return trans('new_event_select', {}, 'agenda')
-      case 'parameters':
-        return trans('new_event_configure', {}, 'agenda')
-    }
-  }
-
-  renderStep() {
-    switch (this.state.currentStep) {
-      case 'type':
-        return this.state.loaded && (
-          <GridSelection
-            items={this.state.types
-              .map(event => {
-                return ({
-                  name: event.name,
-                  icon: event.icon,
-                  label: trans(event.name, {}, 'event'),
-                  description: trans(`${event.name}_desc`, {}, 'event')
-                })
-              })
+  return (
+    <Modal
+      {...omit(props, 'event', 'onCreate')}
+      title={trans('new_event', {}, 'agenda')}
+      subtitle={trans('new_event_select', {}, 'agenda')}
+      centered={true}
+    >
+      <div className="modal-body" role="presentation">
+        <ContentMenu
+          className="mb-3"
+          items={eventTypes.map(type => ({
+            id: type.name,
+            icon: type.icon,
+            label: trans(type.name, {}, 'event'),
+            description: trans(`${type.name}_desc`, {}, 'event'),
+            action: {
+              type: MODAL_BUTTON,
+              modal: [MODAL_EVENT_FORM, {
+                title: trans('new_event', {}, 'agenda'),
+                subtitle: trans('new_event_configure', {}, 'agenda'),
+                isNew: true,
+                event: merge({}, EventTypes.defaultProps, props.event, {
+                  start: start,
+                  end: end.format('YYYY-MM-DDThh:mm:ss'),
+                  meta: {
+                    type: type.name
+                  },
+                  workspace: 'workspace' === contextType ? contextData : null
+                }),
+                onSave: (created) => {
+                  if (props.onCreate) {
+                    props.onCreate(created)
+                  }
+                  props.fadeModal()
+                }
+              }]
             }
-            handleSelect={(selectedType) => {
-              this.props.startCreation(this.props.event, selectedType.name, this.props.currentUser, this.props.contextData)
-              this.changeStep('parameters')
-            }}
-          />
-        )
-
-      case 'parameters':
-        return (
-          <EventParameters
-            flush={true}
-            name={selectors.STORE_NAME}
-            event={this.props.formData}
-            update={this.props.update}
-            isNew={true}
-            onSave={(response) => {
-              this.props.onSave(response)
-              this.close()
-            }}
-          />
-        )
-    }
-  }
-
-  close() {
-    this.props.fadeModal()
-    this.changeStep('type')
-    this.props.reset()
-  }
-
-  render() {
-    return (
-      <Modal
-        {...omit(this.props, 'currentUser', 'contextData', 'contextType', 'contextTools', 'formData', 'event', 'saveEnabled', 'update', 'onSave', 'startCreation', 'reset')}
-        icon="fa fa-fw fa-plus"
-        title={trans('new_event', {}, 'agenda')}
-        subtitle={this.renderStepTitle()}
-        fadeModal={() => this.close()}
-        size="lg"
-      >
-        {this.renderStep()}
-      </Modal>
-    )
-  }
+          }))}
+        />
+      </div>
+    </Modal>
+  )
 }
 
 EventCreationModal.propTypes = {
-  currentUser: T.object,
-  contextType: T.string.isRequired,
-  contextData: T.object,
-  contextTools: T.arrayOf(T.object),
   event: T.shape(
     EventTypes.propTypes
   ),
-  formData: T.shape(
-    EventTypes.propTypes
-  ),
-  onSave: T.func,
-  startCreation: T.func.isRequired,
-  update: T.func.isRequired,
-  reset: T.func,
+  onCreate: T.func,
   fadeModal: T.func.isRequired
 }
 

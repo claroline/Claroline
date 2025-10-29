@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {useDispatch, useSelector} from 'react-redux'
 import classes from 'classnames'
 import get from 'lodash/get'
+import CloseButton from 'react-bootstrap/CloseButton'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl'
@@ -17,7 +18,6 @@ import {displayUsername} from '#/main/community/utils'
 import {route, selectors as contextSelectors} from '#/main/app/context'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {actions, selectors} from '#/main/app/platform/store'
-import {CloseButton} from 'react-bootstrap'
 
 const UserMenu = (props) => {
   const dispatch = useDispatch()

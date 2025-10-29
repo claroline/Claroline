@@ -80,7 +80,7 @@ EventsModal.propTypes = {
 }
 
 EventsModal.defaultProps = {
-  url: ['apiv2_cursus_event_list'],
+  url: ['apiv2_training_event_list'],
   title: trans('session_events', {}, 'cursus')
 }
 

@@ -14,7 +14,6 @@ services:
 
     Claroline\AuthenticationBundle\Manager\OAuthManager:
         arguments:
-            - '@logger'
             - '@router'
             - '@Claroline\AuthenticationBundle\Component\OAuth\OAuth2Provider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'

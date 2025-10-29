@@ -1,17 +1,17 @@
-import {makeReducer, combineReducers} from '#/main/app/store/reducer'
+import {makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store/reducer'
+import {makeFetchReducer} from '#/main/app/api/fetch'
+import {makeInstanceAction} from '#/main/app/store/actions'
+import {API_FETCH_INVALIDATE} from '#/main/app/api/fetch/store/actions'
 
-import {EVENT_LOAD, EVENT_SET_LOADED} from '#/plugin/agenda/events/event/store/actions'
 import {selectors} from '#/plugin/agenda/events/event/store/selectors'
 
-const reducer = combineReducers({
-  loaded: makeReducer(false, {
-    [EVENT_SET_LOADED]: (state, action) => action.loaded
-  }),
-  event: makeReducer(null, {
-    [EVENT_LOAD]: (state, action) => action.event
-  }),
-  participants: makeListReducer(selectors.LIST_NAME)
+const reducer = makeFetchReducer(selectors.STORE_NAME, {}, {
+  participants: makeListReducer(selectors.LIST_NAME, {}, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(API_FETCH_INVALIDATE, selectors.STORE_NAME)]: () => true
+    })
+  })
 })
 
 export {

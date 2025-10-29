@@ -36,7 +36,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[Route(path: '/cursus_event_presence')]
+#[Route(path: '/training_event_presence')]
 class EventPresenceController
 {
     use PermissionCheckerTrait;
@@ -60,7 +60,7 @@ class EventPresenceController
     /**
      * Updates the status of a EventPresence for current user.
      */
-    #[Route(path: '/sign', name: 'apiv2_cursus_event_presence_sign', methods: ['PUT'])]
+    #[Route(path: '/sign', name: 'apiv2_training_event_presence_sign', methods: ['PUT'])]
     public function signStatusAction(Request $request): JsonResponse
     {
         $data = $this->decodeRequest($request);
@@ -102,7 +102,7 @@ class EventPresenceController
     /**
      * Confirm the status of a EventPresence for current event.
      */
-    #[Route(path: '/confirm/{id}', name: 'apiv2_cursus_event_presence_confirm', methods: ['PUT'])]
+    #[Route(path: '/confirm/{id}', name: 'apiv2_training_event_presence_confirm', methods: ['PUT'])]
     public function confirmStatusAction(#[MapEntity(mapping: ['id' => 'uuid'])] Event $event): JsonResponse
     {
         $this->checkPermission('ADMINISTRATE', $event, [], true);
@@ -123,7 +123,7 @@ class EventPresenceController
         return new JsonResponse();
     }
 
-    #[Route(path: '/check/{code}', name: 'apiv2_cursus_event_presence_check', methods: ['GET'])]
+    #[Route(path: '/check/{code}', name: 'apiv2_training_event_presence_check', methods: ['GET'])]
     public function getEventPresenceByCodeAction(string $code): JsonResponse
     {
         $event = $this->om->getRepository(Event::class)->findOneBy(['code' => $code]);
@@ -144,7 +144,7 @@ class EventPresenceController
         return new JsonResponse($this->serializer->serialize($presence));
     }
 
-    #[Route(path: '/{id}', name: 'apiv2_cursus_event_presence_list', methods: ['GET'])]
+    #[Route(path: '/{id}', name: 'apiv2_training_event_presence_list', methods: ['GET'])]
     public function listAction(
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Event $event,
@@ -190,7 +190,7 @@ class EventPresenceController
     /**
      * Updates the status of an EventPresence list.
      */
-    #[Route(path: '/status/{status}', name: 'apiv2_cursus_event_presence_update', methods: ['PUT'])]
+    #[Route(path: '/status/{status}', name: 'apiv2_training_event_presence_update', methods: ['PUT'])]
     public function updateStatusAction(string $status, Request $request): JsonResponse
     {
         $data = $this->decodeRequest($request);
@@ -213,7 +213,7 @@ class EventPresenceController
         }, $presences));
     }
 
-    #[Route(path: '/{id}/download/{filled}', name: 'apiv2_cursus_event_presence_download', methods: ['GET'])]
+    #[Route(path: '/{id}/download/{filled}', name: 'apiv2_training_event_presence_download', methods: ['GET'])]
     public function downloadPdfAction(
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Event $event,

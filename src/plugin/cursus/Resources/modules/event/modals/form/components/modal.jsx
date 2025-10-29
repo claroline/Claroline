@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import omit from 'lodash/omit'
 import merge from 'lodash/merge'
 
@@ -9,11 +9,15 @@ import {FormModal} from '#/main/app/data/modals/form/components/modal'
 import {actions as formActions} from '#/main/app/content/form'
 import {constants} from '#/plugin/cursus/constants'
 import {Event as EventTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
+import {selectors as contextSelectors} from '#/main/app/context'
 
 const FORM_NAME = 'trainingEventForm'
 
 const EventFormModal = props => {
   const dispatch = useDispatch()
+
+  const contextType = useSelector(contextSelectors.type)
+  const contextData = useSelector(contextSelectors.data)
 
   const update = useCallback((prop, value) => {
     dispatch(formActions.updateProp(FORM_NAME, prop, value))
@@ -22,7 +26,7 @@ const EventFormModal = props => {
   let formData
   if (props.event) {
     formData = props.event
-  } else {
+  } else if (props.isNew && props.session) {
     formData = merge(
       {
         session: {
@@ -38,17 +42,17 @@ const EventFormModal = props => {
 
   return (
     <FormModal
+      title={trans(props.isNew ? 'new_event' : 'session_event', {}, 'cursus')}
+      subtitle={props.isNew && props.session ? trans('new_event_desc', {session: props.session.name}, 'cursus') : undefined}
       {...omit(props, 'event', 'session')}
       name={FORM_NAME}
-      title={trans(!props.event ? 'new_event' : 'session_event', {}, 'cursus')}
-      subtitle={!props.event ? trans('new_event_desc', {session: props.session.name}, 'cursus') : undefined}
-      target={!props.event ?
-        ['apiv2_cursus_event_create'] :
-        ['apiv2_cursus_event_update', {id: props.event.id}]
+      target={props.isNew ?
+        ['apiv2_training_event_create'] :
+        ['apiv2_training_event_update', {id: props.event.id}]
       }
-      isNew={!props.event}
+      isNew={props.isNew}
       data={formData}
-      saveLabel={trans(!props.event ? 'plan_training_event' : 'save_training_event', {}, 'actions')}
+      saveLabel={trans(props.isNew ? 'plan_training_event' : 'save_training_event', {}, 'actions')}
       definition={[
         {
           title: trans('general'),
@@ -81,6 +85,18 @@ const EventFormModal = props => {
               },
               options: {
                 time: true
+              }
+            }, {
+              name: 'session',
+              type: 'training_session',
+              label: trans('session', {}, 'cursus'),
+              required: true,
+              displayed: !props.session,
+              options: {
+                multiple: false,
+                picker: {
+                  url: ['apiv2_cursus_session_context_list', {context: contextType, contextId: contextData ? contextData.id : null}]
+                }
               }
             }
           ]
@@ -159,7 +175,7 @@ const EventFormModal = props => {
             }
           ]
         }, {
-          icon: 'fa fa-fw fa-sign-in',
+          icon: 'fa fa-fw fa-user-plus',
           title: trans('registration'),
           fields: [
             {
@@ -196,6 +212,7 @@ const EventFormModal = props => {
 
 
 EventFormModal.propTypes = {
+  isNew: T.bool,
   event: T.shape(
     EventTypes.propTypes
   ),

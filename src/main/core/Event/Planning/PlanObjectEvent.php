@@ -8,17 +8,10 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class PlanObjectEvent extends Event
 {
-    /** @var AbstractPlanned */
-    private $planned;
-    /** @var IdentifiableInterface */
-    private $object;
-
     public function __construct(
-        AbstractPlanned $planned,
-        IdentifiableInterface $object
+        private readonly AbstractPlanned $planned,
+        private readonly IdentifiableInterface $object
     ) {
-        $this->planned = $planned;
-        $this->object = $object;
     }
 
     public function getPlanned(): AbstractPlanned

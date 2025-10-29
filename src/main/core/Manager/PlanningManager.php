@@ -12,20 +12,13 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class PlanningManager
 {
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var ObjectManager */
-    private $om;
-
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        ObjectManager $om
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ObjectManager $om
     ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->om = $om;
     }
 
-    public function addToPlanning(AbstractPlanned $planned, IdentifiableInterface $object)
+    public function addToPlanning(AbstractPlanned $planned, IdentifiableInterface $object): void
     {
         $planning = $this->om->getRepository(Planning::class)->findOneBy([
             'objectId' => $object->getUuid(),
@@ -49,7 +42,7 @@ class PlanningManager
         $this->om->flush();
     }
 
-    public function removeFromPlanning(AbstractPlanned $planned, IdentifiableInterface $object)
+    public function removeFromPlanning(AbstractPlanned $planned, IdentifiableInterface $object): void
     {
         $planning = $this->om->getRepository(Planning::class)->findOneBy([
             'objectId' => $object->getUuid(),

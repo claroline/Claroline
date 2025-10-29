@@ -3,7 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import {useSelector} from 'react-redux'
 import omit from 'lodash/omit'
 
+import CloseButton from 'react-bootstrap/CloseButton'
 import BaseModal from 'react-bootstrap/Modal'
+
 import {Router, Routes} from '#/main/app/router'
 import {trans} from '#/main/app/intl'
 import {selectors} from '#/main/app/platform/store'
@@ -12,7 +14,6 @@ import {LoginMain} from '#/main/app/security/login/containers/main'
 import {RegistrationMain} from '#/main/app/security/registration/containers/main'
 import {SendPasswordForm} from '#/main/app/security/password/send/containers/send'
 import {SecurityLayout} from '#/main/app/security/components/layout'
-import {CloseButton} from 'react-bootstrap'
 
 const SecurityModal = props => {
   const [aborted, setAborted] = useState(true)

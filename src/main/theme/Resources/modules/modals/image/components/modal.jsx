@@ -1,6 +1,6 @@
 import React, {useCallback, useRef, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {CloseButton} from 'react-bootstrap'
+import CloseButton from 'react-bootstrap/CloseButton'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
@@ -13,6 +13,7 @@ import {Poster} from '#/main/app/components/poster'
 import {actions} from '#/main/app/api/store'
 import {useDispatch} from 'react-redux'
 import {FileDrop} from '#/main/app/overlays/dnd/components/file-drop'
+import {Alert} from '#/main/app/components/alert'
 
 const ImageEditorModal = (props) => {
   const dispatch = useDispatch()
@@ -86,6 +87,10 @@ const ImageEditorModal = (props) => {
           <span role="presentation">-</span>
           <b>Taille recommandée :</b> 1920 x 320px
         </div>
+
+        {error &&
+          <Alert type="danger" className="mt-3">{error}</Alert>
+        }
 
         {(props.url || url || !isEmpty(uploadedFiles)) &&
           <>

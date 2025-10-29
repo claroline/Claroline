@@ -15,7 +15,7 @@ export default declareBadgeRule({
   },
   render: (rule, contextType, contextId) => createElement(Html, {
     children: trans('training_event_presence_desc', {
-      training_event: `<a class="fw-bolder text-reset" href="#${route(rule.subject, contextRoute(contextType, contextId, 'trainings'))}">`+get(rule, 'subject.name')+'</a>'
+      training_event: `<a class="fw-bolder text-reset" href="#${route(rule.subject, contextRoute(contextType, contextId))}">`+get(rule, 'subject.name')+'</a>'
     }, 'badge')
   }),
   default: (rule) => Object.assign({}, rule, {
