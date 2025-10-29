@@ -9,7 +9,7 @@ import {makeFetchReducer} from '#/main/app/api/fetch/store/reducer'
 import {actions} from '#/main/app/api/fetch/store/actions'
 import {selectors} from '#/main/app/api/fetch/store/selectors'
 
-function useFetch(storeName, apiEndpoint) {
+function useFetch(storeName, apiEndpoint, options = {autoload: true}) {
   const apiUrl = Array.isArray(apiEndpoint) ? url(apiEndpoint) : apiEndpoint
 
   // append fetch reducer to the store if not already mounted
@@ -25,7 +25,7 @@ function useFetch(storeName, apiEndpoint) {
 
   useEffect(() => {
     let fetchPromise
-    if (apiUrl) {
+    if (apiUrl && options.autoload) {
       fetchPromise = makeCancelable(dispatch(actions.fetch(storeName, apiUrl)))
 
       fetchPromise.promise.then(
@@ -39,7 +39,7 @@ function useFetch(storeName, apiEndpoint) {
         fetchPromise.cancel()
       }
     }
-  }, [storeName, apiUrl])
+  }, [storeName, apiUrl, options.autoload])
 
   return [data, status, error, errorCode]
 }

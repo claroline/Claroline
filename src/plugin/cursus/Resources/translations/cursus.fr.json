@@ -19,11 +19,9 @@
     "create_mode_empty_desc": "Créez une formation vide pour pouvoir la configurer comme vous le souhaitez.",
     "create_mode_copy": "Copier une formation existante",
     "create_mode_copy_desc": "Dupliquez une formation ainsi que tous ses contenus.",
-    "create_mode_organization": "Ajouter depuis une autre organisation",
-    "create_mode_organization_desc": "Sélectionnez une formation existante dans une autre organisation.",
+    "add_from_another_organization_desc": "Sélectionnez une ou plusieurs formations existant dans une autre organisation pour les rendre accessible aux membres de l'organisation <b>%organization%</b>.",
     "create_mode_existing": "Sélectionner une formation existante",
     "create_mode_existing_desc": "Sélectionnez une formation existante.",
-    "create_mode_group_existing": "A partir d'un contenu existant",
     "catalog": "Catalogue",
     "course": "Formation",
     "courses": "Formations",
@@ -190,5 +188,7 @@
     "my_pending_registrations_desc": "Vous avez des inscriptions nécessitant l'intervention d'un gestionnaire. Veuillez patientez le temps qu'un gestionnaire valide vos inscriptions ou vous propose une session de formation.",
     "canceled": "Annulé",
     "session_workspace_model_help": "Un nouvel espace sera automatiquement généré à partir du modèle défini dans la formation lors la création de la session.",
-    "session_workspace_course_help": "La session sera automatiquement rattachée à l'espace de la formation lors de la création."
+    "session_workspace_course_help": "La session sera automatiquement rattachée à l'espace de la formation lors de la création.",
+    "add_to_organization_desc": "Sélectionnez le(s) formations que vous souhaitez ajouter à l'organisation.",
+    "course_organizations_desc": "Choisissez les organisations dans lesquels la formation doit apparaître. Seuls les membres de ces organisations pourront voir et s'inscrire à la formation."
 }

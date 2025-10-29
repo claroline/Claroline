@@ -4,14 +4,11 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
-import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {EditorPage} from '#/main/app/editor'
 
+import {LinkedOrganizations} from '#/main/community/components/linked-organizations'
 import {actions, selectors} from '#/main/app/context/editor'
-import {actions as workspaceActions, selectors as workspaceSelectors} from '#/main/app/contexts/workspace/editor/store'
-
-import {MODAL_ORGANIZATIONS} from '#/main/community/modals/organizations'
-import {OrganizationList} from '#/main/community/organization/components/list'
+import {selectors as workspaceSelectors} from '#/main/app/contexts/workspace/editor/store'
 
 // easy selection for restrictions
 const restrictByDates = (workspace) => get(workspace, 'data.restrictions.enableDates') || !isEmpty(get(workspace, 'data.restrictions.dates'))
@@ -49,32 +46,16 @@ const WorkspaceEditorPermissions = () => {
         }, {
           name: 'organizations',
           title: trans('organizations', {}, 'community'),
-          description: trans('Choisissez les organisations dans lesquels l\'espace d\'activités doit apparaître. Seuls les membres de ces organisations pourront voir et s\'inscrire à l\'espace.'),
+          description: trans('workspace_organizations_desc', {}, 'workspace'),
           primary: true,
           render: () => (
-            <OrganizationList
-              className="mb-3"
-              name={`${workspaceSelectors.STORE_NAME}.organizations`}
-              url={['apiv2_workspace_list_organizations', {id: context ? context.id : null}]}
+            <LinkedOrganizations
               autoload={!!context && !!context.id}
-              addAction={{
-                name: 'add',
-                type: MODAL_BUTTON,
-                icon: 'fa fa-fw fa-plus',
-                label: trans('add_organizations', {}, 'actions'),
-                tooltip: 'bottom',
-                modal: [MODAL_ORGANIZATIONS, {
-                  selectAction: (organizations) => ({
-                    type: CALLBACK_BUTTON,
-                    label: trans('add', {}, 'actions'),
-                    callback: () => dispatch(workspaceActions.addOrganizations(context.id, organizations.map(organization => organization.id)))
-                  })
-                }]
-              }}
-              delete={{
-                url: ['apiv2_workspace_remove_organizations', {id: context ? context.id : null}]
-              }}
-              actions={() => []}
+              name={`${workspaceSelectors.STORE_NAME}.organizations`}
+              description={trans('workspace_organizations_desc', {}, 'workspace')}
+              url={['apiv2_workspace_list_organizations', {id: context ? context.id : null}]}
+              addUrl={['apiv2_workspace_add_organizations', {id: context ? context.id : null}]}
+              removeUrl={['apiv2_workspace_remove_organizations', {id: context ? context.id : null}]}
             />
           )
         }, {

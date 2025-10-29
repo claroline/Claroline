@@ -15,13 +15,11 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CommunityBundle\Serializer\OrganizationSerializer;
 use Claroline\CommunityBundle\Serializer\RoleSerializer;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -46,7 +44,6 @@ class CourseSerializer
         private readonly ObjectManager $om,
         private readonly UserSerializer $userSerializer,
         private readonly RoleSerializer $roleSerializer,
-        private readonly OrganizationSerializer $orgaSerializer,
         private readonly WorkspaceSerializer $workspaceSerializer,
         private readonly PanelFacetSerializer $panelFacetSerializer,
     ) {
@@ -152,9 +149,6 @@ class CourseSerializer
                         return $this->panelFacetSerializer->serialize($panelFacet);
                     }, $course->getPanelFacets()->toArray()),
                 ],
-                'organizations' => array_map(function (Organization $organization) {
-                    return $this->orgaSerializer->serialize($organization, [SerializerInterface::SERIALIZE_MINIMAL]);
-                }, $course->getOrganizations()->toArray()),
             ]);
         }
 
@@ -263,23 +257,6 @@ class CourseSerializer
                 $workspace = $this->workspaceRepo->findOneBy(['uuid' => $data['workspace']['id']]);
             }
             $course->setWorkspace($workspace);
-        }
-
-        if (array_key_exists('organizations', $data)) {
-            $organizations = [];
-            if (!empty($data['organizations'])) {
-                foreach ($data['organizations'] as $organizationData) {
-                    if (!empty($organizationData['id']) && empty($organizations[$organizationData['id']])) {
-                        /** @var Organization $organization */
-                        $organization = $this->om->getObject($organizationData, Organization::class);
-                        if ($organization) {
-                            $organizations[$organization->getUuid()] = $organization;
-                        }
-                    }
-                }
-            }
-
-            $course->setOrganizations(array_values($organizations));
         }
 
         if (isset($data['tags'])) {

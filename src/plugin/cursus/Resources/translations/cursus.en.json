@@ -18,11 +18,8 @@
     "create_mode_empty_desc": "Create an empty training so that you can configure it as you wish.",
     "create_mode_copy": "Copy an existing training",
     "create_mode_copy_desc": "Duplicate a training and all its content.",
-    "create_mode_organization": "Add from an organization",
-    "create_mode_organization_desc": "Select an existing training from another organization.",
     "create_mode_existing": "Select an existing training",
     "create_mode_existing_desc": "Select an existing training.",
-    "create_mode_group_existing": "From existing content",
 
     "catalog": "Catalog",
     "course": "Training",

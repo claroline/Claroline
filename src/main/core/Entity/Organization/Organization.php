@@ -26,9 +26,7 @@ use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\IsPublic;
 use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\CommunityBundle\Finder\OrganizationType;
-use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid as BaseUuid;
@@ -115,37 +113,5 @@ class Organization implements CrudEntityInterface, ContextSubjectInterface
     public function removeManager(User $user): void
     {
         $user->removeAdministratedOrganization($this);
-    }
-
-    /**
-     * @deprecated no replacement. Required by TransferFeature and OrganizationController::HasGroupsTrait.
-     */
-    public function addGroup(Group $group): void
-    {
-        $group->addOrganization($this);
-    }
-
-    /**
-     * @deprecated no replacement. Required by TransferFeature and OrganizationController::HasGroupsTrait.
-     */
-    public function removeGroup(Group $group): void
-    {
-        $group->removeOrganization($this);
-    }
-
-    /**
-     * @deprecated no replacement. Required by OrganizationController::HasWorkspacesTrait.
-     */
-    public function addWorkspace(Workspace $workspace): void
-    {
-        $workspace->addOrganization($this);
-    }
-
-    /**
-     * @deprecated no replacement. Required by OrganizationController::HasWorkspacesTrait.
-     */
-    public function removeWorkspace(Workspace $workspace): void
-    {
-        $workspace->removeOrganization($this);
     }
 }

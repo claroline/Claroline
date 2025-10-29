@@ -17,6 +17,7 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\PdfManager;
+use Claroline\CoreBundle\Controller\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
@@ -42,6 +43,7 @@ class CourseController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
     use RequestDecoderTrait;
+    use HasOrganizationsTrait;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,

@@ -6,10 +6,8 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CommunityBundle\Serializer\OrganizationSerializer;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -19,7 +17,6 @@ use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class WorkspaceSerializer
@@ -28,12 +25,10 @@ class WorkspaceSerializer
 
     public function __construct(
         private readonly AuthorizationCheckerInterface $authorization,
-        private readonly TokenStorageInterface $tokenStorage,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly ObjectManager $om,
         private readonly WorkspaceManager $workspaceManager,
         private readonly UserSerializer $userSerializer,
-        private readonly OrganizationSerializer $organizationSerializer,
         private readonly ResourceNodeSerializer $resNodeSerializer
     ) {
     }
@@ -268,23 +263,6 @@ class WorkspaceSerializer
         if (isset($data['evaluation'])) {
             $this->sipe('evaluation.successCondition', 'setSuccessCondition', $data, $workspace);
             $this->sipe('evaluation.scoreTotal', 'setScoreTotal', $data, $workspace);
-        }
-
-        if (array_key_exists('organizations', $data)) {
-            $organizations = [];
-            if (!empty($data['organizations'])) {
-                foreach ($data['organizations'] as $organizationData) {
-                    if (!empty($organizationData['id']) && empty($organizations[$organizationData['id']])) {
-                        /** @var Organization $organization */
-                        $organization = $this->om->getObject($organizationData, Organization::class);
-                        if ($organization) {
-                            $organizations[$organization->getUuid()] = $organization;
-                        }
-                    }
-                }
-            }
-
-            $workspace->setOrganizations(array_values($organizations));
         }
 
         if (isset($data['tags'])) {

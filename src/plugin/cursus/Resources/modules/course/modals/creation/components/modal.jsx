@@ -23,6 +23,7 @@ const CreationModal = (props) =>
         openForm={props.openForm}
         fadeModal={props.fadeModal}
         modal={true}
+        onCreate={props.onCreate}
       />
     </div>
   </Modal>
@@ -31,6 +32,7 @@ CreationModal.propTypes = {
   path: T.string.isRequired,
   contextType: T.string.isRequired,
   contextId: T.string,
+  onCreate: T.func,
   openForm: T.func.isRequired,
   reset: T.func.isRequired,
   fadeModal: T.func.isRequired

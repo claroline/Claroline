@@ -28,16 +28,3 @@ actions.addRoles = (id, roles) => (dispatch) => dispatch({
     }
   }
 })
-
-actions.addOrganizations = (id, organizations) => (dispatch) => dispatch({
-  [API_REQUEST]: {
-    url: ['apiv2_user_add_organizations', {id: id}],
-    request: {
-      method: 'PATCH',
-      body: JSON.stringify(organizations)
-    },
-    success: () => {
-      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.organizations'))
-    }
-  }
-})

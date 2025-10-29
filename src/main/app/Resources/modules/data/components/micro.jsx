@@ -25,7 +25,7 @@ DataMicro.propTypes = {
     name: T.string.isRequired,
     thumbnail: T.string,
     poster: T.string
-  }).isRequired
+  })
 }
 
 DataMicro.defaultProps = {

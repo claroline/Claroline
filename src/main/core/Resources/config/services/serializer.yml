@@ -14,12 +14,10 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@security.authorization_checker'
-            - '@security.token_storage'
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-            - '@Claroline\CommunityBundle\Serializer\OrganizationSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
     Claroline\CoreBundle\API\Serializer\Workspace\PendingRegistrationSerializer:

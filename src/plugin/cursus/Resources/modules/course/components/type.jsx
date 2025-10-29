@@ -1,13 +1,16 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import {useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl'
 import {ContentMenu} from '#/main/app/content/components/menu'
 import {ASYNC_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-
+import {selectors} from '#/main/app/platform/store'
+import {selectors as contextSelectors} from '#/main/app/context'
 import {MODAL_WORKSPACES} from '#/main/core/modals/workspaces'
+
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {MODAL_TRAINING_COURSES} from '#/plugin/cursus/modals/courses'
 
@@ -24,6 +27,9 @@ const CreationType = (props) => {
       props.openForm(null, CourseTypes.defaultProps, workspace)
     }
   }
+
+  const currentOrganization = useSelector(selectors.currentOrganization)
+  const organizations = useSelector(contextSelectors.organizations)
 
   return (
     <ContentMenu
@@ -95,23 +101,49 @@ const CreationType = (props) => {
               })
             }]
           },
-          group: trans('create_mode_group_existing', {}, 'cursus')
+          group: trans('from_existing_content')
         }, {
           id: 'create-from-organization',
           icon: 'building',
-          label: trans('create_mode_organization', {}, 'cursus'),
-          description: trans('create_mode_organization_desc', {}, 'cursus'),
+          label: trans('add_from_another_organization', {}, 'actions'),
+          description: trans('add_from_another_organization_desc', {organization: currentOrganization.name}, 'cursus'),
+          displayed: 'desktop' === props.contextType,
+          group: trans('from_existing_content'),
           action: {
-            type: CALLBACK_BUTTON,
-            callback: () => true
-          },
-          group: trans('create_mode_group_existing', {}, 'cursus')
+            type: MODAL_BUTTON,
+            modal: [MODAL_TRAINING_COURSES, {
+              title: trans('new_course', {}, 'cursus'),
+              subtitle: trans('add_to_organization_desc', {}, 'cursus'),
+              multiple: true,
+              filters: [
+                {property: 'organizations', value: organizations.map(o => o.id !== currentOrganization.id ? o.id : 'not:'+o.id)}
+              ],
+              selectAction: (selected) => ({
+                type: ASYNC_BUTTON,
+                label: trans('add_to_organization', {}, 'actions'),
+                request: {
+                  url: ['apiv2_cursus_course_add_current_organization'],
+                  request: {
+                    method: 'PUT',
+                    body: JSON.stringify(selected.map(c => c.id))
+                  },
+                  success: () => {
+                    if (props.onCreate) {
+                      props.onCreate(selected)
+                    }
+
+                    props.fadeModal()
+                  }
+                }
+              })
+            }]
+          }
         }, {
           id: 'create-from-existing',
           icon: 'graduation-cap',
           label: trans('create_mode_existing', {}, 'cursus'),
           description: trans('create_mode_existing_desc', {}, 'cursus'),
-          displayed: props.contextType === 'workspace',
+          displayed: 'workspace' === props.contextType,
           action: {
             type: MODAL_BUTTON,
             modal: [MODAL_TRAINING_COURSES, {
@@ -132,7 +164,7 @@ const CreationType = (props) => {
               })
             }]
           },
-          group: trans('create_mode_group_existing', {}, 'cursus')
+          group: trans('from_existing_content')
         }
       ]}
     />
@@ -146,7 +178,8 @@ CreationType.propTypes = {
   contextType: T.string,
   contextId: T.string,
   modal: T.bool,
-  fadeModal: T.func
+  fadeModal: T.func,
+  onCreate: T.func
 }
 
 export {

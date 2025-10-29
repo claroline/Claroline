@@ -3,15 +3,17 @@ import merge from 'lodash/merge'
 
 import {combineReducers, makeInstanceReducer, reduceReducers} from '#/main/app/store/reducer'
 
+import {constants} from '#/main/app/api/fetch/constants'
 import {
   API_FETCH_FAILED,
   API_FETCH_FULFILLED,
   API_FETCH_INVALIDATE,
-  API_FETCH_PENDING
+  API_FETCH_PENDING,
+  API_FETCH_RELOAD
 } from '#/main/app/api/fetch/store/actions'
 
 const defaultState = {
-  status: 'idle', // 'idle' | 'pending' | 'succeeded' | 'failed',
+  status: constants.STATUS_IDLE,
   errorCode: null,
   error: null,
   data: null
@@ -19,10 +21,10 @@ const defaultState = {
 
 const baseReducer = {
   status: makeInstanceReducer(defaultState.status, {
-    [API_FETCH_PENDING]: () => 'pending',
-    [API_FETCH_FULFILLED]: () => 'succeeded',
-    [API_FETCH_FAILED]: () => 'failed',
-    [API_FETCH_INVALIDATE]: () => 'idle'
+    [API_FETCH_PENDING]: () => constants.STATUS_PENDING,
+    [API_FETCH_FULFILLED]: () => constants.STATUS_SUCCEEDED,
+    [API_FETCH_FAILED]: () => constants.STATUS_FAILED,
+    [API_FETCH_INVALIDATE]: () => constants.STATUS_IDLE
   }),
 
   errorCode: makeInstanceReducer(defaultState.errorCode, {
@@ -40,7 +42,8 @@ const baseReducer = {
    */
   data: makeInstanceReducer(defaultState.data, {
     [API_FETCH_FULFILLED]: (state, action) => action.response,
-    [API_FETCH_FAILED]: () => null
+    [API_FETCH_FAILED]: () => null,
+    [API_FETCH_RELOAD]: (state, action) => action.data
   })
 }
 

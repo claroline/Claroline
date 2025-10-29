@@ -31,9 +31,10 @@ actions.fail = makeInstanceActionCreator(API_FETCH_FAILED, 'error', 'errorCode')
 /**
  * Calls API.
  */
-actions.fetch = (name, url) => (dispatch) => dispatch({
+actions.fetch = (name, url, silent = false) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: url,
+    silent: silent,
     request: {
       method: 'GET'
     },
