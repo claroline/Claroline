@@ -81,7 +81,7 @@ const Assignments = () => {
       </div>
 
       <Collapse in={showHelp}>
-        <dl className="p-3 mb-0 bg-body-tertiary rounded-3 gap-0">
+        <dl className="p-4 mb-0 bg-body-tertiary rounded-3 gap-0">
           <dt className="text-uppercase fw-bolder fs-base text-body">{trans('sequence_available', {}, 'evaluation')}</dt>
           <dd className="mb-3">
             <div className="py-1 d-flex flex-row align-items-baseline" role="presentation">

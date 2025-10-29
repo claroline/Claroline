@@ -254,7 +254,7 @@ const ContentRights = props => {
 
       {props.permissions &&
         <Collapse in={showHelp}>
-          <dl className="p-3 mb-0 bg-body-tertiary rounded-3 gap-0">
+          <dl className="p-4 mb-0 bg-body-tertiary rounded-3 gap-0">
             {allPerms.map(permission =>
               <Fragment key={permission}>
                 <dt className="text-uppercase fw-bolder fs-base text-body">{trans(permission, {}, 'actions')}</dt>

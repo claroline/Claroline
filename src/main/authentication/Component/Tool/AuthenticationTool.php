@@ -10,10 +10,12 @@ use Claroline\AuthenticationBundle\Manager\AuthenticationManager;
 use Claroline\AuthenticationBundle\Manager\OAuthManager;
 use Claroline\CoreBundle\Component\Context\AdministrationContext;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class AuthenticationTool extends ToolComponent
 {
     public function __construct(
+        private readonly UrlGeneratorInterface $router,
         private readonly SerializerProvider $serializer,
         private readonly AuthenticationManager $authenticationManager,
         private readonly OAuthManager $oauthManager,
@@ -46,6 +48,7 @@ class AuthenticationTool extends ToolComponent
             'authentication' => $this->serializer->serialize(
                 $this->authenticationManager->getParameters()
             ),
+            'oauthRedirect' => $this->router->generate('claro_security_login_check_oauth2', [], UrlGeneratorInterface::ABSOLUTE_URL),
             'oauthProviders' => $this->oauthManager->getAvailableProviders(),
             'oauthClients' => array_map(function (OAuthClient $client) {
                 return $this->serializer->serialize($client);

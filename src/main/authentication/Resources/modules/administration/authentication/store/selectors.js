@@ -5,6 +5,11 @@ const FORM_NAME = STORE_NAME+'.form'
 
 const store = (baseStore) => baseStore[STORE_NAME]
 
+const oauthRedirect = createSelector(
+  [store],
+  (store) => store.oauthRedirect
+)
+
 const oauthProviders = createSelector(
   [store],
   (store) => store.oauthProviders
@@ -20,7 +25,8 @@ export const selectors = {
   FORM_NAME,
   store,
   oauthProviders,
-  oauthClients
+  oauthClients,
+  oauthRedirect
 }
 
 

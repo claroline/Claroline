@@ -21,6 +21,9 @@ export const reducer = combineReducers({
       [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.authentication
     })
   }),
+  oauthRedirect: makeReducer(null, {
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.oauthRedirect
+  }),
   oauthProviders: makeReducer([], {
     [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.oauthProviders
   }),

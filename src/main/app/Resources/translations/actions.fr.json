@@ -127,5 +127,6 @@
   "add_from_another_organization": "Ajouter depuis une autre organization",
   "import_archive": "Importer une archive",
   "import_archive_desc": "Déposez une archive (.zip) générée à partir d'une autre plateforme compatible.",
-  "set_default": "Définir par défaut"
+  "set_default": "Définir par défaut",
+  "clipboard_copy": "Copier dans le presse-papiers"
 }

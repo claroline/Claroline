@@ -51,6 +51,12 @@
   "oauth_url_resource_owner_details": "URL d'info utilisateur (Resource owner details URL)",
   "oauth_url_resource_owner_details_help": "L'URL de récupération des informations utilisateur définie par le service d'authentification utilisé (elle peut être retrouvée dans les paramètres de l'application externe).",
   "generic_oauth": "Application générique",
-  "generic_oauth_desc": "Permettez aux utilisateurs de se connecter avec leur compte provenant d'une application supportant l'authentification OAuth2. Utilisez ce service si vous ne trouvez pas l'application appropriées dans la liste."
-
+  "generic_oauth_desc": "Permettez aux utilisateurs de se connecter avec leur compte provenant d'une application supportant l'authentification OAuth2. Utilisez ce service si vous ne trouvez pas l'application appropriées dans la liste.",
+  "oauth_create_client": "Créer un nouveau client d'authentification",
+  "oauth_configure_client": "Configurer le client d'authentification",
+  "oauth_register_client": "Enregistrer le client d'authentification",
+  "oauth_require_client_help": "Pour pouvoir utiliser l'authentification externe vous devrez au préalable déclarer un nouveau client OAuth2 dans l'application (Azure, GiHub, etc.) que vous souhaitez utiliser.",
+  "oauth_create_client_help": "La procédure à suivre dépend du fournisseur de service utilisé, veuillez vous référer à la documentation de l'application pour savoir comment déclarer une nouvelle application OAuth2.",
+  "oauth_configure_client_help": "Lors de la création du nouveau client d'authentification, il vous sera demandé une URL de redirection. Veuillez saisir :",
+  "oauth_register_client_help": "Une fois le client créé auprès de votre fournisseur de service, cliquez sur \"Ajouter une application\", choisissez le fournisseur de service utilisé et renseigné le Client ID et Client Secret de votre client d'authentification."
 }

@@ -2,5 +2,5 @@
   "change_password": "Changer le mot de passe",
   "reset-password": "Réinitialiser le mot de passe",
   "reset_password_desc": "Envoyez un email à l'utilisateur contenant un lien lui permettant de créer un nouveau mot de passe.",
-  "add_oauth_client": "Ajouter une application d'authentification"
+  "add_oauth_client": "Ajouter une application"
 }

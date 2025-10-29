@@ -3,6 +3,7 @@ services:
         parent: Claroline\AppBundle\Component\Tool\ToolComponent
         tags: [ 'claroline.component.tool' ]
         arguments:
+            - '@router'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'
             - '@Claroline\AuthenticationBundle\Manager\OAuthManager'

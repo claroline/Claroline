@@ -1,12 +1,14 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
+import {Collapse} from 'react-bootstrap'
 import classes from 'classnames'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
+import {copy} from '#/main/app/clipboard'
 import {Button, Toolbar} from '#/main/app/action'
-import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Badge} from '#/main/app/components/badge'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
@@ -55,21 +57,58 @@ const AuthenticationOauthClient = ({
 const AuthenticationOauth = () => {
   const dispatch = useDispatch()
 
+  const [showHelp, setShowHelp] = useState(false)
   const oauthProviders = useSelector(selectors.oauthProviders)
   const oauthClients = useSelector(selectors.oauthClients)
+  const oauthRedirect = useSelector(selectors.oauthRedirect)
 
   return (
     <>
-      <Button
-        className="btn btn-primary me-auto"
-        type={MODAL_BUTTON}
-        icon="fa fa-fw fa-plus"
-        label={trans('add_oauth_client', {}, 'actions')}
-        modal={[MODAL_OAUTH_CREATION, {
-          providers: oauthProviders,
-          onCreate: (createdClient) => dispatch(actions.addOauthClient(createdClient))
-        }]}
-      />
+      <div className="d-flex flex-row gap-1" role="presentation">
+        <Button
+          className="btn btn-primary"
+          type={MODAL_BUTTON}
+          label={trans('add_oauth_client', {}, 'actions')}
+          modal={[MODAL_OAUTH_CREATION, {
+            providers: oauthProviders,
+            onCreate: (createdClient) => dispatch(actions.addOauthClient(createdClient))
+          }]}
+        />
+
+        <Button
+          className="btn btn-text-body focus-ring"
+          type={CALLBACK_BUTTON}
+          icon="fa fa-fw fa-question-circle"
+          label={trans(showHelp ? 'hide_help' : 'show_help', {}, 'actions')}
+          callback={() => setShowHelp(!showHelp)}
+        />
+      </div>
+
+      <Collapse in={showHelp}>
+        <div className="p-4 mb-0 bg-body-tertiary rounded-3 gap-0">
+          <h3 className="h5">{trans('oauth_create_client', {}, 'security')}</h3>
+          <p>{trans('oauth_require_client_help', {}, 'security')}</p>
+          <p>{trans('oauth_create_client_help', {}, 'security')}</p>
+
+          <h3 className="h5 mt-2">{trans('oauth_configure_client', {}, 'security')}</h3>
+          <p>{trans('oauth_configure_client_help', {}, 'security')}</p>
+
+          <div className="p-2 px-3 d-flex flex-row align-items-center gap-2 rounded-2 border mb-3 bg-body">
+            <b className="text-truncate">{oauthRedirect}</b>
+            <Button
+              className="btn btn-text-body p-2 foxus-ring p-1 ms-auto my-n1 me-n1"
+              type={CALLBACK_BUTTON}
+              icon="fa fa-copy"
+              label={trans('clipboard_copy', {}, 'actions')}
+              callback={() => copy(oauthRedirect)}
+              tooltip="bottom"
+            />
+          </div>
+
+          <h3 className="h5 mt-2">{trans('oauth_register_client', {}, 'security')}</h3>
+          <p>{trans('oauth_register_client_help', {}, 'security')}</p>
+        </div>
+      </Collapse>
 
       {isEmpty(oauthClients) &&
         <ContentPlaceholder title={trans('no_oauth_client', {}, 'security')} />
