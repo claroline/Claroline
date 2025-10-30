@@ -1,6 +1,7 @@
-import React, {useState} from 'react'
-
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+
 import {trans} from '#/main/app/intl'
 import {EditorPage} from '#/main/app/editor'
 import {Checkbox} from '#/main/app/input/components/checkbox'
@@ -40,16 +41,22 @@ const Field = props => {
   )
 }
 
-const ExportEditorFormat = (props) => {
-  const [selectedColumns, setSelectedColumns] = useState(props.columns)
+Field.propTypes = {
+  type: T.string.isRequired,
+  name: T.string.isRequired,
+  description: T.string,
+  isArray: T.bool,
+  selected: T.bool,
+  update: T.func.isRequired
+}
 
+const ExportEditorFormat = (props) => {
   return (
     <EditorPage
       title={trans('format')}
       help={trans('transfer_format_help', {}, 'transfer')}
       definition={[
         {
-          name: 'format',
           title: trans('format'),
           primary: true,
           fields: [
@@ -99,8 +106,7 @@ const ExportEditorFormat = (props) => {
             }
           ]
         }, {
-          name: 'explanation',
-          title: trans('format'),
+          title: trans('explanation'),
           hideTitle: true,
           primary: true,
           render: () => {
@@ -110,15 +116,14 @@ const ExportEditorFormat = (props) => {
                   <Checkbox
                     id="export-column-select"
                     className="transfer-schema-select"
-                    label={trans(0 < selectedColumns.length ? 'list_deselect_all' : 'list_select_all')}
-                    checked={0 < selectedColumns.length}
+                    label={trans(0 < props.columns.length ? 'list_deselect_all' : 'list_select_all')}
+                    checked={0 < props.columns.length}
                     onChange={() => {
-                      if (0 === selectedColumns.length){
-                        setSelectedColumns(props.schema.properties.map(column => column.name))
-                      }else {
-                        setSelectedColumns([])
+                      if (0 === props.columns.length){
+                        props.update(props.schema.properties.map(column => column.name))
+                      } else {
+                        props.update([])
                       }
-                      props.update(selectedColumns)
                     }}
                   />
 
@@ -126,15 +131,14 @@ const ExportEditorFormat = (props) => {
                     <Field
                       key={index}
                       {...prop}
-                      selected={-1 !== selectedColumns.indexOf(prop.name)}
+                      selected={-1 !== props.columns.indexOf(prop.name)}
                       update={(columnName, selected) => {
-                        const newColumns = [].concat(selectedColumns)
+                        const newColumns = [].concat(props.columns)
                         if (selected && -1 === newColumns.indexOf(columnName)) {
                           newColumns.push(columnName)
                         } else if (-1 !== newColumns.indexOf(columnName)) {
                           newColumns.splice(newColumns.indexOf(columnName), 1)
                         }
-                        setSelectedColumns(newColumns)
                         props.update(newColumns)
                       }}
                     />
@@ -147,6 +151,19 @@ const ExportEditorFormat = (props) => {
       ]}
     />
   )
+}
+
+ExportEditorFormat.propTypes = {
+  schema: T.shape({
+    properties: T.arrayOf(T.shape({
+      type: T.string.isRequired,
+      name: T.string.isRequired,
+      description: T.string,
+      isArray: T.bool
+    }))
+  }),
+  columns: T.array.isRequired,
+  update: T.func.isRequired
 }
 
 export {
