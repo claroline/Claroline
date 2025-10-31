@@ -12,7 +12,7 @@ const ToolShortcutTabParameters = (props) =>
     disabled={props.readOnly}
     name={selectors.FORM_NAME}
     dataPart={`${getFormDataPart(props.currentTab.id, props.tabs)}.parameters`}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         fields: [
