@@ -23,6 +23,7 @@ abstract class AbstractEvaluationRepository extends EntityRepository
                 WHERE uo.organization = :organization 
                   AND e.$subjectProp = :subject
                   AND e.archived = false
+                  AND u.disabled = false
                 GROUP BY e.status
                 ORDER BY value DESC
             ")
@@ -44,6 +45,7 @@ abstract class AbstractEvaluationRepository extends EntityRepository
                 WHERE uo.organization = :organization 
                   AND e.$subjectProp = :subject
                   AND e.archived = false
+                  AND u.disabled = false
            ")
             ->setParameter('organization', $organization)
             ->setParameter('subject', $subject)
@@ -66,6 +68,7 @@ abstract class AbstractEvaluationRepository extends EntityRepository
                 WHERE uo.organization = :organization
                   AND e.$subjectProp = :subject
                   AND e.archived = false
+                  AND u.disabled = false
             ";
 
             if (0 === $i) {
@@ -111,6 +114,7 @@ abstract class AbstractEvaluationRepository extends EntityRepository
                   AND e.status IN (:statuses)
                   AND e.scoreMax IS NOT NULL
                   AND e.scoreMax != 0
+                  AND u.disabled = false
            ")
             ->setParameter('organization', $organization)
             ->setParameter('subject', $subject)
@@ -129,6 +133,7 @@ abstract class AbstractEvaluationRepository extends EntityRepository
                   AND e.status IN (:statuses)
                   AND e.scoreMax IS NOT NULL
                   AND e.scoreMax != 0
+                  AND u.disabled = false
            ")
             ->setParameter('organization', $organization)
             ->setParameter('subject', $subject)
