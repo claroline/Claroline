@@ -43,26 +43,19 @@ const ToolMain = (props) => {
   return (
     <PageContext.Provider
       value={{
-        menu: (props.menu || []).concat([
+        menu: props.menu,
+        actions: [
+          // the dashboard is not injected through the standard action system because not all tools have a dashboard
+          // and I don't know it in the action definition
           {
             name: 'dashboard',
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-gauge',
             label: trans('dashboard'),
-            tooltip: 'bottom',
             target: toolPath+'/dashboard',
             displayed: !!props.dashboard && canFollow
-          }, {
-            name: 'parameters',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-sliders',
-            label: trans('parameters'),
-            tooltip: 'bottom',
-            target: toolPath+'/edit',
-            displayed: canEdit && 'administration' !== contextType
           }
-        ]),
-        actions: props.actions,
+        ].concat(props.actions || []),
         styles: props.styles
       }}
     >

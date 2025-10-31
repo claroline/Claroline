@@ -36,18 +36,20 @@ const ToolPage = props => {
       description={props.description || trans(toolName+'_desc', {}, 'tools')}
       menu={props.menu || {
         nav: toolDef.menu,
-        toolbar: 'search more',
+        toolbar: 'show-dashboard configure more',
         // get actions injected through plugins and the ones defined by the current tool
         actions: getActions([toolData], {
           update: reload
-        }, basePath, currentUser).then(loadedActions => [{
-          name: 'search',
-          type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-wand-magic-sparkles',
-          label: trans('search', {}, 'actions') + ' (Ctrl + K)',
-          modal: [MODAL_COMMAND_PALETTE],
-          displayed: false
-        }].concat(loadedActions.filter(action => 'configure' !== action.name && 'dashboard' !== action.name), toolDef.actions || []))
+        }, basePath, currentUser).then(loadedActions => [
+          {
+            name: 'search',
+            type: MODAL_BUTTON,
+            icon: 'fa fa-fw fa-wand-magic-sparkles',
+            label: trans('search', {}, 'actions') + ' (Ctrl + K)',
+            modal: [MODAL_COMMAND_PALETTE],
+            displayed: false
+          }
+        ].concat(loadedActions, toolDef.actions || []))
       }}
 
       styles={[].concat(toolDef.styles || [], props.styles || [])}
