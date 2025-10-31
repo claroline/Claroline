@@ -100,8 +100,11 @@ const WidgetContentForm = (props) => {
 
 WidgetContentForm.propTypes = {
   level: T.number,
+  isNew: T.bool.isRequired,
   name: T.string.isRequired,
-  currentContext: T.object.isRequired
+  currentContext: T.object.isRequired,
+  onSave: T.func.isRequired,
+  children: T.any
 }
 
 export {

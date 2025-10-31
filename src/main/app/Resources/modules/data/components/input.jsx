@@ -25,7 +25,7 @@ class DataInput extends Component {
 
     this.state = {
       error: false,
-      loaded: false,
+      loaded: !props.type,
       input: null,
       group: null
     }
@@ -56,7 +56,7 @@ class DataInput extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.type !== this.props.type) {
+    if (this.props.type && prevProps.type !== this.props.type) {
       this.load()
     }
   }
@@ -184,7 +184,7 @@ class DataInput extends Component {
 DataInput.propTypes = {
   id: T.string.isRequired,
   className: T.string,
-  type: T.string.isRequired,
+  type: T.string,
   label: T.string,
   icon: T.string,
   hideLabel: T.bool,

@@ -126,6 +126,13 @@ const PageMenu = (props) => {
 PageMenu.propTypes = {
   embedded: T.bool.isRequired,
 
+  affix: T.elementType,
+  breadcrumb: T.arrayOf(T.shape({
+    label: T.string.isRequired,
+    displayed: T.bool,
+    target: T.oneOfType([T.string, T.array])
+  })),
+
   /**
    * The main navigation elements.
    */

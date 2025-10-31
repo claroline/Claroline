@@ -3,6 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import {useDispatch, useSelector} from 'react-redux'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
+import cloneDeep from 'lodash/cloneDeep'
+import set from 'lodash/set'
 
 import {trans, transChoice} from '#/main/app/intl'
 import {makeId} from '#/main/app/utils/id'
@@ -21,6 +23,7 @@ import {Badge} from '#/main/app/components/badge'
 import {DragDropProvider} from '#/main/app/overlays/dnd/components/provider'
 import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
 import {validate} from '#/plugin/exo/items/validation'
+import {chainSync, gteZero, notBlank, number} from '#/main/app/data/types/validators'
 
 const FORM_NAME = 'quizItemForm'
 
@@ -35,6 +38,7 @@ const ItemFormModalComponent = (props) => {
   }, [props.item.type])
 
   const formData = useSelector((state) => formSelectors.data(formSelectors.form(state, FORM_NAME)))
+  const errors = useSelector((state) => formSelectors.errors(formSelectors.form(state, FORM_NAME)))
   const update = useCallback((prop, value) => {
     dispatch(formActions.updateProp(FORM_NAME, prop, value))
   }, [FORM_NAME])
@@ -189,15 +193,20 @@ const ItemFormModalComponent = (props) => {
               options: {
                 placeholder: trans('no_hint_info', {}, 'quiz'),
                 button: trans('add_hint', {}, 'quiz'),
-                type: 'string',
-                defaultItem: {id: makeId(), penalty: 0},
+                defaultItem: {id: makeId(), value: '', penalty: 0},
                 render: useCallback((hint = {}, hintErrors, hintIndex) => (
                   <div className="hint-control">
                     <HtmlInput
                       id={`hint-${props.item.id}-${hintIndex}-text`}
                       className="hint-value"
                       value={hint.value}
-                      onChange={value => update(`hints[${hintIndex}].value`, value)}
+                      onChange={value => {
+                        const newErrors = errors ? cloneDeep(errors) : {}
+                        set(newErrors, `hints[${hintIndex}]`, notBlank(value, {isHtml: true}))
+                        setErrors(newErrors)
+
+                        update(`hints[${hintIndex}].value`, value)
+                      }}
                     />
 
                     <NumberInput
@@ -205,7 +214,13 @@ const ItemFormModalComponent = (props) => {
                       className="hint-penalty"
                       min={0}
                       value={hint.penalty}
-                      onChange={value => update(`hints[${hintIndex}].penalty`, value)}
+                      onChange={value => {
+                        const newErrors = errors ? cloneDeep(errors) : {}
+                        set(newErrors, `hints[${hintIndex}]`, chainSync(value, {}, [notBlank, number, gteZero]))
+                        setErrors(newErrors)
+
+                        update(`hints[${hintIndex}].penalty`, value)
+                      }}
                     />
                   </div>
                 ), [props.item.id])
