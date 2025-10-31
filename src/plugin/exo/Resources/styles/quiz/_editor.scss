@@ -10,17 +10,8 @@
     flex: 1;
   }
 
-  .form-control {
-    min-width: 0; // hack to avoid overflow in FF
-
-    + .form-control {
-      margin-left: ($grid-gutter-width * .5);
-    }
-  }
-
-  // todo find better selector
   input[type=number] {
-    text-align: right;
-    max-width: 80px;
+    width: $score-input-size;
+    margin-left: ($grid-gutter-width * .5);
   }
 }

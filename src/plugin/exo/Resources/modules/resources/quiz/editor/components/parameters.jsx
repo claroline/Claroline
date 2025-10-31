@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 import omit from 'lodash/omit'
+import set from 'lodash/set'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -17,6 +18,8 @@ import {configureTypeEditor, setTypePresets} from '#/plugin/exo/resources/quiz/t
 import ScoreNone from '#/plugin/exo/scores/none'
 import ScoreSum from '#/plugin/exo/scores/sum'
 import {Step} from '#/plugin/exo/resources/quiz/prop-types'
+
+import {chainSync, gtZero, notBlank, number} from '#/main/app/data/types/validators'
 
 const hasEnd = (quiz) => get(quiz, 'parameters.showEndPage')
 
@@ -46,25 +49,21 @@ const QuizEditorParameters = props => {
               type: 'string',
               required: true,
               hideLabel: true,
-              render: (quiz) => {
-                const CurrentType = (
-                  <QuizType
-                    type={get(quiz, 'parameters.type')}
-                    selectAction={(type) => ({
-                      type: CALLBACK_BUTTON,
-                      callback: () => {
-                        props.update(setTypePresets(type, quiz))
-                      },
-                      confirm: {
-                        message: trans('change_quiz_type_message', {}, 'quiz'),
-                        button: trans('change', {}, 'actions')
-                      }
-                    })}
-                  />
-                )
-
-                return CurrentType
-              }
+              render: (quiz) => (
+                <QuizType
+                  type={get(quiz, 'parameters.type')}
+                  selectAction={(type) => ({
+                    type: CALLBACK_BUTTON,
+                    callback: () => {
+                      props.update(setTypePresets(type, quiz))
+                    },
+                    confirm: {
+                      message: trans('change_quiz_type_message', {}, 'quiz'),
+                      button: trans('change', {}, 'actions')
+                    }
+                  })}
+                />
+              )
             }, {
               name: 'parameters.hasExpectedAnswers',
               label: trans('has_expected_answers', {}, 'quiz'),
@@ -95,6 +94,7 @@ const QuizEditorParameters = props => {
         }, {
           icon: 'fa fa-fw fa-dice',
           title: trans('attempts_pick', {}, 'quiz'),
+          primary: true,
           fields: [
             {
               name: 'parameters.mandatoryQuestions',
@@ -175,36 +175,42 @@ const QuizEditorParameters = props => {
                       required: true,
                       options: {
                         placeholder: trans('no_picked_tag', {}, 'quiz'),
-                        button: trans('add-tag', {}, 'actions'),
-                        render: (pickedTag = {}, pickedTagErrors, pickedTagIndex) => {
-                          const TagPicking = (
-                            <div className="tag-control">
-                              <ChoiceInput
-                                id={`picking-pick-tag-${pickedTagIndex}`}
-                                size="sm"
-                                multiple={false}
-                                noEmpty={false}
-                                condensed={true}
-                                placeholder={trans('quiz_select_picking_tags', {}, 'quiz')}
-                                choices={props.tags.reduce((acc, current) => Object.assign(acc, {
-                                  [current]: current
-                                }), {})}
-                                value={pickedTag[0]}
-                                onChange={value => props.updateProp(`picking.pick[${pickedTagIndex}][0]`, value)}
-                              />
+                        button: trans('add_tag', {}, 'actions'),
+                        render: (pickedTag = {}, pickedTagErrors, pickedTagIndex) => (
+                          <div className="tag-control">
+                            <ChoiceInput
+                              id={`picking-pick-tag-${pickedTagIndex}`}
+                              multiple={false}
+                              noEmpty={false}
+                              condensed={true}
+                              placeholder={trans('quiz_select_picking_tags', {}, 'quiz')}
+                              choices={props.tags.reduce((acc, current) => Object.assign(acc, {
+                                [current]: current
+                              }), {})}
+                              value={pickedTag[0]}
+                              onChange={value => {
+                                const newErrors = props.errors ? cloneDeep(props.errors) : {}
+                                set(newErrors, `resource.picking.pick[${pickedTagIndex}]`, notBlank(value))
+                                props.setErrors(newErrors)
 
-                              <NumberInput
-                                id={`picking-pick-count-${pickedTagIndex}`}
-                                size="sm"
-                                min={1}
-                                value={pickedTag[1]}
-                                onChange={value => props.updateProp(`picking.pick[${pickedTagIndex}][1]`, value)}
-                              />
-                            </div>
-                          )
+                                props.updateProp(`picking.pick[${pickedTagIndex}][0]`, value)
+                              }}
+                            />
 
-                          return TagPicking
-                        }
+                            <NumberInput
+                              id={`picking-pick-count-${pickedTagIndex}`}
+                              min={1}
+                              value={pickedTag[1]}
+                              onChange={value => {
+                                const newErrors = props.errors ? cloneDeep(props.errors) : {}
+                                set(newErrors, `resource.picking.pick[${pickedTagIndex}]`, chainSync(value, {}, [notBlank, number, gtZero]))
+                                props.setErrors(newErrors)
+
+                                props.updateProp(`picking.pick[${pickedTagIndex}][1]`, value)
+                              }}
+                            />
+                          </div>
+                        )
                       }
                     }
                   ]
@@ -230,6 +236,7 @@ const QuizEditorParameters = props => {
         }, {
           icon: ' fa fa-fw fa-play',
           title: trans('attempts_play', {}, 'quiz'),
+          primary: true,
           fields: [
             {
               name: 'parameters.progressionDisplayed',
@@ -294,6 +301,7 @@ const QuizEditorParameters = props => {
         }, {
           icon: 'fa fa-fw fa-flag-checkered',
           title: trans('end_page'),
+          primary: true,
           fields: [
             {
               name: 'parameters.showEndPage',
@@ -409,6 +417,7 @@ const QuizEditorParameters = props => {
         }, {
           icon: 'fa fa-fw fa-check-double',
           title: trans('results', {}, 'quiz'),
+          primary: true,
           fields: [
             {
               name: 'parameters.anonymizeAttempts',
@@ -480,6 +489,7 @@ const QuizEditorParameters = props => {
         }, {
           icon: 'fa fa-fw fa-percentage',
           title: trans('score'),
+          primary: true,
           displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers'),
           fields: [
             {
@@ -531,6 +541,7 @@ const QuizEditorParameters = props => {
         }, {
           icon: 'fa fa-fw fa-award',
           title: trans('evaluation'),
+          primary: true,
           displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers'),
           fields: [
             {
@@ -566,6 +577,7 @@ const QuizEditorParameters = props => {
         }, {
           icon: 'fa fa-fw fa-key',
           title: trans('access_restrictions'),
+          primary: true,
           fields: [
             {
               name: 'parameters._maxAttempts',
@@ -609,6 +621,7 @@ const QuizEditorParameters = props => {
 }
 
 QuizEditorParameters.propTypes = {
+  errors: T.object,
   quizType: T.string.isRequired,
   score: T.shape({
     type: T.string.isRequired
@@ -621,7 +634,8 @@ QuizEditorParameters.propTypes = {
   tags: T.array.isRequired,
   workspace: T.object,
   update: T.func.isRequired,
-  updateProp: T.func.isRequired
+  updateProp: T.func.isRequired,
+  setErrors: T.func.isRequired
 }
 
 export {
