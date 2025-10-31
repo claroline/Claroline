@@ -75,7 +75,9 @@ const WidgetContentForm = (props) => {
         />
         {!isEmpty(widgetApp) && createElement(widgetApp.component, {
           name: props.name,
-          currentContext: props.currentContext,
+          currentContext: props.currentContext, // deprecated
+          contextType: props.currentContext.type,
+          contextData: props.currentContext.data,
           instance: formData
         })}
       </div>

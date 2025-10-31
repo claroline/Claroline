@@ -20,7 +20,12 @@ const ResourceWidgetParameters = (props) =>
             label: trans('resource'),
             type: 'resource',
             displayed: (data) => 'personal_workspace' !== get(data, 'source'),
-            required: true
+            required: true,
+            options: {
+              picker: {
+                contextId: props.contextData ? props.contextData.id : null
+              }
+            }
           }, {
             name: 'parameters.showResourceHeader',
             type: 'boolean',
@@ -32,7 +37,9 @@ const ResourceWidgetParameters = (props) =>
   />
 
 ResourceWidgetParameters.propTypes = {
-  name: T.string.isRequired
+  name: T.string.isRequired,
+  contextType: T.string.isRequired,
+  contextData: T.object
 }
 
 export {
