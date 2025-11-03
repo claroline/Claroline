@@ -6,10 +6,6 @@
 
 @import "node_modules/pdfjs-dist/web/pdf_viewer";
 
-.pdf-container {
-  height: 20px;
-}
-
 .pdf-content {
   overflow: auto;
   font-weight: $font-weight-normal;

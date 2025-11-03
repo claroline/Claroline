@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import isNumber from 'lodash/isNumber'
 import classes from 'classnames'
@@ -392,11 +393,13 @@ class PdfPlayer extends Component {
           <div
             className="pdf-container position-relative w-100 flex-fill"
             role="presentation"
+            style={{height: get(this.state.viewer, 'container.offsetHeight')}}
           >
             <div
               id={'pdf-' + this.props.nodeId}
               className={classes('pdf-content position-absolute w-100', {
-                'h-100': !this.props.embedded
+                'h-100': !this.props.embedded,
+                'scroller-thin': this.props.embedded
               })}
             >
               <div
