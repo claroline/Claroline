@@ -10,3 +10,4 @@ services:
            - '@event_dispatcher'
            - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'

@@ -7,13 +7,13 @@ import {DataCard} from '#/main/app/data/components/card'
 import {UserMicro} from '#/main/core/user/components/micro'
 import {Datetime} from '#/main/app/components/date'
 
-const AnnouncementCard = (props) =>
+const ChapterCard = (props) =>
   <DataCard
     {...props}
     name={props.data.title}
     title={props.data.title}
     poster={props.data.poster}
-    status={props.loaded && !get(props.data, 'meta.publishedAt') ? {
+    status={props.loaded && !get(props.data, 'meta.published') ? {
       variant: 'secondary',
       text: trans('not_published')
     } : undefined}
@@ -22,10 +22,10 @@ const AnnouncementCard = (props) =>
       <>
         <UserMicro {...get(props.data, 'meta.creator', {})} className="fs-sm text-body-secondary" />
 
-        {get(props.data, 'meta.publishedAt') &&
+        {get(props.data, 'meta.updatedAt') &&
           <>
             <span className="fs-sm text-body-secondary" aria-hidden={true}>-</span>
-            <Datetime className="fs-sm text-body-secondary" value={get(props.data, 'meta.publishedAt')} time={true} />
+            <Datetime className="fs-sm text-body-secondary" value={get(props.data, 'meta.updatedAt')} time={true} />
           </>
         }
       </>
@@ -35,5 +35,5 @@ const AnnouncementCard = (props) =>
   </DataCard>
 
 export {
-  AnnouncementCard
+  ChapterCard
 }

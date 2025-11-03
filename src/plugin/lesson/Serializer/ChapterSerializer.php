@@ -7,6 +7,7 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
+use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -27,7 +28,8 @@ class ChapterSerializer
         private readonly ObjectManager $om,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly PlaceholderManager $placeholderManager,
-        private readonly UserSerializer $userSerializer
+        private readonly UserSerializer $userSerializer,
+        private readonly ResourceNodeSerializer $resourceNodeSerializer,
     ) {
         $this->chapterRepository = $om->getRepository(Chapter::class);
     }
@@ -77,6 +79,7 @@ class ChapterSerializer
             'content' => $this->placeholderManager->replacePlaceholders($chapter->getText() ?? ''),
             'level' => $chapter->getLevel(),
             'meta' => [
+                'published' => $chapter->isPublished(),
                 'createdAt' => DateNormalizer::normalize($chapter->getCreatedAt()),
                 'updatedAt' => DateNormalizer::normalize($chapter->getUpdatedAt()),
                 'creator' => $chapter->getCreator() ? $this->userSerializer->serialize($chapter->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
@@ -86,6 +89,11 @@ class ChapterSerializer
             'previousSlug' => $previousChapter?->getSlug(),
             'nextSlug' => $nextChapter?->getSlug(),
         ];
+
+        if (in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
+            // this is required to create the correct link in DataSource
+            $serialized['resourceNode'] = $this->resourceNodeSerializer->serialize($chapter->getLesson()->getResourceNode(), [SerializerInterface::SERIALIZE_MINIMAL]);
+        }
 
         if (in_array(SerializerInterface::SERIALIZE_TRANSFER, $options) || in_array(static::INCLUDE_INTERNAL_NOTES, $options)) {
             $serialized['internalNote'] = $chapter->getInternalNote();
@@ -109,6 +117,8 @@ class ChapterSerializer
         $this->sipe('internalNote', 'setInternalNote', $data, $chapter);
 
         if (isset($data['meta'])) {
+            $this->sipe('meta.published', 'setPublished', $data, $chapter);
+
             if (array_key_exists('created', $data['meta'])) {
                 $chapter->setCreatedAt(DateNormalizer::denormalize($data['meta']['created']));
             }

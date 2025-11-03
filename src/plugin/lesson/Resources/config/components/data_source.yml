@@ -1,0 +1,6 @@
+services:
+    Icap\LessonBundle\Component\DataSource\ChapterSource:
+        parent: Claroline\AppBundle\Component\DataSource\ListSourceComponent
+        tags: [ 'claroline.component.data_source' ]
+        arguments:
+            - '@security.token_storage'

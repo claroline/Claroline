@@ -1,0 +1,3 @@
+services:
+    Icap\LessonBundle\Finder\ChapterType:
+        tags: [ claroline.finder.type ]

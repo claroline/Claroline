@@ -1,3 +1,4 @@
 imports:
+    - { resource: components/data_source.yml }
     - { resource: components/log.yml }
     - { resource: components/resource.yml }
