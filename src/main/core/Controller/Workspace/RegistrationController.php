@@ -178,9 +178,9 @@ class RegistrationController
     {
         $data = $this->decodeRequest($request);
 
-        $workspaces = isset($data['workspaces']) ? $this->om->getRepository(Workspace::class)->findBy(['uuid' => $data['workspaces']]) : [];
-        $users = isset($data['users']) ? $this->om->getRepository(User::class)->findBy(['uuid' => $data['users']]) : [];
-        $groups = isset($data['groups']) ? $this->om->getRepository(Group::class)->findBy(['uuid' => $data['groups']]) : [];
+        $workspaces = !empty($data['workspaces']) ? $this->om->getRepository(Workspace::class)->findBy(['uuid' => $data['workspaces']]) : [];
+        $users = !empty($data['users']) ? $this->om->getRepository(User::class)->findBy(['uuid' => $data['users']]) : [];
+        $groups = !empty($data['groups']) ? $this->om->getRepository(Group::class)->findBy(['uuid' => $data['groups']]) : [];
 
         foreach ($workspaces as $workspace) {
             $roleEntity = null;
