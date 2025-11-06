@@ -78,12 +78,12 @@ const PageMenu = (props) => {
 
       {(!isEmpty(displayedNav) || actions) &&
         <nav
-          className="app-tool-menu ms-auto d-flex flex-nowrap gap-4 fs-sm overflow-hidden"
+          className="app-tool-menu ms-auto d-flex flex-nowrap gap-4 fs-sm"
           aria-labelledby={toolMenuTitleId}
         >
           <h2 id={toolMenuTitleId} className="visually-hidden">{trans('tool_menu')}</h2>
           {!isEmpty(displayedNav) &&
-            <ul className="nav nav-underline flex-nowrap overflow-hidden">
+            <ul className="nav nav-underline flex-nowrap">
               {displayedNav.map((nav) =>
                 <li className="nav-item" key={nav.name || nav.label}>
                   <Button
