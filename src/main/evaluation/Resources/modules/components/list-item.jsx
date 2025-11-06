@@ -1,4 +1,4 @@
-import React, {createElement} from 'react'
+import React, {createElement, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
@@ -31,10 +31,10 @@ const EvaluationListItem = ({
         <b>{title}</b>
         <div className={classes('d-flex gap-2 text-body-secondary fs-sm mt-2')} role="presentation">
           {meta.map(metaItem =>
-            <>
+            <Fragment key={metaItem}>
               {metaItem}
               <span aria-hidden={true}>-</span>
-            </>
+            </Fragment>
           )}
 
           <div role="presentation">

@@ -2,7 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useSelector} from 'react-redux'
 import get from 'lodash/get'
-import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
@@ -36,11 +35,11 @@ const SequencePage = (props) => {
       }
       description={props.description || get(sequence, 'meta.description')}
       menu={{
-        children: currentUser && userEvaluation && (
+        children: userEvaluation && (
           <EvaluationShortcut
             className="my-auto"
             modal={MODAL_USER_PROGRESSION}
-            evaluation={merge({}, userEvaluation, {user: currentUser, sequence: sequence})}
+            evaluation={userEvaluation}
           />
         ),
         toolbar: 'show-dashboard configure more',

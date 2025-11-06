@@ -42,7 +42,7 @@ const UserProgressionModal = (props) => {
 
   return (
     <ModalEmpty
-      {...omit(props, 'evaluation', 'actions', 'additional', 'title', 'name', 'overview')}
+      {...omit(props, 'evaluation', 'actions', 'additional', 'title', 'name', 'overview', 'archives')}
       size="xl"
     >
       <div className="d-flex flex-row" role="presentation">

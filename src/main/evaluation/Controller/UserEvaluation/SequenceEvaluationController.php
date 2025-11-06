@@ -149,13 +149,13 @@ class SequenceEvaluationController
         $this->evaluationManager->updateUserEvaluation($userEvaluation, $step);
 
         return new JsonResponse([
-            'evaluation' => $this->serializer->serialize($userEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
+            'evaluation' => $this->serializer->serialize($userEvaluation),
             'progression' => $this->evaluationManager->getUserProgression($userEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
         ]);
     }
 
     #[Route(path: '/{evaluationId}', name: 'apiv2_sequence_evaluation_get', methods: ['GET'])]
-    public function geAction(
+    public function getAction(
         #[MapEntity(mapping: ['evaluationId' => 'uuid'])]
         SequenceEvaluation $sequenceEvaluation
     ): JsonResponse {
