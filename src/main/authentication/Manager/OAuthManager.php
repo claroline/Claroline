@@ -89,7 +89,7 @@ class OAuthManager implements LoggerAwareInterface
         // urlAuthorize option and generates and applies any necessary parameters
         // (e.g., state).
         $authorizationUrl = $provider->getAuthorizationUrl([
-            'redirectUri' => $this->router->generate('claro_security_login_check_oauth2', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'redirect_uri' => $this->router->generate('claro_security_login_check_oauth2', [], UrlGeneratorInterface::ABSOLUTE_URL),
         ]);
 
         // store the local id of the oauth client used for the authentication
