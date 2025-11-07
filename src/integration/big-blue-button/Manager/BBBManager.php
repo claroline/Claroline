@@ -206,10 +206,11 @@ class BBBManager
 
         $meetingId = $bbb->getUuid();
         $server = $this->getMeetingServer($bbb);
-        $serverUrl = $server['url'];
-        $securitySalt = $server['token'];
 
-        if ($serverUrl && $securitySalt) {
+        if (!empty($server['url']) && !empty($server['token'])) {
+            $serverUrl = $server['url'];
+            $securitySalt = $server['token'];
+
             $queryString = "meetingID=$meetingId&password=manager";
             $checksum = sha1("getMeetingInfo$queryString$securitySalt");
             $url = "$serverUrl/bigbluebutton/api/getMeetingInfo?$queryString&checksum=$checksum";
