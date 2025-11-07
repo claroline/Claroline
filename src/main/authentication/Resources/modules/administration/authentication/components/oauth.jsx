@@ -140,7 +140,7 @@ const AuthenticationOauth = () => {
                   label: trans('delete', {}, 'actions'),
                   request: {
                     url: ['apiv2_authentication_oauth_client_delete', {id: client.id}],
-                    request: {method: 'DELETE'},
+                    request: {method: 'DELETE', body: JSON.stringify([client.id])},
                     success: () => dispatch(actions.deleteOauthClient(client))
                   },
                   confirm: true,
