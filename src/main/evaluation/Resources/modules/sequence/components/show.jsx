@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import {useSelector} from 'react-redux'
 
 import {Routes} from '#/main/app/router'
 import {useFetch} from '#/main/app/api/fetch'
@@ -12,7 +13,6 @@ import {SequencePlayer} from '#/main/evaluation/sequence/player'
 import {SequenceDashboard} from '#/main/evaluation/sequence/dashboard'
 import {PageContent, PageHeadingSkeleton} from '#/main/app/page'
 import {SequencePage} from '#/main/evaluation/sequence/components/page'
-import {useSelector} from 'react-redux'
 
 const SequenceShow = props => {
   const [sequence, status] = useFetch(selectors.STORE_NAME, ['apiv2_evaluation_sequence_open', {id: props.id}])

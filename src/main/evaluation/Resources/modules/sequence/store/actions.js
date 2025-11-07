@@ -1,6 +1,9 @@
-import {makeActionCreator} from '#/main/app/store/actions'
+import {makeActionCreator, makeInstanceAction} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
+import {API_FETCH_FULFILLED} from '#/main/app/api/fetch/store/actions'
+import {selectors} from '#/main/evaluation/sequence/store/selectors'
 
+export const SEQUENCE_OPEN = makeInstanceAction(API_FETCH_FULFILLED, selectors.STORE_NAME)
 export const SEQUENCE_RELOAD = 'SEQUENCE_RELOAD'
 export const SEQUENCE_EVALUATION_UPDATE    = 'SEQUENCE_EVALUATION_UPDATE'
 export const SEQUENCE_SET_CURRENT_STEP = 'SEQUENCE_SET_CURRENT_STEP'
