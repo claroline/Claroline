@@ -6,6 +6,7 @@ use Claroline\AppBundle\Component\Context\ContextComponent;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Manager\SecurityManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Security\PlatformRoles;
@@ -33,7 +34,12 @@ final class PublicContext extends ContextComponent
         return 'home';
     }
 
-    public function getObject(?string $contextId): ?ContextSubjectInterface
+    public static function getSubjectClass(): null
+    {
+        return null;
+    }
+
+    public function getSubject(?string $contextId): ?ContextSubjectInterface
     {
         return null;
     }
@@ -83,7 +89,6 @@ final class PublicContext extends ContextComponent
                 'name' => $this->config->getParameter('name'),
                 'permissions' => [
                     'open' => true,
-                    'edit' => $this->securityManager->isAdmin(),
                     'administrate' => $this->securityManager->isAdmin(),
                 ],
                 'opening' => [
@@ -96,6 +101,8 @@ final class PublicContext extends ContextComponent
 
     public function getOrganizations(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
     {
-        return [];
+        return $this->om->getRepository(Organization::class)->findBy([
+            'public' => true,
+        ]);
     }
 }

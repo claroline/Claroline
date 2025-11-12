@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 import merge from 'lodash/merge'
 
-
 import {CreationType} from '#/main/evaluation/sequence/modals/creation/components/type'
 import {CreationUpload} from '#/main/evaluation/sequence/modals/creation/components/upload'
 import {CreationForm} from '#/main/evaluation/sequence/modals/creation/components/form'
@@ -65,9 +64,11 @@ CreationModal.propTypes = {
   workspace: T.object.isRequired,
   onCreate: T.func,
 
+  // from modal
+  fadeModal: T.func.isRequired,
   // from store
   create: T.func.isRequired,
-  startCreation: T.func.isRequired,
+  startCreation: T.func.isRequired
 }
 
 export {

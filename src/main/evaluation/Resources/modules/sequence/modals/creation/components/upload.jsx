@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form'
+import {Form, FormContent} from '#/main/app/content/form'
 
 import {selectors} from '#/main/evaluation//sequence/modals/creation/store'
 
@@ -16,26 +16,32 @@ const CreationUpload = (props) =>
     title={trans('new_sequence', {}, 'evaluation')}
     centered={true}
   >
-    <FormData
+    <Form
       name={selectors.STORE_NAME}
       flush={true}
-      definition={[
-        {
-          title: trans('general'),
-          fields: [
-            {
-              name: 'file',
-              type: 'file',
-              label: trans('file'),
-              required: true,
-              options: {
-                autoUpload: false
-              }
-            }
-          ]
-        }
-      ]}
     >
+      <FormContent
+        className="modal-body"
+        name={selectors.STORE_NAME}
+        flush={true}
+        definition={[
+          {
+            title: trans('general'),
+            fields: [
+              {
+                name: 'file',
+                type: 'file',
+                label: trans('file'),
+                required: true,
+                options: {
+                  autoUpload: false
+                }
+              }
+            ]
+          }
+        ]}
+      />
+
       <div className="modal-footer">
         <Button
           type={CALLBACK_BUTTON}
@@ -57,7 +63,7 @@ const CreationUpload = (props) =>
           callback={() => true}
         />
       </div>
-    </FormData>
+    </Form>
   </Modal>
 
 CreationUpload.propTypes = {

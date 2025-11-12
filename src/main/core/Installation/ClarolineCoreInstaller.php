@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Installation\Updater\Updater140010;
 use Claroline\CoreBundle\Installation\Updater\Updater140014;
 use Claroline\CoreBundle\Installation\Updater\Updater140100;
 use Claroline\CoreBundle\Installation\Updater\Updater150000;
+use Claroline\CoreBundle\Installation\Updater\Updater150008;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller;
@@ -30,6 +31,7 @@ class ClarolineCoreInstaller extends AdditionalInstaller
             '14.0.14' => Updater140014::class,
             '14.1.0' => Updater140100::class,
             '15.0.0' => Updater150000::class,
+            '15.0.8' => Updater150008::class,
         ];
     }
 

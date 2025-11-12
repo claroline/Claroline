@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Event\Context;
+namespace Claroline\AppBundle\Event\Context;
 
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Symfony\Contracts\EventDispatcher\Event;

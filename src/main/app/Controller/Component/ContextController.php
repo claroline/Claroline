@@ -3,19 +3,19 @@
 namespace Claroline\AppBundle\Controller\Component;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Component\Tool\ToolInterface;
 use Claroline\AppBundle\Component\Tool\ToolProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Event\Context\OpenContextEvent;
+use Claroline\AppBundle\Manager\Component\ContextManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Event\CatalogEvents\ContextEvents;
-use Claroline\CoreBundle\Event\Context\OpenContextEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -41,6 +41,7 @@ class ContextController
         private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
         private readonly Crud $crud,
+        private readonly ContextManager $contextManager,
         private readonly ContextProvider $contextProvider,
         private readonly ToolProvider $toolProvider
     ) {
@@ -55,7 +56,7 @@ class ContextController
         // retrieve the requested context
         try {
             $contextHandler = $this->contextProvider->getContext($context);
-            $contextSubject = $contextHandler->getObject($contextId);
+            $contextSubject = $contextHandler->getSubject($contextId);
         } catch (\Exception $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
@@ -123,44 +124,12 @@ class ContextController
             throw new NotFoundHttpException($e->getMessage());
         }
 
-        $contextSubject = $contextHandler->getObject($contextId);
-
-        if (!$contextHandler->isGranted('ADMINISTRATE', $contextSubject)) {
-            throw new AccessDeniedException();
-        }
-
         $data = $this->decodeRequest($request);
 
-        $this->om->startFlushSuite();
+        $contextSubject = $this->contextManager->update($context, $contextId, $data);
 
-        // update context configuration
-        if (!empty($data['data']) && $contextSubject) {
-            $this->crud->update($contextSubject, $data['data'], [Crud::NO_PERMISSIONS, Options::PERSIST_TAG]);
-        }
-
-        // update tools configuration if any
+        // reload tools
         $contextTools = $this->toolProvider->getEnabledTools($context, $contextSubject);
-        if (!empty($data['tools'])) {
-            $updatedTools = [];
-            foreach ($data['tools'] as $toolData) {
-                $updatedTool = new OrderedTool();
-                $updatedTool->setContextName($context);
-                $updatedTool->setContextId($contextSubject?->getContextIdentifier());
-
-                $updatedTool = $this->crud->createOrUpdate($updatedTool, $toolData, [Crud::NO_PERMISSIONS]);
-                $updatedTools[$updatedTool->getName()] = $updatedTool;
-            }
-
-            foreach ($contextTools as $existingTool) {
-                if (!array_key_exists($existingTool->getName(), $updatedTools)) {
-                    $this->crud->delete($existingTool);
-                }
-            }
-
-            $contextTools = array_values($updatedTools);
-        }
-
-        $this->om->endFlushSuite();
 
         // reopen context to get fresh data
         return new JsonResponse(array_merge([], [
@@ -182,7 +151,7 @@ class ContextController
     public function getAvailableToolsAction(string $context, string $contextId = null): JsonResponse
     {
         $contextHandler = $this->contextProvider->getContext($context);
-        $contextSubject = $contextHandler->getObject($contextId);
+        $contextSubject = $contextHandler->getSubject($contextId);
 
         if (!$contextHandler->isGranted('ADMINISTRATE', $contextSubject)) {
             throw new AccessDeniedException();

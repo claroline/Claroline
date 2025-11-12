@@ -41,18 +41,19 @@ const CreationType = (props) =>
               type: CALLBACK_BUTTON,
               callback: () => props.changeStep('copy')
             },
-            group: 'A partir d\'un contenu existant'
+            group: trans('from_existing_content')
           }, {
             id: 'create-from-import',
             icon: 'file-zipper',
-            label: trans('Importer une archive'),
-            description: trans('Déposez une archive (.zip) générée à partir d\'une autre plateforme compatible.'),
+            label: trans('import_archive', {}, 'actions'),
+            description: trans('import_archive_desc', {}, 'actions'),
+            displayed: false,
             action: {
               type: CALLBACK_BUTTON,
               callback: () => props.changeStep('upload')
             },
             advanced: true,
-            group: 'A partir d\'un contenu existant'
+            group: trans('from_existing_content')
           }
         ]}
       />
@@ -60,7 +61,8 @@ const CreationType = (props) =>
   </Modal>
 
 CreationType.propTypes = {
-  changeStep: T.func.isRequired
+  changeStep: T.func.isRequired,
+  startCreation: T.func.isRequired
 }
 
 export {

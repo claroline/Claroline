@@ -35,7 +35,12 @@ final class WorkspaceContext extends ContextComponent
         return 'book';
     }
 
-    public function getObject(?string $contextId): ?Workspace
+    public static function getSubjectClass(): string
+    {
+        return Workspace::class;
+    }
+
+    public function getSubject(?string $contextId): ?Workspace
     {
         if (empty($contextId)) {
             throw new \RuntimeException('WorkspaceContext can not be opened without an ID.');
@@ -94,12 +99,7 @@ final class WorkspaceContext extends ContextComponent
         return array_intersect($workspaceOrganizations, $userOrganizations);
     }
 
-    public function getAdditionalData(?ContextSubjectInterface $contextSubject): array
-    {
-        return [];
-    }
-
-    public function create(array $data): void
+    public function create(?ContextSubjectInterface $contextSubject, array $data): void
     {
         // create collaborator role
         // create manager role

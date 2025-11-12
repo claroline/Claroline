@@ -32,7 +32,12 @@ final class DesktopContext extends ContextComponent
         return 'atlas';
     }
 
-    public function getObject(?string $contextId): ?ContextSubjectInterface
+    public static function getSubjectClass(): null
+    {
+        return null;
+    }
+
+    public function getSubject(?string $contextId): ?ContextSubjectInterface
     {
         return null;
     }

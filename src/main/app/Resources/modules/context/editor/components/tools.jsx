@@ -3,9 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import {useDispatch, useSelector} from 'react-redux'
 import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
 import {constants as actionConstants, pickActionSet, Toolbar, PromisedActionTypes} from '#/main/app/action'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {Thumbnail} from '#/main/app/components/thumbnail'
 import {EditorPage} from '#/main/app/editor'
 import {selectors as securitySelectors} from '#/main/app/security/store'
@@ -37,15 +39,19 @@ const Tool = (props) => {
           }
 
           <div className="form-check form-switch  mb-0 me-n2">
-            <input
-              id={props.name}
-              className="form-check-input"
-              type="checkbox"
-              checked={props.enabled}
-              onChange={props.toggle}
-            />
+            <TooltipOverlay
+              tip={trans(props.enabled ? 'disable' : 'enable', {}, 'actions')}
+              position="bottom"
+            >
+              <input
+                id={props.name}
+                className="form-check-input"
+                type="checkbox"
+                checked={props.enabled}
+                onChange={props.toggle}
+              />
+            </TooltipOverlay>
           </div>
-
         </div>
         <p className="fs-sm text-body-secondary mb-0">{trans(props.name+'_desc', {}, 'tools')}</p>
       </div>
@@ -139,12 +145,14 @@ const ContextEditorTools = () => {
         toggleTool={toggleTool}
       />
 
-      <Tools
-        title={trans('disabled_tools', {}, 'context')}
-        tools={disabledTools}
-        enabled={false}
-        toggleTool={toggleTool}
-      />
+      {!isEmpty(disabledTools) &&
+        <Tools
+          title={trans('disabled_tools', {}, 'context')}
+          tools={disabledTools}
+          enabled={false}
+          toggleTool={toggleTool}
+        />
+      }
     </EditorPage>
   )
 }

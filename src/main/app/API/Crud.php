@@ -166,8 +166,6 @@ class Crud
      * @param array $data          - the serialized data of the object to create
      * @param array $options       - additional creation options
      *
-     * @return object|array
-     *
      * @throws InvalidDataException
      */
     public function create(string|object $classOrObject, ?array $data = [], ?array $options = []): object
@@ -217,16 +215,14 @@ class Crud
      * @param mixed $data          - the serialized data of the object to create
      * @param array $options       - additional update options
      *
-     * @return array|object
-     *
      * @throws InvalidDataException
      */
-    public function update(string|object $classOrObject, array $data, array $options = []): mixed
+    public function update(string|object $classOrObject, array $data, array $options = []): object
     {
         if (is_string($classOrObject)) {
             // class name received
             $class = $classOrObject;
-            // grab object from db
+            // grab the object from db
             $oldObject = $this->om->getObject($data, $class, $this->schema->getIdentifiers($class) ?? []) ?? new $class();
         } else {
             // object instance received

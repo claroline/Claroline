@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Event\Context;
+namespace Claroline\AppBundle\Event\Context;
 
 /**
  * Event fired when a context is opened.

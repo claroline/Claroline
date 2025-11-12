@@ -47,6 +47,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Manager\Component\ContextManager'
             - '@Claroline\AppBundle\Component\Context\ContextProvider'
             - '@Claroline\AppBundle\Component\Tool\ToolProvider'
 

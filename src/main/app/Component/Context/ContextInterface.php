@@ -10,9 +10,11 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  */
 interface ContextInterface extends ComponentInterface
 {
-    public function getObject(?string $contextId): ?ContextSubjectInterface;
-
     public static function getIcon(): string;
+
+    public static function getSubjectClass(): ?string;
+
+    public function getSubject(?string $contextId): ?ContextSubjectInterface;
 
     public function isAvailable(): bool;
 
@@ -33,4 +35,8 @@ interface ContextInterface extends ComponentInterface
      * Get additional data required by the context (ex. current user evaluation).
      */
     public function getAdditionalData(?ContextSubjectInterface $contextSubject): array;
+
+    public function create(?ContextSubjectInterface $contextSubject, array $data): void;
+
+    public function update(?ContextSubjectInterface $contextSubject, array $data): void;
 }
