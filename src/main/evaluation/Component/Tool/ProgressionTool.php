@@ -167,7 +167,7 @@ class ProgressionTool extends ToolComponent
                             'role' => [
                                 'id' => $role->getUuid(),
                             ],
-                        ]), $assignment);
+                        ]), $assignment, [Options::REFRESH_UUID]);
                     }
                 }
             }
