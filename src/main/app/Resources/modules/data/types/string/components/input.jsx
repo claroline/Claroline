@@ -37,6 +37,7 @@ class StringInput extends PureComponent {
       return (
         <textarea
           {...commonProps}
+          className={classes(commonProps.className, 'scroller-thin')}
           rows={this.props.minRows}
         />
       )

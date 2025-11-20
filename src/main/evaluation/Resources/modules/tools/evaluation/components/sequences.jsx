@@ -27,6 +27,7 @@ const EvaluationSequences = () => {
           icon: 'fa fa-fw fa-plus',
           label: trans('add_sequence', {}, 'actions'),
           type: MODAL_BUTTON,
+          displayed: 'workspace' === contextName,
           modal: [MODAL_SEQUENCE_CREATION, {
             workspace: contextData,
             onCreate: () => dispatch(listActions.invalidateData(selectors.STORE_NAME+'.sequences'))

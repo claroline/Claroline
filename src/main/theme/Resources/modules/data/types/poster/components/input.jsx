@@ -47,7 +47,7 @@ const PosterInput = (props) => {
           <div className="poster-placeholder bg-body-tertiary rounded-3 ratio ratio-poster">
             <div role="presentation" className="p-3 d-flex flex-column align-items-center justify-content-center gap-3 ">
               <span className="fa fa-camera fs-1 text-body-tertiary" />
-              <b className="fs-sm text-body-secondary">Clickez pour ajouter une image de couverture</b>
+              <b className="fs-sm text-body-secondary">Cliquez pour ajouter une image de couverture</b>
             </div>
           </div>
         }

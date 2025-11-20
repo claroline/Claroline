@@ -28,6 +28,7 @@ $content-sizes: (
 ) !default;
 
 $icon-sizes: (
+    xxs: 1.5rem,
     xs: 2rem, // tables, data micro
     sm: 3rem, // context menu, current user, lists, creation menu, organizations modal
     md: 6rem, // cards

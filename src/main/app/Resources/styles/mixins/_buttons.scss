@@ -32,3 +32,29 @@
     box-shadow: none !important;
   }
 }
+
+@mixin button-subtle-variant(
+  $name,
+  $color,
+  $active-background: if(color-contrast($color) == $color-contrast-light, shade-color($color, $btn-active-bg-shade-amount), tint-color($color, $btn-active-bg-tint-amount)),
+  $active-border: if(color-contrast($color) == $color-contrast-light, shade-color($color, $btn-active-border-shade-amount), tint-color($color, $btn-active-border-tint-amount)),
+  $active-color: color-contrast($active-background),
+) {
+  --#{$prefix}btn-color: var(--#{$prefix}#{$name}-text-emphasis);
+  --#{$prefix}btn-bg: var(--#{$prefix}#{$name}-bg-subtle);
+  --#{$prefix}btn-border-color: transparent !important;
+
+  --#{$prefix}btn-hover-color: #{color-contrast($color)};
+  --#{$prefix}btn-hover-bg: #{$color};
+  --#{$prefix}btn-hover-border-color: #{$color};
+  --#{$prefix}btn-focus-shadow-rgb: #{to-rgb($color)};
+
+  --#{$prefix}btn-active-color: #{$active-color};
+  --#{$prefix}btn-active-bg: #{$active-background};
+  --#{$prefix}btn-active-border-color: #{$active-border};
+  --#{$prefix}btn-active-shadow: #{$btn-active-box-shadow};
+
+  --#{$prefix}btn-disabled-color: var(--#{$prefix}#{$name}-text-semphasis);
+  --#{$prefix}btn-disabled-bg: var(--#{$prefix}#{$name}-bg-subtle);
+  --#{$prefix}btn-disabled-border-color: #{$color};
+}

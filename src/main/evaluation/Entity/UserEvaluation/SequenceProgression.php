@@ -47,7 +47,7 @@ class SequenceProgression
     /**
      * The parent sequence evaluation.
      */
-    #[ORM\ManyToOne(targetEntity: SequenceEvaluation::class)]
+    #[ORM\ManyToOne(targetEntity: SequenceEvaluation::class, inversedBy: 'stepProgressions')]
     #[ORM\JoinColumn(name: 'sequence_evaluation_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private ?SequenceEvaluation $sequenceEvaluation = null;
 

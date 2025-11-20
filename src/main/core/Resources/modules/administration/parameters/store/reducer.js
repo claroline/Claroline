@@ -24,7 +24,9 @@ const reducer = combineReducers({
     [makeInstanceAction(TOOL_LOAD, 'parameters')]: (state, action) => action.toolData.availableLocales
   }),
 
-  plugins: makeListReducer(selectors.STORE_NAME+'.plugins'),
+  plugins: makeListReducer(selectors.STORE_NAME+'.plugins', {
+    pagination: {pageSize: -1}
+  }),
   plugin: makeReducer(null, {
     [PLUGIN_LOAD]: (state, action) => action.plugin
   })

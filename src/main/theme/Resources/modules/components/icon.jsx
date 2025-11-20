@@ -59,7 +59,7 @@ ThemeUrlIcon.propTypes = {
   className: T.string,
   url: T.string.isRequired,
   svg: T.bool.isRequired,
-  size: T.oneOf(['xs', 'sm', 'md', 'lg', 'xl'])
+  size: T.oneOf(['xxs', 'xs', 'sm', 'md', 'lg', 'xl'])
 }
 
 const ThemeIcon = props => {
@@ -79,7 +79,7 @@ ThemeIcon.propTypes = {
   className: T.string,
   mimeType: T.string,
   set: T.oneOf(['resources', 'widgets', 'data']),
-  size: T.oneOf(['xs', 'sm', 'md', 'lg', 'xl'])
+  size: T.oneOf(['xxs', 'xs', 'sm', 'md', 'lg', 'xl'])
 }
 
 export {

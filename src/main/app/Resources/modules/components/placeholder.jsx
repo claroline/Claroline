@@ -22,13 +22,13 @@ TextSkeleton.propTypes = {
   rows: T.number
 }
 
-const PlaceholderTitle = (props) => createElement(`h`+props.level, {
-  className: classes('placeholder-glow', props.displayLevel && `h`+props.displayLevel, {
+const HeadingSkeleton = (props) => createElement('h'+props.level, {
+  className: classes('placeholder-glow', props.displayLevel && 'h'+props.displayLevel, {
     'text-end': 'end' === props.align
   })
 }, <span className={classes('placeholder rounded-1', `col-${random(5, 11)}`, props.className)} />)
 
-PlaceholderTitle.propTypes = {
+HeadingSkeleton.propTypes = {
   className: T.string,
   level: T.number.isRequired,
   displayLevel: T.number,
@@ -62,11 +62,11 @@ PlaceholderParagraph.defaultProps = {
 const PlaceholderText = (props) => {
   return (
     <div role="presentation">
-      <PlaceholderTitle align={props.align} level={props.level} displayLevel={props.displayLevel} />
+      <HeadingSkeleton align={props.align} level={props.level} displayLevel={props.displayLevel} />
       <PlaceholderParagraph align={props.align} rows={3} />
       {range(0, props.paragraphs).map(paragraph =>
         <Fragment key={paragraph}>
-          <PlaceholderTitle align={props.align} level={props.level + 1} displayLevel={props.displayLevel + 1} />
+          <HeadingSkeleton align={props.align} level={props.level + 1} displayLevel={props.displayLevel + 1} />
           <PlaceholderParagraph align={props.align} rows={random(4, 6)} />
         </Fragment>
       )}
@@ -88,5 +88,6 @@ PlaceholderText.defaultProps = {
 
 export {
   TextSkeleton,
+  HeadingSkeleton,
   PlaceholderText
 }

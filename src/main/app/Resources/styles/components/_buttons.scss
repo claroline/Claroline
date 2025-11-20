@@ -81,9 +81,15 @@
     --#{$prefix}btn-focus-shadow-rgb: var(--#{$prefix}secondary-rgb);
 }
 
-/*.btn:active {
-    transform: scale(0.97);
-}*/
+//-
+// Button subtle type
+// ----
+
+@each $color, $value in $theme-colors {
+    .btn-subtle-#{$color} {
+        @include button-subtle-variant($color, $value);
+    }
+}
 
 
 //-

@@ -7,9 +7,9 @@ use Claroline\AuthenticationBundle\Manager\OAuthManager;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AuthenticationController
 {
@@ -29,7 +29,7 @@ class AuthenticationController
         Request $request
     ): RedirectResponse {
         if ($this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedHttpException('You are already logged in.');
+            throw new AccessDeniedException('You are already logged in.');
         }
 
         return new RedirectResponse(

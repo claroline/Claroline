@@ -21,10 +21,10 @@ const Nav = (props) => {
       })}>
         {displayedItems
           .map((item) =>
-            <li className="nav-item" key={item.name}>
+            <li className="nav-item" key={item.label}>
               <Button
                 {...item}
-                className={classes('nav-link', {
+                className={classes('nav-link', item.className, {
                   active: item.active
                 })}
               >

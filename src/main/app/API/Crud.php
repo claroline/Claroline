@@ -101,7 +101,7 @@ class Crud
 
     public function find(string $class, array $data): ?object
     {
-        if (class_implements($class, CrudEntityInterface::class)) {
+        if (is_subclass_of($class, CrudEntityInterface::class)) {
             $identifiers = call_user_func([$class, 'getIdentifiers']);
         } else {
             $identifiers = $this->schema->getIdentifiers($class);
@@ -153,7 +153,7 @@ class Crud
         $results = $this->finder->searchEntities($class, $query);
 
         return array_merge($results, [
-            'data' => array_map(function ($result) use ($options) {
+            'data' => array_map(function (object $result) use ($options) {
                 return $this->serializer->serialize($result, $options);
             }, $results['data']),
         ]);
