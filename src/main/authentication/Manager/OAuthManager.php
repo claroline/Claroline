@@ -125,6 +125,7 @@ class OAuthManager implements LoggerAwareInterface
         // Try to get an access token (using the authorization code grant)
         $token = $provider->getAccessToken('authorization_code', [
             'code' => $request->get('code'),
+            'redirect_uri' => $this->router->generate('claro_security_login_check_oauth2', [], UrlGeneratorInterface::ABSOLUTE_URL),
         ]);
         // We got an access token, let's now get the user's details
         $resourceOwner = $provider->getResourceOwner($token);
