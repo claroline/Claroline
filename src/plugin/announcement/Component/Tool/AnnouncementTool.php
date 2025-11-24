@@ -106,7 +106,9 @@ final class AnnouncementTool extends ToolComponent
             $newAnnouncement = new Announcement();
             $newAnnouncement->setWorkspace($contextSubject);
 
-            $this->crud->create($newAnnouncement, $announcementData, [
+            $this->crud->create($newAnnouncement, array_merge($announcementData, [
+                'workspace' => ['id' => $contextSubject->getUuid()],
+            ]), [
                 Crud::NO_PERMISSIONS, // the core has already checked this before forwarding the import
                 Crud::NO_VALIDATION,
                 Options::REFRESH_UUID,
