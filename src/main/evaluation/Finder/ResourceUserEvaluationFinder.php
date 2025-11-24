@@ -41,6 +41,11 @@ class ResourceUserEvaluationFinder extends AbstractFinder
             ]);
         }
 
+        if (!array_key_exists('archived', $searches)) {
+            // don't show archived evaluation by default
+            $qb->andWhere('obj.archived = false');
+        }
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'user':

@@ -40,6 +40,7 @@ const ExportEditorOverview = () => {
               label: trans('type'),
               disabled: !isNew,
               calculated: () => entity,
+              required: true,
               options: {
                 noEmpty: false,
                 condensed: true,
@@ -54,6 +55,7 @@ const ExportEditorOverview = () => {
               disabled: !isNew,
               displayed: !!entity,
               calculated: () => entity + '_' + action,
+              required: true,
               options: {
                 noEmpty: false,
                 condensed: true,

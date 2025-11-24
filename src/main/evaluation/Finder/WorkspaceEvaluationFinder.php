@@ -39,6 +39,11 @@ class WorkspaceEvaluationFinder extends AbstractFinder
             ]);
         }
 
+        if (!array_key_exists('archived', $searches)) {
+            // don't show archived evaluation by default
+            $qb->andWhere('obj.archived = false');
+        }
+
         $workspaceJoin = false;
         if (!array_key_exists('workspace', $searches) && !array_key_exists('workspaces', $searches)) {
             // don't show evaluation of archived workspaces

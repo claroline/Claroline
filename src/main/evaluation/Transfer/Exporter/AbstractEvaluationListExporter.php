@@ -113,6 +113,11 @@ abstract class AbstractEvaluationListExporter extends AbstractListExporter
                 'name' => 'userDisabled',
                 'label' => $this->translator->trans('user_disabled', [], 'community'),
                 'type' => 'boolean',
+            ], [
+                'name' => 'meta.archived',
+                'label' => $this->translator->trans('archived', [], 'platform'),
+                'alias' => 'archived',
+                'type' => 'boolean',
             ],
         ];
     }
