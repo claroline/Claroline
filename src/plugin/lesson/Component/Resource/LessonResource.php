@@ -109,9 +109,9 @@ final class LessonResource extends ResourceComponent implements DownloadableReso
             return;
         }
 
-        $this->om->startFlushSuite();
-
         $resource->buildRoot();
+
+        $this->om->startFlushSuite();
         $chapters = [];
         foreach ($data['chapters'] as $chapterData) {
             $parent = $resource->getRoot();
