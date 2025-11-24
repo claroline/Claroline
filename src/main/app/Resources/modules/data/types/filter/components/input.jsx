@@ -22,32 +22,33 @@ const FilterInput = props => {
   }
 
   return (
-    <div className={classes('filter-control', props.className)}>
-      <div className="filter-property">
-        <Select
-          id={`${props.id}-property`}
-          value={filter.property}
-          onChange={(column) => props.onChange(Object.assign({}, filter, {property: column}))}
-          choices={props.properties.reduce((propList, current) => Object.assign(propList, {
-            [current.alias || current.name]: current.label
-          }), {})}
-          size={props.size}
-        />
-      </div>
-
-      <div className="filter-value">
-        {filter.property &&
-          <DataFilter
-            id={props.id+'-value'}
-            {...searchProp}
-            value={filter.value}
-            updateSearch={(value) => props.onChange(Object.assign({}, filter, {value: value}))}
+    <div className={classes('filter-control d-flex flex-row align-items-start gap-3', props.className)}>
+        <div className="filter-property flex-fill w-50">
+          <Select
+            id={`${props.id}-property`}
+            value={filter.property}
+            onChange={(column) => props.onChange(Object.assign({}, filter, {property: column, value: null}))}
+            choices={props.properties.reduce((propList, current) => Object.assign(propList, {
+              [current.alias || current.name]: current.label
+            }), {})}
+            size={props.size}
           />
-        }
-      </div>
+        </div>
+
+        <div className="filter-value flex-fill">
+          {filter.property &&
+            <DataFilter
+              id={props.id+'-value'}
+              {...searchProp}
+              size="md"
+              value={filter.value}
+              updateSearch={(value) => props.onChange(Object.assign({}, filter, {value: value}))}
+            />
+          }
+        </div>
 
       <Button
-        className="btn btn-text-body focus-ring"
+        className="btn btn-text-body focus-ring px-1"
         type={CALLBACK_BUTTON}
         icon={classes('fa fa-fw', {
           'fa-lock': filter.locked,

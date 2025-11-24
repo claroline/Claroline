@@ -14,12 +14,12 @@ const TagFilter = (props) =>
     {props.search}
 
     <Button
-      className="btn btn-outline-secondary btn-filter"
+      className="btn btn-body btn-filter"
       type={MODAL_BUTTON}
       tooltip="left"
       icon="fa fa-fw fa-tags"
       label={props.placeholder || trans('select', {}, 'actions')}
-      size="sm"
+      size={props.size}
       modal={[MODAL_TAGS, {
         objectClass: props.objectClass,
         selectAction: (selected) => ({

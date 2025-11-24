@@ -22,7 +22,8 @@ const Checkboxes = props => {
 
   return (
     <ul className={classes('list-unstyled mb-0', {
-      'd-flex flex-row': props.inline
+      'd-flex flex-row': props.inline,
+      [`fs-${props.size}`]: !!props.size
     })}>
       {choiceValues.map(choiceValue =>
         <li key={choiceValue}>

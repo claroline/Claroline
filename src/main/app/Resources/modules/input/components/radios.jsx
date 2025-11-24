@@ -1,4 +1,5 @@
 import React from 'react'
+import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -25,6 +26,7 @@ const Radios = props => {
       {!props.noEmpty &&
         <Radio
           key="empty-value"
+          className={classes({[`fs-${props.size}`]: !!props.size})}
           name={props.id}
           label={props.placeholder || trans('none')}
           value=""
@@ -37,6 +39,7 @@ const Radios = props => {
       {choiceValues.map((choiceValue) =>
         <Radio
           key={choiceValue}
+          className={classes({[`fs-${props.size}`]: !!props.size})}
           {...(typeof props.choices[choiceValue] === 'string' ? {label: props.choices[choiceValue]} : props.choices[choiceValue])}
           name={props.id}
           value={choiceValue}

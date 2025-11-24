@@ -138,7 +138,7 @@ DataFilter.propTypes = {
   type: T.string,
   options: T.object, // depends on the data type
   placeholder: T.string,
-  size: T.oneOf(['sm', 'lg']),
+  size: T.oneOf(['sm', 'md', 'lg']),
   // filter data
   value: T.any, // depends on the data type
   // filter state

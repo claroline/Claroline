@@ -23,9 +23,8 @@ const BooleanFilter = (props) => {
         type={CALLBACK_BUTTON}
         label={trans('yes')}
         callback={() => props.updateSearch(true)}
-        //primary={props.isValid && searchValue}
         disabled={props.disabled}
-        size="sm"
+        size={props.size}
       />
 
       <Button
@@ -36,9 +35,8 @@ const BooleanFilter = (props) => {
         type={CALLBACK_BUTTON}
         label={trans('no')}
         callback={() => props.updateSearch(false)}
-        //primary={props.isValid && !searchValue}
         disabled={props.disabled}
-        size="sm"
+        size={props.size}
       />
     </span>
   )

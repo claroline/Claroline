@@ -16,7 +16,7 @@ const DateSearch = (props) =>
     }
 
     <Button
-      className="btn btn-outline-secondary btn-filter"
+      className="btn btn-body btn-filter"
       type={MENU_BUTTON}
       icon={props.calendarIcon}
       label={trans('show-calendar', {}, 'actions')}

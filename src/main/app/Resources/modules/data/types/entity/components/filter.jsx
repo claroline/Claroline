@@ -12,12 +12,12 @@ const EntityFilter = (props) =>
     {props.value}
 
     <Button
-      className="btn btn-outline-secondary btn-filter"
+      className="btn btn-body btn-filter"
       type={MODAL_BUTTON}
       tooltip="left"
       icon={props.icon}
       label={props.placeholder || trans('select', {}, 'actions')}
-      size="sm"
+      size={props.size}
       modal={[props.pickerType, {
         ...props.picker,
         multiple: props.multiple,

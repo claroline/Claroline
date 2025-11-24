@@ -50,7 +50,7 @@ const ThumbnailSkeleton = ({
 /**
  * A square visual representation of an entity.
  *
- * It displays :
+ * It displays:
  * - A color
  * - A thumbnail image
  * - OR The first letter of the entity name

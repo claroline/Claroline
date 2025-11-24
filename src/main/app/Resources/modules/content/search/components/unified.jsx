@@ -98,11 +98,11 @@ class SearchForm extends Component {
       >
         {this.props.available.map(filter =>
           <div key={filter.name} className="form-group row" role="presentation">
-            <label className="col-sm-3 col-form-label col-form-label-sm text-end" htmlFor={this.props.id+'-'+toKey(filter.name)}>
+            <label className="col-sm-4 col-form-label col-form-label-sm text-end" htmlFor={this.props.id+'-'+toKey(filter.name)}>
               {filter.label}
             </label>
 
-            <div className="col-sm-9" role="presentation">
+            <div className="col-sm-8" role="presentation">
               <DataFilter
                 {...omit(filter)}
 
