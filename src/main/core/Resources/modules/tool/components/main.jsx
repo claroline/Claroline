@@ -48,7 +48,7 @@ const ToolMain = (props) => {
           // the dashboard is not injected through the standard action system because not all tools have a dashboard
           // and I don't know it in the action definition
           {
-            name: 'dashboard',
+            name: 'show-dashboard',
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-gauge',
             label: trans('dashboard'),
