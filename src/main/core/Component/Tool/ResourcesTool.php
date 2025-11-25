@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
@@ -176,7 +177,7 @@ class ResourcesTool extends ToolComponent
             $this->crud->create($resource, $resourceData['resource'], array_merge([Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID], $resSerializeOptions));
 
             $importEvent = new ImportResourceEvent($resource, $fileBag, $resourceData);
-            $this->dispatcher->dispatch($importEvent, 'resource.'.$resourceNode->getType().'.import');
+            $this->dispatcher->dispatch($importEvent, ResourceEvents::getEventName(ResourceEvents::IMPORT, $resourceNode->getType()));
 
             // replace workspace opening resource id by the new one
             // this is for retro-compatibility, when we have stored the autoincrement id of the resource in the workspace options
@@ -209,7 +210,7 @@ class ResourcesTool extends ToolComponent
             $resSerializeOptions = method_exists($resSerializer, 'getCopyOptions') ? $resSerializer->getCopyOptions() : [];
 
             $exportEvent = new ExportResourceEvent($resource, $fileBag);
-            $this->dispatcher->dispatch($exportEvent, 'resource.'.$resourceNode->getType().'.export');
+            $this->dispatcher->dispatch($exportEvent, ResourceEvents::getEventName(ResourceEvents::EXPORT, $resourceNode->getType()));
 
             $exported[] = array_merge([
                 'resourceNode' => $this->serializer->serialize($resourceNode, [SerializerInterface::SERIALIZE_TRANSFER, Options::NO_RIGHTS]),
