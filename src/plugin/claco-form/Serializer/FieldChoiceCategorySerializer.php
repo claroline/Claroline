@@ -5,20 +5,22 @@ namespace Claroline\ClacoFormBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\ClacoFormBundle\Entity\Category;
+use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldChoiceCategory;
+use Claroline\ClacoFormBundle\Repository\CategoryRepository;
+use Claroline\ClacoFormBundle\Repository\FieldRepository;
 use Claroline\CoreBundle\Manager\FacetManager;
 
 class FieldChoiceCategorySerializer
 {
     use SerializerTrait;
 
-    /** @var FieldSerializer */
-    private $fieldSerializer;
-    /** @var FacetManager */
-    private $facetManager;
+    private FieldSerializer $fieldSerializer;
+    private FacetManager $facetManager;
 
-    private $categoryRepo;
-    private $fieldRepo;
+    private CategoryRepository $categoryRepo;
+    private FieldRepository $fieldRepo;
 
     public function __construct(
         FieldSerializer $fieldSerializer,
@@ -28,11 +30,11 @@ class FieldChoiceCategorySerializer
         $this->fieldSerializer = $fieldSerializer;
         $this->facetManager = $facetManager;
 
-        $this->categoryRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\Category');
-        $this->fieldRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\Field');
+        $this->categoryRepo = $om->getRepository(Category::class);
+        $this->fieldRepo = $om->getRepository(Field::class);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'clacoform_field_choice_category';
     }

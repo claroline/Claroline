@@ -144,7 +144,7 @@ class FieldFacetSerializer
             $newChoicesUuids[] = $choice->getUuid();
 
             if (isset($choiceData['children'])) {
-                $this->deserializeChildrenChoices($choiceData['children'], $choice, $field);
+                $this->deserializeChildrenChoices($choiceData['children'], $choice, $field, $options);
             } elseif (!$isNew) {
                 $children = $choice->getChildren();
 

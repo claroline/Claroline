@@ -154,12 +154,12 @@ class ClacoFormSerializer
             $this->sipe('template.content', 'setTemplate', $data, $clacoForm);
         }
 
-        // fields
-        $oldFields = $clacoForm->getFields();
-        $newFieldsUuids = [];
-        $clacoForm->emptyFields();
-
         if (!in_array(Options::REFRESH_UUID, $options) && isset($data['fields'])) {
+            // fields
+            $oldFields = $clacoForm->getFields();
+            $newFieldsUuids = [];
+            $clacoForm->emptyFields();
+
             foreach ($data['fields'] as $fieldData) {
                 if (isset($fieldData['id'])) {
                     $newFieldsUuids[] = $fieldData['id'];
@@ -170,7 +170,7 @@ class ClacoFormSerializer
                     $field = new Field();
                     $field->setClacoForm($clacoForm);
                 }
-                $newField = $this->fieldSerializer->deserialize($fieldData, $field);
+                $newField = $this->fieldSerializer->deserialize($fieldData, $field, $options);
                 $this->om->persist($newField);
 
                 $clacoForm->addField($newField);
