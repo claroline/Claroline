@@ -24,14 +24,14 @@ function getInitials(name) {
 }
 
 function getColor(str, s = 65, l = 40) {
-  let hash = 0;
+  let hash = 0
   for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    hash = str.charCodeAt(i) + ((hash << 5) - hash)
   }
 
-  let h = hash % 360;
+  let h = hash % 360
 
-  return 'hsl('+h+', '+s+'%, '+l+'%)';
+  return 'hsl('+h+', '+s+'%, '+l+'%)'
 }
 
 const ThumbnailSkeleton = ({
@@ -99,7 +99,7 @@ const Thumbnail = ({
         'placeholder': !loaded,
         'thumbnail-icon-bordered': border,
         [`thumbnail-${size} ratio-thumbnail`]: !square,
-        [`thumbnail-icon thumbnail-icon-${size} ratio-1x1`]: square,
+        [`thumbnail-icon thumbnail-icon-${size} ratio-1x1`]: square
       })}
       aria-hidden={true}
     >

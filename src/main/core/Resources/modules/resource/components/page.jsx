@@ -57,7 +57,7 @@ const ResourcePage = (props) => {
           />
         ),
         nav: resourceDef.menu,
-        toolbar: 'show-dashboard configure more',
+        toolbar: 'edit show-dashboard configure more',
         // get actions injected through plugins and the ones defined by the current resource type
         actions: getActions([resourceNode], {
           add: reload,
