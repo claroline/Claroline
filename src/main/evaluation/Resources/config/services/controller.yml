@@ -44,6 +44,7 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\EvaluationBundle\Manager\SequenceManager'
             - '@Claroline\EvaluationBundle\Manager\SequenceEvaluationManager'
 

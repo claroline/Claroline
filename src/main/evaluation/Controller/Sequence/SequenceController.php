@@ -12,7 +12,9 @@ use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Manager\SequenceEvaluationManager;
 use Claroline\EvaluationBundle\Manager\SequenceManager;
@@ -35,6 +37,7 @@ class SequenceController extends AbstractCrudController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         private readonly TokenStorageInterface $tokenStorage,
+        private readonly ToolManager $toolManager,
         private readonly SequenceManager $sequenceManager,
         private readonly SequenceEvaluationManager $evaluationManager
     ) {
@@ -70,6 +73,15 @@ class SequenceController extends AbstractCrudController
             $finderQuery->addFilter('workspace', $contextId);
         }
 
+        $roles = $this->tokenStorage->getToken()?->getRoleNames();
+        if (!in_array(PlatformRoles::ADMIN, $roles) && !$this->toolManager->isGranted('FOLLOW', 'progression', $contextId)) {
+            $finderQuery->addFilter('roles', $roles);
+        }
+
+        if (!$this->toolManager->isGranted('EDIT', 'progression', $contextId)) {
+            $finderQuery->addFilter('published', true);
+        }
+
         $sequences = $this->crud->search(Sequence::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
 
         return $sequences->toResponse();
@@ -82,8 +94,7 @@ class SequenceController extends AbstractCrudController
     ): JsonResponse {
         $this->checkPermission('OPEN', $resourceNode, [], true);
 
-        return new JsonResponse(
-        );
+        return new JsonResponse();
     }
 
     #[Route(path: '/{id}', name: 'open', methods: ['GET'])]

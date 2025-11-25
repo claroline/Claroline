@@ -16,6 +16,9 @@ services:
   Claroline\EvaluationBundle\Component\DataSource\SequencesList:
     parent: Claroline\AppBundle\Component\DataSource\ListSourceComponent
     tags: [ 'claroline.component.data_source' ]
+    arguments:
+      - '@security.token_storage'
+      - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
 
   Claroline\EvaluationBundle\Component\DataSource\SequenceEvaluationsList:
     parent: Claroline\AppBundle\Component\DataSource\ListSourceComponent

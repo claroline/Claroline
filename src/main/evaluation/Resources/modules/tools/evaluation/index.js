@@ -32,13 +32,14 @@ export default declareTool(EvaluationTool, () => new CommandPalette('evaluation'
       'Initialiser les évaluations',
       'Recalculer les évaluations',
       'Télécharger les certificats des utilisateurs',
-      "Régénérer les certificats des utilisateurs"
+      'Régénérer les certificats des utilisateurs'
     ]
   },
   edit: {
     order: 10,
     actions: [
       'Créer des séquences',
+      'Voir les séquences non publiées',
       'Administrer toutes les séquences',
       'Purger les évaluations des séquences'
     ]

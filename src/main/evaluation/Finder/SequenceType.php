@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Finder\AbstractType;
 use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
 use Claroline\AppBundle\API\Finder\FinderInterface;
 use Claroline\AppBundle\API\Finder\Type\BooleanType;
+use Claroline\AppBundle\API\Finder\Type\ClosureType;
 use Claroline\AppBundle\API\Finder\Type\CreatorType;
 use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
@@ -41,7 +42,22 @@ class SequenceType extends AbstractType
             ->add('creator', CreatorType::class)
             ->add('workspace', RelatedEntityType::class)
             ->add('tags', TagType::class)
-            // for evaluations
+            ->add('roles', ClosureType::class, [
+                'buildQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
+                    if (null !== $finder->getFilterValue()) {
+                        $alias = $finder->getAlias();
+                        if (!$finder->isRoot()) {
+                            $alias = $finder->getParent()->getAlias();
+                        }
+
+                        $queryBuilder->leftJoin($alias.'.assignments', 'assignments');
+                        $queryBuilder->leftJoin('assignments.role', 'roles');
+                        $queryBuilder->andWhere("($alias.public = true OR roles.name IN (:roles))");
+                        $queryBuilder->setParameter('roles', $finder->getFilterValue());
+                    }
+                },
+            ])
+            // for evaluations (deprecated)
             ->add('required', BooleanType::class)
             ->add('evaluated', BooleanType::class)
         ;

@@ -12,6 +12,8 @@
 namespace Claroline\CoreBundle\Manager\Tool;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
@@ -29,6 +31,17 @@ class ToolManager
         private readonly ToolRightsManager $toolRightsManager
     ) {
         $this->orderedToolRepo = $om->getRepository(OrderedTool::class);
+    }
+
+    public function isGranted(string $permission, string $toolName, ?string $contextId = null): bool
+    {
+        if ($contextId) {
+            $tool = $this->getOrderedTool($toolName, WorkspaceContext::getName(), $contextId);
+        } else {
+            $tool = $this->getOrderedTool($toolName, DesktopContext::getName());
+        }
+
+        return !is_null($tool) && $this->authorization->isGranted($permission, $tool);
     }
 
     public function getCurrentPermissions(OrderedTool $orderedTool): array
