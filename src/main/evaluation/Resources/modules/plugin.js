@@ -13,6 +13,13 @@ registry.add('ClarolineEvaluationBundle', {
     'progression': () => { return import(/* webpackChunkName: "evaluation-tool-progression" */ '#/main/evaluation/tools/evaluation') }
   },
 
+  /**
+   * Provides searchable items for the global search.
+   */
+  search: {
+    'sequence' : () => { return import(/* webpackChunkName: "evaluation-search-sequence" */ '#/main/evaluation/search/sequence')}
+  },
+
   data: {
     types: {
       'score': () => { return import(/* webpackChunkName: "app-data-type-score" */ '#/main/evaluation/data/types/score') },

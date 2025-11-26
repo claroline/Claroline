@@ -13,6 +13,21 @@ class SequenceRepository extends EntityRepository
 {
     use UniqueValueFinder;
 
+    public function search(string $search, int $nbResults)
+    {
+        return $this->createQueryBuilder('s')
+            ->join('s.workspace', 'w')
+            ->where('(UPPER(s.name) LIKE :search OR UPPER(s.code) LIKE :search)')
+            ->andWhere('w.archived = false')
+            ->andWhere('s.published = true')
+            ->andWhere('s.archived = false')
+            ->setFirstResult(0)
+            ->setMaxResults($nbResults)
+            ->setParameter('search', '%'.strtoupper($search).'%')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * Find all the Sequences using the $resourceNode as a primary resource of a Step.
      *

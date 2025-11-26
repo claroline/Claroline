@@ -380,6 +380,17 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         return $roles;
     }
 
+    public function getUserRole(): ?Role
+    {
+        foreach ($this->roles as $role) {
+            if (Role::USER === $role->getType()) {
+                return $role;
+            }
+        }
+
+        return null;
+    }
+
     public function getGroups(): Collection
     {
         return $this->groups;

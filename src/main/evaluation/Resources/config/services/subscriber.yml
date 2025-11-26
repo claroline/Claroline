@@ -1,4 +1,11 @@
 services:
+    Claroline\EvaluationBundle\Subscriber\GlobalSearchSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+        tags:
+            - { name: kernel.event_subscriber }
+
     Claroline\EvaluationBundle\Subscriber\ResourceEvaluationSubscriber:
         tags: [ 'kernel.event_subscriber' ]
         arguments:
