@@ -6,7 +6,6 @@ import merge from 'lodash/merge'
 import {makeInstanceReducer, reduceReducers, combineReducers} from '#/main/app/store/reducer'
 
 import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'
-import {reducer as paginationReducer} from '#/main/app/content/pagination/store/reducer'
 import {reducer as searchReducer} from '#/main/app/content/search/store/reducer'
 import {
   LIST_SORT_UPDATE,
@@ -17,6 +16,14 @@ import {
   LIST_DATA_LOAD,
   LIST_DATA_DELETE
 } from '#/main/app/content/list/store/actions'
+import {constants} from '#/main/app/content/list/constants'
+import {PAGINATION_PAGE_CHANGE, PAGINATION_SIZE_UPDATE} from '#/main/app/content/pagination/store/actions'
+import {
+  SEARCH_FILTER_ADD,
+  SEARCH_FILTER_REMOVE,
+  SEARCH_FILTER_RESET,
+  SEARCH_TEXT_UPDATE
+} from '#/main/app/content/search/store/actions'
 
 const defaultState = {
   loaded: false,
@@ -27,7 +34,11 @@ const defaultState = {
     property: null,
     direction: 0
   },
-  selected: []
+  selected: [],
+  pagination: {
+    page: 0,
+    pageSize: constants.DEFAULT_PAGE_SIZE
+  }
 }
 
 /**
@@ -92,7 +103,7 @@ const selectedReducer = makeInstanceReducer(defaultState.selected, {
 
     const itemPos = state.indexOf(action.row.id)
     if (-1 === itemPos) {
-      // Item not selected
+      // item is not selected
       selected.push(action.row.id)
     } else {
       // Item selected
@@ -118,6 +129,40 @@ const selectedReducer = makeInstanceReducer(defaultState.selected, {
   [LIST_TOGGLE_SELECT_ALL]: (state, action) => {
     return 0 < state.length ? [] : [].concat(state, action.rows.map(row => row.id))
   }
+})
+
+const paginationReducer = makeInstanceReducer(defaultState.pagination, {
+  /**
+   * Changes the current page.
+   *
+   * @param {Object} state
+   * @param {Object} action
+   *
+   * @returns {Object}
+   */
+  [PAGINATION_PAGE_CHANGE]: (state, action) => ({
+    page: action.page,
+    pageSize: state.pageSize
+  }),
+
+  /**
+   * Changes the page size.
+   *
+   * @param {Object} state
+   * @param {Object} action
+   *
+   * @returns {Object}
+   */
+  [PAGINATION_SIZE_UPDATE]: (state, action) => ({
+    page: state.page,
+    pageSize: action.pageSize
+  }),
+
+  // reset page on search update
+  [SEARCH_FILTER_ADD]: (state) => ({page: 0, pageSize: state.pageSize}),
+  [SEARCH_FILTER_REMOVE]: (state) => ({page: 0, pageSize: state.pageSize}),
+  [SEARCH_FILTER_RESET]: (state) => ({page: 0, pageSize: state.pageSize}),
+  [SEARCH_TEXT_UPDATE]: (state) => ({page: 0, pageSize: state.pageSize})
 })
 
 const baseReducer = {

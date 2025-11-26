@@ -5,6 +5,7 @@ import {
   EXPLORER_SET_CURRENT
 } from '#/main/core/modals/resources/store/actions'
 import {selectors} from '#/main/core/modals/resources/store/selectors'
+import {constants} from '#/main/app/content/pagination/constants'
 
 const reducer = combineReducers({
   /**
@@ -20,17 +21,17 @@ const reducer = combineReducers({
   resources: makeListReducer(`${selectors.STORE_NAME}.resources`, {
     sortBy: {property: 'name', direction: 1}
   }, {
-    invalidated: makeReducer([], {
+    invalidated: makeReducer(false, {
       [EXPLORER_SET_CURRENT]: () => true
     }),
     selected: makeReducer([], {
       [EXPLORER_SET_CURRENT]: () => []
     }),
     filters: makeReducer({text: null, filters: []}, {
-      [EXPLORER_SET_CURRENT]: (action) => ({text: null, filters: action.filters})
+      [EXPLORER_SET_CURRENT]: (state, action) => ({text: '', filters: action.filters})
     }),
-    page: makeReducer([], {
-      [EXPLORER_SET_CURRENT]: () => 0
+    pagination: makeReducer({page: 0, pageSize: constants.DEFAULT_PAGE_SIZE}, {
+      [EXPLORER_SET_CURRENT]: (state) => Object.assign({}, state, {page: 0})
     })
   })
 })

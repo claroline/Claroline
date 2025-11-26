@@ -18,13 +18,13 @@ class FinderQuery
     public const SORT_DESC = 'DESC';
     public const ALL = -1;
 
-    private ?string $search;
+    private ?string $search = null;
     private array $filters;
     private array $sortBy;
     private int $page;
     private int $pageSize;
 
-    public function __construct(string $q = null, array $filters = [], array $sortBy = [], ?int $page = 0, ?int $limit = self::ALL)
+    public function __construct(?string $q = null, ?array $filters = [], ?array $sortBy = [], ?int $page = 0, ?int $limit = self::ALL)
     {
         $this->search = $q;
         $this->filters = $filters;

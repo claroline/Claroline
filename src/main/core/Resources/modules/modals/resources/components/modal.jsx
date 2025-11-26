@@ -22,6 +22,7 @@ const ResourcesModal = (props) => {
   const selectAction = props.selectAction(props.selected)
 
   const ownProps = [
+    'contextId',
     'root',
     'current',
     'currentDirectory',
@@ -136,6 +137,7 @@ ResourcesModal.propTypes = {
     name: T.string.isRequired
   }),
   setCurrent: T.func.isRequired,
+  reset: T.func.isRequired,
   // from modal
   fadeModal: T.func.isRequired
 }
