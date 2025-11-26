@@ -153,9 +153,9 @@ class OAuthManager implements LoggerAwareInterface
             $this->om->persist($user);
         }
 
-        if (0 !== $client->getOrganizations()->count()) {
+        if (!empty($client->getOrganization())) {
             // add the user to the defined organizations
-            $this->crud->patch($user, 'organization', Crud::COLLECTION_ADD, $client->getOrganizations()->toArray());
+            $this->crud->patch($user, 'organization', Crud::COLLECTION_ADD, [$client->getOrganization()], [Crud::NO_PERMISSIONS]);
         }
 
         $this->om->endFlushSuite();

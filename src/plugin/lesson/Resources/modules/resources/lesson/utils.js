@@ -50,8 +50,6 @@ function matchSearch(page, search) {
     return true
   }
 
-  console.log(page)
-
   const regex = new RegExp(search+'(?!([^<]+)?>)', 'gi')
 
   return -1 !== page.title.search(regex)

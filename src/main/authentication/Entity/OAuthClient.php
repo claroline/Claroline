@@ -6,10 +6,7 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Disabled;
 use Claroline\AppBundle\Entity\Meta\Name;
-use Claroline\CommunityBundle\Model\HasOrganizations;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,7 +18,6 @@ class OAuthClient
     use Uuid;
     use Name;
     use Disabled;
-    use HasOrganizations;
 
     #[ORM\Column(type: Types::STRING)]
     private ?string $serviceProvider = null;
@@ -77,16 +73,9 @@ class OAuthClient
     #[ORM\Column(nullable: true)]
     private ?string $buttonConfirm = null;
 
-    #[ORM\ManyToMany(targetEntity: Organization::class)]
-    #[ORM\JoinTable(name: 'claro_authentication_oauth_organization')]
-    private Collection $organizations;
-
-    public function __construct()
-    {
-        $this->refreshUuid();
-
-        $this->organizations = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private ?Organization $organization = null;
 
     public function getServiceProvider(): string
     {
@@ -235,5 +224,20 @@ class OAuthClient
     public function setButtonConfirm(?string $buttonConfirm): void
     {
         $this->buttonConfirm = $buttonConfirm;
+    }
+
+    public function getOrganizations(): array
+    {
+        return [$this->organization];
+    }
+
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(?Organization $organization): void
+    {
+        $this->organization = $organization;
     }
 }

@@ -7,6 +7,7 @@ import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
+import {selectors as platformSelectors} from '#/main/app/platform/store'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 import {FormModal} from '#/main/app/data/modals/form'
 import {OauthClient} from '#/main/authentication/oauth/prop-types'
@@ -61,13 +62,12 @@ const OauthFormModal = props => {
   const dispatch = useDispatch()
   const [oauthDefinition, setOauthDefinition] = useState()
 
+  const currentOrganization = useSelector(platformSelectors.currentOrganization)
   const formData = useSelector((state) => formSelectors.data(formSelectors.form(state, STORE_NAME)))
 
   useEffect(() => {
-    console.log(get(props.provider, 'name'))
     if (get(props.provider, 'name')) {
       getOauthApp(props.provider.name).then(app => {
-        console.log(app.default)
         setOauthDefinition(app.default)
       })
     }
@@ -82,6 +82,7 @@ const OauthFormModal = props => {
         serviceProvider: props.provider.name,
         name: capitalize(props.provider.name),
         fieldsMapping: props.provider.defaultMapping,
+        organization: currentOrganization,
         button: {
           displayed: true
         }
@@ -111,6 +112,13 @@ const OauthFormModal = props => {
               type: 'string',
               label: trans('name'),
               required: true
+            }, {
+              name: 'organization',
+              type: 'organization',
+              label: trans('organization', {}, 'community'),
+              options: {
+                multiple: false
+              }
             }, {
               name: 'meta.disabled',
               type: 'boolean',

@@ -45,9 +45,6 @@ const LinkedOrganizations = ({
   const dispatch = useDispatch()
   const [data, status] = useFetch(name, url, {autoload: autoload})
 
-  console.log(data)
-  console.log(status)
-
   if (fetchConst.STATUS_IDLE === status || fetchConst.STATUS_PENDING === status) {
     return (
       <LinkedOrganizationsSkeleton />

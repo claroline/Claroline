@@ -51,9 +51,9 @@ class OAuthClientSerializer
                 'label' => $client->getButtonLabel(),
                 'confirm' => $client->getButtonConfirm(),
             ],
-            'organizations' => array_map(function (Organization $organization) {
-                return $this->organizationSerializer->serialize($organization, [SerializerInterface::SERIALIZE_MINIMAL]);
-            }, $client->getOrganizations()->toArray()),
+            'organization' => !empty($client->getOrganization()) ?
+                $this->organizationSerializer->serialize($client->getOrganization(), [SerializerInterface::SERIALIZE_MINIMAL]) :
+                null,
         ];
     }
 
@@ -82,23 +82,13 @@ class OAuthClientSerializer
         $this->sipe('button.label', 'setButtonLabel', $data, $client);
         $this->sipe('button.confirm', 'setButtonConfirm', $data, $client);
 
-        if (array_key_exists('organizations', $data)) {
-            $linkedOrganizations = $client->getOrganizations();
-
-            $organizations = [];
-            foreach ($data['organizations'] as $organizationData) {
-                $organization = $this->om->getRepository(Organization::class)->findOneBy(['uuid' => $organizationData['id']]);
-                if ($organization) {
-                    $client->addOrganization($organization);
-                    $organizations[] = $organization->getUuid();
-                }
+        if (array_key_exists('organization', $data)) {
+            $organization = null;
+            if (!empty($data['organization']) && !empty($data['organization']['id'])) {
+                $organization = $this->om->getRepository(Organization::class)->findOneBy(['uuid' => $data['organization']['id']]);
             }
 
-            foreach ($linkedOrganizations as $linkedOrganization) {
-                if (!in_array($linkedOrganization->getUuid(), $organizations)) {
-                    $client->removeOrganization($linkedOrganization);
-                }
-            }
+            $client->setOrganization($organization);
         }
 
         return $client;
