@@ -11,6 +11,9 @@
 
 namespace Claroline\EvaluationBundle\Subscriber\Certificate;
 
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\EvaluationBundle\Entity\Certificate\WorkspaceCertificate;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\WorkspaceEvaluationEvent;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
@@ -31,6 +34,7 @@ class WorkspaceCertificateSubscriber implements EventSubscriberInterface
     {
         return [
             EvaluationEvents::WORKSPACE_EVALUATION => 'generateCertificate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, WorkspaceCertificate::class) => 'deleteCertificateFile',
         ];
     }
 
@@ -39,5 +43,13 @@ class WorkspaceCertificateSubscriber implements EventSubscriberInterface
         if ($event->hasStatusChanged() && in_array($event->getEvaluation()->getStatus(), [EvaluationStatus::COMPLETED, EvaluationStatus::PASSED])) {
             $this->certificateManager->getCertificate($event->getEvaluation());
         }
+    }
+
+    public function deleteCertificateFile(DeleteEvent $event): void
+    {
+        /** @var WorkspaceCertificate $object */
+        $certificate = $event->getObject();
+
+        $this->certificateManager->removeCertificateFile($certificate);
     }
 }

@@ -11,6 +11,9 @@
 
 namespace Claroline\EvaluationBundle\Subscriber\Certificate;
 
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\EvaluationBundle\Entity\Certificate\SequenceCertificate;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\SequenceEvaluationEvent;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
@@ -31,6 +34,7 @@ class SequenceCertificateSubscriber implements EventSubscriberInterface
     {
         return [
             EvaluationEvents::SEQUENCE_EVALUATION => 'generateCertificate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, SequenceCertificate::class) => 'deleteCertificateFile',
         ];
     }
 
@@ -39,5 +43,13 @@ class SequenceCertificateSubscriber implements EventSubscriberInterface
         if ($event->hasStatusChanged() && in_array($event->getEvaluation()->getStatus(), [EvaluationStatus::COMPLETED, EvaluationStatus::PASSED])) {
             $this->certificateManager->getCertificate($event->getEvaluation());
         }
+    }
+
+    public function deleteCertificateFile(DeleteEvent $event): void
+    {
+        /** @var SequenceCertificate $object */
+        $certificate = $event->getObject();
+
+        $this->certificateManager->removeCertificateFile($certificate);
     }
 }

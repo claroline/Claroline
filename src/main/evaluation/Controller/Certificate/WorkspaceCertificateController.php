@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\EvaluationBundle\Entity\Certificate\WorkspaceCertificate;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\WorkspaceEvaluation;
+use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\EvaluationBundle\Manager\WorkspaceCertificateManager;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -72,7 +73,7 @@ class WorkspaceCertificateController
 
         $workspace = $certificate->getEvaluation()->getWorkspace();
 
-        return new BinaryFileResponse($this->certificateManager->getCertificateFilepath($certificate), 200, [
+        return new BinaryFileResponse($this->certificateManager->getCertificateFile($certificate), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($workspace->getName()).'.pdf',
         ]);
@@ -137,7 +138,9 @@ class WorkspaceCertificateController
 
         $workspaceEvaluations = $this->om->getRepository(WorkspaceEvaluation::class)->findBy(['sequence' => $workspace]);
         foreach ($workspaceEvaluations as $workspaceEvaluation) {
-            $this->certificateManager->getCertificate($workspaceEvaluation, true);
+            if (in_array($workspaceEvaluation->getStatus(), [EvaluationStatus::COMPLETED, EvaluationStatus::PASSED])) {
+                $this->certificateManager->getCertificate($workspaceEvaluation, true);
+            }
         }
 
         return new JsonResponse(null, 204);
@@ -151,7 +154,7 @@ class WorkspaceCertificateController
 
         $certificateFiles = [];
         foreach ($workspaceEvaluations as $evaluation) {
-            if ($this->checkPermission('OPEN', $evaluation)) {
+            if (in_array($evaluation->getStatus(), [EvaluationStatus::COMPLETED, EvaluationStatus::PASSED]) && $this->checkPermission('OPEN', $evaluation)) {
                 $certificateFiles[] = $this->certificateManager->getCertificate($evaluation, $regenerate);
             }
         }

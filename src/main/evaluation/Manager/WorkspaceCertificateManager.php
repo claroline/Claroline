@@ -40,9 +40,7 @@ class WorkspaceCertificateManager
         ], ['issueDate' => 'DESC']);
 
         if ($certificate && !$regenerate) {
-            if (file_exists($this->getCertificateFilepath($certificate))) {
-                return $this->getCertificateFilepath($certificate);
-            }
+            return $this->getCertificateFile($certificate);
         }
 
         $certificate = new WorkspaceCertificate();
@@ -72,14 +70,7 @@ class WorkspaceCertificateManager
         $this->om->persist($certificate);
         $this->om->flush();
 
-        $path = $this->getCertificateFilepath($certificate);
-
-        $filesystem = new Filesystem();
-        if (!$filesystem->exists($path)) {
-            $filesystem->dumpFile($path, $this->pdfManager->fromHtml($html));
-        }
-
-        return $path;
+        return $this->getCertificateFile($certificate);
     }
 
     public function createArchive(array $certificateFiles): string
@@ -95,12 +86,34 @@ class WorkspaceCertificateManager
         return $tmpFile;
     }
 
-    public function getCertificateFilepath(WorkspaceCertificate $certificate): string
+    public function getCertificateFile(WorkspaceCertificate $certificate): string
+    {
+        $path = $this->getCertificateFilepath($certificate);
+
+        $filesystem = new Filesystem();
+        if (!$filesystem->exists($path)) {
+            $filesystem->dumpFile($path, $this->pdfManager->fromHtml($certificate->getContent()));
+        }
+
+        return $path;
+    }
+
+    public function removeCertificateFile(WorkspaceCertificate $certificate): void
+    {
+        $path = $this->getCertificateFilepath($certificate);
+
+        $filesystem = new Filesystem();
+        if ($filesystem->exists($path)) {
+            $filesystem->remove($path);
+        }
+    }
+
+    private function getCertificateFilepath(WorkspaceCertificate $certificate): string
     {
         $path = $this->fileManager->getDirectory();
         $path .= DIRECTORY_SEPARATOR.'certificates';
         $path .= DIRECTORY_SEPARATOR.$certificate->getEvaluation()->getWorkspace()->getUuid();
-        $path .= DIRECTORY_SEPARATOR.$certificate->getUser()->getUuid().'.pdf';
+        $path .= DIRECTORY_SEPARATOR.$certificate->getUuid().'.pdf';
 
         return $path;
     }
@@ -133,7 +146,8 @@ class WorkspaceCertificateManager
             $this->templateManager->formatDatePlaceholder('evaluation_last_activity', $evaluation->getLastActivityAt()),
             $this->templateManager->formatDatePlaceholder('evaluation_start', $evaluation->getStartedAt()),
             $this->templateManager->formatDatePlaceholder('evaluation_end', $evaluation->getEndedAt()),
-            $this->templateManager->formatDatePlaceholder('certificate_issued', $certificate->getIssueDate())
+            $this->templateManager->formatDatePlaceholder('certificate_issued', $certificate->getIssueDate()),
+            $this->templateManager->formatDatePlaceholder('certificate_obtention', $certificate->getObtentionDate())
         );
     }
 }

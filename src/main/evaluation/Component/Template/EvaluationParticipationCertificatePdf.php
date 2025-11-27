@@ -16,6 +16,13 @@ final class EvaluationParticipationCertificatePdf extends PdfComponent
     public function getPlaceholders(): array
     {
         return [
+            'certificate_obtention_datetime_utc',
+            'certificate_obtention_date_utc',
+            'certificate_obtention_time_utc',
+            'certificate_obtention_datetime',
+            'certificate_obtention_date',
+            'certificate_obtention_time',
+
             'certificate_issued_datetime_utc',
             'certificate_issued_date_utc',
             'certificate_issued_time_utc',

@@ -42,9 +42,7 @@ class SequenceCertificateManager
         ], ['issueDate' => 'DESC']);
 
         if ($certificate && !$regenerate) {
-            if (file_exists($this->getCertificateFilepath($certificate))) {
-                return $this->getCertificateFilepath($certificate);
-            }
+            return $this->getCertificateFile($certificate);
         }
 
         $certificate = new SequenceCertificate();
@@ -82,14 +80,7 @@ class SequenceCertificateManager
         $this->om->persist($certificate);
         $this->om->flush();
 
-        $path = $this->getCertificateFilepath($certificate);
-
-        $filesystem = new Filesystem();
-        if (!$filesystem->exists($path)) {
-            $filesystem->dumpFile($path, $this->pdfManager->fromHtml($html));
-        }
-
-        return $path;
+        return $this->getCertificateFile($certificate);
     }
 
     public function createArchive(array $certificateFiles): string
@@ -105,7 +96,29 @@ class SequenceCertificateManager
         return $tmpFile;
     }
 
-    public function getCertificateFilepath(SequenceCertificate $certificate): string
+    public function getCertificateFile(SequenceCertificate $certificate): string
+    {
+        $path = $this->getCertificateFilepath($certificate);
+
+        $filesystem = new Filesystem();
+        if (!$filesystem->exists($path)) {
+            $filesystem->dumpFile($path, $this->pdfManager->fromHtml($certificate->getContent()));
+        }
+
+        return $path;
+    }
+
+    public function removeCertificateFile(SequenceCertificate $certificate): void
+    {
+        $path = $this->getCertificateFilepath($certificate);
+
+        $filesystem = new Filesystem();
+        if ($filesystem->exists($path)) {
+            $filesystem->remove($path);
+        }
+    }
+
+    private function getCertificateFilepath(SequenceCertificate $certificate): string
     {
         $path = $this->fileManager->getDirectory();
         $path .= DIRECTORY_SEPARATOR.'sequence_certificates';
@@ -143,7 +156,8 @@ class SequenceCertificateManager
             $this->templateManager->formatDatePlaceholder('evaluation_last_activity', $evaluation->getLastActivityAt()),
             $this->templateManager->formatDatePlaceholder('evaluation_start', $evaluation->getStartedAt()),
             $this->templateManager->formatDatePlaceholder('evaluation_end', $evaluation->getEndedAt()),
-            $this->templateManager->formatDatePlaceholder('certificate_issued', $certificate->getIssueDate())
+            $this->templateManager->formatDatePlaceholder('certificate_issued', $certificate->getIssueDate()),
+            $this->templateManager->formatDatePlaceholder('certificate_obtention', $certificate->getObtentionDate())
         );
     }
 }
