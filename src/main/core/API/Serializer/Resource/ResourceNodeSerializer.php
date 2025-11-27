@@ -96,7 +96,8 @@ class ResourceNodeSerializer
                 'created' => DateNormalizer::normalize($resourceNode->getCreationDate()),
                 'updated' => DateNormalizer::normalize($resourceNode->getModificationDate()),
                 'published' => $resourceNode->isPublished(),
-                'active' => $resourceNode->isActive(),
+                'active' => $resourceNode->isActive(), // deprecated
+                'archived' => !$resourceNode->isActive(),
                 'downloadable' => $resourceNode->isDownloadable(),
                 'views' => $resourceNode->getViews(),
             ],

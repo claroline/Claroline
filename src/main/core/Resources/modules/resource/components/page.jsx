@@ -1,4 +1,4 @@
-import React, {useCallback, useContext} from 'react'
+import React, {useContext} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 import get from 'lodash/get'
@@ -15,8 +15,13 @@ import {selectors, actions} from '#/main/core/resource/store'
 import {route} from '#/main/core/resource/routing'
 import {EvaluationShortcut} from '#/main/evaluation/components/shortcut'
 import {MODAL_USER_PROGRESSION} from '#/main/evaluation/resource/modals/user-progression'
+import {pickAction} from '#/main/app/action'
+import {trans} from '#/main/app/intl'
 
 const ResourcePage = (props) => {
+  const dispatch = useDispatch()
+  const history = useHistory()
+
   const resourceDef = useContext(PageContext)
 
   const currentUser = useSelector(securitySelectors.currentUser)
@@ -28,9 +33,49 @@ const ResourcePage = (props) => {
   const hasEvaluation = useSelector(selectors.hasEvaluation)
   const userEvaluation = useSelector(selectors.resourceEvaluation)
 
-  const dispatch = useDispatch()
-  const history = useHistory()
-  const reload = useCallback(() => dispatch(actions.reload()), [get(resourceNode, 'id')])
+  const resourceActions = getActions([resourceNode], {
+    add: () => dispatch(actions.reload()),
+    update: (resourceNodes) => {
+      // checks if the action has modified the current node
+      if (resourceNodes.find(node => node.id === resourceNode.id)) {
+        dispatch(actions.reload())
+      }
+    },
+    delete: (resourceNodes) => {
+      // checks if the action has deleted the current node
+      const currentNode = resourceNodes.find(node => node.id === resourceNode.id)
+      if (currentNode) {
+        let redirect
+        if (currentNode.parent) {
+          redirect = route(currentNode.parent)
+        } else {
+          redirect = workspaceRoute(currentNode.workspace, 'resources')
+        }
+
+        history.push(redirect)
+      }
+    }
+  }, basePath, currentUser, false).then(loadedActions => [].concat(loadedActions, resourceDef.actions || []))
+
+  let banner
+  if (get(resourceNode, 'meta.archived', false)) {
+    banner = {
+      type: 'danger',
+      content: trans('resource_archived_info', {}, 'resource'),
+      actions: Promise.all([
+        pickAction('restore', resourceActions),
+        pickAction('delete', resourceActions)
+      ])
+    }
+  } else if (!get(resourceNode, 'meta.published', true)) {
+    banner = {
+      type: 'warning',
+      content: trans('resource_not_published_info', {}, 'resource'),
+      actions: Promise.all([
+        pickAction('publish', resourceActions)
+      ])
+    }
+  }
 
   return (
     <ToolPage
@@ -59,31 +104,9 @@ const ResourcePage = (props) => {
         nav: resourceDef.menu,
         toolbar: 'edit show-dashboard configure more',
         // get actions injected through plugins and the ones defined by the current resource type
-        actions: getActions([resourceNode], {
-          add: reload,
-          update: (resourceNodes) => {
-            // checks if the action has modified the current node
-            if (resourceNodes.find(node => node.id === resourceNode.id)) {
-              reload()
-            }
-          },
-          delete: (resourceNodes) => {
-            // checks if the action has deleted the current node
-            const currentNode = resourceNodes.find(node => node.id === resourceNode.id)
-            if (currentNode) {
-              let redirect
-              if (currentNode.parent) {
-                redirect = route(currentNode.parent)
-              } else {
-                redirect = workspaceRoute(currentNode.workspace, 'resources')
-              }
-
-              history.push(redirect)
-            }
-          }
-        }, basePath, currentUser, false).then(loadedActions => [].concat(loadedActions, resourceDef.actions || []))
+        actions: resourceActions
       }}
-
+      banner={banner}
       {...omit(props, 'className', 'breadcrumb', 'title', 'description')}
     >
       {props.children}

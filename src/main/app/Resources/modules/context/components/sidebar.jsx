@@ -90,6 +90,41 @@ const ContextSidebar = ({
         </div>
       }
 
+      <div className="rounded-2 text-primary-emphasis bg-primary-subtle p-3 m-3 mx-2 mt-0 mb-4">
+        <div className="d-flex flex-row flex-nowrap align-items-baseline gap-1">
+          <h6 className="mb-3 fs-sm flex-fill">
+            Modèle d'espace d'activités
+          </h6>
+          <Button
+            className="btn btn-link p-1 text-reset mt-n1 me-n1"
+            {...{
+              name: 'close-banner',
+              type: CALLBACK_BUTTON,
+              icon: 'fa fa-times',
+              label: trans('hide', {}, 'actions'),
+              tooltip: 'bottom',
+              callback: () => setDismissed(true),
+              //displayed: props.dismissible
+            }}
+          />
+        </div>
+
+        <p className="fs-sm">
+          Cet espace est un modèle utilisé pour la création de nouveaux espaces d'activités.
+        </p>
+        <a href="" className="fs-sm fw-bolder alert-link">Créer <span className="fa ms-1 fa-arrow-right" /></a>
+        {/*<Button
+          className="btn btn-primary"
+          type={CALLBACK_BUTTON}
+          {...{
+            name: 'create',
+            type: CALLBACK_BUTTON,
+            label: trans('Créer à partir du modèle', {}, 'actions'),
+            callback: () => true
+          }}
+        />*/}
+      </div>
+
       {1 < organizations.length &&
         <div className="bg-body-tertiary p-4 d-flex flex-column mt-auto" role="presentation">
           <h2 id={organizationsTitleId} className="fs-sm text-body-secondary text-uppercase">

@@ -15,7 +15,7 @@ const PageSimple = ({
   description,
   children,
   styles = [],
-  embedded = false,
+  embedded = false
 }) =>
   <div
     className={classes({
@@ -61,7 +61,7 @@ PageSimple.propTypes ={
   styles: T.arrayOf(T.string),
 
   /**
-   * Is the current page embedded into another one ?
+   * Is the current page embedded into another one?
    *
    * @type {bool}
    */

@@ -114,5 +114,7 @@
   "count_success_conditions": "{0} Aucune | {1} 1 condition | ]1,Inf[ %count% conditions",
   "users_progression": "Progression des utilisateurs",
   "users_score": "Score des utilisateurs",
-  "avg_participant_view": "{0, 1} ~ <b>1</b> vue par participant | ]1,Inf[ ~ <b>%count%</b> vues par participant"
+  "avg_participant_view": "{0, 1} ~ <b>1</b> vue par participant | ]1,Inf[ ~ <b>%count%</b> vues par participant",
+  "sequence_not_published_info": "Cette séquence n'est pas encore publiée et n'est pas accessible aux utilisateurs.",
+  "sequence_archived_info": "Cette séquence est archivée et n'est plus accessible aux utilisateurs."
 }

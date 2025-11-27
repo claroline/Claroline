@@ -37,8 +37,7 @@ function pickActions(actionNames, actions) {
 
 function pickAction(actionName, actions) {
   if (Array.isArray(actions)) {
-    return [].concat(actions)
-      .filter(action => action.name === actionName)
+    return actions.find(action => action.name === actionName)
   }
 
   return actions.then((loadedActions) => loadedActions.find(action => action.name === actionName))

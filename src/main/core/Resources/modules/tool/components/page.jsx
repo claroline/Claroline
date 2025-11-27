@@ -51,7 +51,7 @@ const ToolPage = props => {
           }
         ].concat(loadedActions, toolDef.actions || []))
       }}
-
+      banner={props.banner}
       styles={[].concat(toolDef.styles || [], props.styles || [])}
       embedded={props.embedded}
       showHeader={props.showHeader}

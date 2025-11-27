@@ -74,5 +74,6 @@
   "add_from_another_organization_desc": "Sélectionnez un ou plusieurs utilisateurs existant dans une autre organization pour leur donner accès au contenu de l'organisation <b>%organization%</b>.",
   "organization_set_default_confirm": "Êtes-vous sûr(e) de vouloir faire de cette organisation l'organisation par défaut de votre plateforme ?",
   "user_organizations_desc": "Choisissez les organisations auxquels l'utilisateur a accès.",
-  "organizations_loading_error": "Nous sommes désolés nous n'avons pas pu charger la liste des organisations."
+  "organizations_loading_error": "Nous sommes désolés nous n'avons pas pu charger la liste des organisations.",
+  "user_disabled_info": "Cet utilisateur est désactivé et ne peut plus se connecter à la plateforme."
 }

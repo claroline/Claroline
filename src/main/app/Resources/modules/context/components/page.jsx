@@ -11,6 +11,7 @@ import {PageBody, PageSimple} from '#/main/app/page'
 import {selectors} from '#/main/app/context/store'
 import {ContextMenu} from '#/main/app/context/components/menu'
 import {PageMenu} from '#/main/app/page/components/menu'
+import {PageBanner} from '#/main/app/page/components/banner'
 
 const ContextPage = ({
   className,
@@ -18,6 +19,7 @@ const ContextPage = ({
   description,
   children,
   menu,
+  banner = null,
   styles = [],
   embedded = false,
   showHeader = true,
@@ -52,6 +54,13 @@ const ContextPage = ({
         />
       }
 
+      {banner &&
+        <PageBanner
+          embedded={embedded}
+          {...banner}
+        />
+      }
+
       <PageBody embedded={embedded}>
         {!embedded &&
           <h1 className="visually-hidden">{title ?
@@ -75,6 +84,20 @@ ContextPage.propTypes = merge({}, PageSimple.propTypes, {
     target: T.string
   })),
   showHeader: T.bool,
+  banner: T.shape({
+    type: T.oneOf(['primary', 'info', 'warning', 'danger']),
+    content: T.string.isRequired,
+    actions: T.oneOfType([
+      // a regular array of actions
+      T.arrayOf(T.shape(
+        Action.propTypes
+      )),
+      // a promise that will resolve a list of actions
+      T.shape(
+        PromisedAction.propTypes
+      )
+    ])
+  }),
   menu: T.shape({
     /**
      * The main navigation elements.
