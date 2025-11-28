@@ -59,7 +59,7 @@ class WorkspaceCertificateManager
         }
 
         $html = $this->templateManager->getTemplate(
-            EvaluationStatus::PASSED === $evaluation->getStatus() ? 'evaluation_success_certificate' : 'evaluation_participation_certificate',
+            EvaluationStatus::PASSED === $evaluation->getStatus() ? 'workspace_success_certificate' : 'workspace_participation_certificate',
             $placeholders,
             $locale
         );

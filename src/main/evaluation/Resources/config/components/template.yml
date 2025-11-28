@@ -1,8 +1,16 @@
 services:
-    Claroline\EvaluationBundle\Component\Template\EvaluationParticipationCertificatePdf:
+    Claroline\EvaluationBundle\Component\Template\SequenceParticipationCertificatePdf:
         parent: Claroline\TemplateBundle\Component\Template\PdfComponent
         tags: [ 'claroline.component.template' ]
 
-    Claroline\EvaluationBundle\Component\Template\EvaluationSuccessCertificatePdf:
+    Claroline\EvaluationBundle\Component\Template\SequenceSuccessCertificatePdf:
+        parent: Claroline\TemplateBundle\Component\Template\PdfComponent
+        tags: [ 'claroline.component.template' ]
+
+    Claroline\EvaluationBundle\Component\Template\WorkspaceParticipationCertificatePdf:
+        parent: Claroline\TemplateBundle\Component\Template\PdfComponent
+        tags: [ 'claroline.component.template' ]
+
+    Claroline\EvaluationBundle\Component\Template\WorkspaceSuccessCertificatePdf:
         parent: Claroline\TemplateBundle\Component\Template\PdfComponent
         tags: [ 'claroline.component.template' ]

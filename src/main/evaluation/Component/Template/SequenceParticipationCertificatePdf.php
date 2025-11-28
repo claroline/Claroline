@@ -6,11 +6,11 @@ use Claroline\TemplateBundle\Component\Template\PdfComponent;
 use Claroline\TemplateBundle\Library\SystemTemplate;
 use Claroline\TemplateBundle\Model\TemplateInterface;
 
-final class EvaluationSuccessCertificatePdf extends PdfComponent
+final class SequenceParticipationCertificatePdf extends PdfComponent
 {
     public static function getName(): string
     {
-        return 'evaluation_success_certificate';
+        return 'evaluation_participation_certificate';
     }
 
     public function getPlaceholders(): array
@@ -29,6 +29,10 @@ final class EvaluationSuccessCertificatePdf extends PdfComponent
             'certificate_issued_datetime',
             'certificate_issued_date',
             'certificate_issued_time',
+
+            'workspace_name',
+            'workspace_code',
+            'workspace_description',
 
             'evaluated_content_name',
             'evaluated_content_code',
@@ -62,9 +66,6 @@ final class EvaluationSuccessCertificatePdf extends PdfComponent
             'evaluation_end_datetime',
             'evaluation_end_date',
             'evaluation_end_time',
-
-            'evaluation_score',
-            'evaluation_score_max',
         ];
     }
 
@@ -73,13 +74,13 @@ final class EvaluationSuccessCertificatePdf extends PdfComponent
         return (new SystemTemplate())
             ->addTemplateContent(
                 'en',
-                'Certificate of achievement in "%evaluated_content_name%"',
-                $this->twig->render('@ClarolineEvaluation/template/evaluation_success_certificate.en.pdf.twig')
+                'Certificate of participation in "%evaluated_content_name%"',
+                $this->twig->render('@ClarolineEvaluation/template/sequence_participation_certificate.en.pdf.twig')
             )
             ->addTemplateContent(
                 'fr',
-                'Certificat de réussite à "%evaluated_content_name%"',
-                $this->twig->render('@ClarolineEvaluation/template/evaluation_success_certificate.fr.pdf.twig')
+                'Certificat de participation à "%evaluated_content_name%"',
+                $this->twig->render('@ClarolineEvaluation/template/sequence_participation_certificate.fr.pdf.twig')
             );
     }
 }

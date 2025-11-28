@@ -132,6 +132,7 @@ class SequenceCertificateManager
     {
         $evaluation = $certificate->getEvaluation();
         $sequence = $evaluation->getSequence();
+        $workspace = $sequence->getWorkspace();
         $user = $evaluation->getUser();
 
         $score = $evaluation->getScore() ?: 0;
@@ -139,6 +140,10 @@ class SequenceCertificateManager
         $finalScore = round(($score / $scoreMax) * 100, 2);
 
         return array_merge([
+            'workspace_name' => $workspace->getName(),
+            'workspace_code' => $workspace->getCode(),
+            'workspace_description' => $workspace->getDescription(),
+
             'evaluated_content_name' => $sequence->getName(),
             'evaluated_content_code' => $sequence->getCode(),
             'evaluated_content_description' => $sequence->getDescription(),

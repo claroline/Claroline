@@ -3,14 +3,14 @@
   "workspace_poster_desc": "Affiche de l'espace d'activités",
 
   "workspace_participation_certificate": "Certificat de participation à un espace d'activités",
-  "workspace_participation_certificate_desc": "Template utilisé pour générer les certificats de participation des utilisateurs.",
+  "workspace_participation_certificate_desc": "Template utilisé pour générer les certificats de participation des utilisateurs aux espaces d'activités.",
   "workspace_success_certificate": "Certificat de réussite à un espace d'activités",
-  "workspace_success_certificate_desc": "Template utilisé pour générer les certificats de réussite des utilisateurs.",
+  "workspace_success_certificate_desc": "Template utilisé pour générer les certificats de réussite des utilisateurs aux espaces d'activités.",
 
-  "evaluation_participation_certificate": "Certificat de participation à une activité pédagogique",
-  "evaluation_participation_certificate_desc": "Template utilisé pour générer les certificats de participation des utilisateurs à des activités, tel que la participation à un Espace d'activités ou à une Séquence.",
-  "evaluation_success_certificate": "Certificat de réussite d'une activité pédagogique",
-  "evaluation_success_certificate_desc": "Template utilisé pour générer les certificats de réussite des utilisateurs, tel que la réussite à un Espace d'activités ou à une Séquence.",
+  "evaluation_participation_certificate": "Certificat de participation à une séquence",
+  "evaluation_participation_certificate_desc": "Template utilisé pour générer les certificats de participation des utilisateurs aux séquences.",
+  "evaluation_success_certificate": "Certificat de réussite à une séquence",
+  "evaluation_success_certificate_desc": "Template utilisé pour générer les certificats de réussite des utilisateurs aux séquences.",
 
   "evaluation_duration_desc": "Durée de l'évaluation",
   "evaluation_status_desc": "Statut de l'évaluation (Non commencé, En cours, Réussi, etc.)",

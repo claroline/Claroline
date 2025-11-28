@@ -12,6 +12,7 @@
 namespace Claroline\EvaluationBundle\Installation;
 
 use Claroline\EvaluationBundle\Installation\Updater\Updater150000;
+use Claroline\EvaluationBundle\Installation\Updater\Updater150010;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
 class ClarolineEvaluationInstaller extends AdditionalInstaller
@@ -20,6 +21,7 @@ class ClarolineEvaluationInstaller extends AdditionalInstaller
     {
         return [
             '15.0.0' => Updater150000::class,
+            '15.0.10' => Updater150010::class,
         ];
     }
 

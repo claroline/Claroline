@@ -4,3 +4,8 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\EvaluationBundle\Installation\Updater\Updater150010:
+        tags: [ 'claroline.platform.updater' ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

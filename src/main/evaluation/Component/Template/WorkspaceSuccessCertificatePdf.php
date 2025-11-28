@@ -6,11 +6,11 @@ use Claroline\TemplateBundle\Component\Template\PdfComponent;
 use Claroline\TemplateBundle\Library\SystemTemplate;
 use Claroline\TemplateBundle\Model\TemplateInterface;
 
-final class EvaluationParticipationCertificatePdf extends PdfComponent
+final class WorkspaceSuccessCertificatePdf extends PdfComponent
 {
     public static function getName(): string
     {
-        return 'evaluation_participation_certificate';
+        return 'workspace_success_certificate';
     }
 
     public function getPlaceholders(): array
@@ -62,6 +62,9 @@ final class EvaluationParticipationCertificatePdf extends PdfComponent
             'evaluation_end_datetime',
             'evaluation_end_date',
             'evaluation_end_time',
+
+            'evaluation_score',
+            'evaluation_score_max',
         ];
     }
 
@@ -70,13 +73,13 @@ final class EvaluationParticipationCertificatePdf extends PdfComponent
         return (new SystemTemplate())
             ->addTemplateContent(
                 'en',
-                'Certificate of participation in "%evaluated_content_name%"',
-                $this->twig->render('@ClarolineEvaluation/template/evaluation_participation_certificate.en.pdf.twig')
+                'Certificate of achievement in "%evaluated_content_name%"',
+                $this->twig->render('@ClarolineEvaluation/template/workspace_success_certificate.en.pdf.twig')
             )
             ->addTemplateContent(
                 'fr',
-                'Certificat de participation à "%evaluated_content_name%"',
-                $this->twig->render('@ClarolineEvaluation/template/evaluation_participation_certificate.fr.pdf.twig')
+                'Certificat de réussite à "%evaluated_content_name%"',
+                $this->twig->render('@ClarolineEvaluation/template/workspace_success_certificate.fr.pdf.twig')
             );
     }
 }
