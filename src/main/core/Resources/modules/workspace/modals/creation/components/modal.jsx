@@ -26,6 +26,7 @@ const CreationModal = (props) => {
     case 'type':
       StepComponent = (
         <CreationType
+          model={props.model || false}
           startCreation={props.startCreation}
           changeStep={setCurrentStep}
           onCreate={props.onCreate}
@@ -57,8 +58,8 @@ const CreationModal = (props) => {
   return (
     <Modal
       {...omit(props, 'model', 'create', 'onCreate', 'startCreation', 'reset')}
-      title={trans('new_workspace', {}, 'workspace')}
-      subtitle={trans('new_workspace_desc', {}, 'workspace')}
+      title={trans(props.model ? 'new_workspace_model' : 'new_workspace', {}, 'workspace')}
+      subtitle={trans(props.model ? 'new_workspace_model_desc' : 'new_workspace_desc', {}, 'workspace')}
       centered={true}
       onExited={props.reset}
     >

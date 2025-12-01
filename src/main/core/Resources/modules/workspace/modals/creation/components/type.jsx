@@ -40,7 +40,7 @@ const CreationType = (props) => {
                   callback: () => {
                     props.startCreation(merge({}, pick(selected[0], 'name', 'thumbnail', 'poster', 'meta'), {
                       model: selected[0],
-                      meta: {model: false, personal: false, archived: false}
+                      meta: {model: props.model, personal: false, archived: false}
                     }), 'model')
                     props.changeStep('info')
                   }
@@ -55,7 +55,10 @@ const CreationType = (props) => {
             displayed: false, // TODO : implement
             action: {
               type: CALLBACK_BUTTON,
-              callback: () => props.changeStep('info')
+              callback: () => {
+                props.startCreation({meta: {model: props.model}})
+                props.changeStep('info')
+              }
             },
             advanced: true
           }, {
@@ -66,7 +69,7 @@ const CreationType = (props) => {
             action: {
               type: MODAL_BUTTON,
               modal: [MODAL_WORKSPACES, {
-                title: trans('new_workspace', {}, 'workspace'),
+                title: trans(props.model ? 'new_workspace_model' : 'new_workspace', {}, 'workspace'),
                 subtitle: trans('select_workspaces_to_copy', {}, 'workspace'),
                 multiple: false,
                 selectAction: (selected) => ({
@@ -75,7 +78,7 @@ const CreationType = (props) => {
                   callback: () => {
                     props.startCreation(merge({}, selected[0], {
                       id: makeId(),
-                      meta: {model: false, personal: false}
+                      meta: {model: props.model, personal: false}
                     }), 'copy')
                     props.changeStep('info')
                   }
@@ -91,8 +94,9 @@ const CreationType = (props) => {
             action: {
               type: MODAL_BUTTON,
               modal: [MODAL_WORKSPACES, {
-                title: trans('new_workspace', {}, 'workspace'),
+                title: trans(props.model ? 'new_workspace_model' : 'new_workspace', {}, 'workspace'),
                 subtitle: trans('add_to_organization_desc', {}, 'workspace'),
+                url: [props.model ? 'apiv2_workspace_list_model' : 'apiv2_workspace_list'],
                 multiple: true,
                 filters: [
                   {property: 'organizations', value: organizations.map(o => o.id !== currentOrganization.id ? o.id : 'not:'+o.id)}
@@ -125,7 +129,10 @@ const CreationType = (props) => {
             description: trans('import_archive_desc', {}, 'actions'),
             action: {
               type: CALLBACK_BUTTON,
-              callback: () => props.changeStep('upload')
+              callback: () => {
+                props.startCreation({meta: {model: props.model}})
+                props.changeStep('upload')
+              }
             },
             advanced: true,
             group: trans('from_existing_content')
@@ -137,6 +144,7 @@ const CreationType = (props) => {
 }
 
 CreationType.propTypes = {
+  model: T.bool,
   startCreation: T.func.isRequired,
   changeStep: T.func.isRequired,
   onCreate: T.func.isRequired,

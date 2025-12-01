@@ -1,7 +1,4 @@
+import {declareContext} from '#/main/app/context'
 import {WorkspaceContext} from '#/main/app/contexts/workspace/components/context'
 
-export default {
-  name: 'workspace',
-  path: '/workspace/:contextId',
-  component: WorkspaceContext
-}
+export default declareContext('workspace', '/workspace/:contextId', WorkspaceContext)

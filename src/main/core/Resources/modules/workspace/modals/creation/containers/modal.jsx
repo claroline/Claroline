@@ -11,7 +11,7 @@ const CreationModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     null,
     (dispatch) => ({
-      startCreation(baseData, creationType) {
+      startCreation(baseData) {
         dispatch(formActions.load(selectors.STORE_NAME, baseData))
       },
       create() {

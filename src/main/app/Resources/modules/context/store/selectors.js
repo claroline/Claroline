@@ -50,6 +50,11 @@ const data = createSelector(
   (store) => get(store, 'data', null)
 )
 
+const name = createSelector(
+  [type, data],
+  (type, data) => get(data, 'name', trans(type, {}, 'context'))
+)
+
 /**
  * Is the context fully loaded?
  *
@@ -217,6 +222,7 @@ export const selectors = {
   type,
   id,
   path,
+  name,
 
   // selectors for menu
   menuOpened,

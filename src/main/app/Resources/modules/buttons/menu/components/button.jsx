@@ -43,7 +43,7 @@ const StandardMenu = (props) => {
       groups: groupActions,
       dangerous: dangerousActions
     }
-  }, props.menu.items)
+  }, [props.menu.items.map(item => item.name).join('-')])
 
   return (
     <Menu

@@ -1,4 +1,4 @@
-import {getApps} from '#/main/app/plugins'
+import {getApp, getApps} from '#/main/app/plugins'
 import isEmpty from 'lodash/isEmpty'
 
 // memoize loaded context as a small performance optimization
@@ -23,6 +23,11 @@ function getContexts() {
   ).then(contexts => loadedContexts = contexts)
 }
 
+function getContext(contextName) {
+  return getApp('context', contextName)()
+}
+
 export {
-  getContexts
+  getContexts,
+  getContext
 }

@@ -25,6 +25,7 @@ const ContextPage = ({
   showHeader = true,
   breadcrumb = []
 }) => {
+  const contextName = useSelector(selectors.name)
   const contextType = useSelector(selectors.type)
   const contextData = useSelector(selectors.data)
   const contextPath = useSelector(selectors.path)
@@ -32,10 +33,7 @@ const ContextPage = ({
   return (
     <PageSimple
       className={className}
-      title={title ?
-        title + ' | ' + get(contextData, 'name', trans(contextType, {}, 'context')) :
-        get(contextData, 'name', trans(contextType, {}, 'context'))
-      }
+      title={title ? title + ' | ' + contextName : contextName}
       description={description || get(contextData, 'meta.description')}
       styles={styles}
       embedded={embedded}

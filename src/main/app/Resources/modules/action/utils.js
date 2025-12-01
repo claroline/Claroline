@@ -2,7 +2,6 @@ import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 import uniqWith from 'lodash/uniqWith'
-import pickBy from 'lodash/pickBy'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'

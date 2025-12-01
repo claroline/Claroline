@@ -1,7 +1,4 @@
+import {declareContext} from '#/main/app/context'
 import {DesktopContext} from '#/main/app/contexts/desktop/components/context'
 
-export default {
-  name: 'desktop',
-  path: '/desktop',
-  component: DesktopContext
-}
+export default declareContext('desktop', '/desktop', DesktopContext)

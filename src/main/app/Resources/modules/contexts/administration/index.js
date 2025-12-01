@@ -1,7 +1,4 @@
+import {declareContext} from '#/main/app/context'
 import {AdministrationContext} from '#/main/app/contexts/administration/components/context'
 
-export default {
-  name: 'administration',
-  path: '/administration',
-  component: AdministrationContext
-}
+export default declareContext('administration', '/administration', AdministrationContext)
