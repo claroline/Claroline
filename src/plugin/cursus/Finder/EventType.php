@@ -11,6 +11,8 @@ use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\CoreBundle\Finder\PlannedObjectType;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
+use Claroline\CursusBundle\Entity\Registration\EventUser;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -45,6 +47,24 @@ class EventType extends AbstractType
                     $queryBuilder->leftJoin('sessionWorkspace.workspace', $finder->getAlias());
                     $queryBuilder->andWhere("{$finder->getAlias()}.uuid = :workspaceId");
                     $queryBuilder->setParameter('workspaceId', $finder->getFilterValue());
+                },
+            ])
+            ->add('user', ClosureType::class, [
+                'buildQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
+                    if (null === $finder->getFilterValue()) {
+                        return;
+                    }
+
+                    $alias = $finder->getAlias();
+                    if (!$finder->isRoot()) {
+                        $alias = $finder->getParent()->getAlias();
+                    }
+
+                    $queryBuilder->leftJoin(EventUser::class, 'eu', Join::WITH, 'eu.event = '.$alias);
+                    $queryBuilder->leftJoin('eu.user', 'u');
+                    $queryBuilder->andWhere('eu.confirmed = 1 AND eu.validated = 1');
+                    $queryBuilder->andWhere('u.uuid = :userId');
+                    $queryBuilder->setParameter('userId', $finder->getFilterValue());
                 },
             ])
             ->add('capacity', ClosureType::class, [
