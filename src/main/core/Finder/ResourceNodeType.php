@@ -59,7 +59,7 @@ class ResourceNodeType extends AbstractType
             ])
             ->add('roles', ClosureType::class, [
                 'buildQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
-                    if (null !== $finder->getFilterValue()) {
+                    if (!empty($finder->getFilterValue())) {
                         $alias = $finder->getAlias();
                         if (!$finder->isRoot()) {
                             $alias = $finder->getParent()->getAlias();

@@ -8,6 +8,7 @@ import {DataCard} from '#/main/app/data/components/card'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {Badge} from '#/main/app/components/badge'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
 const ResourceCard = props =>
   <DataCard
@@ -20,7 +21,21 @@ const ResourceCard = props =>
       />
     }
     name={props.data.name}
-    title={props.data.name}
+    title={
+      <>
+        {get(props.data, 'meta.public') &&
+          <TooltipOverlay
+            id={'ws-type'+props.data.id}
+            position="top"
+            tip={trans('public')}
+          >
+            <span className="fa fa-fw fa-globe me-2" aria-hidden={true} />
+          </TooltipOverlay>
+        }
+
+        {props.data.name}
+      </>
+    }
     status={false === get(props.data, 'meta.published') ? {
       variant: 'secondary',
       text: trans('not_published')
