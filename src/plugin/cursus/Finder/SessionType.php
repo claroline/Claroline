@@ -16,7 +16,9 @@ use Claroline\AppBundle\API\Finder\Type\PeriodStatusType;
 use Claroline\AppBundle\API\Finder\Type\RelatedEntityType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
+use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -46,6 +48,24 @@ class SessionType extends AbstractType
             ->add('creator', CreatorType::class)
             ->add('createdAt', DateType::class)
             ->add('updatedAt', DateType::class)
+            ->add('user', ClosureType::class, [
+                'buildQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
+                    if (null === $finder->getFilterValue()) {
+                        return;
+                    }
+
+                    $alias = $finder->getAlias();
+                    if (!$finder->isRoot()) {
+                        $alias = $finder->getParent()->getAlias();
+                    }
+
+                    $queryBuilder->leftJoin(SessionUser::class, 'su', Join::WITH, 'su.session = '.$alias);
+                    $queryBuilder->leftJoin('su.user', 'u');
+                    $queryBuilder->andWhere('su.confirmed = 1 AND su.validated = 1');
+                    $queryBuilder->andWhere('u.uuid = :userId');
+                    $queryBuilder->setParameter('userId', $finder->getFilterValue());
+                },
+            ])
             ->add('capacity', ClosureType::class, [
                 'buildQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
                     if (null === $finder->getFilterValue()) {
