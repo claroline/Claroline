@@ -32,7 +32,7 @@ class GroupType extends AbstractType
             ->add('name', TextType::class)
             ->add('code', TextType::class)
             ->add('description', TextType::class)
-            ->add('organization', OrganizationType::class)
+            ->add('organization', OrganizationType::class, ['fulltext' => null])
             ->add('user', RelatedEntityType::class, [
                 'joinQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
                     $alias = $finder->getAlias();

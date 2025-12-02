@@ -51,4 +51,13 @@ class ResolvedFinderType implements ResolvedFinderTypeInterface
 
         return $this->optionsResolver;
     }
+
+    public function submit(mixed $filterValue, array $options): mixed
+    {
+        if (!empty($this->parent)) {
+            $filterValue = $this->parent->submit($filterValue, $options);
+        }
+
+        return $this->innerType->submit($filterValue, $options);
+    }
 }

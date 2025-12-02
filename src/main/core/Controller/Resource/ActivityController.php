@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Controller\Resource;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Manager\ViewerManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -41,14 +41,14 @@ class ActivityController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         ResourceNode $resource,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('FOLLOW', $resource, [], true);
 
-        $finderQuery->addFilter('objectClass', ResourceNode::class);
-        $finderQuery->addFilter('objectId', $resource->getUuid());
+        $finderRequest->addFilter('objectClass', ResourceNode::class);
+        $finderRequest->addFilter('objectId', $resource->getUuid());
 
-        $logs = $this->crud->search(FunctionalLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $logs = $this->crud->search(FunctionalLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $logs->toResponse();
     }
@@ -93,13 +93,13 @@ class ActivityController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         ResourceNode $resource,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('FOLLOW', $resource, [], true);
 
-        $finderQuery->addFilter('resource', $resource->getUuid());
+        $finderRequest->addFilter('resource', $resource->getUuid());
 
-        $viewers = $this->viewerManager->listViews(ResourceViewType::class, $finderQuery);
+        $viewers = $this->viewerManager->listViews(ResourceViewType::class, $finderRequest);
 
         return $viewers->toResponse();
     }

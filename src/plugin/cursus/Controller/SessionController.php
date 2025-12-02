@@ -11,7 +11,7 @@
 
 namespace Claroline\CursusBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -73,13 +73,13 @@ class SessionController extends AbstractCrudController
         string $context,
         ?string $contextId = null,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         if (WorkspaceContext::getName() === $context) {
-            $finderQuery->addFilter('workspace', $contextId);
+            $finderRequest->addFilter('workspace', $contextId);
         }
 
-        $sessions = $this->crud->search(Session::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $sessions = $this->crud->search(Session::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $sessions->toResponse();
     }
@@ -114,14 +114,14 @@ class SessionController extends AbstractCrudController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Course $course,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('EDIT', $course, [], true);
 
-        $finderQuery->addFilter('course', $course->getUuid());
-        $finderQuery->addFilter('canceled', true);
+        $finderRequest->addFilter('course', $course->getUuid());
+        $finderRequest->addFilter('canceled', true);
 
-        $sessions = $this->crud->search(Session::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $sessions = $this->crud->search(Session::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $sessions->toResponse();
     }
@@ -165,12 +165,12 @@ class SessionController extends AbstractCrudController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Session $session,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $session, [], true);
 
         return $this->crud
-            ->search(Event::class, $finderQuery->addFilters([
+            ->search(Event::class, $finderRequest->addFilters([
                 'session' => $session->getUuid(),
             ]), [SerializerInterface::SERIALIZE_LIST])
             ->toResponse();

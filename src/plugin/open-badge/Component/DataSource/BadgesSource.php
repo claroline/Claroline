@@ -2,7 +2,7 @@
 
 namespace Claroline\OpenBadgeBundle\Component\DataSource;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\DataSource\ListSourceComponent;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
@@ -30,13 +30,13 @@ class BadgesSource extends ListSourceComponent
         return BadgeType::class;
     }
 
-    protected function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
     {
-        $finderQuery = parent::getQuery($context, $contextSubject, $request);
+        $finderRequest = parent::getRequest($context, $contextSubject, $request);
         if (WorkspaceContext::getName() === $context) {
-            $finderQuery->addFilter('badge.workspace', $contextSubject->getUuid());
+            $finderRequest->addFilter('badge.workspace', $contextSubject->getUuid());
         }
 
-        return $finderQuery;
+        return $finderRequest;
     }
 }

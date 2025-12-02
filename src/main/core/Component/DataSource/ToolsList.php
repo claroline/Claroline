@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Component\DataSource;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\DataSource\ListSourceComponent;
@@ -33,22 +33,22 @@ class ToolsList extends ListSourceComponent
         return ToolType::class;
     }
 
-    protected function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
     {
-        $finderQuery = parent::getQuery($context, $contextSubject, $request);
+        $finderRequest = parent::getRequest($context, $contextSubject, $request);
 
-        $finderQuery->addFilter('contextName', $context);
+        $finderRequest->addFilter('contextName', $context);
         if ($contextSubject) {
-            $finderQuery->addFilter('contextId', $contextSubject->getContextIdentifier());
+            $finderRequest->addFilter('contextId', $contextSubject->getContextIdentifier());
         }
 
         // filter the tool list by current user if he is not an admin
         $context = $this->contextProvider->getContext($context);
         if (!$context->isGranted('ADMINISTRATE', $contextSubject)) {
             $roles = $context->getRoles($this->tokenStorage->getToken(), $contextSubject);
-            $finderQuery->addFilter('roles', $roles);
+            $finderRequest->addFilter('roles', $roles);
         }
 
-        return $finderQuery;
+        return $finderRequest;
     }
 }

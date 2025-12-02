@@ -38,6 +38,29 @@ class EntityType extends AbstractType
             ->default(false);
     }
 
+    public function submit(mixed $filterValue, array $options): ?array
+    {
+        if (empty($filterValue)) {
+            return null;
+        }
+
+        $requestValue = is_array($filterValue) ? $filterValue : [$filterValue];
+
+        $value = [];
+        foreach ($requestValue as $item) {
+            if ($item instanceof $options['data_class']) {
+                $identifierGetter = 'get'.ucwords($options['identifier']);
+                if (method_exists($item, $identifierGetter)) {
+                    $value[] = $item->{$identifierGetter}();
+                }
+            } else {
+                $value[] = $item;
+            }
+        }
+
+        return $value;
+    }
+
     public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
     {
         if (!$finder->isRoot()) {
@@ -49,28 +72,26 @@ class EntityType extends AbstractType
 
             $finder->distinct();
 
-            if (null !== $finder->getFilterValue()) {
+            if ($finder->hasFilter()) {
                 $nullableCondition = '';
                 if ($options['nullable']) {
                     $nullableCondition = "{$finder->getAlias()}.{$options['identifier']} IS NULL OR";
                 }
 
-                $value = is_array($finder->getFilterValue()) ? $finder->getFilterValue() : [$finder->getFilterValue()];
-                if (1 === count($value)) {
+                if (1 === count($finder->getFilterValue())) {
                     $queryBuilder
                         ->andWhere("($nullableCondition {$finder->getAlias()}.{$options['identifier']} = :{$finder->getAlias()})")
-                        ->setParameter($finder->getAlias(), $value[0]);
+                        ->setParameter($finder->getAlias(), $finder->getFilterValue()[0]);
                     $finder->distinct(false);
                 } else {
                     $queryBuilder
                         ->andWhere("($nullableCondition {$finder->getAlias()}.{$options['identifier']} IN (:{$finder->getAlias()}))")
-                        ->setParameter($finder->getAlias(), $value);
+                        ->setParameter($finder->getAlias(), $finder->getFilterValue());
                 }
             }
         }
 
-        // only enable fulltext search for first level finder for now
-        if ($finder->isRoot() && !empty($options['fulltext']) && !empty($finder->getSearchValue())) {
+        if ($finder->isRoot() && !$finder->hasFilter() && !empty($options['fulltext']) && !empty($finder->getSearchValue())) {
             $fulltextQuery = [];
             foreach ($options['fulltext'] as $propName) {
                 $fulltextQuery[] = "LOWER({$finder->getQueryPath()}.$propName) LIKE :{$finder->getAlias()}Fulltext";

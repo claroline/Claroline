@@ -2,7 +2,7 @@
 
 namespace Claroline\ForumBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -46,15 +46,15 @@ class SubjectController extends AbstractCrudController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Subject $subject,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $subject, [], true);
 
-        $finderQuery->addFilter('subject', $subject->getUuid());
-        $finderQuery->addFilter('parent', null);
-        $finderQuery->addFilter('first', false);
+        $finderRequest->addFilter('subject', $subject->getUuid());
+        $finderRequest->addFilter('parent', null);
+        $finderRequest->addFilter('first', false);
 
-        $subjects = $this->crud->search(Message::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $subjects = $this->crud->search(Message::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $subjects->toResponse();
     }

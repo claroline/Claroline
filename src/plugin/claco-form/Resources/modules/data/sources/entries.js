@@ -167,22 +167,6 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, isCategoryM
         sortable: canViewMetadata,
         calculated: (rowData) => canViewEntryMetadata(rowData, clacoForm, canEdit, currentUser) ? rowData.editionDate : null
       }, {
-        name: 'createdAfter',
-        label: trans('created_after'),
-        type: 'date',
-        filterable: canViewMetadata,
-        displayable: false,
-        sortable: false,
-        options: {time: true}
-      }, {
-        name: 'createdBefore',
-        label: trans('created_before'),
-        type: 'date',
-        filterable: canViewMetadata,
-        displayable: false,
-        sortable: false,
-        options: {time: true}
-      }, {
         name: 'user',
         label: trans('creator'),
         type: 'user',

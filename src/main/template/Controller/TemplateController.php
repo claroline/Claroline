@@ -11,7 +11,7 @@
 
 namespace Claroline\TemplateBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\TemplateBundle\Entity\Template;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
@@ -34,13 +34,13 @@ class TemplateController extends AbstractCrudController
     #[Route(path: '/{type}', name: 'type_list', methods: ['GET'])]
     public function listByTypeAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery(),
+        ?FinderRequest $finderRequest = new FinderRequest(),
         ?string $type = null
     ): StreamedJsonResponse {
         if ($type) {
-            $finderQuery->addFilter('type', $type);
+            $finderRequest->addFilter('type', $type);
         }
 
-        return parent::listAction($finderQuery);
+        return parent::listAction($finderRequest);
     }
 }

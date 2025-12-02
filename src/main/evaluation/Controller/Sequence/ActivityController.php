@@ -3,7 +3,7 @@
 namespace Claroline\EvaluationBundle\Controller\Sequence;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Manager\ViewerManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -42,14 +42,14 @@ class ActivityController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Sequence $sequence,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('FOLLOW', $sequence, [], true);
 
-        $finderQuery->addFilter('objectClass', Sequence::class);
-        $finderQuery->addFilter('objectId', $sequence->getUuid());
+        $finderRequest->addFilter('objectClass', Sequence::class);
+        $finderRequest->addFilter('objectId', $sequence->getUuid());
 
-        $logs = $this->crud->search(FunctionalLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $logs = $this->crud->search(FunctionalLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $logs->toResponse();
     }
@@ -94,13 +94,13 @@ class ActivityController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Sequence $sequence,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('FOLLOW', $sequence, [], true);
 
-        $finderQuery->addFilter('sequence', $sequence->getUuid());
+        $finderRequest->addFilter('sequence', $sequence->getUuid());
 
-        $viewers = $this->viewerManager->listViews(SequenceViewType::class, $finderQuery);
+        $viewers = $this->viewerManager->listViews(SequenceViewType::class, $finderRequest);
 
         return $viewers->toResponse();
     }

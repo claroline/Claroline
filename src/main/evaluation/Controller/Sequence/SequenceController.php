@@ -3,7 +3,7 @@
 namespace Claroline\EvaluationBundle\Controller\Sequence;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
@@ -67,22 +67,22 @@ class SequenceController extends AbstractCrudController
         string $context,
         string $contextId = null,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         if (WorkspaceContext::getName() === $context) {
-            $finderQuery->addFilter('workspace', $contextId);
+            $finderRequest->addFilter('workspace', $contextId);
         }
 
         $roles = $this->tokenStorage->getToken()?->getRoleNames();
         if (!in_array(PlatformRoles::ADMIN, $roles) && !$this->toolManager->isGranted('FOLLOW', 'progression', $contextId)) {
-            $finderQuery->addFilter('roles', $roles);
+            $finderRequest->addFilter('roles', $roles);
         }
 
         if (!$this->toolManager->isGranted('EDIT', 'progression', $contextId)) {
-            $finderQuery->addFilter('published', true);
+            $finderRequest->addFilter('published', true);
         }
 
-        $sequences = $this->crud->search(Sequence::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $sequences = $this->crud->search(Sequence::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $sequences->toResponse();
     }

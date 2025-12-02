@@ -7,7 +7,7 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\Finder\FinderFactory'
             - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
 
     Claroline\ClacoFormBundle\Controller\CategoryController:

@@ -7,7 +7,7 @@ use Claroline\AnnouncementBundle\Entity\AnnouncementParameters;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer;
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -109,13 +109,13 @@ class AnnouncementController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Announcement $announcement,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('EDIT', $announcement, [], true);
 
-        $finderQuery->addFilter('workspace', $announcement->getWorkspace());
+        $finderRequest->addFilter('workspace', $announcement->getWorkspace());
 
-        $results = $this->crud->search(User::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $results = $this->crud->search(User::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $results->toResponse();
     }

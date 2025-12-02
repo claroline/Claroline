@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Workspace;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -44,11 +44,11 @@ class ArchiveController
     #[Route(path: '/', name: 'apiv2_workspace_archive_list', methods: ['GET'])]
     public function listAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        $archives = $this->crud->search(Workspace::class, $finderQuery->addFilters([
+        $archives = $this->crud->search(Workspace::class, $finderRequest->addFilters([
             'archived' => true,
         ]), [SerializerInterface::SERIALIZE_LIST]);
 

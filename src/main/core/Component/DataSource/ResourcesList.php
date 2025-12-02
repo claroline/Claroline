@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Component\DataSource;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\DataSource\ListSourceComponent;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
@@ -34,27 +34,27 @@ final class ResourcesList extends ListSourceComponent
         ]);
     }
 
-    protected function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
     {
-        $finderQuery = $this->parseRequest($request);
+        $finderRequest = $this->parseRequest($request);
 
-        if (!$finderQuery->hasFilter('parent') && $contextSubject) {
+        if (!$finderRequest->hasFilter('parent') && $contextSubject) {
             // we don't want the current workspace as filter if we already filter by a parent directory
             // this permits listing resources from another workspace
-            $finderQuery->addFilter('workspace', $contextSubject->getContextIdentifier());
+            $finderRequest->addFilter('workspace', $contextSubject->getContextIdentifier());
         }
 
         if (PublicContext::getName() === $context) {
-            $finderQuery->addFilter('workspace.public', true);
-            $finderQuery->addFilter('public', true);
+            $finderRequest->addFilter('workspace.public', true);
+            $finderRequest->addFilter('public', true);
         } else {
             $roleNames = $this->tokenStorage->getToken()->getRoleNames();
             if (!in_array(PlatformRoles::ADMIN, $roleNames)) {
-                $finderQuery->addFilter('roles', $roleNames);
+                $finderRequest->addFilter('roles', $roleNames);
             }
         }
 
-        return $finderQuery;
+        return $finderRequest;
     }
 
     public static function getClass(): string

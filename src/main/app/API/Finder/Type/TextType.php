@@ -42,6 +42,19 @@ class TextType extends AbstractType
         $resolver->setAllowedValues('mode', [self::MODE_PARTIAL, self::MODE_START, self::MODE_END, self::MODE_EXACT]);
     }
 
+    public function submit(mixed $filterValue, array $options): ?string
+    {
+        $value = empty($filterValue) ? $options['default'] : $filterValue;
+        if (null !== $value) {
+            $value = strtolower($value);
+            if ($options['trim']) {
+                $value = strtolower($value);
+            }
+        }
+
+        return $value;
+    }
+
     public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
     {
         if ($finder->getSortValue()) {
@@ -56,7 +69,7 @@ class TextType extends AbstractType
             }
         }
 
-        if (empty($value)) {
+        if (empty($finder->getFilterValue())) {
             return;
         }
 

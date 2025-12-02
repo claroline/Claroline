@@ -9,15 +9,11 @@ import {reducer, selectors} from '#/main/app/data/types/fields/modals/parameters
 const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
-      saveEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.STORE_NAME))
+      formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({
       update(prop, value) {
         dispatch(formActions.updateProp(selectors.STORE_NAME, prop, value))
-      },
-      reset(data, isNew) {
-        dispatch(formActions.reset(selectors.STORE_NAME, data, isNew))
       }
     })
   )(ParametersModalComponent)

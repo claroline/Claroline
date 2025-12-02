@@ -12,7 +12,7 @@
 namespace Claroline\EvaluationBundle\Controller\UserEvaluation;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -64,7 +64,7 @@ class WorkspaceEvaluationController
     #[Route(path: '/{parentType}/{parentId}', name: 'apiv2_workspace_evaluation_list', requirements: ['parentType' => '(workspace)+', 'parentId' => '.+'], defaults: ['parentType' => null, 'parentId' => null], methods: ['GET'])]
     public function listAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery(),
+        ?FinderRequest $finderRequest = new FinderRequest(),
         ?string $parentId = null
     ): StreamedJsonResponse {
         $workspace = null;
@@ -81,14 +81,14 @@ class WorkspaceEvaluationController
             // only display evaluation of the current user
             /** @var User $user */
             $user = $this->tokenStorage->getToken()?->getUser();
-            $finderQuery->addFilter('user', $user->getUuid());
+            $finderRequest->addFilter('user', $user->getUuid());
         }
 
         if ($workspace) {
-            $finderQuery->addFilter('workspace', $workspace->getUuid());
+            $finderRequest->addFilter('workspace', $workspace->getUuid());
         }
 
-        $evaluations = $this->crud->search(WorkspaceEvaluation::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $evaluations = $this->crud->search(WorkspaceEvaluation::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $evaluations->toResponse();
     }

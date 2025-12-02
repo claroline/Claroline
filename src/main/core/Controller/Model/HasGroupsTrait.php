@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Controller\Model;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\CoreBundle\Entity\Group;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,16 +27,15 @@ trait HasGroupsTrait
     public function listGroupsAction(
         string $id,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         // no need to secure entrypoint, the CRUD will do it for us.
         $this->crud->get(static::getClass(), $id);
 
         // filter the list by the parent
-        $finderQuery
-            ->addFilter(static::getName(), $id);
+        $finderRequest->addFilter(static::getName(), $id);
 
-        $groups = $this->crud->search(Group::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $groups = $this->crud->search(Group::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $groups->toResponse();
     }

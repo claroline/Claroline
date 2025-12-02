@@ -2,7 +2,7 @@
 
 namespace Claroline\CursusBundle\Controller\Registration;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -48,14 +48,14 @@ class SessionUserController extends AbstractCrudController
         string $context,
         string $contextId = null,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         if (WorkspaceContext::getName() === $context) {
-            $finderQuery->addFilter('workspace', $contextId);
+            $finderRequest->addFilter('workspace', $contextId);
         }
 
         $options = static::getOptions();
-        $assertions = $this->crud->search(SessionUser::class, $finderQuery, $options['list'] ?? []);
+        $assertions = $this->crud->search(SessionUser::class, $finderRequest, $options['list'] ?? []);
 
         return $assertions->toResponse();
     }
@@ -70,18 +70,18 @@ class SessionUserController extends AbstractCrudController
         Course $course,
         string $sessionId = null,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('FOLLOW', $course, [], true);
 
         if (!empty($sessionId)) {
-            $finderQuery->addFilter('session', $sessionId);
+            $finderRequest->addFilter('session', $sessionId);
         } else {
-            $finderQuery->addFilter('course', $course->getUuid());
+            $finderRequest->addFilter('course', $course->getUuid());
         }
 
         $options = static::getOptions();
-        $results = $this->crud->search(SessionUser::class, $finderQuery, $options['list'] ?? []);
+        $results = $this->crud->search(SessionUser::class, $finderRequest, $options['list'] ?? []);
 
         return $results->toResponse();
     }

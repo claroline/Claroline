@@ -14,7 +14,7 @@ class FinderResult implements FinderResultInterface, \Countable
 
     public function __construct(
         private readonly string $name,
-        private readonly FinderQuery $searchQuery,
+        private readonly FinderRequest $request,
         private readonly QueryBuilder $queryBuilder,
         private readonly ?\Closure $rowTransformer = null,
         private readonly bool $readonly = true
@@ -81,9 +81,9 @@ class FinderResult implements FinderResultInterface, \Countable
 
     private function getQuery(): Query
     {
-        if (0 < $this->searchQuery->getPageSize()) {
-            $this->queryBuilder->setFirstResult($this->searchQuery->getPage() * $this->searchQuery->getPageSize());
-            $this->queryBuilder->setMaxResults($this->searchQuery->getPageSize());
+        if (0 < $this->request->getPageSize()) {
+            $this->queryBuilder->setFirstResult($this->request->getPage() * $this->request->getPageSize());
+            $this->queryBuilder->setMaxResults($this->request->getPageSize());
         }
 
         return $this->queryBuilder

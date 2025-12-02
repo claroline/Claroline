@@ -2,7 +2,7 @@
 
 namespace Claroline\AppBundle\API\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,11 +14,11 @@ trait ListAction
     #[Route(path: '', name: 'list', methods: ['GET'])]
     public function listAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $options = static::getOptions();
 
-        $results = $this->getCrud()->search(static::getClass(), $finderQuery, $options['list'] ?? []);
+        $results = $this->getCrud()->search(static::getClass(), $finderRequest, $options['list'] ?? []);
         if (is_array($results)) {
             // retro-compatibility with old finders
             return new StreamedJsonResponse($results);

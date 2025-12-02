@@ -2,7 +2,7 @@
 
 namespace Claroline\CursusBundle\Component\DataSource;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\DataSource\ListSourceComponent;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -43,20 +43,20 @@ class MyEventPresencesList extends ListSourceComponent
         return EventPresenceType::class;
     }
 
-    protected function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
     {
-        $finderQuery = parent::getQuery($context, $contextSubject, $request);
+        $finderRequest = parent::getRequest($context, $contextSubject, $request);
 
         if ($context === WorkspaceContext::getName()) {
             $workspaceSessions = array_map(function (Session $session) {
                 return $session->getUuid();
             }, $this->sessionRepo->findByWorkspace($contextSubject));
 
-            $finderQuery->addFilter('event.workspace', $workspaceSessions);
+            $finderRequest->addFilter('event.workspace', $workspaceSessions);
         }
 
-        $finderQuery->addFilter('user', $this->tokenStorage->getToken()?->getUser()->getUuid());
+        $finderRequest->addFilter('user', $this->tokenStorage->getToken()?->getUser()->getUuid());
 
-        return $finderQuery;
+        return $finderRequest;
     }
 }

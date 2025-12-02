@@ -11,7 +11,7 @@
 
 namespace Claroline\AuthenticationBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Entity\IpUser;
@@ -54,15 +54,15 @@ class IpUserController extends AbstractCrudController
         #[MapEntity(mapping: ['userId' => 'uuid'])]
         User $user,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('EDIT', $user, [], true);
 
-        $finderQuery->addFilters([
+        $finderRequest->addFilters([
             'user' => $user->getUuid(),
         ]);
 
-        $tokens = $this->crud->search(IpUser::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $tokens = $this->crud->search(IpUser::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $tokens->toResponse();
     }

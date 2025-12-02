@@ -3,7 +3,7 @@
 namespace Claroline\LogBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -31,7 +31,7 @@ class OperationalLogController
         string $context,
         string $contextId = null,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         try {
             $contextHandler = $this->contextProvider->getContext($context, $contextId);
@@ -44,11 +44,11 @@ class OperationalLogController
             throw new AccessDeniedException();
         }
 
-        $finderQuery
+        $finderRequest
             ->addFilter('contextId', $contextSubject?->getUuid())
             ->addFilter('contextName', $context);
 
-        $logs = $this->crud->search(OperationalLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $logs = $this->crud->search(OperationalLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $logs->toResponse();
     }
@@ -63,7 +63,7 @@ class OperationalLogController
         string $objectId,
         ?string $objectName = null,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         try {
             // I can't find a way to get \ in the URL directly (route never matches)
@@ -81,10 +81,10 @@ class OperationalLogController
             throw new AccessDeniedException();
         }
 
-        $finderQuery
+        $finderRequest
             ->addFilter('objectId', $objectId);
 
-        $logs = $this->crud->search(OperationalLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $logs = $this->crud->search(OperationalLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $logs->toResponse();
     }

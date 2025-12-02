@@ -3,7 +3,7 @@
 namespace Claroline\EvaluationBundle\Controller\UserEvaluation;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -49,21 +49,21 @@ class ResourceAttemptController
         #[MapEntity(mapping: ['resourceId' => 'uuid'])]
         ResourceNode $resourceNode,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
         }
 
-        $finderQuery->addFilter('resourceNode', $resourceNode->getUuid());
+        $finderRequest->addFilter('resourceNode', $resourceNode->getUuid());
         if (!$this->checkPermission('FOLLOW', $resourceNode)) {
             // only display evaluation of the current user
             /** @var User $user */
             $user = $this->tokenStorage->getToken()?->getUser();
-            $finderQuery->addFilter('user', $user->getUuid());
+            $finderRequest->addFilter('user', $user->getUuid());
         }
 
-        $evaluations = $this->crud->search(ResourceAttempt::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $evaluations = $this->crud->search(ResourceAttempt::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $evaluations->toResponse();
     }

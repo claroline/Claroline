@@ -4,7 +4,7 @@ namespace Claroline\AppBundle\API;
 
 use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\AppBundle\API\Finder\FinderFactoryInterface;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Finder\FinderResultInterface;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
@@ -118,7 +118,7 @@ class Crud
         return $this->finder->count($class, $query);
     }
 
-    public function search(string $class, ?FinderQuery $query = null, ?array $options = []): FinderResultInterface|array
+    public function search(string $class, ?FinderRequest $request = null, ?array $options = []): FinderResultInterface|array
     {
         $entityDef = new \ReflectionClass($class);
         $attributes = $entityDef->getAttributes();
@@ -128,7 +128,7 @@ class Crud
                 $args = $attribute->getArguments();
                 if ($args['finderClass']) {
                     return $this->finderFactory->create($args['finderClass'])
-                        ->submit($query)
+                        ->submit($request)
                         ->getResult(function (object $entity) use ($options): array {
                             return $this->serializer->serialize($entity, array_merge([SerializerInterface::SERIALIZE_LIST], $options));
                         })
@@ -138,10 +138,10 @@ class Crud
         }
 
         // for retro compatibility
-        return $this->list($class, $query ? [
-            'filters' => $query->getFilters(),
-            'page' => $query->getPage(),
-            'limit' => $query->getPageSize(),
+        return $this->list($class, $request ? [
+            'filters' => $request->getFilters(),
+            'page' => $request->getPage(),
+            'limit' => $request->getPageSize(),
         ] : [], $options);
     }
 

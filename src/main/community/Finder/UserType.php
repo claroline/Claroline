@@ -24,11 +24,8 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'disabled' => false,
             'fulltext' => ['username', 'firstName', 'lastName', 'email'],
         ]);
-
-        $resolver->setAllowedValues('disabled', [null, true, false]);
     }
 
     public function buildFinder(FinderBuilderInterface $builder, array $options): void
@@ -40,7 +37,7 @@ class UserType extends AbstractType
             ->add('email', TextType::class)
             ->add('lastActivity', DateType::class)
             ->add('created', DateType::class)
-            ->add('disabled', BooleanType::class, ['default' => $options['disabled']])
+            ->add('disabled', BooleanType::class, ['default' => false])
             ->add('groups', RelatedEntityType::class)
             ->add('roles', RelatedEntityType::class, [
                 'joinQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
@@ -84,6 +81,7 @@ class UserType extends AbstractType
                 },
             ])
             ->add('organizations', OrganizationType::class, [
+                'fulltext' => null,
                 'joinQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {
                     $alias = $finder->getAlias();
                     if (!$finder->isRoot()) {

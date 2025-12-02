@@ -5,6 +5,7 @@ namespace Claroline\AnnouncementBundle\Component\Tool;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementParameters;
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
@@ -14,10 +15,14 @@ use Claroline\AppBundle\Component\Tool\ToolComponent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class AnnouncementTool extends ToolComponent
 {
     public function __construct(
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
         private readonly Crud $crud
@@ -39,17 +44,23 @@ final class AnnouncementTool extends ToolComponent
         return WorkspaceContext::getName() === $context;
     }
 
-    public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
+    public function open(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null): ?array
     {
         $parameters = $this->om->getRepository(AnnouncementParameters::class)->findOneByWorkspace($contextSubject);
 
-        $postsList = $this->crud->list(Announcement::class, [
-            'filters' => ['visible' => true, 'workspace' => $contextSubject->getUuid()],
-        ]);
+        $finderRequest = new FinderRequest();
+        $finderRequest->addFilter('workspace', $contextSubject->getUuid());
+
+        if (!$this->authorization->isGranted('EDIT', $tool)) {
+            $finderRequest->addFilter('roles', $this->tokenStorage->getToken()?->getRoleNames() ?? []);
+            $finderRequest->addFilter('visible', true);
+        }
+
+        $announces = $this->crud->search(Announcement::class, $finderRequest);
 
         return [
             'parameters' => $parameters ? $this->serializer->serialize($parameters) : null,
-            'posts' => $postsList['data'],
+            'posts' => iterator_to_array($announces->getItems()),
         ];
     }
 

@@ -21,14 +21,28 @@ class ChoiceType extends AbstractType
         $resolver->setRequired('choices');
     }
 
+    public function submit(mixed $filterValue, array $options): mixed
+    {
+        $requestValue = $options['default'];
+        if (null !== $filterValue) {
+            $requestValue = $filterValue;
+        }
+
+        if (is_array($requestValue) && 1 === count($requestValue)) {
+            $requestValue = $requestValue[0];
+        }
+
+        return $requestValue;
+    }
+
     public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
     {
-        $value = !empty($finder->getFilterValue()) ? $finder->getFilterValue() : $options['default'];
-        if (null !== $value) {
-            if (is_array($value) && 1 === count($value)) {
-                $value = $value[0];
-            }
+        if ($finder->getSortValue()) {
+            $queryBuilder->addOrderBy($finder->getQueryPath(), $finder->getSortValue());
+        }
 
+        if ($finder->hasFilter()) {
+            $value = $finder->getFilterValue();
             if (is_array($value)) {
                 $queryBuilder->andWhere("{$finder->getQueryPath()} IN (:{$finder->getAlias()})");
             } else {

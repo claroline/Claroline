@@ -3,6 +3,8 @@ services:
         parent: Claroline\AppBundle\Component\Tool\ToolComponent
         tags: [ 'claroline.component.tool' ]
         arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'

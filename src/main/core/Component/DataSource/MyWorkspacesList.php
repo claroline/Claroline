@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Component\DataSource;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\DataSource\ListSourceComponent;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
@@ -35,12 +35,12 @@ final class MyWorkspacesList extends ListSourceComponent
         return $context === DesktopContext::getName();
     }
 
-    protected function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
     {
-        $query = parent::getQuery($context, $contextSubject, $request);
+        $finderRequest = parent::getRequest($context, $contextSubject, $request);
 
-        $query->addFilter('roles', $this->tokenStorage->getToken()->getRoleNames());
+        $finderRequest->addFilter('roles', $this->tokenStorage->getToken()->getRoleNames());
 
-        return $query;
+        return $finderRequest;
     }
 }

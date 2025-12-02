@@ -29,6 +29,13 @@ const EditorArchives = () => {
         display={{
           current: listConst.DISPLAY_LIST
         }}
+        customDefinition={[
+          {
+            name: 'parent',
+            label: trans('directory', {}, 'resource'),
+            type: 'resource'
+          }
+        ]}
       />
     </EditorPage>
   )

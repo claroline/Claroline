@@ -2,7 +2,7 @@
 
 namespace Claroline\CommunityBundle\Component\DataSource;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\DataSource\ListSourceComponent;
 use Claroline\CommunityBundle\Entity\Team;
@@ -35,9 +35,9 @@ class TeamMembersList extends ListSourceComponent
         return UserType::class;
     }
 
-    protected function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
     {
-        $finderQuery = parent::getQuery($context, $contextSubject, $request);
+        $finderRequest = parent::getRequest($context, $contextSubject, $request);
 
         $user = $this->tokenStorage->getToken()?->getUser();
         $teams = [];
@@ -48,13 +48,13 @@ class TeamMembersList extends ListSourceComponent
             }, $teams);
         }
 
-        $teamFilter = $finderQuery->getFilter('teams');
+        $teamFilter = $finderRequest->getFilter('teams');
         if (!empty($teamFilter)) {
             $teams = array_intersect($teams, is_array($teamFilter) ? $teamFilter : [$teamFilter]);
         }
 
-        $finderQuery->addFilter('teams', $teams);
+        $finderRequest->addFilter('teams', $teams);
 
-        return $finderQuery;
+        return $finderRequest;
     }
 }

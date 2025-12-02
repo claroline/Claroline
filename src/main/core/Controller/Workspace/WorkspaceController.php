@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Workspace;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
@@ -76,7 +76,7 @@ class WorkspaceController extends AbstractCrudController
     public function listRegisteredAction(
         ?string $userId = null,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         if ($userId) {
             // list workspace of the requested user if enough rights
@@ -94,7 +94,7 @@ class WorkspaceController extends AbstractCrudController
         }
 
         return $this->crud
-            ->search(Workspace::class, $finderQuery->addFilters([
+            ->search(Workspace::class, $finderRequest->addFilters([
                 'roles' => $userRoles,
             ]), [SerializerInterface::SERIALIZE_LIST])
             ->toResponse();
@@ -103,12 +103,12 @@ class WorkspaceController extends AbstractCrudController
     #[Route(path: '/list/model', name: 'list_model', methods: ['GET'])]
     public function listModelAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         return $this->crud
-            ->search(Workspace::class, $finderQuery->addFilters([
+            ->search(Workspace::class, $finderRequest->addFilters([
                 'model' => true,
             ]), [SerializerInterface::SERIALIZE_LIST])
             ->toResponse();

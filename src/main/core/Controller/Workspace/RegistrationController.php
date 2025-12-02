@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Workspace;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -63,11 +63,11 @@ class RegistrationController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Workspace $workspace,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkToolAccess('FOLLOW', $workspace->getUuid());
 
-        $results = $this->crud->search(User::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $results = $this->crud->search(User::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $results->toResponse();
     }

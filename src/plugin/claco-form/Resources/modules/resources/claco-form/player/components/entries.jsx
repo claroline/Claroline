@@ -14,7 +14,7 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
 import {constants} from '#/plugin/claco-form/resources/claco-form/constants'
-import {ClacoForm as ClacoFormTypes} from '#/plugin/claco-form/resources/claco-form/prop-types'
+import {Category, ClacoForm as ClacoFormTypes} from '#/plugin/claco-form/resources/claco-form/prop-types'
 import entriesSource from '#/plugin/claco-form/data/sources/entries'
 import {ResourcePage} from '#/main/core/resource'
 import {PageListSection} from '#/main/app/page'
@@ -49,7 +49,7 @@ const EntriesComponent = props =>
           url: ['apiv2_clacoformentry_delete'],
           displayed: (rows) => -1 !== rows.findIndex(e => !e.locked && hasPermission('administrate', e))
         }}
-        source={merge({}, entriesSource(props.clacoForm, props.canViewMetadata, props.canEdit, props.isCategoryManager, props.path, props.currentUser), {
+        source={merge({}, entriesSource(merge({categories: props.categories}, props.clacoForm), props.canViewMetadata, props.canEdit, props.isCategoryManager, props.path, props.currentUser), {
           actions: (rows) => [
             {
               name: 'edit',
@@ -134,6 +134,7 @@ EntriesComponent.propTypes = {
   clacoForm: T.shape(
     ClacoFormTypes.propTypes
   ).isRequired,
+  categories: T.arrayOf(T.shape(Category.propTypes)),
   listConfiguration: T.shape(
     ListParametersTypes.propTypes
   ),
@@ -154,6 +155,7 @@ const Entries = connect(
     currentUser: securitySelectors.currentUser(state),
     listConfiguration: selectors.listConfiguration(state),
     clacoForm: selectors.clacoForm(state),
+    categories: selectors.categories(state),
     canAddEntry: selectors.canAddEntry(state),
     canEdit: selectors.canEdit(state),
     canViewMetadata: selectors.canViewMetadata(state),

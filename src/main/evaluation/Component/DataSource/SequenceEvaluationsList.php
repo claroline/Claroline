@@ -2,7 +2,7 @@
 
 namespace Claroline\EvaluationBundle\Component\DataSource;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\DataSource\ListSourceComponent;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
@@ -30,14 +30,14 @@ final class SequenceEvaluationsList extends ListSourceComponent
         return SequenceEvaluationType::class;
     }
 
-    protected function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
     {
-        $finderQuery = parent::getQuery($context, $contextSubject, $request);
+        $finderRequest = parent::getRequest($context, $contextSubject, $request);
 
         if ($contextSubject) {
-            $finderQuery->addFilter('sequence.workspace', $contextSubject->getContextIdentifier());
+            $finderRequest->addFilter('sequence.workspace', $contextSubject->getContextIdentifier());
         }
 
-        return $finderQuery;
+        return $finderRequest;
     }
 }

@@ -18,6 +18,11 @@ interface ResolvedFinderTypeInterface
     public function getInnerType(): FinderTypeInterface;
 
     /**
+     * Submits a filter to the type hierarchy.
+     */
+    public function submit(mixed $filterValue, array $options): mixed;
+
+    /**
      * Configures a finder builder for the type hierarchy.
      */
     public function buildFinder(FinderBuilder $builder, array $options): void;

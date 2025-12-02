@@ -12,7 +12,7 @@
 namespace Claroline\OpenBadgeBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -45,16 +45,16 @@ class ArchiveController
     public function listAction(
         ?string $contextId = null,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        $finderQuery->addFilter('archived', true);
+        $finderRequest->addFilter('archived', true);
         if ($contextId) {
-            $finderQuery->addFilter('workspace', $contextId);
+            $finderRequest->addFilter('workspace', $contextId);
         }
 
-        $archives = $this->crud->search(BadgeClass::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $archives = $this->crud->search(BadgeClass::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $archives->toResponse();
     }

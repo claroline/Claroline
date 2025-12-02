@@ -11,7 +11,7 @@
 
 namespace Claroline\CursusBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -96,16 +96,16 @@ class EventController extends AbstractCrudController
     #[Route(path: '/{workspace}', name: 'list', methods: ['GET'])]
     public function listAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery(),
+        ?FinderRequest $finderRequest = new FinderRequest(),
         #[MapEntity(mapping: ['workspace' => 'uuid'])]
         ?Workspace $workspace = null
     ): StreamedJsonResponse {
         if ($workspace) {
-            $finderQuery->addFilter('workspace', $workspace->getUuid());
+            $finderRequest->addFilter('workspace', $workspace->getUuid());
         }
 
         $options = static::getOptions();
-        $results = $this->crud->search(static::getClass(), $finderQuery, $options['list'] ?? []);
+        $results = $this->crud->search(static::getClass(), $finderRequest, $options['list'] ?? []);
 
         return $results->toResponse();
     }
@@ -203,11 +203,11 @@ class EventController extends AbstractCrudController
         Event $sessionEvent,
         string $type,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $sessionEvent, [], true);
 
-        $users = $this->crud->search(EventUser::class, $finderQuery->addFilters([
+        $users = $this->crud->search(EventUser::class, $finderRequest->addFilters([
             'type' => $type,
             'event' => $sessionEvent->getUuid(),
         ]), [SerializerInterface::SERIALIZE_LIST]);

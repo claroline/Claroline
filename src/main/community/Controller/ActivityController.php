@@ -3,7 +3,7 @@
 namespace Claroline\CommunityBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
@@ -33,15 +33,15 @@ class ActivityController
     public function functionalLogsAction(
         string $contextId = null,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         if (!$this->checkToolAccess('FOLLOW', $contextId)) {
             throw new AccessDeniedException();
         }
 
-        $finderQuery->addFilter('contextId', $contextId);
+        $finderRequest->addFilter('contextId', $contextId);
 
-        $logs = $this->crud->search(FunctionalLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $logs = $this->crud->search(FunctionalLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $logs->toResponse();
     }

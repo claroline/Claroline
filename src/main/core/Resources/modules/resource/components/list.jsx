@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 import merge from 'lodash/merge'
@@ -14,18 +14,21 @@ import {getActions, getDefaultAction, getTypes} from '#/main/core/resource/utils
 import {ResourceCard} from '#/main/core/resource/components/card'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
 
-const Resources = props => {
+const ResourceList = props => {
+  const dispatch = useDispatch()
+  const currentUser = useSelector(securitySelectors.currentUser)
+
   const refresher = merge({
-    add:    () => props.invalidate(props.name),
-    update: () => props.invalidate(props.name),
-    delete: () => props.invalidate(props.name)
+    add:    () => dispatch(listActions.invalidateData(props.name)),
+    update: () => dispatch(listActions.invalidateData(props.name)),
+    delete: () => dispatch(listActions.invalidateData(props.name))
   }, props.refresher || {})
 
   return (
     <ListData
       autoFocus={props.autoFocus}
-      primaryAction={(row) => getDefaultAction(row, refresher, props.path, props.currentUser)}
-      actions={(rows) => getActions(rows, refresher, props.path, props.currentUser).then((actions) => [].concat(actions, props.customActions(rows)))}
+      primaryAction={(row) => getDefaultAction(row, refresher, props.path, currentUser)}
+      actions={(rows) => getActions(rows, refresher, props.path, currentUser).then((actions) => [].concat(actions, props.customActions(rows)))}
       definition={[
         {
           name: 'name',
@@ -54,10 +57,6 @@ const Resources = props => {
               .reduce((resourceTypes, current) => Object.assign(resourceTypes, {[current.name]: trans(current.name, {}, 'resource')}), {}),
             condensed: true
           }
-        }, {
-          name: 'parent',
-          label: trans('directory', {}, 'resource'),
-          type: 'resource'
         }, {
           name: 'meta.views',
           type: 'number',
@@ -125,7 +124,7 @@ const Resources = props => {
   )
 }
 
-Resources.propTypes = {
+ResourceList.propTypes = {
   path: T.string,
   name: T.string.isRequired,
   autoFocus: T.bool,
@@ -145,22 +144,11 @@ Resources.propTypes = {
   })
 }
 
-Resources.defaultProps = {
+ResourceList.defaultProps = {
   autoload: true,
   customDefinition: [],
   customActions: () => []
 }
-
-const ResourceList = connect(
-  (state) => ({
-    currentUser: securitySelectors.currentUser(state)
-  }),
-  (dispatch) => ({
-    invalidate(name) {
-      dispatch(listActions.invalidateData(name))
-    }
-  })
-)(Resources)
 
 export {
   ResourceList

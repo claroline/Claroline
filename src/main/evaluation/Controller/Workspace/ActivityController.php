@@ -3,7 +3,7 @@
 namespace Claroline\EvaluationBundle\Controller\Workspace;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Manager\ViewerManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -47,15 +47,15 @@ class ActivityController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Workspace $workspace,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkToolAccess('FOLLOW', $workspace->getUuid());
 
-        $finderQuery->addFilter('objectClass', Workspace::class);
-        $finderQuery->addFilter('objectId', $workspace->getUuid());
-        $finderQuery->addFilter('event', 'evaluation');
+        $finderRequest->addFilter('objectClass', Workspace::class);
+        $finderRequest->addFilter('objectId', $workspace->getUuid());
+        $finderRequest->addFilter('event', 'evaluation');
 
-        $logs = $this->crud->search(FunctionalLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $logs = $this->crud->search(FunctionalLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $logs->toResponse();
     }
@@ -100,13 +100,13 @@ class ActivityController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Workspace $workspace,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkToolAccess('FOLLOW', $workspace->getUuid());
 
-        $finderQuery->addFilter('workspace', $workspace->getUuid());
+        $finderRequest->addFilter('workspace', $workspace->getUuid());
 
-        $viewers = $this->viewerManager->listViews(WorkspaceViewType::class, $finderQuery);
+        $viewers = $this->viewerManager->listViews(WorkspaceViewType::class, $finderRequest);
 
         return $viewers->toResponse();
     }

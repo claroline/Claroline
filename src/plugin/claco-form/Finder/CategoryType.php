@@ -1,32 +1,33 @@
 <?php
 
-namespace Claroline\EvaluationBundle\Finder;
+namespace Claroline\ClacoFormBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractType;
 use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
-use Claroline\CommunityBundle\Finder\UserType;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\SequenceEvaluation;
+use Claroline\AppBundle\API\Finder\Type\EntityType;
+use Claroline\AppBundle\API\Finder\Type\TextType;
+use Claroline\ClacoFormBundle\Entity\Category;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SequenceEvaluationType extends AbstractType
+class CategoryType extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => SequenceEvaluation::class,
+            'data_class' => Category::class,
+            'fulltext' => ['name'],
         ]);
     }
 
     public function buildFinder(FinderBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('sequence', SequenceType::class, ['fulltext' => null])
-            ->add('user', UserType::class)
+            ->add('name', TextType::class)
         ;
     }
 
     public function getParent(): ?string
     {
-        return EvaluationType::class;
+        return EntityType::class;
     }
 }

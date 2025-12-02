@@ -17,6 +17,11 @@ class FinderBuilder implements FinderBuilderInterface
      */
     private array $children = [];
 
+    /**
+     * A list of transformations callback to apply to the FinderRequest before submitting it to the Finder.
+     */
+    private array $requestTransformers = [];
+
     private ResolvedFinderTypeInterface $type;
 
     private FinderFactoryInterface $factory;
@@ -58,7 +63,7 @@ class FinderBuilder implements FinderBuilderInterface
 
         $this->locked = true;
 
-        $finder = new Finder($this->em, $this->eventDispatcher, $this->type, $this->name, $this->options);
+        $finder = new Finder($this->em, $this->eventDispatcher, $this->type, $this->name, $this->options, $this->requestTransformers);
 
         foreach ($this->children as $child) {
             $finder->add($child->getFinder());
@@ -93,5 +98,16 @@ class FinderBuilder implements FinderBuilderInterface
         }
 
         throw new \InvalidArgumentException(sprintf('The child with the name "%s" does not exist.', $name));
+    }
+
+    public function addRequestTransformer(callable $transformer): static
+    {
+        if ($this->locked) {
+            throw new \BadMethodCallException('FinderBuilder methods cannot be accessed anymore once the builder is turned into a FinderInterface instance.');
+        }
+
+        $this->requestTransformers[] = $transformer;
+
+        return $this;
     }
 }

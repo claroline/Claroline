@@ -11,7 +11,7 @@
 
 namespace Claroline\TransferBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -61,13 +61,13 @@ class ImportController extends AbstractCrudController
         #[MapEntity(mapping: ['workspaceId' => 'uuid'])]
         Workspace $workspace,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission(ToolPermissions::getPermission('import', 'OPEN'), $workspace, [], true);
 
-        $finderQuery->addFilter('workspace', $workspace->getUuid());
+        $finderRequest->addFilter('workspace', $workspace->getUuid());
 
-        $imports = $this->crud->search(ImportFile::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $imports = $this->crud->search(ImportFile::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $imports->toResponse();
     }

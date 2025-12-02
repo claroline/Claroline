@@ -2,7 +2,7 @@
 
 namespace Claroline\CursusBundle\Controller\Registration;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -46,14 +46,14 @@ class EventUserController extends AbstractCrudController
         string $context,
         string $contextId = null,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         if (WorkspaceContext::getName() === $context) {
-            $finderQuery->addFilter('event.workspace', $contextId);
+            $finderRequest->addFilter('event.workspace', $contextId);
         }
 
         $options = static::getOptions();
-        $assertions = $this->crud->search(EventUser::class, $finderQuery, $options['list'] ?? []);
+        $assertions = $this->crud->search(EventUser::class, $finderRequest, $options['list'] ?? []);
 
         return $assertions->toResponse();
     }
@@ -63,14 +63,14 @@ class EventUserController extends AbstractCrudController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Event $event,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('FOLLOW', $event, [], true);
 
-        $finderQuery->addFilter('event', $event->getUuid());
+        $finderRequest->addFilter('event', $event->getUuid());
 
         $options = static::getOptions();
-        $results = $this->crud->search(EventUser::class, $finderQuery, $options['list'] ?? []);
+        $results = $this->crud->search(EventUser::class, $finderRequest, $options['list'] ?? []);
 
         return $results->toResponse();
     }

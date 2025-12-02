@@ -3,7 +3,7 @@
 namespace Claroline\AnnouncementBundle\Component\DataSource;
 
 use Claroline\AnnouncementBundle\Finder\AnnouncementType;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\DataSource\ListSourceComponent;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
@@ -39,9 +39,9 @@ class AnnouncementSource extends ListSourceComponent
         return AnnouncementType::class;
     }
 
-    protected function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
     {
-        $finderQuery = parent::getQuery($context, $contextSubject, $request);
+        $finderRequest = parent::getRequest($context, $contextSubject, $request);
 
         if (PublicContext::getName() === $context) {
             // only announcements accessible by anonymous users
@@ -52,11 +52,12 @@ class AnnouncementSource extends ListSourceComponent
         }
 
         if (WorkspaceContext::getName() === $context) {
-            $finderQuery->addFilter('workspace', $contextSubject->getUuid());
+            $finderRequest->addFilter('workspace', $contextSubject->getUuid());
         }
 
-        $finderQuery->addFilter('roles', $roles);
+        $finderRequest->addFilter('visible', true);
+        $finderRequest->addFilter('roles', $roles);
 
-        return $finderQuery;
+        return $finderRequest;
     }
 }

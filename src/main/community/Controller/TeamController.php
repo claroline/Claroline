@@ -11,7 +11,7 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CommunityBundle\Entity\Team;
@@ -57,13 +57,13 @@ class TeamController extends AbstractCrudController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Workspace $workspace,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkToolAccess($workspace, 'OPEN');
 
-        $finderQuery->addFilter('workspace', $workspace->getUuid());
+        $finderRequest->addFilter('workspace', $workspace->getUuid());
 
-        $teams = $this->crud->search(Team::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $teams = $this->crud->search(Team::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $teams->toResponse();
     }
@@ -74,14 +74,14 @@ class TeamController extends AbstractCrudController
         Team $team,
         string $role,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $team, [], true);
 
-        $finderQuery->addFilter('teams', $team->getUuid());
-        $finderQuery->addFilter('roles', ['manager' === $role ? $team->getManagerRole()->getUuid() : $team->getRole()->getUuid()]);
+        $finderRequest->addFilter('teams', $team->getUuid());
+        $finderRequest->addFilter('roles', ['manager' === $role ? $team->getManagerRole()->getUuid() : $team->getRole()->getUuid()]);
 
-        $users = $this->crud->search(User::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $users = $this->crud->search(User::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $users->toResponse();
     }

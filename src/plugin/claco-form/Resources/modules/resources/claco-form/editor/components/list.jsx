@@ -1,5 +1,6 @@
 import React from 'react'
 import {useSelector} from 'react-redux'
+import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {ListForm} from '#/main/app/content/list/parameters/containers/form'
@@ -25,7 +26,7 @@ const generateDisplayList = (fields = []) => {
 
 const EditorList = () => {
   const clacoForm = useSelector(selectors.clacoForm)
-
+  const categories = useSelector(selectors.categories)
 
   return (
     <EditorPage
@@ -65,7 +66,7 @@ const EditorList = () => {
         level={3}
         name={selectors.STORE_NAME}
         dataPart="resource.list"
-        list={entriesSource(clacoForm, true, true, true)}
+        list={entriesSource(merge({categories: categories}, clacoForm), true, true, true)}
         parameters={clacoForm.list}
       />
     </EditorPage>

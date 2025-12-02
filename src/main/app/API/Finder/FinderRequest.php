@@ -9,10 +9,10 @@ namespace Claroline\AppBundle\API\Finder;
  *
  *      public function controllerAction(
  *          #[MapQueryString]
- *          ?FinderQuery $finderQuery = new FinderQuery()
+ *          ?FinderRequest $finderRequest = new FinderRequest()
  *      )
  */
-class FinderQuery
+class FinderRequest
 {
     public const SORT_ASC = 'ASC';
     public const SORT_DESC = 'DESC';
@@ -74,6 +74,20 @@ class FinderQuery
         return $this->sortBy;
     }
 
+    public function hasSort(string $sortName): bool
+    {
+        return array_key_exists($sortName, $this->sortBy);
+    }
+
+    public function removeSort(string $sortName): self
+    {
+        if (array_key_exists($sortName, $this->sortBy)) {
+            unset($this->sortBy[$sortName]);
+        }
+
+        return $this;
+    }
+
     public function getSort(string $sortName): mixed
     {
         if (array_key_exists($sortName, $this->sortBy)) {
@@ -132,6 +146,15 @@ class FinderQuery
     public function addFilter(string $filterName, mixed $filterValue): self
     {
         $this->filters[$filterName] = $filterValue;
+
+        return $this;
+    }
+
+    public function removeFilter(string $filterName): self
+    {
+        if (array_key_exists($filterName, $this->filters)) {
+            unset($this->filters[$filterName]);
+        }
 
         return $this;
     }

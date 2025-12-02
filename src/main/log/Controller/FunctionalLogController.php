@@ -3,7 +3,7 @@
 namespace Claroline\LogBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
@@ -33,11 +33,11 @@ class FunctionalLogController
     #[Route(path: '', name: 'apiv2_logs_functional', methods: ['GET'])]
     public function listAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
 
-        $logs = $this->crud->search(FunctionalLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $logs = $this->crud->search(FunctionalLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $logs->toResponse();
     }
@@ -45,14 +45,14 @@ class FunctionalLogController
     #[Route(path: '/current', name: 'apiv2_logs_functional_list_current', methods: ['GET'])]
     public function listForCurrentUserAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         $user = $this->tokenStorage->getToken()?->getUser();
-        $finderQuery->addFilter('doer', $user->getUuid());
+        $finderRequest->addFilter('doer', $user->getUuid());
 
-        $logs = $this->crud->search(FunctionalLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $logs = $this->crud->search(FunctionalLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $logs->toResponse();
     }
@@ -62,13 +62,13 @@ class FunctionalLogController
         #[MapEntity(mapping: ['userId' => 'uuid'])]
         User $user,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $user, [], true);
 
-        $finderQuery->addFilter('doer', $user->getUuid());
+        $finderRequest->addFilter('doer', $user->getUuid());
 
-        $logs = $this->crud->search(FunctionalLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $logs = $this->crud->search(FunctionalLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $logs->toResponse();
     }
@@ -78,13 +78,13 @@ class FunctionalLogController
         #[MapEntity(mapping: ['groupId' => 'uuid'])]
         Group $group,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $group, [], true);
 
-        $finderQuery->addFilter('doer.groups', $group->getUuid());
+        $finderRequest->addFilter('doer.groups', $group->getUuid());
 
-        $logs = $this->crud->search(FunctionalLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $logs = $this->crud->search(FunctionalLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $logs->toResponse();
     }

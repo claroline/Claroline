@@ -14,17 +14,22 @@ class Finder implements FinderInterface
     private ?FinderInterface $parent = null;
     /** @var FinderInterface[] */
     private array $children = [];
-    private FinderQuery $query;
+    private array $requestTransformers;
+    private FinderRequest $request;
+    private bool $submitted = false;
+    private mixed $filterValue = null;
+    private ?string $sortValue = null;
     private array $options;
     private bool $distinct = false;
     private EntityManagerInterface $em;
     private EventDispatcherInterface $eventDispatcher;
 
-    public function __construct(EntityManagerInterface $em, EventDispatcherInterface $eventDispatcher, ResolvedFinderTypeInterface $type, string $name, array $options)
+    public function __construct(EntityManagerInterface $em, EventDispatcherInterface $eventDispatcher, ResolvedFinderTypeInterface $type, string $name, array $options, ?array $requestTransformers = [])
     {
         $this->name = $name;
         $this->type = $type;
         $this->options = $options;
+        $this->requestTransformers = $requestTransformers;
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -46,11 +51,14 @@ class Finder implements FinderInterface
 
     public function getAlias(): string
     {
+        $sanitizedName = str_replace('-', '', $this->getName());
+        $sanitizedName = str_replace('.', '', $sanitizedName);
+
         if (null !== $this->parent) {
-            return $this->parent->getAlias().'_'.$this->getName();
+            return $this->parent->getAlias().'_'.$sanitizedName;
         }
 
-        return $this->getName();
+        return $sanitizedName;
     }
 
     public function getPropertyPath(): string
@@ -108,12 +116,28 @@ class Finder implements FinderInterface
         throw new \OutOfBoundsException(sprintf('Child "%s" does not exist.', $name));
     }
 
-    public function submit(?FinderQuery $query): static
+    public function submit(?FinderRequest $request): static
     {
-        $this->query = $query ?? new FinderQuery();
+        if (empty($request)) {
+            $request = new FinderRequest();
+        } else {
+            $request = clone $request;
+        }
 
-        foreach ($this->children as $child) {
-            $child->submit($this->query);
+        foreach ($this->requestTransformers as $transformer) {
+            $request = $transformer($request, $this, $this->options);
+        }
+
+        $this->request = $request;
+        $this->submitted = true;
+
+        $this->filterValue = $this->type->submit($request->getFilter($this->getPropertyPath()), $this->options);
+        $this->sortValue = $request->getSort($this->getPropertyPath());
+
+        if (null === $this->filterValue) {
+            foreach ($this->children as $child) {
+                $child->submit($request);
+            }
         }
 
         return $this;
@@ -125,33 +149,33 @@ class Finder implements FinderInterface
             throw new \RuntimeException('Method can only be called on root finder.');
         }
 
-        $queryBuilder = $this->createQueryBuilder();
-        if (0 < $this->query->getPageSize()) {
-            $queryBuilder->setFirstResult($this->query->getPage() * $this->query->getPageSize());
-            $queryBuilder->setMaxResults($this->query->getPageSize());
+        if (!$this->submitted) {
+            throw new \RuntimeException('A FinderRequest must be submitted first.');
         }
 
-        return new FinderResult($this->getAlias(), $this->query, $queryBuilder, $rowTransformer, $readonly);
+        $queryBuilder = $this->createQueryBuilder();
+
+        return new FinderResult($this->getAlias(), $this->request, $queryBuilder, $rowTransformer, $readonly);
     }
 
     public function getSearchValue(): ?string
     {
-        return $this->query->getSearch();
+        return $this->request->getSearch();
     }
 
     public function hasFilter(): bool
     {
-        return $this->query->hasFilter($this->getPropertyPath());
+        return null !== $this->filterValue;
     }
 
     public function getFilterValue(): mixed
     {
-        return $this->query->getFilter($this->getPropertyPath());
+        return $this->filterValue;
     }
 
     public function getSortValue(): ?string
     {
-        return $this->query->getSort($this->getPropertyPath());
+        return $this->sortValue;
     }
 
     public function createQueryBuilder(?QueryBuilder $queryBuilder = null): QueryBuilder

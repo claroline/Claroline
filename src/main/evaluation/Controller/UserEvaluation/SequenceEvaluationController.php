@@ -12,7 +12,7 @@
 namespace Claroline\EvaluationBundle\Controller\UserEvaluation;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -72,7 +72,7 @@ class SequenceEvaluationController
         ?string $parentType = null,
         ?string $parentId = null,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
@@ -83,7 +83,7 @@ class SequenceEvaluationController
                 $sequence = $this->om->getRepository(Sequence::class)->findOneBy(['uuid' => $parentId]);
                 $manager = $this->checkPermission('FOLLOW', $sequence);
 
-                $finderQuery->addFilter('sequence', $sequence->getUuid());
+                $finderRequest->addFilter('sequence', $sequence->getUuid());
                 break;
 
             case 'workspace':
@@ -91,7 +91,7 @@ class SequenceEvaluationController
                 $progressionTool = $this->toolManager->getOrderedTool('progression', WorkspaceContext::getName(), $parentId);
                 $manager = $this->checkPermission('FOLLOW', $progressionTool);
 
-                $finderQuery->addFilter('sequence.workspace', $workspace->getUuid());
+                $finderRequest->addFilter('sequence.workspace', $workspace->getUuid());
                 break;
 
             default:
@@ -104,10 +104,10 @@ class SequenceEvaluationController
             // only display evaluation of the current user
             /** @var User $user */
             $user = $this->tokenStorage->getToken()?->getUser();
-            $finderQuery->addFilter('user', $user->getUuid());
+            $finderRequest->addFilter('user', $user->getUuid());
         }
 
-        $evaluations = $this->crud->search(SequenceEvaluation::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $evaluations = $this->crud->search(SequenceEvaluation::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $evaluations->toResponse();
     }

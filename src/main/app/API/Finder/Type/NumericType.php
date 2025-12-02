@@ -18,6 +18,20 @@ class NumericType extends AbstractType
         $resolver->setAllowedTypes('default', ['null', 'numeric']);
     }
 
+    public function submit(mixed $filterValue, array $options): ?float
+    {
+        $value = $options['default'];
+        if (is_numeric($filterValue)) {
+            // convert numbers
+            $floatValue = floatval($filterValue);
+            if ($filterValue === $floatValue.'') {
+                $value = $floatValue;
+            }
+        }
+
+        return $value;
+    }
+
     public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
     {
         if ($finder->getSortValue()) {
@@ -29,7 +43,7 @@ class NumericType extends AbstractType
             // convert numbers
             $floatValue = floatval($finder->getFilterValue());
             if ($finder->getFilterValue() === $floatValue.'') {
-                // dumb check to allow users search with strings like '001' without catching it as a number
+                // dumb check to allow users to search with strings like '001' without catching it as a number
                 $value = $floatValue;
             }
         }

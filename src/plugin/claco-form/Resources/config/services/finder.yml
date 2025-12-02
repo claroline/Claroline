@@ -1,4 +1,14 @@
 services:
+    Claroline\ClacoFormBundle\Finder\EntryType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\ClacoFormBundle\Finder\FieldValueType:
+        tags: [ claroline.finder.type ]
+
+    Claroline\ClacoFormBundle\Finder\CategoryType:
+        tags: [ claroline.finder.type ]
+
+    # deprecated
     Claroline\ClacoFormBundle\Finder\CategoryFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]

@@ -11,7 +11,7 @@
 
 namespace Claroline\OpenBadgeBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
@@ -64,13 +64,13 @@ class BadgeClassController extends AbstractCrudController
         #[MapEntity(mapping: ['workspace' => 'uuid'])]
         Workspace $workspace,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $workspace, [], true);
 
-        $finderQuery->addFilter('workspace', $workspace->getUuid());
+        $finderRequest->addFilter('workspace', $workspace->getUuid());
 
-        $assertions = $this->crud->search(BadgeClass::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $assertions = $this->crud->search(BadgeClass::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $assertions->toResponse();
     }
@@ -80,7 +80,7 @@ class BadgeClassController extends AbstractCrudController
         #[MapEntity(mapping: ['badge' => 'uuid'])]
         BadgeClass $badge,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         if ($badge->getHideRecipients()) {
             $this->checkPermission('FOLLOW', $badge, [], true);
@@ -88,9 +88,9 @@ class BadgeClassController extends AbstractCrudController
             $this->checkPermission('OPEN', $badge, [], true);
         }
 
-        $finderQuery->addFilter('badge', $badge->getUuid());
+        $finderRequest->addFilter('badge', $badge->getUuid());
 
-        $assertions = $this->crud->search(Assertion::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $assertions = $this->crud->search(Assertion::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $assertions->toResponse();
     }

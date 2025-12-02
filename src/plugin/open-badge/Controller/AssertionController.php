@@ -11,7 +11,7 @@
 
 namespace Claroline\OpenBadgeBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Manager\PdfManager;
@@ -68,7 +68,7 @@ class AssertionController extends AbstractCrudController
     #[Route(path: '/current-user/{workspaceId}', name: 'current_user_list', defaults: ['workspaceId' => null], methods: ['GET'])]
     public function listMyAssertionsAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery(),
+        ?FinderRequest $finderRequest = new FinderRequest(),
         #[MapEntity(mapping: ['workspaceId' => 'uuid'])]
         ?Workspace $workspace = null
     ): StreamedJsonResponse {
@@ -78,12 +78,12 @@ class AssertionController extends AbstractCrudController
 
         $user = $this->tokenStorage->getToken()?->getUser();
 
-        $finderQuery->addFilter('recipient', $user->getUuid());
+        $finderRequest->addFilter('recipient', $user->getUuid());
         if ($workspace) {
-            $finderQuery->addFilter('badge.workspace', $workspace->getUuid());
+            $finderRequest->addFilter('badge.workspace', $workspace->getUuid());
         }
 
-        $assertions = $this->crud->search(Assertion::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $assertions = $this->crud->search(Assertion::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $assertions->toResponse();
     }
@@ -95,16 +95,16 @@ class AssertionController extends AbstractCrudController
         #[MapEntity(mapping: ['workspaceId' => 'uuid'])]
         ?Workspace $workspace = null,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $user, [], true);
 
-        $finderQuery->addFilter('recipient', $user->getUuid());
+        $finderRequest->addFilter('recipient', $user->getUuid());
         if ($workspace) {
-            $finderQuery->addFilter('badge.workspace', $workspace->getUuid());
+            $finderRequest->addFilter('badge.workspace', $workspace->getUuid());
         }
 
-        $assertions = $this->crud->search(Assertion::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $assertions = $this->crud->search(Assertion::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $assertions->toResponse();
     }
@@ -114,12 +114,12 @@ class AssertionController extends AbstractCrudController
         #[MapEntity(mapping: ['assertion' => 'uuid'])]
         Assertion $assertion,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $assertion, [], true);
 
-        $finderQuery->addFilter('assertion', $assertion->getUuid());
-        $evidences = $this->crud->search(Evidence::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $finderRequest->addFilter('assertion', $assertion->getUuid());
+        $evidences = $this->crud->search(Evidence::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $evidences->toResponse();
     }

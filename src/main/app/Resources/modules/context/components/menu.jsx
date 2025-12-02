@@ -180,7 +180,24 @@ const ContextMenu = () => {
     )
   }
 
-  return null
+  return (
+    <Button
+      id="toggle-menu"
+      type={CALLBACK_BUTTON}
+      className="app-context-menu-toggle btn btn-text-body focus-ring py-1 px-2 mx-n2 my-2 rounded-1 border-0"
+      icon="fa fa-square-caret-left"
+      label={trans('close_context_menu', {}, 'actions')}
+      tooltip="bottom"
+      callback={() => {
+        setPinedMenu(!pinedMenu)
+        setTimeout(() => {
+          document.querySelector('.app-context-menu-toggle').focus()
+        }, 0)
+      }}
+      aria-expanded={true}
+      aria-controls={menuId}
+    />
+  )
 }
 
 export {

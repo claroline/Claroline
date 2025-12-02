@@ -12,7 +12,7 @@
 namespace Claroline\EvaluationBundle\Controller\UserEvaluation;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -71,7 +71,7 @@ class ResourceEvaluationController
         ?string $parentType = null,
         ?string $parentId = null,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
@@ -82,14 +82,14 @@ class ResourceEvaluationController
                 $resourceNode = $this->om->getRepository(ResourceNode::class)->findOneBy(['uuid' => $parentId]);
                 $manager = $this->checkPermission('FOLLOW', $resourceNode);
 
-                $finderQuery->addFilter('resourceNode', $resourceNode->getUuid());
+                $finderRequest->addFilter('resourceNode', $resourceNode->getUuid());
                 break;
 
             case 'sequence':
                 $sequence = $this->om->getRepository(Sequence::class)->findOneBy(['uuid' => $parentId]);
                 $manager = $this->checkPermission('FOLLOW', $sequence);
 
-                $finderQuery->addFilter('sequence', $sequence->getUuid());
+                $finderRequest->addFilter('sequence', $sequence->getUuid());
                 break;
 
             case 'workspace':
@@ -97,7 +97,7 @@ class ResourceEvaluationController
                 $progressionTool = $this->toolManager->getOrderedTool('progression', WorkspaceContext::getName(), $parentId);
                 $manager = $this->checkPermission('FOLLOW', $progressionTool);
 
-                $finderQuery->addFilter('resourceNode.workspace', $workspace->getUuid());
+                $finderRequest->addFilter('resourceNode.workspace', $workspace->getUuid());
                 break;
 
             default:
@@ -110,10 +110,10 @@ class ResourceEvaluationController
             // only display evaluation of the current user
             /** @var User $user */
             $user = $this->tokenStorage->getToken()?->getUser();
-            $finderQuery->addFilter('user', $user->getUuid());
+            $finderRequest->addFilter('user', $user->getUuid());
         }
 
-        $evaluations = $this->crud->search(ResourceEvaluation::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $evaluations = $this->crud->search(ResourceEvaluation::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $evaluations->toResponse();
     }

@@ -11,7 +11,7 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Manager\MailManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
@@ -66,17 +66,17 @@ class UserController extends AbstractCrudController
     #[Route(path: '/{contextId}', name: 'list', methods: ['GET'])]
     public function listAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery(),
+        ?FinderRequest $finderRequest = new FinderRequest(),
         ?string $contextId = null
     ): StreamedJsonResponse {
         $this->checkToolAccess('OPEN', $contextId);
 
         if ($contextId) {
             $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $contextId]);
-            $finderQuery->addFilter('workspace', $workspace->getUuid());
+            $finderRequest->addFilter('workspace', $workspace->getUuid());
         }
 
-        return parent::listAction($finderQuery);
+        return parent::listAction($finderRequest);
     }
 
     #[Route(path: '/enable', name: 'enable', methods: ['PUT'])]

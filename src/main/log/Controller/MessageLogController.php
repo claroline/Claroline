@@ -3,7 +3,7 @@
 namespace Claroline\LogBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Security\PlatformRoles;
@@ -30,11 +30,11 @@ class MessageLogController
     #[Route(path: '', name: 'apiv2_logs_message', methods: ['GET'])]
     public function listAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
 
-        $logs = $this->crud->search(MessageLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $logs = $this->crud->search(MessageLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $logs->toResponse();
     }
@@ -42,14 +42,14 @@ class MessageLogController
     #[Route(path: '/current', name: 'apiv2_logs_message_list_current', methods: ['GET'])]
     public function listForCurrentUserAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         $user = $this->tokenStorage->getToken()?->getUser();
-        $finderQuery->addFilter('doer', $user->getUuid());
+        $finderRequest->addFilter('doer', $user->getUuid());
 
-        $logs = $this->crud->search(MessageLog::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $logs = $this->crud->search(MessageLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $logs->toResponse();
     }

@@ -3,7 +3,7 @@
 namespace Claroline\EvaluationBundle\Manager;
 
 use Claroline\AppBundle\API\Finder\FinderFactory;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -30,7 +30,7 @@ class ExportManager
     public function exportResourceEvaluations(ResourceNode $resourceNode): mixed
     {
         $results = $this->finderFactory->create(ResourceEvaluationType::class)
-            ->submit(new FinderQuery(null, ['resourceNode' => $resourceNode->getUuid()]))
+            ->submit(new FinderRequest(null, ['resourceNode' => $resourceNode->getUuid()]))
             ->getResult(function (ResourceEvaluation $evaluation): array {
                 return array_merge($this->formatEvaluation($evaluation), [
                     $evaluation->getEstimatedDuration(),
@@ -55,7 +55,7 @@ class ExportManager
     public function exportSequenceEvaluations(Sequence $sequence): mixed
     {
         $results = $this->finderFactory->create(SequenceEvaluationType::class)
-            ->submit(new FinderQuery(null, ['sequence' => $sequence->getUuid()]))
+            ->submit(new FinderRequest(null, ['sequence' => $sequence->getUuid()]))
             ->getResult(function (SequenceEvaluation $evaluation): array {
                 return array_merge($this->formatEvaluation($evaluation), [
                     $evaluation->getEstimatedDuration(),
@@ -82,7 +82,7 @@ class ExportManager
     public function exportWorkspaceEvaluations(Workspace $workspace): mixed
     {
         $results = $this->finderFactory->create(WorkspaceEvaluationType::class)
-            ->submit(new FinderQuery(null, ['workspace' => $workspace->getUuid()]))
+            ->submit(new FinderRequest(null, ['workspace' => $workspace->getUuid()]))
             ->getResult(function (WorkspaceEvaluation $evaluation): array {
                 return array_merge($this->formatEvaluation($evaluation), [
                     $evaluation->isCertified(),

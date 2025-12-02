@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Controller;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -12,7 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Item\Item;
-use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Manager\Item\ItemManager;
 use UJM\ExoBundle\Manager\Item\ShareManager;
 
@@ -75,12 +73,5 @@ class ItemController extends AbstractCrudController
     public function getIgnore(): array
     {
         return ['get', 'create', 'update'];
-    }
-
-    public static function getOptions(): array
-    {
-        return array_merge(parent::getOptions(), [
-            'list' => [Options::SERIALIZE_LIST, Transfer::INCLUDE_SOLUTIONS],
-        ]);
     }
 }

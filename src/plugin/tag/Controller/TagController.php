@@ -11,7 +11,7 @@
 
 namespace Claroline\TagBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -56,13 +56,13 @@ class TagController extends AbstractCrudController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Tag $tag,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $tag, [], true);
 
-        $finderQuery->addFilter('tag', $tag->getUuid());
+        $finderRequest->addFilter('tag', $tag->getUuid());
 
-        $tags = $this->crud->search(TaggedObject::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $tags = $this->crud->search(TaggedObject::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $tags->toResponse();
     }

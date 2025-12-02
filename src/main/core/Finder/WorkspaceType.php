@@ -40,11 +40,11 @@ class WorkspaceType extends AbstractType
             ->add('hidden', HiddenType::class)
             ->add('archived', BooleanType::class, ['default' => false])
             ->add('public', PublicType::class)
-            ->add('organizations', OrganizationType::class)
+            ->add('organizations', OrganizationType::class, ['fulltext' => null])
             ->add('creator', CreatorType::class)
             ->add('createdAt', DateType::class)
             ->add('updatedAt', DateType::class)
-            ->add('roles', RoleType::class)
+            ->add('roles', RoleType::class, ['fulltext' => null])
             ->add('tags', TagType::class)
         ;
     }

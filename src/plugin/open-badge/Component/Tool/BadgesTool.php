@@ -3,7 +3,7 @@
 namespace Claroline\OpenBadgeBundle\Component\Tool;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
@@ -53,7 +53,7 @@ class BadgesTool extends ToolComponent
     {
         $user = $this->tokenStorage->getToken()?->getUser();
         if ($user instanceof User) {
-            $countQuery = new FinderQuery();
+            $countQuery = new FinderRequest();
             $countQuery->addFilter('recipient', $user->getUuid());
             if ($contextSubject) {
                 $countQuery->addFilter('badge.workspace', $contextSubject->getUuid());

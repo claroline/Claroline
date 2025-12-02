@@ -11,7 +11,7 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
@@ -60,7 +60,7 @@ class RoleController extends AbstractCrudController
     #[Route(path: '/{roleType<platform|workspace|user>?platform}/{contextId}', name: 'list', methods: ['GET'])]
     public function listAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery(),
+        ?FinderRequest $finderRequest = new FinderRequest(),
         ?string $roleType = Role::PLATFORM,
         ?string $contextId = null,
     ): StreamedJsonResponse {
@@ -68,12 +68,12 @@ class RoleController extends AbstractCrudController
 
         if ($contextId) {
             $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $contextId]);
-            $finderQuery->addFilter('workspace', $workspace->getUuid());
+            $finderRequest->addFilter('workspace', $workspace->getUuid());
         }
 
-        $finderQuery->addFilter('type', $roleType);
+        $finderRequest->addFilter('type', $roleType);
 
-        return parent::listAction($finderQuery);
+        return parent::listAction($finderRequest);
     }
 
     /**

@@ -14,4 +14,6 @@ interface FinderBuilderInterface
      * Creates the finder.
      */
     public function getFinder(): FinderInterface;
+
+    public function addRequestTransformer(callable $transformer): static;
 }

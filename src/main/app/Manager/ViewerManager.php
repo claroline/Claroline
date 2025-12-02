@@ -3,7 +3,7 @@
 namespace Claroline\AppBundle\Manager;
 
 use Claroline\AppBundle\API\Finder\FinderFactoryInterface;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Finder\FinderResultInterface;
 use Claroline\AppBundle\Entity\AbstractUserView;
 use Claroline\AppBundle\Entity\UserViewCounterInterface;
@@ -25,10 +25,10 @@ class ViewerManager
     ) {
     }
 
-    public function listViews(string $finderClass, FinderQuery $finderQuery): FinderResultInterface
+    public function listViews(string $finderClass, FinderRequest $finderRequest): FinderResultInterface
     {
         return $this->finderFactory->create($finderClass)
-            ->submit($finderQuery)
+            ->submit($finderRequest)
             ->getResult(function (AbstractUserView $viewer): array {
                 return $this->viewerSerializer->serialize($viewer);
             });

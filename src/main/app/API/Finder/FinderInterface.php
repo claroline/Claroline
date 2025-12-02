@@ -41,25 +41,25 @@ interface FinderInterface
     /**
      * Submits a user search query to the finder.
      */
-    public function submit(FinderQuery $query): static;
+    public function submit(FinderRequest $request): static;
 
     /**
-     * Shortcut to get the current search string {@see FinderQuery}.
+     * Shortcut to get the current search string {@see FinderRequest}.
      */
     public function getSearchValue(): ?string;
 
     /**
-     * Shortcut to check if a filter is defined for current finder instance {@see FinderQuery}.
+     * Shortcut to check if a filter is defined for current finder instance {@see FinderRequest}.
      */
     public function hasFilter(): bool;
 
     /**
-     * Shortcut to get the filter value for current finder instance {@see FinderQuery}.
+     * Shortcut to get the filter value for current finder instance {@see FinderRequest}.
      */
     public function getFilterValue(): mixed;
 
     /**
-     * Shortcut to get the sort value for current finder instance {@see FinderQuery}.
+     * Shortcut to get the sort value for current finder instance {@see FinderRequest}.
      */
     public function getSortValue(): ?string;
 

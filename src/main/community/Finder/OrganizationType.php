@@ -33,23 +33,14 @@ class OrganizationType extends AbstractType
         ]);
     }
 
-    public function buildFinder(FinderBuilderInterface $builder, array $options): void
-    {
-        $builder
-            ->add('name', TextType::class)
-            ->add('code', TextType::class)
-            ->add('description', TextType::class)
-            ->add('public', PublicType::class);
-    }
-
-    public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
+    public function submit(mixed $filterValue, array $options): ?array
     {
         $user = $this->tokenStorage->getToken()?->getUser();
 
         $includedOrganizations = [];
         $excludedOrganizations = [];
-        if (!empty($finder->getFilterValue())) {
-            $value = is_array($finder->getFilterValue()) ? $finder->getFilterValue() : [$finder->getFilterValue()];
+        if (!empty($filterValue)) {
+            $value = is_array($filterValue) ? $filterValue : [$filterValue];
             foreach ($value as $organization) {
                 if (str_starts_with($organization, 'not:')) {
                     $excludedOrganizations[] = str_replace('not:', '', $organization);
@@ -62,7 +53,7 @@ class OrganizationType extends AbstractType
         if ($this->tokenStorage->getToken() && $user instanceof User) {
             // we need to filter the results by the organizations owned by the current user
             // when used in another finder we will filter by the main organization of the user if no search is defined
-            if (!empty($finder->getFilterValue())) {
+            if (!empty($includedOrganizations)) {
                 // there is a user search on organizations
                 // we need to only keep the organizations owned by the current user
                 if (!in_array(PlatformRoles::ADMIN, $this->tokenStorage->getToken()->getRoleNames())) {
@@ -72,15 +63,45 @@ class OrganizationType extends AbstractType
                         return in_array($organization->getUuid(), $includedOrganizations);
                     }));
                 }
-            } elseif ($finder->isRoot()) {
-                if (!in_array(PlatformRoles::ADMIN, $this->tokenStorage->getToken()->getRoleNames())) {
-                    $includedOrganizations = array_map(function (Organization $organization) {
-                        return $organization->getUuid();
-                    }, $user->getOrganizations());
-                }
             } else {
                 // default behavior: only return results for the current user organization
                 $includedOrganizations = [$user->getMainOrganization()->getUuid()];
+            }
+        }
+
+        return [
+            'included' => $includedOrganizations,
+            'excluded' => $excludedOrganizations,
+        ];
+    }
+
+    public function buildFinder(FinderBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('name', TextType::class)
+            ->add('code', TextType::class)
+            ->add('description', TextType::class)
+            ->add('public', PublicType::class);
+    }
+
+    public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
+    {
+        $includedOrganizations = [];
+        $excludedOrganizations = [];
+        if (!empty($finder->getFilterValue())) {
+            $value = $finder->getFilterValue();
+            $includedOrganizations = $value['included'];
+            $excludedOrganizations = $value['excluded'];
+        }
+
+        $user = $this->tokenStorage->getToken()?->getUser();
+        if ($finder->isRoot() && $user instanceof User) {
+            if (!in_array(PlatformRoles::ADMIN, $this->tokenStorage->getToken()->getRoleNames())) {
+                $includedOrganizations = array_map(function (Organization $organization) {
+                    return $organization->getUuid();
+                }, $user->getOrganizations());
+            } else {
+                $includedOrganizations = [];
             }
         }
 

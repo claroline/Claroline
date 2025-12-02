@@ -18,18 +18,25 @@ class BooleanType extends AbstractType
         $resolver->setAllowedValues('default', [null, true, false]);
     }
 
+    public function submit(mixed $filterValue, array $options): ?bool
+    {
+        $requestValue = null;
+        if (null !== $filterValue) {
+            $requestValue = filter_var($filterValue, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        }
+
+        return null === $requestValue ? $options['default'] : $requestValue;
+    }
+
     public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
     {
         if ($finder->getSortValue()) {
             $queryBuilder->addOrderBy($finder->getQueryPath(), $finder->getSortValue());
         }
 
-        $requestValue = null === $finder->getFilterValue() ? null : filter_var($finder->getFilterValue(), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-        $value = null === $requestValue ? $options['default'] : $requestValue;
-
-        if (null !== $value) {
+        if (null !== $finder->getFilterValue()) {
             $queryBuilder->andWhere("{$finder->getQueryPath()} = :{$finder->getAlias()}");
-            $queryBuilder->setParameter($finder->getAlias(), $value);
+            $queryBuilder->setParameter($finder->getAlias(), $finder->getFilterValue());
         }
     }
 }

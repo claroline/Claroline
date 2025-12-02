@@ -11,8 +11,10 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\ClacoFormBundle\Finder\EntryType;
 use Claroline\ClacoFormBundle\Repository\EntryRepository;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,6 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_clacoformbundle_entry')]
 #[ORM\Entity(repositoryClass: EntryRepository::class)]
+#[CrudEntity(finderClass: EntryType::class)]
 class Entry
 {
     use Id;

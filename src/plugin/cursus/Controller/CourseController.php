@@ -11,7 +11,7 @@
 
 namespace Claroline\CursusBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
@@ -76,11 +76,11 @@ class CourseController extends AbstractCrudController
     #[Route(path: '/archived', name: 'list_archived', methods: ['GET'])]
     public function listArchivedAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        $archives = $this->crud->search(Course::class, $finderQuery->addFilters([
+        $archives = $this->crud->search(Course::class, $finderRequest->addFilters([
             'archived' => true,
         ]), [SerializerInterface::SERIALIZE_LIST]);
 
@@ -90,11 +90,11 @@ class CourseController extends AbstractCrudController
     #[Route(path: '/list/existing', name: 'list_existing', methods: ['GET'])]
     public function listNoWorkspaceAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        $courses = $this->crud->search(Course::class, $finderQuery->addFilters([
+        $courses = $this->crud->search(Course::class, $finderRequest->addFilters([
             'workspace' => null,
         ]), [SerializerInterface::SERIALIZE_LIST]);
 
@@ -238,12 +238,12 @@ class CourseController extends AbstractCrudController
     public function listSessionsAction(
         #[MapEntity(mapping: ['id' => 'uuid'])] Course $course,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $course, [], true);
 
-        $finderQuery->addFilter('course', $course->getUuid());
-        $sessions = $this->crud->search(Session::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $finderRequest->addFilter('course', $course->getUuid());
+        $sessions = $this->crud->search(Session::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $sessions->toResponse();
     }

@@ -11,7 +11,7 @@
 
 namespace Claroline\AuthenticationBundle\Controller;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Entity\ApiToken;
@@ -52,15 +52,15 @@ class ApiTokenController extends AbstractCrudController
     #[Route(path: '/current', name: 'list_current', methods: ['GET'])]
     public function listForCurrentUserAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        $finderQuery->addFilters([
+        $finderRequest->addFilters([
             'user' => $this->tokenStorage->getToken()?->getUser()->getUuid(),
         ]);
 
-        $tokens = $this->crud->search(ApiToken::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $tokens = $this->crud->search(ApiToken::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $tokens->toResponse();
     }
@@ -73,15 +73,15 @@ class ApiTokenController extends AbstractCrudController
         #[MapEntity(mapping: ['userId' => 'uuid'])]
         User $user,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('EDIT', $user, [], true);
 
-        $finderQuery->addFilters([
+        $finderRequest->addFilters([
             'user' => $user->getUuid(),
         ]);
 
-        $tokens = $this->crud->search(ApiToken::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $tokens = $this->crud->search(ApiToken::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $tokens->toResponse();
     }

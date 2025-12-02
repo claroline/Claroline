@@ -14,6 +14,9 @@ namespace Claroline\ClacoFormBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * @deprecated
+ */
 class CategoryFinder extends AbstractFinder
 {
     public static function getClass(): string

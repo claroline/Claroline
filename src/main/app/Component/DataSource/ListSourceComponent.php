@@ -3,7 +3,7 @@
 namespace Claroline\AppBundle\Component\DataSource;
 
 use Claroline\AppBundle\API\Finder\FinderFactoryInterface;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
@@ -35,10 +35,10 @@ abstract class ListSourceComponent extends DataSourceComponent
     public function open(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): StreamedJsonResponse
     {
         $options = static::getOptions();
-        $finderQuery = $this->getQuery($context, $contextSubject, $request);
+        $finderRequest = $this->getRequest($context, $contextSubject, $request);
 
         return $this->finderFactory->create(static::getClass())
-            ->submit($finderQuery)
+            ->submit($finderRequest)
             ->getResult(function (object $entity) use ($options): array {
                 return $this->serializer->serialize($entity, $options);
             })
@@ -46,34 +46,34 @@ abstract class ListSourceComponent extends DataSourceComponent
         ;
     }
 
-    protected function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderQuery
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
     {
-        $finderQuery = $this->parseRequest($request);
+        $finderRequest = $this->parseRequest($request);
 
         if ($contextSubject) {
-            $finderQuery->addFilter('workspace', $contextSubject->getContextIdentifier());
+            $finderRequest->addFilter('workspace', $contextSubject->getContextIdentifier());
         }
 
-        return $finderQuery;
+        return $finderRequest;
     }
 
-    protected function parseRequest(?Request $request = null): FinderQuery
+    protected function parseRequest(?Request $request = null): FinderRequest
     {
         if ($request) {
             $data = $request->query->all();
 
-            $finderQuery = new FinderQuery(
+            $finderRequest = new FinderRequest(
                 !empty($data['q']) ? $data['q'] : null,
                 !empty($data['filters']) ? $data['filters'] : [],
                 !empty($data['sortBy']) ? $data['sortBy'] : [],
                 !empty($data['page']) ? $data['page'] : 0,
-                !empty($data['limit']) ? $data['limit'] : FinderQuery::ALL,
+                !empty($data['limit']) ? $data['limit'] : FinderRequest::ALL,
             );
         } else {
-            $finderQuery = new FinderQuery();
+            $finderRequest = new FinderRequest();
         }
 
-        return $finderQuery;
+        return $finderRequest;
     }
 
     protected static function getOptions(): array

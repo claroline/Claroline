@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller\Resource;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -67,17 +67,21 @@ class ResourceNodeController extends AbstractCrudController
     #[Route(path: '/list/{contextId}/{parent}', name: 'list', defaults: ['contextId' => null, 'parent' => null], methods: ['GET'])]
     public function listAction(
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery(),
+        ?FinderRequest $finderRequest = new FinderRequest(),
         ?string $contextId = null,
         ?string $parent = null
     ): StreamedJsonResponse {
-        $finderQuery->addFilters([
+        $finderRequest->addFilters([
             'active' => true,
             'resourceTypeEnabled' => true,
             'parent' => null,
         ]);
 
         if ($contextId || $parent) {
+            if ($contextId) {
+                $finderRequest->addFilter('workspace', $contextId);
+            }
+
             if (!$parent) {
                 $parentNode = $this->om->getRepository(ResourceNode::class)->findWorkspaceRoot($contextId);
             } else {
@@ -86,21 +90,21 @@ class ResourceNodeController extends AbstractCrudController
 
             // grab directory content
             if ($parentNode) {
-                $finderQuery->addFilter('parent', $parentNode->getUuid());
+                $finderRequest->addFilter('parent', $parentNode->getUuid());
 
                 if (!$this->authorization->isGranted('ADMINISTRATE', $parentNode)) {
-                    $finderQuery->addFilter('published', true);
+                    $finderRequest->addFilter('published', true);
                 }
             }
         }
 
         $roles = $this->token->getToken()?->getRoleNames() ?? [];
         if (!empty($roles) && !in_array(PlatformRoles::ADMIN, $roles)) {
-            $finderQuery->addFilter('roles', $roles);
+            $finderRequest->addFilter('roles', $roles);
         }
 
         $options = static::getOptions();
-        $results = $this->crud->search(static::getClass(), $finderQuery, $options['list'] ?? []);
+        $results = $this->crud->search(static::getClass(), $finderRequest, $options['list'] ?? []);
 
         return $results->toResponse();
     }

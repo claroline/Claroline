@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller\Planning;
 
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Planning\PlannedObject;
@@ -46,13 +46,13 @@ class PlannedObjectController extends AbstractCrudController
     public function listByPlanningAction(
         string $planningId,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        $finderQuery->addFilter('planning', $planningId);
+        $finderRequest->addFilter('planning', $planningId);
 
-        $plannedObjects = $this->crud->search(PlannedObject::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $plannedObjects = $this->crud->search(PlannedObject::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $plannedObjects->toResponse();
     }

@@ -11,15 +11,20 @@
 
 namespace Claroline\ClacoFormBundle\Controller;
 
-use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Finder\FinderFactoryInterface;
+use Claroline\AppBundle\API\Finder\FinderRequest;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
+use Claroline\ClacoFormBundle\Finder\EntryType;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -30,7 +35,7 @@ class EntryController extends AbstractCrudController
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        private readonly FinderProvider $finder,
+        private readonly FinderFactoryInterface $finderFactory,
         private readonly ClacoFormManager $manager
     ) {
         $this->authorization = $authorization;
@@ -55,40 +60,20 @@ class EntryController extends AbstractCrudController
     public function entriesListAction(
         #[MapEntity(mapping: ['clacoForm' => 'uuid'])]
         ClacoForm $clacoForm,
-        Request $request
-    ): JsonResponse {
+        #[MapQueryString]
+        ?FinderRequest $finderRequest = new FinderRequest()
+    ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
 
-        $params = $request->query->all();
-        if (!isset($params['hiddenFilters'])) {
-            $params['hiddenFilters'] = [];
-        }
-        $params['hiddenFilters']['clacoForm'] = $clacoForm->getId();
+        $finderRequest->addFilter('clacoForm', $clacoForm->getUuid());
 
-        if (isset($params['filters'])) {
-            $filters = $params['filters'];
-            $excludedFilters = [
-                'clacoForm',
-                'type',
-                'title',
-                'status',
-                'locked',
-                'user',
-                'createdAfter',
-                'createdBefore',
-                'categories',
-            ];
-
-            foreach ($params['filters'] as $key => $value) {
-                if (!in_array($key, $excludedFilters)) {
-                    $filters[$key] = $value;
-                }
-            }
-            $params['filters'] = $filters;
-        }
-        $data = $this->finder->search(Entry::class, $params);
-
-        return new JsonResponse($data, 200);
+        return $this->finderFactory->create(EntryType::class, ['clacoForm' => $clacoForm])
+            ->submit($finderRequest)
+            ->getResult(function (Entry $entity): array {
+                return $this->serializer->serialize($entity, [SerializerInterface::SERIALIZE_LIST]);
+            })
+            ->toResponse()
+        ;
     }
 
     #[Route(path: '/clacoform/{clacoForm}/file/upload', name: 'file_upload', methods: ['POST'])]
@@ -154,7 +139,7 @@ class EntryController extends AbstractCrudController
             }
         }
 
-        $updatedEntries = $this->manager->changeEntriesStatus($entries, intval($status));
+        $updatedEntries = $this->manager->changeEntriesStatus($entries, $status);
         foreach ($updatedEntries as $entry) {
             $serializedEntries[] = $this->serializer->serialize($entry);
         }

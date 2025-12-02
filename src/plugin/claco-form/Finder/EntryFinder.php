@@ -21,6 +21,9 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+/**
+ * @deprecated
+ */
 class EntryFinder extends AbstractFinder
 {
     private array $usedJoin = [];

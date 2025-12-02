@@ -19,7 +19,7 @@ class PeriodStatusType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        // the default filter to apply if not defined by the FinderQuery
+        // the default filter to apply if not defined by the FinderRequest
         $resolver
             ->define('default')
             ->default(null)

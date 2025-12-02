@@ -11,6 +11,11 @@ abstract class AbstractType implements FinderTypeInterface
     {
     }
 
+    public function submit(mixed $filterValue, array $options): mixed
+    {
+        return $filterValue;
+    }
+
     public function buildFinder(FinderBuilderInterface $builder, array $options): void
     {
     }

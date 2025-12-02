@@ -12,7 +12,7 @@
 namespace Claroline\BigBlueButtonBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -108,13 +108,13 @@ class BBBController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         BBB $bbb,
         #[MapQueryString]
-        ?FinderQuery $finderQuery = new FinderQuery()
+        ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
         $this->checkPermission('OPEN', $bbb->getResourceNode(), [], true);
 
-        $finderQuery->addFilter('meeting', $bbb->getUuid());
+        $finderRequest->addFilter('meeting', $bbb->getUuid());
 
-        $recordings = $this->crud->search(Recording::class, $finderQuery, [SerializerInterface::SERIALIZE_LIST]);
+        $recordings = $this->crud->search(Recording::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
 
         return $recordings->toResponse();
     }
