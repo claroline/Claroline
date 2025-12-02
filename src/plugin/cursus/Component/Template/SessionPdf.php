@@ -21,6 +21,8 @@ final class SessionPdf extends PdfComponent
             'course_description',
             'course_price',
             'course_price_description',
+            'course_default_duration',
+
             'session_url',
             'session_name',
             'session_code',

@@ -84,6 +84,7 @@ class SessionManager
             'course_description' => $course->getDescription(),
             'course_price' => $course->getPrice(),
             'course_price_description' => $course->getPriceDescription(),
+            'course_default_duration' => $course->getDefaultSessionDuration(),
 
             'session_url' => $this->routingHelper->desktopUrl('trainings').'/course/'.$course->getSlug().'/'.$session->getUuid(),
             'session_name' => $session->getName(),
