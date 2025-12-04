@@ -32,10 +32,10 @@ abstract class ListSourceComponent extends DataSourceComponent
         $this->serializer = $serializer;
     }
 
-    public function open(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): StreamedJsonResponse
+    public function open(string $context, ?ContextSubjectInterface $contextSubject = null, ?bool $filterSubject = true, ?Request $request = null): StreamedJsonResponse
     {
         $options = static::getOptions();
-        $finderRequest = $this->getRequest($context, $contextSubject, $request);
+        $finderRequest = $this->getRequest($context, $contextSubject, $filterSubject, $request);
 
         return $this->finderFactory->create(static::getClass())
             ->submit($finderRequest)
@@ -46,11 +46,11 @@ abstract class ListSourceComponent extends DataSourceComponent
         ;
     }
 
-    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?bool $filterSubject = true, ?Request $request = null): FinderRequest
     {
         $finderRequest = $this->parseRequest($request);
 
-        if ($contextSubject) {
+        if ($filterSubject && $contextSubject) {
             $finderRequest->addFilter('workspace', $contextSubject->getContextIdentifier());
         }
 

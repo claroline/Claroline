@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {ListSource} from '#/main/app/content/list/containers/source'
 import {getSource} from '#/main/app/data/sources'
-import {ListParameters as ListParametersTypes} from '#/main/app/content/list/parameters/prop-types'
 
 import {selectors} from '#/main/core/widget/types/list/store'
+import {ListWidgetParameters as ListWidgetParametersTypes} from '#/main/core/widget/types/list/prop-types'
 
 class ListWidget extends Component {
   constructor(props) {
@@ -34,6 +35,8 @@ class ListWidget extends Component {
       return null
     }
 
+    console.log(get(this.props.parameters, 'all', false))
+
     return (
       <ListSource
         name={selectors.STORE_NAME}
@@ -41,7 +44,8 @@ class ListWidget extends Component {
           url: ['apiv2_data_source', {
             type: this.props.source,
             context: this.props.currentContext.type,
-            contextId: 'workspace' === this.props.currentContext.type ? this.props.currentContext.data.id : null
+            contextId: 'workspace' === this.props.currentContext.type ? this.props.currentContext.data.id : null,
+            all: get(this.props.parameters, 'all', false) && 'all'
           }],
           autoload: true
         }}
@@ -58,7 +62,7 @@ ListWidget.propTypes = {
   currentUser: T.object,
   currentContext: T.object.isRequired,
   parameters: T.shape(
-    ListParametersTypes.propTypes
+    ListWidgetParametersTypes.propTypes
   ),
   invalidate: T.func.isRequired
 }

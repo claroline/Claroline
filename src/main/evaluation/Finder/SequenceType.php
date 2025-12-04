@@ -11,9 +11,9 @@ use Claroline\AppBundle\API\Finder\Type\CreatorType;
 use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\PublicType;
-use Claroline\AppBundle\API\Finder\Type\RelatedEntityType;
 use Claroline\AppBundle\API\Finder\Type\TagType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
+use Claroline\CoreBundle\Finder\WorkspaceType;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,7 +40,7 @@ class SequenceType extends AbstractType
             ->add('createdAt', DateType::class)
             ->add('updatedAt', DateType::class)
             ->add('creator', CreatorType::class)
-            ->add('workspace', RelatedEntityType::class)
+            ->add('workspace', WorkspaceType::class)
             ->add('tags', TagType::class)
             ->add('roles', ClosureType::class, [
                 'buildQuery' => static function (QueryBuilder $queryBuilder, FinderInterface $finder): void {

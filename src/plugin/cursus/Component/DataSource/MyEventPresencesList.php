@@ -43,11 +43,11 @@ class MyEventPresencesList extends ListSourceComponent
         return EventPresenceType::class;
     }
 
-    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?bool $filterSubject = true, ?Request $request = null): FinderRequest
     {
-        $finderRequest = parent::getRequest($context, $contextSubject, $request);
+        $finderRequest = parent::getRequest($context, $contextSubject, $filterSubject, $request);
 
-        if ($context === WorkspaceContext::getName()) {
+        if ($filterSubject && $context === WorkspaceContext::getName()) {
             $workspaceSessions = array_map(function (Session $session) {
                 return $session->getUuid();
             }, $this->sessionRepo->findByWorkspace($contextSubject));

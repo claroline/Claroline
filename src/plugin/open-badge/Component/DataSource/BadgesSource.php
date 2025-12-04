@@ -30,10 +30,10 @@ class BadgesSource extends ListSourceComponent
         return BadgeType::class;
     }
 
-    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?bool $filterSubject = true, ?Request $request = null): FinderRequest
     {
-        $finderRequest = parent::getRequest($context, $contextSubject, $request);
-        if (WorkspaceContext::getName() === $context) {
+        $finderRequest = parent::getRequest($context, $contextSubject, $filterSubject, $request);
+        if ($filterSubject && WorkspaceContext::getName() === $context) {
             $finderRequest->addFilter('badge.workspace', $contextSubject->getUuid());
         }
 

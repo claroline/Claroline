@@ -33,16 +33,16 @@ final class WorkspacesList extends ListSourceComponent
         ]);
     }
 
-    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?bool $filterSubject = true, ?Request $request = null): FinderRequest
     {
-        $query = parent::getRequest($context, $contextSubject, $request);
+        $finderRequest = parent::getRequest($context, $contextSubject, $filterSubject, $request);
 
         if (PublicContext::getName() === $context) {
-            $query->addFilter('model', false);
-            $query->addFilter('personal', false);
-            $query->addFilter('public', true);
+            $finderRequest->addFilter('model', false);
+            $finderRequest->addFilter('personal', false);
+            $finderRequest->addFilter('public', true);
         }
 
-        return $query;
+        return $finderRequest;
     }
 }

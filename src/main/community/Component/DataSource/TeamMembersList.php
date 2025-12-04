@@ -35,9 +35,9 @@ class TeamMembersList extends ListSourceComponent
         return UserType::class;
     }
 
-    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?bool $filterSubject = true, ?Request $request = null): FinderRequest
     {
-        $finderRequest = parent::getRequest($context, $contextSubject, $request);
+        $finderRequest = parent::getRequest($context, $contextSubject, $filterSubject, $request);
 
         $user = $this->tokenStorage->getToken()?->getUser();
         $teams = [];

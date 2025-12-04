@@ -34,7 +34,7 @@ final class ResourcesList extends ListSourceComponent
         ]);
     }
 
-    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?bool $filterSubject = true, ?Request $request = null): FinderRequest
     {
         $finderRequest = $this->parseRequest($request);
 

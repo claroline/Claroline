@@ -37,9 +37,9 @@ class ChapterSource extends ListSourceComponent
         return ChapterType::class;
     }
 
-    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?bool $filterSubject = true, ?Request $request = null): FinderRequest
     {
-        $finderRequest = parent::getRequest($context, $contextSubject, $request);
+        $finderRequest = parent::getRequest($context, $contextSubject, $filterSubject, $request);
 
         $roles = $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
         if (!in_array(PlatformRoles::ADMIN, $roles)) {

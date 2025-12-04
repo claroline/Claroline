@@ -39,9 +39,9 @@ class AnnouncementSource extends ListSourceComponent
         return AnnouncementType::class;
     }
 
-    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?bool $filterSubject = true, ?Request $request = null): FinderRequest
     {
-        $finderRequest = parent::getRequest($context, $contextSubject, $request);
+        $finderRequest = parent::getRequest($context, $contextSubject, $filterSubject, $request);
 
         if (PublicContext::getName() === $context) {
             // only announcements accessible by anonymous users
@@ -49,10 +49,6 @@ class AnnouncementSource extends ListSourceComponent
         } else {
             // filter by current user roles
             $roles = $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
-        }
-
-        if (WorkspaceContext::getName() === $context) {
-            $finderRequest->addFilter('workspace', $contextSubject->getUuid());
         }
 
         $finderRequest->addFilter('visible', true);

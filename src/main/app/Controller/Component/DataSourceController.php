@@ -24,22 +24,23 @@ class DataSourceController
     /**
      * Gets data from a data source.
      */
-    #[Route(path: '/{type}/{context}/{contextId}', name: 'apiv2_data_source', defaults: ['contextId' => null], methods: ['GET'])]
+    #[Route(path: '/{type}/{context}/{contextId}/{all}', name: 'apiv2_data_source', defaults: ['all' => false, 'contextId' => null], methods: ['GET'])]
     public function openAction(
         Request $request,
         string $type,
         string $context,
-        ?string $contextId = null
+        ?string $contextId = null,
+        ?bool $all = false
     ): Response {
         try {
             $contextHandler = $this->contextProvider->getContext($context, $contextId);
-            $contextSubject = $contextHandler->getObject($contextId);
+            $contextSubject = $contextHandler->getSubject($contextId);
 
             $dataSource = $this->dataSourceProvider->getDataSource($type, $context, $contextSubject);
         } catch (\Exception $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
 
-        return $dataSource->open($context, $contextSubject, $request);
+        return $dataSource->open($context, $contextSubject, !$all, $request);
     }
 }

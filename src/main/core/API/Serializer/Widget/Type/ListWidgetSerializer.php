@@ -22,6 +22,7 @@ class ListWidgetSerializer
     public function serialize(ListWidget $widget, array $options = []): array
     {
         return [
+            'all' => $widget->hasAll(),
             'maxResults' => $widget->getMaxResults(),
 
             'actions' => $widget->hasActions(),
@@ -58,6 +59,7 @@ class ListWidgetSerializer
 
     public function deserialize($data, ListWidget $widget, array $options = []): ListWidget
     {
+        $this->sipe('all', 'setAll', $data, $widget);
         $this->sipe('maxResults', 'setMaxResults', $data, $widget);
 
         $this->sipe('count', 'setCount', $data, $widget);

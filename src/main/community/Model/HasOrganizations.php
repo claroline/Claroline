@@ -8,6 +8,9 @@ use Doctrine\Common\Collections\Collection;
 
 trait HasOrganizations
 {
+    /**
+     * @var Collection<int, Organization>
+     */
     private Collection $organizations;
 
     /**
