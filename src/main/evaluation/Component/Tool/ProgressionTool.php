@@ -12,6 +12,7 @@ use Claroline\AppBundle\Component\Tool\ToolComponent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -159,7 +160,12 @@ class ProgressionTool extends ToolComponent
 
             if (!empty($assignments)) {
                 foreach ($assignments as $assignmentData) {
-                    $role = $entities[$assignmentData['role']['id']];
+                    if (Role::WORKSPACE !== $assignmentData['role']['type']) {
+                        $role = $this->om->getRepository(Role::class)->findOneBy(['uuid' => $assignmentData['role']['id']]);
+                    } elseif (!empty($entities[$assignmentData['role']['id']])) {
+                        $role = $entities[$assignmentData['role']['id']];
+                    }
+
                     if (!empty($role)) {
                         $assignment = new Assignment();
                         $newSequence->addAssignment($assignment);
