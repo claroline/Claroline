@@ -150,10 +150,6 @@ PositionModal.propTypes = {
   fadeModal: T.func.isRequired
 }
 
-PositionModal.defaultProps = {
-  steps: []
-}
-
 export {
   PositionModal
 }

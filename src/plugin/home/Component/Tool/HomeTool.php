@@ -170,7 +170,7 @@ class HomeTool extends ToolComponent
     {
         foreach ($installedTabs as $installedTab) {
             if (!in_array($installedTab->getUuid(), $ids)) {
-                // the tab no longer exist we can remove it
+                // the tab no longer exists we can remove it
                 $this->crud->delete($installedTab);
             }
         }

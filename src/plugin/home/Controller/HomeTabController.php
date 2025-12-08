@@ -2,9 +2,8 @@
 
 namespace Claroline\HomeBundle\Controller;
 
-use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\HomeBundle\Entity\HomeTab;
@@ -16,13 +15,14 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route(path: '/home_tab', name: 'apiv2_home_tab_')]
-class HomeTabController extends AbstractCrudController
+class HomeTabController
 {
     use RequestDecoderTrait;
     use PermissionCheckerTrait;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        private readonly SerializerProvider $serializer,
         private readonly HomeManager $manager
     ) {
         $this->authorization = $authorization;
@@ -53,16 +53,16 @@ class HomeTabController extends AbstractCrudController
                 'managed' => $isManager,
                 'homeTab' => $this->serializer->serialize($homeTab),
                 // append access restrictions to the loaded node if any
-                // to let the manager knows that other users can not enter the resource
+                // to let the manager knows that other users cannot enter the resource
                 'accessErrors' => $accessErrors,
             ]);
         }
 
         return new JsonResponse([
-            'managed' => $isManager,
-            'homeTab' => $this->serializer->serialize($homeTab, [Options::SERIALIZE_MINIMAL]),
+            'managed' => true,
+            'homeTab' => $this->serializer->serialize($homeTab, [SerializerInterface::SERIALIZE_MINIMAL]),
             // append access restrictions to the loaded node if any
-            // to let the manager knows that other users can not enter the resource
+            // to let the manager knows that other users cannot enter the resource
             'accessErrors' => $accessErrors,
         ], 403);
     }
@@ -76,72 +76,5 @@ class HomeTabController extends AbstractCrudController
         $this->manager->unlock($homeTab, $request);
 
         return new JsonResponse(null, 204);
-    }
-
-    #[Route(path: '/{context}/{contextId}', name: 'update', methods: ['PUT'])]
-    public function updateContextAction(Request $request, string $context, string $contextId = null): JsonResponse
-    {
-        // grab tabs data
-        $tabs = $this->decodeRequest($request);
-
-        // retrieve existing tabs for the context to remove deleted ones
-        /** @var HomeTab[] $installedTabs */
-        $installedTabs = $this->om->getRepository(HomeTab::class)->findBy([
-            'contextName' => $context,
-            'contextId' => $contextId,
-        ]);
-
-        $this->om->startFlushSuite();
-
-        $ids = [];
-        $updated = [];
-        foreach ($tabs as $tab) {
-            $new = true;
-            $existingTab = null;
-            if (isset($tab['id'])) {
-                foreach ($installedTabs as $installedTab) {
-                    if ($installedTab->getUuid() === $tab['id']) {
-                        $existingTab = $installedTab;
-                        $new = false;
-                        break;
-                    }
-                }
-            }
-
-            if (empty($existingTab)) {
-                $existingTab = new HomeTab();
-                $existingTab->setContextName($context);
-                $existingTab->setContextId($contextId);
-            }
-
-            if ($new) {
-                $this->crud->create($existingTab, $tab);
-            } else {
-                $this->crud->update($existingTab, $tab);
-            }
-
-            $updated[] = $existingTab;
-            $ids = array_merge($ids, [$existingTab->getUuid()], array_map(function (HomeTab $child) {
-                return $child->getUuid();
-            }, $existingTab->getChildren()->toArray())); // will be used to determine deleted tabs
-        }
-
-        $this->cleanDatabase($installedTabs, $ids);
-
-        $this->om->endFlushSuite();
-
-        return new JsonResponse(array_values(array_map(function (HomeTab $tab) {
-            return $this->serializer->serialize($tab);
-        }, $updated)));
-    }
-
-    private function cleanDatabase(array $installedTabs, array $ids): void
-    {
-        foreach ($installedTabs as $installedTab) {
-            if (!in_array($installedTab->getUuid(), $ids)) {
-                // the tab no longer exist we can remove it
-                $this->crud->delete($installedTab);
-            }
-        }
     }
 }

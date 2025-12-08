@@ -22,8 +22,7 @@ actions.startCreation = (type, position) => (dispatch) => {
     position: position + 1,
     slug: newSlug,
     class: type.class,
-    type: type.name,
-    _new: true // this is used to avoid requesting an ObjectLock to the server as the tab not already exists
+    type: type.name
   }), true))
 
   // set the tab title

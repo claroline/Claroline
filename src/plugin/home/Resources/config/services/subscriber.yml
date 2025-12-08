@@ -2,7 +2,7 @@ services:
     _defaults:
         tags: [kernel.event_subscriber]
 
-    Claroline\HomeBundle\Subscriber\WorkspaceSubscriber:
+    Claroline\HomeBundle\Subscriber\Crud\HomeTabSubscriber:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'

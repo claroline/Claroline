@@ -55,8 +55,8 @@ class ListWidgetParameters extends Component {
                   {
                     name: 'parameters.all',
                     type: 'boolean',
-                    label: trans('Afficher tous les éléments', {}, 'resource'),
-                    help: trans('Par défaut seuls les élements de l\'espace courant seront affichés. Vous pouvez activer cette option pour afficher tous les éléments disponibles.')
+                    label: trans('list_all_contexts', {}, 'data_sources'),
+                    help: trans('list_all_contexts_help', {}, 'data_sources')
                   }
                 ]
               }

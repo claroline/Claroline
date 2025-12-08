@@ -139,7 +139,7 @@ class HomeTabSerializer
 
                 foreach ($existingRoles as $role) {
                     if (!in_array($role->getUuid(), $roles)) {
-                        // the role no longer exist we can remove it
+                        // the role no longer exists we can remove it
                         $homeTab->removeRole($role);
                     }
                 }
@@ -156,7 +156,7 @@ class HomeTabSerializer
                 ->findOneBy(['tab' => $homeTab]);
 
             if (!$typeParameters || in_array(Options::REFRESH_UUID, $options)) {
-                // no existing parameters => initializes one
+                // no existing parameters => initialize one
 
                 /** @var AbstractTab $typeParameters */
                 $typeParameters = new $parametersClass();
@@ -172,13 +172,14 @@ class HomeTabSerializer
 
         // Set children tabs
         // TODO : should no longer be exposed here (still required by update and ws import)
-        if (isset($data['children'])) {
+        if (array_key_exists('children', $data)) {
             /** @var HomeTab[] $currentChildren */
             $currentChildren = $homeTab->getChildren()->toArray();
             $ids = [];
 
             // updates tabs
-            foreach ($data['children'] as $childIndex => $childData) {
+            $childrenData = $data['children'] ?? [];
+            foreach ($childrenData as $childIndex => $childData) {
                 $child = null;
                 if ($childData['id'] && !in_array(Options::REFRESH_UUID, $options)) {
                     $child = $this->om->getRepository(HomeTab::class)->findOneBy(['uuid' => $childData['id']]);
@@ -197,7 +198,7 @@ class HomeTabSerializer
                 $ids[] = $child->getUuid();
             }
 
-            // removes tabs which no longer exists
+            // removes tabs which no longer exist
             foreach ($currentChildren as $currentTab) {
                 if (!in_array($currentTab->getUuid(), $ids)) {
                     $homeTab->removeChild($currentTab);

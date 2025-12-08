@@ -29,10 +29,17 @@ class HomeTabVoter extends AbstractVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
+        $isAdmin = $this->isContextToolGranted(self::EDIT, HomeTool::getName(), $object->getContextName(), $object->getContextId());
+        if ($isAdmin) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
         $granted = $this->isContextToolGranted($attributes[0], HomeTool::getName(), $object->getContextName(), $object->getContextId());
 
-        if ($granted && $this->checkTabRestrictions($token, $object)) {
-            return VoterInterface::ACCESS_GRANTED;
+        if ($granted) {
+            if (self::OPEN !== $attributes[0] || $this->checkTabRestrictions($token, $object)) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
         }
 
         return VoterInterface::ACCESS_DENIED;

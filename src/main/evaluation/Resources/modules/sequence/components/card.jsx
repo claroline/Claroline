@@ -41,7 +41,7 @@ const SequenceCard = props =>
     name={props.data.name}
     title={props.data.name}
     status={false === get(props.data, 'meta.published') ? {
-      variant: 'secondary',
+      variant: 'warning',
       text: trans('not_published')
     } : undefined}
     meta={

@@ -99,7 +99,7 @@ class TabCreationModal extends Component {
         {...omit(this.props, 'currentContext', 'position', 'create', 'startCreation', 'reset')}
         title={trans('new_page', {}, 'home')}
         subtitle={this.renderStepTitle()}
-        onExit={this.props.reset}
+        onEnter={this.props.reset}
       >
         {this.renderStep()}
       </Modal>

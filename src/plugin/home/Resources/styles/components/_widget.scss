@@ -46,7 +46,7 @@ button.widget-insert-content {
     margin-bottom: $spacer;
 
     .widget-col-preview {
-        background: #f5f5f5;
+        background: var(--#{$prefix}secondary-bg-subtle);
         border-radius: $border-radius;
         height: 60px;
         width: 100%;

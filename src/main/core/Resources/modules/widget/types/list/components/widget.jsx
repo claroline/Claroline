@@ -35,8 +35,6 @@ class ListWidget extends Component {
       return null
     }
 
-    console.log(get(this.props.parameters, 'all', false))
-
     return (
       <ListSource
         name={selectors.STORE_NAME}

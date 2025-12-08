@@ -59,7 +59,7 @@ class OrderedToolVoter extends AbstractVoter
 
         if (WorkspaceContext::getName() === $object->getContextName()) {
             $wsContext = $this->contextProvider->getContext(WorkspaceContext::getName());
-            if ($this->isGranted(self::ADMINISTRATE, $wsContext->getObject($object->getContextId()))) {
+            if ($this->isGranted(self::ADMINISTRATE, $wsContext->getSubject($object->getContextId()))) {
                 return VoterInterface::ACCESS_GRANTED;
             }
         }

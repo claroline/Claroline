@@ -89,11 +89,8 @@ const HomeEditorSummary = () => {
           modal: [MODAL_HOME_POSITION, {
             tab: tab,
             tabs: flattenTabs(tabs),
-            selectAction: (position) => ({
-              type: CALLBACK_BUTTON,
-              label: trans('move', {}, 'actions'),
-              callback: () => moveTab(tabs, tab.id, position)
-            })
+            saveLabel: trans('move', {}, 'actions'),
+            onSave: (position) => moveTab(tabs, tab.id, position)
           }],
           group: trans('management')
         }, {

@@ -131,13 +131,12 @@ class HomeTab
         $this->longTitle = $longTitle;
     }
 
-    public function setParent(HomeTab $parent = null): void
+    /**
+     * @internal use addChild|removeChild instead
+     */
+    public function setParent(?HomeTab $parent = null): void
     {
-        if ($parent !== $this->parent) {
-            $this->parent = $parent;
-
-            $parent?->addChild($this);
-        }
+        $this->parent = $parent;
     }
 
     public function getParent(): ?HomeTab
