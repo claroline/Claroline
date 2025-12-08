@@ -14,6 +14,7 @@ namespace Claroline\OpenBadgeBundle\Controller;
 use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Controller\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -38,6 +39,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class BadgeClassController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
+    use HasOrganizationsTrait;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,

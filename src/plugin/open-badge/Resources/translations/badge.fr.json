@@ -39,5 +39,13 @@
   "rule": "Règle d'attributions",
   "search_rule": "Rechercher une règle",
   "rule_granted": "Félicitations, vous remplissez cette condition !",
-  "rule_not_granted": "Vous ne remplissez pas cette condition."
+  "rule_not_granted": "Vous ne remplissez pas cette condition.",
+  "badge_workspace_desc": "Ce badge n'est disponible que pour les membres de l'espace d'activités.",
+  "badge_organizations_desc": "Choisissez les organisations dans lesquels le badge doit apparaître. Seuls les membres de ces organisations pourront voir et obtenir ce badge.",
+  "issuer": "Organisation émettrice",
+  "issuer_help": "Définissez au nom de quelle organisation le certificat du badge est émis.",
+  "new_badge_desc": "Les badges vous permettent de récompenser vos utilisateurs pour leur activité sur la plateforme.",
+  "create_new": "Créer un nouveau badge",
+  "create_new_desc": "Créez et configurez un nouveau badge à attribuer (soit manuellement, soit automatiquement) aux utilisateurs.",
+  "add_from_another_organization_desc": "Sélectionnez un ou plusieurs badges existant dans une autre organisation pour les rendre accessible aux membres de l'organisation <b>%organization%</b>."
 }

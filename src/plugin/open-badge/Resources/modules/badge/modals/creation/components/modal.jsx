@@ -1,52 +1,87 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl'
-import {CreationModal} from '#/main/app/data/modals/creation/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 
-import {BadgesModal} from '#/plugin/open-badge/modals/badges/containers/modal'
-import {BadgeCreationStart} from '#/plugin/open-badge/badge/modals/creation/components/start'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {CreationType} from '#/plugin/open-badge/badge/modals/creation/components/type'
+import {CreationInfo} from '#/plugin/open-badge/badge/modals/creation/components/info'
+import {useSelector} from 'react-redux'
+import {selectors as contextSelectors} from '#/main/app/context'
+import {selectors} from '#/main/app/platform/store'
 
-const BadgeCreationModal = (props) => {
+const CreationModal = (props) => {
+  const [currentStep, setCurrentStep] = useState('type')
+
+  const currentOrganization = useSelector(selectors.currentOrganization)
+  const contextType = useSelector(contextSelectors.type)
+  const contextData = useSelector(contextSelectors.data)
+
+  const create = () => props.create().then(response => {
+    props.fadeModal()
+
+    if (props.onCreate) {
+      props.onCreate(response)
+    }
+
+    return response
+  })
+
+  let StepComponent
+  switch (currentStep) {
+    case 'type':
+      StepComponent = (
+        <CreationType
+          startCreation={props.startCreation}
+          changeStep={setCurrentStep}
+          onCreate={props.onCreate}
+          fadeModal={props.fadeModal}
+        />
+      )
+      break
+
+    case 'info':
+      StepComponent = (
+        <CreationInfo
+          create={create}
+          changeStep={setCurrentStep}
+        />
+      )
+      break
+  }
+
   return (
-    <CreationModal
-      {...omit(props, 'contextType', 'contextId')}
+    <Modal
+      {...omit(props, 'create', 'onCreate', 'startCreation', 'reset')}
       title={trans('new_badge', {}, 'badge')}
-      steps={[
-        {
-          name: 'start',
-          title: trans('Attribuez un badge à vos utilisateurs pour les récompenser pour leur activité.'),
-          component: BadgeCreationStart
-        }, {
-          name: 'organization',
-          title: trans('Sélectionnez le(s) badge(s) à rendre accessible dans l\'organisation.'),
-          previous: 'start',
-          render: (stepProps) => {
-            return (
-              <BadgesModal
-                {...stepProps}
-                multiple={true}
-                selectAction={(selected) => ({
-                  type: CALLBACK_BUTTON,
-                  label: trans('Ajouter à l\'organization'),
-                  callback: () => true
-                })}
-              />
-            )
-          }
+      subtitle={trans('new_badge_desc', {}, 'badge')}
+      centered={true}
+      onExited={props.reset}
+      onEntering={() => {
+        if ('workspace' === contextType) {
+          props.startCreation({
+            issuer: currentOrganization,
+            workspace: contextData
+          })
+          setCurrentStep('info')
         }
-      ]}
-    />
+      }}
+    >
+      {StepComponent}
+    </Modal>
   )
 }
 
-BadgeCreationModal.propTypes = {
-  contextType: T.string.isRequired,
-  contextId: T.string
+CreationModal.propTypes = {
+  startCreation: T.func.isRequired,
+  create: T.func.isRequired,
+  onCreate: T.func,
+  reset: T.func.isRequired,
+  // from modal
+  fadeModal: T.func.isRequired
 }
 
 export {
-  BadgeCreationModal
+  CreationModal
 }

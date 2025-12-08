@@ -7,6 +7,7 @@ import {displayScore} from '#/main/evaluation/data/types/score/utils'
 import {ScoreCell} from '#/main/evaluation/data/types/score/components/cell'
 import {ScoreDisplay} from '#/main/evaluation/data/types/score/components/display'
 import {declareDataType} from '#/main/app/data/types'
+import {NumberFilter} from '#/main/app/data/types/number/components/filter'
 
 /**
  * Score data type.
@@ -54,6 +55,7 @@ export default declareDataType({
    */
   components: {
     display: ScoreDisplay,
-    cell: ScoreCell
+    cell: ScoreCell,
+    filter: NumberFilter
   }
 })

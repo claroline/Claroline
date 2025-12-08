@@ -6,5 +6,13 @@
   "show_evidences": "Voir les preuves",
   "grant_users": "Attribuer à des utilisateurs",
   "add_rule": "Ajouter une règle",
-  "save_rule": "Enregistrer la règle"
+  "save_rule": "Enregistrer la règle",
+  "archive_badge": "Archiver le badge",
+  "archive_badge_desc": "Archivez un badge pour le rendre inaccessible aux utilisateurs tout en conservant ses données. Retrouvez les badges archivés dans les paramètres de l'outil 'Badges' pour les restaurer ou les supprimer définitivement.",
+  "restore_badge": "Restaurer le badge",
+  "restore_badge_desc": "Restaurez le badge pour le rendre de nouveau accessible aux utilisateurs.",
+  "delete_badge": "Supprimer le badge",
+  "delete_badge_desc": "Supprimez définitivement le badge. Toutes les données et résultats des utilisateurs seront supprimés et ne pourront pas être récupérés.",
+  "recompute_assertions": "Recalculer les attributions",
+  "recompute_assertions_desc": "Recalculez les attributions pour automatiquement attribuer le badge à tous les utilisateurs répondants aux règles définies et qui ne possèdent pas encore ce badge."
 }

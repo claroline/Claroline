@@ -23,6 +23,7 @@ use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\DescriptionHtml;
 use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\AppBundle\Entity\Meta\UpdatedAt;
+use Claroline\CommunityBundle\Model\HasOrganizations;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\OpenBadgeBundle\Finder\BadgeType;
@@ -52,6 +53,7 @@ class BadgeClass implements CrudEntityInterface
     use HasTemplate;
     use Archived;
     use Poster;
+    use HasOrganizations;
 
     #[ORM\Column(nullable: true)]
     private ?string $image = null;
@@ -93,11 +95,16 @@ class BadgeClass implements CrudEntityInterface
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $notifyGrant = false;
 
+    #[ORM\JoinTable(name: 'claro__open_badge_badge_organizations')]
+    #[ORM\ManyToMany(targetEntity: Organization::class)]
+    private Collection $organizations;
+
     public function __construct()
     {
         $this->refreshUuid();
 
         $this->rules = new ArrayCollection();
+        $this->organizations = new ArrayCollection();
     }
 
     public static function getIdentifiers(): array
@@ -110,9 +117,6 @@ class BadgeClass implements CrudEntityInterface
         return $this->image;
     }
 
-    /**
-     * Set the value of Image.
-     */
     public function setImage($image): void
     {
         $this->image = $image;
@@ -215,15 +219,5 @@ class BadgeClass implements CrudEntityInterface
             $this->rules->removeElement($rule);
             $rule->setBadge(null);
         }
-    }
-
-    // this is for security checks
-    public function getOrganizations(): array
-    {
-        if (!empty($this->issuer)) {
-            return [$this->issuer];
-        }
-
-        return [];
     }
 }

@@ -5,7 +5,7 @@ import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
-import {declareAction} from '#/main/app/action'
+import {constants, declareAction} from '#/main/app/action'
 
 export default declareAction((badges, refresher) => ({
   name: 'recalculate',
@@ -21,5 +21,8 @@ export default declareAction((badges, refresher) => ({
     success: () => refresher.update(badges)
   },
   scope: ['object'],
-  group: trans('management')
+  group: trans('management'),
+  set: [constants.ACTION_SET_LIST, constants.ACTION_SET_DETAILS, constants.ACTION_SET_ADVANCED],
+  title: trans('recompute_assertions', {}, 'actions'),
+  description: trans('recompute_assertions_desc', {}, 'actions')
 }))

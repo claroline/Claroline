@@ -3,6 +3,7 @@ import {chain, number, inRange} from '#/main/app/data/types/validators'
 
 import {NumberInput} from '#/main/app/data/types/number/components/input'
 import {declareDataType} from '#/main/app/data/types'
+import {NumberFilter} from '#/main/app/data/types/number/components/filter'
 
 /**
  * Number definition.
@@ -69,6 +70,7 @@ export default declareDataType({
    * Custom components for numbers rendering.
    */
   components: {
-    input: NumberInput
+    input: NumberInput,
+    filter: NumberFilter
   }
 })

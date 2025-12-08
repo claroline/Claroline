@@ -4,7 +4,7 @@ import {selectors} from '#/main/evaluation/sequence/editor/store/selectors'
 
 export const actions = {}
 
-actions.reset = (sequence) => formActions.reset(selectors.STORE_NAME, sequence)
+actions.reset = (badge) => formActions.reset(selectors.STORE_NAME, badge)
 
 actions.update = (value, propPath = null) => {
   if (propPath) {

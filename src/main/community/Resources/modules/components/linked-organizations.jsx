@@ -40,7 +40,8 @@ const LinkedOrganizations = ({
   url,
   addUrl,
   removeUrl,
-  autoload = true
+  autoload = true,
+  disabled = false
 }) => {
   const dispatch = useDispatch()
   const [data, status] = useFetch(name, url, {autoload: autoload})
@@ -68,6 +69,7 @@ const LinkedOrganizations = ({
           <Button
             className="btn btn-link ms-auto me-n2"
             size="sm"
+            disabled={disabled}
             {...{
               name: 'remove',
               type: ASYNC_BUTTON,
@@ -91,6 +93,7 @@ const LinkedOrganizations = ({
           type={MODAL_BUTTON}
           icon="fa fa-plus"
           label={trans('add_organizations', {}, 'actions')}
+          disabled={disabled}
           modal={[MODAL_ORGANIZATIONS, {
             subtitle: description,
             multiple: true,
@@ -119,7 +122,8 @@ LinkedOrganizations.propTypes = {
   description: T.string,
   url: T.oneOfType([T.string, T.array]).isRequired,
   addUrl: T.oneOfType([T.string, T.array]).isRequired,
-  removeUrl: T.oneOfType([T.string, T.array]).isRequired
+  removeUrl: T.oneOfType([T.string, T.array]).isRequired,
+  disabled: T.bool
 }
 
 export {

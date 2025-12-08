@@ -3,7 +3,7 @@ import {trans} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
 
 import {route} from '#/plugin/open-badge/badge/routing'
-import {declareAction} from '#/main/app/action'
+import {constants, declareAction} from '#/main/app/action'
 
 export default declareAction((badges, refresher, path) => ({
   name: 'edit',
@@ -14,5 +14,6 @@ export default declareAction((badges, refresher, path) => ({
   displayed: hasPermission('edit', badges[0]),
   primary: true,
   group: trans('management'),
-  scope: ['object']
+  scope: ['object'],
+  set: [constants.ACTION_SET_LIST, constants.ACTION_SET_DETAILS]
 }))

@@ -4,6 +4,7 @@ import {chain, number, inRange} from '#/main/app/data/types/validators'
 import {ProgressionDisplay} from '#/main/app/data/types/progression/components/display'
 import {ProgressionCell} from '#/main/app/data/types/progression/components/cell'
 import {declareDataType} from '#/main/app/data/types'
+import {NumberFilter} from '#/main/app/data/types/number/components/filter'
 
 /**
  * Progression data type.
@@ -37,10 +38,11 @@ export default declareDataType({
   validate: (value, options) => chain(value, Object.assign({}, options, {min: 0, max: 100}), [number, inRange]),
 
   /**
-   * Custom components for scores rendering.
+   * Custom components for progression rendering.
    */
   components: {
     display: ProgressionDisplay,
-    cell: ProgressionCell
+    cell: ProgressionCell,
+    filter: NumberFilter
   }
 })

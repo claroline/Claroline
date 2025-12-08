@@ -65,7 +65,6 @@ const EvaluationList = (props) => {
           label: trans('progression'),
           type: 'progression',
           displayed: true,
-          filterable: false,
           options: {
             type: 'learning'
           }
@@ -76,6 +75,7 @@ const EvaluationList = (props) => {
           label: trans('score'),
           displayed: props.hasScore,
           displayable: props.hasScore,
+          filterable: false, // props.hasScore,
           placeholder: props.hasScore && (
             <div className="d-inline-flex gap-2 flex-row align-items-center" role="presentation">
               <TooltipOverlay
@@ -88,8 +88,7 @@ const EvaluationList = (props) => {
 
               <EvaluationScore scoreMax={props.totalScore} />
             </div>
-          ),
-          filterable: false
+          )
         }, {
           name: 'status',
           type: 'choice',

@@ -1,7 +1,6 @@
 import {connect} from 'react-redux'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {selectors as formSelectors} from '#/main/app/content/form/store'
 
 import {actions, selectors} from '#/plugin/open-badge/tools/badges/store'
 import {BadgeShow as BadgeShowComponent} from '#/plugin/open-badge/badge/components/show'
@@ -11,13 +10,13 @@ const BadgeShow = connect(
     path: toolSelectors.path(state),
     contextType: toolSelectors.contextType(state),
     contextId: toolSelectors.contextId(state),
-    badge: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)),
+    badge: selectors.currentBadge(state),
     assertion: selectors.assertion(state),
     evidences: selectors.evidences(state)
   }),
   dispatch =>({
     reload(id) {
-      dispatch(actions.openBadge(selectors.FORM_NAME, id))
+      dispatch(actions.openBadge(id))
     }
   })
 )(BadgeShowComponent)

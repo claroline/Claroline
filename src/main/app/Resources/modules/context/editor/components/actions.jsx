@@ -31,7 +31,7 @@ const ContextEditorActions = () => {
       }
     },
     delete: (contexts) => {
-      // checks if the action has deleted the current node
+      // checks if the action has deleted the current context
       const currentContext = contexts.find(c => c.id === get(contextData, 'id'))
       if (currentContext) {
         history.push('/')

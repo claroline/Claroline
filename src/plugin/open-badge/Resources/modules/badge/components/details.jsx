@@ -7,7 +7,6 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {PageSection} from '#/main/app/page/components/section'
-import {Alert} from '#/main/app/components/alert'
 import {Content} from '#/main/app/components/content'
 
 import {Assertion as AssertionTypes, Badge as BadgeTypes, Evidence as EvidenceTypes} from '#/plugin/open-badge/prop-types'
@@ -88,12 +87,6 @@ const BadgeDetails = (props) => {
         title={trans('Comment obtenir ce badge ?', {}, 'badge')}
         className="mb-5"
       >
-        {get(props.badge, 'meta.archived', false) &&
-          <Alert type="info">
-            {trans('badge_archived_help', {}, 'badge')}
-          </Alert>
-        }
-
         {!isEmpty(props.badge.rules) &&
           <BadgeRules
             rules={props.badge.rules}

@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {trans, transChoice} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
-import {declareAction} from '#/main/app/action'
+import {constants, declareAction} from '#/main/app/action'
 
 export default declareAction((badges, refresher) => {
   const processable = badges.filter(badge => hasPermission('edit', badge) && !get(badge, 'meta.archived', false))
@@ -33,6 +33,9 @@ export default declareAction((badges, refresher) => {
     },
     scope: ['object', 'collection'],
     group: trans('transfer'),
-    dangerous: true
+    dangerous: true,
+    set: [constants.ACTION_SET_LIST, constants.ACTION_SET_DETAILS, constants.ACTION_SET_ADVANCED],
+    title: trans('archive_badge', {}, 'actions'),
+    description: trans('archive_badge_desc', {}, 'actions')
   }
 })

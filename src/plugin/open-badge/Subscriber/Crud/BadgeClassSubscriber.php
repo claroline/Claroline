@@ -108,22 +108,23 @@ class BadgeClassSubscriber implements EventSubscriberInterface
      */
     private function checkOrganization(BadgeClass $badge): void
     {
-        if (empty($badge->getIssuer())) {
-            $organization = null;
+        if (empty($badge->getOrganizations()->toArray())) {
+            $organizations = null;
             if ($badge->getWorkspace()) {
-                $wsOrganizations = $badge->getWorkspace()->getOrganizations()->toArray();
-                if (!empty($wsOrganizations)) {
-                    $organization = $wsOrganizations[0];
-                }
+                $organizations = $badge->getWorkspace()->getOrganizations()->toArray();
             } elseif ($this->tokenStorage->getToken()?->getUser() instanceof User) {
-                $organization = $this->tokenStorage->getToken()?->getUser()->getMainOrganization();
+                $organizations = [$this->tokenStorage->getToken()?->getUser()->getMainOrganization()];
             }
 
-            if (!empty($organization)) {
-                $badge->setIssuer($organization);
-            } else {
-                $badge->setIssuer($this->organizationManager->getDefault(true));
+            if (empty($organizations)) {
+                $organizations = [$this->organizationManager->getDefault(true)];
             }
+
+            $badge->setOrganizations($organizations);
+        }
+
+        if (empty($badge->getIssuer())) {
+            $badge->setIssuer($badge->getOrganizations()[0]);
         }
     }
 }

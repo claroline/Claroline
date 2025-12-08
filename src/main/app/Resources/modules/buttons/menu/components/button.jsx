@@ -49,6 +49,7 @@ const StandardMenu = (props) => {
     <Menu
       {...omit(props, 'menu')}
       className={props.menu.className}
+      style={props.menu.style}
     >
       {(props.menu.label && 0 !== actions.unclassified.length) &&
         <MenuHeader>{props.menu.label}</MenuHeader>
@@ -98,7 +99,9 @@ const StandardMenu = (props) => {
 
 StandardMenu.propTypes = {
   menu: T.shape({
+    className: T.string,
     label: T.string,
+    style: T.object,
     position: T.oneOf(['top', 'bottom']),
     align: T.oneOf(['start', 'end']),
     items: T.arrayOf(T.shape(
@@ -141,19 +144,20 @@ const MenuButton = forwardRef((props, ref) => {
       align={props.menu.align}
       drop={props.menu.drop}
       className={classes(props.containerClassName, 'btn-group')}
+      style={props.containerStyle}
       disabled={(isStandard && !hasActions) || props.disabled}
       onToggle={props.onToggle}
       ref={ref}
     >
       <MenuToggle
-        {...omit(props, 'menu', 'containerClassName', 'onToggle', 'opened', 'onClick', 'indicator')}
+        {...omit(props, 'menu', 'containerClassName', 'containerStyle', 'onToggle', 'opened', 'onClick', 'indicator')}
         as={CallbackButton}
         callback={props.onClick ? props.onClick : identity}
       >
         {props.children}
 
         {props.indicator &&
-          <small className="fa fa-fw fa-chevron-down opacity-50 ms-2" aria-hidden={true} />
+          <small className="fa fa-chevron-down opacity-50 ms-2" aria-hidden={true} />
         }
       </MenuToggle>
 
@@ -171,12 +175,14 @@ implementPropTypes(MenuButton, ButtonTypes, {
   opened: T.bool,
   onToggle: T.func,
   containerClassName: T.string, // permits to add a custom class to the wrapping .dropdown element,
+  containerStyle: T.object, // permits to add a custom styles to the wrapping .dropdown element,
   indicator: T.bool,
   menu: T.oneOfType([
     // a custom menu component
     T.element,
     // an action menu
     T.shape({
+      className: T.string,
       label: T.string,
       drop: T.oneOf(['up', 'start', 'end', 'down']),
       align: T.oneOf(['start', 'end']),

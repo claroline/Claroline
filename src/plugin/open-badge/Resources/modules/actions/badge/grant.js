@@ -4,7 +4,7 @@ import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
 import {MODAL_USERS} from '#/main/community/modals/users'
-import {declareAction} from '#/main/app/action'
+import {constants, declareAction} from '#/main/app/action'
 
 export default declareAction((badges, refresher) => ({
   name: 'grant',
@@ -30,5 +30,6 @@ export default declareAction((badges, refresher) => ({
   }],
   primary: true,
   scope: ['object'],
-  group: trans('management')
+  group: trans('management'),
+  set: [constants.ACTION_SET_LIST, constants.ACTION_SET_DETAILS]
 }))

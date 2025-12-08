@@ -24,7 +24,8 @@ registry.add('ClarolineOpenBadgeBundle', {
       'grant'      : () => { return import(/* webpackChunkName: "badge-action-badge-grant" */       '#/plugin/open-badge/actions/badge/grant') },
       'archive'    : () => { return import(/* webpackChunkName: "badge-action-badge-archive" */      '#/plugin/open-badge/actions/badge/archive') },
       'restore'  : () => { return import(/* webpackChunkName: "badge-action-badge-restore" */     '#/plugin/open-badge/actions/badge/restore') },
-      'recalculate': () => { return import(/* webpackChunkName: "badge-action-badge-recalculate" */ '#/plugin/open-badge/actions/badge/recalculate') }
+      'recalculate': () => { return import(/* webpackChunkName: "badge-action-badge-recalculate" */ '#/plugin/open-badge/actions/badge/recalculate') },
+      'open-workspace': () => { return import(/* webpackChunkName: "badge-action-badge-open-workspace" */ '#/plugin/open-badge/actions/badge/open-workspace') }
     },
     badge_assertion: {
       'open'          : () => { return import(/* webpackChunkName: "badge-action-badge_assertion-open" */           '#/plugin/open-badge/actions/badge_assertion/open') },

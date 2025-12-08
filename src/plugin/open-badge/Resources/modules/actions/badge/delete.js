@@ -3,7 +3,7 @@ import isEmpty from 'lodash/isEmpty'
 import {hasPermission} from '#/main/app/security'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {declareAction} from '#/main/app/action'
+import {constants, declareAction} from '#/main/app/action'
 import get from 'lodash/get'
 
 /**
@@ -37,6 +37,9 @@ export default declareAction((badges, refresher) => {
       success: () => refresher.delete(processable)
     },
     group: trans('management'),
-    scope: ['object', 'collection']
+    scope: ['object', 'collection'],
+    set: [constants.ACTION_SET_LIST, constants.ACTION_SET_DETAILS, constants.ACTION_SET_ADVANCED],
+    title: trans('delete_badge', {}, 'actions'),
+    description: trans('delete_badge_desc', {}, 'actions')
   }
 })

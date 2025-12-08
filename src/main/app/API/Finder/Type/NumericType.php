@@ -25,7 +25,7 @@ class NumericType extends AbstractType
             // convert numbers
             $floatValue = floatval($filterValue);
             if ($filterValue === $floatValue.'') {
-                $value = $floatValue;
+                $value = $filterValue;
             }
         }
 
@@ -38,19 +38,9 @@ class NumericType extends AbstractType
             $queryBuilder->addOrderBy($finder->getQueryPath(), $finder->getSortValue());
         }
 
-        $value = $options['default'];
-        if (is_numeric($finder->getFilterValue())) {
-            // convert numbers
-            $floatValue = floatval($finder->getFilterValue());
-            if ($finder->getFilterValue() === $floatValue.'') {
-                // dumb check to allow users to search with strings like '001' without catching it as a number
-                $value = $floatValue;
-            }
-        }
-
-        if (null !== $value) {
+        if ($finder->hasFilter()) {
             $queryBuilder->andWhere("{$finder->getQueryPath()} = :{$finder->getAlias()}");
-            $queryBuilder->setParameter($finder->getAlias(), $value);
+            $queryBuilder->setParameter($finder->getAlias(), $finder->getFilterValue());
         }
     }
 }

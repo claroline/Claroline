@@ -52,6 +52,7 @@ class RelatedEntityType extends AbstractType
                     $queryBuilder->andWhere("{$finder->getAlias()}.{$options['identifier']} = :{$finder->getAlias()}");
                 } else {
                     $queryBuilder->andWhere("{$finder->getAlias()}.{$options['identifier']} IN (:{$finder->getAlias()})");
+                    $finder->distinct(true);
                 }
 
                 $queryBuilder->setParameter($finder->getAlias(), $finder->getFilterValue());
