@@ -2,9 +2,9 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useSelector} from 'react-redux'
 import get from 'lodash/get'
-import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl'
+import {useLocaleStorage} from '#/main/app/storage'
 import {Action, PromisedAction} from '#/main/app/action/prop-types'
 import {PageBody, PageSimple} from '#/main/app/page'
 
@@ -30,6 +30,8 @@ const ContextPage = ({
   const contextData = useSelector(selectors.data)
   const contextPath = useSelector(selectors.path)
 
+  const [pinedMenu] = useLocaleStorage('contextMenuPined', false)
+
   return (
     <PageSimple
       className={className}
@@ -42,12 +44,12 @@ const ContextPage = ({
         <PageMenu
           embedded={embedded}
           {...menu}
-          breadcrumb={[
+          breadcrumb={(!pinedMenu ? [
             {
               label: get(contextData, 'name') || trans(contextType, {}, 'context'),
               target: contextPath
             }
-          ].concat(breadcrumb || [])}
+          ] : []).concat(breadcrumb || [])}
           affix={ContextMenu}
         />
       }
@@ -73,7 +75,29 @@ const ContextPage = ({
   )
 }
 
-ContextPage.propTypes = merge({}, PageSimple.propTypes, {
+ContextPage.propTypes = {
+  className: T.string,
+
+  /**
+   * Custom data used for document head.
+   */
+  title: T.string,
+  description: T.string,
+
+  /**
+   * A list of additional styles to add to the page.
+   */
+  styles: T.arrayOf(T.string),
+
+  /**
+   * Is the current page embedded into another one?
+   *
+   * @type {bool}
+   */
+  embedded: T.bool,
+
+  children: T.node,
+
   /**
    * The path of the page inside the context.
    */
@@ -120,7 +144,7 @@ ContextPage.propTypes = merge({}, PageSimple.propTypes, {
     ]),
     children: T.node
   })
-})
+}
 
 export {
   ContextPage

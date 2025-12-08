@@ -160,27 +160,26 @@ const visibleTools = createSelector(
 const toolLinks = createSelector(
   [path, data, visibleTools],
   (path, data, visibleTools) => {
-    const toolLinks = visibleTools
-      .map(tool => ({
-        name: tool.name,
-        type: LINK_BUTTON,
-        icon: `fa fa-fw fa-${tool.icon}`,
-        label: trans(tool.name, {}, 'tools'),
-        target: path + '/' + tool.name,
-        status: tool.status,
-        subscript: tool.status ? {
-          type: 'label',
-          value: tool.status,
-          status: 'primary'
-        } : undefined
-      }))
+    const toolLinks = visibleTools.map(tool => ({
+      name: tool.name,
+      type: LINK_BUTTON,
+      icon: `fa fa-fw fa-${tool.icon}`,
+      label: trans(tool.name, {}, 'tools'),
+      target: path + '/' + tool.name,
+      status: tool.status,
+      subscript: tool.status ? {
+        type: 'label',
+        value: tool.status,
+        status: 'primary'
+      } : undefined
+    }))
 
     if (hasPermission('administrate', data)) {
       // append editor
       toolLinks.push({
         name: 'parameters',
         type: LINK_BUTTON,
-        icon: `fa fa-fw fa-sliders`,
+        icon: 'fa fa-fw fa-sliders',
         label: trans('parameters'),
         target: path + '/edit'
       })

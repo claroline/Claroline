@@ -1,12 +1,13 @@
-import React, {useCallback, useId} from 'react'
+import React, {useCallback, useEffect, useId, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useDispatch, useSelector} from 'react-redux'
+import {useHistory} from 'react-router-dom'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl'
 import {useLocaleStorage} from '#/main/app/storage'
-import {Button} from '#/main/app/action'
+import {Button, constants as actionConstants, pickActionSet} from '#/main/app/action'
 import {CALLBACK_BUTTON, CallbackButton, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {DataMicro} from '#/main/app/data/components/micro'
 import {Menu} from '#/main/app/overlays/menu'
@@ -16,10 +17,18 @@ import {MODAL_PLATFORM_ORGANIZATIONS} from '#/main/app/platform/modals/organizat
 
 import {ContextFavourite} from '#/main/app/context/components/favorite'
 import {actions, selectors} from '#/main/app/context/store'
+import {ContextCallout} from '#/main/app/context/components/callout'
+import {selectors as securitySelectors} from '#/main/app/security'
+import {route} from '#/main/app/context'
+import {getActions} from '#/main/app/context/utils'
 
 const ContextFlyout = (props) => {
   const dispatch = useDispatch()
+  const history = useHistory()
 
+  const contextPath = useSelector(selectors.path)
+  const contextType = useSelector(selectors.type)
+  const contextData = useSelector(selectors.data)
   // get context organizations
   const organizations = useSelector(selectors.organizations)
   // get context tools
@@ -29,6 +38,22 @@ const ContextFlyout = (props) => {
   const toolsTitleId = useId()
   const organizationsTitleId = useId()
   const organizationsDescId = useId()
+
+  const [contextActions, setContextActions] = useState([])
+
+  const currentUser = useSelector(securitySelectors.currentUser)
+  const refresher = {
+    add: () => dispatch(actions.reload()),
+    update: () => dispatch(actions.reload()),
+    delete: () => {
+      history.push(route('desktop', null, 'workspaces'))
+    }
+  }
+  useEffect(() => {
+    getActions(contextType, [contextData], refresher, contextPath, currentUser).then((loadedActions) => {
+      setContextActions(pickActionSet(actionConstants.ACTION_SET_DETAILS, loadedActions))
+    })
+  }, [contextType, contextData ? contextData.id : null])
 
   return (
     <Menu
@@ -52,8 +77,10 @@ const ContextFlyout = (props) => {
             <span className="fa fa-thumb-tack fs-base" aria-hidden={true} />
           </Button>
 
-          <ContextFavourite />
+          <ContextFavourite className="p-1 ms-n1" />
         </div>
+
+        <ContextCallout className="mt-4 mx-4" actions={contextActions} />
 
         {1 < toolLinks.length &&
           <div role="presentation">

@@ -14,6 +14,7 @@ const MenuOverlay = forwardRef((props, ref) =>
     disabled={props.disabled}
     onToggle={props.onToggle}
     ref={ref}
+    style={props.style}
   >
     {props.children}
   </Dropdown>
@@ -21,6 +22,7 @@ const MenuOverlay = forwardRef((props, ref) =>
 
 MenuOverlay.propTypes = {
   show: T.bool,
+  style: T.object,
   className: T.string,
   disabled: T.bool,
   drop: T.oneOf(['up', 'start', 'end', 'down']),

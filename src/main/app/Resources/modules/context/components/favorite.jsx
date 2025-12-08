@@ -11,7 +11,8 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {actions as platformActions, selectors as platformSelectors} from '#/main/app/platform/store'
 
 const ContextFavourite = ({
-  className
+  className,
+  tooltip
 }) => {
   const dispatch = useDispatch()
 
@@ -21,19 +22,20 @@ const ContextFavourite = ({
   const favourite = useSelector((state) => platformSelectors.isContextFavorite(state, contextData))
 
   if (!isAuthenticated || 'workspace' !== contextType) {
-    return null;
+    return null
   }
 
   return (
     <Button
       id="toggle-favorite"
-      className={classes('btn btn-text-body p-1 focus-ring ms-n1', className)}
+      className={classes('btn btn-text-body focus-ring', className)}
       type={CALLBACK_BUTTON}
       label={trans(favourite ? 'remove-favourite' : 'add-favourite', {}, 'actions')}
       icon={classes('fa fs-base', {
         'fa-star text-warning': favourite,
         'far fa-star': !favourite
       })}
+      tooltip={tooltip}
       callback={() => favourite ?
         dispatch(platformActions.deleteFavorite(contextData)) :
         dispatch(platformActions.addFavorite(contextData))
@@ -44,7 +46,8 @@ const ContextFavourite = ({
 }
 
 ContextFavourite.propTypes = {
-  className: T.string
+  className: T.string,
+  tooltip: T.string
 }
 
 export {
