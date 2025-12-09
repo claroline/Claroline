@@ -14,22 +14,12 @@
 
 .search-unified {
     .search-control {
-        /*min-height: auto;
+        min-height: auto;
         border: none;
         box-shadow: none;
         background: transparent;
         text-overflow: ellipsis;
-        border-radius: 0;*/
-
-        /*&::before {
-            content: '\f002';
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            font-style: normal;
-            font-variant: normal;
-            line-height: 1;
-            text-rendering: auto;
-        }*/
+        border-radius: 0;
     }
 
     .search-form {
