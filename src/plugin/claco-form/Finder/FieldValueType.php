@@ -6,11 +6,8 @@ use Claroline\AppBundle\API\Finder\AbstractType;
 use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
 use Claroline\AppBundle\API\Finder\FinderInterface;
 use Claroline\AppBundle\API\Finder\FinderRequest;
-use Claroline\AppBundle\API\Finder\Type\BooleanType;
 use Claroline\AppBundle\API\Finder\Type\ChoiceType;
-use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
-use Claroline\AppBundle\API\Finder\Type\NumericType;
 use Claroline\AppBundle\API\Finder\Type\RelatedEntityType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
@@ -59,15 +56,6 @@ class FieldValueType extends AbstractType
         });
 
         switch ($field->getType()) {
-            case FieldFacet::BOOLEAN_TYPE:
-                $builder->add('value', BooleanType::class);
-                break;
-            case FieldFacet::NUMBER_TYPE:
-                $builder->add('value', NumericType::class);
-                break;
-            case FieldFacet::DATE_TYPE:
-                $builder->add('value', DateType::class);
-                break;
             case FieldFacet::CHOICE_TYPE:
                 $builder->add('value', ChoiceType::class, ['choices' => array_map(function (FieldFacetChoice $choice) {
                     return $choice->getValue();

@@ -103,22 +103,6 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, isCategoryM
     }),
     definition: [
       {
-        name: 'type',
-        label: trans('type'),
-        displayable: false,
-        displayed: false,
-        sortable: false,
-        filterable: true,
-        type: 'choice',
-        options: {
-          choices: Object.assign({
-            all_entries: trans('all_entries', {}, 'clacoform'),
-            my_entries: trans('my_entries', {}, 'clacoform')
-          }, isCategoryManager ? {
-            manager_entries: trans('manager_entries', {}, 'clacoform')
-          } : {})
-        }
-      }, {
         name: 'title',
         type: 'string',
         label: titleLabel ? titleLabel : trans('title'),
@@ -185,7 +169,7 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, isCategoryM
         filterable: hasCategories,
         options: {
           multiple: true,
-          condensed: true, // for search
+          condensed: false,
           choices: clacoForm.categories ? clacoForm.categories.reduce((acc, category) => Object.assign(acc, {
             [category.id]: category.name
           }), {}) : {}
