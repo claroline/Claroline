@@ -69,10 +69,14 @@ class OrganizationType extends AbstractType
             }
         }
 
-        return [
-            'included' => $includedOrganizations,
-            'excluded' => $excludedOrganizations,
-        ];
+        if (!empty($includedOrganizations) || !empty($excludedOrganizations)) {
+            return [
+                'included' => $includedOrganizations,
+                'excluded' => $excludedOrganizations,
+            ];
+        }
+
+        return null;
     }
 
     public function buildFinder(FinderBuilderInterface $builder, array $options): void
@@ -81,7 +85,8 @@ class OrganizationType extends AbstractType
             ->add('name', TextType::class)
             ->add('code', TextType::class)
             ->add('description', TextType::class)
-            ->add('public', PublicType::class);
+            ->add('public', PublicType::class)
+        ;
     }
 
     public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
