@@ -74,7 +74,7 @@ class ResourceNodeController extends AbstractCrudController
         $finderRequest->addFilters([
             'active' => true,
             'resourceTypeEnabled' => true,
-            'parent' => null,
+            'parent' => 'null',
         ]);
 
         if ($contextId || $parent) {

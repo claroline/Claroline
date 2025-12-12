@@ -97,6 +97,12 @@ const ResourceList = props => {
           filterable: true,
           displayable: false
         }, {
+          name: 'meta.public',
+          label: trans('public'),
+          type: 'boolean',
+          alias: 'public',
+          displayable: true
+        }, {
           name: 'tags',
           type: 'tag',
           label: trans('tags'),
@@ -134,9 +140,6 @@ ResourceList.propTypes = {
     // data list prop types
   })),
   backAction: T.object,
-  customActions: T.func,
-  invalidate: T.func.isRequired,
-  currentUser: T.object,
   refresher: T.shape({
     add: T.func,
     update: T.func,
@@ -146,8 +149,7 @@ ResourceList.propTypes = {
 
 ResourceList.defaultProps = {
   autoload: true,
-  customDefinition: [],
-  customActions: () => []
+  customDefinition: []
 }
 
 export {

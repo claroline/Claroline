@@ -100,6 +100,16 @@ const ResourcesModal = (props) => {
           return null
         }}
         actions={undefined}
+        customDefinition={[
+          {
+            name: 'workspace',
+            type: 'workspace',
+            label: trans('workspace', {}, 'workspace'),
+            displayable: 'all' === section,
+            filterable: 'all' === section,
+            sortable: 'all' === section
+          }
+        ]}
       />
 
       <Button

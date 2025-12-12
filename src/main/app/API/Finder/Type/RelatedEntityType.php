@@ -42,7 +42,7 @@ class RelatedEntityType extends AbstractType
             }
 
             if ($finder->hasFilter()) {
-                if (is_null($finder->getFilterValue())) {
+                if ('null' === $finder->getFilterValue()) {
                     $queryBuilder->andWhere("{$finder->getAlias()} IS NULL");
 
                     return;
