@@ -139,6 +139,7 @@ ResourceList.propTypes = {
   customDefinition: T.arrayOf(T.shape({
     // data list prop types
   })),
+  customActions: T.func,
   backAction: T.object,
   refresher: T.shape({
     add: T.func,
@@ -149,7 +150,8 @@ ResourceList.propTypes = {
 
 ResourceList.defaultProps = {
   autoload: true,
-  customDefinition: []
+  customDefinition: [],
+  customActions: () => []
 }
 
 export {

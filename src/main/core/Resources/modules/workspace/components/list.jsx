@@ -61,15 +61,19 @@ const Workspaces = (props) => {
           name: 'meta.creator',
           label: trans('creator'),
           type: 'user',
-          alias: 'creator',
-          sortable: false
+          alias: 'creator'
         }, {
           name: 'restrictions.hidden',
           label: trans('hidden'),
           type: 'boolean',
           alias: 'hidden',
-          displayable: false,
-          sortable: false
+          displayable: false
+        }, {
+          name: 'meta.public',
+          label: trans('public'),
+          type: 'boolean',
+          alias: 'public',
+          displayable: true
         }, {
           name: 'tags',
           type: 'tag',

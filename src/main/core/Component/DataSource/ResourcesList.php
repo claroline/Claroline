@@ -48,8 +48,8 @@ final class ResourcesList extends ListSourceComponent
             $finderRequest->addFilter('workspace.public', true);
             $finderRequest->addFilter('public', true);
         } else {
-            $roleNames = $this->tokenStorage->getToken()->getRoleNames();
-            if (!in_array(PlatformRoles::ADMIN, $roleNames)) {
+            $roleNames = $this->tokenStorage->getToken()?->getRoleNames();
+            if (!empty($roleNames) && !in_array(PlatformRoles::ADMIN, $roleNames)) {
                 $finderRequest->addFilter('roles', $roleNames);
             }
         }

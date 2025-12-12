@@ -28,23 +28,38 @@ class PublicType extends AbstractType
         $resolver->setAllowedValues('default', [null, true, false]);
     }
 
-    public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
+    public function submit(mixed $filterValue, array $options): ?bool
     {
+        $value = $filterValue;
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             // force public elements for anonymous
             $value = true;
         } else {
             $requestValue = null;
-            if (null !== $finder->getFilterValue()) {
-                $requestValue = filter_var($finder->getFilterValue(), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            if (null !== $value) {
+                $requestValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
             }
 
             $value = null === $requestValue ? $options['default'] : $requestValue;
         }
 
-        if (null !== $value) {
-            $queryBuilder->andWhere("{$finder->getQueryPath()} = :{$finder->getAlias()}");
-            $queryBuilder->setParameter($finder->getAlias(), $value);
+        return $value;
+    }
+
+    public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
+    {
+        if ($finder->getSortValue()) {
+            $queryBuilder->addOrderBy($finder->getQueryPath(), $finder->getSortValue());
         }
+
+        if ($finder->hasFilter()) {
+            $queryBuilder->andWhere("{$finder->getQueryPath()} = :{$finder->getAlias()}");
+            $queryBuilder->setParameter($finder->getAlias(), $finder->getFilterValue());
+        }
+    }
+
+    public function getParent(): ?string
+    {
+        return BooleanType::class;
     }
 }
