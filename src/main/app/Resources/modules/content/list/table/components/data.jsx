@@ -40,7 +40,7 @@ const TableData = props => {
       <tbody>
         {data.map((row, index) =>
           <TableItem
-            key={`row-${index}`}
+            key={row.id ? row.id : `row-${index}`}
             row={row}
             size={props.size}
             columns={props.definition.filter(prop => -1 !== displayedColumns.indexOf(prop.name))}
