@@ -114,7 +114,7 @@ class WorkspaceController extends AbstractCrudController
             ->toResponse();
     }
 
-    #[Route(path: '/', name: 'create', methods: ['POST'])]
+    #[Route(path: '', name: 'create', methods: ['POST'])]
     public function createAction(Request $request): JsonResponse
     {
         $this->checkPermission('CREATE', new Workspace(), [], true);
