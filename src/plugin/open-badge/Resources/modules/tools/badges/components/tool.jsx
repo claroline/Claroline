@@ -37,7 +37,7 @@ const BadgeTool = (props) =>
         path: '/',
         component: Assertions,
         exact: true,
-        disabled: props.contextType === toolConstants.TOOL_WORKSPACE && !get(props.contextData, 'meta.model')
+        disabled: props.contextType === toolConstants.TOOL_WORKSPACE && get(props.contextData, 'meta.model', false)
       }, {
         path: '/all',
         component: BadgeList
