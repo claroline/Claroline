@@ -49,6 +49,7 @@ final class Version20251203101259 extends AbstractMigration
             FROM claro__open_badge_badge_class AS b
             LEFT JOIN workspace_organization AS wo ON (wo.workspace_id = b.workspace_id)
             WHERE b.workspace_id IS NOT NULL
+              AND wo.organization_id IS NOT NULL
         ');
     }
 
