@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -47,7 +48,7 @@ class ResourceVoter implements VoterInterface
         $this->repository = $om->getRepository(ResourceRights::class);
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes): int
+    public function vote(TokenInterface $token, $subject, array $attributes, ?Vote $vote = null): int
     {
         if ($subject instanceof ObjectCollection) {
             $subject = $subject->toArray()[0];

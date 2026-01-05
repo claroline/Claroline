@@ -14,6 +14,7 @@ namespace Claroline\CommunityBundle\Security\Voter\CurrentUser;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
@@ -34,7 +35,7 @@ class AdministratorVoter implements VoterInterface, CacheableVoterInterface
         return true;
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes): int
+    public function vote(TokenInterface $token, $subject, array $attributes, ?Vote $vote = null): int
     {
         if (in_array(PlatformRoles::ADMIN, $token->getRoleNames())) {
             return VoterInterface::ACCESS_GRANTED;

@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\OrganizationManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
@@ -47,7 +48,7 @@ class OrganizationManagerVoter implements VoterInterface, CacheableVoterInterfac
         return class_exists($subjectType) && method_exists($subjectType, 'getOrganizations');
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes): int
+    public function vote(TokenInterface $token, $subject, array $attributes, ?Vote $vote = null): int
     {
         if ($token->getUser() instanceof User && $this->organizationManager->isManager($token->getUser(), $subject->getOrganizations())) {
             // user is a manager of the subject, grant him all accesses

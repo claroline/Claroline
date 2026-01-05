@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
@@ -41,7 +42,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, CacheableVoterI
         $this->om = $om;
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes): int
+    public function vote(TokenInterface $token, mixed $subject, array $attributes, ?Vote $vote = null): int
     {
         if (is_string($attributes[0])) {
             $attributes[0] = strtoupper($attributes[0]);

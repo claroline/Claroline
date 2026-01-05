@@ -13,6 +13,7 @@ namespace Claroline\AuthenticationBundle\Security;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -41,7 +42,7 @@ class UserChecker implements UserCheckerInterface
         }
     }
 
-    public function checkPostAuth(UserInterface $user): void
+    public function checkPostAuth(UserInterface $user, ?TokenInterface $token = null): void
     {
         if (!$user instanceof User) {
             return;

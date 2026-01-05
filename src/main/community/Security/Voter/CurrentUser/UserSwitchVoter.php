@@ -14,6 +14,7 @@ namespace Claroline\CommunityBundle\Security\Voter\CurrentUser;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
@@ -47,7 +48,7 @@ class UserSwitchVoter extends Voter
         return $this->supportsAttribute($attribute) && $subject instanceof User;
     }
 
-    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
         return $this->security->isGranted('ADMINISTRATE', $subject);
     }

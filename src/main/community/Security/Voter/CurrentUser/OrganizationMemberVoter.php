@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\OrganizationManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
@@ -45,7 +46,7 @@ class OrganizationMemberVoter implements VoterInterface, CacheableVoterInterface
         return class_exists($subjectType) && method_exists($subjectType, 'getOrganizations');
     }
 
-    public function vote(TokenInterface $token, mixed $subject, array $attributes): int
+    public function vote(TokenInterface $token, mixed $subject, array $attributes, ?Vote $vote = null): int
     {
         if (!$token->getUser() instanceof User || !$this->organizationManager->isMember($token->getUser(), $subject->getOrganizations())) {
             // User is not part of the same organization, we can deny access now
