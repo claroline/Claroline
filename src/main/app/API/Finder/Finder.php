@@ -102,6 +102,11 @@ class Finder implements FinderInterface
         return $this;
     }
 
+    public function all(): array
+    {
+        return $this->children;
+    }
+
     public function has(string $name): bool
     {
         return isset($this->children[$name]);

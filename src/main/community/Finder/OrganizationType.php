@@ -5,7 +5,6 @@ namespace Claroline\CommunityBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractType;
 use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
 use Claroline\AppBundle\API\Finder\FinderInterface;
-use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\PublicType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -27,10 +26,32 @@ class OrganizationType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'data_class' => Organization::class,
-            'fulltext' => ['name', 'code', 'description'],
-        ]);
+        // the entity classname managed by the finder
+        $resolver
+            ->define('data_class')
+            ->default(Organization::class)
+            ->required();
+
+        $resolver
+            ->define('identifier')
+            ->default('uuid')
+            ->required();
+
+        // enabled multi-column search for the entity
+        $resolver
+            ->define('fulltext')
+            ->allowedTypes('null', 'array')
+            ->default(['name', 'code', 'description']);
+
+        // allows customizing the join to the entity when the finder is embedded into another
+        // the callback is called with the QueryBuilder, FinderInterface and resolved options as parameters.
+        $resolver
+            ->define('joinQuery')
+            ->allowedTypes('callable');
+        $resolver
+            ->define('nullable')
+            ->allowedTypes('boolean')
+            ->default(false);
     }
 
     public function submit(mixed $filterValue, array $options): ?array
@@ -111,13 +132,26 @@ class OrganizationType extends AbstractType
         }
 
         if (!empty($includedOrganizations) || !empty($excludedOrganizations)) {
+            if (!$finder->isRoot()) {
+                if (isset($options['joinQuery'])) {
+                    $options['joinQuery']($queryBuilder, $finder, $options);
+                } else {
+                    $queryBuilder->leftJoin($finder->getQueryPath(false), $finder->getAlias());
+                }
+            }
+
+            $nullableCondition = '';
+            if ($options['nullable']) {
+                $nullableCondition = "{$finder->getAlias()}.{$options['identifier']} IS NULL OR";
+            }
+
             if (1 === count($includedOrganizations)) {
-                $queryBuilder->andWhere("{$finder->getAlias()}.uuid = :{$finder->getAlias()}");
+                $queryBuilder->andWhere("($nullableCondition {$finder->getAlias()}.uuid = :{$finder->getAlias()})");
                 $queryBuilder->setParameter($finder->getAlias(), $includedOrganizations[0]);
                 $finder->distinct(false);
             } else {
                 if (!empty($includedOrganizations)) {
-                    $queryBuilder->andWhere("{$finder->getAlias()}.uuid IN (:{$finder->getAlias()}Include)");
+                    $queryBuilder->andWhere("($nullableCondition {$finder->getAlias()}.uuid IN (:{$finder->getAlias()}Include))");
                     $queryBuilder->setParameter($finder->getAlias().'Include', $includedOrganizations);
                 }
 
@@ -176,10 +210,14 @@ class OrganizationType extends AbstractType
                 }
             }
         }
-    }
 
-    public function getParent(): ?string
-    {
-        return EntityType::class;
+        if ($finder->isRoot() && !$finder->hasFilter() && !empty($options['fulltext']) && !empty($finder->getSearchValue())) {
+            $fulltextQuery = [];
+            foreach ($options['fulltext'] as $propName) {
+                $fulltextQuery[] = "LOWER({$finder->getQueryPath()}.$propName) LIKE :{$finder->getAlias()}Fulltext";
+            }
+            $queryBuilder->andWhere('('.implode(' OR ', $fulltextQuery).')');
+            $queryBuilder->setParameter($finder->getAlias().'Fulltext', '%'.addcslashes(strtolower($finder->getSearchValue()), '%_').'%');
+        }
     }
 }

@@ -64,13 +64,15 @@ class EntityType extends AbstractType
     public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
     {
         if (!$finder->isRoot()) {
-            if (isset($options['joinQuery'])) {
-                $options['joinQuery']($queryBuilder, $finder, $options);
-            } else {
-                $queryBuilder->leftJoin($finder->getQueryPath(false), $finder->getAlias());
-            }
+            if ($this->requireJoin($finder)) {
+                if (isset($options['joinQuery'])) {
+                    $options['joinQuery']($queryBuilder, $finder, $options);
+                } else {
+                    $queryBuilder->leftJoin($finder->getQueryPath(false), $finder->getAlias());
+                }
 
-            $finder->distinct();
+                $finder->distinct();
+            }
 
             if ($finder->hasFilter()) {
                 $nullableCondition = '';
@@ -99,5 +101,25 @@ class EntityType extends AbstractType
             $queryBuilder->andWhere('('.implode(' OR ', $fulltextQuery).')');
             $queryBuilder->setParameter($finder->getAlias().'Fulltext', '%'.addcslashes(strtolower($finder->getSearchValue()), '%_').'%');
         }
+    }
+
+    private function requireJoin(FinderInterface $finder): bool
+    {
+        if ($finder->isRoot()) {
+            return false;
+        }
+
+        if (null !== $finder->getFilterValue() || null !== $finder->getSortValue()) {
+            return true;
+        }
+
+        foreach ($finder->all() as $child) {
+            $childRequireJoin = $this->requireJoin($child);
+            if ($childRequireJoin) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

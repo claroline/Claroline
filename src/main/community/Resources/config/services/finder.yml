@@ -10,8 +10,6 @@ services:
 
     Claroline\CommunityBundle\Finder\RoleType:
         tags: [ claroline.finder.type ]
-        arguments:
-            - '@security.token_storage'
 
     Claroline\CommunityBundle\Finder\TeamType:
         tags: [ claroline.finder.type ]

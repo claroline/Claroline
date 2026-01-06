@@ -34,10 +34,6 @@ class CreatorType extends AbstractType
 
     public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
     {
-        if ($finder->getFilterValue()) {
-            $finder->distinct(false);
-        }
-
         if ($finder->getSortValue()) {
             $queryBuilder->addOrderBy("{$finder->getQueryPath()}.lastName", $finder->getSortValue());
         }

@@ -39,6 +39,25 @@ interface FinderInterface
     public function add(self $child): static;
 
     /**
+     * Returns the child with the given name.
+     *
+     * @throws \OutOfBoundsException if the named child does not exist
+     */
+    public function get(string $name): self;
+
+    /**
+     * Returns whether a child with the given name exists.
+     */
+    public function has(string $name): bool;
+
+    /**
+     * Returns all children in this finder.
+     *
+     * @return self[]
+     */
+    public function all(): array;
+
+    /**
      * Submits a user search query to the finder.
      */
     public function submit(FinderRequest $request): static;
