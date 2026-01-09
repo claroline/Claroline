@@ -147,15 +147,16 @@ class ProgressionTool extends ToolComponent
 
             $assignments = [];
             if (!empty($sequenceData['assignments'])) {
-                // we need to manually manage sequence requirements in order to link them to the correct roles
+                // we need to manually manage sequence requirements to link them to the correct roles
                 $assignments = $sequenceData['assignments'];
                 unset($sequenceData['assignments']);
             }
 
             $this->crud->create($newSequence, $sequenceData, [
-                Crud::NO_PERMISSIONS, // this has already been checked by the core before forwarding the import
+                Crud::NO_PERMISSIONS, // the core has already checked this before forwarding the import
                 Crud::NO_VALIDATION,
                 Options::REFRESH_UUID,
+                Options::PERSIST_TAG,
             ]);
 
             if (!empty($assignments)) {

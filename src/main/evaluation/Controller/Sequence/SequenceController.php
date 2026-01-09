@@ -186,7 +186,7 @@ class SequenceController extends AbstractCrudController
         $sequenceIds = $this->decodeRequest($request);
         $toCopy = $this->om->getRepository(Sequence::class)->findBy(['uuid' => $sequenceIds]);
 
-        $options = [Crud::NO_PERMISSIONS];
+        $options = [Crud::NO_PERMISSIONS, Options::PERSIST_TAG];
         if ($copyResources) {
             $options[] = 'copyResources';
         }
