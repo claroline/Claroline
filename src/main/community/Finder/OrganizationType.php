@@ -131,15 +131,17 @@ class OrganizationType extends AbstractType
             }
         }
 
-        if (!empty($includedOrganizations) || !empty($excludedOrganizations)) {
-            if (!$finder->isRoot()) {
-                if (isset($options['joinQuery'])) {
-                    $options['joinQuery']($queryBuilder, $finder, $options);
-                } else {
-                    $queryBuilder->leftJoin($finder->getQueryPath(false), $finder->getAlias());
-                }
+        if ($this->requireJoin($finder) || !empty($includedOrganizations) || !empty($excludedOrganizations)) {
+            if (isset($options['joinQuery'])) {
+                $options['joinQuery']($queryBuilder, $finder, $options);
+            } else {
+                $queryBuilder->leftJoin($finder->getQueryPath(false), $finder->getAlias());
             }
 
+            $finder->distinct();
+        }
+
+        if (!empty($includedOrganizations) || !empty($excludedOrganizations)) {
             $nullableCondition = '';
             if ($options['nullable']) {
                 $nullableCondition = "{$finder->getAlias()}.{$options['identifier']} IS NULL OR";
@@ -219,5 +221,25 @@ class OrganizationType extends AbstractType
             $queryBuilder->andWhere('('.implode(' OR ', $fulltextQuery).')');
             $queryBuilder->setParameter($finder->getAlias().'Fulltext', '%'.addcslashes(strtolower($finder->getSearchValue()), '%_').'%');
         }
+    }
+
+    private function requireJoin(FinderInterface $finder): bool
+    {
+        if ($finder->isRoot()) {
+            return false;
+        }
+
+        if (null !== $finder->getFilterValue() || null !== $finder->getSortValue()) {
+            return true;
+        }
+
+        foreach ($finder->all() as $child) {
+            $childRequireJoin = $this->requireJoin($child);
+            if ($childRequireJoin) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
