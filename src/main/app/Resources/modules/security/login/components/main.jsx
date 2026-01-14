@@ -72,7 +72,7 @@ class LoginMain extends Component {
             <div role="presentation" className="d-grid gap-1">
               {displayedSso.map(sso => this.state.sso[sso.service] ?
                 createElement(this.state.sso[sso.service].components.button, Object.assign({}, sso, {
-                  key: sso.service,
+                  key: sso.label || sso.service,
                   label: sso.label || trans('login_with_third_party_btn', {name: trans(sso.service, {}, 'oauth')}),
                   primary: 1 === displayedSso.length
                 })) : null

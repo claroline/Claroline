@@ -22,12 +22,14 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class TransferManager implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
     public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
         private readonly ArchiveManager $archiveManager,
         private readonly FileManager $fileManager,
@@ -169,6 +171,14 @@ class TransferManager implements LoggerAwareInterface
 
         /** @var Workspace $workspace */
         $workspace = $this->serializer->deserialize($data, $workspace, array_merge($options, [Options::REFRESH_UUID]));
+
+        $currentOrganization = $this->tokenStorage->getToken()?->getUser()->getMainOrganization();
+        if ($currentOrganization) {
+            // This is normally done in the post create event. However, if something goes wrong during the import of tools,
+            // the workspace will be linked to no organization at all, and it will be hard to retrieve it in the UI.
+            $workspace->addOrganization($currentOrganization);
+        }
+
         $this->om->persist($workspace);
 
         return $workspace;

@@ -46,7 +46,7 @@
 
   --#{$prefix}btn-hover-color: #{color-contrast($color)};
   --#{$prefix}btn-hover-bg: #{$color};
-  --#{$prefix}btn-hover-border-color: #{$color};
+  --#{$prefix}btn-hover-border-color: transparent;
   --#{$prefix}btn-focus-shadow-rgb: #{to-rgb($color)};
 
   --#{$prefix}btn-active-color: #{$active-color};
@@ -54,7 +54,7 @@
   --#{$prefix}btn-active-border-color: #{$active-border};
   --#{$prefix}btn-active-shadow: #{$btn-active-box-shadow};
 
-  --#{$prefix}btn-disabled-color: var(--#{$prefix}#{$name}-text-semphasis);
+  --#{$prefix}btn-disabled-color: var(--#{$prefix}#{$name}-text-emphasis);
   --#{$prefix}btn-disabled-bg: var(--#{$prefix}#{$name}-bg-subtle);
-  --#{$prefix}btn-disabled-border-color: #{$color};
+  --#{$prefix}btn-disabled-border-color: transparent;
 }

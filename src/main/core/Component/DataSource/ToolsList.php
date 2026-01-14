@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\DataSource\ListSourceComponent;
+use Claroline\CoreBundle\Component\Context\PublicContext;
 use Claroline\CoreBundle\Finder\ToolType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -42,11 +43,13 @@ class ToolsList extends ListSourceComponent
             $finderRequest->addFilter('contextId', $contextSubject->getContextIdentifier());
         }
 
-        // filter the tool list by current user if he is not an admin
-        $context = $this->contextProvider->getContext($context);
-        if (!$context->isGranted('ADMINISTRATE', $contextSubject)) {
-            $roles = $context->getRoles($this->tokenStorage->getToken(), $contextSubject);
-            $finderRequest->addFilter('roles', $roles);
+        if (PublicContext::getName() !== $context) {
+            // filter the tool list by current user if he is not an admin
+            $contextHandler = $this->contextProvider->getContext($context);
+            if (!$contextHandler->isGranted('ADMINISTRATE', $contextSubject)) {
+                $roles = $contextHandler->getRoles($this->tokenStorage->getToken(), $contextSubject);
+                $finderRequest->addFilter('roles', $roles);
+            }
         }
 
         return $finderRequest;

@@ -147,6 +147,7 @@ services:
 
     Claroline\CoreBundle\Manager\Workspace\TransferManager:
         arguments:
+            - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\File\ArchiveManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
