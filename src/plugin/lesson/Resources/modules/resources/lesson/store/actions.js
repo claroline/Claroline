@@ -69,3 +69,14 @@ actions.downloadChapterPdf = (lessonId, chapterId) => ({
     }
   }
 })
+
+actions.updateProgression = (lessonId,id, totalPage) => (dispatch) => dispatch({
+  [API_REQUEST]: {
+    silent: true,
+    url: ['apiv2_chapter_progression_update', {lessonId: lessonId, id: id, total: totalPage}],
+    request: {
+      method: 'PUT'
+    },
+    success: (response) => dispatch(resourceActions.updateUserEvaluation(response.userEvaluation))
+  }
+})

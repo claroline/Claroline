@@ -6,12 +6,15 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Manager\ChapterManager;
 use Icap\LessonBundle\Manager\PdfManager;
+use Icap\LessonBundle\Manager\EvaluationManager;
 use Icap\LessonBundle\Repository\ChapterRepository;
 use Icap\LessonBundle\Serializer\ChapterSerializer;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -22,6 +25,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/lesson/{lessonId}/chapters')]
 class ChapterController
@@ -36,7 +40,8 @@ class ChapterController
         private readonly Crud $crud,
         private readonly SerializerProvider $serializer,
         private readonly ChapterManager $chapterManager,
-        private readonly PdfManager $pdfManager
+        private readonly PdfManager $pdfManager,
+        private readonly EvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
         $this->chapterRepository = $this->om->getRepository(Chapter::class);
@@ -174,6 +179,33 @@ class ChapterController
         }, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename='.$fileName.'.pdf',
+        ]);
+    }
+
+    #[Route(path: '/{id}/progression/{total}', name: 'apiv2_chapter_progression_update', methods: ['PUT'])]
+    public function updateProgressionAction(
+        #[CurrentUser]
+        ?User $user,
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Chapter $chapter,
+        #[MapEntity(mapping: ['lessonId' => 'uuid'])]
+        Lesson $lesson,
+        int $total
+    ): JsonResponse {
+
+        if (null === $user) {
+            return new JsonResponse(null, 204);
+        }
+
+
+        $this->checkPermission('OPEN', $lesson->getResourceNode(), [], true);
+
+        $this->evaluationManager->update($lesson->getResourceNode(), $user, $chapter->getId(), $total);
+
+        $resourceUserEvaluation = $this->evaluationManager->getResourceUserEvaluation($lesson->getResourceNode(), $user);
+
+        return new JsonResponse([
+            'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation, [Options::SERIALIZE_MINIMAL]),
         ]);
     }
 }

@@ -84,6 +84,7 @@ const LessonPlayer = () => {
                 setTimeout(() => {
                   scrollTo('#page-'+page.id)
                 }, 0)
+                dispatch(actions.updateProgression(lesson.id,page.id,pages.length))
               } else {
                 history.replace(resourcePath)
               }

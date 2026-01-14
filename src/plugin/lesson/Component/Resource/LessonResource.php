@@ -13,6 +13,8 @@ use Claroline\CoreBundle\Component\Resource\FileAdapterInterface;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Manager\Template\PlaceholderManager;
+use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
+use Icap\LessonBundle\Manager\EvaluationManager;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Manager\ChapterManager;
@@ -21,7 +23,7 @@ use Icap\LessonBundle\Serializer\ChapterSerializer;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-final class LessonResource extends ResourceComponent implements DownloadableResourceInterface, FileAdapterInterface
+final class LessonResource extends ResourceComponent implements DownloadableResourceInterface, FileAdapterInterface, EvaluatedResourceInterface
 {
     public function __construct(
         private readonly AuthorizationCheckerInterface $authorization,
@@ -30,6 +32,7 @@ final class LessonResource extends ResourceComponent implements DownloadableReso
         private readonly PlaceholderManager $placeholderManager,
         private readonly ChapterManager $chapterManager,
         private readonly PdfManager $pdfManager,
+        private readonly EvaluationManager $evaluationManager
     ) {
     }
 
@@ -152,6 +155,16 @@ final class LessonResource extends ResourceComponent implements DownloadableReso
     }
 
     public function requireAdapter(): bool
+    {
+        return false;
+    }
+
+    public static function supportsScore(): bool
+    {
+        return false;
+    }
+
+    public static function supportsAttempts(): bool
     {
         return false;
     }
