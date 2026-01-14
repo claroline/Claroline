@@ -29,11 +29,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly LocaleSwitcher $localeSwitcher,
         private readonly SerializerProvider $serializer,
         private readonly RoutingHelper $routingHelper,
         private readonly PlatformManager $platformManager,
@@ -51,8 +53,11 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         $this->userManager->setInitDate($user);
 
-        if ($user->getLocale()) {
+        if ($user->getLocale() && $user->getLocale() !== $request->getLocale()) {
             $request->setLocale($user->getLocale());
+            $request->getSession()->set('_locale', $user->getLocale());
+
+            $this->localeSwitcher->setLocale($user->getLocale());
         }
 
         $loginEvent = new UserLoginEvent($user);

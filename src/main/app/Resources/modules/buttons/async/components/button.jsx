@@ -47,7 +47,7 @@ const AsyncButton = forwardRef((props, ref) => {
         )
       }}
     >
-      {loading ?
+      {loading && props.loader ?
         <>
           <div className="position-absolute top-50 start-50 translate-middle" role="presentation">
             <div className="dot-elastic" aria-hidden={true} />

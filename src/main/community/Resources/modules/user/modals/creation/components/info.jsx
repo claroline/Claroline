@@ -7,7 +7,7 @@ import {param} from '#/main/app/config'
 import {trans} from '#/main/app/intl'
 import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {Form, FormContent, FormData} from '#/main/app/content/form'
+import {Form, FormContent} from '#/main/app/content/form'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {route} from '#/main/community/user/routing'

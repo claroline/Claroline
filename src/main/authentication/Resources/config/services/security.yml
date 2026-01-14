@@ -14,6 +14,7 @@ services:
     Claroline\AuthenticationBundle\Security\Authentication\AuthenticationSuccessHandler:
         arguments:
             - '@event_dispatcher'
+            - '@translation.locale_switcher'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\AppBundle\Manager\PlatformManager'

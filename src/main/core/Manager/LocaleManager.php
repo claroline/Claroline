@@ -78,15 +78,7 @@ class LocaleManager
 
     private function getCurrentUser(): ?User
     {
-        $token = $this->tokenStorage->getToken();
-        if (is_object($token)) { // not sure this check is still required
-            $user = $token->getUser();
-            if ($user instanceof User) {
-                return $user;
-            }
-        }
-
-        return null;
+        return $this->tokenStorage->getToken()?->getUser();
     }
 
     public function getLocale(User $user): string
