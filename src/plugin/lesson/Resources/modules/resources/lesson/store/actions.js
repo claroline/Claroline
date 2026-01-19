@@ -70,7 +70,7 @@ actions.downloadChapterPdf = (lessonId, chapterId) => ({
   }
 })
 
-actions.updateProgression = (lessonId,id, totalPage) => (dispatch) => dispatch({
+actions.updateProgression = (lessonId,id) => (dispatch) => dispatch({
   [API_REQUEST]: {
     silent: true,
     url: ['apiv2_chapter_progression_update', {lessonId: lessonId, id: id}],
