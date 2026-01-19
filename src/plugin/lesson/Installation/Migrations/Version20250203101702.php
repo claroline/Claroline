@@ -52,5 +52,4 @@ final class Version20250203101702 extends AbstractMigration
     {
         return false;
     }
-
 }

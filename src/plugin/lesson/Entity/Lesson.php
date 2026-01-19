@@ -2,8 +2,8 @@
 
 namespace Icap\LessonBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 

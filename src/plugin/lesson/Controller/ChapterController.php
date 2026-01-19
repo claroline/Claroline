@@ -6,15 +6,14 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Manager\ChapterManager;
-use Icap\LessonBundle\Manager\PdfManager;
 use Icap\LessonBundle\Manager\EvaluationManager;
+use Icap\LessonBundle\Manager\PdfManager;
 use Icap\LessonBundle\Repository\ChapterRepository;
 use Icap\LessonBundle\Serializer\ChapterSerializer;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -182,7 +181,7 @@ class ChapterController
         ]);
     }
 
-    #[Route(path: '/{id}/progression/{total}', name: 'apiv2_chapter_progression_update', methods: ['PUT'])]
+    #[Route(path: '/{id}/progression', name: 'apiv2_chapter_progression_update', methods: ['PUT'])]
     public function updateProgressionAction(
         #[CurrentUser]
         ?User $user,
@@ -190,17 +189,14 @@ class ChapterController
         Chapter $chapter,
         #[MapEntity(mapping: ['lessonId' => 'uuid'])]
         Lesson $lesson,
-        int $total
     ): JsonResponse {
-
         if (null === $user) {
             return new JsonResponse(null, 204);
         }
 
-
         $this->checkPermission('OPEN', $lesson->getResourceNode(), [], true);
 
-        $this->evaluationManager->update($lesson->getResourceNode(), $user, $chapter->getId(), $total);
+        $this->evaluationManager->update($lesson->getResourceNode(), $user, $chapter->getId(), $chapter->getLesson());
 
         $resourceUserEvaluation = $this->evaluationManager->getResourceUserEvaluation($lesson->getResourceNode(), $user);
 

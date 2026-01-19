@@ -3,26 +3,28 @@
 namespace Icap\LessonBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\EvaluationBundle\Repository\UserEvaluation\ResourceAttemptRepository;
+use Icap\LessonBundle\Entity\Chapter;
 
 class EvaluationManager
 {
     private ResourceEvaluationManager $resourceEvalManager;
     private ResourceAttemptRepository $resourceEvalRepo;
+    private ObjectManager $om;
 
     public function __construct(
         ObjectManager $om,
         ResourceEvaluationManager $resourceEvalManager
     ) {
         $this->resourceEvalManager = $resourceEvalManager;
-
         $this->resourceEvalRepo = $om->getRepository(ResourceAttempt::class);
+        $this->om = $om;
     }
 
     public function getResourceUserEvaluation(ResourceNode $node, User $user): ResourceEvaluation
@@ -30,7 +32,7 @@ class EvaluationManager
         return $this->resourceEvalManager->getUserEvaluation($node, $user);
     }
 
-    public function update(ResourceNode $node, User $user, $page, $total): ResourceAttempt
+    public function update(ResourceNode $node, User $user, $page, $lesson): ResourceAttempt
     {
         $evaluation = $this->resourceEvalRepo->findOneInProgress($node, $user);
         $data = ['done' => []];
@@ -47,7 +49,7 @@ class EvaluationManager
             array_splice($data['done'], array_search($page, $data['done']), 1);
         }
 
-        $statusData = $this->computeResourceUserEvaluation($total, $data);
+        $statusData = $this->computeResourceUserEvaluation($data, $lesson->getId());
 
         $evaluationData = [
             'status' => $statusData['status'],
@@ -69,14 +71,13 @@ class EvaluationManager
     /**
      * Compute current resource evaluation status.
      */
-    private function computeResourceUserEvaluation(int $total, array $data = []): array
+    private function computeResourceUserEvaluation(array $data = [], $lessonId): array
     {
         $progression = 0;
-        $progressionMax = $total;
-
+        $progressionMax = $this->om->getRepository(Chapter::class)->countWithParent($lessonId);
         $status = EvaluationStatus::NOT_ATTEMPTED;
         if ($progressionMax) {
-            $rest = $total - count($data['done']);
+            $rest = $progressionMax - count($data['done']);
 
             $progression = $progressionMax - $rest;
 

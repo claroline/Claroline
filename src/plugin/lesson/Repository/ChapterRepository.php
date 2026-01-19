@@ -62,4 +62,15 @@ class ChapterRepository extends NestedTreeRepository
             return null;
         }
     }
+
+    public function countWithParent($lessonId): int
+    {
+        return (int) $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.lesson = :lesson')
+            ->andWhere('c.parent IS NOT NULL')
+            ->setParameter('lesson', $lessonId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

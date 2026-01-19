@@ -2,7 +2,6 @@
 
 namespace Icap\LessonBundle\Manager;
 
-
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Manager\PdfManager as BasePdfManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
