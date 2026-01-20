@@ -14,7 +14,8 @@ export default {
   parameters: {
     primaryAction: (session) => ({
       type: URL_BUTTON,
-      target: `#${workspaceRoute(session.workspace)}`
+      target: session.workspace ? `#${workspaceRoute(session.workspace)}` : '',
+      disabled: !session.workspace
     }),
     definition: [
       {
