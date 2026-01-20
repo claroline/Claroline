@@ -19,7 +19,7 @@ import {ContextFavourite} from '#/main/app/context/components/favorite'
 import {actions, selectors} from '#/main/app/context/store'
 import {ContextCallout} from '#/main/app/context/components/callout'
 import {selectors as securitySelectors} from '#/main/app/security'
-import {route} from '#/main/app/context'
+import {route} from '#/main/app/context/routing'
 import {getActions} from '#/main/app/context/utils'
 
 const ContextFlyout = (props) => {
