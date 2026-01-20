@@ -36,10 +36,10 @@ const ToolEditor = (props) => {
       onSave={(savedData) => props.refresh(props.name, savedData, props.contextType)}
       canAdministrate={hasPermission('administrate', props.tool)}
       overviewPage={props.children ? (() => props.children) : props.overviewPage}
-      appearancePage={props.appearancePage}
+      appearancePage={'administration' !== props.contextType && props.appearancePage}
       // historyPage={props.historyPage}
-      permissionsPage={props.permissionsPage}
-      actionsPage={ToolEditorActions}
+      permissionsPage={'administration' !== props.contextType && props.permissionsPage}
+      actionsPage={'administration' !== props.contextType && ToolEditorActions}
       pages={props.pages || []}
     />
   )

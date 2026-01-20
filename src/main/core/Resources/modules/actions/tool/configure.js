@@ -14,7 +14,7 @@ export default declareAction((tools, toolRefresher, path) => ({
   icon: 'fa fa-fw fa-sliders',
   label: trans('configure', {}, 'actions'),
   target: route(tools[0].name, path) + '/edit',
-  displayed: hasPermission('edit', tools[0]) && 'administration' !== tools[0].contextType,
+  displayed: hasPermission('edit', tools[0]),
   group: trans('management'),
   scope: ['object'],
   set: [constants.ACTION_SET_LIST, constants.ACTION_SET_DETAILS]
