@@ -21,7 +21,6 @@ Claroline\ScormBundle\ClarolineScormBundle = true
 Claroline\PdfPlayerBundle\ClarolinePdfPlayerBundle = true
 Claroline\VideoPlayerBundle\ClarolineVideoPlayerBundle = true
 Claroline\WebResourceBundle\ClarolineWebResourceBundle = true
-Claroline\TextPlayerBundle\ClarolineTextPlayerBundle = true
 HeVinci\UrlBundle\HeVinciUrlBundle = true
 Innova\PathBundle\InnovaPathBundle = false
 Claroline\DevBundle\ClarolineDevBundle = true
