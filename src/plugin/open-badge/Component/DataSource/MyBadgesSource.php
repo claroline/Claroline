@@ -36,14 +36,14 @@ class MyBadgesSource extends ListSourceComponent
         return AssertionType::class;
     }
 
-    protected function getQuery(string $context, ?ContextSubjectInterface $contextSubject = null, ?Request $request = null): FinderRequest
+    protected function getRequest(string $context, ?ContextSubjectInterface $contextSubject = null, ?bool $filterSubject = true, ?Request $request = null): FinderRequest
     {
-        $finderRequest = parent::getRequest($context, $contextSubject, $request);
+        $finderRequest = parent::getRequest($context, $contextSubject, $filterSubject, $request);
 
         $user = $this->tokenStorage->getToken()?->getUser();
 
         $finderRequest->addFilter('recipient', $user?->getUuid());
-        if (WorkspaceContext::getName() === $context) {
+        if ($filterSubject && WorkspaceContext::getName() === $context) {
             $finderRequest->addFilter('badge.workspace', $contextSubject->getUuid());
         }
 
