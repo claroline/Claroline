@@ -41,6 +41,18 @@ export default () => ({
       alias: 'creator',
       label: trans('creator'),
       displayed: true
+    }, {
+      name: 'meta.resource',
+      alias: 'resourceNode',
+      type: 'resource',
+      label: trans('resource')
+    }, {
+      name: 'meta.resource.tags',
+      alias: 'resourceNode.tags',
+      type: 'tag',
+      label: trans('tags'),
+      displayable: false,
+      sortable: false
     }
   ],
   card: MessageCard
