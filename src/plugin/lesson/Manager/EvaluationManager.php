@@ -32,7 +32,7 @@ class EvaluationManager
         return $this->resourceEvalManager->getUserEvaluation($node, $user);
     }
 
-    public function update(ResourceNode $node, User $user, $page, $lesson): ResourceAttempt
+    public function update(ResourceNode $node, User $user, $page, int $lesson): ResourceAttempt
     {
         $evaluation = $this->resourceEvalRepo->findOneInProgress($node, $user);
         $data = ['done' => []];
@@ -71,7 +71,7 @@ class EvaluationManager
     /**
      * Compute current resource evaluation status.
      */
-    private function computeResourceUserEvaluation(array $data = [], $lessonId): array
+    private function computeResourceUserEvaluation(array $data = [], int $lessonId): array
     {
         $progression = 0;
         $progressionMax = $this->om->getRepository(Chapter::class)->countWithParent($lessonId);
