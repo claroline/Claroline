@@ -27,7 +27,7 @@ class File extends AbstractResource
     private ?int $size = null;
 
     #[ORM\Column(name: 'hash_name')]
-    private ?string $hashName = null;
+    private ?string $url = null;
 
     #[ORM\Column]
     private string $opening = self::OPENING_DOWNLOAD;
@@ -54,12 +54,12 @@ class File extends AbstractResource
 
     public function getUrl(): ?string
     {
-        return $this->hashName;
+        return $this->url;
     }
 
     public function setUrl(string $url): void
     {
-        $this->hashName = $url;
+        $this->url = $url;
     }
 
     /**
