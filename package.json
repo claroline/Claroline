@@ -32,7 +32,7 @@
     "html-react-parser": "^5.1.10",
     "invariant": "^2.2.4",
     "jsplumb": "^2.2.11",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "mathjax": "2.7.4",
     "moment": "^2.30",
     "pdfjs-dist": "^4.10",
