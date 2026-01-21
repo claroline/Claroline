@@ -11,6 +11,7 @@ use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\EvaluationBundle\Repository\UserEvaluation\ResourceAttemptRepository;
 use Icap\LessonBundle\Entity\Chapter;
+use Icap\LessonBundle\Entity\Lesson;
 
 class EvaluationManager
 {
@@ -32,7 +33,7 @@ class EvaluationManager
         return $this->resourceEvalManager->getUserEvaluation($node, $user);
     }
 
-    public function update(ResourceNode $node, User $user, $page, int $lesson): ResourceAttempt
+    public function update(ResourceNode $node, User $user, int $page, Lesson $lesson): ResourceAttempt
     {
         $evaluation = $this->resourceEvalRepo->findOneInProgress($node, $user);
         $data = ['done' => []];
@@ -49,7 +50,7 @@ class EvaluationManager
             array_splice($data['done'], array_search($page, $data['done']), 1);
         }
 
-        $statusData = $this->computeResourceUserEvaluation($data, $lesson->getId());
+        $statusData = $this->computeResourceUserEvaluation($lesson->getId(), $data);
 
         $evaluationData = [
             'status' => $statusData['status'],
@@ -71,7 +72,7 @@ class EvaluationManager
     /**
      * Compute current resource evaluation status.
      */
-    private function computeResourceUserEvaluation(array $data = [], int $lessonId): array
+    private function computeResourceUserEvaluation(int $lessonId, array $data = []): array
     {
         $progression = 0;
         $progressionMax = $this->om->getRepository(Chapter::class)->countWithParent($lessonId);
