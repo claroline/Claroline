@@ -20,6 +20,7 @@ trait FileAdapterTrait
     private readonly FileManager $fileManager;
 
     abstract public static function getName(): string;
+
     abstract public static function getClass(): string;
 
     public function create(AbstractResource $resource, array $data): void
@@ -55,6 +56,11 @@ trait FileAdapterTrait
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
             $fileBag->add($resource->getName().'.'.$ext, $filePath);
         }
+    }
+
+    public function stream(AbstractResource $resource): ?string
+    {
+        return file_get_contents($this->fileManager->getAbsolutePath($resource->getUrl()));
     }
 
     public function delete(AbstractResource $resource, FileBag $fileBag, bool $softDelete = true): bool

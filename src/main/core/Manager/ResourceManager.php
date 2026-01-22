@@ -19,6 +19,7 @@ use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Manager\ViewerManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Resource\DownloadableResourceInterface;
+use Claroline\CoreBundle\Component\Resource\ResourceInterface;
 use Claroline\CoreBundle\Component\Resource\ResourceProvider;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -380,6 +381,16 @@ class ResourceManager
         }
 
         throw new \RuntimeException(sprintf('Cannot load AbstractResource from ResourceNode (%s).', $resourceNode->getUuid()));
+    }
+
+    public function stream(ResourceNode $resourceNode): ?string
+    {
+        $resource = $this->getResourceFromNode($resourceNode);
+
+        /** @var ResourceInterface $resourceHandler */
+        $resourceHandler = $this->resourceProvider->getComponent($resourceNode->getResourceType()->getName());
+
+        return $resourceHandler->stream($resource);
     }
 
     public function isManager(ResourceNode $resourceNode): bool

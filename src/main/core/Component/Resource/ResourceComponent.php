@@ -124,4 +124,8 @@ abstract class ResourceComponent implements ResourceInterface, EventSubscriberIn
     public function import(AbstractResource $resource, FileBag $fileBag, array $data = []): void
     {
     }
+
+    public function stream(AbstractResource $resource): ?string
+    {
+    }
 }

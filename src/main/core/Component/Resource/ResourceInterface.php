@@ -29,4 +29,6 @@ interface ResourceInterface extends ComponentInterface
      * Import a resource inside the platform. Only possible through Workspace import.
      */
     public function import(AbstractResource $resource, FileBag $fileBag, array $data = []): void;
+
+    public function stream(AbstractResource $resource): ?string;
 }

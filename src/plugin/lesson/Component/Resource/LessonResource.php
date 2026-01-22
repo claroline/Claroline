@@ -17,7 +17,6 @@ use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Manager\ChapterManager;
-use Icap\LessonBundle\Manager\EvaluationManager;
 use Icap\LessonBundle\Manager\PdfManager;
 use Icap\LessonBundle\Serializer\ChapterSerializer;
 use Symfony\Component\HttpFoundation\File\File;
@@ -31,8 +30,7 @@ final class LessonResource extends ResourceComponent implements DownloadableReso
         private readonly SerializerProvider $serializer,
         private readonly PlaceholderManager $placeholderManager,
         private readonly ChapterManager $chapterManager,
-        private readonly PdfManager $pdfManager,
-        private readonly EvaluationManager $evaluationManager
+        private readonly PdfManager $pdfManager
     ) {
     }
 
