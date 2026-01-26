@@ -1,3 +1,6 @@
 services:
     Icap\LessonBundle\Finder\ChapterType:
         tags: [ claroline.finder.type ]
+
+    Icap\LessonBundle\Finder\ChapterViewType:
+        tags: [ claroline.finder.type ]

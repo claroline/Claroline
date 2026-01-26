@@ -11,3 +11,4 @@ services:
           - '@Icap\LessonBundle\Manager\ChapterManager'
           - '@Icap\LessonBundle\Manager\PdfManager'
           - '@Icap\LessonBundle\Manager\EvaluationManager'
+          - '@Claroline\AppBundle\Manager\ViewerManager'

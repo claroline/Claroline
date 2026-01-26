@@ -10,6 +10,7 @@ export const LESSON_SET_CURRENT_PAGE = 'LESSON_SET_CURRENT_PAGE'
 export const LESSON_PAGE_ADD = 'LESSON_PAGE_ADD'
 export const LESSON_PAGE_UPDATE = 'LESSON_PAGE_UPDATE'
 export const LESSON_PAGES_REFRESH = 'LESSON_PAGES_REFRESH'
+export const LESSON_UPDATE_VIEWS = 'LESSON_UPDATE_VIEWS'
 
 export const actions = {}
 
@@ -18,6 +19,7 @@ actions.setCurrentPage = makeActionCreator(LESSON_SET_CURRENT_PAGE, 'pageSlug')
 actions.addPage = makeActionCreator(LESSON_PAGE_ADD, 'page')
 actions.updatePage = makeActionCreator(LESSON_PAGE_UPDATE, 'page')
 actions.refreshPages = makeActionCreator(LESSON_PAGES_REFRESH, 'pages')
+actions.updateViews = makeActionCreator(LESSON_UPDATE_VIEWS, 'chapterId', 'nbViews')
 
 actions.loadChapter = (chapter) => dispatch => {
   dispatch(actions.setCurrentPage(chapter.slug))
@@ -78,5 +80,16 @@ actions.updateProgression = (lessonId,id) => (dispatch) => dispatch({
       method: 'PUT'
     },
     success: (response) => dispatch(resourceActions.updateUserEvaluation(response.userEvaluation))
+  }
+})
+
+actions.updateView = (lessonId,id) => (dispatch) => dispatch({
+  [API_REQUEST]: {
+    silent: true,
+    url: ['apiv2_chapter_view_update', {lessonId: lessonId, id: id}],
+    request: {
+      method: 'PUT'
+    },
+    success: (response) => dispatch(actions.updateViews(id, response.nbViews))
   }
 })
