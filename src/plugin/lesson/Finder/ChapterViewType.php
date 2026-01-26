@@ -6,8 +6,8 @@ use Claroline\AppBundle\API\Finder\AbstractType;
 use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
 use Claroline\AppBundle\API\Finder\Type\RelatedEntityType;
 use Claroline\AppBundle\API\Finder\Type\ViewerType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Icap\LessonBundle\Entity\ChapterView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ChapterViewType extends AbstractType
 {

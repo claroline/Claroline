@@ -5,8 +5,8 @@ namespace Icap\LessonBundle\Entity;
 use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\AppBundle\Entity\AbstractUserView;
 use Doctrine\ORM\Mapping as ORM;
-use Icap\LessonBundle\Repository\ChapterViewRepository;
 use Icap\LessonBundle\Finder\ChapterViewType;
+use Icap\LessonBundle\Repository\ChapterViewRepository;
 
 #[ORM\Table('claro_chapter_view')]
 #[ORM\Entity(repositoryClass: ChapterViewRepository::class)]

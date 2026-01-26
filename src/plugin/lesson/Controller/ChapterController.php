@@ -3,8 +3,10 @@
 namespace Icap\LessonBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Manager\ViewerManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
@@ -12,6 +14,7 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\ChapterView;
 use Icap\LessonBundle\Entity\Lesson;
+use Icap\LessonBundle\Finder\ChapterViewType;
 use Icap\LessonBundle\Manager\ChapterManager;
 use Icap\LessonBundle\Manager\EvaluationManager;
 use Icap\LessonBundle\Manager\PdfManager;
@@ -20,17 +23,14 @@ use Icap\LessonBundle\Serializer\ChapterSerializer;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Claroline\AppBundle\Manager\ViewerManager;
-use Claroline\AppBundle\API\Finder\FinderRequest;
-use Symfony\Component\HttpKernel\Attribute\MapQueryString;
-use Symfony\Component\HttpFoundation\StreamedJsonResponse;
-use Icap\LessonBundle\Finder\ChapterViewType;
 
 #[Route(path: '/lesson/{lessonId}/chapters')]
 class ChapterController
@@ -226,8 +226,9 @@ class ChapterController
             return new JsonResponse(null, 204);
         }
         $this->viewerManager->addView(ChapterView::class, $chapter, $user);
+
         return new JsonResponse([
-            'nbViews' => $chapter->getViews()
+            'nbViews' => $chapter->getViews(),
         ]);
     }
 
@@ -247,10 +248,11 @@ class ChapterController
             return new JsonResponse(null, 204);
         }
         $finderRequest->addFilter('chapter', $chapter->getUuid());
-        if (!$this->authorization->isGranted('FOLLOW', $lesson->getResourceNode())){
+        if (!$this->authorization->isGranted('FOLLOW', $lesson->getResourceNode())) {
             $finderRequest->addFilter('user', $user->getUuid());
         }
         $viewers = $this->viewerManager->listViews(ChapterViewType::class, $finderRequest);
+
         return $viewers->toResponse();
     }
 }

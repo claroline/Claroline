@@ -10,12 +10,12 @@ use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Published;
 use Claroline\AppBundle\Entity\Meta\UpdatedAt;
+use Claroline\AppBundle\Entity\Meta\Views;
+use Claroline\AppBundle\Entity\UserViewCounterInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Icap\LessonBundle\Repository\ChapterRepository;
-use Claroline\AppBundle\Entity\Meta\Views;
-use Claroline\AppBundle\Entity\UserViewCounterInterface;
 
 #[ORM\Table(name: 'icap__lesson_chapter')]
 #[ORM\Entity(repositoryClass: ChapterRepository::class)]
