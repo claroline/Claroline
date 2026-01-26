@@ -2,6 +2,7 @@ services:
     Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer:
         tags: [claroline.serializer]
         arguments:
+            - '@security.authorization_checker'
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'

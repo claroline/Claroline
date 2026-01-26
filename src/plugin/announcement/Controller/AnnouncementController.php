@@ -4,6 +4,8 @@ namespace Claroline\AnnouncementBundle\Controller;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementParameters;
+use Claroline\AnnouncementBundle\Entity\AnnouncementView;
+use Claroline\AnnouncementBundle\Finder\AnnouncementViewType;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer;
 use Claroline\AppBundle\API\Crud;
@@ -12,6 +14,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\PdfManager;
+use Claroline\AppBundle\Manager\ViewerManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -27,6 +30,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 /**
  * Manages announcements of an announcement resource.
@@ -46,6 +50,7 @@ class AnnouncementController
         private readonly RoutingHelper $routing,
         private readonly AnnouncementManager $manager,
         private readonly AnnouncementSerializer $serializer,
+        private readonly ViewerManager $viewerManager
     ) {
         $this->authorization = $authorization;
     }
@@ -154,5 +159,42 @@ class AnnouncementController
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename='.$fileName.'.pdf',
         ]);
+    }
+
+    #[Route(path: '/{id}/view', name: 'claro_announcement_view_update', methods: ['PUT'])]
+    public function addViewAction(
+        #[CurrentUser]
+        ?User $user,
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Announcement $announcement
+    ): JsonResponse {
+        $this->checkPermission('OPEN', $announcement, [], true);
+        if (null === $user) {
+            return new JsonResponse(null, 204);
+        }
+        $this->viewerManager->addView(AnnouncementView::class, $announcement, $user);
+
+        return new JsonResponse([
+            'nbViews' => $announcement->getViews(),
+        ]);
+    }
+
+    #[Route(path: '/{id}/views', name: 'claro_announcement_views', methods: ['GET'])]
+    public function viewsAction(
+        #[CurrentUser]
+        ?User $user,
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Announcement $announcement,
+        #[MapQueryString]
+        ?FinderRequest $finderRequest = new FinderRequest(),
+    ): StreamedJsonResponse {
+        $this->checkPermission('FOLLOW', $announcement, [], true);
+        if (null === $user) {
+            return new JsonResponse(null, 204);
+        }
+        $finderRequest->addFilter('announcement', $announcement->getUuid());
+        $viewers = $this->viewerManager->listViews(AnnouncementViewType::class, $finderRequest);
+
+        return $viewers->toResponse();
     }
 }

@@ -18,12 +18,14 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class AnnouncementSerializer
 {
     use SerializerTrait;
 
     public function __construct(
+        private readonly AuthorizationCheckerInterface $authorization,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly ObjectManager $om,
         private readonly UserSerializer $userSerializer,
@@ -60,6 +62,7 @@ class AnnouncementSerializer
                 'publishedAt' => DateNormalizer::normalize($announce->getPublicationDate()),
                 'notifyUsers' => !empty($announce->getTask()) ? 2 : 0,
                 'notificationDate' => !empty($announce->getTask()) ? DateNormalizer::normalize($announce->getTask()->getScheduledDate()) : null,
+                'views' => $announce->getViews(),
             ],
             'restrictions' => [
                 'hidden' => !$announce->isVisible(),
@@ -67,6 +70,9 @@ class AnnouncementSerializer
                     $announce->getVisibleFrom(),
                     $announce->getVisibleUntil()
                 ),
+            ],
+            'permissions' => [
+                'follow' => $this->authorization->isGranted('FOLLOW', $announce),
             ],
             'roles' => array_map(function (Role $role) {
                 return $this->roleSerializer->serialize($role, [SerializerInterface::SERIALIZE_MINIMAL]);
