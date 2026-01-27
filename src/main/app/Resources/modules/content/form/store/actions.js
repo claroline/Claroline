@@ -28,8 +28,27 @@ export const FORM_UPDATE         = 'FORM_UPDATE'
 
 export const actions = {}
 
-actions.update = makeInstanceActionCreator(FORM_UPDATE, 'value')
-actions.updateProp = makeInstanceActionCreator(FORM_UPDATE, 'path', 'value')
+/**
+ * Update the whole form data.
+ * The silent params permits changing the form data without toggling the pendingChanges flag.
+ */
+actions.update = (formName, value, silent = false) => ({
+  type: makeInstanceAction(FORM_UPDATE, formName),
+  value: value,
+  silent: silent
+})
+
+/**
+ * Update a part of the form data.
+ * The silent params permits changing the form data without toggling the pendingChanges flag.
+ */
+actions.updateProp = (formName, path, value, silent = false) => ({
+  type: makeInstanceAction(FORM_UPDATE, formName),
+  path: path,
+  value: value,
+  silent: silent
+})
+
 actions.setErrors = makeInstanceActionCreator(FORM_SET_ERRORS, 'errors')
 actions.submit = makeInstanceActionCreator(FORM_SUBMIT)
 actions.submitSuccess = makeInstanceActionCreator(FORM_SUBMIT_SUCCESS, 'updatedData')

@@ -28,7 +28,13 @@ const baseReducer = {
 
   pendingChanges: makeInstanceReducer(defaultState.pendingChanges, {
     [FORM_RESET]: () => defaultState.pendingChanges,
-    [FORM_UPDATE]: () => true
+    [FORM_UPDATE]: (state, action) => {
+      if (!action.silent) {
+        return true
+      }
+
+      return state
+    }
   }),
 
   /**
