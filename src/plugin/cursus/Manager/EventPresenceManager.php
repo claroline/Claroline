@@ -119,15 +119,15 @@ class EventPresenceManager
 
         $table = '<table style="border: 1px solid black; width: 100%; border-collapse: collapse;">';
         $table .= '<tr>';
-        $table .= '<th style="border: 1px solid black; width: 75%; padding: 10px;">'.$this->translator->trans('user', [], 'platform').'</th>';
-        $table .= '<th style="border: 1px solid black; width: 75%; padding: 10px;">'.$this->translator->trans('status', [], 'platform').'</th>';
-        $table .= '<th style="border: 1px solid black; width: 75%; padding: 10px;">'.$this->translator->trans('presence_confirm_title', [], 'presence').'</th>';
-        $table .= '<th style="border: 1px solid black; width: 75%; padding: 10px;">'.$this->translator->trans('presence_validation_date', [], 'presence').'</th>';
+        $table .= '<th style="border: 1px solid black; width: 75%; padding: 10px;">'.$this->translator->trans('user', [], 'platform', $locale).'</th>';
+        $table .= '<th style="border: 1px solid black; width: 75%; padding: 10px;">'.$this->translator->trans('status', [], 'platform', $locale).'</th>';
+        $table .= '<th style="border: 1px solid black; width: 75%; padding: 10px;">'.$this->translator->trans('presence_confirm_title', [], 'presence', $locale).'</th>';
+        $table .= '<th style="border: 1px solid black; width: 75%; padding: 10px;">'.$this->translator->trans('presence_validation_date', [], 'presence', $locale).'</th>';
         foreach ($presences as $presence) {
             $table .= '<tr>';
             $table .= "<td style='border: 1px solid black; width: 75%; padding: 10px;'>".$presence->getUser()->getLastName().' '.$presence->getUser()->getFirstName().'</td>';
             if ($filled) {
-                $table .= "<td style='border: 1px solid black; padding: 10px;'>{$this->translator->trans('presence_'.$presence->getStatus(), [], 'cursus')}</td> ";
+                $table .= "<td style='border: 1px solid black; padding: 10px;'>{$this->translator->trans('presence_'.$presence->getStatus(), [], 'cursus', $locale)}</td> ";
                 $table .= "<td style='border: 1px solid black; padding: 10px;'>{$presence->getSignature()}</td>";
                 $validationDate = $presence->getValidationDate() ? $this->localeManager->getLocaleDateTimeFormat($presence->getValidationDate()) : '';
                 $table .= "<td style='border: 1px solid black; padding: 10px;'>$validationDate</td>";
