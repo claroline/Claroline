@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {makeAbsolute} from '#/main/app/action/utils'
@@ -55,7 +56,7 @@ const DirectoryPlayer = (props) => {
         <FileDrop
           className="flex-fill"
           size="lg"
-          disabled={!(get(props.currentNode, 'permissions.create') || []).includes('file')}
+          disabled={isEmpty(get(props.currentNode, 'permissions.create'))}
           onDrop={(files) => props.uploadFiles(props.currentNode, files).then(props.updateNodes)}
           help={trans('file_drop_help', {}, 'resource')}
         >

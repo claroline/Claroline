@@ -6,6 +6,7 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 import merge from 'lodash/merge'
+import uniq from 'lodash/uniq'
 
 import {trans}  from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
@@ -75,32 +76,39 @@ CreateMenu.propTypes = {
   onChange: T.func.isRequired
 }
 
-const CreatePermission = props =>
-  <MenuButton
-    id={`${props.id}-rights-creation`}
-    className={classes('py-1 px-2 border focus-ring btn btn-text-body', {
-      'border-primary text-primary-emphasis bg-primary-subtle': props.permission && 0 < props.permission.length
-    })}
-    size="sm"
-    disabled={!props.editable}
-    menu={
-      <Menu
-        id={props.id}
-        as={CreateMenu}
-        align="end"
-        permission={props.permission}
-        editable={props.editable}
-        creatable={props.creatable}
-        onChange={props.onChange}
-      />
-    }
-  >
-    {trans('create', {}, 'actions')}
+const CreatePermission = props => {
+  // be sure every creatable type is only declared once
+  // (it can be duplicated because of some migrations)
+  const permissions = uniq(props.permission || [])
 
-    <Badge variant={isEmpty(props.permission) ? 'secondary' : 'primary'} className="ms-1 p-1">
-      {props.permission ? props.permission.length : 0}
-    </Badge>
-  </MenuButton>
+  return (
+    <MenuButton
+      id={`${props.id}-rights-creation`}
+      className={classes('py-1 px-2 border focus-ring btn btn-text-body', {
+        'border-primary text-primary-emphasis bg-primary-subtle': permissions && 0 < permissions.length
+      })}
+      size="sm"
+      disabled={!props.editable}
+      menu={
+        <Menu
+          id={props.id}
+          as={CreateMenu}
+          align="end"
+          permission={permissions}
+          editable={props.editable}
+          creatable={props.creatable}
+          onChange={props.onChange}
+        />
+      }
+    >
+      {trans('create', {}, 'actions')}
+
+      <Badge variant={isEmpty(permissions) ? 'secondary' : 'primary'} className="ms-1 p-1">
+        {permissions ? permissions.length : 0}
+      </Badge>
+    </MenuButton>
+  )
+}
 
 CreatePermission.propTypes = {
   id: T.string.isRequired,
