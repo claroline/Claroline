@@ -184,4 +184,12 @@ class Announcement implements CrudEntityInterface, UserViewCounterInterface
     {
         $this->roles->clear();
     }
+
+    /**
+     * @deprecated
+     */
+    public function getAnnouncer(): ?string
+    {
+        return $this->announcer;
+    }
 }
