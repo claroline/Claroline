@@ -51,7 +51,7 @@ class SubjectController extends AbstractCrudController
         $this->checkPermission('OPEN', $subject, [], true);
 
         $finderRequest->addFilter('subject', $subject->getUuid());
-        $finderRequest->addFilter('parent', null);
+        $finderRequest->addFilter('parent', 'null');
         $finderRequest->addFilter('first', false);
 
         $subjects = $this->crud->search(Message::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
