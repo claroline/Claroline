@@ -26,6 +26,11 @@ class EvaluationStatusChecker
         foreach ($this->checkers as $checker) {
             if ($checker->supports($evaluation)) {
                 $checkerStatus = $checker->vote($evaluation);
+                if (EvaluationStatus::FAILED === $checkerStatus) {
+                    // no need to run the other checker, the evaluation will be failed anyway
+                    return $checkerStatus;
+                }
+
                 if ($checkerStatus && (!$status || EvaluationStatus::PRIORITY[$checkerStatus] > EvaluationStatus::PRIORITY[$status])) {
                     $status = $checkerStatus;
                 }
