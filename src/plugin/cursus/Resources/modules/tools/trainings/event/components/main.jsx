@@ -17,6 +17,7 @@ const EventMain = (props) =>
       {
         path: '/',
         exact: true,
+        disabled: !props.canRegister,
         render: useCallback(() => (
           <EventsList
             path={props.contextPath}
@@ -28,6 +29,7 @@ const EventMain = (props) =>
         ),[props.path, props.authenticated, props.canEdit, props.canRegister])
       }, {
         path: '/participants',
+        disabled: !props.canRegister,
         render: useCallback(() => (
           <TrainingsEventUsers
             path={props.path}
@@ -41,6 +43,7 @@ const EventMain = (props) =>
         ), [props.path])
       }, {
         path: '/tutors',
+        disabled: !props.canRegister,
         render: useCallback(() => (
           <TrainingsEventUsers
             path={props.path}

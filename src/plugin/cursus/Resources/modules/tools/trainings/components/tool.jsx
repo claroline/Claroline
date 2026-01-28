@@ -101,8 +101,7 @@ const TrainingsTool = (props) =>
         disabled: !props.canRegister
       }, {
         path: '/events',
-        component: EventMain,
-        disabled: !props.canRegister
+        component: EventMain
       }
     ]}
     redirect={[
