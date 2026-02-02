@@ -18,8 +18,12 @@ import {selectors} from '#/main/core/resource/store'
 import {EvaluationFeedback} from '#/main/evaluation/components/feedback'
 import {EvaluationProgression} from '#/main/evaluation/components/progression'
 import {MODAL_USER_PROGRESSION} from '#/main/evaluation/resource/modals/user-progression'
+import merge from 'lodash/merge'
+import {selectors as securitySelectors} from '#/main/app/security'
 
 const ResourceOverview = props => {
+  const currentUser = useSelector(securitySelectors.currentUser)
+
   const resourceNode = useSelector(selectors.resourceNode)
   const showHeader = useSelector(selectors.showHeader)
   const embedded = useSelector(selectors.embedded)
@@ -40,7 +44,7 @@ const ResourceOverview = props => {
             {userEvaluation &&
               <EvaluationProgression
                 className="mb-4"
-                evaluation={userEvaluation}
+                evaluation={merge({}, userEvaluation, {user: currentUser, resourceNode: resourceNode})}
                 modal={MODAL_USER_PROGRESSION}
               />
             }
