@@ -12,8 +12,8 @@ class AuthenticationParameters
 {
     use Id;
 
-    #[ORM\Column(type: Types::INTEGER)]
-    private int $minLength = 0;
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?int $minLength = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $requireLowercase = false;
@@ -39,12 +39,12 @@ class AuthenticationParameters
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $showClientIp = false;
 
-    public function getMinLength(): int
+    public function getMinLength(): ?int
     {
         return $this->minLength;
     }
 
-    public function setMinLength(int $minLength): void
+    public function setMinLength(?int $minLength): void
     {
         $this->minLength = $minLength;
     }
