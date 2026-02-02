@@ -423,6 +423,7 @@ class ResourceController
         }
 
         $updateResource = new UpdateResourceEvent($resource, $data, $previousData);
+        $this->eventDispatcher->dispatch($updateResource, ResourceEvents::getEventName(ResourceEvents::UPDATE));
         $this->eventDispatcher->dispatch($updateResource, ResourceEvents::getEventName(ResourceEvents::UPDATE, $resourceNode->getResourceType()->getName()));
 
         $this->om->refresh($resourceNode);

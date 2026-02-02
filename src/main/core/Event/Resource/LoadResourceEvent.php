@@ -58,6 +58,11 @@ class LoadResourceEvent extends Event
         $this->data = $data;
     }
 
+    public function addData(array $data): void
+    {
+        $this->data = array_merge($data, $this->data);
+    }
+
     public function getData(): ?array
     {
         return $this->data;
