@@ -87,5 +87,6 @@
     "file_drop_help": "Drop your files to import them inside the directory",
     "description_long_help": "Give a detailed description of the content of your resource and the work expected by your users (the detailed description is displayed in the \"About\" view).",
     "description_short_help": "Briefly describe your resource (the short description is displayed in the lists).",
-    "resource_name": "%type%: %name%"
+    "resource_name": "%type%: %name%",
+    "resource_tags": "Resource: Tags"
 }

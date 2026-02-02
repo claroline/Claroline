@@ -98,5 +98,6 @@
     "make_resource_public_help": "Les ressources publiques sont accessibles à tous les utilisateurs inscrits à l'espace d'activités.",
     "make_resource_public_warning": "<b>Attention :</b> Si l'espace d'activités et l'outil Ressources sont également publics alors les ressources publiques sont accessibles sans inscription et sans connexion.",
     "archives": "Ressources archivées",
-    "archives_desc": "Retrouvez et gérez toutes les resources archivées."
+    "archives_desc": "Retrouvez et gérez toutes les resources archivées.",
+    "resource_tags": "Ressource: Tags"
 }

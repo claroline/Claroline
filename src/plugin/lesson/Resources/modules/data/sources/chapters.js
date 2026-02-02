@@ -57,7 +57,7 @@ export default declareDataSource(() => ({
     }, {
       name: 'resourceNode.tags',
       type: 'tag',
-      label: trans('resource_tags', {}, 'data_sources')
+      label: trans('resource_tags', {}, 'resource')
     }
   ],
   card: ChapterCard
