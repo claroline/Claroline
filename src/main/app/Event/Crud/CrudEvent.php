@@ -22,7 +22,7 @@ class CrudEvent extends Event
     private bool $block = false;
 
     public function __construct(
-        private readonly mixed $object,
+        private readonly object $object,
         private readonly array $options = []
     ) {
     }
@@ -34,7 +34,7 @@ class CrudEvent extends Event
             get_class($this->object);
     }
 
-    public function getObject(): mixed
+    public function getObject(): object
     {
         return $this->object;
     }
