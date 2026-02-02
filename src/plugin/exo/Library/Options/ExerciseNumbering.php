@@ -20,5 +20,5 @@ final class ExerciseNumbering
     /**
      * @var string
      */
-    public const LITTERAL = 'litteral';
+    public const LITERAL = 'literal';
 }

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import shuffle from 'lodash/shuffle'
 
-import {ContentHtml} from '#/main/app/content/components/html'
+import {Html} from '#/main/app/components/html'
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 import {NUMBERING_NONE} from '#/main/app/utils/numbering'
 
@@ -48,11 +48,6 @@ class ChoicePlayer extends Component {
                 this.isChecked(choice.id, this.props.answer) ? 'selected-answer' : null
               )}
             >
-              {this.props.item.numbering !== NUMBERING_NONE &&
-                <span>
-                  {getNumbering(this.props.item.numbering, idx)}) {'\u00a0'} {/*non breaking whitespace */}
-                </span>
-              }
               <input
                 checked={this.isChecked(choice.id, this.props.answer)}
                 id={`choice-${choice.id}`}
@@ -66,9 +61,15 @@ class ChoicePlayer extends Component {
                 ))}
               />
 
-              <ContentHtml className="choice-item-content">
+              {this.props.item.numbering !== NUMBERING_NONE &&
+                <b>
+                  {getNumbering(this.props.item.numbering, idx)} {'\u00a0'} {/*non-breaking whitespace */}
+                </b>
+              }
+
+              <Html className="choice-item-content">
                 {choice.data}
-              </ContentHtml>
+              </Html>
             </label>
           )}
         </div>

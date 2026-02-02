@@ -8,11 +8,13 @@ import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/componen
 import {SolutionScore} from '#/plugin/exo/components/score'
 import {ChoiceItem as ChoiceItemTypes} from '#/plugin/exo/items/choice/prop-types'
 import {Html} from '#/main/app/components/html'
+import {NUMBERING_NONE} from '#/main/app/utils/numbering'
+import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 
 const ChoiceExpectedAnswer = props =>
   <div className="choice-paper">
     <div className={classes('choice-answer-items', props.item.direction)}>
-      {props.item.solutions.map(solution =>
+      {props.item.solutions.map((solution, idx) =>
         <label
           key={utils.expectedId(solution.id)}
           htmlFor={utils.expectedId(solution.id)}
@@ -28,6 +30,12 @@ const ChoiceExpectedAnswer = props =>
             type={props.item.multiple ? 'checkbox': 'radio'}
             disabled={true}
           />
+
+          {props.item.numbering !== NUMBERING_NONE &&
+            <b>
+              {getNumbering(props.item.numbering, idx)} {'\u00a0'} {/*non-breaking whitespace */}
+            </b>
+          }
 
           <Html className="choice-item-content">
             {utils.getChoiceById(props.item.choices, solution.id).data}

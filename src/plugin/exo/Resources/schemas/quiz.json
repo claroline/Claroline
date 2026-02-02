@@ -128,7 +128,7 @@
           "default": false
         },
         "numbering": {
-          "enum": ["none", "litteral", "numeric"],
+          "enum": ["none", "literal", "numeric"],
           "description": "The question numbering",
           "default": "none"
         },
