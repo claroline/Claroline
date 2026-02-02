@@ -228,7 +228,7 @@ class WorkspaceEvaluationController
             ]);
 
             if ($evaluation && $this->checkPermission('ADMINISTRATE', $evaluation)) {
-                $this->manager->refreshEvaluation($evaluation);
+                $this->manager->recomputeEvaluation($evaluation);
             }
         }
 

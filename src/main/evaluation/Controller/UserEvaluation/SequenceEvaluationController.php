@@ -252,7 +252,7 @@ class SequenceEvaluationController
         $evaluations = $this->om->getRepository(SequenceEvaluation::class)->findBy(['uuid' => $evaluationIds]);
         foreach ($evaluations as $evaluation) {
             if ($this->checkPermission('ADMINISTRATE', $evaluation)) {
-                $this->evaluationManager->refreshEvaluation($evaluation);
+                $this->evaluationManager->recomputeEvaluation($evaluation);
             }
         }
 
