@@ -16,6 +16,7 @@ const FormPrimarySection = ({
   title,
   description,
   children,
+  icon = null,
   level = 2,
   displayLevel = 5,
   hideTitle = false,
@@ -32,7 +33,6 @@ const FormPrimarySection = ({
     >
       {title &&
         <header className={classes({
-          'mb-3': !hideTitle,
           'visually-hidden': hideTitle
         })}>
           <Heading
@@ -41,6 +41,10 @@ const FormPrimarySection = ({
             level={level}
             displayLevel={displayLevel}
           >
+            {icon &&
+              <span className={classes('h5 my-auto me-2', icon)} aria-hidden={true} />
+            }
+
             {title}
           </Heading>
 
@@ -67,7 +71,8 @@ const FormPrimarySection = ({
 FormPrimarySection.propTypes = {
   className: T.string,
   level: T.number, // level for section heading
-  displayLevel: T.number, // modifier for headings level (used when some headings levels are hidden in the page)
+  displayLevel: T.number, // modifier for heading level (used when some heading levels are hidden in the page)
+  icon: T.string,
   title: T.string,
   hideTitle: T.bool,
   description: T.string,
@@ -86,13 +91,17 @@ const FormToggleSection = (props) => {
       aria-labelledby={titleId}
       aria-describedby={props.description ? descriptionId : undefined}
     >
-      <header className="mb-3">
+      <header>
         <Heading
           id={titleId}
           className="mb-0 form-check form-switch form-check-reverse d-flex flex-row flex-nowrap align-items-center"
           level={props.level}
           displayLevel={props.displayLevel - 2}
         >
+          {props.icon &&
+            <span className={classes('h5 my-auto me-2', props.icon, {'text-body-secondary': !props.displayed})} aria-hidden={true} />
+          }
+
           <label
             className={classes('form-check-label flex-fill text-start', {
               'text-body-secondary': !props.displayed
@@ -139,7 +148,8 @@ const FormToggleSection = (props) => {
 FormToggleSection.propTypes = {
   className: T.string,
   level: T.number, // level for section heading
-  displayLevel: T.number, // modifier for headings level (used when some headings levels are hidden in the page)
+  displayLevel: T.number, // modifier for heading level (used when some heading levels are hidden in the page)
+  icon: T.string,
   title: T.string,
   hideTitle: T.bool,
   description: T.string,

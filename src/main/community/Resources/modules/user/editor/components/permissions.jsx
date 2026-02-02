@@ -99,7 +99,6 @@ const UserEditorPermissions = () => {
           )
         }, {
           name: 'restrictions',
-          icon: 'fa fa-fw fa-key',
           title: trans('access_restrictions'),
           description: trans('Ajoutez des conditions d\'accès supplémentaires à l\'utilisateur'),
           primary: true,
