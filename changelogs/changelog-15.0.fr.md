@@ -1,47 +1,62 @@
-Interface utilisateur :
+<h1> V15.0.13 </h1>
 
-- Refonte et modernisation générale de l'interface utilisateur
+<ul>
+  <li>Ajout des filtres par tag sur le widget liste des messages du forum</li>
+  <li>Ajout du suivi de la progression dans une ressource connaissance</li>
+  <li>Ajout du filtre par tag sur le widget liste des pages de connaissance</li>
+  <li>Questionnaire : correction de l'erreur lié à la numérotation littérale des questions d'un choix multiple</li>
+  <li>Ajout des droits de création pour les ressources PDF, vidéo, image et audio quand on avait déjà le droit de créer des fichiers</li>
+  <li>Suppression de l'affichage en double de réponse du forum</li>
+  <li>Le lien de progression est fonctionnelle sur les accueils de ressources</li>
+  <li>correction d'une page blanche lors de l'ouverture d'une séance par un utilisateur non-administrateur</li>
+  <li>Prise en compte de paramètre de réussite obligeant à réussir toutes les ressources</li>
+  <li>Correction de l'action de recalcul des progessions / scores par utilisateur dans le suivi pédagogique</li>
+  <li></li>
+</ul>
 
-- La création d'espaces d'activités a été retravaillée
 
-- La création de ressource a été retravaillée
+<h1> V15.0.0 </h1>
 
-- Les listes ont été retravaillées
+<h2>Interface utilisateur :</h2>
 
-- La page de connexion a été refaite
+<ul>
+<li></li>Refonte et modernisation générale de l'interface utilisateur</li>
+<li>La création d'espaces d'activités a été retravaillée</li>
+<li>La création de ressource a été retravaillée</li>
+<li>Les listes ont été retravaillées</li>
+<li>La page de connexion a été refaite</li>
+<li>L'ensemble des éditeurs ont été revus : fusion de l'édition vers un formulaire unique pour l'édition, la configuration et la gestion des droits.</li>
+</ul>
 
-- L'ensemble des éditeurs ont été revus : fusion de l'édition vers un formulaire unique pour l'édition, la configuration et la gestion des droits.
+<h2>Ressources :</h2>
 
-Ressources :
+<ul>
+<li>La ressource annonces devient un outil</li>
+<li>Les ressources parcours deviennent des séquences au sein de l'outil progression. (Il n'est plus possible de créer des parcours de parcours)</li>
+<li>Ajout des attestations de participation / réussite sur les séquences</li>
+<li>La progression de l'espace d'activité est liée à la progression dans les séquences</li>
+<li>Les ressources textes, cours, wiki et blog sont fusionnés pour devenir la ressource connaissance</li>
+</ul>
 
-- La ressource annonces devient un outil
+<h2>Droits et permission :</h2>
 
-- Les ressources parcours deviennent des séquences au sein de l'outil progression. (Il n'est plus possible de créer des parcours de parcours)
+<ul>
+<li>Les données sont cloisonnées par organisations.</li>
+<li>Les éléments cachés ne sont plus affiché par défaut dans les listes, il faut activer le filtre dédié pour les visualiser.</li>
+<li>Le rôle anonyme est supprimé et remplacé par une option "publique" permettant de rendre un espace d'activité ou une ressource publique.</li>
+</ul>
 
-- Ajout des attestations de participation / réussite sur les séquences
+<h2>Espace d'activités :</h2>
 
-- La progression de l'espace d'activité est liée à la progression dans les séquences
+Les espaces personnels deviennent des espaces d'activités standard
 
-- Les ressources textes, cours, wiki et blog sont fusionnés pour devenir la ressource connaissance
+<h2>Légale et accessibilités :</h2>
 
-Droits et permission :
+<ul>
+<li>Amélioration générale de l'accessibilité</li>
+<li>Ajout d'une politique de confidentialité obligatoire (en plus des conditions d'utilisation)</li>
+</ul>
 
-- Les données sont cloisonnées par organisations.
+<h2>API :</h2>
 
-- Les éléments cachés ne sont plus affiché par défaut dans les listes, il faut activer le filtre dédié pour les visualiser.
-
-- Le rôle anonyme est supprimé et remplacé par une option "publique" permettant de rendre un espace d'activité ou une ressource publique.
-
-Espace d'activités :
-
-- Les espaces personnels deviennent des espaces d'activités standard
-
-Légale et accessibilités :
-
-- Amélioration générale de l'accessibilité
-
-- Ajout d'une politique de confidentialité obligatoire (en plus des conditions d'utilisation)
-
-API :
-
-- Suppression du préfixe `/apiv2` dans toutes les URLs.
+Suppression du préfixe `/apiv2` dans toutes les URLs.
