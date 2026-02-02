@@ -11,7 +11,6 @@
   <li>correction d'une page blanche lors de l'ouverture d'une séance par un utilisateur non-administrateur</li>
   <li>Prise en compte de paramètre de réussite obligeant à réussir toutes les ressources</li>
   <li>Correction de l'action de recalcul des progessions / scores par utilisateur dans le suivi pédagogique</li>
-  <li></li>
 </ul>
 
 
@@ -20,7 +19,7 @@
 <h2>Interface utilisateur :</h2>
 
 <ul>
-<li></li>Refonte et modernisation générale de l'interface utilisateur</li>
+<li>Refonte et modernisation générale de l'interface utilisateur</li>
 <li>La création d'espaces d'activités a été retravaillée</li>
 <li>La création de ressource a été retravaillée</li>
 <li>Les listes ont été retravaillées</li>
