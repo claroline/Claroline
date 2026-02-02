@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Listener\Resource\Types;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\CoreBundle\Component\Resource\DownloadableResourceInterface;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
@@ -27,7 +26,6 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 final class DirectoryListener extends ResourceComponent implements DownloadableResourceInterface
 {
     public function __construct(
-        private readonly SerializerProvider $serializer,
         private readonly Crud $crud,
         private readonly ResourceManager $resourceManager,
     ) {
@@ -36,14 +34,6 @@ final class DirectoryListener extends ResourceComponent implements DownloadableR
     public static function getName(): string
     {
         return 'directory';
-    }
-
-    /** @param Directory $resource */
-    public function open(AbstractResource $resource, bool $embedded = false): ?array
-    {
-        return [
-            'resource' => $this->serializer->serialize($resource),
-        ];
     }
 
     /** @param Directory $resource */

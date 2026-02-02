@@ -1,22 +1,14 @@
-import React, {useCallback} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+import React from 'react'
+import {useSelector} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {EditorPage} from '#/main/app/editor'
 import {selectors as editorSelectors} from '#/main/core/resource/editor'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
-import {selectors as resourceSelectors} from '#/main/core/resource'
-import {actions as formActions} from '#/main/app/content/form'
 
 const DropzoneEditorParameters = () => {
-  const workspace = useSelector(resourceSelectors.workspace)
   const dropzone = useSelector(editorSelectors.resource)
-
-  const dispatch = useDispatch()
-  const updateProp = useCallback((prop, value) => {
-    dispatch(formActions.updateProp(resourceSelectors.EDITOR_NAME, 'resource.'+prop, value))
-  }, [resourceSelectors.EDITOR_NAME])
 
   return (
     <EditorPage
@@ -85,7 +77,6 @@ const DropzoneEditorParameters = () => {
             }
           ]
         }, {
-          icon: 'fa fa-fw fa-key',
           title: trans('access_restrictions'),
           primary: true,
           hideTitle: true,

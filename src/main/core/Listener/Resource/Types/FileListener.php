@@ -2,13 +2,11 @@
 
 namespace Claroline\CoreBundle\Listener\Resource\Types;
 
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Resource\DownloadableResourceInterface;
 use Claroline\CoreBundle\Component\Resource\FileAdapterInterface;
 use Claroline\CoreBundle\Component\Resource\FileAdapterTrait;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\File as FileResource;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\FileManager;
@@ -25,7 +23,6 @@ final class FileListener extends ResourceComponent implements DownloadableResour
     public function __construct(
         private readonly PlatformConfigurationHandler $config,
         private readonly ObjectManager $om,
-        private readonly SerializerProvider $serializer,
         private readonly FileManager $fileManager
     ) {
     }
@@ -48,14 +45,6 @@ final class FileListener extends ResourceComponent implements DownloadableResour
     public static function supportsAttempts(): bool
     {
         return false;
-    }
-
-    /** @param FileResource $resource */
-    public function open(AbstractResource $resource, bool $embedded = false): ?array
-    {
-        return [
-            'resource' => $this->serializer->serialize($resource),
-        ];
     }
 
     public function supportsFile(File $file): int

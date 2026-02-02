@@ -52,15 +52,7 @@ class ForumResource extends ResourceComponent
         }
 
         return [
-            'resource' => $this->serializer->serialize($resource),
             'notified' => $validationUser?->isNotified() ?? false,
-        ];
-    }
-
-    public function update(AbstractResource $resource, array $data, array $previousData): ?array
-    {
-        return [
-            'resource' => $this->serializer->serialize($resource),
         ];
     }
 

@@ -4,5 +4,4 @@ services:
         arguments:
             - '%claroline.param.files_directory%'
             - '@security.token_storage'
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
