@@ -8,7 +8,6 @@
   "evaluation_failed_status": "Je bent niet geslaagd voor de workspace.",
   "evaluation_completed_status": "Je hebt de workspace voltooid.",
   "evaluation_passed_status": "Je bent geslaagd voor de workspace.",
-  "workspace_certificates_availability_help": "Certificaten zijn beschikbaar zodra de workspace voltooid is.",
   "enable_success_condition": "Succes- of faalvoorwaarden activeren",
   "enable_success_condition_help": "Na voltooiing van de workspace krijgen gebruikers een geslaagd of niet-geslaagd status op basis van de gedefinieerde voorwaarden.",
   "enable_success_condition_score": "Een minimale score behalen",

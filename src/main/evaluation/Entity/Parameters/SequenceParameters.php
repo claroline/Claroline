@@ -6,6 +6,9 @@ use Claroline\EvaluationBundle\Entity\Certified;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Store evaluation parameters for evaluated sequences.
+ */
 #[ORM\Entity]
 #[ORM\Table(name: 'claro_evaluation_sequence_parameters')]
 class SequenceParameters extends AbstractEvaluationParameters

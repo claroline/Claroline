@@ -85,7 +85,6 @@ const DropzoneEditorParameters = () => {
             }
           ]
         }, {
-          icon: 'fa fa-fw fa-key',
           title: trans('access_restrictions'),
           primary: true,
           hideTitle: true,

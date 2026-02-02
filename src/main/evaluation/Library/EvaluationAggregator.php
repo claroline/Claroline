@@ -5,15 +5,15 @@ namespace Claroline\EvaluationBundle\Library;
 class EvaluationAggregator implements EvaluationInterface
 {
     /**
-     * The list of evaluation which participate in the progression of the aggregate.
+     * The list of evaluations which participate in the progression of the aggregate.
      *
      * @var EvaluationInterface[]
      */
     private array $progressionEvaluations = [];
 
     /**
-     * The list of evaluation which participate in the score of the aggregate.
-     * NB. if an evaluation is used in the aggregate score, it's also used in its progression.
+     * The list of evaluations which participate in the score of the aggregate.
+     * NB. If an evaluation is used in the aggregate score, it's also used in its progression.
      *
      * @var EvaluationInterface[]
      */
@@ -43,7 +43,7 @@ class EvaluationAggregator implements EvaluationInterface
     }
 
     /**
-     * The progression of an aggregator is the sum of the progression of all the required evaluation.
+     * The progression of an aggregator is the sum of the progression for all the required evaluation.
      */
     public function getProgression(): float
     {
@@ -98,7 +98,7 @@ class EvaluationAggregator implements EvaluationInterface
     {
         foreach ($this->progressionEvaluations as $evaluation) {
             if (!$evaluation->isTerminated()) {
-                // there is one non terminated evaluation, the aggregate is not terminated
+                // there is one non-terminated evaluation, the aggregate is not terminated
                 return false;
             }
         }

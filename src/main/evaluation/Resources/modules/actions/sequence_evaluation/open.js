@@ -1,9 +1,9 @@
+import {constants, declareAction} from '#/main/app/action'
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 
-import {MODAL_USER_PROGRESSION} from '#/main/evaluation/sequence/modals/user-progression'
-import {constants, declareAction} from '#/main/app/action'
+import {MODAL_SEQUENCE_USER_PROGRESSION} from '#/main/evaluation/sequence/modals/user-progression'
 
 export default declareAction((evaluations) => ({
   name: 'open',
@@ -12,7 +12,7 @@ export default declareAction((evaluations) => ({
   label: trans('open', {}, 'actions'),
   displayed: hasPermission('open', evaluations[0]),
   scope: ['object'],
-  modal: [MODAL_USER_PROGRESSION, {
+  modal: [MODAL_SEQUENCE_USER_PROGRESSION, {
     evaluation: evaluations[0]
   }],
   set: [constants.ACTION_SET_LIST]

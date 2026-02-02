@@ -145,7 +145,7 @@ class SequenceEvaluationController
 
         $this->checkPermission('OPEN', $sequence, [], true);
 
-        $userEvaluation = $this->evaluationManager->getUserEvaluation($sequence, $user, false);
+        $userEvaluation = $this->evaluationManager->getUserEvaluation($sequence, $user);
         $this->evaluationManager->updateUserEvaluation($userEvaluation, $step);
 
         return new JsonResponse([
@@ -162,6 +162,7 @@ class SequenceEvaluationController
         $this->checkPermission('OPEN', $sequenceEvaluation, [], true);
 
         $sequence = $sequenceEvaluation->getSequence();
+        $evaluationParameters = $this->evaluationManager->getParameters($sequence);
 
         $certificates = [];
         if ($sequenceEvaluation->isCertified()) {
@@ -183,9 +184,7 @@ class SequenceEvaluationController
         }
 
         return new JsonResponse([
-            'parameters' => [
-                'successCondition' => $sequence->getSuccessCondition(),
-            ],
+            'parameters' => $evaluationParameters ? $this->serializer->serialize($evaluationParameters, [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             'evaluation' => $this->serializer->serialize($sequenceEvaluation),
             'progression' => $this->evaluationManager->getUserProgression($sequenceEvaluation),
             'certificates' => array_map(function (SequenceCertificate $certificate) {

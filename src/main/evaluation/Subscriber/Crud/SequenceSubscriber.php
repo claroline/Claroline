@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\CodeNormalizer;
 use Claroline\CoreBundle\Manager\FileManager;
+use Claroline\EvaluationBundle\Entity\Parameters\SequenceParameters;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Entity\Sequence\Step;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -73,6 +74,11 @@ class SequenceSubscriber implements EventSubscriberInterface
         if ($sequence->getPoster()) {
             $this->fileManager->linkFile(Sequence::class, $sequence->getUuid(), $sequence->getPoster());
         }
+
+        $data = $event->getData();
+        if (array_key_exists('evaluation', $data)) {
+            $this->manageEvaluationParameters($sequence, $data['evaluation']);
+        }
     }
 
     public function preUpdate(UpdateEvent $event): void
@@ -95,6 +101,11 @@ class SequenceSubscriber implements EventSubscriberInterface
             $sequence->getPoster(),
             !empty($oldData['poster']) ? $oldData['poster'] : null
         );
+
+        $data = $event->getData();
+        if (array_key_exists('evaluation', $data)) {
+            $this->manageEvaluationParameters($sequence, $data['evaluation']);
+        }
     }
 
     public function preDelete(DeleteEvent $event): void
@@ -137,12 +148,22 @@ class SequenceSubscriber implements EventSubscriberInterface
 
     public function postCopy(CopyEvent $event): void
     {
+        $options = $event->getOptions();
+        /** @var Sequence $originalSequence */
+        $originalSequence = $event->getObject();
         /** @var Sequence $newSequence */
         $newSequence = $event->getCopy();
-        $options = $event->getOptions();
+
+        $this->om->startFlushSuite();
 
         if ($newSequence->getPoster()) {
             $this->fileManager->linkFile(Sequence::class, $newSequence->getUuid(), $newSequence->getPoster());
+        }
+
+        $parameters = $this->om->getRepository(SequenceParameters::class)->findOneBy(['sequence' => $originalSequence]);
+        if ($parameters) {
+            $newParameters = $this->crud->copy($parameters, $options);
+            $newParameters->setSequence($newSequence);
         }
 
         if (in_array('copyResources', $options) && $newSequence->hasResources()) {
@@ -174,7 +195,7 @@ class SequenceSubscriber implements EventSubscriberInterface
         }
 
         $this->om->persist($newSequence);
-        $this->om->flush();
+        $this->om->endFlushSuite();
     }
 
     private function copyStepResources(Step $step, ?ResourceNode $parent = null, array $copiedResources = []): array
@@ -218,5 +239,21 @@ class SequenceSubscriber implements EventSubscriberInterface
         }
 
         return $copiedResources;
+    }
+
+    private function manageEvaluationParameters(Sequence $sequence, ?array $evaluationParameters = null): void
+    {
+        $parameters = $this->om->getRepository(SequenceParameters::class)->findOneBy(['sequence' => $sequence]);
+        if (empty($evaluationParameters)) {
+            $this->crud->delete($parameters);
+        } else {
+            if ($parameters) {
+                $this->crud->update($parameters, $evaluationParameters);
+            } else {
+                $parameters = new SequenceParameters();
+                $parameters->setSequence($sequence);
+                $this->crud->create($parameters, $evaluationParameters);
+            }
+        }
     }
 }

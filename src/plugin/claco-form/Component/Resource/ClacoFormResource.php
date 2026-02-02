@@ -54,7 +54,6 @@ class ClacoFormResource extends ResourceComponent implements DownloadableResourc
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
         return [
-            'resource' => $this->serializer->serialize($resource),
             'categories' => array_map(function (Category $category) {
                 return $this->serializer->serialize($category);
             }, $resource->getCategories()),
@@ -136,7 +135,6 @@ class ClacoFormResource extends ResourceComponent implements DownloadableResourc
         $categories = $resource->getCategories();
 
         return [
-            'resource' => $this->serializer->serialize($resource),
             'categories' => array_map(function (Category $category) {
                 return $this->serializer->serialize($category);
             }, $categories),

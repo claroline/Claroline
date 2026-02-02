@@ -55,7 +55,7 @@ class WorkspaceEvaluationController
         private readonly ObjectManager $om,
         private readonly Crud $crud,
         private readonly SerializerProvider $serializer,
-        private readonly WorkspaceEvaluationManager $manager,
+        private readonly WorkspaceEvaluationManager $evaluationManager,
         private readonly ExportManager $exportManager,
     ) {
         $this->authorization = $authorization;
@@ -116,6 +116,7 @@ class WorkspaceEvaluationController
         $this->checkPermission('OPEN', $workspaceEvaluation, [], true);
 
         $workspace = $workspaceEvaluation->getWorkspace();
+        $evaluationParameters = $this->evaluationManager->getParameters($workspace);
 
         $certificates = [];
         if ($workspaceEvaluation->isCertified()) {
@@ -137,9 +138,7 @@ class WorkspaceEvaluationController
         }
 
         return new JsonResponse([
-            'parameters' => [
-                'successCondition' => $workspace->getSuccessCondition(),
-            ],
+            'parameters' => $evaluationParameters ? $this->serializer->serialize($evaluationParameters, [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             'evaluation' => $this->serializer->serialize($workspaceEvaluation),
             'progression' => array_map(function (SequenceEvaluation $evaluation) {
                 return $this->serializer->serialize($evaluation);
@@ -180,7 +179,7 @@ class WorkspaceEvaluationController
 
         foreach ($evaluations as $evaluation) {
             if ($this->checkPermission('ADMINISTRATE', $evaluation)) {
-                $this->manager->archiveEvaluation($evaluation);
+                $this->evaluationManager->archiveEvaluation($evaluation);
             }
         }
 
@@ -197,7 +196,7 @@ class WorkspaceEvaluationController
     ): JsonResponse {
         $this->checkToolAccess('FOLLOW', $workspace);
 
-        $this->manager->initialize($workspace);
+        $this->evaluationManager->initialize($workspace);
 
         return new JsonResponse(null, 204);
     }
@@ -216,7 +215,7 @@ class WorkspaceEvaluationController
         // recompute all the sequence evaluations
         if (empty($evaluationIds)) {
             $this->checkToolAccess('FOLLOW', $workspace);
-            $this->manager->recomputeEvaluations($workspace);
+            $this->evaluationManager->recomputeEvaluations($workspace);
 
             return new JsonResponse(null, 204);
         }
@@ -228,7 +227,7 @@ class WorkspaceEvaluationController
             ]);
 
             if ($evaluation && $this->checkPermission('ADMINISTRATE', $evaluation)) {
-                $this->manager->refreshEvaluation($evaluation);
+                $this->evaluationManager->refreshEvaluation($evaluation);
             }
         }
 
@@ -245,7 +244,7 @@ class WorkspaceEvaluationController
     ): JsonResponse {
         $this->checkToolAccess('ADMINISTRATE', $workspace);
 
-        $this->manager->purgeEvaluations($workspace);
+        $this->evaluationManager->purgeEvaluations($workspace);
 
         return new JsonResponse(null, 204);
     }

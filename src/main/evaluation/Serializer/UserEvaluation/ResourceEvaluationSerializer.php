@@ -21,7 +21,7 @@ class ResourceEvaluationSerializer
 
     public function getName(): string
     {
-        return 'resource_user_evaluation';
+        return 'resource_evaluation';
     }
 
     public function getClass(): string

@@ -88,6 +88,8 @@ class SequenceSerializer
             'poster' => $sequence->getPoster(),
             'meta' => [
                 'public' => $sequence->isPublic(),
+                'published' => $sequence->isPublished(),
+                'archived' => $sequence->isArchived(),
                 'description' => $sequence->getDescription(),
                 'descriptionHtml' => $sequence->getDescriptionHtml(),
                 'creator' => $sequence->getCreator() ?
@@ -95,14 +97,12 @@ class SequenceSerializer
                     null,
                 'createdAt' => DateNormalizer::normalize($sequence->getCreatedAt()),
                 'updatedAt' => DateNormalizer::normalize($sequence->getUpdatedAt()),
-                'published' => $sequence->isPublished(),
                 'views' => $sequence->getViews(),
             ],
             'workspace' => $serializedWorkspace,
             'display' => [
                 'numbering' => $sequence->getNumbering(),
                 'pagination' => $sequence->getPagination(),
-                'showScore' => $sequence->getShowScore(),
             ],
             'opening' => [
                 'secondaryResources' => $sequence->getSecondaryResourcesTarget(),
@@ -117,7 +117,6 @@ class SequenceSerializer
                 'certificateTemplate' => $sequence->getCertificateTemplate() ?
                     $this->templateSerializer->serialize($sequence->getCertificateTemplate(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                     null,
-                'estimatedDuration' => $sequence->getEstimatedDuration(), // deprecated
                 'scoreTotal' => $sequence->getScoreTotal(),
                 'successCondition' => $sequence->getSuccessCondition(),
                 'endMessage' => $sequence->getEndMessage(),
@@ -172,13 +171,13 @@ class SequenceSerializer
         $this->sipe('code', 'setCode', $data, $sequence);
         $this->sipe('poster', 'setPoster', $data, $sequence);
         $this->sipe('meta.published', 'setPublished', $data, $sequence);
+        $this->sipe('meta.archived', 'setArchived', $data, $sequence);
         $this->sipe('meta.description', 'setDescription', $data, $sequence);
         $this->sipe('meta.descriptionHtml', 'setDescriptionHtml', $data, $sequence);
         $this->sipe('meta.public', 'setPublic', $data, $sequence);
 
         $this->sipe('display.numbering', 'setNumbering', $data, $sequence);
         $this->sipe('display.pagination', 'setPagination', $data, $sequence);
-        $this->sipe('display.showScore', 'setShowScore', $data, $sequence);
 
         $this->sipe('opening.secondaryResources', 'setSecondaryResourcesTarget', $data, $sequence);
         $this->sipe('estimatedDuration', 'setEstimatedDuration', $data, $sequence);

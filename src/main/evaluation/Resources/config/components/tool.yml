@@ -7,3 +7,4 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'

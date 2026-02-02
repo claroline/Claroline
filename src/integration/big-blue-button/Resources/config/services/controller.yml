@@ -14,8 +14,10 @@ services:
     Claroline\BigBlueButtonBundle\Controller\BBBController:
         arguments:
             - '@security.authorization_checker'
+            - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
+            - '@Claroline\BigBlueButtonBundle\Manager\EvaluationManager'
             - '@router'
             - '@Claroline\CoreBundle\Library\RoutingHelper'

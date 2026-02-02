@@ -93,7 +93,7 @@ final class AudioResource extends ResourceComponent implements DownloadableResou
     {
         $this->manager->deserializeSections($resource->getResourceNode(), $data);
 
-        return parent::update($resource, $data, $previousData);
+        return [];
     }
 
     public function supportsFile(File $file): int

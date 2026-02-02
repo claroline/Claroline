@@ -121,10 +121,7 @@ class ResourceManager
             throw new InvalidDataException(sprintf('%s is not valid', $resourceClass), $errors);
         }
 
-        $createResource = new CreateResourceEvent($resource, [
-            'resourceNode' => $nodeData,
-            'resource' => $resourceData,
-        ]);
+        $createResource = new CreateResourceEvent($resource, $data);
         // generic event
         $this->eventDispatcher->dispatch($createResource, ResourceEvents::getEventName(ResourceEvents::CREATE));
         // specific event

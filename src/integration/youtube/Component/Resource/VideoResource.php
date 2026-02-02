@@ -2,24 +2,16 @@
 
 namespace Claroline\YouTubeBundle\Component\Resource;
 
-use Claroline\AppBundle\API\Serializer\SerializerInterface;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Component\Resource\UrlAdapterInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Claroline\YouTubeBundle\Entity\Video;
-use Claroline\YouTubeBundle\Manager\EvaluationManager;
 use Claroline\YouTubeBundle\Manager\YouTubeManager;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 final class VideoResource extends ResourceComponent implements EvaluatedResourceInterface, UrlAdapterInterface
 {
     public function __construct(
-        private readonly TokenStorageInterface $tokenStorage,
-        private readonly SerializerProvider $serializer,
-        private readonly EvaluationManager $evaluationManager,
         private readonly YouTubeManager $youtubeManager
     ) {
     }
@@ -61,20 +53,6 @@ final class VideoResource extends ResourceComponent implements EvaluatedResource
     }
 
     /** @param Video $resource */
-    public function open(AbstractResource $resource, bool $embedded = false): ?array
-    {
-        $user = $this->tokenStorage->getToken()?->getUser();
-
-        return [
-            'resource' => $this->serializer->serialize($resource),
-            'userEvaluation' => $user instanceof User ? $this->serializer->serialize(
-                $this->evaluationManager->getResourceUserEvaluation($resource->getResourceNode(), $user),
-                [SerializerInterface::SERIALIZE_MINIMAL]
-            ) : null,
-        ];
-    }
-
-    /** @param Video $resource */
     public function create(AbstractResource $resource, array $data): void
     {
         $this->youtubeManager->handleThumbnailForVideo($resource);
@@ -85,9 +63,7 @@ final class VideoResource extends ResourceComponent implements EvaluatedResource
     {
         $this->youtubeManager->handleThumbnailForVideo($resource);
 
-        return [
-            'resource' => $this->serializer->serialize($resource),
-        ];
+        return [];
     }
 
     public function requireAdapter(): bool

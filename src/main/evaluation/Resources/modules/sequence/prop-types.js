@@ -30,17 +30,14 @@ const Sequence = {
     poster: T.string,
     objective: T.string,
     meta: T.shape({
+      public: T.bool,
       published: T.bool,
       description: T.string,
       descriptionHtml: T.string
     }),
     display: T.shape({
       numbering: T.oneOf(['none', 'numeric', 'literal']),
-      showScore: T.bool
-    }),
-    score: T.shape({
-      success: T.number,
-      total: T.number
+      pagination: T.oneOf(['none', 'step', 'all'])
     }),
     steps: T.arrayOf(T.shape(
       Step.propTypes

@@ -2,7 +2,6 @@ services:
     Claroline\CoreBundle\Listener\Resource\Types\DirectoryListener:
         tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
 
@@ -11,7 +10,6 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\FileManager'
 
     Claroline\CoreBundle\Listener\Resource\ResourceListener:

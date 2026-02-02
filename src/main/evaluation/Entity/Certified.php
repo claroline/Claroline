@@ -16,7 +16,7 @@ trait Certified
 
     #[ORM\JoinColumn(name: 'certificate_template_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: Template::class)]
-    private ?Template $certificateTemplate = null;
+    protected ?Template $certificateTemplate = null;
 
     public function isCertified(): bool
     {

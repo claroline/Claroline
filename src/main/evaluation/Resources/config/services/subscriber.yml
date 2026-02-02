@@ -24,6 +24,15 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
 
+    Claroline\EvaluationBundle\Subscriber\Crud\ResourceSubscriber:
+        tags: [ 'kernel.event_subscriber' ]
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
+
     Claroline\EvaluationBundle\Subscriber\Crud\SequenceSubscriber:
         tags: [ 'kernel.event_subscriber' ]
         arguments:
@@ -32,12 +41,18 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Manager\FileManager'
 
+    Claroline\EvaluationBundle\Subscriber\Crud\WorkspaceSubscriber:
+        tags: [ 'kernel.event_subscriber' ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+
     Claroline\EvaluationBundle\Subscriber\Certificate\WorkspaceCertificateSubscriber:
         tags: [ 'kernel.event_subscriber' ]
         arguments:
-            - '@Claroline\EvaluationBundle\Manager\WorkspaceCertificateManager'
+            - '@Claroline\EvaluationBundle\Manager\Certificate\WorkspaceCertificateManager'
 
     Claroline\EvaluationBundle\Subscriber\Certificate\SequenceCertificateSubscriber:
         tags: [ 'kernel.event_subscriber' ]
         arguments:
-            - '@Claroline\EvaluationBundle\Manager\SequenceCertificateManager'
+            - '@Claroline\EvaluationBundle\Manager\Certificate\SequenceCertificateManager'

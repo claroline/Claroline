@@ -140,8 +140,11 @@ class ResourceEvaluationController
     ): JsonResponse {
         $this->checkPermission('OPEN', $resourceEvaluation, [], true);
 
+        $resourceNode = $resourceEvaluation->getResourceNode();
+        $evaluationParameters = $this->evaluationManager->getParameters($resourceNode);
+
         $attempts = [];
-        if ($this->evaluationManager->supportsAttempts($resourceEvaluation->getResourceNode())) {
+        if ($this->evaluationManager->supportsAttempts($resourceNode)) {
             $attempts = $this->om->getRepository(ResourceAttempt::class)->findBy([
                 'resourceUserEvaluation' => $resourceEvaluation,
             ]);
@@ -151,12 +154,13 @@ class ResourceEvaluationController
         if (!$resourceEvaluation->isArchived()) {
             $archives = $this->om->getRepository(ResourceEvaluation::class)->findBy([
                 'user' => $resourceEvaluation->getUser(),
-                'resourceNode' => $resourceEvaluation->getResourceNode(),
+                'resourceNode' => $resourceNode,
                 'archived' => true,
             ]);
         }
 
         return new JsonResponse([
+            'parameters' => $evaluationParameters ? $this->serializer->serialize($evaluationParameters, [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             'evaluation' => $this->serializer->serialize($resourceEvaluation),
             'progression' => array_map(function (ResourceAttempt $attempt) {
                 return $this->serializer->serialize($attempt);

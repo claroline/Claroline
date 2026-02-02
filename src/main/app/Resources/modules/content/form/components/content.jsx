@@ -40,6 +40,7 @@ const FormContent = (props) => {
               level={props.level}
               displayLevel={props.displayLevel}
               className={primarySection.className}
+              icon={primarySection.icon}
               title={primarySection.title}
               hideTitle={(0 === index && undefined === primarySection.hideTitle) || primarySection.hideTitle}
               description={primarySection.description}
@@ -65,6 +66,7 @@ const FormContent = (props) => {
               level={props.level}
               displayLevel={props.displayLevel}
               className={primarySection.className}
+              icon={primarySection.icon}
               title={primarySection.title}
               description={primarySection.description}
               actions={primarySection.actions}

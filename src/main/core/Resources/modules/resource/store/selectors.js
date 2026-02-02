@@ -149,19 +149,24 @@ const estimatedDuration = createSelector(
   (resourceNode) => get(resourceNode, 'estimatedDuration')
 )
 
+const evaluationParameters = createSelector(
+  [store],
+  (store) => store.evaluation
+)
+
 const hasEvaluation = createSelector(
-  [resourceNode],
-  (resourceNode) => !isEmpty(resourceNode) && supportEvaluation(resourceNode)
+  [resourceNode, evaluationParameters],
+  (resourceNode) => !isEmpty(resourceNode) && supportEvaluation(resourceNode) && !isEmpty(evaluationParameters)
 )
 
 const totalScore = createSelector(
-  [resourceNode, resource],
-  (resourceNode, resource) => get(resourceNode, 'evaluation.scoreTotal', null) || get(resource, 'evaluation.scoreTotal', null)
+  [evaluationParameters],
+  () => get(evaluationParameters, 'scoreTotal', null)
 )
 
 const hasScore = createSelector(
   [resourceNode, totalScore],
-  (resourceNode, totalScore) => supportScore(resourceNode) && !!totalScore
+  (resourceNode, evaluationParameters) => supportScore(resourceNode) && get(evaluationParameters, 'scored', false)
 )
 
 const hasAttempts = createSelector(
@@ -170,13 +175,13 @@ const hasAttempts = createSelector(
 )
 
 const successCondition = createSelector(
-  [resource],
-  (resource) => get(resource, 'evaluation.successCondition', null)
+  [evaluationParameters],
+  (evaluationParameters) => get(evaluationParameters, 'successCondition', null)
 )
 
 const successScore = createSelector(
-  [resource],
-  (resource) => get(resource, 'evaluation.successCondition.score', null)
+  [evaluationParameters],
+  (evaluationParameters) => get(evaluationParameters, 'successCondition.score', null)
 )
 
 const countSuccessCondition = createSelector(
@@ -251,6 +256,7 @@ export const selectors = {
   resourceType,
   mimeType,
   // evaluation params
+  evaluationParameters,
   hasEvaluation,
   hasScore,
   hasAttempts,

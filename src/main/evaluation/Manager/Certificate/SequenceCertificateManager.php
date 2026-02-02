@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\EvaluationBundle\Manager;
+namespace Claroline\EvaluationBundle\Manager\Certificate;
 
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Manager\File\ArchiveManager;
@@ -11,13 +11,13 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
-use Claroline\EvaluationBundle\Entity\Certificate\WorkspaceCertificate;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\WorkspaceEvaluation;
+use Claroline\EvaluationBundle\Entity\Certificate\SequenceCertificate;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\SequenceEvaluation;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class WorkspaceCertificateManager
+class SequenceCertificateManager
 {
     public function __construct(
         private readonly ObjectManager $om,
@@ -32,9 +32,11 @@ class WorkspaceCertificateManager
     ) {
     }
 
-    public function getCertificate(WorkspaceEvaluation $evaluation, bool $regenerate = false): ?string
+    public function getCertificate(SequenceEvaluation $evaluation, bool $regenerate = false): ?string
     {
-        $certificate = $this->om->getRepository(WorkspaceCertificate::class)->findOneBy([
+        $sequence = $evaluation->getSequence();
+
+        $certificate = $this->om->getRepository(SequenceCertificate::class)->findOneBy([
             'evaluation' => $evaluation,
             'user' => $evaluation->getUser(),
         ], ['issueDate' => 'DESC']);
@@ -43,7 +45,7 @@ class WorkspaceCertificateManager
             return $this->getCertificateFile($certificate);
         }
 
-        $certificate = new WorkspaceCertificate();
+        $certificate = new SequenceCertificate();
         $certificate->setUser($evaluation->getUser());
         $certificate->setIssueDate(new \DateTime());
         $certificate->setEvaluation($evaluation);
@@ -51,18 +53,26 @@ class WorkspaceCertificateManager
         $certificate->setScore($evaluation->getScore() ?: 0);
         $certificate->setStatus($evaluation->getStatus());
 
-        $placeholders = $this->getCommonPlaceholders($certificate);
+        $placeholders = $this->getPlaceholders($certificate);
 
         $locale = $evaluation->getUser()->getLocale();
         if (!$locale) {
             $locale = $this->localeManager->getDefault();
         }
 
-        $html = $this->templateManager->getTemplate(
-            EvaluationStatus::PASSED === $evaluation->getStatus() ? 'workspace_success_certificate' : 'workspace_participation_certificate',
-            $placeholders,
-            $locale
-        );
+        if ($sequence->getCertificateTemplate()) {
+            $html = $this->templateManager->getTemplateContent(
+                $sequence->getCertificateTemplate(),
+                $placeholders,
+                $locale
+            );
+        } else {
+            $html = $this->templateManager->getTemplate(
+                EvaluationStatus::PASSED === $evaluation->getStatus() ? 'evaluation_success_certificate' : 'evaluation_participation_certificate',
+                $placeholders,
+                $locale
+            );
+        }
 
         $certificate->setLanguage($locale);
         $certificate->setContent($html);
@@ -86,7 +96,7 @@ class WorkspaceCertificateManager
         return $tmpFile;
     }
 
-    public function getCertificateFile(WorkspaceCertificate $certificate): string
+    public function getCertificateFile(SequenceCertificate $certificate): string
     {
         $path = $this->getCertificateFilepath($certificate);
 
@@ -98,7 +108,7 @@ class WorkspaceCertificateManager
         return $path;
     }
 
-    public function removeCertificateFile(WorkspaceCertificate $certificate): void
+    public function removeCertificateFile(SequenceCertificate $certificate): void
     {
         $path = $this->getCertificateFilepath($certificate);
 
@@ -108,20 +118,21 @@ class WorkspaceCertificateManager
         }
     }
 
-    private function getCertificateFilepath(WorkspaceCertificate $certificate): string
+    private function getCertificateFilepath(SequenceCertificate $certificate): string
     {
         $path = $this->fileManager->getDirectory();
-        $path .= DIRECTORY_SEPARATOR.'certificates';
-        $path .= DIRECTORY_SEPARATOR.$certificate->getEvaluation()->getWorkspace()->getUuid();
+        $path .= DIRECTORY_SEPARATOR.'sequence_certificates';
+        $path .= DIRECTORY_SEPARATOR.$certificate->getEvaluation()->getSequence()->getUuid();
         $path .= DIRECTORY_SEPARATOR.$certificate->getUuid().'.pdf';
 
         return $path;
     }
 
-    private function getCommonPlaceholders(WorkspaceCertificate $certificate): array
+    private function getPlaceholders(SequenceCertificate $certificate): array
     {
         $evaluation = $certificate->getEvaluation();
-        $workspace = $evaluation->getWorkspace();
+        $sequence = $evaluation->getSequence();
+        $workspace = $sequence->getWorkspace();
         $user = $evaluation->getUser();
 
         $score = $evaluation->getScore() ?: 0;
@@ -129,10 +140,14 @@ class WorkspaceCertificateManager
         $finalScore = round(($score / $scoreMax) * 100, 2);
 
         return array_merge([
-            'evaluated_content_name' => $workspace->getName(),
-            'evaluated_content_code' => $workspace->getCode(),
-            'evaluated_content_description' => $workspace->getDescription(),
-            'evaluated_content_poster' => $workspace->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$workspace->getPoster().'" style="max-width: 100%;"/>' : '',
+            'workspace_name' => $workspace->getName(),
+            'workspace_code' => $workspace->getCode(),
+            'workspace_description' => $workspace->getDescription(),
+
+            'evaluated_content_name' => $sequence->getName(),
+            'evaluated_content_code' => $sequence->getCode(),
+            'evaluated_content_description' => $sequence->getDescription(),
+            'evaluated_content_poster' => $sequence->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$sequence->getPoster().'" style="max-width: 100%;"/>' : '',
 
             'user_first_name' => $user->getFirstName(),
             'user_last_name' => $user->getLastName(),
@@ -141,7 +156,7 @@ class WorkspaceCertificateManager
             'evaluation_score' => $finalScore ?: '0',
             'evaluation_score_max' => 100,
             'evaluation_duration' => round($evaluation->getDuration() / 60, 2), // in minutes
-            'evaluation_status' => $this->translator->trans('evaluation_'.$evaluation->getStatus().'_status', [], 'workspace'),
+            'evaluation_status' => $this->translator->trans('evaluation_'.$evaluation->getStatus().'_status', [], 'evaluation'),
         ],
             $this->templateManager->formatDatePlaceholder('evaluation_last_activity', $evaluation->getLastActivityAt()),
             $this->templateManager->formatDatePlaceholder('evaluation_start', $evaluation->getStartedAt()),

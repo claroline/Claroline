@@ -47,6 +47,13 @@ const reducer = combineReducers({
   }),
 
   /**
+   * Manages the evaluation parameters of the resource.
+   */
+  evaluation: makeReducer({}, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.evaluation
+  }),
+
+  /**
    * Manages current user's evaluation for the resource.
    */
   userEvaluation: makeReducer(null, {

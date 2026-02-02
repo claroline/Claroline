@@ -3,7 +3,7 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 
-import {MODAL_USER_PROGRESSION} from '#/main/evaluation/workspace/modals/user-progression'
+import {MODAL_WORKSPACE_USER_PROGRESSION} from '#/main/evaluation/workspace/modals/user-progression'
 
 export default declareAction((evaluations) => ({
   name: 'open',
@@ -12,7 +12,7 @@ export default declareAction((evaluations) => ({
   label: trans('open', {}, 'actions'),
   displayed: hasPermission('open', evaluations[0]),
   scope: ['object'],
-  modal: [MODAL_USER_PROGRESSION, {
+  modal: [MODAL_WORKSPACE_USER_PROGRESSION, {
     evaluation: evaluations[0]
   }],
   set: [constants.ACTION_SET_LIST]

@@ -17,7 +17,7 @@ use Claroline\EvaluationBundle\Entity\Certificate\WorkspaceCertificate;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\WorkspaceEvaluationEvent;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
-use Claroline\EvaluationBundle\Manager\WorkspaceCertificateManager;
+use Claroline\EvaluationBundle\Manager\Certificate\WorkspaceCertificateManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**

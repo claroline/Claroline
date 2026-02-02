@@ -28,9 +28,7 @@ class SequenceEvaluationVoter extends AbstractEvaluationVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
-        $isAdmin = $this->isToolGranted(self::FOLLOW, 'progression')
-            || $this->isToolGranted(self::FOLLOW, 'progression', $object->getSequence()->getWorkspace())
-            || $this->isGranted(self::FOLLOW, $object->getSequence());
+        $isAdmin = $this->isGranted(self::FOLLOW, $object->getSequence());
 
         switch ($attributes[0]) {
             case self::OPEN:

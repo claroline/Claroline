@@ -15,6 +15,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\EvaluationBundle\Entity\Parameters\WorkspaceParameters;
 use Claroline\EvaluationBundle\Entity\Sequence\Assignment;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\SequenceEvaluation;
@@ -45,9 +46,20 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
     ) {
     }
 
+    /**
+     * Check if evaluation is enabled for a workspace.
+     */
     public function isEvaluated(Workspace $workspace): bool
     {
-        return true;
+        return 1 === $this->om->getRepository(WorkspaceParameters::class)->count(['workspace' => $workspace]);
+    }
+
+    /**
+     * Get the evaluation parameters for a workspace.
+     */
+    public function getParameters(Workspace $workspace): ?WorkspaceParameters
+    {
+        return $this->om->getRepository(WorkspaceParameters::class)->findOneBy(['workspace' => $workspace]);
     }
 
     /**
@@ -104,6 +116,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
     public function refreshEvaluation(WorkspaceEvaluation $evaluation): void
     {
         $workspace = $evaluation->getWorkspace();
+        $evaluationParameters = $this->getParameters($workspace);
         $user = $evaluation->getUser();
 
         // get the list of sequence the user must do to progress in the workspace
@@ -118,9 +131,9 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
         ];
 
         // get the success condition of the workspace if any
-        $successCondition = $workspace->getSuccessCondition();
+        $successCondition = $evaluationParameters->getSuccessCondition();
         if (!empty($successCondition)) {
-            if (array_key_exists('score', $successCondition) && is_numeric($successCondition['score'])) {
+            if ($evaluationParameters->isScored() && array_key_exists('score', $successCondition) && is_numeric($successCondition['score'])) {
                 // check user score (the condition is a percentage of the max score)
                 $conditionCheckers[] = new ScoreChecker($successCondition['score']);
             }
@@ -187,6 +200,11 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
      */
     public function recomputeEvaluations(Workspace $workspace): void
     {
+        if (!$this->isEvaluated($workspace)) {
+            // the workspace is not evaluated so there is no evaluation to recompute
+            return;
+        }
+
         $this->messageBus->dispatch(
             new RecomputeWorkspaceEvaluations($workspace->getId()),
             [new AuthenticationStamp($this->tokenStorage->getToken()?->getUser()->getId())]

@@ -218,7 +218,6 @@ const QuizEditorParameters = props => {
             }
           ]
         }, {
-          icon: 'fa fa-fw fa-key',
           title: trans('access_restrictions'),
           fields: [
             {

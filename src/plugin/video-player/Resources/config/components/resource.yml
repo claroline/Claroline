@@ -2,8 +2,6 @@ services:
     Claroline\VideoPlayerBundle\Component\Resource\VideoResource:
         tags: [ 'claroline.component.resource', 'kernel.event_subscriber' ]
         arguments:
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\FileManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\VideoPlayerBundle\Manager\EvaluationManager'

@@ -8,7 +8,7 @@ use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\EvaluationBundle\Entity\Sequence\Requirement;
+use Claroline\EvaluationBundle\Entity\Parameters\SequenceParameters;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Entity\Sequence\Step;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
@@ -42,36 +42,20 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
     ) {
     }
 
-    public function fulfillRequirements(Sequence $sequence, User $user): bool
+    /**
+     * Check if evaluation is enabled for a sequence.
+     */
+    public function isEvaluated(Sequence $sequence): bool
     {
-        /** @var Requirement[] $requirements */
-        $requirements = $sequence->getRequirements()->toArray();
-        if (empty($requirements)) {
-            return true;
-        }
+        return 1 === $this->om->getRepository(SequenceParameters::class)->count(['sequence' => $sequence]);
+    }
 
-        foreach ($requirements as $requirement) {
-            /** @var SequenceEvaluation $userEvaluation */
-            $userEvaluation = $this->om->getRepository(SequenceEvaluation::class)->findOneBy([
-                'sequence' => $requirement->getRequiredSequence(),
-                'user' => $user,
-            ]);
-
-            if (empty($userEvaluation)) {
-                return false;
-            }
-
-            if (
-                ($requirement->getStatus() && $userEvaluation->getStatus() !== $requirement->getStatus())
-                || ($requirement->getProgression() && $userEvaluation->getProgression() < $requirement->getProgression())
-                || ($requirement->getMinScore() && $userEvaluation->getRelativeScore() < $requirement->getMinScore())
-                || ($requirement->getMaxScore() && $userEvaluation->getRelativeScore() >= $requirement->getMaxScore())
-            ) {
-                return false;
-            }
-        }
-
-        return true;
+    /**
+     * Get the evaluation parameters for a sequence.
+     */
+    public function getParameters(Sequence $sequence): ?SequenceParameters
+    {
+        return $this->om->getRepository(SequenceParameters::class)->findOneBy(['sequence' => $sequence]);
     }
 
     /**
@@ -178,15 +162,16 @@ class SequenceEvaluationManager extends AbstractEvaluationManager
     public function refreshEvaluation(SequenceEvaluation $evaluation): void
     {
         $sequence = $evaluation->getSequence();
+        $evaluationParameters = $this->getParameters($sequence);
 
         $conditionCheckers = [
             new ProgressionChecker(),
         ];
 
         // get the success condition of the sequence if any
-        $successCondition = $sequence->getSuccessCondition();
+        $successCondition = $evaluationParameters->getSuccessCondition();
         if (!empty($successCondition)) {
-            if (array_key_exists('score', $successCondition) && is_numeric($successCondition['score'])) {
+            if ($evaluationParameters->isScored() && array_key_exists('score', $successCondition) && is_numeric($successCondition['score'])) {
                 // check user score (the condition is a percentage of the max score)
                 $conditionCheckers[] = new ScoreChecker($successCondition['score']);
             }

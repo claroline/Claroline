@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Component\Resource\ResourceProvider;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
+use Claroline\EvaluationBundle\Entity\Parameters\ResourceParameters;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
@@ -53,8 +54,37 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         return $resourceHandler instanceof EvaluatedResourceInterface && $resourceHandler::supportsAttempts();
     }
 
+    /**
+     * Check if evaluation is enabled for a resource.
+     */
+    public function isEvaluated(ResourceNode $resourceNode): bool
+    {
+        if (!$this->supportsEvaluation($resourceNode)) {
+            return false;
+        }
+
+        return 1 === $this->om->getRepository(ResourceParameters::class)->count(['resource' => $resourceNode]);
+    }
+
+    /**
+     * Get the evaluation parameters for a resource.
+     */
+    public function getParameters(ResourceNode $resourceNode): ?ResourceParameters
+    {
+        if (!$this->supportsEvaluation($resourceNode)) {
+            return null;
+        }
+
+        return $this->om->getRepository(ResourceParameters::class)->findOneBy(['resource' => $resourceNode]);
+    }
+
     public function getUserEvaluation(ResourceNode $node, User $user, ?bool $withCreation = true): ?ResourceEvaluation
     {
+        if (!$this->isEvaluated($node)) {
+            // evaluation is not enabled for this resource, the current user will have no evaluation data
+            return null;
+        }
+
         $evaluation = $this->om->getRepository(ResourceEvaluation::class)->findOneBy([
             'resourceNode' => $node,
             'user' => $user,
@@ -120,11 +150,11 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         return $attempt;
     }
 
-    public function updateUserEvaluation(ResourceNode $node, User $user, ?array $data = [], \DateTimeInterface $date = null, ?bool $withCreation = true): ?ResourceEvaluation
+    public function updateUserEvaluation(ResourceNode $node, User $user, ?array $data = [], \DateTimeInterface $date = null): ?ResourceEvaluation
     {
         $this->om->startFlushSuite();
 
-        $evaluation = $this->getUserEvaluation($node, $user, $withCreation);
+        $evaluation = $this->getUserEvaluation($node, $user);
         if (empty($evaluation)) {
             return null;
         }
@@ -151,6 +181,10 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
      */
     public function giveAnotherAttempt(ResourceEvaluation $evaluation): void
     {
+        if (!$this->supportsAttempts($evaluation->getResourceNode())) {
+            return;
+        }
+
         if (0 !== $evaluation->getNbAttempts()) {
             $evaluation->setNbAttempts($evaluation->getNbAttempts() - 1);
 

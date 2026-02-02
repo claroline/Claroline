@@ -11,7 +11,7 @@ import {EvaluationShortcut} from '#/main/evaluation/components/shortcut'
 
 import {getActions} from '#/main/evaluation/sequence/utils'
 import {selectors} from '#/main/evaluation/sequence/store'
-import {MODAL_USER_PROGRESSION} from '#/main/evaluation/sequence/modals/user-progression'
+import {MODAL_SEQUENCE_USER_PROGRESSION} from '#/main/evaluation/sequence/modals/user-progression'
 import {pickAction} from '#/main/app/action'
 
 const SequencePage = (props) => {
@@ -63,7 +63,7 @@ const SequencePage = (props) => {
         children: userEvaluation && (
           <EvaluationShortcut
             className="my-auto"
-            modal={MODAL_USER_PROGRESSION}
+            modal={MODAL_SEQUENCE_USER_PROGRESSION}
             evaluation={userEvaluation}
           />
         ),

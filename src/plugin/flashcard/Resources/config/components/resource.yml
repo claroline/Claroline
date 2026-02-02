@@ -6,4 +6,3 @@ services:
       - '@Claroline\AppBundle\API\SerializerProvider'
       - '@security.token_storage'
       - '@Claroline\FlashcardBundle\Manager\FlashcardManager'
-      - '@Claroline\FlashcardBundle\Manager\EvaluationManager'
