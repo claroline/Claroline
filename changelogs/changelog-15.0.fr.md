@@ -4,10 +4,10 @@
   <li>Ajout des filtres par tag sur le widget liste des messages du forum</li>
   <li>Ajout du suivi de la progression dans une ressource connaissance</li>
   <li>Ajout du filtre par tag sur le widget liste des pages de connaissance</li>
-  <li>Questionnaire : correction de l'erreur lié à la numérotation littérale des questions d'un choix multiple</li>
-  <li>Ajout des droits de création pour les ressources PDF, vidéo, image et audio quand on avait déjà le droit de créer des fichiers</li>
-  <li>Suppression de l'affichage en double de réponse du forum</li>
-  <li>Le lien de progression est fonctionnelle sur les accueils de ressources</li>
+  <li>Questionnaire : correction de l'erreur liée à la numérotation littérale des questions d'un choix multiple</li>
+  <li>Ajout des droits de création pour les ressources PDF, vidéo, image et audio si le droit de création de fichiers était actif</li>
+  <li>Suppression de l'affichage en double des réponses du forum</li>
+  <li>Le lien de progression est fonctionnel sur les accueils de ressources</li>
   <li>correction d'une page blanche lors de l'ouverture d'une séance par un utilisateur non-administrateur</li>
   <li>Prise en compte de paramètre de réussite obligeant à réussir toutes les ressources</li>
   <li>Correction de l'action de recalcul des progessions / scores par utilisateur dans le suivi pédagogique</li>
