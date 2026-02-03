@@ -15,6 +15,7 @@ use Claroline\CommunityBundle\Finder\RoleType;
 use Claroline\CoreBundle\Finder\WorkspaceType;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Claroline\AppBundle\API\Finder\Type\DateType;
 
 class AnnouncementType extends AbstractType
 {
@@ -32,6 +33,7 @@ class AnnouncementType extends AbstractType
             ->add('title', TextType::class)
             ->add('content', TextType::class)
             ->add('creator', CreatorType::class)
+            ->add('publicationDate', DateType::class)
             ->add('workspace', WorkspaceType::class)
             ->add('roles', RoleType::class, ['nullable' => true])
             ->add('tags', TagType::class)
