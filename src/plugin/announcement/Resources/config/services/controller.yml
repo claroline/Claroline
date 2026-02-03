@@ -12,3 +12,4 @@ services:
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
             - '@Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer'
+            - '@Claroline\AppBundle\Manager\ViewerManager'

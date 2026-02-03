@@ -8,6 +8,7 @@ use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
 use Claroline\AppBundle\API\Finder\FinderInterface;
 use Claroline\AppBundle\API\Finder\Type\ClosureType;
 use Claroline\AppBundle\API\Finder\Type\CreatorType;
+use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\TagType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
@@ -32,6 +33,7 @@ class AnnouncementType extends AbstractType
             ->add('title', TextType::class)
             ->add('content', TextType::class)
             ->add('creator', CreatorType::class)
+            ->add('publicationDate', DateType::class)
             ->add('workspace', WorkspaceType::class)
             ->add('roles', RoleType::class, ['nullable' => true])
             ->add('tags', TagType::class)

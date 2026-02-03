@@ -11,7 +11,8 @@ import {
   ANNOUNCE_DETAIL_RESET,
   ANNOUNCE_ADD,
   ANNOUNCE_DELETE,
-  ANNOUNCE_CHANGE
+  ANNOUNCE_CHANGE,
+  ANNOUNCE_UPDATE_VIEWS
 } from '#/plugin/announcement/tools/announcement/store/actions'
 import {CONTEXT_OPEN} from '#/main/app/context/store/actions'
 
@@ -51,6 +52,12 @@ const reducer = combineReducers({
         1
       )
 
+      return newState
+    },
+    [ANNOUNCE_UPDATE_VIEWS]: (state, action) => {
+      const newState = cloneDeep(state)
+      const announcePos = newState.findIndex(post => post.id === action.announceId)
+      newState[announcePos]['meta'].views = action.nbViews
       return newState
     }
   }),

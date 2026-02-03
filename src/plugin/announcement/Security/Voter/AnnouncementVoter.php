@@ -13,7 +13,6 @@ namespace Claroline\AnnouncementBundle\Security\Voter;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
-use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 

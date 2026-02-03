@@ -9,7 +9,8 @@ import {
   LESSON_SEARCH,
   LESSON_PAGE_ADD,
   LESSON_PAGE_UPDATE, LESSON_PAGES_REFRESH,
-  LESSON_SET_CURRENT_PAGE
+  LESSON_SET_CURRENT_PAGE,
+  LESSON_UPDATE_VIEWS
 } from '#/plugin/lesson/resources/lesson/store/actions'
 import cloneDeep from 'lodash/cloneDeep'
 
@@ -46,6 +47,12 @@ const reducer = combineReducers({
         newState[pos] = action.page
       }
 
+      return newState
+    },
+    [LESSON_UPDATE_VIEWS]: (state, action) => {
+      const newState = cloneDeep(state)
+      const chapter = state.findIndex(page => page.id === action.chapterId)
+      newState[chapter]['meta'].views = action.nbViews
       return newState
     }
   }),

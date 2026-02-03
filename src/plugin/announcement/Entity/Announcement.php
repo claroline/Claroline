@@ -20,6 +20,8 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\UpdatedAt;
+use Claroline\AppBundle\Entity\Meta\Views;
+use Claroline\AppBundle\Entity\UserViewCounterInterface;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Model\HasWorkspace;
 use Claroline\SchedulerBundle\Entity\ScheduledTask;
@@ -31,7 +33,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'claro_announcement')]
 #[ORM\Entity]
 #[CrudEntity(finderClass: AnnouncementType::class)]
-class Announcement implements CrudEntityInterface
+class Announcement implements CrudEntityInterface, UserViewCounterInterface
 {
     use Id;
     use Uuid;
@@ -40,6 +42,7 @@ class Announcement implements CrudEntityInterface
     use CreatedAt;
     use UpdatedAt;
     use HasWorkspace;
+    use Views;
 
     #[ORM\Column(nullable: true)]
     private ?string $title = null;
@@ -148,9 +151,6 @@ class Announcement implements CrudEntityInterface
         $this->visibleUntil = $visibleUntil;
     }
 
-    /**
-     * @return ScheduledTask
-     */
     public function getTask(): ?ScheduledTask
     {
         return $this->task;
@@ -183,5 +183,13 @@ class Announcement implements CrudEntityInterface
     public function emptyRoles(): void
     {
         $this->roles->clear();
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getAnnouncer(): ?string
+    {
+        return $this->announcer;
     }
 }

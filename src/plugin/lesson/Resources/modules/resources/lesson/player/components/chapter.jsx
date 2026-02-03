@@ -6,10 +6,11 @@ import classes from 'classnames'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
+import {Badge} from '#/main/app/components/badge'
 import {Html} from '#/main/app/components/html'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, ModalButton} from '#/main/app/buttons'
 import {PageContent, PageHeading, PageHeadingSkeleton, PageSection, PageToolbar} from '#/main/app/page'
 import {Content, ContentSkeleton} from '#/main/app/components/content'
 import {ContentPublication} from '#/main/app/content/components/publication'
@@ -21,6 +22,7 @@ import {MODAL_PAGE_HISTORY} from '#/plugin/lesson/resources/lesson/modals/histor
 import {LessonPlayerNavSkeleton} from '#/plugin/lesson/resources/lesson/player/components/nav'
 
 import {MODAL_PAGE_POSITION} from '#/plugin/lesson/resources/lesson/modals/position'
+import {MODAL_VIEWERS} from '#/main/app/modals/viewers'
 import {highlightSearch} from '#/plugin/lesson/resources/lesson/utils'
 
 const Chapter = props => {
@@ -163,10 +165,26 @@ const Chapter = props => {
         <Content
           placeholder={trans('no_content')}
           meta={showMeta ?
-            <ContentPublication
-              user={get(props.chapter, 'meta.creator', {})}
-              publishedAt={get(props.chapter, 'meta.updatedAt')}
-            /> :
+            <>
+              <ContentPublication
+                user={get(props.chapter, 'meta.creator', {})}
+                publishedAt={get(props.chapter, 'meta.updatedAt')}
+              />
+              <div className="w-50 text-end">
+                <ModalButton
+                  className="btn btn-link ms-auto mt-auto me-n3 mb-n2"
+                  modal={[
+                    MODAL_VIEWERS, {
+                      url: ['apiv2_chapter_views', {lessonId: lesson.id, id: props.chapter.id}]
+                    }
+                  ]}
+                ><Badge variant="secondary" subtle={true}>
+                    <span className="fa fa-eye me-2"/>
+                    {transChoice('display_views', get(props.chapter, 'meta.views', 0), {count: get(props.chapter, 'meta.views', 0)})}
+                  </Badge>
+                </ModalButton>
+              </div>
+            </>:
             undefined
           }
           tags={showMeta ? get(props.chapter, 'tags') : undefined}

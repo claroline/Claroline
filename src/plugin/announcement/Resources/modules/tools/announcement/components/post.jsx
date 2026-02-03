@@ -4,8 +4,9 @@ import {useDispatch} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {trans, transChoice} from '#/main/app/intl/translation'
+import {Badge} from '#/main/app/components/badge'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, ModalButton} from '#/main/app/buttons'
 import {PageContent, PageHeading, PageHeadingSkeleton, PageSection} from '#/main/app/page'
 import {Content, ContentSkeleton} from '#/main/app/components/content'
 import {ContentPublication} from '#/main/app/content/components/publication'
@@ -15,7 +16,9 @@ import {Announcement as AnnouncementTypes} from '#/plugin/announcement/prop-type
 import {MODAL_ANNOUNCEMENT_SENDING} from '#/plugin/announcement/tools/announcement/modals/sending'
 import {PageToolbar, PageToolbarSkeleton} from '#/main/app/page/components/toolbar'
 import {MODAL_ANNOUNCEMENT_FORM} from '#/plugin/announcement/announcement/modals/form'
+import {MODAL_VIEWERS} from '#/main/app/modals/viewers'
 import {actions} from '#/plugin/announcement/tools/announcement/store'
+import {hasPermission} from '#/main/app/security'
 
 const AnnouncementPost = (props) => {
   const dispatch = useDispatch()
@@ -103,10 +106,28 @@ const AnnouncementPost = (props) => {
             <Content
               placeholder={trans('no_content')}
               meta={
-                <ContentPublication
-                  user={get(props.announcement, 'meta.creator', {})}
-                  publishedAt={get(props.announcement, 'meta.publishedAt')}
-                />
+                <>
+                  <ContentPublication
+                    user={get(props.announcement, 'meta.creator', {})}
+                    publishedAt={get(props.announcement, 'meta.publishedAt')}
+                  />
+                  {hasPermission('follow', props.announcement) && (
+                    <div className="w-50 text-end">
+                      <ModalButton
+                        className="btn btn-link ms-auto mt-auto me-n3 mb-n2"
+                        modal={[
+                          MODAL_VIEWERS, {
+                            url: ['claro_announcement_views', {id: props.announcement.id}]
+                          }
+                        ]}
+                      ><Badge variant="secondary" subtle={true}>
+                          <span className="fa fa-eye me-2"/>
+                          {transChoice('display_views', get(props.announcement, 'meta.views', 0), {count: get(props.announcement, 'meta.views', 0)})}
+                        </Badge>
+                      </ModalButton>
+                    </div>
+                  )}
+                </>
               }
               tags={props.announcement.tags}
             >

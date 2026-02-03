@@ -83,6 +83,7 @@ class ChapterSerializer
                 'createdAt' => DateNormalizer::normalize($chapter->getCreatedAt()),
                 'updatedAt' => DateNormalizer::normalize($chapter->getUpdatedAt()),
                 'creator' => $chapter->getCreator() ? $this->userSerializer->serialize($chapter->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
+                'views' => $chapter->getViews(),
             ],
             'tags' => $this->serializeTags($chapter),
             'parentSlug' => $chapter->getParent()?->getSlug(),

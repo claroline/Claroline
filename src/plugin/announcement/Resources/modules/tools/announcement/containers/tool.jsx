@@ -14,6 +14,7 @@ const AnnouncementTool = withReducer(selectors.STORE_NAME, reducer)(
     dispatch => ({
       openDetail(id) {
         dispatch(actions.openDetail(id))
+        dispatch(actions.updateView(id))
       },
       resetDetail() {
         dispatch(actions.resetDetail())

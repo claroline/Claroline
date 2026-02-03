@@ -10,6 +10,8 @@ use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Published;
 use Claroline\AppBundle\Entity\Meta\UpdatedAt;
+use Claroline\AppBundle\Entity\Meta\Views;
+use Claroline\AppBundle\Entity\UserViewCounterInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -18,7 +20,7 @@ use Icap\LessonBundle\Repository\ChapterRepository;
 #[ORM\Table(name: 'icap__lesson_chapter')]
 #[ORM\Entity(repositoryClass: ChapterRepository::class)]
 #[Gedmo\Tree(type: 'nested')]
-class Chapter implements CrudEntityInterface
+class Chapter implements CrudEntityInterface, UserViewCounterInterface
 {
     use Id;
     use Uuid;
@@ -27,6 +29,7 @@ class Chapter implements CrudEntityInterface
     use Creator;
     use CreatedAt;
     use UpdatedAt;
+    use Views;
 
     #[ORM\Column(type: Types::STRING, nullable: false)]
     private ?string $title = null;
