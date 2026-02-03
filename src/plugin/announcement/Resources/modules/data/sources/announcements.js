@@ -25,8 +25,8 @@ export default declareDataSource(() => ({
       label: trans('content'),
       displayed: true
     }, {
-      name: 'meta.publishedAt',
-      alias: 'publicationDate',
+      name: 'meta.updatedAt',
+      alias: 'updatedAt',
       type: 'date',
       label: trans('date'),
       displayed: true,
