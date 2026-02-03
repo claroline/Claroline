@@ -8,6 +8,7 @@ use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
 use Claroline\AppBundle\API\Finder\FinderInterface;
 use Claroline\AppBundle\API\Finder\Type\ClosureType;
 use Claroline\AppBundle\API\Finder\Type\CreatorType;
+use Claroline\AppBundle\API\Finder\Type\DateType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\TagType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
@@ -15,7 +16,6 @@ use Claroline\CommunityBundle\Finder\RoleType;
 use Claroline\CoreBundle\Finder\WorkspaceType;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Claroline\AppBundle\API\Finder\Type\DateType;
 
 class AnnouncementType extends AbstractType
 {
