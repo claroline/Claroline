@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {Badge} from '#/main/app/components/badge'
 import {DataCard} from '#/main/app/data/components/card'
 
@@ -46,6 +46,7 @@ const SequenceCard = props =>
     } : undefined}
     meta={
       <>
+        <Badge variant="secondary" subtle={true}>{transChoice('display_views', get(props.data, 'meta.views') || 0, {count: get(props.data, 'meta.views') || 0})}</Badge>
         {get(props.data, 'estimatedDuration') &&
           <Badge variant="secondary" subtle={true}>
             <span className="fa far fa-clock me-1" />
