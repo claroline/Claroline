@@ -10,8 +10,8 @@ const Action = {
     /**
      * A unique identifier for the action
      *
-     * Most of the time we can generate it from label (that's why it's optional)
-     * but it's not sufficient, for actions on data collection (same action names for each item)
+     * Most of the time we can generate it from label (that's why it's optional),
+     * but it's not enough for actions on data collection (same action names for each item)
      *
      * @type {string}
      */

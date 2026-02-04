@@ -10,6 +10,7 @@ import {LINK_BUTTON,     LinkButton}     from '#/main/app/buttons/link'
 import {MENU_BUTTON,     MenuButton}     from '#/main/app/buttons/menu'
 import {MODAL_BUTTON,    ModalButton}    from '#/main/app/buttons/modal'
 import {POPOVER_BUTTON,  PopoverButton}  from '#/main/app/buttons/popover'
+import {REQUEST_BUTTON,  RequestButton}  from '#/main/app/buttons/request'
 import {URL_BUTTON,      UrlButton}      from '#/main/app/buttons/url'
 
 export {
@@ -21,6 +22,7 @@ export {
   MENU_BUTTON,
   MODAL_BUTTON,
   POPOVER_BUTTON,
+  REQUEST_BUTTON,
   URL_BUTTON,
 
   // button components
@@ -31,5 +33,6 @@ export {
   MenuButton,
   ModalButton,
   PopoverButton,
+  RequestButton,
   UrlButton
 }

@@ -1,15 +1,30 @@
-import React from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
+import classes from 'classnames'
+import invariant from 'invariant'
+import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
-import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
-
-import {Action as ActionTypes} from '#/main/app/action/prop-types'
-import {ModalEmpty} from '#/main/app/overlays/modal/components/empty'
 import {Html} from '#/main/app/components/html'
 import {DataMicro} from '#/main/app/data/components/micro'
+import {ModalEmpty} from '#/main/app/overlays/modal/components/empty'
+import {CallbackButton} from '#/main/app/buttons/callback'
+
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {registry as buttonRegistry} from '#/main/app/buttons/registry'
+
+/**
+ * We don't reuse the standard <Button /> to avoid circular references and because we don't need the full flexibility
+ * of it (like confirm modale or tooltips)
+ */
+const ConfirmButton = (props) => {
+  const button = buttonRegistry.get(props.type)
+
+  invariant(undefined !== button, `You have requested a non existent button "${props.type}".`)
+
+  return createElement(button, merge(omit(props, 'type', 'icon', 'label', 'subscript', 'managerOnly', 'description')), props.label)
+}
 
 const ConfirmModal = (props) =>
   <ModalEmpty
@@ -43,17 +58,20 @@ const ConfirmModal = (props) =>
     </div>
 
     <div className="modal-footer bg-transparent" role="toolbar">
-      <Button
+      <CallbackButton
         className="btn btn-body flex-fill"
-        label={props.cancel || trans('cancel', {}, 'actions')}
-        type={CALLBACK_BUTTON}
         callback={props.fadeModal}
-      />
+      >
+        {props.cancel || trans('cancel', {}, 'actions')}
+      </CallbackButton>
 
-      <Button
+      <ConfirmButton
         label={trans('confirm', {}, 'actions')}
         {...omit(props.confirmAction, 'icon', 'tooltip', 'size', 'className')}
-        className="flex-fill"
+        className={classes('btn flex-fill', {
+          'btn-primary': !props.dangerous,
+          'btn-danger': props.dangerous
+        })}
         variant="btn"
         onClick={props.fadeModal}
         dangerous={props.dangerous}
@@ -64,7 +82,7 @@ const ConfirmModal = (props) =>
 
 ConfirmModal.propTypes = {
   dangerous: T.bool,
-  question: T.string.isRequired, // It can be plain text or HTML
+  question: T.string, // It can be plain text or HTML
   additional: T.string,
   items: T.arrayOf(T.shape({
     thumbnail: T.string,

@@ -10,8 +10,7 @@
 }
 
 .dropdown-item {
-  .form-check-input,
-  .action-icon {
+  .form-check-input {
     margin-right: map-get($spacers, 3);
   }
 
@@ -24,14 +23,6 @@
   &.active {
     .action-icon {
       opacity: 1;
-    }
-  }
-
-  .action-subscript {
-    float: right;
-
-    .fa {
-      margin: 0;
     }
   }
 }
