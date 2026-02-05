@@ -4,9 +4,9 @@ namespace Claroline\HomeBundle\Subscriber\Crud;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\HomeBundle\Entity\HomeTab;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

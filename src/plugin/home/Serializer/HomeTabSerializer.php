@@ -50,6 +50,9 @@ class HomeTabSerializer
             'icon' => $homeTab->getIcon(),
             'type' => $homeTab->getType(),
             'class' => $homeTab->getClass(), // TODO : should no longer be exposed here
+            'meta' => [
+                'views' => $homeTab->getViews(),
+            ],
             'position' => $homeTab->getOrder(),
             'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $homeTab),

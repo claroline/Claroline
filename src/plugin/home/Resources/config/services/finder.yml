@@ -1,0 +1,3 @@
+services:
+  Claroline\HomeBundle\Finder\HomeTabViewType:
+    tags: [ claroline.finder.type ]

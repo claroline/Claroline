@@ -11,10 +11,12 @@ import {
   TABS_LOAD,
   TAB_LOAD,
   TAB_RESTRICTIONS_DISMISS,
-  TAB_SET_LOADED
+  TAB_SET_LOADED,
+  TAB_UPDATE_VIEWS
 } from '#/plugin/home/tools/home/store/actions'
 import {selectors} from '#/plugin/home/tools/home/store/selectors'
 import {CONTEXT_OPEN} from '#/main/app/context/store/actions'
+import cloneDeep from 'lodash/cloneDeep'
 
 const reducer = combineReducers({
   currentTabId: makeReducer(null, {
@@ -46,6 +48,12 @@ const reducer = combineReducers({
       }
 
       return tabs
+    },
+    [TAB_UPDATE_VIEWS]: (state, action) => {
+      const newState = cloneDeep(state)
+      const tab = state.findIndex(tab => tab.id === action.tabId)
+      newState[tab]['meta'].views = action.nbViews
+      return newState
     }
   }),
 

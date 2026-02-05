@@ -19,6 +19,7 @@ const HomeTab = connect(
   (dispatch) => ({
     open(tab) {
       dispatch(actions.fetchTab(tab))
+      dispatch(actions.updateView(tab))
     },
     dismissRestrictions() {
       dispatch(actions.dismissRestrictions())

@@ -5,3 +5,7 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\HomeBundle\Manager\HomeManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Manager\ViewerManager'
