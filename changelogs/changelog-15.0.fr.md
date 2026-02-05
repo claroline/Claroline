@@ -1,9 +1,10 @@
 <h1> V15.0.14 </h1>>
 
 <ul>
-  <li>Le tri par date sur le widget liste des annonces fonctionne et se fait sur la date de mise à jour de l'annonce.</li>
   <li>Questionnaire :  une étape avec une question ouverte s'affiche désormais correctement.</li>
   <li>Quand on crée un Espace d'activité, le créateur est automatiquement inscrit comme gestionnaire de l'espace créé.</li>
+  <li>Séquence : possibilité de créer les étapes d'une séquence directement en choisissant plusieurs ressources.</li>
+  <li>Ajout du suivi du nombre de vues sur les connaissances, les annonces et les pages d'accueil</li>
 </ul>
 
 <h1> V15.0.13 </h1>
