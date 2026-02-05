@@ -12,3 +12,4 @@ services:
           - '@Icap\LessonBundle\Manager\PdfManager'
           - '@Icap\LessonBundle\Manager\EvaluationManager'
           - '@Claroline\AppBundle\Manager\ViewerManager'
+          - '@security.token_storage'

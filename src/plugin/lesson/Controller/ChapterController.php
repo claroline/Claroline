@@ -5,12 +5,14 @@ namespace Icap\LessonBundle\Controller;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Manager\ViewerManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\LogBundle\Entity\FunctionalLog;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\ChapterView;
 use Icap\LessonBundle\Entity\Lesson;
@@ -28,6 +30,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -47,7 +50,8 @@ class ChapterController
         private readonly ChapterManager $chapterManager,
         private readonly PdfManager $pdfManager,
         private readonly EvaluationManager $evaluationManager,
-        private readonly ViewerManager $viewerManager
+        private readonly ViewerManager $viewerManager,
+        private readonly TokenStorageInterface $tokenStorage,
     ) {
         $this->authorization = $authorization;
         $this->chapterRepository = $this->om->getRepository(Chapter::class);
@@ -254,5 +258,61 @@ class ChapterController
         $viewers = $this->viewerManager->listViews(ChapterViewType::class, $finderRequest);
 
         return $viewers->toResponse();
+    }
+
+    #[Route(path: '/{id}/logs', name: 'apiv2_chapter_functional_logs', methods: ['GET'])]
+    public function functionalLogsAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Chapter $chapter,
+        #[MapEntity(mapping: ['lessonId' => 'uuid'])]
+        Lesson $lesson,
+        #[MapQueryString]
+        ?FinderRequest $finderRequest = new FinderRequest()
+    ): StreamedJsonResponse {
+        $this->checkPermission('FOLLOW', $lesson->getResourceNode(), [], true);
+
+        $finderRequest->addFilter('objectClass', Chapter::class);
+        $finderRequest->addFilter('objectId', $chapter->getUuid());
+
+        $logs = $this->crud->search(FunctionalLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
+
+        return $logs->toResponse();
+    }
+
+    #[Route(path: '/{id}/activity/{activityType<(views|visitors|actions)>}', name: 'apiv2_chapter_activity', methods: ['GET'])]
+    public function activityAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Chapter $chapter,
+        #[MapEntity(mapping: ['lessonId' => 'uuid'])]
+        Lesson $lesson,
+        string $activityType
+    ): JsonResponse {
+        $this->checkPermission('FOLLOW', $lesson->getResourceNode(), [], true);
+
+        switch ($activityType) {
+            case 'views':
+                $activity = $this->om->getRepository(ChapterView::class)->findViewsForPeriod(
+                    $chapter,
+                    $this->tokenStorage->getToken()->getUser()->getMainOrganization()
+                );
+
+                break;
+            case 'visitors':
+                $activity = $this->om->getRepository(ChapterView::class)->findVisitorsForPeriod(
+                    $chapter,
+                    $this->tokenStorage->getToken()->getUser()->getMainOrganization()
+                );
+                break;
+
+            case 'actions':
+                $activity = $this->om->getRepository(FunctionalLog::class)->findActionsForPeriod(
+                    Chapter::class,
+                    $chapter->getUuid(),
+                    $this->tokenStorage->getToken()->getUser()->getMainOrganization()
+                );
+                break;
+        }
+
+        return new JsonResponse($activity);
     }
 }
