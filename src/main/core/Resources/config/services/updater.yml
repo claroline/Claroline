@@ -31,3 +31,7 @@ services:
     Claroline\CoreBundle\Installation\Updater\Updater150008:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    Claroline\CoreBundle\Installation\Updater\Updater150013:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

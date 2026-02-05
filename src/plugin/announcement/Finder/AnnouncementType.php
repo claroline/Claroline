@@ -33,7 +33,7 @@ class AnnouncementType extends AbstractType
             ->add('title', TextType::class)
             ->add('content', TextType::class)
             ->add('creator', CreatorType::class)
-            ->add('publicationDate', DateType::class)
+            ->add('updatedAt', DateType::class)
             ->add('workspace', WorkspaceType::class)
             ->add('roles', RoleType::class, ['nullable' => true])
             ->add('tags', TagType::class)

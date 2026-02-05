@@ -88,7 +88,6 @@ const CreatePermission = props => {
         'border-primary text-primary-emphasis bg-primary-subtle': permissions && 0 < permissions.length
       })}
       size="sm"
-      disabled={!props.editable}
       menu={
         <Menu
           id={props.id}
