@@ -1,6 +1,5 @@
 import React from 'react'
 
-import {trans} from '#/main/app/intl'
 import {ToolDashboard} from '#/main/core/tool'
 import {HomeDashboardOverview} from '#/plugin/home/tools/home/dashboard/components/overview'
 const HomeDashboard = () => {

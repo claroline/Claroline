@@ -58,7 +58,8 @@ HomeTool.propTypes = {
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
-  setCurrentTab: T.func.isRequired
+  setCurrentTab: T.func.isRequired,
+  showHidden: T.bool
 }
 
 HomeTool.defaultProps = {
