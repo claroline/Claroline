@@ -107,6 +107,11 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         /** @var Workspace $workspace */
         $workspace = $event->getObject();
 
+        // give the creator the manager role
+        if (!$workspace->isModel() && $workspace->getManagerRole() && $workspace->getCreator()) {
+            $this->crud->patch($workspace->getCreator(), 'role', 'add', [$workspace->getManagerRole()]);
+        }
+
         $filesystem = new Filesystem();
         $filesystem->mkdir($this->manager->getStorageDirectory($workspace));
 
