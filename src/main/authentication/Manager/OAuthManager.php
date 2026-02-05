@@ -153,11 +153,6 @@ class OAuthManager implements LoggerAwareInterface
             $this->om->persist($user);
         }
 
-        if (!empty($client->getOrganization())) {
-            // add the user to the defined organizations
-            $this->crud->patch($user, 'organization', Crud::COLLECTION_ADD, [$client->getOrganization()], [Crud::NO_PERMISSIONS]);
-        }
-
         $this->om->endFlushSuite();
 
         // we don't need to pass the `$userLoader` param to UserBadge because it uses the default UserProvider
@@ -183,6 +178,13 @@ class OAuthManager implements LoggerAwareInterface
     private function createUserFromResourceOwner(ResourceOwnerInterface $resourceOwner, OAuthClient $client): User
     {
         $normalizedData = $this->extractResourceOwnerData($resourceOwner, $client);
+
+        $user = new User();
+
+        if (!empty($client->getOrganization())) {
+            // add the user to the defined organizations
+            $user->setMainOrganization($client->getOrganization());
+        }
 
         /** @var User $user */
         $user = $this->crud->create(User::class, [
