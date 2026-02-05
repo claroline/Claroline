@@ -25,7 +25,7 @@ export default {
   },
 
   /**
-   * List all available score modes for a open item.
+   * List all available score modes for an open item.
    *
    * @return {Array}
    */
@@ -43,7 +43,7 @@ export default {
   create: (baseItem) => merge({}, baseItem, OpenItem.defaultProps),
 
   /**
-   * Validate a open item.
+   * Validate an open item.
    *
    * @param {object} item
    *

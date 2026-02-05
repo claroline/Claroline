@@ -34,6 +34,8 @@ const ItemEditor = ({
     totalScore = calculateTotal(item)
   }
 
+  const expectedAnswerComponent = getComponent(item.type, 'expectedAnswer')
+
   return (
     <div id={id} className="card quiz-item item-paper">
       <div className="card-header d-flex align-items-center gap-2">
@@ -71,9 +73,11 @@ const ItemEditor = ({
           numbering={numbering}
         />
 
-        <hr className="item-content-separator my-4" />
+        {expectedAnswerComponent &&
+          <hr className="item-content-separator my-4" />
+        }
 
-        {createElement(getComponent(item.type, 'expectedAnswer'), {
+        {expectedAnswerComponent && createElement(expectedAnswerComponent, {
           item: item,
           showScore: item.hasExpectedAnswers && ScoreNone.name !== get(item, 'score.type')
         })}
