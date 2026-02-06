@@ -11,9 +11,10 @@ import {EditorPage} from '#/main/app/editor'
 
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 import {ItemIcon} from '#/plugin/exo/items/components/icon'
-import {getDefinition} from '#/plugin/exo/items/item-types'
+import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
 import {calculateTotal} from '#/plugin/exo/items/score'
 import {Badge} from '#/main/app/components/badge'
+import {getContentDefinition} from '#/plugin/exo/contents/utils'
 
 const QuizEditorSummary = props => {
   return (
@@ -34,7 +35,10 @@ const QuizEditorSummary = props => {
           } : undefined,
           actions: props.getStepActions(step, index),
           children: (step.items || []).map((item, itemIndex) => {
-            const itemDefinition = getDefinition(item.type)
+            const itemDefinition = isQuestionType(item.type) ?
+              getDefinition(item.type) :
+              getContentDefinition(item.type)
+
             let totalScore
             if (item.hasExpectedAnswers) {
               totalScore = calculateTotal(item)
