@@ -139,7 +139,12 @@ const Chapter = props => {
             group: trans('management'),
             confirm: {
               message: trans('page_delete_message', {}, 'lesson'),
-              additional: trans('irreversible_action_confirm')
+              additional: trans('irreversible_action_confirm'),
+              items:  [{
+                thumbnail: props.chapter.poster,
+                id: props.chapter.id,
+                name: props.chapter.title
+              }]
             },
             displayed: canEdit
           }
