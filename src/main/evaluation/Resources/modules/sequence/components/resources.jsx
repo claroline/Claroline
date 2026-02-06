@@ -12,7 +12,7 @@ const SequenceResources = ({className, resources}) =>
     {resources.map(resource =>
       <UrlButton
         key={resource.id}
-        className="list-group-item list-group-item-action d-flex align-items-center"
+        className="list-group-item list-group-item-action d-flex align-items-center focus-ring"
         target={'#'+resourceRoute(resource)}
         open="_blank"
       >
