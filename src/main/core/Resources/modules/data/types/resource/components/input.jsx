@@ -7,12 +7,18 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 import {EntityInput} from '#/main/app/data/types/entity'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {route} from '#/main/core/resource'
 
 const ResourceInput = props =>
   <EntityInput
     {...props}
     add={trans(props.multiple ? 'add_resources' : 'add_resource', {}, 'actions')}
     pickerType={MODAL_RESOURCES}
+    openAction={(resource) => ({
+      type: LINK_BUTTON,
+      target: route(resource)
+    })}
   />
 
 implementPropTypes(ResourceInput, DataInputTypes, {
