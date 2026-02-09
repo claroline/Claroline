@@ -2,31 +2,19 @@ import React from 'react'
 import {useSelector} from 'react-redux'
 import Accordion from 'react-bootstrap/Accordion'
 import {Badge} from '#/main/app/components/badge'
-import {PageContent, PageHeading, PageSection} from '#/main/app/page'
+import {PageSection} from '#/main/app/page'
 
 import {ActivityChart} from '#/main/evaluation/chart/components/activity'
 import get from 'lodash/get'
-import {ResourceDashboardMetrics} from '#/main/core/resource/dashboard/overview/components/metrics'
-import {ResourceDashboardInfo} from '#/main/core/resource/dashboard/overview/components/info'
-import {trans, transChoice} from '#/main/app/intl/translation'
-import {selectors as LessonSelectors} from '#/plugin/lesson/resources/lesson/store'
+import {ResourceDashboardOverview} from '#/main/core/resource/dashboard/overview/components/main'
+import {transChoice} from '#/main/app/intl/translation'
+import {selectors as lessonSelectors} from '#/plugin/lesson/resources/lesson/store'
 const LessonDashboardOverview = () => {
-  const pages = useSelector(LessonSelectors.pages)
-  const lesson = useSelector(LessonSelectors.lesson)
+  const pages = useSelector(lessonSelectors.pages)
+  const lesson = useSelector(lessonSelectors.lesson)
 
   return (
-    <PageContent>
-      <PageHeading title={trans('overview')} className="visually-hidden" level={2} />
-      <PageSection className="my-4" size="lg" title={trans('general')} level={3} showTitle={false} flush={true}>
-        <ResourceDashboardInfo />
-      </PageSection>
-
-      <PageSection size="full" className="mb-4">
-        <div className="border-top border-bottom" role="presentation">
-          <ResourceDashboardMetrics />
-        </div>
-      </PageSection>
-
+    <ResourceDashboardOverview>
       <PageSection size="xl" className="my-5">
         {pages.length === 0 ? (
           <div />
@@ -60,7 +48,6 @@ const LessonDashboardOverview = () => {
                         'apiv2_chapter_activity',
                         {lessonId: lesson.id, id: page.id, activityType: activityType}
                       ]}
-                      logUrl={['apiv2_chapter_functional_logs', {lessonId: lesson.id, id: page.id}]}
                       viewUrl={['apiv2_chapter_views', {lessonId: lesson.id, id: page.id}]}
                     />
                   </Accordion.Body>
@@ -70,7 +57,8 @@ const LessonDashboardOverview = () => {
           </Accordion>
         )}
       </PageSection>
-    </PageContent>
+    </ResourceDashboardOverview>
+
   )
 }
 

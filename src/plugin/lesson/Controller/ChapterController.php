@@ -260,26 +260,7 @@ class ChapterController
         return $viewers->toResponse();
     }
 
-    #[Route(path: '/{id}/logs', name: 'apiv2_chapter_functional_logs', methods: ['GET'])]
-    public function functionalLogsAction(
-        #[MapEntity(mapping: ['id' => 'uuid'])]
-        Chapter $chapter,
-        #[MapEntity(mapping: ['lessonId' => 'uuid'])]
-        Lesson $lesson,
-        #[MapQueryString]
-        ?FinderRequest $finderRequest = new FinderRequest()
-    ): StreamedJsonResponse {
-        $this->checkPermission('FOLLOW', $lesson->getResourceNode(), [], true);
-
-        $finderRequest->addFilter('objectClass', Chapter::class);
-        $finderRequest->addFilter('objectId', $chapter->getUuid());
-
-        $logs = $this->crud->search(FunctionalLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
-
-        return $logs->toResponse();
-    }
-
-    #[Route(path: '/{id}/activity/{activityType<(views|visitors|actions)>}', name: 'apiv2_chapter_activity', methods: ['GET'])]
+    #[Route(path: '/{id}/activity/{activityType<(views|visitors)>}', name: 'apiv2_chapter_activity', methods: ['GET'])]
     public function activityAction(
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Chapter $chapter,
@@ -300,14 +281,6 @@ class ChapterController
             case 'visitors':
                 $activity = $this->om->getRepository(ChapterView::class)->findVisitorsForPeriod(
                     $chapter,
-                    $this->tokenStorage->getToken()->getUser()->getMainOrganization()
-                );
-                break;
-
-            case 'actions':
-                $activity = $this->om->getRepository(FunctionalLog::class)->findActionsForPeriod(
-                    Chapter::class,
-                    $chapter->getUuid(),
                     $this->tokenStorage->getToken()->getUser()->getMainOrganization()
                 );
                 break;
