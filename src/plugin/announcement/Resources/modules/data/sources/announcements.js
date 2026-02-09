@@ -33,7 +33,7 @@ export default declareDataSource(() => ({
       options: {time: true}
     }, {
       name: 'meta.creator',
-      type: 'string',
+      type: 'user',
       label: trans('creator'),
       displayed: true
     }, {
@@ -42,14 +42,6 @@ export default declareDataSource(() => ({
       label: trans('workspace'),
       displayed: true,
       filterable: false,
-      sortable: false
-    }, {
-      name: 'notDoneYet',
-      type: 'boolean',
-      label: trans('after_today'),
-      displayed: false,
-      displayable: false,
-      filterable: true,
       sortable: false
     }
   ],

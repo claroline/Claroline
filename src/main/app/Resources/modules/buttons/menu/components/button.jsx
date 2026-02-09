@@ -12,12 +12,13 @@ import {MenuAction}  from '#/main/app/buttons/menu/components/menu-action'
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
+import {createActionDefinition} from '#/main/app/action/utils'
 
 const StandardMenu = (props) => {
   const actions = useMemo(() => {
     const displayedActions = props.menu.items.filter(
       action => undefined === action.displayed || action.displayed
-    )
+    ).map(createActionDefinition)
 
     // filters and groups actions
     const primaryActions      = displayedActions.filter(action => action.primary && !action.dangerous)

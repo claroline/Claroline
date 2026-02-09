@@ -21,6 +21,7 @@ const ShortcutPlayer = () => {
 
       {embeddedResource &&
         <ResourceEmbedded
+          className="overflow-auto px-4 pt-5"
           resourceNode={embeddedResource}
           showHeader={false}
         />

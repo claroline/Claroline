@@ -50,8 +50,14 @@ export default () => ({
       name: 'meta.resource.tags',
       alias: 'resourceNode.tags',
       type: 'tag',
-      label: trans('tags'),
+      label: trans('resource_tags', {}, 'resource'),
       displayable: false,
+      sortable: false
+    }, {
+      name: 'subject.tags',
+      type: 'tag',
+      label: trans('tags'),
+      displayable: true,
       sortable: false
     }
   ],

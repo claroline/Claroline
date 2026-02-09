@@ -1,18 +1,19 @@
 import React, {createElement} from 'react'
+import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import isEmpty from 'lodash/isEmpty'
 import {DataMicro} from '#/main/app/data/components/micro'
 
-const PickerButton = props =>
+const EntityPickerButton = props =>
   <Button
     className={props.className}
     type={MODAL_BUTTON}
-    icon={props.icon}
+    icon="fa fa-plus"
     label={props.label}
     modal={[props.type, Object.assign({}, props.picker, {
       subtitle: props.help,
@@ -42,7 +43,7 @@ const PickerButton = props =>
     disabled={props.disabled}
   />
 
-PickerButton.propTypes = {
+EntityPickerButton.propTypes = {
   className: T.string,
   type: T.string.isRequired,
   picker: T.shape({
@@ -57,7 +58,6 @@ PickerButton.propTypes = {
     T.arrayOf(T.object) // multiple = true
   ]),
   label: T.string.isRequired,
-  icon: T.string,
   help: T.string,
   onChange: T.func.isRequired,
   size: T.string,
@@ -65,13 +65,51 @@ PickerButton.propTypes = {
   multiple: T.bool
 }
 
+const EntityItem = ({entity, card, openAction, remove, disabled}) => {
+  return (
+    <>
+      {createElement(card, {
+        object: entity,
+        className: 'fw-normal'
+      })}
+
+      {openAction &&
+        <Button
+          className="btn btn-link ms-auto me-n3"
+          size="sm"
+          label={trans('open', {}, 'actions')}
+          {...openAction(entity)}
+        />
+      }
+
+      <Button
+        className={classes('btn btn-link me-n2', {'ms-auto': !openAction})}
+        size="sm"
+        {...{
+          type: CALLBACK_BUTTON,
+          label: trans('remove', {}, 'actions'),
+          disabled: disabled,
+          callback: remove
+        }}
+      />
+    </>
+  )
+}
+
+EntityItem.propTypes = {
+  entity: T.object.isRequired,
+  card: T.any.isRequired,
+  openAction: T.func,
+  remove: T.func.isRequired,
+  disabled: T.bool
+}
+
 const EntityInput = (props) => {
   if (isEmpty(props.value)) {
     return (
       <div className="py-1" role="presentation">
-        <PickerButton
+        <EntityPickerButton
           className="btn-add btn btn-link text-start ms-n2 px-2"
-          icon="fa fa-plus"
           label={props.add}
           title={props.label}
           picker={props.picker}
@@ -92,27 +130,18 @@ const EntityInput = (props) => {
       <ul className="list-group list-group-flush mb-0 border-top border-bottom">
         {props.value.map(object => (
           <li key={object.id} className="list-group-item d-flex align-items-center gap-3 px-0">
-            {createElement(props.card, {
-              object: object,
-              className: 'fw-normal'
-            })}
+            <EntityItem
+              entity={object}
+              card={props.card}
+              openAction={props.openAction}
+              disabled={props.disabled}
+              remove={() => {
+                const newValue = [].concat(props.value || [])
+                const index = newValue.findIndex(o => o.id === object.id)
 
-            <Button
-              className="btn btn-link ms-auto me-n2"
-              size="sm"
-              {...{
-                name: 'remove',
-                type: CALLBACK_BUTTON,
-                label: trans('remove', {}, 'actions'),
-                disabled: props.disabled,
-                callback: () => {
-                  const newValue = [].concat(props.value || [])
-                  const index = newValue.findIndex(o => o.id === object.id)
-
-                  if (-1 < index) {
-                    newValue.splice(index, 1)
-                    props.onChange(newValue)
-                  }
+                if (-1 < index) {
+                  newValue.splice(index, 1)
+                  props.onChange(newValue)
                 }
               }}
             />
@@ -120,9 +149,8 @@ const EntityInput = (props) => {
         ))}
 
         <li className="list-group-item py-1 px-0">
-          <PickerButton
+          <EntityPickerButton
             className="btn-add btn btn-link text-start ms-n2 px-2"
-            icon="fa fa-plus"
             label={props.add}
             title={props.label}
             picker={props.picker}
@@ -141,20 +169,12 @@ const EntityInput = (props) => {
 
   return (
     <div className="d-flex align-items-center gap-3 border-top border-bottom" role="presentation" style={{padding: '.75rem 0'}}>
-      {createElement(props.card, {
-        object: props.value,
-        className: 'fw-normal'
-      })}
-
-      <Button
-        className="btn btn-link ms-auto me-n2"
-        size="sm"
-        {...{
-          type: CALLBACK_BUTTON,
-          label: trans('remove', {}, 'actions'),
-          disabled: props.disabled,
-          callback: () => props.onChange(null)
-        }}
+      <EntityItem
+        entity={props.value}
+        card={props.card}
+        openAction={props.openAction}
+        disabled={props.disabled}
+        remove={() => props.onChange(null)}
       />
     </div>
   )
@@ -182,8 +202,11 @@ implementPropTypes(EntityInput, DataInputTypes, {
     }))
   }),
 
+  /**
+   * A function which returns an Action definition. It takes in parameter the entity.
+   */
+  openAction: T.func,
   card: T.any,
-  icon: T.string,
   add: T.string,
   multiple: T.bool
 }, {

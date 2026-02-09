@@ -16,12 +16,23 @@ const Button = {
      *
      * @type {object}
      */
-    confirm: T.shape({
-      icon: T.string,
-      title: T.string,
-      message: T.string,
-      button: T.string
-    })
+    confirm: T.oneOfType([
+      // display a generic confirmation message
+      T.bool,
+      // display a custom confirmation message
+      T.string,
+      // full configuration of the confirmation modale
+      T.shape({
+        additional: T.string,
+        message: T.string,
+        button: T.string,
+        items: T.arrayOf(T.shape({
+          id: T.string.isRequired,
+          name: T.string.isRequired,
+          thumbnail: T.string
+        }))
+      })
+    ])
   },
   defaultProps: {
     disabled: false

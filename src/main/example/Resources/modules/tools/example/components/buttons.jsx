@@ -151,7 +151,7 @@ const ExampleButtons = () =>
             }, {
               name: 'other-1',
               type: CALLBACK_BUTTON,
-              icon: 'fa fa-fw fa-bomb',
+              // icon: 'fa fa-fw fa-bomb',
               label: 'Other action 1',
               callback: () => true,
               group: 'Group 1'
@@ -161,14 +161,24 @@ const ExampleButtons = () =>
               icon: 'fa fa-fw fa-bomb',
               label: 'Other action 2',
               callback: () => true,
-              group: 'Group 1'
+              group: 'Group 1',
+              subscript: {
+                type: 'label',
+                status: 'primary',
+                value: 'status'
+              }
             }, {
               name: 'other-3',
               type: CALLBACK_BUTTON,
               icon: 'fa fa-fw fa-bomb',
               label: 'Other action 3',
               callback: () => true,
-              group: 'Group 2'
+              group: 'Group 2',
+              subscript: {
+                type: 'text',
+                status: 'danger',
+                value: <span className="fa fa-fw fa-exclamation-circle" role="alert" />
+              }
             }, {
               name: 'disabled',
               type: CALLBACK_BUTTON,

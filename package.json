@@ -58,7 +58,7 @@
     "uuid": "^9.0.0",
     "video.js": "^8.21",
     "wavesurfer.js": "2.2.1",
-    "webpack": "^5.75",
+    "webpack": "^5.105",
     "webpack-cli": "^6.0"
   },
   "files": [

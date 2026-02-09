@@ -139,7 +139,17 @@ const Chapter = props => {
             group: trans('management'),
             confirm: {
               message: trans('page_delete_message', {}, 'lesson'),
-              additional: trans('irreversible_action_confirm')
+              additional: trans('irreversible_action_confirm'),
+              items: pages
+                .filter(page =>
+                  page.id === props.chapter.id ||
+                  get(page, 'parentSlug') === props.chapter.slug
+                )
+                .map(page => ({
+                  thumbnail: page.poster,
+                  id: page.id,
+                  name: page.title
+                }))
             },
             displayed: canEdit
           }

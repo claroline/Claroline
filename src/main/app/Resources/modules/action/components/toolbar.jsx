@@ -12,7 +12,7 @@ import {
   Toolbar as ToolbarTypes
 } from '#/main/app/action/prop-types'
 
-import {buildToolbar} from '#/main/app/action/utils'
+import {buildToolbar} from '#/main/app/action/toolbar'
 
 /**
  * Creates a toolbar of actions.

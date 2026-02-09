@@ -12,10 +12,9 @@ import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {trans} from '#/main/app/intl'
 
 /**
- * Async button.
- * Renders a component that will trigger an async call on click.
+ * @deprecated
  */
-const AsyncButton = forwardRef((props, ref) => {
+const AsyncButtonOld = forwardRef((props, ref) => {
   const dispatch = useDispatch()
 
   const [loading, setLoading] = useState(false)
@@ -64,13 +63,86 @@ const AsyncButton = forwardRef((props, ref) => {
 })
 
 // for debug purpose, otherwise component is named after the HOC
+AsyncButtonOld.displayName = 'AsyncButton'
+
+/**
+ * Async button.
+ * Renders a component that will trigger an async call on click.
+ */
+const AsyncButton = forwardRef((props, ref) => {
+  const [loading, setLoading] = useState(false)
+
+  if (props.request) {
+    // for retro-compatibility. Use <RequestButton /> instead
+    return <AsyncButtonOld {...props} loader={!!props.loader} ref={ref} />
+  }
+
+  let loaderComponent
+  if (props.loader) {
+    if (typeof props.loader === 'boolean') {
+      // we just display the generic loader
+      loaderComponent = (
+        <>
+          <div className="position-absolute top-50 start-50 translate-middle" role="presentation">
+            <div className="dot-elastic" aria-hidden={true} />
+            <span className="visually-hidden">{trans('loading')}</span>
+          </div>
+          <span style={{visibility: 'hidden'}} aria-hidden={true}>
+            {props.children}
+          </span>
+        </>
+      )
+    } else {
+      // we received a custom loader component
+      loaderComponent = props.loader
+    }
+  }
+
+  return (
+    <CallbackButton
+      {...omit(props, 'request', 'async', 'loader', 'onClick')}
+      className={classes(props.className, 'position-relative')}
+      ref={ref}
+      callback={(e) => {
+        if (loading) {
+          return false
+        }
+
+        setLoading(true)
+
+        return props.async().then(
+          // success
+          () => {
+            setLoading(false)
+            if (props.onClick) {
+              props.onClick(e)
+            }
+          },
+          // error
+          () => setLoading(false)
+        )
+      }}
+    >
+      {loading && loaderComponent ?
+        loaderComponent :
+        props.children
+      }
+    </CallbackButton>
+  )
+})
+
+// for debug purpose, otherwise component is named after the HOC
 AsyncButton.displayName = 'AsyncButton'
 
 implementPropTypes(AsyncButton, ButtonTypes, {
   loader: T.bool,
+  /**
+   * @deprecated use <RequestButton /> instead
+   */
   request: T.shape(
     ApiRequestTypes.propTypes
-  ).isRequired
+  ),
+  async: T.func.isRequired
 }, {
   loader: true
 })

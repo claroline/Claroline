@@ -49,23 +49,25 @@ class TagSubscriber implements EventSubscriberInterface
         if ($finder->getType() instanceof TagType && !empty($finder->getFilterValue())) {
             $tags = is_string($finder->getFilterValue()) ? [$finder->getFilterValue()] : $finder->getFilterValue();
 
+            $alias = $finder->getAlias();
+
             // generate query for tags filter
             $tagQueryBuilder = $this->om->createQueryBuilder();
             $tagQueryBuilder
-                ->select('to.id')
-                ->from(TaggedObject::class, 'to')
-                ->innerJoin('to.tag', 't')
-                ->andWhere("to.objectId = {$finder->getParent()->getAlias()}.uuid") // this makes the UUID required on tagged objects
-                ->andWhere('(t.uuid IN (:tagIds) OR t.name IN (:tagNames))')
-                ->groupBy('to.objectId')
-                ->having('COUNT(to.id) = :expectedCount'); // this permits making a AND between tags
+                ->select("{$alias}to.id")
+                ->from(TaggedObject::class, "{$alias}to")
+                ->innerJoin("{$alias}to.tag", "{$alias}t")
+                ->andWhere("{$alias}to.objectId = {$finder->getParent()->getAlias()}.uuid") // this makes the UUID required on tagged objects
+                ->andWhere("({$alias}t.uuid IN (:{$alias}TagIds) OR {$alias}t.name IN (:{$alias}TagNames))")
+                ->groupBy("{$alias}to.objectId")
+                ->having("COUNT({$alias}to.id) = :{$alias}ExpectedCount"); // this permits making a AND between tags
 
             // append subquery to the original one
             $queryBuilder = $event->getQueryBuilder();
             $queryBuilder->andWhere($queryBuilder->expr()->exists($tagQueryBuilder->getDql()))
-                ->setParameter('tagIds', $tags)
-                ->setParameter('tagNames', $tags)
-                ->setParameter('expectedCount', count($tags));
+                ->setParameter($alias.'TagIds', $tags)
+                ->setParameter($alias.'TagNames', $tags)
+                ->setParameter($alias.'ExpectedCount', count($tags));
         }
     }
 
