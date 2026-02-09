@@ -182,6 +182,10 @@ class RightsManager
                 $this->rightsRepo->findMaximumRights($roleNames, $resourceNode),
                 $resourceNode->getResourceType()
             );
+
+            if ($resourceNode->isPublic()) {
+                $perms['open'] = true;
+            }
         }
 
         return array_merge($perms, ['create' => $creatable]);
