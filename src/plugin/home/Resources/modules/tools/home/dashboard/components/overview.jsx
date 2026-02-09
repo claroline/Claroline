@@ -48,7 +48,6 @@ const HomeDashboardOverview = () => {
                         'apiv2_home_tab_activity',
                         {id: tab.id, activityType: activityType}
                       ]}
-                      logUrl={['apiv2_home_tab_functional_logs', {id: tab.id}]}
                       viewUrl={['apiv2_home_tab_views', {id: tab.id}]}
                     />
                   </Accordion.Body>

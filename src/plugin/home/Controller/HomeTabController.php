@@ -15,7 +15,6 @@ use Claroline\HomeBundle\Entity\HomeTab;
 use Claroline\HomeBundle\Entity\HomeTabView;
 use Claroline\HomeBundle\Finder\HomeTabViewType;
 use Claroline\HomeBundle\Manager\HomeManager;
-use Claroline\LogBundle\Entity\FunctionalLog;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -112,24 +111,7 @@ class HomeTabController
         ]);
     }
 
-    #[Route(path: '/{id}/logs', name: 'functional_logs', methods: ['GET'])]
-    public function functionalLogsAction(
-        #[MapEntity(mapping: ['id' => 'uuid'])]
-        HomeTab $homeTab,
-        #[MapQueryString]
-        ?FinderRequest $finderRequest = new FinderRequest()
-    ): StreamedJsonResponse {
-        $this->checkPermission('FOLLOW', $homeTab, [], true);
-
-        $finderRequest->addFilter('objectClass', HomeTab::class);
-        $finderRequest->addFilter('objectId', $homeTab->getUuid());
-
-        $logs = $this->crud->search(FunctionalLog::class, $finderRequest, [SerializerInterface::SERIALIZE_LIST]);
-
-        return $logs->toResponse();
-    }
-
-    #[Route(path: '/{id}/activity/{activityType<(views|visitors|actions)>}', name: 'activity', methods: ['GET'])]
+    #[Route(path: '/{id}/activity/{activityType<(views|visitors)>}', name: 'activity', methods: ['GET'])]
     public function activityAction(
         #[MapEntity(mapping: ['id' => 'uuid'])]
         HomeTab $homeTab,
@@ -148,14 +130,6 @@ class HomeTabController
             case 'visitors':
                 $activity = $this->om->getRepository(HomeTabView::class)->findVisitorsForPeriod(
                     $homeTab,
-                    $this->tokenStorage->getToken()->getUser()->getMainOrganization()
-                );
-                break;
-
-            case 'actions':
-                $activity = $this->om->getRepository(FunctionalLog::class)->findActionsForPeriod(
-                    HomeTab::class,
-                    $homeTab->getUuid(),
                     $this->tokenStorage->getToken()->getUser()->getMainOrganization()
                 );
                 break;
