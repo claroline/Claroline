@@ -121,6 +121,7 @@ class PasswordInput extends PureComponent {
             onChange={this.onChange}
             placeholder={this.props.placeholder}
             autoComplete={this.props.autoComplete}
+            autoFocus={this.props.autoFocus}
           />
 
           <Button

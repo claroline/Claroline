@@ -5,6 +5,7 @@ import {url} from '#/main/app/api/router'
 import {makeCancelable} from '#/main/app/api/fetch/makeCancelable'
 import {useReducer} from '#/main/app/store/reducer'
 
+import {constants} from '#/main/app/api/fetch/constants'
 import {makeFetchReducer} from '#/main/app/api/fetch/store/reducer'
 import {actions} from '#/main/app/api/fetch/store/actions'
 import {selectors} from '#/main/app/api/fetch/store/selectors'
@@ -25,7 +26,7 @@ function useFetch(storeName, apiEndpoint, options = {autoload: true}) {
 
   useEffect(() => {
     let fetchPromise
-    if (apiUrl && options.autoload) {
+    if (constants.STATUS_IDLE === status && apiUrl && options.autoload) {
       fetchPromise = makeCancelable(dispatch(actions.fetch(storeName, apiUrl)))
 
       fetchPromise.promise.then(
@@ -39,7 +40,7 @@ function useFetch(storeName, apiEndpoint, options = {autoload: true}) {
         fetchPromise.cancel()
       }
     }
-  }, [storeName, apiUrl, options.autoload])
+  }, [storeName, apiUrl, status, options.autoload])
 
   return [data, status, error, errorCode]
 }

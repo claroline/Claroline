@@ -49,11 +49,6 @@ final class PublicContext extends ContextComponent
         return 'tool' === $this->config->getParameter('home.type');
     }
 
-    public function getAccessErrors(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
-    {
-        return [];
-    }
-
     public function isImpersonated(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
     {
         return $this->securityManager->isImpersonated();

@@ -17,10 +17,7 @@ export const CONTEXT_LOAD = 'CONTEXT_LOAD'
  */
 export const CONTEXT_SET_LOADED = 'CONTEXT_SET_LOADED'
 
-/**
- * Action dispatched when the requested context cannot be found.
- */
-export const CONTEXT_NOT_FOUND = 'CONTEXT_NOT_FOUND'
+export const CONTEXT_SET_ERROR = 'CONTEXT_SET_ERROR'
 
 /**
  * Action dispatched when the user chooses to open/close the context menu.
@@ -34,7 +31,7 @@ actions.toggleMenuOpen = makeActionCreator(CONTEXT_MENU_TOGGLE_OPEN)
 
 actions.load = makeActionCreator(CONTEXT_LOAD, 'contextData')
 actions.setLoaded = makeActionCreator(CONTEXT_SET_LOADED, 'loaded')
-actions.setNotFound = makeActionCreator(CONTEXT_NOT_FOUND)
+actions.setError = makeActionCreator(CONTEXT_SET_ERROR, 'code', 'message', 'additional')
 actions.reload = () => actions.setLoaded(false)
 actions.open = (contextType, contextId = null) => ({
   type: CONTEXT_OPEN,
@@ -48,12 +45,14 @@ actions.fetch = (contextType, contextId = null) => (dispatch) => dispatch({
     url: contextId ?
       ['claro_context_open', {context: contextType, contextId: contextId}] :
       ['claro_context_open', {context: contextType}],
-    // before: () => dispatch(actions.open(contextType, contextId)),
     success: (response) => dispatch(actions.load(response)),
     error: (response, status) => {
       switch (status) {
         case 404:
-          dispatch(actions.setNotFound())
+          dispatch(actions.setError('NOT_FOUND', 'Context not found.', null))
+          break
+        case 500:
+          dispatch(actions.setError('UNKNOWN_ERROR', response.message, response.trace))
           break
         case 401:
         case 403:

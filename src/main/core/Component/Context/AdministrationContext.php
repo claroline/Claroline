@@ -50,11 +50,6 @@ final class AdministrationContext extends ContextComponent
         return $this->securityManager->isAdmin();
     }
 
-    public function getAccessErrors(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
-    {
-        return [];
-    }
-
     public function isImpersonated(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
     {
         return $this->securityManager->isImpersonated();

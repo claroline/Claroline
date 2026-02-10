@@ -180,20 +180,17 @@ const Chapter = props => {
                 user={get(props.chapter, 'meta.creator', {})}
                 publishedAt={get(props.chapter, 'meta.updatedAt')}
               />
-              <div className="w-50 text-end">
-                <ModalButton
-                  className="btn btn-link ms-auto mt-auto me-n3 mb-n2"
-                  modal={[
-                    MODAL_VIEWERS, {
-                      url: ['apiv2_chapter_views', {lessonId: lesson.id, id: props.chapter.id}]
-                    }
-                  ]}
-                ><Badge variant="secondary" subtle={true}>
-                    <span className="fa fa-eye me-2"/>
-                    {transChoice('display_views', get(props.chapter, 'meta.views', 0), {count: get(props.chapter, 'meta.views', 0)})}
-                  </Badge>
-                </ModalButton>
-              </div>
+              <ModalButton
+                className="ms-auto btn btn-link p-0 border-0"
+                modal={[MODAL_VIEWERS, {
+                  url: ['apiv2_chapter_views', {lessonId: lesson.id, id: props.chapter.id}]
+                }]}
+              >
+                <Badge variant="secondary" subtle={true} className="lh-base">
+                  <span className="fa fa-eye me-2" aria-hidden={true} />
+                  {transChoice('display_views', get(props.chapter, 'meta.views', 0), {count: get(props.chapter, 'meta.views', 0)})}
+                </Badge>
+              </ModalButton>
             </>:
             undefined
           }

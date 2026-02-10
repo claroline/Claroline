@@ -6,8 +6,7 @@ import {
   RESOURCE_LOAD,
   RESOURCE_SET_LOADED,
   RESOURCE_EVALUATION_UPDATE,
-  RESOURCE_RESTRICTIONS_DISMISS,
-  RESOURCE_NOT_FOUND
+  RESOURCE_SET_ERROR
 } from '#/main/core/resource/store/actions'
 
 const reducer = combineReducers({
@@ -19,11 +18,7 @@ const reducer = combineReducers({
     [RESOURCE_OPEN]: () => false,
     [RESOURCE_SET_LOADED]: (state, action) => action.loaded,
     [RESOURCE_LOAD]: () => true,
-    [RESOURCE_NOT_FOUND]: () => true
-  }),
-  notFound: makeReducer(false, {
-    [RESOURCE_OPEN]: () => false,
-    [RESOURCE_NOT_FOUND]: () => true
+    [RESOURCE_SET_ERROR]: () => true
   }),
 
   embedded: makeReducer(false, {
@@ -57,13 +52,12 @@ const reducer = combineReducers({
 
   lifecycle: makeReducer({}),
 
-  accessErrors: combineReducers({
-    dismissed: makeReducer(false, {
-      [RESOURCE_RESTRICTIONS_DISMISS]: () => true,
-      [RESOURCE_LOAD]: () => false
-    }),
-    details: makeReducer({}, {
-      [RESOURCE_LOAD]: (state, action) => action.resourceData.accessErrors || {}
+  error: makeReducer(null, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.error || null,
+    [RESOURCE_SET_ERROR]: (state, action) => ({
+      code: action.code.toUpperCase(),
+      message: action.message,
+      additional: action.additional
     })
   })
 })

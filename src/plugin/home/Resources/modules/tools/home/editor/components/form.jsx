@@ -133,7 +133,10 @@ const TabForm = (props) => {
                     label: trans('access_code'),
                     displayed: restrictedByCode,
                     type: 'password',
-                    required: true
+                    required: true,
+                    options: {
+                      disablePasswordCheck: true
+                    }
                   }
                 ]
               }, {

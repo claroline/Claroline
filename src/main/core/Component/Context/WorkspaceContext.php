@@ -66,12 +66,12 @@ final class WorkspaceContext extends ContextComponent
         return $this->authorization->isGranted($permission, $contextSubject);
     }
 
-    public function getAccessErrors(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
+    public function getAccessError(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): ?array
     {
         /** @var Workspace $workspace */
         $workspace = $contextSubject;
 
-        return $this->restrictionsManager->getErrors($workspace, $token && $token->getUser() instanceof User ? $token->getUser() : null);
+        return $this->restrictionsManager->getError($workspace, $token && $token->getUser() instanceof User ? $token->getUser() : null);
     }
 
     public function isImpersonated(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool

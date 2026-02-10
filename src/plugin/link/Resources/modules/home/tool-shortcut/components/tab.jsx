@@ -31,10 +31,7 @@ const ToolShortcutTab = props => {
 
   // this is just to avoid a blank page in case of something goes wrong in the redirect
   return (
-    <HomePage
-      currentTab={props.currentTab}
-      title={props.title}
-    />
+    <HomePage />
   )
 }
 

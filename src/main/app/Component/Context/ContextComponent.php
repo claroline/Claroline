@@ -2,6 +2,8 @@
 
 namespace Claroline\AppBundle\Component\Context;
 
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+
 abstract class ContextComponent implements ContextInterface
 {
     /**
@@ -10,6 +12,11 @@ abstract class ContextComponent implements ContextInterface
     public function getObject(?string $contextId): ?ContextSubjectInterface
     {
         return $this->getSubject($contextId);
+    }
+
+    public function getAccessError(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): ?array
+    {
+        return null;
     }
 
     public function getAdditionalData(?ContextSubjectInterface $contextSubject): array

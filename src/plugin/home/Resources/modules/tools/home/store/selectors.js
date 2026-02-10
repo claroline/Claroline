@@ -1,5 +1,4 @@
 import {createSelector} from 'reselect'
-import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 
@@ -55,20 +54,15 @@ const currentTabTitle = createSelector(
   (context, currentTab) => getTabTitle(context, currentTab)
 )
 
-const managed = createSelector(
-  [store],
-  (store) => store.managed
-)
-
 const loaded = createSelector(
   [store],
   (store) => store.loaded
 )
 
 // access restrictions selectors
-const accessErrors = createSelector(
+const error = createSelector(
   [store],
-  (store) => !store.accessErrors.dismissed && !isEmpty(store.accessErrors.details) ? store.accessErrors.details : {}
+  (store) => store.error
 )
 
 export const selectors = {
@@ -80,7 +74,6 @@ export const selectors = {
   tabs,
   currentTab,
   currentTabTitle,
-  managed,
   loaded,
-  accessErrors
+  error
 }

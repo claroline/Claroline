@@ -14,11 +14,7 @@ const WidgetsTab = props => {
     .filter(widget => widget.visible === true)
 
   return (
-    <HomePage
-      root={props.root}
-      currentTab={props.currentTab}
-      title={props.title}
-    >
+    <HomePage>
       {0 === visibleWidgets.length &&
         <ContentPlaceholder
           className="my-3 flex-fill"
@@ -44,9 +40,7 @@ const WidgetsTab = props => {
 }
 
 WidgetsTab.propTypes = {
-  root: T.bool,
   currentContext: T.object,
-  title: T.string.isRequired,
   currentTab: T.shape(
     TabTypes.propTypes
   )

@@ -17,7 +17,7 @@ const ContentSkeleton = ({meta, tags, length = 3}) =>
     }
 
     {[4, 5, 3].slice(0, length).map((i) =>
-      <TextSkeleton key={i} className="content-text mb-0" rows={i} />
+      <TextSkeleton key={i} className={classes('content-text', {'mb-0': i === length - 1})} rows={i} />
     )}
 
     {tags &&

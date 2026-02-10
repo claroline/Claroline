@@ -166,7 +166,6 @@ const ContextMenu = () => {
   const dispatch = useDispatch()
 
   const contextPath = useSelector(selectors.path)
-  const notFound = useSelector(selectors.notFound)
   const hasErrors = useSelector(selectors.hasErrors)
 
   const menuId = useId()
@@ -187,7 +186,7 @@ const ContextMenu = () => {
         label={trans(menuOpened ? 'close_context_menu': 'show_context_menu', {}, 'actions')}
         tooltip="bottom"
         onToggle={toggleMenu}
-        disabled={notFound || hasErrors}
+        disabled={hasErrors}
         opened={menuOpened}
         aria-controls={menuId}
         menu={

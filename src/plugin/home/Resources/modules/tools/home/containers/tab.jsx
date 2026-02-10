@@ -11,21 +11,13 @@ const HomeTab = connect(
     currentContext: toolSelectors.context(state),
 
     loaded: selectors.loaded(state),
-    accessErrors: selectors.accessErrors(state),
-    managed: selectors.managed(state),
-    currentTab: selectors.currentTab(state),
-    currentTabTitle: selectors.currentTabTitle(state)
+    error: selectors.error(state),
+    currentTab: selectors.currentTab(state)
   }),
   (dispatch) => ({
     open(tab) {
       dispatch(actions.fetchTab(tab))
       dispatch(actions.updateView(tab))
-    },
-    dismissRestrictions() {
-      dispatch(actions.dismissRestrictions())
-    },
-    checkAccessCode(tab, code) {
-      dispatch(actions.checkAccessCode(tab, code))
     }
   })
 )(HomeTabComponent)

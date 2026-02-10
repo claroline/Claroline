@@ -39,5 +39,6 @@
   "export_sequence_evaluations_help": "Téléchargez les résultats obtenues par les participants de la séquence au format CSV.",
   "export_workspace_evaluations_help": "Téléchargez les résultats obtenues par les participants de l'espace au format CSV.",
   "archive_evaluation_confirm": "{1} Êtes-vous sûr(e) de vouloir archiver l'évaluation de cet utilisateur ? | ]1,Inf[ Êtes-vous sûr(e) de vouloir archiver l'évaluation de ces %count% utilisateurs ?",
-  "archive_evaluation_confirm_additional": "Les évaluations des utilisateurs sélectionnées seront archivées pour leur permettre de refaire les activités de l'espace et obtenir de nouveaux résultats. <br/>Attention, cette action est irréversible."
+  "archive_evaluation_confirm_additional": "Les évaluations des utilisateurs sélectionnées seront archivées pour leur permettre de refaire les activités de l'espace et obtenir de nouveaux résultats. <br/>Attention, cette action est irréversible.",
+  "browse-sequences": "Parcourir les séquences"
 }

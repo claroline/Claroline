@@ -11,33 +11,24 @@
 
 namespace Claroline\CoreBundle\Event\Workspace;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-
 /**
- * Event dispatched when a workspace is opened but the user can not access it.
+ * Event dispatched when a workspace is opened but the user cannot access it.
  */
 class AccessRestrictedWorkspaceEvent extends AbstractWorkspaceEvent
 {
-    private array $errors;
+    private ?array $error = null;
 
-    public function __construct(Workspace $workspace, ?array $errors = [])
+    public function getError(): ?array
     {
-        parent::__construct($workspace);
-
-        $this->errors = $errors;
+        return $this->error;
     }
 
-    public function getErrors(): array
+    public function addError(string $code, string $message, ?array $additional = []): void
     {
-        return $this->errors;
-    }
-
-    public function addError(string $errorKey, $errorData): void
-    {
-        if (array_key_exists($errorKey, $this->errors)) {
-            throw new \LogicException(sprintf('Access restrictions already contains a key %s. You can not override it. Please use a different $errorKey for your error', $errorKey));
-        }
-
-        $this->errors[$errorKey] = $errorData;
+        $this->error = [
+            'code' => $code,
+            'message' => $message,
+            'additional' => $additional,
+        ];
     }
 }

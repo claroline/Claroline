@@ -1,3 +1,5 @@
+import omit from 'lodash/omit'
+
 import {makeInstanceActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 
@@ -26,7 +28,7 @@ actions.invalidate = makeInstanceActionCreator(API_FETCH_INVALIDATE)
  */
 actions.request = makeInstanceActionCreator(API_FETCH_PENDING)
 
-actions.fail = makeInstanceActionCreator(API_FETCH_FAILED, 'error', 'errorCode')
+actions.fail = makeInstanceActionCreator(API_FETCH_FAILED, 'error', 'errorCode', 'data')
 
 /**
  * Calls API.
@@ -40,6 +42,13 @@ actions.fetch = (name, url, silent = false) => (dispatch) => dispatch({
     },
     before: () => dispatch(actions.request(name)),
     success: (response) => dispatch(actions.load(name, response)),
-    error: (response, errorStatus) => dispatch(actions.fail(name, response, errorStatus))
+    error: (response, errorStatus) => {
+      if (typeof response === 'object' && response.error) {
+        const data = response.data ? response.data : omit(response, 'error')
+        return dispatch(actions.fail(name, response.error, errorStatus, data))
+      }
+
+      return dispatch(actions.fail(name, response, errorStatus, null))
+    }
   }
 })

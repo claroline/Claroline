@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Security\PlatformRoles;
 use Claroline\EvaluationBundle\Entity\Sequence\Sequence;
 use Claroline\EvaluationBundle\Manager\SequenceEvaluationManager;
 use Claroline\EvaluationBundle\Manager\SequenceManager;
+use Claroline\EvaluationBundle\Manager\SequenceRestrictionsManager;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,6 +40,7 @@ class SequenceController extends AbstractCrudController
         private readonly TokenStorageInterface $tokenStorage,
         private readonly ToolManager $toolManager,
         private readonly SequenceManager $sequenceManager,
+        private readonly SequenceRestrictionsManager $restrictionsManager,
         private readonly SequenceEvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
@@ -102,26 +104,35 @@ class SequenceController extends AbstractCrudController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Sequence $sequence
     ): JsonResponse {
-        $this->checkPermission('OPEN', $sequence, [], true);
+        if ($this->authorization->isGranted('OPEN', $sequence)) {
+            $user = $this->tokenStorage->getToken()?->getUser();
 
-        $user = $this->tokenStorage->getToken()?->getUser();
+            $this->sequenceManager->addView($sequence, $user);
 
-        $this->sequenceManager->addView($sequence, $user);
+            $evaluation = null;
+            $progression = [];
+            if ($user instanceof User) {
+                $userEvaluation = $this->evaluationManager->getUserEvaluation($sequence, $user);
 
-        $evaluation = null;
-        $progression = [];
-        if ($user instanceof User) {
-            $userEvaluation = $this->evaluationManager->getUserEvaluation($sequence, $user);
+                $evaluation = $this->serializer->serialize($userEvaluation);
+                $progression = $this->evaluationManager->getUserProgression($userEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]);
+            }
 
-            $evaluation = $this->serializer->serialize($userEvaluation);
-            $progression = $this->evaluationManager->getUserProgression($userEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]);
+            return new JsonResponse([
+                'sequence' => $this->serializer->serialize($sequence),
+                'userEvaluation' => $evaluation,
+                'progression' => $progression,
+            ]);
         }
 
+        // return the details of access errors to display it to users
+        $userRoles = $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
+        $accessError = $this->restrictionsManager->getError($sequence, $userRoles);
+
         return new JsonResponse([
-            'sequence' => $this->serializer->serialize($sequence),
-            'userEvaluation' => $evaluation,
-            'progression' => $progression,
-        ]);
+            'sequence' => $this->serializer->serialize($sequence, [SerializerInterface::SERIALIZE_MINIMAL]),
+            'error' => $accessError,
+        ], 403);
     }
 
     #[Route(path: '/publish', name: 'publish', methods: ['PUT'])]
@@ -196,6 +207,20 @@ class SequenceController extends AbstractCrudController
                 $this->crud->copy($sequence, $options, ['workspace' => $workspace]);
             }
         }
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * Submit access code.
+     */
+    #[Route(path: '/unlock/{id}', name: 'unlock', methods: ['POST'])]
+    public function unlockAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Sequence $sequence,
+        Request $request
+    ): JsonResponse {
+        $this->restrictionsManager->unlock($sequence, json_decode($request->getContent(), true)['code']);
 
         return new JsonResponse(null, 204);
     }

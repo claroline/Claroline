@@ -6,17 +6,18 @@ import isEmpty from 'lodash/isEmpty'
 import {makeCancelable} from '#/main/app/api'
 import {Routes} from '#/main/app/router'
 import {trans} from '#/main/app/intl'
-import {ContentNotFound} from '#/main/app/content/components/not-found'
+import {ErrorBoundary} from '#/main/app/components/error-boundary'
+import {useLocaleStorage} from '#/main/app/storage'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {ContentForbidden} from '#/main/app/content/components/forbidden'
-import {ContextEditor} from '#/main/app/context/editor/containers/main'
-import {ContextProfile} from '#/main/app/context/profile/containers/main'
-import {getTool} from '#/main/core/tool/utils'
-import {useCtrlKeyPress} from '#/main/app/dom/key'
 import {actions as modalActions} from '#/main/app/overlays/modal'
+import {useCtrlKeyPress} from '#/main/app/dom/key'
+
+import {getTool} from '#/main/core/tool/utils'
 import {MODAL_COMMAND_PALETTE} from '#/main/app/context/modals/command-palette'
 import {ContextSidebar} from '#/main/app/context/components/sidebar'
-import {useLocaleStorage} from '#/main/app/storage'
+import {ContextError} from '#/main/app/context/components/error'
+import {ContextEditor} from '#/main/app/context/editor/containers/main'
+import {ContextProfile} from '#/main/app/context/profile/containers/main'
 
 const ContextMain = (props) => {
   const dispatch = useDispatch()
@@ -105,28 +106,14 @@ const ContextMain = (props) => {
   }, [props.loaded, props.tools.map(t => t.name).join('-')])
 
   if (props.loaded && toolApps.loaded) {
-    if (!isEmpty(props.accessErrors)) {
-      return props.forbiddenPage ?
-        createElement(props.forbiddenPage) :
-        <ContentForbidden
-          size="lg"
-          title={trans('access_forbidden')}
-          description={trans('access_forbidden_help')}
-        />
-    }
-
-    if (props.notFound) {
-      return props.notFoundPage ?
-        createElement(props.notFoundPage) :
-        <ContentNotFound
-          size="lg"
-          title={trans('not_found')}
-          description={trans('not_found_desc')}
-        />
+    if (!isEmpty(props.error)) {
+      return props.errorPage ?
+        createElement(props.errorPage, props.error) :
+        <ContextError {...props.error} />
     }
 
     return (
-      <>
+      <ErrorBoundary fallback={<ContextError code="UNKNOWN_ERROR" message="Error while rendering the requested context." />}>
         {pinedMenu &&
           <ContextSidebar />
         }
@@ -166,7 +153,7 @@ const ContextMain = (props) => {
         />
 
         {props.children}
-      </>
+      </ErrorBoundary>
     )
   }
 
@@ -186,8 +173,7 @@ ContextMain.propTypes = {
 
   // context status
   loaded: T.bool.isRequired,
-  notFound: T.bool.isRequired,
-  accessErrors: T.object,
+  error: T.object,
   // context params
   defaultOpening: T.string,
   tools: T.arrayOf(T.shape({
@@ -198,12 +184,12 @@ ContextMain.propTypes = {
   })),
 
   // custom context components
+  errorPage: T.elementType,
   loadingPage: T.elementType,
-  notFoundPage: T.elementType,
-  forbiddenPage: T.elementType,
   editor: T.elementType,
   onOpen: T.func,
 
+  fetch: T.func.isRequired,
   open: T.func.isRequired,
   history: T.shape({
     replace: T.func.isRequired

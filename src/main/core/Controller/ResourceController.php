@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -89,11 +90,11 @@ class ResourceController
 
         // return the details of access errors to display it to users
         $userRoles = $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
-        $accessErrors = $this->restrictionsManager->getErrors($resourceNode, $userRoles);
+        $accessError = $this->restrictionsManager->getError($resourceNode, $userRoles);
 
         return new JsonResponse([
-            'resourceNode' => $this->serializer->serialize($resourceNode, [Options::NO_RIGHTS]),
-            'accessErrors' => $accessErrors,
+            'resourceNode' => $this->serializer->serialize($resourceNode, [SerializerInterface::SERIALIZE_MINIMAL, Options::NO_RIGHTS]),
+            'error' => $accessError,
         ], 403);
     }
 

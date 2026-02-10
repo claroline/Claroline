@@ -29,7 +29,10 @@ interface ContextInterface extends ComponentInterface
 
     public function getOrganizations(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array;
 
-    public function getAccessErrors(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array;
+    /**
+     * Explain why the current user cannot open the context subject.
+     */
+    public function getAccessError(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): ?array;
 
     /**
      * Get additional data required by the context (ex. current user evaluation).

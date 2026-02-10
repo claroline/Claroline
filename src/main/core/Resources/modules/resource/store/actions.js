@@ -8,14 +8,13 @@ export const RESOURCE_EVALUATION_UPDATE    = 'RESOURCE_EVALUATION_UPDATE'
 export const RESOURCE_OPEN                 = 'RESOURCE_OPEN'
 export const RESOURCE_LOAD                 = 'RESOURCE_LOAD'
 export const RESOURCE_SET_LOADED           = 'RESOURCE_SET_LOADED'
-export const RESOURCE_RESTRICTIONS_DISMISS = 'RESOURCE_RESTRICTIONS_DISMISS'
-export const RESOURCE_NOT_FOUND            = 'RESOURCE_NOT_FOUND'
+export const RESOURCE_SET_ERROR = 'RESOURCE_SET_ERROR'
 
 // action creators
 export const actions = {}
 
 actions.setResourceLoaded = makeActionCreator(RESOURCE_SET_LOADED, 'loaded')
-actions.setNotFound = makeActionCreator(RESOURCE_NOT_FOUND)
+actions.setError = makeActionCreator(RESOURCE_SET_ERROR, 'code', 'message', 'additional')
 actions.loadResource = makeActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.loadResourceType = makeInstanceActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.reload = () => actions.setResourceLoaded(false)
@@ -35,13 +34,15 @@ actions.fetchResource = (slug, embedded = false) => (dispatch) => dispatch({
     error: (response, status) => {
       switch (status) {
         case 404:
-          dispatch(actions.setNotFound())
+          dispatch(actions.setError('NOT_FOUND', 'Resource not found.', null))
+          break
+        case 500:
+          dispatch(actions.setError('UNKNOWN_ERROR', response.message, response.trace))
           break
         case 401:
         case 403:
-          // we don't have any custom resource type data here
-          dispatch(actions.loadResource(response)) // the response contains why we can't access the resource
-          dispatch(actions.setResourceLoaded(true))
+          // the response contains why we can't access the resource and the minimal representation of the resource node
+          dispatch(actions.loadResource(response))
           break
       }
     }
@@ -62,8 +63,6 @@ actions.triggerLifecycleAction = (action) => (dispatch, getState) => {
 
 actions.updateUserEvaluation = makeActionCreator(RESOURCE_EVALUATION_UPDATE, 'userEvaluation')
 
-actions.dismissRestrictions = makeActionCreator(RESOURCE_RESTRICTIONS_DISMISS)
-
 actions.checkAccessCode = (resourceNode, code) => (dispatch) => dispatch({
   [API_REQUEST] : {
     url: ['claro_resource_unlock', {id: resourceNode.id}],
@@ -71,6 +70,6 @@ actions.checkAccessCode = (resourceNode, code) => (dispatch) => dispatch({
       method: 'POST',
       body: JSON.stringify({code: code})
     },
-    success: () => dispatch(actions.setResourceLoaded(false)) // force reload the resource
+    success: () => dispatch(actions.reload()) // force the reload of the resource
   }
 })

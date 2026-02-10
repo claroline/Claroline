@@ -5,8 +5,9 @@ import isEmpty from 'lodash/isEmpty'
 
 import {getTab} from '#/plugin/home/home'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
-import {HomePage, HomePageSkeleton} from '#/plugin/home/tools/home/components/page'
-import {HomeRestrictions} from '#/plugin/home/tools/home/components/restrictions'
+import {HomePageSkeleton} from '#/plugin/home/tools/home/components/page'
+import {HomeError} from '#/plugin/home/tools/home/components/error'
+import {ErrorBoundary} from '#/main/app/components/error-boundary'
 
 class HomeTab extends Component {
   constructor(props) {
@@ -50,29 +51,22 @@ class HomeTab extends Component {
       )
     }
 
-    if (!isEmpty(this.props.accessErrors)) {
+    if (!isEmpty(this.props.error)) {
       return (
-        <HomePage
-          currentTab={this.props.currentTab}
-          title={this.props.currentTabTitle}
-        >
-          <HomeRestrictions
-            errors={this.props.accessErrors}
-            dismiss={this.props.dismissRestrictions}
-            managed={this.props.managed}
-            checkAccessCode={(code) => this.props.checkAccessCode(this.props.currentTab, code)}
-          />
-        </HomePage>
+        <HomeError {...this.props.error} />
       )
     }
 
     if (this.props.currentTab && this.state.component) {
-      return createElement(this.state.component, {
-        path: `${this.props.path}/${this.props.currentTab.slug}`,
-        currentContext: this.props.currentContext,
-        currentTab: this.props.currentTab,
-        title: this.props.currentTabTitle
-      })
+      return (
+        <ErrorBoundary fallback={<HomeError code="UNKNOWN_ERROR" message="Error while rendering the requested home tab." />}>
+          {createElement(this.state.component, {
+            path: `${this.props.path}/${this.props.currentTab.slug}`,
+            currentContext: this.props.currentContext,
+            currentTab: this.props.currentTab
+          })}
+        </ErrorBoundary>
+      )
     }
 
     return null
@@ -83,13 +77,9 @@ HomeTab.propTypes = {
   path: T.string.isRequired,
   loaded: T.bool.isRequired,
   currentContext: T.object.isRequired,
-  currentTabTitle: T.string.isRequired,
   currentTab: T.shape(TabTypes.propTypes),
-  managed: T.bool.isRequired,
-  accessErrors: T.object,
-  open: T.func.isRequired,
-  dismissRestrictions: T.func.isRequired,
-  checkAccessCode: T.func.isRequired
+  error: T.object,
+  open: T.func.isRequired
 }
 
 export {

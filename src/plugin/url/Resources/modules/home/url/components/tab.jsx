@@ -8,10 +8,7 @@ import {Tab as TabTypes} from '#/plugin/home/prop-types'
 import {UrlDisplay} from '#/plugin/url/components/display'
 
 const UrlTab = props =>
-  <HomePage
-    currentTab={props.currentTab}
-    title={props.title}
-  >
+  <HomePage>
     <UrlDisplay
       url={get(props.currentTab, 'parameters.url')}
       mode={get(props.currentTab, 'parameters.mode')}
@@ -21,7 +18,6 @@ const UrlTab = props =>
 
 UrlTab.propTypes = {
   currentContext: T.object,
-  title: T.string.isRequired,
   currentTab: T.shape(
     TabTypes.propTypes
   )

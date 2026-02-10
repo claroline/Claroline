@@ -2,5 +2,9 @@ services:
     Claroline\HomeBundle\Manager\HomeManager:
         arguments:
             - '@security.authorization_checker'
-            - '@request_stack'
+            - '@security.token_storage'
             - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\HomeBundle\Manager\HomeRestrictionsManager:
+        arguments:
+            - '@request_stack'

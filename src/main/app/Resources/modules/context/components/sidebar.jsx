@@ -64,7 +64,6 @@ const ContextSidebar = ({
   const dispatch = useDispatch()
   const history = useHistory()
 
-  const notFound = useSelector(selectors.notFound)
   const hasErrors = useSelector(selectors.hasErrors)
 
   const contextName = useSelector(selectors.name)
@@ -97,7 +96,7 @@ const ContextSidebar = ({
   const organizationsTitleId = useId()
   const organizationsDescId = useId()
 
-  if (notFound || hasErrors) {
+  if (hasErrors) {
     return null
   }
 

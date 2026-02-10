@@ -24,7 +24,7 @@ const currentUserId = createSelector(
 )
 
 /**
- * Checks if the current user usurp another user account.
+ * Checks if the current user usurps another user account.
  *
  * @return {bool}
  */

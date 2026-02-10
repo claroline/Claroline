@@ -11,10 +11,11 @@ use Claroline\AppBundle\Manager\ViewerManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Claroline\HomeBundle\Entity\HomeTab;
 use Claroline\HomeBundle\Entity\HomeTabView;
 use Claroline\HomeBundle\Finder\HomeTabViewType;
-use Claroline\HomeBundle\Manager\HomeManager;
+use Claroline\HomeBundle\Manager\HomeRestrictionsManager;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,52 +34,34 @@ class HomeTabController
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
         private readonly SerializerProvider $serializer,
-        private readonly HomeManager $manager,
         private readonly ObjectManager $om,
         private readonly Crud $crud,
-        private readonly TokenStorageInterface $tokenStorage,
+        private readonly HomeRestrictionsManager $restrictionsManager,
         private readonly ViewerManager $viewerManager
     ) {
         $this->authorization = $authorization;
     }
 
-    public static function getName(): string
-    {
-        return 'home_tab';
-    }
-
-    public static function getClass(): string
-    {
-        return HomeTab::class;
-    }
-
-    public function getIgnore(): array
-    {
-        return ['create', 'update', 'list'];
-    }
-
     #[Route(path: '/open/{id}', name: 'open', methods: ['GET'])]
-    public function openAction(#[MapEntity(mapping: ['id' => 'uuid'])] HomeTab $homeTab): JsonResponse
-    {
-        $accessErrors = $this->manager->getRestrictionsErrors($homeTab);
-        $isManager = $this->checkPermission('EDIT', $homeTab);
-        if (empty($accessErrors) || $isManager) {
+    public function openAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        HomeTab $homeTab
+    ): JsonResponse {
+        if ($this->authorization->isGranted('OPEN', $homeTab)) {
             return new JsonResponse([
-                'managed' => $isManager,
                 'homeTab' => $this->serializer->serialize($homeTab),
-                // append access restrictions to the loaded node if any
-                // to let the manager knows that other users cannot enter the resource
-                'accessErrors' => $accessErrors,
             ]);
         }
 
+        // return the details of access errors to display it to users
+        $userRoles = $this->tokenStorage->getToken()?->getRoleNames() ?? [PlatformRoles::ANONYMOUS];
+        $accessError = $this->restrictionsManager->getError($homeTab, $userRoles);
+
         return new JsonResponse([
-            'managed' => true,
             'homeTab' => $this->serializer->serialize($homeTab, [SerializerInterface::SERIALIZE_MINIMAL]),
-            // append access restrictions to the loaded node if any
-            // to let the manager knows that other users cannot enter the resource
-            'accessErrors' => $accessErrors,
+            'error' => $accessError,
         ], 403);
     }
 
@@ -88,7 +71,7 @@ class HomeTabController
     #[Route(path: '/unlock/{id}', name: 'unlock', methods: ['POST'])]
     public function unlockAction(#[MapEntity(mapping: ['id' => 'uuid'])] HomeTab $homeTab, Request $request): JsonResponse
     {
-        $this->manager->unlock($homeTab, $request);
+        $this->restrictionsManager->unlock($homeTab, $request);
 
         return new JsonResponse(null, 204);
     }
@@ -100,7 +83,8 @@ class HomeTabController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         HomeTab $homeTab,
     ): JsonResponse {
-        $this->checkPermission('OPEN', $homeTab);
+        $this->checkPermission('OPEN', $homeTab, [], true);
+
         if (null === $user) {
             return new JsonResponse(null, 204);
         }

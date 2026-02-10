@@ -99,15 +99,15 @@ class ContextController
         }
 
         // return the details of access errors to display it to users
-        $accessErrors = $contextHandler->getAccessErrors($this->tokenStorage->getToken(), $contextSubject);
+        $accessError = $contextHandler->getAccessError($this->tokenStorage->getToken(), $contextSubject);
 
         return new JsonResponse([
-            'data' => $contextSubject ? $this->serializer->serialize($contextSubject) : null,
+            'data' => $contextSubject ? $this->serializer->serialize($contextSubject, [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             'impersonated' => $isImpersonated,
             'roles' => array_map(function (Role $role) {
                 return $this->serializer->serialize($role, [SerializerInterface::SERIALIZE_MINIMAL]);
             }, $contextRoles),
-            'accessErrors' => $accessErrors,
+            'error' => $accessError,
         ], 403);
     }
 

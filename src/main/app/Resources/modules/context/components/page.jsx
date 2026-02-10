@@ -29,6 +29,7 @@ const ContextPage = ({
   const contextType = useSelector(selectors.type)
   const contextData = useSelector(selectors.data)
   const contextPath = useSelector(selectors.path)
+  const contextError = useSelector(selectors.error)
 
   const [pinedMenu] = useLocaleStorage('contextMenuPined', false)
 
@@ -44,13 +45,13 @@ const ContextPage = ({
         <PageMenu
           embedded={embedded}
           {...menu}
-          breadcrumb={(!pinedMenu ? [
+          breadcrumb={(contextError || !pinedMenu ? [
             {
               label: get(contextData, 'name') || trans(contextType, {}, 'context'),
               target: contextPath
             }
           ] : []).concat(breadcrumb || [])}
-          affix={ContextMenu}
+          affix={!contextError ? ContextMenu : null}
         />
       }
 

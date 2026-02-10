@@ -51,6 +51,7 @@ class OrganizationSerializer
                 'name' => $organization->getName(),
                 'code' => $organization->getCode(),
                 'thumbnail' => $organization->getThumbnail(),
+                'email' => $organization->getEmail(),
                 'meta' => [
                     'public' => $organization->isPublic(),
                     'description' => $organization->getDescription(),

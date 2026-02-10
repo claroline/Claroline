@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useSelector} from 'react-redux'
-import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
+import {Action, PromisedAction} from '#/main/app/action/prop-types'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {Routes} from '#/main/app/router'
-
 import {PageContext} from '#/main/app/page/context'
+
 import {selectors} from '#/main/core/resource/store'
-import {ResourceRestrictions} from '#/main/core/resource/containers/restrictions'
 import {ResourceEditor} from '#/main/core/resource/editor/containers/main'
 import {ResourceDashboard} from '#/main/core/resource/dashboard'
 
@@ -18,7 +17,6 @@ const Resource = props => {
 
   const embedded = useSelector(selectors.embedded)
   const resourcePath = useSelector(selectors.path)
-  const accessErrors = useSelector(selectors.accessErrors)
   const canEdit = useSelector(selectors.canEdit)
   const canFollow = useSelector(selectors.canFollow)
 
@@ -45,11 +43,7 @@ const Resource = props => {
         styles: props.styles
       }}
     >
-      {loaded && !isEmpty(accessErrors) &&
-        <ResourceRestrictions />
-      }
-
-      {loaded && isEmpty(accessErrors) &&
+      {loaded &&
         <Routes
           path={resourcePath}
           routes={[
@@ -77,7 +71,7 @@ const Resource = props => {
         />
       }
 
-      {loaded && isEmpty(accessErrors) && props.children}
+      {loaded && props.children}
     </PageContext.Provider>
   )
 }
@@ -91,6 +85,20 @@ Resource.propTypes = {
   styles: T.arrayOf(T.string),
   children: T.node,
   open: T.func.isRequired,
+  actions: T.oneOfType([
+    // a regular array of actions
+    T.arrayOf(T.shape(
+      Action.propTypes
+    )),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedAction.propTypes
+    )
+  ]),
+  menu: T.array,
+  redirect: T.array,
+  pages: T.array,
+
   /**
    * The resource overview component
    * NB. This SHOULD extend the base <ResourceOverview /> component.

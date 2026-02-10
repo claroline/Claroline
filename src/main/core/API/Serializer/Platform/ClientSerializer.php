@@ -47,6 +47,7 @@ class ClientSerializer
             'version' => $this->platformManager->getVersion(),
             'environment' => $this->platformManager->getEnv(),
             'help' => $this->config->getParameter('help_url'),
+            'contact' => $this->config->getParameter('help.support_email'),
             'selfRegistration' => $this->config->getParameter('registration.self'),
             'community' => $this->config->getParameter('community'),
             'serverUrl' => $this->platformManager->getUrl(),

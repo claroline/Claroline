@@ -66,6 +66,7 @@ class WorkspaceSerializer
                 'slug' => $workspace->getSlug(),
                 'thumbnail' => $workspace->getThumbnail(),
                 'poster' => $workspace->getPoster(),
+                'contactEmail' => $workspace->getContactEmail(), // required by the access error page
                 'meta' => [
                     'model' => $workspace->isModel(),
                     'public' => $workspace->isPublic(),

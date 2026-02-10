@@ -3,9 +3,9 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
+            - '@security.token_storage'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\HomeBundle\Manager\HomeManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
-            - '@security.token_storage'
+            - '@Claroline\HomeBundle\Manager\HomeRestrictionsManager'
             - '@Claroline\AppBundle\Manager\ViewerManager'

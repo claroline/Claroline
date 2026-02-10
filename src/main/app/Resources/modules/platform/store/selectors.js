@@ -56,9 +56,25 @@ const isContextFavorite = (state, context) => {
 
 const currentOrganization = (state) => state.currentOrganization
 
+const currentOrganizationContactEmail = createSelector(
+  [currentOrganization],
+  (currentOrganization) => currentOrganization ? currentOrganization.email : null
+)
+
+const contactEmail = (state) => {
+  const organizationEmail = currentOrganizationContactEmail(state)
+
+  if (organizationEmail) {
+    return organizationEmail
+  }
+
+  return configSelectors.param(state, 'contact')
+}
+
 export const selectors = {
   version,
   helpUrl,
+  contactEmail,
   unavailable,
   selfRegistration,
   availableContexts,

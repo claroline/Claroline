@@ -31,6 +31,7 @@ const MenuButton = forwardRef((props, ref) => {
       }
 
       {props.label}
+      {props.children}
       {subscript}
     </>
   ))

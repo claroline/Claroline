@@ -76,10 +76,17 @@ class SequenceRepository extends EntityRepository
 
     public function isAssigned(Sequence $sequence, User $user): bool
     {
-        $roles = $user->getRoles();
+        return $this->hasAssignedRoles($sequence, $user->getRoles());
+    }
+
+    public function hasAssignedRoles(Sequence $sequence, array $roles): bool
+    {
+        if (empty($roles)) {
+            return false;
+        }
 
         return 0 < $this->getEntityManager()
-            ->createQuery('
+                ->createQuery('
                 SELECT COUNT(s)
                 FROM Claroline\EvaluationBundle\Entity\Sequence\Sequence AS s
                 WHERE s = :sequence 
@@ -91,9 +98,9 @@ class SequenceRepository extends EntityRepository
                       AND r.name IN (:roles)
                   )
            ')
-            ->setParameter('sequence', $sequence)
-            ->setParameter('roles', $roles)
-            ->getSingleScalarResult();
+                ->setParameter('sequence', $sequence)
+                ->setParameter('roles', $roles)
+                ->getSingleScalarResult();
     }
 
     public function isRequired(Sequence $sequence, User $user): bool

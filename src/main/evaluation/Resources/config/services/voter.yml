@@ -5,7 +5,7 @@ services:
     Claroline\EvaluationBundle\Security\Voter\SequenceVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter
         arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\SequenceRestrictionsManager'
 
     Claroline\EvaluationBundle\Security\Voter\WorkspaceEvaluationVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter

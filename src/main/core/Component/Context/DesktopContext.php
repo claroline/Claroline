@@ -47,10 +47,11 @@ final class DesktopContext extends ContextComponent
         return true;
     }
 
-    public function getAccessErrors(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
+    public function getAccessError(?TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
     {
         return [
-            'noRights' => true,
+            'code' => 'NO_RIGHTS',
+            'message' => 'You need to be authenticated to access the desktop.',
         ];
     }
 
