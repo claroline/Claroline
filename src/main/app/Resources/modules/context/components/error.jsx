@@ -6,11 +6,11 @@ import get from 'lodash/get'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl'
 import {PageContent, PageSection} from '#/main/app/page'
-import {ContextPage} from '#/main/app/context'
 import {ContentErrorNotFound} from '#/main/app/content/error/components/not-found'
 import {ContentErrorRights} from '#/main/app/content/error/components/rights'
 import {ContentErrorUnknown} from '#/main/app/content/error/components/unknown'
 
+import {ContextPage} from '#/main/app/context/components/page'
 import {actions as contextActions, selectors as contextSelectors} from '#/main/app/context/store'
 
 /**
@@ -19,6 +19,7 @@ import {actions as contextActions, selectors as contextSelectors} from '#/main/a
 const ContextError = ({code}) => {
   const dispatch = useDispatch()
 
+  const contextName = useSelector(contextSelectors.name)
   const contextData = useSelector(contextSelectors.data)
   const contactEmail = useSelector(contextSelectors.contactEmail)
 
@@ -39,6 +40,7 @@ const ContextError = ({code}) => {
     case 'NO_RIGHTS':
       errorComponent = (
         <ContentErrorRights
+          contentName={contextName}
           backAction={backAction}
           contactEmail={contactEmail}
           onLogin={() => dispatch(contextActions.reload())}

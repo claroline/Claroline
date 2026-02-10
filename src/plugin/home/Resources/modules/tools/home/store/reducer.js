@@ -9,7 +9,6 @@ import {TOOL_LOAD, TOOL_OPEN} from '#/main/core/tool/store/actions'
 
 import {
   CURRENT_TAB,
-  TABS_LOAD,
   TAB_LOAD,
   TAB_SET_LOADED,
   TAB_SET_ERROR,
@@ -29,17 +28,6 @@ const reducer = combineReducers({
     [CONTEXT_OPEN]: () => [],
     [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => {
       const tabs = [].concat(action.toolData.tabs || [])
-
-      if (isEmpty(tabs) || -1 === tabs.findIndex(tab => !get(tab, 'restrictions.hidden', false))) {
-        tabs.push(
-          selectors.defaultTab({tool: {currentContext: action.context}})
-        )
-      }
-
-      return tabs
-    },
-    [TABS_LOAD]: (state, action) => {
-      const tabs = [].concat(action.tabs || [])
 
       if (isEmpty(tabs) || -1 === tabs.findIndex(tab => !get(tab, 'restrictions.hidden', false))) {
         tabs.push(

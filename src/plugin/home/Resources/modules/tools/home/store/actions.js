@@ -2,7 +2,6 @@ import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 
 export const CURRENT_TAB              = 'CURRENT_TAB'
-export const TABS_LOAD                = 'TABS_LOAD'
 export const TAB_LOAD                 = 'TAB_LOAD'
 export const TAB_SET_LOADED           = 'TAB_SET_LOADED'
 export const TAB_SET_ERROR = 'TAB_SET_ERROR'
@@ -12,7 +11,7 @@ export const actions = {}
 
 actions.setCurrentTab = makeActionCreator(CURRENT_TAB, 'tab')
 actions.setTabLoaded = makeActionCreator(TAB_SET_LOADED, 'loaded')
-actions.loadTab = makeActionCreator(TAB_LOAD, 'homeTab', 'managed', 'accessErrors')
+actions.loadTab = makeActionCreator(TAB_LOAD, 'homeTab', 'error')
 actions.updateViews = makeActionCreator(TAB_UPDATE_VIEWS, 'tabId', 'nbViews')
 actions.setError = makeActionCreator(TAB_SET_ERROR, 'code', 'message', 'additional')
 
