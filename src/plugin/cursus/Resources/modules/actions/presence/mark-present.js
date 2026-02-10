@@ -29,7 +29,7 @@ export default declareAction((presences, refresher) => {
     group: trans('management'),
     scope: ['collection', 'object'],
     children: createElement('b', {
-      className: `ms-2 fw-semibold text-${constants.PRESENCE_STATUS_COLORS[status]}`,
+      className: `fw-semibold text-${constants.PRESENCE_STATUS_COLORS[status]}`,
       children: constants.PRESENCE_STATUSES[status]
     })
   }
