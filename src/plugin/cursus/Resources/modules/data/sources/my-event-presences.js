@@ -48,6 +48,20 @@ export default (contextType, contextData, refresher, currentUser) => {
         label: trans('training_event', {}, 'data_sources'),
         displayed: true,
         filterable: true
+      }, {
+        name: 'eventStatus',
+        type: 'choice',
+        label: trans('event_status', {}, 'presence'),
+        alias: 'event.plannedObject.status',
+        filterable: true,
+        options: {
+          choices: {
+            not_started: trans('session_not_started', {}, 'cursus'),
+            in_progress: trans('session_in_progress', {}, 'cursus'),
+            ended: trans('session_ended', {}, 'cursus'),
+            not_ended: trans('session_not_ended', {}, 'cursus')
+          }
+        }
       }
     ],
     card: PresenceCard
