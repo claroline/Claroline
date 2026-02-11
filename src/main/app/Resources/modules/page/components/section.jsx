@@ -16,7 +16,7 @@ const PageSection = ({
   flush = false
 }) => {
   return (
-    <div className={classes('page-section', className)} role="presentation">
+    <div className={classes('page-section d-flex flex-column', className)} role="presentation">
       <ContentSizing className={classes('flex-fill d-flex flex-column', {
         'px-4': !flush
       })} size={size}>

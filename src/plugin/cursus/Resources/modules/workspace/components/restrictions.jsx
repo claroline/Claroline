@@ -14,10 +14,10 @@ import {actions} from '#/plugin/cursus/course/store'
 const TrainingWorkspaceRestrictions = (props) => {
   const dispatch = useDispatch()
 
-  const course = get(props.errors, 'trainings.course')
-  const defaultSession = get(props.errors, 'trainings.defaultSession')
-  const availableSessions = get(props.errors, 'trainings.availableSessions')
-  const registrations = get(props.errors, 'trainings.registrations')
+  const course = get(props.error, 'additional.course')
+  const defaultSession = get(props.error, 'additional.defaultSession')
+  const availableSessions = get(props.error, 'additional.availableSessions')
+  const registrations = get(props.error, 'additional.registrations')
 
   const [activeSession, setActiveSession] = useState(defaultSession || null)
 
@@ -68,7 +68,7 @@ TrainingWorkspaceRestrictions.propTypes = {
   workspace: T.shape(
     Workspace.propTypes
   ).isRequired,
-  errors: T.object.isRequired,
+  error: T.object.isRequired
 }
 
 export {

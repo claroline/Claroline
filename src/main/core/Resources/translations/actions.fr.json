@@ -50,5 +50,6 @@
   "apply_rights_desc": "Appliquer les droits du dossier à toutes les ressources qu'il contient. Les droits des ressources des sous dossiers seront également modifiés.",
   "apply_rights_confirm": "Êtes-vous sûr(e) de vouloir appliquer les droits de ce dossier à tout son contenu ?",
   "create_from_model": "Créer à partir du modèle",
-  "create_from_model_desc": "Choisissez un modèle préconfiguré pour commencer à ajouter vos contenus plus rapidement."
+  "create_from_model_desc": "Choisissez un modèle préconfiguré pour commencer à ajouter vos contenus plus rapidement.",
+  "unlock_resource": "Déverrouiller la ressource"
 }

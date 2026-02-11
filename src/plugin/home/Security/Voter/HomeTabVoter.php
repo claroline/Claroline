@@ -14,11 +14,17 @@ namespace Claroline\HomeBundle\Security\Voter;
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\HomeBundle\Component\Tool\HomeTool;
 use Claroline\HomeBundle\Entity\HomeTab;
+use Claroline\HomeBundle\Manager\HomeRestrictionsManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class HomeTabVoter extends AbstractVoter
 {
+    public function __construct(
+        private readonly HomeRestrictionsManager $homeRestrictionsManager,
+    ) {
+    }
+
     public function getClass(): string
     {
         return HomeTab::class;
@@ -47,19 +53,7 @@ class HomeTabVoter extends AbstractVoter
 
     private function checkTabRestrictions(TokenInterface $token, HomeTab $object): bool
     {
-        // TODO : this should also check other tab restrictions (dates, code, etc.). Mimic Workspace and Resource
-
-        if (0 === $object->getRoles()->count()) {
-            return true;
-        }
-
-        foreach ($object->getRoles() as $role) {
-            if (in_array($role->getName(), $token->getRoleNames())) {
-                return true;
-            }
-        }
-
-        return false;
+        return empty($this->homeRestrictionsManager->getError($object, $token->getRoleNames()));
     }
 
     public function getSupportedActions(): array

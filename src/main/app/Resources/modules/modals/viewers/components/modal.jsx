@@ -5,7 +5,8 @@ import omit from 'lodash/omit'
 import {useReducer} from '#/main/app/store/reducer'
 import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlays'
-import {ListData, makeListReducer} from '#/main/app/content/list'
+import {ListData, makeListReducer, actions as listActions} from '#/main/app/content/list'
+import {useDispatch} from 'react-redux'
 
 const STORE_NAME = 'viewersModal'
 
@@ -14,6 +15,7 @@ const ViewersModal = (props) => {
     sortBy: {property: 'seenAt', direction: -1}
   }), [STORE_NAME])
   useReducer(STORE_NAME, reducer)
+  const dispatch = useDispatch()
 
   return (
     <Modal
@@ -23,6 +25,9 @@ const ViewersModal = (props) => {
       centered={true}
       scrollable={true}
       enforceFocus={true}
+      onExited={ () => {
+        dispatch(listActions.invalidateData(STORE_NAME))
+      }}
     >
       <div className="modal-body p-0 d-flex">
         <ListData

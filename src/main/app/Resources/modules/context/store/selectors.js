@@ -6,6 +6,7 @@ import isNumber from 'lodash/isNumber'
 import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {selectors as platformSelectors} from '#/main/app/platform/store/selectors'
 
 const STORE_NAME = 'context'
 const EDITOR_NAME = 'contextEditor'
@@ -55,6 +56,11 @@ const name = createSelector(
   (type, data) => get(data, 'name', trans(type, {}, 'context'))
 )
 
+const contactEmail = createSelector(
+  [platformSelectors.contactEmail, data],
+  (contactEmail, data) => data && data.contactEmail ? data.contactEmail : contactEmail
+)
+
 /**
  * Is the context fully loaded?
  *
@@ -66,28 +72,18 @@ const loaded = createSelector(
 )
 
 /**
- * Is context not found?
- *
- * @return bool
- */
-const notFound = createSelector(
-  [store],
-  (store) => get(store, 'notFound', false)
-)
-
-/**
  * Get the list of all access errors to the context.
  *
  * @return object
  */
-const accessErrors = createSelector(
+const error = createSelector(
   [store],
-  (store) => get(store, 'accessErrors')
+  (store) => get(store, 'error')
 )
 
 const hasErrors = createSelector(
-  [accessErrors],
-  (accessErrors) => !isEmpty(accessErrors)
+  [error],
+  (error) => !isEmpty(error)
 )
 
 /**
@@ -223,13 +219,12 @@ export const selectors = {
   path,
   name,
 
-  // selectors for menu
+  // selectors for the context menu
   menuOpened,
 
   // selectors for context statuses
   loaded,
-  notFound,
-  accessErrors,
+  error,
   hasErrors,
 
   // selectors for context security
@@ -241,6 +236,7 @@ export const selectors = {
   // selectors for context config
   data,
   tools,
+  contactEmail,
   accessibleTools,
   visibleTools,
   toolLinks,

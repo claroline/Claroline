@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -47,7 +48,8 @@ class ChapterController
         private readonly ChapterManager $chapterManager,
         private readonly PdfManager $pdfManager,
         private readonly EvaluationManager $evaluationManager,
-        private readonly ViewerManager $viewerManager
+        private readonly ViewerManager $viewerManager,
+        private readonly TokenStorageInterface $tokenStorage,
     ) {
         $this->authorization = $authorization;
         $this->chapterRepository = $this->om->getRepository(Chapter::class);
@@ -254,5 +256,34 @@ class ChapterController
         $viewers = $this->viewerManager->listViews(ChapterViewType::class, $finderRequest);
 
         return $viewers->toResponse();
+    }
+
+    #[Route(path: '/{id}/activity/{activityType<(views|visitors)>}', name: 'apiv2_chapter_activity', methods: ['GET'])]
+    public function activityAction(
+        #[MapEntity(mapping: ['id' => 'uuid'])]
+        Chapter $chapter,
+        #[MapEntity(mapping: ['lessonId' => 'uuid'])]
+        Lesson $lesson,
+        string $activityType
+    ): JsonResponse {
+        $this->checkPermission('FOLLOW', $lesson->getResourceNode(), [], true);
+
+        switch ($activityType) {
+            case 'views':
+                $activity = $this->om->getRepository(ChapterView::class)->findViewsForPeriod(
+                    $chapter,
+                    $this->tokenStorage->getToken()->getUser()->getMainOrganization()
+                );
+
+                break;
+            case 'visitors':
+                $activity = $this->om->getRepository(ChapterView::class)->findVisitorsForPeriod(
+                    $chapter,
+                    $this->tokenStorage->getToken()->getUser()->getMainOrganization()
+                );
+                break;
+        }
+
+        return new JsonResponse($activity);
     }
 }

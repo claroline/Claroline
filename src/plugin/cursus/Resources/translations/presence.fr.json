@@ -13,6 +13,7 @@
   "delete_evidence": "Supprimer le justificatif",
   "delete_evidence_message": "Êtes-vous sûr de vouloir supprimer ce justificatif ?",
 
+  "event_status": "Statut de la séance",
   "event_not_found": "Séance introuvable",
   "event_not_found_desc": "Ce code ne correspond à aucune séance.",
   "event_not_found_retry": "Saisir à nouveau le code de la séance",

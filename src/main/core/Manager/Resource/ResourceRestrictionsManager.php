@@ -15,6 +15,11 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class ResourceRestrictionsManager
 {
+    private const NO_RIGHTS = 'NO_RIGHTS';
+    private const NOT_PUBLISHED = 'NOT_PUBLISHED';
+    private const INVALID_DATES = 'INVALID_DATES';
+    private const ACCESS_CODE = 'ACCESS_CODE';
+
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly RightsManager $rightsManager,
@@ -36,47 +41,61 @@ class ResourceRestrictionsManager
             && $this->isUnlocked($resourceNode);
     }
 
-    /**
-     * Gets the list of access error for a resource and a user roles.
-     *
-     * @param string[] $userRoles
-     */
-    public function getErrors(ResourceNode $resourceNode, array $userRoles): array
+    public function getError(ResourceNode $resourceNode, array $userRoles): ?array
     {
-        if (!$this->isGranted($resourceNode, $userRoles)) {
-            // return restrictions details
-            $errors = [
-                'noRights' => !$this->hasRights($resourceNode, $userRoles),
-                'deleted' => !$resourceNode->isActive(),
-                'notPublished' => !$resourceNode->isPublished(),
+        if (!$this->hasRights($resourceNode, $userRoles)) {
+            return [
+                'code' => self::NO_RIGHTS,
+                'message' => 'You don\'t have the permissions to access this resource.',
             ];
-
-            // optional restrictions
-            // we return them only if they are enabled
-            if (!empty($resourceNode->getAccessCode())) {
-                $errors['locked'] = !$this->isUnlocked($resourceNode);
-            }
-
-            if (!empty($resourceNode->getAccessibleFrom()) || !empty($resourceNode->getAccessibleUntil())) {
-                $errors['notStarted'] = !$this->isStarted($resourceNode);
-                $errors['startDate'] = DateNormalizer::normalize($resourceNode->getAccessibleFrom());
-                $errors['ended'] = $this->isEnded($resourceNode);
-                $errors['endDate'] = DateNormalizer::normalize($resourceNode->getAccessibleUntil());
-            }
-
-            return $errors;
         }
 
-        return [];
+        if (!$resourceNode->isActive() || !$resourceNode->isPublished()) {
+            return [
+                'code' => self::NOT_PUBLISHED,
+                'message' => !$resourceNode->isPublished() ?
+                    'The resource is not published.' :
+                    'The resource is archived.',
+                'additional' => [
+                    'archived' => !$resourceNode->isActive(),
+                ],
+            ];
+        }
+
+        if (!$this->isStarted($resourceNode) || $this->isEnded($resourceNode)) {
+            return [
+                'code' => self::INVALID_DATES,
+                'message' => !$this->isStarted($resourceNode) ?
+                    'The access period of the resource is not started yet.' :
+                    'The access period of the resource is ended.',
+                'additional' => [
+                    'startDate' => DateNormalizer::normalize($resourceNode->getAccessibleFrom()),
+                    'endDate' => DateNormalizer::normalize($resourceNode->getAccessibleUntil()),
+                ],
+            ];
+        }
+
+        if (!$this->isUnlocked($resourceNode)) {
+            return [
+                'code' => self::ACCESS_CODE,
+                'message' => 'This resource requires an access code to be opened.',
+            ];
+        }
+
+        return null;
     }
 
     /**
-     * Checks if a user has at least the right to access to one of the resource action.
+     * Checks if a user has at least the right to access to one of the resource actions.
      *
      * @param string[] $userRoles
      */
-    public function hasRights(ResourceNode $resourceNode, array $userRoles): bool
+    private function hasRights(ResourceNode $resourceNode, array $userRoles): bool
     {
+        if ($resourceNode->isPublic()) {
+            return true;
+        }
+
         $isAdmin = false;
 
         $workspace = $resourceNode->getWorkspace();
@@ -123,7 +142,7 @@ class ResourceRestrictionsManager
 
     /**
      * Submits a code to unlock a resource.
-     * NB. The resource will stay unlocked as long as the user session stay alive.
+     * NB. The resource will stay unlocked as long as the user session stays alive.
      */
     public function unlock(ResourceNode $resourceNode, string $code = null): void
     {

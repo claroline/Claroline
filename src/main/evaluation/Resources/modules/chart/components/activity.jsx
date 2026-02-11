@@ -10,22 +10,24 @@ import {ActivityCalendar} from '#/main/log/activity/components/calendar'
 import {MODAL_VIEWERS} from '#/main/app/modals/viewers'
 import {MODAL_FUNCTIONAL_LOGS} from '#/main/log/modals/functional'
 
-const activityTypes = {
-  actions: {
-    icon: 'fa fa-fw fa-hand-pointer',
-    label: trans('actions')
-  },
-  visitors: {
-    icon: 'fa fa-fw fa-user',
-    label: trans('visitors')
-  },
-  views: {
-    icon: 'fa fa-fw fa-eye',
-    label: trans('views')
-  }
-}
-
 const ActivityChart = ({className, name, activityUrl, logUrl, viewUrl}) => {
+  const activityTypes = {
+    visitors: {
+      icon: 'fa fa-fw fa-user',
+      label: trans('visitors')
+    },
+    views: {
+      icon: 'fa fa-fw fa-eye',
+      label: trans('views')
+    }
+  }
+
+  if (logUrl) {
+    activityTypes.actions = {
+      icon: 'fa fa-fw fa-hand-pointer',
+      label: trans('actions')
+    }
+  }
   const [activityType, setActivityType] = useState('views')
   const [activityData] = useFetch(name, activityUrl(activityType))
 
@@ -89,7 +91,7 @@ ActivityChart.propTypes = {
   name: T.string.isRequired,
   activityUrl: T.func.isRequired,
   // an API url to get the list of logs
-  logUrl: T.oneOfType([T.string, T.array]).isRequired,
+  logUrl: T.oneOfType([T.string, T.array]),
   // an API url to get the list of views
   viewUrl: T.oneOfType([T.string, T.array]).isRequired
 }

@@ -11,13 +11,17 @@ import {SequenceOverview} from '#/main/evaluation/sequence/components/overview'
 import {SequenceEditor} from '#/main/evaluation/sequence/editor'
 import {SequencePlayer} from '#/main/evaluation/sequence/player'
 import {SequenceDashboard} from '#/main/evaluation/sequence/dashboard'
-import {PageContent, PageHeadingSkeleton} from '#/main/app/page'
+import {PageContent, PageHeadingSkeleton, PageSection} from '#/main/app/page'
 import {SequencePage} from '#/main/evaluation/sequence/components/page'
+import {SequenceError} from '#/main/evaluation/sequence/components/error'
+import {TextSkeleton} from '#/main/app/components/placeholder'
 
 const SequenceShow = props => {
-  const [sequence, status] = useFetch(selectors.STORE_NAME, ['apiv2_evaluation_sequence_open', {id: props.id}])
+  const [sequence, status, error, errorCode] = useFetch(selectors.STORE_NAME, ['apiv2_evaluation_sequence_open', {id: props.id}])
 
   const firstStepNotDone = useSelector(selectors.firstStepNotDone)
+
+  console.log(error)
 
   if ('succeeded' === status) {
     return (
@@ -49,8 +53,22 @@ const SequenceShow = props => {
   }
 
   if ('failed' === status) {
+    let sequenceError
+    switch (errorCode) {
+      case 404:
+        sequenceError =  {code: 'NOT_FOUND', message: 'Sequence not found.'}
+        break
+      case 500:
+        sequenceError =  {code: 'UNKNOWN_ERROR', message: error.message, additional: error.trace}
+        break
+      case 401:
+      case 403:
+        sequenceError = error
+        break
+    }
+
     return (
-      <div>Error</div>
+      <SequenceError {...sequenceError} />
     )
   }
 
@@ -60,6 +78,9 @@ const SequenceShow = props => {
         <PageHeadingSkeleton
           description={true}
         />
+        <PageSection className="mb-5">
+          <TextSkeleton />
+        </PageSection>
       </PageContent>
     </SequencePage>
   )

@@ -42,7 +42,7 @@ const baseReducer = {
    */
   data: makeInstanceReducer(defaultState.data, {
     [API_FETCH_FULFILLED]: (state, action) => action.response,
-    [API_FETCH_FAILED]: () => null,
+    [API_FETCH_FAILED]: (state, action) => action.data || state,
     [API_FETCH_RELOAD]: (state, action) => action.data
   })
 }

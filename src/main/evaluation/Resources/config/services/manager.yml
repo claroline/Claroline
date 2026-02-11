@@ -56,3 +56,9 @@ services:
     Claroline\EvaluationBundle\Manager\SequenceManager:
         arguments:
             - '@Claroline\AppBundle\Manager\ViewerManager'
+
+    Claroline\EvaluationBundle\Manager\SequenceRestrictionsManager:
+        arguments:
+            - '@request_stack'
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

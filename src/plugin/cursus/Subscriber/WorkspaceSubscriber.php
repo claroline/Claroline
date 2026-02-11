@@ -33,7 +33,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         $courses = $this->om->getRepository(Course::class)->findByWorkspace($workspace);
         if (!empty($courses)) {
             $course = $courses[0];
-            $event->addError('trainings', $this->courseManager->open($course));
+            $event->addError('NOT_REGISTERED_TRAINING', 'You are not registered to the workspace course.', $this->courseManager->open($course));
         }
     }
 }

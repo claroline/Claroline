@@ -3,8 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import {useSelector} from 'react-redux'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
+import {pickAction} from '#/main/app/action'
+import {hasPermission} from '#/main/app/security'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {ToolPage, selectors as toolSelectors} from '#/main/core/tool'
 import {EvaluationShortcut} from '#/main/evaluation/components/shortcut'
@@ -12,7 +15,7 @@ import {EvaluationShortcut} from '#/main/evaluation/components/shortcut'
 import {getActions} from '#/main/evaluation/sequence/utils'
 import {selectors} from '#/main/evaluation/sequence/store'
 import {MODAL_USER_PROGRESSION} from '#/main/evaluation/sequence/modals/user-progression'
-import {pickAction} from '#/main/app/action'
+
 
 const SequencePage = (props) => {
   const currentUser = useSelector(securitySelectors.currentUser)
@@ -27,22 +30,24 @@ const SequencePage = (props) => {
     : []
 
   let banner
-  if (get(sequence, 'meta.archived', false)) {
-    banner = {
-      type: 'danger',
-      content: trans('sequence_archived_info', {}, 'evaluation'),
-      actions: Promise.all([
-        pickAction('restore', sequenceActions),
-        pickAction('delete', sequenceActions)
-      ])
-    }
-  } else if (!get(sequence, 'meta.published', true)) {
-    banner = {
-      type: 'warning',
-      content: trans('sequence_not_published_info', {}, 'evaluation'),
-      actions: Promise.all([
-        pickAction('publish', sequenceActions)
-      ])
+  if (hasPermission('open', sequence)) {
+    if (get(sequence, 'meta.archived', false)) {
+      banner = {
+        type: 'danger',
+        content: trans('sequence_archived_info', {}, 'evaluation'),
+        actions: Promise.all([
+          pickAction('restore', sequenceActions),
+          pickAction('delete', sequenceActions)
+        ])
+      }
+    } else if (!get(sequence, 'meta.published', true)) {
+      banner = {
+        type: 'warning',
+        content: trans('sequence_not_published_info', {}, 'evaluation'),
+        actions: Promise.all([
+          pickAction('publish', sequenceActions)
+        ])
+      }
     }
   }
 
@@ -60,7 +65,7 @@ const SequencePage = (props) => {
       }
       description={props.description || get(sequence, 'meta.description')}
       menu={{
-        children: userEvaluation && (
+        children: !isEmpty(userEvaluation) && (
           <EvaluationShortcut
             className="my-auto"
             modal={MODAL_USER_PROGRESSION}

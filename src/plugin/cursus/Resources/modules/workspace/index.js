@@ -3,8 +3,7 @@ import {TrainingWorkspaceRestrictions} from '#/plugin/cursus/workspace/container
 /**
  * Adds a page to register to the parent training if the workspace is linked to one.
  */
-export default (workspace, errors) => ({
+export default (workspace, error) => ({
   component: TrainingWorkspaceRestrictions,
-  displayed: !!errors.trainings, // only display the restriction if there is training info
-  order: 0
+  displayed: 'NOT_REGISTERED_TRAINING' === error.code // only display the restriction if there is training info
 })

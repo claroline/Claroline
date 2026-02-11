@@ -1,11 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import {useSelector} from 'react-redux'
 import get from 'lodash/get'
 
+import {PageContent} from '#/main/app/page'
 import {ToolPage} from '#/main/core/tool'
 
-import {Tab as TabTypes} from '#/plugin/home/prop-types'
-import {PageContent} from '#/main/app/page'
+import {selectors} from '#/plugin/home/tools/home/store'
 
 const HomePageSkeleton = () =>
   <ToolPage>
@@ -42,21 +43,22 @@ const HomePageSkeleton = () =>
     </PageContent>
   </ToolPage>
 
-const HomePage = props =>
-  <ToolPage
-    title={props.title}
-  >
-    <PageContent poster={props.poster || get(props.currentTab, 'poster')}>
-      {props.children}
-    </PageContent>
-  </ToolPage>
+const HomePage = ({children}) => {
+  const currentTab = useSelector(selectors.currentTab)
+  const title = useSelector(selectors.currentTabTitle)
+
+  return (
+    <ToolPage
+      title={title}
+    >
+      <PageContent poster={get(currentTab, 'poster')}>
+        {children}
+      </PageContent>
+    </ToolPage>
+  )
+}
 
 HomePage.propTypes = {
-  title: T.string.isRequired,
-  poster: T.string,
-  currentTab: T.shape(
-    TabTypes.propTypes
-  ),
   children: T.any
 }
 

@@ -20,6 +20,7 @@ class ViewerSerializer
             'user' => $viewer->getUser() ? $this->userSerializer->serialize($viewer->getUser(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             'seenAt' => DateNormalizer::normalize($viewer->getSeenAt()),
             'count' => $viewer->getCount(),
+            'id' => $viewer->getId(),
         ];
     }
 }

@@ -61,19 +61,9 @@ const showHeader = createSelector(
   (store) => store.showHeader
 )
 
-const managed = createSelector(
-  [store],
-  (store) => store.managed
-)
-
 const loaded = createSelector(
   [store],
   (store) => store.loaded
-)
-
-const notFound = createSelector(
-  [store],
-  (store) => store.notFound
 )
 
 // lifecycle selectors
@@ -139,9 +129,9 @@ const canFollow = createSelector(
 )
 
 // access restrictions selectors
-const accessErrors = createSelector(
+const error = createSelector(
   [store],
-  (store) => !store.accessErrors.dismissed && !isEmpty(store.accessErrors.details) ? store.accessErrors.details : {}
+  (store) => store.error
 )
 
 const estimatedDuration = createSelector(
@@ -229,13 +219,11 @@ export const selectors = {
   isRoot,
   embedded,
   showHeader,
-  managed,
   loaded,
-  notFound,
   canEdit,
   canFollow,
   resourceLifecycle,
-  accessErrors,
+  error,
   resourceNode,
   resource,
   slug,

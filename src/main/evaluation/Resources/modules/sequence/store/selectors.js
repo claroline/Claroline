@@ -22,6 +22,11 @@ const sequence = createSelector(
   (data) => data.sequence
 )
 
+const name = createSelector(
+  [sequence],
+  (sequence) => sequence.name
+)
+
 const workspace = createSelector(
   [sequence],
   (sequence) => sequence ? sequence.workspace : null
@@ -215,6 +220,7 @@ export const selectors = {
   workspace,
   path,
   id,
+  name,
   steps,
   totalSteps,
   totalActivities,

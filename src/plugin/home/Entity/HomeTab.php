@@ -18,9 +18,11 @@ use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\HasContext;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Views;
 use Claroline\AppBundle\Entity\Restriction\AccessCode;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
+use Claroline\AppBundle\Entity\UserViewCounterInterface;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -29,7 +31,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_home_tab')]
 #[ORM\Entity]
-class HomeTab
+class HomeTab implements UserViewCounterInterface
 {
     use Id;
     use Uuid;
@@ -43,6 +45,7 @@ class HomeTab
     use AccessibleUntil;
     use AccessCode;
     use HasContext;
+    use Views;
 
     /**
      * The type of the tab (e.g. Widgets, Url).

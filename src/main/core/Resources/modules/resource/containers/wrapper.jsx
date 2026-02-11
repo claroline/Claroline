@@ -12,7 +12,7 @@ const ResourceWrapper = withReducer(selectors.STORE_NAME, reducer)(
     (state) => ({
       path: selectors.path(state),
       loaded: selectors.loaded(state),
-      notFound: selectors.notFound(state)
+      error: selectors.error(state)
     }),
     (dispatch) => ({
       fetch(resourceSlug, embedded) {

@@ -43,8 +43,9 @@ class PeriodStatusType extends AbstractType
     public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
     {
         $value = $finder->getFilterValue() ? $finder->getFilterValue() : $options['default'];
+        $value = !is_array($value) ? [$value] : $value;
 
-        if (empty($value) || !in_array($value, [self::NOT_STARTED, self::IN_PROGRESS, self::ENDED, self::NOT_ENDED])) {
+        if (empty($value)) {
             return;
         }
 
@@ -56,21 +57,31 @@ class PeriodStatusType extends AbstractType
         $startProp = $alias.'.'.$options['startPropName'];
         $endProp = $alias.'.'.$options['endPropName'];
 
-        switch ($value) {
-            case self::NOT_STARTED:
-                $queryBuilder->andWhere("$startProp > :{$finder->getAlias()}Now");
-                break;
-            case self::IN_PROGRESS:
-                $queryBuilder->andWhere("($startProp <= :{$finder->getAlias()}Now AND $endProp >= :{$finder->getAlias()}Now)");
-                break;
-            case self::ENDED:
-                $queryBuilder->andWhere("($endProp IS NOT NULL AND $endProp < :{$finder->getAlias()}Now)");
-                break;
-            case self::NOT_ENDED:
-                $queryBuilder->andWhere("($endProp IS NULL OR $endProp >= :{$finder->getAlias()}Now)");
-                break;
+        $query = '';
+        foreach ($value as $item) {
+            if (!empty($query)) {
+                $query .= ' OR ';
+            }
+
+            switch ($item) {
+                case self::NOT_STARTED:
+                    $query .= "$startProp > :{$finder->getAlias()}Now";
+                    break;
+                case self::IN_PROGRESS:
+                    $query .= "($startProp <= :{$finder->getAlias()}Now AND $endProp >= :{$finder->getAlias()}Now)";
+                    break;
+                case self::ENDED:
+                    $query .= "($endProp IS NOT NULL AND $endProp < :{$finder->getAlias()}Now)";
+                    break;
+                case self::NOT_ENDED:
+                    $query .= "($endProp IS NULL OR $endProp >= :{$finder->getAlias()}Now)";
+                    break;
+            }
         }
 
-        $queryBuilder->setParameter($finder->getAlias().'Now', new \DateTime());
+        if (!empty($query)) {
+            $queryBuilder->andWhere('('.$query.')');
+            $queryBuilder->setParameter($finder->getAlias().'Now', new \DateTime());
+        }
     }
 }

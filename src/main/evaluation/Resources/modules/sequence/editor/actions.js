@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl'
 import {makeId} from '#/main/app/utils/id'
 import {toKey} from '#/main/app/utils/text'
-import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_STEP_POSITION} from '#/main/evaluation/sequence/editor/modals/position'
 import {
@@ -16,6 +16,7 @@ import {
   getStepTitle
 } from '#/main/evaluation/sequence/editor/utils'
 import {flattenSteps} from '#/main/evaluation/sequence/utils'
+import {route} from '#/main/core/resource'
 
 function replaceStepIds(step, all) {
   step.id = makeId()
@@ -164,6 +165,14 @@ function getStepActions(steps, step, update, navigate, isCurrent = false) {
 
   return [
     {
+      name: 'open-activity',
+      type: LINK_BUTTON,
+      icon: 'fa fa-fw fa-arrow-up-right-from-square',
+      label: trans('open_activity', {}, 'actions'),
+      target: step.primaryResource ? route(step.primaryResource) : '',
+      displayed: !!step.primaryResource,
+      primary: true
+    }, {
       name: 'add',
       type: CALLBACK_BUTTON,
       icon: 'fa fa-fw fa-plus',

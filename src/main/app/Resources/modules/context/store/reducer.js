@@ -6,9 +6,8 @@ import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'
 import {
   CONTEXT_OPEN,
   CONTEXT_LOAD,
-  CONTEXT_NOT_FOUND,
   CONTEXT_SET_LOADED,
-  CONTEXT_MENU_TOGGLE_OPEN
+  CONTEXT_MENU_TOGGLE_OPEN, CONTEXT_SET_ERROR
 } from '#/main/app/context/store/actions'
 
 import {TOOL_LOAD} from '#/main/core/tool/store'
@@ -16,7 +15,7 @@ import {PLATFORM_SET_CURRENT_ORGANIZATION} from '#/main/app/platform/store/actio
 
 const reducer = combineReducers({
   /**
-   * The type of the current context (e.g. public, desktop, workspace, administration).
+   * The type of the current context (e.g., public, desktop, workspace, administration).
    *
    * @var string
    */
@@ -49,18 +48,19 @@ const reducer = combineReducers({
     [PLATFORM_SET_CURRENT_ORGANIZATION]: () => false,
     [CONTEXT_OPEN]: () => false,
     [CONTEXT_LOAD]: () => true,
-    [CONTEXT_NOT_FOUND]: () => true,
+    [CONTEXT_SET_ERROR]: () => true,
     [CONTEXT_SET_LOADED]: (state, action) => action.loaded
   }),
-  notFound: makeReducer(false, {
-    [CONTEXT_OPEN]: () => false,
-    [CONTEXT_NOT_FOUND]: () => true
-  }),
-  accessErrors: makeReducer({}, {
-    [SECURITY_USER_CHANGE]: () => ({}),
-    [PLATFORM_SET_CURRENT_ORGANIZATION]: () => ({}),
-    [CONTEXT_OPEN]: () => ({}),
-    [CONTEXT_LOAD]: (state, action) => action.contextData.accessErrors || {}
+  error: makeReducer(null, {
+    [SECURITY_USER_CHANGE]: () => null,
+    [PLATFORM_SET_CURRENT_ORGANIZATION]: () => null,
+    [CONTEXT_OPEN]: () => null,
+    [CONTEXT_LOAD]: (state, action) => action.contextData.error || null,
+    [CONTEXT_SET_ERROR]: (state, action) => ({
+      code: action.code.toUpperCase(),
+      message: action.message,
+      additional: action.additional
+    })
   }),
 
   data: makeReducer({}, {

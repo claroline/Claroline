@@ -1,4 +1,5 @@
 import get from 'lodash/get'
+import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 
 import {makeInstanceAction} from '#/main/app/store/actions'
@@ -8,10 +9,10 @@ import {TOOL_LOAD, TOOL_OPEN} from '#/main/core/tool/store/actions'
 
 import {
   CURRENT_TAB,
-  TABS_LOAD,
   TAB_LOAD,
-  TAB_RESTRICTIONS_DISMISS,
-  TAB_SET_LOADED
+  TAB_SET_LOADED,
+  TAB_SET_ERROR,
+  TAB_UPDATE_VIEWS
 } from '#/plugin/home/tools/home/store/actions'
 import {selectors} from '#/plugin/home/tools/home/store/selectors'
 import {CONTEXT_OPEN} from '#/main/app/context/store/actions'
@@ -36,16 +37,11 @@ const reducer = combineReducers({
 
       return tabs
     },
-    [TABS_LOAD]: (state, action) => {
-      const tabs = [].concat(action.tabs || [])
-
-      if (isEmpty(tabs) || -1 === tabs.findIndex(tab => !get(tab, 'restrictions.hidden', false))) {
-        tabs.push(
-          selectors.defaultTab({tool: {currentContext: action.context}})
-        )
-      }
-
-      return tabs
+    [TAB_UPDATE_VIEWS]: (state, action) => {
+      const newState = cloneDeep(state)
+      const tab = state.findIndex(tab => tab.id === action.tabId)
+      newState[tab]['meta'].views = action.nbViews
+      return newState
     }
   }),
 
@@ -53,7 +49,8 @@ const reducer = combineReducers({
     [CONTEXT_OPEN]: () => false,
     [SECURITY_USER_CHANGE]: () => false,
     [TAB_LOAD]: () => true,
-    [TAB_SET_LOADED]: (state, action) => action.loaded
+    [TAB_SET_LOADED]: (state, action) => action.loaded,
+    [TAB_SET_ERROR]: () => true
   }),
 
   current: makeReducer(null, {
@@ -61,17 +58,12 @@ const reducer = combineReducers({
     [TAB_LOAD]: (state, action) => action.homeTab
   }),
 
-  managed: makeReducer(false, {
-    [TAB_LOAD]: (state, action) => action.managed || false
-  }),
-
-  accessErrors: combineReducers({
-    dismissed: makeReducer(false, {
-      [TAB_RESTRICTIONS_DISMISS]: () => true,
-      [TAB_LOAD]: () => false
-    }),
-    details: makeReducer({}, {
-      [TAB_LOAD]: (state, action) => action.accessErrors || {}
+  error: makeReducer(null, {
+    [TAB_LOAD]: (state, action) => action.error || null,
+    [TAB_SET_ERROR]: (state, action) => ({
+      code: action.code.toUpperCase(),
+      message: action.message,
+      additional: action.additional
     })
   })
 })

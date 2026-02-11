@@ -1,13 +1,14 @@
 import React, {createElement, useEffect, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/app/intl/translation'
 import {makeCancelable} from '#/main/app/api'
 import {getResource} from '#/main/core/resource/utils'
 
-import {ContentLoader} from '#/main/app/content/components/loader'
-import {ResourceNotFound} from '#/main/core/resource/components/not-found'
+import {ResourceSkeleton} from '#/main/core/resource/components/skeleton'
+import {ResourceError} from '#/main/core/resource/components/error'
+import {ErrorBoundary} from '#/main/app/components/error-boundary'
 
 const ResourceWrapper = (props) => {
   const [app, setApp] = useState(null)
@@ -52,27 +53,28 @@ const ResourceWrapper = (props) => {
     }
   }, [props.loaded])
 
-  if (props.notFound) {
+  if (props.loaded && !isEmpty(props.error)) {
     return (
-      <ResourceNotFound />
+      <ResourceError {...props.error} />
     )
   }
 
   if (!props.loaded || !app) {
     return (
-      <ContentLoader
-        size="lg"
-        description={trans('loading', {}, 'resource')}
-      />
+      <ResourceSkeleton />
     )
   }
 
-  return createElement(app.component, {
-    path: props.path,
-    type: app.type,
-    slug: props.slug,
-    open: (resourceType, resourceSlug) => props.openType(resourceType, resourceSlug, app.data)
-  })
+  return (
+    <ErrorBoundary fallback={<ResourceError code="UNKNOWN_ERROR" message="Error while rendering the requested resource." />}>
+      {createElement(app.component, {
+        path: props.path,
+        type: app.type,
+        slug: props.slug,
+        open: (resourceType, resourceSlug) => props.openType(resourceType, resourceSlug, app.data)
+      })}
+    </ErrorBoundary>
+  )
 }
 
 ResourceWrapper.propTypes = {
@@ -82,7 +84,7 @@ ResourceWrapper.propTypes = {
 
   // from store
   loaded: T.bool.isRequired,
-  notFound: T.bool.isRequired,
+  error: T.object,
   open: T.func.isRequired,
   fetch: T.func.isRequired,
   openType: T.func.isRequired

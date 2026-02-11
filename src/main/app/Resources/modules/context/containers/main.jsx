@@ -13,8 +13,7 @@ const ContextMain = withRouter(
         path: selectors.path(state),
         contextData: selectors.data(state),
         loaded: selectors.loaded(state),
-        notFound: selectors.notFound(state),
-        accessErrors: selectors.accessErrors(state),
+        error: selectors.error(state),
         defaultOpening: selectors.defaultOpening(state),
         tools: selectors.tools(state)
       }),

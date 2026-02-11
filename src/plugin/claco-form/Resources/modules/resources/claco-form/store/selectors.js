@@ -138,11 +138,10 @@ const canEditCurrentEntry = createSelector(
 
 const canAddEntry = createSelector(
   resourceSelect.resourceNode,
-  resourceSelect.managed,
   params,
   myEntriesCount,
   (resourceNode, managed, params, myEntriesCount) => {
-    return managed
+    return hasPermission('edit', resourceNode)
       || (hasPermission('contribute', resourceNode) && (!params.max_entries || myEntriesCount < params.max_entries))
   }
 )

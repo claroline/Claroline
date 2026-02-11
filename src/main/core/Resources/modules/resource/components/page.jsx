@@ -17,6 +17,7 @@ import {EvaluationShortcut} from '#/main/evaluation/components/shortcut'
 import {MODAL_USER_PROGRESSION} from '#/main/evaluation/resource/modals/user-progression'
 import {pickAction} from '#/main/app/action'
 import {trans} from '#/main/app/intl'
+import {hasPermission} from '#/main/app/security'
 
 const ResourcePage = (props) => {
   const dispatch = useDispatch()
@@ -58,22 +59,24 @@ const ResourcePage = (props) => {
   }, basePath, currentUser, false).then(loadedActions => [].concat(loadedActions, resourceDef.actions || []))
 
   let banner
-  if (get(resourceNode, 'meta.archived', false)) {
-    banner = {
-      type: 'danger',
-      content: trans('resource_archived_info', {}, 'resource'),
-      actions: Promise.all([
-        pickAction('restore', resourceActions),
-        pickAction('delete', resourceActions)
-      ])
-    }
-  } else if (!get(resourceNode, 'meta.published', true)) {
-    banner = {
-      type: 'warning',
-      content: trans('resource_not_published_info', {}, 'resource'),
-      actions: Promise.all([
-        pickAction('publish', resourceActions)
-      ])
+  if (hasPermission('open', resourceNode)) {
+    if (get(resourceNode, 'meta.archived', false)) {
+      banner = {
+        type: 'danger',
+        content: trans('resource_archived_info', {}, 'resource'),
+        actions: Promise.all([
+          pickAction('restore', resourceActions),
+          pickAction('delete', resourceActions)
+        ])
+      }
+    } else if (!get(resourceNode, 'meta.published', true)) {
+      banner = {
+        type: 'warning',
+        content: trans('resource_not_published_info', {}, 'resource'),
+        actions: Promise.all([
+          pickAction('publish', resourceActions)
+        ])
+      }
     }
   }
 

@@ -9,6 +9,7 @@ import {flattenTabs, getTabSummary} from '#/plugin/home/tools/home/utils'
 import {HomeTab} from '#/plugin/home/tools/home/containers/tab'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
 import {HomePageSkeleton} from '#/plugin/home/tools/home/components/page'
+import {HomeDashboard} from '#/plugin/home/tools/home/dashboard/components/main'
 
 const HomeTool = props => {
   const tabs = props.tabs
@@ -24,6 +25,7 @@ const HomeTool = props => {
       redirect={[
         props.loaded && props.tabs[0] && {from: '/', exact: true, to: '/' + props.tabs[0].slug}
       ].filter(redirect => !!redirect)}
+      dashboard={HomeDashboard}
       pages={props.loaded ? [
         {
           path: '/:slug',
@@ -56,7 +58,8 @@ HomeTool.propTypes = {
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
-  setCurrentTab: T.func.isRequired
+  setCurrentTab: T.func.isRequired,
+  showHidden: T.bool
 }
 
 HomeTool.defaultProps = {

@@ -100,6 +100,7 @@
   "sequence_required": "Requis",
   "sequence_scored": "Noté",
   "sequence_available_help": "Les utilisateurs <b>peuvent faire</b> la séquence",
+  "sequence_no_step": "Cette séquence ne contient aucune activité pour le moment.",
   "sequence_not_required_help": "La séquence <b>ne participe pas</b> à la progression de l'espace d'activités",
   "sequence_required_help": "La séquence <b>participe</b> à la progression de l'espace d'activités",
   "sequence_not_scored_help": "Le score de la séquence <b>n'est pas comptabilisé</b> lors du calcul du score de l'espace d'activités",

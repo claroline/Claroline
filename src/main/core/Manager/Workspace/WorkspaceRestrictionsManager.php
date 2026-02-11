@@ -21,6 +21,12 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 class WorkspaceRestrictionsManager
 {
+    private const NO_RIGHTS = 'NO_RIGHTS';
+    private const NOT_PUBLISHED = 'NOT_PUBLISHED';
+    private const NOT_REGISTERED = 'NOT_REGISTERED';
+    private const INVALID_DATES = 'INVALID_DATES';
+    private const ACCESS_CODE = 'ACCESS_CODE';
+
     public function __construct(
         private readonly EventDispatcherInterface $dispatcher,
         private readonly RequestStack $requestStack,
@@ -41,50 +47,69 @@ class WorkspaceRestrictionsManager
             && $this->isUnlocked($workspace);
     }
 
-    /**
-     * Gets the list of access error for a workspace and a user.
-     */
-    public function getErrors(Workspace $workspace, User $user = null): array
+    public function getError(Workspace $workspace, ?User $user = null): ?array
     {
-        if (!$this->isGranted($workspace)) {
-            // return restrictions details
-            $errors = [
-                'noRights' => !$this->hasRights($workspace),
-                'selfRegistration' => $workspace->getSelfRegistration(),
-                'archived' => $workspace->isArchived(),
-            ];
-
-            if ($user) {
-                $errors['registered'] = $this->workspaceManager->isRegistered($workspace, $user);
-                $errors['pendingRegistration'] = $this->workspaceUserQueueManager->isUserInValidationQueue($workspace, $user);
-            }
-
-            // optional restrictions
-            // we return them only if they are enabled
-            if (!empty($workspace->getAccessCode())) {
-                $errors['locked'] = !$this->isUnlocked($workspace);
-            }
-
-            if (!empty($workspace->getAccessibleFrom()) || !empty($workspace->getAccessibleUntil())) {
-                $errors['notStarted'] = !$this->isStarted($workspace);
-                $errors['startDate'] = DateNormalizer::normalize($workspace->getAccessibleFrom());
-                $errors['ended'] = $this->isEnded($workspace);
-                $errors['endDate'] = DateNormalizer::normalize($workspace->getAccessibleUntil());
-            }
-
-            $event = new AccessRestrictedWorkspaceEvent($workspace, $errors);
+        if (!$this->hasRights($workspace)) {
+            $event = new AccessRestrictedWorkspaceEvent($workspace);
             $this->dispatcher->dispatch($event, WorkspaceEvents::ACCESS_RESTRICTED);
 
-            return $event->getErrors();
+            if ($event->getError()) {
+                return $event->getError();
+            }
+
+            if (!$user || !$this->workspaceManager->isRegistered($workspace, $user)) {
+                return [
+                    'code' => self::NOT_REGISTERED,
+                    'additional' => [
+                        'selfRegistration' => !$workspace->isArchived() && $workspace->getSelfRegistration(),
+                        'pendingRegistration' => $user ? $this->workspaceUserQueueManager->isUserInValidationQueue($workspace, $user) : null,
+                    ],
+                ];
+            }
+
+            return [
+                'code' => self::NO_RIGHTS,
+                'message' => 'You don\'t have the permissions to access this workspace.',
+            ];
         }
 
-        return [];
+        if ($workspace->isArchived()) {
+            return [
+                'code' => self::NOT_PUBLISHED,
+                'message' => 'The workspace is archived.',
+                'additional' => [
+                    'archived' => true,
+                ],
+            ];
+        }
+
+        if (!$this->isStarted($workspace) || $this->isEnded($workspace)) {
+            return [
+                'code' => self::INVALID_DATES,
+                'message' => !$this->isStarted($workspace) ?
+                    'The access period of the workspace is not started yet.' :
+                    'The access period of the workspace is ended.',
+                'additional' => [
+                    'startDate' => DateNormalizer::normalize($workspace->getAccessibleFrom()),
+                    'endDate' => DateNormalizer::normalize($workspace->getAccessibleUntil()),
+                ],
+            ];
+        }
+
+        if (!$this->isUnlocked($workspace)) {
+            return [
+                'code' => self::ACCESS_CODE,
+                'message' => 'This resource requires an access code to be opened.',
+            ];
+        }
+
+        return null;
     }
 
     /**
      * Checks if a user has at least the right to access one workspace tool.
      */
-    public function hasRights(Workspace $workspace): bool
+    private function hasRights(Workspace $workspace): bool
     {
         // we don't simply call the auth checker because it will check all the restrictions (e.g., dates, code)
         // not only the user rights
@@ -127,7 +152,7 @@ class WorkspaceRestrictionsManager
 
     /**
      * Submits a code to unlock a workspace.
-     * NB. The workspace will stay unlocked as long as the user session stay alive.
+     * NB. The workspace will stay unlocked as long as the user session stays alive.
      *
      * @param Workspace $workspace - The workspace to unlock
      * @param string    $code      - The code sent by the user
