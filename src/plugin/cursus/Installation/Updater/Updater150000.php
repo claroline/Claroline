@@ -2,10 +2,6 @@
 
 namespace Claroline\CursusBundle\Installation\Updater;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Component\Context\PublicContext;
-use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Manager\OrganizationManager;
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Connection;

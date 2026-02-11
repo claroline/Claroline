@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\CursusBundle\Component\Tool\TrainingsTool;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\EventPresence;
+use Claroline\CursusBundle\Entity\Registration\EventUser;
 use Claroline\CursusBundle\Manager\EventManager;
 use Claroline\CursusBundle\Manager\EventPresenceManager;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -134,6 +135,14 @@ class EventPresenceController
         $user = $this->tokenStorage->getToken()?->getUser();
         if (!$user) {
             return new JsonResponse(null, 401);
+        }
+
+        $eventUser = $this->om->getRepository(EventUser::class)->findOneBy([
+            'user' => $user,
+            'event' => $event,
+        ]);
+        if (!$eventUser) {
+            return new JsonResponse($this->serializer->serialize($event), 403);
         }
 
         $presence = $this->om->getRepository(EventPresence::class)->findOneBy([

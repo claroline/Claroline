@@ -7,12 +7,17 @@
     "event_not_found_desc": "Deze code komt niet overeen met een sessie.",
     "event_not_found_retry": "Voer de code van de sessie opnieuw in",
     "event_presence_label": "Voer uw naam en voornaam in",
+
+    "event_not_registered": "Je bent niet geregistreerd voor deze sessie.",
+    "event_not_registered_desc": "Je moet je voor deze sessie registreren om je aanwezigheid te bevestigen.",
+
     "not_registered": "Inloggen vereist",
     "not_registered_desc": "U moet ingelogd zijn om uw aanwezigheid bij deze sessie te bevestigen.",
     "presence_code": "Code van de sessie",
     "presence_code_desc": "Voer de code van de sessie in waarvoor u uw aanwezigheid wilt bevestigen.",
     "presence_confirm_title": "Bevestiging van aanwezigheid",
     "presence_confirm_desc": "Uw aanwezigheid bij de sessie %event_title% is geregistreerd.",
+    "presence_confirm": "Bevestig een aanwezigheid",
     "presence_confirm_other": "Bevestig een andere aanwezigheid",
     "presence_confirmation_date": "Datum van bevestiging",
     "presence_validation_date": "Datum van validatie door de trainer",

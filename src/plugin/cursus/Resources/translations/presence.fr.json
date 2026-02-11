@@ -19,11 +19,15 @@
   "event_not_found_retry": "Saisir à nouveau le code de la séance",
   "event_presence_label": "Entrer vos nom et prénom",
 
+  "event_not_registered": "Vous n'êtes pas incrit à cette séance",
+  "event_not_registered_desc": "Vous devez être inscrit à cette séance pour confirmer votre présence.",
+
   "not_registered": "Connexion requise",
   "not_registered_desc": "Vous devez être connecté pour confirmer votre présence à cette séance.",
 
   "presence_code": "Code de la séance",
   "presence_code_desc": "Veuillez entrer le code de la séance pour laquelle vous souhaitez confirmer votre présence.",
+  "presence_confirm": "Confirmer une présence",
   "presence_confirm_title": "Confirmation de présence",
   "presence_confirm_desc": "Votre présence à la séance %event_title% a bien été enregistrée.",
   "presence_confirm_other": "Confirmer une autre présence",

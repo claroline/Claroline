@@ -10,6 +10,7 @@ const CURRENT_EVENT = 'eventCurrent'
 const LOAD_EVENT = 'eventLoad'
 const CHANGE_EVENT = 'eventChange'
 const EVENT_SIGNED = 'eventSigned'
+const USER_REGISTERED = 'userRegistered'
 
 const store = (state) => state[STORE_NAME]
 
@@ -38,6 +39,11 @@ const eventSigned = createSelector(
   (store) => store.eventSigned
 )
 
+const userRegistered = createSelector(
+  [store],
+  (store) => store.userRegistered
+)
+
 const selectors = {
   STORE_NAME,
   currentEvent,
@@ -45,6 +51,7 @@ const selectors = {
   signature,
   code,
   eventSigned,
+  userRegistered,
   store
 }
 
@@ -55,11 +62,13 @@ actions.setSignature = makeActionCreator(SIGN_EVENT, 'signature')
 actions.setEventLoaded = makeActionCreator(LOAD_EVENT, 'eventLoaded')
 actions.setCurrentEvent = makeActionCreator(CURRENT_EVENT, 'currentEvent')
 actions.setEventSigned = makeActionCreator(EVENT_SIGNED, 'eventSigned')
+actions.setUserRegistered = makeActionCreator(USER_REGISTERED, 'userRegistered')
 
 actions.getEventByCode = (code = null) => ({
   [API_REQUEST]: {
     url: ['apiv2_training_event_presence_check', {code: code}],
     success: (response, dispatch) => {
+      dispatch(actions.setUserRegistered(true))
       if (typeof response.status !== 'undefined' && constants.PRESENCE_STATUS_PRESENT === response.status) {
         dispatch(actions.setEventSigned(true))
       }
@@ -70,6 +79,12 @@ actions.getEventByCode = (code = null) => ({
       if (status === 404) {
         dispatch(actions.setCurrentEvent(null))
         dispatch(actions.setEventLoaded(true))
+        dispatch(actions.setUserRegistered(false))
+      }
+      if (status === 403) {
+        dispatch(actions.setEventLoaded(true))
+        dispatch(actions.setCurrentEvent(response))
+        dispatch(actions.setUserRegistered(false))
       }
     }
   }
@@ -107,6 +122,9 @@ const reducer = combineReducers({
   }),
   eventSigned : makeReducer(null, {
     [EVENT_SIGNED]: (state, action) => action.eventSigned
+  }),
+  userRegistered : makeReducer(null, {
+    [USER_REGISTERED]: (state, action) => action.userRegistered
   })
 })
 
@@ -119,5 +137,6 @@ export {
   eventLoaded,
   signature,
   eventSigned,
+  userRegistered,
   code
 }

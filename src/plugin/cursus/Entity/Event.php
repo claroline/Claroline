@@ -15,8 +15,8 @@ use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\CoreBundle\Entity\Planning\AbstractPlanned;
 use Claroline\CursusBundle\Finder\EventType;
-use Claroline\TemplateBundle\Entity\Template;
 use Claroline\CursusBundle\Repository\EventRepository;
+use Claroline\TemplateBundle\Entity\Template;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 

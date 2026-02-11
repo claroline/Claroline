@@ -18,6 +18,9 @@
   "event_not_found_retry": "Enter again event code",
   "event_presence_label": "Enter your firstname and lastname",
 
+  "event_not_registered": "You are not registered at this event",
+  "event_not_registered_desc": "You must be registered at this event to confirm your presence.",
+
   "not_registered": "Authentication required",
   "not_registered_desc": "You must be logged to confirm your presence at this event.",
 
@@ -25,6 +28,7 @@
   "presence_code_desc": "Please enter the event code to confirm your presence.",
   "presence_confirm_title": "Presence confirmation",
   "presence_confirm_desc": "Your %event_title% event signature has been successfully recorded.",
+  "presence_confirm": "Confirm a presence",
   "presence_confirm_other": "Confirm another presence",
   "presence_confirmation_date": "Validation date",
   "presence_validation_date": "Validation date by tutor",

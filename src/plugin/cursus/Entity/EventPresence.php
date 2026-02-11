@@ -34,9 +34,6 @@ class EventPresence
     #[ORM\JoinColumn(name: 'user_id', nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'presence_status', nullable: false)]
     private string $status = self::UNKNOWN;
 

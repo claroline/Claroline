@@ -12,9 +12,9 @@
 namespace Claroline\CursusBundle\Entity\Registration;
 
 use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Finder\Registration\EventUserType;
 use Claroline\CursusBundle\Repository\Registration\EventUserRepository;
-use Claroline\CursusBundle\Entity\Event;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_cursusbundle_session_event_user')]
