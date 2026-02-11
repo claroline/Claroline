@@ -4,10 +4,13 @@
   <li>Séquence : possibilité de créer les étapes d'une séquence directement en choisissant plusieurs ressources.</li>
   <li>Questionnaire :  une étape avec une question ouverte ou un contenu texte s'affiche désormais correctement.</li>
   <li>Quand on crée un Espace d'activité, le créateur est automatiquement inscrit comme gestionnaire de l'espace créé.</li>
+  <li>Ajout de la possibilité de mettre sa présence à une séance depuis le catalogue de formation</li>
+  <li>Amélioration de la page de notification de restriction d'accès à une ressource ou une formation</li>
   <li>Ajout du suivi du nombre de vues sur les connaissances, les annonces et les pages d'accueil</li>
   <li>Ressource raccourci : l'accès à l'éditeur et le scroll sont à nouveau fonctionnel</li>
   <li>Séquence : la ressource d'une étape a une action ouvrir pour y accéder directement </li>
   <li>La vue tableau est à nouveau fonctionnelle pour les annonces</li>
+  <li>Le widget liste des séances peut être filtré par statuts de la séance</li>
   <li>Connaissance : lors de la suppression d'une page, on précise le nom de la page dans la fenêtre de confirmation</li>
   <li>Ajout du suivi des vues sur les pages d'accueil (bureau, espace d'activité et public)</li>
   <li>Ajout du suivi des vues sur les pages d'une ressource connaissance</li>
