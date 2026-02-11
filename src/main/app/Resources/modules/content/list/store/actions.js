@@ -38,7 +38,9 @@ actions.toggleSelectAll = makeInstanceActionCreator(LIST_TOGGLE_SELECT_ALL, 'row
 // data loading
 export const LIST_DATA_LOAD       = 'LIST_DATA_LOAD'
 export const LIST_DATA_INVALIDATE = 'LIST_DATA_INVALIDATE'
+export const LIST_SET_ERROR = 'LIST_SET_ERROR'
 
+actions.setError = makeInstanceActionCreator(LIST_SET_ERROR, 'code', 'message', 'additional')
 actions.loadData = makeInstanceActionCreator(LIST_DATA_LOAD, 'data', 'total')
 actions.invalidateData = makeInstanceActionCreator(LIST_DATA_INVALIDATE)
 actions.fetchData = (listName, target, invalidate = false) => (dispatch, getState) => {
@@ -51,15 +53,25 @@ actions.fetchData = (listName, target, invalidate = false) => (dispatch, getStat
   return dispatch({
     [API_REQUEST]: {
       silent: true,
+      silentError: true,
       url: url(target) + selectors.queryString(listState),
       success: (response, dispatch) => {
-        /*if (selectors.currentPage(listState) !== response.page) {
-          // we reset current page because if we request a non-existing page,
-          // finder will return us the last existing one
-          dispatch(actions.changePage(listName, response.page))
-        }*/
-
         dispatch(actions.loadData(listName, response.data, response.totalResults))
+      },
+      error: (response, status) => {
+        switch (status) {
+          case 404:
+            dispatch(actions.setError(listName, 'NOT_FOUND', 'List not found.', null))
+            break
+          case 500:
+            dispatch(actions.setError(listName, 'UNKNOWN_ERROR', response.message, response.trace))
+            break
+          case 401:
+          case 403:
+            console.log('coucou')
+            dispatch(actions.setError(listName, 'NO_RIGHTS', 'You don\'t have the rights to open this list.', null))
+            break
+        }
       }
     }
   })

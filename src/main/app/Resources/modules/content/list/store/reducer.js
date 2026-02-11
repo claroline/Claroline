@@ -14,7 +14,8 @@ import {
   LIST_TOGGLE_SELECT_ALL,
   LIST_DATA_INVALIDATE,
   LIST_DATA_LOAD,
-  LIST_DATA_DELETE
+  LIST_DATA_DELETE,
+  LIST_SET_ERROR
 } from '#/main/app/content/list/store/actions'
 import {constants} from '#/main/app/content/list/constants'
 import {PAGINATION_PAGE_CHANGE, PAGINATION_SIZE_UPDATE} from '#/main/app/content/pagination/store/actions'
@@ -28,6 +29,7 @@ import {
 const defaultState = {
   loaded: false,
   invalidated: false,
+  error: null,
   data: [],
   totalResults: 0,
   sortBy: {
@@ -48,11 +50,22 @@ const defaultState = {
 const invalidatedReducer = makeInstanceReducer(defaultState.invalidated, {
   [SECURITY_USER_CHANGE]: () => true,
   [LIST_DATA_INVALIDATE]: () => true,
-  [LIST_DATA_LOAD]: () => false
+  [LIST_DATA_LOAD]: () => false,
+  [LIST_SET_ERROR]: () => false
 })
 
 const loadedReducer = makeInstanceReducer(defaultState.loaded, {
-  [LIST_DATA_LOAD]: () => true
+  [LIST_DATA_LOAD]: () => true,
+  [LIST_SET_ERROR]: () => true
+})
+
+const errorReducer = makeInstanceReducer(defaultState.error, {
+  [LIST_DATA_LOAD]: () => true,
+  [LIST_SET_ERROR]: (state, action) => ({
+    code: action.code.toUpperCase(),
+    message: action.message,
+    additional: action.additional
+  })
 })
 
 /**
@@ -168,6 +181,7 @@ const paginationReducer = makeInstanceReducer(defaultState.pagination, {
 const baseReducer = {
   loaded: loadedReducer,
   invalidated: invalidatedReducer,
+  error: errorReducer,
   data: dataReducer,
   totalResults: totalResultsReducer,
   sortBy: sortByReducer,

@@ -10,6 +10,7 @@ const list = (state, listName) => get(state, listName)
 // access list data
 const loaded       = (listState) => listState.loaded
 const invalidated  = (listState) => listState.invalidated
+const error         = (listState) => listState.error
 const data         = (listState) => listState.data
 const totalResults = (listState) => listState.totalResults
 const selected     = (listState) => listState.selected || []
@@ -85,6 +86,7 @@ selectors = select = {
   list,
   loaded,
   invalidated,
+  error,
   data,
   totalResults,
   filters,

@@ -20,12 +20,12 @@ actions.processResponse = makeActionCreator(RESPONSE_RECEIVE, 'apiRequest', 'sta
 actions.receiveResponse = (apiRequest, status, statusText, response) => dispatch => {
   // add new status alert
   // we force the display of errors
-  // this is a quick fix for components which maintain their own loader without managing errors
+  // this is a quick fix for components that maintain their own loader without managing errors
   const currentStatus = constants.HTTP_ALERT_STATUS[status]
-  if (currentStatus && (!apiRequest.silent || alertConstants.ALERT_STATUS_ERROR === currentStatus)) {
+  if (currentStatus && (!apiRequest.silent || (!apiRequest.silentError && alertConstants.ALERT_STATUS_ERROR === currentStatus))) {
     const currentAction = apiRequest.type || constants.HTTP_ACTIONS[apiRequest.request.method]
     if (alertConstants.ALERT_ACTIONS[currentAction][currentStatus]) {
-      // the current action define a message for the status
+      // the current action defines a message for the status
       const customMessages = apiRequest.messages[currentStatus]
 
       dispatch(alertActions.addAlert(

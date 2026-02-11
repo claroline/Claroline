@@ -23,6 +23,7 @@ import DISPLAY_MODES from '#/main/app/content/list/modes'
 import {ListEmpty} from '#/main/app/content/list/components/empty'
 import {ListHeader} from '#/main/app/content/list/components/header'
 import {ListFooter} from '#/main/app/content/list/components/footer'
+import {ListError} from '#/main/app/content/list/components/error'
 
 /**
  * Full data list with configured components (e.g., search, pagination).
@@ -150,9 +151,9 @@ class ListData extends Component {
           />
         }
 
-        {empty && !hasFilters && this.props.children}
+        {!this.props.error && empty && !hasFilters && this.props.children}
 
-        {empty && (!this.props.children || hasFilters) &&
+        {!this.props.error && empty && (!this.props.children || hasFilters) &&
           <ListEmpty hasFilters={hasFilters} />
         }
 
@@ -173,6 +174,10 @@ class ListData extends Component {
               flush: this.props.flush
             }
           ))
+        }
+
+        {this.props.error && !this.props.loading &&
+          <ListError {...this.props.error} />
         }
 
         {0 !== this.props.totalResults && (this.props.count || this.props.pagination) &&
@@ -202,6 +207,12 @@ ListData.propTypes = {
     // because some features (like selection) require retrieving some data rows
     id: T.oneOfType([T.string, T.number]).isRequired
   })).isRequired,
+
+  error: T.shape({
+    code: T.string.isRequired,
+    message: T.string,
+    additional: T.any
+  }),
 
   /**
    * Total results available in the list (without pagination if any).

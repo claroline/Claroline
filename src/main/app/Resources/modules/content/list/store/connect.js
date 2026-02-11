@@ -30,6 +30,7 @@ function mapStateToProps(state, ownProps) {
   const newProps = {
     loaded: listSelectors.loaded(listState),
     invalidated: listSelectors.invalidated(listState),
+    error: listSelectors.error(listState),
     data: listSelectors.data(listState),
     totalResults: listSelectors.totalResults(listState)
   }
@@ -171,6 +172,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     loaded:        stateProps.loaded,
     invalidated:   stateProps.invalidated,
     data:          stateProps.data,
+    error:         stateProps.error,
     totalResults:  stateProps.totalResults,
     children:      ownProps.children
   }

@@ -42,10 +42,16 @@ const ApiRequest = {
     }),
 
     /**
-     * Disables all automatic messages for the request.
+     * Disables all automatic messages (except errors) for the request.
      * This permits a manual management of feedback if the default one does not handle your use case.
      */
     silent: T.bool,
+
+    /**
+     * Disables all error messages for the request.
+     * This permits a manual management of errors in your components.
+     */
+    silentError: T.bool,
 
     /**
      * Displays the login modal if API returns authentication errors (aka 401 http status).
@@ -83,6 +89,7 @@ const ApiRequest = {
   },
   defaultProps: {
     silent: false,
+    silentError: false,
     forceReauthenticate: true,
     request: {
       method: 'GET',
