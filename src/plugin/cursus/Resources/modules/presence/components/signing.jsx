@@ -138,7 +138,7 @@ const SignPresence = withReducer(selectors.STORE_NAME, reducer)(
       eventLoaded: selectors.eventLoaded(state),
       signature: selectors.signature(state),
       eventSigned: selectors.eventSigned(state),
-      userRegistered: selectors.userRegistered(state),
+      userRegistered: selectors.userRegistered(state)
     }),
     (dispatch) => ({
       signPresence: (event, signature) => {
