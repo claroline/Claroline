@@ -11,8 +11,9 @@ import {ContentHtml} from '#/main/app/content/components/html'
 import {MODAL_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {selectors, actions, reducer} from '#/plugin/cursus/presence/store'
-import {PageSection} from '#/main/app/page'
+import {PageContent, PageSection} from '#/main/app/page'
 import {withReducer} from '#/main/app/store/components/withReducer'
+import {ToolPage} from '#/main/core/tool'
 
 const SignPresenceComponent = (props) => {
   const history = useHistory()
@@ -24,8 +25,10 @@ const SignPresenceComponent = (props) => {
   }, [dispatch, props.code])
 
   return (
-    <PageSection size="md" className="d-flex flex-column align-items-center mt-5">
-      {props.currentUser && props.eventLoaded && props.currentEvent && props.eventSigned && props.userRegistered &&
+    <ToolPage title={trans('presence', {}, 'tools')}>
+      <PageContent>
+        <PageSection size="md" className="d-flex flex-column align-items-center mt-5">
+          {props.currentUser && props.eventLoaded && props.currentEvent && props.eventSigned && props.userRegistered &&
             <Alert
               type="success"
               className="content-md"
@@ -41,10 +44,10 @@ const SignPresenceComponent = (props) => {
                 />
               </div>
             </Alert>
-      }
+          }
 
-      {props.currentUser && props.eventLoaded && props.currentEvent && !props.eventSigned && props.userRegistered &&
-            <PageSection size="md" className="d-flex flex-column align-items-center">
+          {props.currentUser && props.eventLoaded && props.currentEvent && !props.eventSigned && props.userRegistered &&
+            <div className="d-flex flex-column align-items-center">
               <div className="bg-body-secondary rounded-2 p-4 text-center">
                 <ContentHtml className="mb-3">
                   {trans('presence_info', {
@@ -69,64 +72,66 @@ const SignPresenceComponent = (props) => {
                   callback={() => {props.signPresence(props.currentEvent, props.signature)}}
                 />
               </div>
-            </PageSection>
-      }
+            </div>
+          }
 
-      {!props.currentUser && props.eventLoaded && props.currentEvent ? (
-        <Alert
-          type="warning"
-          className="content-md"
-          title={trans('not_registered', {}, 'presence')}
-        >
-          {trans('not_registered_desc', {}, 'presence')}
-          <div className="btn-toolbar gap-1 mt-3 justify-content-end">
-            <Button
-              className={'btn btn-outline-warning'}
-              label={trans('login', {}, 'actions')}
-              type={MODAL_BUTTON}
-              modal={[MODAL_SECURITY, {
-                onLogin: () => {
-                  history.push(`${props.path}/${props.currentEvent.codeEmargement}`)
-                }
-              }]}
-            />
-          </div>
-        </Alert>
-      ): props.eventLoaded && !props.currentEvent ? (
-        <Alert
-          type="warning"
-          className="content-md"
-          title={trans('event_not_found', {}, 'presence')}
-        >
-          {trans('event_not_found_desc', {}, 'presence')}
-          <div className="btn-toolbar gap-1 mt-3 justify-content-end">
-            <Button
-              className={'btn btn-outline-warning'}
-              label={trans('event_not_found_retry', {}, 'presence')}
-              type={CALLBACK_BUTTON}
-              callback={() => history.push(`${props.path}`)}
-            />
-          </div>
-        </Alert>
-      ): !props.userRegistered && props.eventLoaded ? (
-        <Alert
-          type="warning"
-          className="content-md"
-          title={trans('event_not_registered', {}, 'presence')}
-        >
-          {trans('event_not_registered_desc', {}, 'presence')}
-          <div className="btn-toolbar gap-1 mt-3 justify-content-end">
-            <Button
-              className={'btn btn-outline-warning'}
-              label={trans('event_not_found_retry', {}, 'presence')}
-              type={CALLBACK_BUTTON}
-              callback={() => history.push(`${props.path}`)}
-            />
-          </div>
-        </Alert>
-      ): null}
+          {!props.currentUser && props.eventLoaded && props.currentEvent ? (
+            <Alert
+              type="warning"
+              className="content-md"
+              title={trans('not_registered', {}, 'presence')}
+            >
+              {trans('not_registered_desc', {}, 'presence')}
+              <div className="btn-toolbar gap-1 mt-3 justify-content-end">
+                <Button
+                  className={'btn btn-outline-warning'}
+                  label={trans('login', {}, 'actions')}
+                  type={MODAL_BUTTON}
+                  modal={[MODAL_SECURITY, {
+                    onLogin: () => {
+                      history.push(`${props.path}/${props.currentEvent.codeEmargement}`)
+                    }
+                  }]}
+                />
+              </div>
+            </Alert>
+          ): props.eventLoaded && !props.currentEvent ? (
+            <Alert
+              type="warning"
+              className="content-md"
+              title={trans('event_not_found', {}, 'presence')}
+            >
+              {trans('event_not_found_desc', {}, 'presence')}
+              <div className="btn-toolbar gap-1 mt-3 justify-content-end">
+                <Button
+                  className={'btn btn-outline-warning'}
+                  label={trans('event_not_found_retry', {}, 'presence')}
+                  type={CALLBACK_BUTTON}
+                  callback={() => history.push(`${props.path}`)}
+                />
+              </div>
+            </Alert>
+          ): !props.userRegistered && props.eventLoaded ? (
+            <Alert
+              type="warning"
+              className="content-md"
+              title={trans('event_not_registered', {}, 'presence')}
+            >
+              {trans('event_not_registered_desc', {}, 'presence')}
+              <div className="btn-toolbar gap-1 mt-3 justify-content-end">
+                <Button
+                  className={'btn btn-outline-warning'}
+                  label={trans('event_not_found_retry', {}, 'presence')}
+                  type={CALLBACK_BUTTON}
+                  callback={() => history.push(`${props.path}`)}
+                />
+              </div>
+            </Alert>
+          ): null}
 
-    </PageSection>
+        </PageSection>
+      </PageContent>
+    </ToolPage>
   )
 }
 

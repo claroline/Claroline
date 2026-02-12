@@ -10,8 +10,9 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {actions, reducer, selectors} from '#/plugin/cursus/presence/store'
 import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
-import {PageSection} from '#/main/app/page'
+import {PageContent, PageSection} from '#/main/app/page'
 import {withReducer} from '#/main/app/store/reducer'
+import {ToolPage} from '#/main/core/tool'
 
 const EventPresenceComponent = (props) => {
   const history = useHistory()
@@ -25,21 +26,23 @@ const EventPresenceComponent = (props) => {
   }, [dispatch])
 
   return (
-    <PageSection size="md" className="d-flex flex-column align-items-center mt-3">
-      <div className="bg-body-secondary rounded-2 p-4 text-center">
-        <ContentHtml className="mb-3">
-          {trans('presence_code_desc', {}, 'presence')}
-        </ContentHtml>
+    <ToolPage title={trans('presence', {}, 'tools')}>
+      <PageContent>
+        <PageSection size="md" className="d-flex flex-column align-items-center mt-3">
+          <div className="bg-body-secondary rounded-2 p-4 text-center">
+            <ContentHtml className="mb-3">
+              {trans('presence_code_desc', {}, 'presence')}
+            </ContentHtml>
 
-        <input
-          className="form-control"
-          placeholder={trans('presence_code', {}, 'presence')}
-          onChange={(event) => {
-            props.setCode(event.target.value.trim())
-          }}
-        />
+            <input
+              className="form-control"
+              placeholder={trans('presence_code', {}, 'presence')}
+              onChange={(event) => {
+                props.setCode(event.target.value.trim())
+              }}
+            />
 
-        {!props.currentUser &&
+            {!props.currentUser &&
           <Button
             className="btn btn-primary my-3"
             type={MODAL_BUTTON}
@@ -52,9 +55,9 @@ const EventPresenceComponent = (props) => {
             }]}
             primary={true}
           />
-        }
+            }
 
-        {props.currentUser &&
+            {props.currentUser &&
           <Button
             className="btn btn-primary my-3"
             type={CALLBACK_BUTTON}
@@ -63,9 +66,11 @@ const EventPresenceComponent = (props) => {
             disabled={0 >= props.code}
             primary={true}
           />
-        }
-      </div>
-    </PageSection>
+            }
+          </div>
+        </PageSection>
+      </PageContent>
+    </ToolPage>
   )
 }
 

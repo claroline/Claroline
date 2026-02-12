@@ -1,9 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import omit from 'lodash/omit'
 import {trans} from '#/main/app/intl'
-import {Tool, ToolPage} from '#/main/core/tool'
+import {Tool} from '#/main/core/tool'
 import {LINK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 
 import {EventMain} from '#/plugin/cursus/tools/trainings/event/containers/main'
@@ -11,14 +10,13 @@ import {CatalogMain} from '#/plugin/cursus/tools/trainings/catalog/containers/ma
 import {SessionMain} from '#/plugin/cursus/tools/trainings/session/containers/main'
 import {TrainingsEditor} from '#/plugin/cursus/tools/trainings/editor/containers/main'
 import {TrainingsOverview} from '#/plugin/cursus/tools/trainings/components/overview'
-import {PageContent} from '#/main/app/page'
 import {EventPresence} from '#/plugin/cursus/presence/components/event'
 import {SignPresence} from '#/plugin/cursus/presence/components/signing'
 // import {TrainingsDashboard} from '#/plugin/cursus/tools/trainings/dashboard/components/main'
 
 const TrainingsTool = (props) =>
   <Tool
-    {...omit(props, 'currentUser', 'getEventByCode')}
+    {...props}
     menu={[
       {
         name: 'overview',
@@ -109,21 +107,13 @@ const TrainingsTool = (props) =>
       }, {
         path: '/presence/:code',
         render: (routerProps) => (
-          <ToolPage title={trans('presence', {}, 'tools')}>
-            <PageContent>
-              <SignPresence code={routerProps.match.params.code} path={`${props.path}/presence`} />
-            </PageContent>
-          </ToolPage>
+          <SignPresence code={routerProps.match.params.code} path={`${props.path}/presence`} />
         )
       },
       {
         path: '/presence',
         render: () => (
-          <ToolPage title={trans('presence', {}, 'tools')}>
-            <PageContent>
-              <EventPresence path={`${props.path}/presence`}/>
-            </PageContent>
-          </ToolPage>
+          <EventPresence path={`${props.path}/presence`}/>
         )
       }
     ]}
