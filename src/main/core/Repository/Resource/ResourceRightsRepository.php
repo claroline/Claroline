@@ -95,6 +95,6 @@ class ResourceRightsRepository extends EntityRepository
             $creation = array_merge($creation, $result['creatableTypes']);
         }
 
-        return array_unique($creation);
+        return array_values(array_unique($creation));
     }
 }
