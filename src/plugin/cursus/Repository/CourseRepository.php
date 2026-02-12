@@ -62,15 +62,19 @@ class CourseRepository extends EntityRepository
         return 0 < (int) $query->getSingleScalarResult();
     }
 
-    public function findByWorkspace(Workspace $workspace): array
+    public function findByWorkspace(Workspace $workspace, bool $onlyPublic = false): array
     {
         $dql = '
             SELECT DISTINCT c
             FROM Claroline\CursusBundle\Entity\Course AS c
             LEFT JOIN c.sessions AS s
-            WHERE c.workspace = :workspace
-               OR s.workspace = :workspace
+            WHERE (c.workspace = :workspace
+               OR s.workspace = :workspace)
         ';
+
+        if ($onlyPublic) {
+            $dql .= ' AND c.public = true';
+        }
 
         $query = $this->getEntityManager()
             ->createQuery($dql)

@@ -21,7 +21,7 @@ const ContentErrorRights = ({contentName, primaryAction, backAction, contactEmai
     return (
       <ContentError
         title={trans('error_not_authenticated')}
-        description={trans('error_not_authenticated_desc', {contentName: `<b>${contentName}</b>`})}
+        description={trans(selfRegistration ? 'error_not_authenticated_self_registration_desc' : 'error_not_authenticated_desc', {contentName: `<b>${contentName}</b>`})}
         help={trans('error_no_rights_contact', {contactLink: contactEmail ?
           `(<a href="mailto:${contactEmail}">${contactEmail}</a>)` : ''
         })}

@@ -8,10 +8,12 @@ use Claroline\CoreBundle\Event\Workspace\AccessRestrictedWorkspaceEvent;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Manager\CourseManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class WorkspaceSubscriber implements EventSubscriberInterface
 {
     public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
         private readonly CourseManager $courseManager
     ) {
@@ -29,8 +31,8 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         $workspace = $event->getWorkspace();
 
         // check if the workspace is linked to any course to display it to the user
-        // in the place of standard restrictions
-        $courses = $this->om->getRepository(Course::class)->findByWorkspace($workspace);
+        // in the place of standard access errors
+        $courses = $this->om->getRepository(Course::class)->findByWorkspace($workspace, empty($this->tokenStorage->getToken()?->getUser()));
         if (!empty($courses)) {
             $course = $courses[0];
             $event->addError('NOT_REGISTERED_TRAINING', 'You are not registered to the workspace course.', $this->courseManager->open($course));
