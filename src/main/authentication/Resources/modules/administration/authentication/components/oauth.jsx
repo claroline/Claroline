@@ -6,9 +6,8 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
-import {copy} from '#/main/app/clipboard'
 import {Button, Toolbar} from '#/main/app/action'
-import {ASYNC_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON, CALLBACK_BUTTON, CLIPBOARD_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Badge} from '#/main/app/components/badge'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
@@ -97,10 +96,10 @@ const AuthenticationOauth = () => {
             <b className="text-truncate">{oauthRedirect}</b>
             <Button
               className="btn btn-text-body p-2 foxus-ring p-1 ms-auto my-n1 me-n1"
-              type={CALLBACK_BUTTON}
+              type={CLIPBOARD_BUTTON}
               icon="fa fa-copy"
               label={trans('clipboard_copy', {}, 'actions')}
-              callback={() => copy(oauthRedirect)}
+              copy={() => oauthRedirect}
               tooltip="bottom"
             />
           </div>

@@ -50,6 +50,8 @@ const EditorPage = (props) => {
           {props.help &&
             <p id={descriptionId} className="lead text-body-secondary mt-2 mb-0">{props.help}</p>
           }
+
+          {props.meta}
         </header>
 
         {!isEmpty(props.definition) &&
@@ -72,7 +74,7 @@ const EditorPage = (props) => {
         buttonName="btn btn-text-body focus-ring focus-ring-secondary"
         separatorName="my-2 border-top border-1"
         tooltip="left"
-        toolbar={"close summary | " + (props.actions ? props.actions.map(a => !['close', 'summary'].includes(a.name)) : '')}
+        toolbar={'close summary | ' + (props.actions ? props.actions.map(a => !['close', 'summary'].includes(a.name)) : '')}
         actions={[
           {
             name: 'close',
@@ -91,6 +93,7 @@ const EditorPage = (props) => {
 EditorPage.propTypes = {
   title: T.node.isRequired,
   help: T.string,
+  meta: T.any,
   children: T.any,
   managerOnly: T.bool,
   disabled: T.bool,

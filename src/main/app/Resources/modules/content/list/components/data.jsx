@@ -136,7 +136,7 @@ class ListData extends Component {
       <div
         className={classes('data-list', this.props.className, {'data-list-flush': this.props.flush})}
         role="presentation"
-        aria-busy={!this.props.loaded || this.props.invalidated}
+        aria-busy={this.props.loading}
       >
         {(displayTool || filtersTool || this.props.addAction) &&
           <ListHeader
@@ -196,9 +196,13 @@ class ListData extends Component {
 ListData.propTypes = {
   id: T.string.isRequired,
   className: T.string,
+  name: T.string.isRequired,
   flush: T.bool,
+  autoFocus: T.bool,
 
   loading: T.bool,
+  loaded: T.bool,
+  invalidated: T.bool,
 
   /**
    * The data list to display.

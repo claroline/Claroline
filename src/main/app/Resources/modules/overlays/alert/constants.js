@@ -64,7 +64,7 @@ const ALERT_STATUS = {
 
 /**
  * Defines available alerts for the app ACTIONS.
- * NB. If ACTION do not declare one of the ALERT_STATUS, this will disable it.
+ * NB. If ACTION does not declare one of the ALERT_STATUS, this will disable it.
  *
  * @type {object}
  */

@@ -5,16 +5,21 @@ import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
-import {EditorPage} from '#/main/app/editor'
 
 import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {selectors} from '#/main/core/resource/editor/store'
+import {EditorOverview} from '#/main/app/editor/components/overview'
 
 const ResourceEditorOverview = (props) => {
   const workspace = useSelector(selectors.workspace)
+  const resourceNode = useSelector(selectors.resourceNode)
+
   return (
-    <EditorPage
-      title={trans('overview')}
+    <EditorOverview
+      meta={{
+        id: get(resourceNode, 'id'),
+        updatedAt: get(resourceNode, 'meta.updated')
+      }}
       definition={[
         {
           title: trans('general'),
@@ -96,7 +101,7 @@ const ResourceEditorOverview = (props) => {
       locked={props.locked}
     >
       {props.children}
-    </EditorPage>
+    </EditorOverview>
   )
 }
 

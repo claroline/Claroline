@@ -1,16 +1,22 @@
 import React from 'react'
+import {useSelector} from 'react-redux'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
-import {EditorPage} from '#/main/app/editor'
-import {useSelector} from 'react-redux'
+
 import {selectors} from '#/main/evaluation/sequence/editor/store'
+import {EditorOverview} from '#/main/app/editor/components/overview'
 
 const SequenceEditorOverview = () => {
   const workspace = useSelector(selectors.workspace)
+  const sequence = useSelector(selectors.data)
 
   return (
-    <EditorPage
-      title={trans('overview')}
+    <EditorOverview
+      meta={{
+        id: get(sequence, 'id'),
+        updatedAt: get(sequence, 'meta.updatedAt')
+      }}
       definition={[
         {
           title: trans('general'),

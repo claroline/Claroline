@@ -5,6 +5,7 @@
 // Implemented buttons (Component + name in registry)
 import {ASYNC_BUTTON,    AsyncButton}    from '#/main/app/buttons/async'
 import {CALLBACK_BUTTON, CallbackButton} from '#/main/app/buttons/callback'
+import {CLIPBOARD_BUTTON, ClipboardButton} from '#/main/app/buttons/clipboard'
 import {DOWNLOAD_BUTTON, DownloadButton} from '#/main/app/buttons/download'
 import {LINK_BUTTON,     LinkButton}     from '#/main/app/buttons/link'
 import {MENU_BUTTON,     MenuButton}     from '#/main/app/buttons/menu'
@@ -17,6 +18,7 @@ export {
   // button types
   ASYNC_BUTTON,
   CALLBACK_BUTTON,
+  CLIPBOARD_BUTTON,
   DOWNLOAD_BUTTON,
   LINK_BUTTON,
   MENU_BUTTON,
@@ -28,6 +30,7 @@ export {
   // button components
   AsyncButton,
   CallbackButton,
+  ClipboardButton,
   DownloadButton,
   LinkButton,
   MenuButton,

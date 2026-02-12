@@ -4,11 +4,10 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {copy} from '#/main/app/clipboard'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {CLIPBOARD_BUTTON} from '#/main/app/buttons'
 import {getValidationClassName} from '#/main/app/content/form/validator'
 
 class UrlInput extends PureComponent {
@@ -24,7 +23,7 @@ class UrlInput extends PureComponent {
   }
 
   copyToClipboard() {
-    copy(this.props.value)
+    return this.props.value
   }
 
   render() {
@@ -49,12 +48,12 @@ class UrlInput extends PureComponent {
 
         <Button
           id={`clipboard-${this.props.id}`}
-          type={CALLBACK_BUTTON}
+          type={CLIPBOARD_BUTTON}
           tooltip="left"
           label={trans('clipboard_copy')}
           className="btn btn-body"
           icon="fa fa-fw fa-clipboard"
-          callback={this.copyToClipboard}
+          copy={this.copyToClipboard}
         />
       </div>
     )
