@@ -69,7 +69,7 @@ class ThemeExtension extends AbstractExtension
                 // default theme not found too, this time we can not do anything
                 $assetNames = implode("\n", array_keys($assets));
 
-                throw new \Exception("Cannot find asset '{$path}' for theme '{$themeName}' "."in theme build. Found:\n{$assetNames})");
+                throw new \Exception("Cannot find asset '{$path}' for theme '{$themeName}' in theme build. Found:\n{$assetNames})");
             }
         }
 

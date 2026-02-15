@@ -2,9 +2,9 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
@@ -34,9 +34,6 @@ class CellChoice implements AnswerPartInterface
     #[ORM\Column(name: 'caseSensitive', type: Types::BOOLEAN, nullable: true)]
     private $caseSensitive;
 
-    /**
-     * @var Cell
-     */
     #[ORM\JoinColumn(name: 'cell_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Cell::class, inversedBy: 'choices')]
     private ?Cell $cell = null;

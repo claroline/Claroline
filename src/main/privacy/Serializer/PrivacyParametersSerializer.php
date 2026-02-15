@@ -5,8 +5,8 @@ namespace Claroline\PrivacyBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\TemplateBundle\Entity\Template;
 use Claroline\PrivacyBundle\Entity\PrivacyParameters;
+use Claroline\TemplateBundle\Entity\Template;
 use Claroline\TemplateBundle\Serializer\TemplateSerializer;
 
 class PrivacyParametersSerializer

@@ -33,7 +33,6 @@ class DropManager
     /**
      * Gets drops corrected by user|team but that are not finished.
      *
-     * @param User   $user
      * @param string $teamId
      *
      * @return array
@@ -89,7 +88,6 @@ class DropManager
     /**
      * Gets a drop for peer evaluation.
      *
-     * @param User   $user
      * @param string $teamId
      * @param string $teamName
      * @param bool   $withCreation
@@ -139,7 +137,6 @@ class DropManager
     /**
      * Gets drops corrected by user|team.
      *
-     * @param User   $user
      * @param string $teamId
      *
      * @return array
@@ -167,7 +164,6 @@ class DropManager
     /**
      * Gets available drop for peer evaluation.
      *
-     * @param User   $user
      * @param string $teamId
      * @param string $teamName
      *

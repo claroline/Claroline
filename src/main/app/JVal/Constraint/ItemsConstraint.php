@@ -14,33 +14,23 @@ use JVal\Context;
 use JVal\Exception\Constraint\InvalidTypeException;
 use JVal\Types;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "items" and "additionalItems" keywords.
  */
 class ItemsConstraint implements Constraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['items', 'additionalItems'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         return Types::TYPE_ARRAY === $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker)
     {
         $this->createDefaults($schema);
 
@@ -52,10 +42,7 @@ class ItemsConstraint implements Constraint
         $context->leaveNode();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         if (is_object($schema->items)) {
             // 8.2.3.1. If items is a schema, then the child instance must be
@@ -91,18 +78,18 @@ class ItemsConstraint implements Constraint
         }
     }
 
-    private function createDefaults(stdClass $schema)
+    private function createDefaults(\stdClass $schema)
     {
         if (!property_exists($schema, 'items')) {
-            $schema->items = new stdClass();
+            $schema->items = new \stdClass();
         }
 
         if (!property_exists($schema, 'additionalItems') || true === $schema->additionalItems) {
-            $schema->additionalItems = new stdClass();
+            $schema->additionalItems = new \stdClass();
         }
     }
 
-    private function parseItemsProperty(stdClass $schema, Context $context, Walker $walker)
+    private function parseItemsProperty(\stdClass $schema, Context $context, Walker $walker)
     {
         if (is_object($schema->items)) {
             $walker->parseSchema($schema->items, $context);
@@ -122,7 +109,7 @@ class ItemsConstraint implements Constraint
         }
     }
 
-    private function parseAdditionalItemsProperty(stdClass $schema, Context $context, Walker $walker)
+    private function parseAdditionalItemsProperty(\stdClass $schema, Context $context, Walker $walker)
     {
         if (is_object($schema->additionalItems)) {
             $walker->parseSchema($schema->additionalItems, $context);

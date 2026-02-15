@@ -11,25 +11,18 @@ namespace Claroline\AppBundle\JVal\Constraint;
 
 use JVal\Context;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "allOf" keyword.
  */
 class AllOfConstraint extends AbstractOfConstraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['allOf'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         $originalCount = $context->countViolations();
 

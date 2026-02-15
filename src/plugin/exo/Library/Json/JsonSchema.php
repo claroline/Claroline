@@ -31,8 +31,6 @@ class JsonSchema
      *
      * @param mixed  $data - the data to validate
      * @param string $uri  - the URI of the schema to use
-     *
-     * @return array
      */
     public function validate(mixed $data, string $uri): array
     {
@@ -41,8 +39,6 @@ class JsonSchema
 
     /**
      * Get schema validator.
-     *
-     * @return SchemaValidator
      */
     private function getValidator(): SchemaValidator
     {

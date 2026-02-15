@@ -11,11 +11,11 @@
 
 namespace Claroline\ScormBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\ScormBundle\Repository\ScormRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
-use Claroline\ScormBundle\Repository\ScormRepository;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_scorm')]

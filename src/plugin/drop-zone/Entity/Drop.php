@@ -11,15 +11,13 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
-use Doctrine\Common\Collections\Collection;
-use DateTimeInterface;
-use Doctrine\DBAL\Types\Types;
-use Claroline\DropZoneBundle\Repository\DropRepository;
-use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\DropZoneBundle\Repository\DropRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_dropzonebundle_drop')]
@@ -30,18 +28,10 @@ class Drop
     use Id;
     use Uuid;
 
-    /**
-     *
-     * @var Dropzone
-     */
     #[ORM\JoinColumn(name: 'dropzone_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Dropzone::class)]
     protected ?Dropzone $dropzone = null;
 
-    /**
-     *
-     * @var User
-     */
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $user = null;
@@ -53,7 +43,7 @@ class Drop
     protected Collection $documents;
 
     /**
-     * @var DateTimeInterface
+     * @var \DateTimeInterface
      */
     #[ORM\Column(name: 'drop_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $dropDate;
@@ -73,7 +63,6 @@ class Drop
     /**
      * Indicate if the drop was close automaticaly (when time is up by the dropzone option $autoCloseDropsAtDropEndDate).
      *
-     *
      * @var bool
      */
     #[ORM\Column(name: 'auto_closed_drop', type: Types::BOOLEAN, nullable: false)]
@@ -83,7 +72,6 @@ class Drop
      * Used to flag that a copy have been unlocked ( admin made a correction that unlocked the copy:
      * the copy doesn't wait anymore the expected number of correction.
      *
-     *
      * @var bool
      */
     #[ORM\Column(name: 'unlocked_drop', type: Types::BOOLEAN, nullable: false)]
@@ -92,7 +80,6 @@ class Drop
     /**
      * Used to flag that a user have been unlocked ( admin made a correction that unlocked the copy:
      * the drop author will not need anymore to do the expected number of correction to see his copy.).
-     *
      *
      * @var bool
      */
@@ -124,7 +111,6 @@ class Drop
     protected Collection $corrections;
 
     /**
-     *
      * @var Collection<int, User>
      */
     #[ORM\JoinTable(name: 'claro_dropzonebundle_drop_users')]
@@ -212,14 +198,14 @@ class Drop
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getDropDate()
     {
         return $this->dropDate;
     }
 
-    public function setDropDate(?DateTime $dropDate = null)
+    public function setDropDate(?\DateTime $dropDate = null)
     {
         $this->dropDate = $dropDate;
     }

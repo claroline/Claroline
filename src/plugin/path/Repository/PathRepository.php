@@ -3,8 +3,8 @@
 namespace Innova\PathBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Doctrine\ORM\EntityRepository;
 use Innova\PathBundle\Entity\Path\Path;
 

@@ -3,9 +3,9 @@
 namespace Innova\PathBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Library\Checker\ProgressionChecker;
 use Claroline\EvaluationBundle\Library\Checker\ScoreChecker;
 use Claroline\EvaluationBundle\Library\EvaluationAggregator;

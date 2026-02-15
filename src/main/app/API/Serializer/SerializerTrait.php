@@ -23,7 +23,6 @@ trait SerializerTrait
      * @param string $setter - the setter to use
      * @param mixed  $data   - the data array
      * @param mixed  $object - the object to use the setter on
-     * @param bool   $trim
      */
     public function sipe(string $prop, string $setter, array $data, mixed $object, bool $trim = true): void
     {

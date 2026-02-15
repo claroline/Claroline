@@ -37,11 +37,10 @@ class WebResourceController
                 $error = 'not_valid_file';
 
                 return new JsonResponse($error, 422);
-            } else {
-                $data = $this->webResourceManager->create($file, $workspace);
-
-                return new JsonResponse($data, 200);
             }
+            $data = $this->webResourceManager->create($file, $workspace);
+
+            return new JsonResponse($data, 200);
         }
 
         return new JsonResponse();

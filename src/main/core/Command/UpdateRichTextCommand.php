@@ -31,9 +31,9 @@ class UpdateRichTextCommand extends Command
         $this
             ->setDescription('Update a text string ')
             ->setDefinition([
-               new InputArgument('old_string', InputArgument::REQUIRED, 'old str'),
-               new InputArgument('new_string', InputArgument::REQUIRED, 'new str'),
-           ])
+                new InputArgument('old_string', InputArgument::REQUIRED, 'old str'),
+                new InputArgument('new_string', InputArgument::REQUIRED, 'new str'),
+            ])
            ->addOption(
                'force',
                'f',

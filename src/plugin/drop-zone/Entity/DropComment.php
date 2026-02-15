@@ -18,10 +18,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class DropComment extends AbstractComment
 {
-    /**
-     *
-     * @var Drop
-     */
     #[ORM\JoinColumn(name: 'drop_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Drop::class, inversedBy: 'comments')]
     private ?Drop $drop = null;

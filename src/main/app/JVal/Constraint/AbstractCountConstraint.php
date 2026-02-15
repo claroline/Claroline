@@ -15,17 +15,13 @@ use JVal\Exception\Constraint\InvalidTypeException;
 use JVal\Exception\Constraint\LessThanZeroException;
 use JVal\Types;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Base class for constraints based on a specific number of elements.
  */
 abstract class AbstractCountConstraint implements Constraint
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker)
     {
         $keyword = $this->keywords()[0];
         $context->enterNode($keyword);

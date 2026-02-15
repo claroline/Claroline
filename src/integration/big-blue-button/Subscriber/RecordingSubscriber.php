@@ -3,9 +3,9 @@
 namespace Claroline\BigBlueButtonBundle\Subscriber;
 
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\BigBlueButtonBundle\Entity\Recording;
 use Claroline\BigBlueButtonBundle\Manager\BBBManager;
-use Claroline\AppBundle\Event\CrudEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RecordingSubscriber implements EventSubscriberInterface

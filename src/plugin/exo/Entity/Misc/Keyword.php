@@ -2,8 +2,8 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
@@ -35,8 +35,6 @@ class Keyword implements AnswerPartInterface
 
     /**
      * @deprecated this relation needs to be removed as it is not needed
-     *
-     * @var OpenQuestion
      */
     #[ORM\JoinColumn(name: 'interaction_open_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: OpenQuestion::class, inversedBy: 'keywords')]
@@ -44,8 +42,6 @@ class Keyword implements AnswerPartInterface
 
     /**
      * @deprecated this relation needs to be removed as it is not needed
-     *
-     * @var Hole
      */
     #[ORM\JoinColumn(name: 'hole_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Hole::class, inversedBy: 'keywords')]

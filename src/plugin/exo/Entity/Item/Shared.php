@@ -2,8 +2,8 @@
 
 namespace UJM\ExoBundle\Entity\Item;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'ujm_share')]

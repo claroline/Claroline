@@ -2,12 +2,12 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\ClozeQuestion;
 use UJM\ExoBundle\Library\Model\ShuffleTrait;
@@ -26,7 +26,6 @@ class Hole
     /**
      * The display size of the hole input.
      *
-     *
      * @var int
      */
     #[ORM\Column(type: Types::INTEGER)]
@@ -41,7 +40,6 @@ class Hole
     /**
      * The help text to display in the empty hole input.
      *
-     *
      * @var string
      */
     #[ORM\Column(type: Types::STRING, nullable: true)]
@@ -53,7 +51,6 @@ class Hole
 
     /**
      * The list of keywords attached to the hole.
-     *
      *
      * @var Collection<int, Keyword>
      */
@@ -164,8 +161,8 @@ class Hole
             $tmpText = trim($keyword->getText());
             if ($tmpText === $text
                 || (
-                    empty($keyword->isCaseSensitive()) &&
-                    strtoupper(TextNormalizer::stripDiacritics($tmpText)) === $iText)
+                    empty($keyword->isCaseSensitive())
+                    && strtoupper(TextNormalizer::stripDiacritics($tmpText)) === $iText)
             ) {
                 $found = $keyword;
                 break;

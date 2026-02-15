@@ -15,33 +15,23 @@ use JVal\Exception\Constraint\InvalidTypeException;
 use JVal\Types;
 use JVal\Utils;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "uniqueItems" keyword.
  */
 class UniqueItemsConstraint implements Constraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['uniqueItems'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         return Types::TYPE_ARRAY === $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker)
     {
         if (!is_bool($schema->uniqueItems)) {
             $context->enterNode('uniqueItems');
@@ -50,10 +40,7 @@ class UniqueItemsConstraint implements Constraint
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         if (true === $schema->uniqueItems) {
             foreach ($instance as $i => $aItem) {

@@ -11,7 +11,6 @@ namespace Claroline\AppBundle\JVal;
 
 use Claroline\AppBundle\JVal\Constraint\ClarolineConstraint;
 use Claroline\AppBundle\JVal\Constraint\RequiredConstraint;
-use Closure;
 use JVal\Resolver;
 use JVal\Uri;
 
@@ -31,11 +30,9 @@ class Validator
      *
      * @see Resolver::setPreFetchHook
      *
-     * @param Closure $preFetchHook
-     *
      * @return Validator
      */
-    public static function build(?Closure $preFetchHook = null, array $constraints = [])
+    public static function build(?\Closure $preFetchHook = null, array $constraints = [])
     {
         $registry = new Registry($constraints);
         $resolver = new Resolver();
@@ -49,7 +46,7 @@ class Validator
         return new self($walker);
     }
 
-    public static function buildDefault(?Closure $preFetchHook = null)
+    public static function buildDefault(?\Closure $preFetchHook = null)
     {
         $constraints = [
             new ClarolineConstraint(),
@@ -72,7 +69,6 @@ class Validator
      * of violations, if any. If the schema contains relative remote
      * references, its (absolute) URI must be passed as argument.
      *
-     * @param mixed    $instance
      * @param stdClass $schema
      * @param string   $schemaUri
      *

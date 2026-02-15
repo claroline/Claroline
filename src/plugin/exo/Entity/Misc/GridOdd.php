@@ -22,9 +22,6 @@ class GridOdd implements AnswerPartInterface
 
     /**
      * The item which is odd.
-     *
-     *
-     * @var GridItem
      */
     #[ORM\JoinColumn(name: 'item_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: GridItem::class)]
@@ -32,9 +29,6 @@ class GridOdd implements AnswerPartInterface
 
     /**
      * The parent question.
-     *
-     *
-     * @var PairQuestion
      */
     #[ORM\JoinColumn(name: 'pair_question_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: PairQuestion::class, inversedBy: 'oddItems')]

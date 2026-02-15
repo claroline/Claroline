@@ -16,33 +16,23 @@ use JVal\Exception\Constraint\InvalidTypeException;
 use JVal\Types;
 use JVal\Utils;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "pattern" keyword.
  */
 class PatternConstraint implements Constraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['pattern'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         return Types::TYPE_STRING === $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker)
     {
         $context->enterNode('pattern');
 
@@ -57,10 +47,7 @@ class PatternConstraint implements Constraint
         $context->leaveNode();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         if (!Utils::matchesRegex($instance, $schema->pattern)) {
             $context->addViolation('should match regex "%s"', [$schema->pattern]);

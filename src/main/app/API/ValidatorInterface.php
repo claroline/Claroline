@@ -21,8 +21,6 @@ interface ValidatorInterface
      * A list of unique properties you want to check (they will be checked by
      * the provider so the validate method is easier)
      * with the format [$dataPropName => $entityPropName].
-     *
-     * @return array
      */
     public function getUniqueFields(): array;
 }

@@ -57,7 +57,6 @@ class EntryRepository extends EntityRepository
     }
 
     /**
-     * @param array       $categoriesIds
      * @param string|null $startDate
      * @param string|null $endDate
      *

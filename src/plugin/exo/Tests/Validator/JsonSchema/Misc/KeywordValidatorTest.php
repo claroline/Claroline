@@ -11,7 +11,7 @@ class KeywordValidatorTest extends JsonSchemaTestCase
     /**
      * @var KeywordValidator
      */
-    private $validator = null;
+    private $validator;
 
     protected function setUp(): void
     {

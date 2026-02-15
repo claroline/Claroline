@@ -2,9 +2,9 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Claroline\AppBundle\Entity\Display\Order;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Display\Order;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -135,8 +135,6 @@ class Step
      * Avoids the need to manually initialize a StepItem object to hold the relation.
      *
      * @param Item $question - the question to add to the step
-     *
-     * @return StepItem
      */
     public function addQuestion(Item $question): StepItem
     {

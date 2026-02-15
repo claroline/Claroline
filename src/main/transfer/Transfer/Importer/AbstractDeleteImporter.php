@@ -57,7 +57,7 @@ abstract class AbstractDeleteImporter extends AbstractImporter
 
     public function getSchema(?array $options = [], ?array $extra = []): array
     {
-        //this is so we don't show all properties. See ImportProvider and search $root
+        // this is so we don't show all properties. See ImportProvider and search $root
         return [static::getAction()[0] => static::getClass()];
     }
 

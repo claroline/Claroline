@@ -11,15 +11,13 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
-use Doctrine\Common\Collections\Collection;
-use DateTimeInterface;
-use Doctrine\DBAL\Types\Types;
-use Claroline\DropZoneBundle\Repository\CorrectionRepository;
-use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\DropZoneBundle\Repository\CorrectionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_dropzonebundle_correction')]
@@ -29,18 +27,10 @@ class Correction
     use Id;
     use Uuid;
 
-    /**
-     *
-     * @var Drop
-     */
     #[ORM\JoinColumn(name: 'drop_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Drop::class, inversedBy: 'corrections')]
     protected ?Drop $drop = null;
 
-    /**
-     *
-     * @var User
-     */
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $user = null;
@@ -64,19 +54,19 @@ class Correction
     protected $valid = true;
 
     /**
-     * @var DateTimeInterface
+     * @var \DateTimeInterface
      */
     #[ORM\Column(name: 'start_date', type: Types::DATETIME_MUTABLE, nullable: false)]
     protected $startDate;
 
     /**
-     * @var DateTimeInterface
+     * @var \DateTimeInterface
      */
     #[ORM\Column(name: 'last_edition_date', type: Types::DATETIME_MUTABLE, nullable: false)]
     protected $lastEditionDate;
 
     /**
-     * @var DateTimeInterface
+     * @var \DateTimeInterface
      */
     #[ORM\Column(name: 'end_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected $endDate;
@@ -148,7 +138,7 @@ class Correction
     {
         $this->refreshUuid();
         $this->grades = new ArrayCollection();
-        $currentDate = new DateTime();
+        $currentDate = new \DateTime();
         $this->setStartDate($currentDate);
         $this->setLastEditionDate($currentDate);
     }
@@ -228,40 +218,40 @@ class Correction
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getStartDate()
     {
         return $this->startDate;
     }
 
-    public function setStartDate(DateTime $startDate)
+    public function setStartDate(\DateTime $startDate)
     {
         $this->startDate = $startDate;
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getLastEditionDate()
     {
         return $this->lastEditionDate;
     }
 
-    public function setLastEditionDate(DateTime $lastEditionDate)
+    public function setLastEditionDate(\DateTime $lastEditionDate)
     {
         $this->lastEditionDate = $lastEditionDate;
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getEndDate()
     {
         return $this->endDate;
     }
 
-    public function setEndDate(?DateTime $endDate = null)
+    public function setEndDate(?\DateTime $endDate = null)
     {
         $this->endDate = $endDate;
     }

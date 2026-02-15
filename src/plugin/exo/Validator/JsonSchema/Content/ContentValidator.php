@@ -9,17 +9,11 @@ use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
  */
 class ContentValidator extends JsonSchemaValidator
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getJsonSchemaUri(): string
     {
         return 'content.json';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validateAfterSchema(mixed $data, array $options = []): array
     {
         return [];

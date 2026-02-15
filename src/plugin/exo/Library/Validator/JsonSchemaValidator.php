@@ -28,8 +28,6 @@ abstract class JsonSchemaValidator implements ValidatorInterface
      *
      * @param mixed $data    - the data to validate
      * @param array $options - the validation options
-     *
-     * @return array
      */
     abstract public function validateAfterSchema(mixed $data, array $options = []): array;
 

@@ -124,13 +124,13 @@ class DropzoneSerializer
                 'type' => 'manual',
                 'state' => $dropzone->getManualState(),
             ];
-        } else {
-            return [
-                'type' => 'auto',
-                'drop' => DateRangeNormalizer::normalize($dropzone->getDropStartDate(), $dropzone->getDropEndDate()),
-                'review' => DateRangeNormalizer::normalize($dropzone->getReviewStartDate(), $dropzone->getReviewEndDate()),
-            ];
         }
+
+        return [
+            'type' => 'auto',
+            'drop' => DateRangeNormalizer::normalize($dropzone->getDropStartDate(), $dropzone->getDropEndDate()),
+            'review' => DateRangeNormalizer::normalize($dropzone->getReviewStartDate(), $dropzone->getReviewEndDate()),
+        ];
     }
 
     private function deserializePlanning(array $planningData, Dropzone $dropzone): void

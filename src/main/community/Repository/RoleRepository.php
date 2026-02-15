@@ -11,7 +11,6 @@
 
 namespace Claroline\CommunityBundle\Repository;
 
-use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;

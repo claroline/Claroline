@@ -7,9 +7,6 @@ namespace UJM\ExoBundle\Library\Attempt;
  */
 class GenericPenalty implements PenaltyItemInterface
 {
-    /**
-     * @var
-     */
     private $penalty;
 
     /**

@@ -135,7 +135,6 @@ class Role implements CrudEntityInterface
         return $this->users;
     }
 
-
     public function hasUser(User $user): bool
     {
         return $user->hasRole($this);

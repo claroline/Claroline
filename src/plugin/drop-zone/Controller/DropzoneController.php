@@ -11,8 +11,6 @@
 
 namespace Claroline\DropZoneBundle\Controller;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
-use Exception;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CommunityBundle\Entity\Team;
@@ -25,6 +23,7 @@ use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Manager\CorrectionManager;
 use Claroline\DropZoneBundle\Manager\DropManager;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -50,10 +49,9 @@ class DropzoneController
         $this->authorization = $authorization;
     }
 
-    
     #[Route(path: '/{id}/corrections/fetch', name: 'claro_dropzone_corrections_fetch', methods: ['GET'])]
     public function correctionsFetchAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Dropzone', mapping: ['id' => 'uuid'])]
-    Dropzone $dropzone): JsonResponse
+        Dropzone $dropzone): JsonResponse
     {
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
         $data = $this->correctionManager->getAllCorrectionsData($dropzone);
@@ -61,10 +59,9 @@ class DropzoneController
         return new JsonResponse($data, 200);
     }
 
-    
     #[Route(path: '/drop/{id}/correction/save', name: 'claro_dropzone_correction_save', methods: ['POST'])]
     public function correctionSaveAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Drop', mapping: ['id' => 'uuid'])]
-    Drop $drop, #[CurrentUser] ?User $user, Request $request): JsonResponse
+        Drop $drop, #[CurrentUser] ?User $user, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -76,15 +73,14 @@ class DropzoneController
             return new JsonResponse(
                 $this->serializer->serialize($correction)
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
-    
     #[Route(path: '/correction/{id}/submit', name: 'claro_dropzone_correction_submit', methods: ['PUT'])]
     public function correctionSubmitAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Correction', mapping: ['id' => 'uuid'])]
-    Correction $correction, #[CurrentUser] ?User $user): JsonResponse
+        Correction $correction, #[CurrentUser] ?User $user): JsonResponse
     {
         $dropzone = $correction->getDrop()->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -97,15 +93,14 @@ class DropzoneController
             return new JsonResponse(
                 $this->serializer->serialize($correction)
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
-    
     #[Route(path: '/correction/{id}/validation/switch', name: 'claro_dropzone_correction_validation_switch', methods: ['PUT'])]
     public function correctionValidationSwitchAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Correction', mapping: ['id' => 'uuid'])]
-    Correction $correction, #[CurrentUser] ?User $user): JsonResponse
+        Correction $correction, #[CurrentUser] ?User $user): JsonResponse
     {
         $dropzone = $correction->getDrop()->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -118,15 +113,14 @@ class DropzoneController
             return new JsonResponse(
                 $this->serializer->serialize($correction)
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
-    
     #[Route(path: '/correction/{id}/delete', name: 'claro_dropzone_correction_delete', methods: ['DELETE'])]
     public function correctionDeleteAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Correction', mapping: ['id' => 'uuid'])]
-    Correction $correction, #[CurrentUser] ?User $user): JsonResponse
+        Correction $correction, #[CurrentUser] ?User $user): JsonResponse
     {
         $dropzone = $correction->getDrop()->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -138,15 +132,14 @@ class DropzoneController
             $this->correctionManager->deleteCorrection($correction);
 
             return new JsonResponse($serializedCorrection);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
-    
     #[Route(path: '/correction/{id}/deny', name: 'claro_dropzone_correction_deny', methods: ['PUT'])]
     public function correctionDenyAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Correction', mapping: ['id' => 'uuid'])]
-    Correction $correction, #[CurrentUser] ?User $user, Request $request): JsonResponse
+        Correction $correction, #[CurrentUser] ?User $user, Request $request): JsonResponse
     {
         $dropzone = $correction->getDrop()->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -161,15 +154,14 @@ class DropzoneController
             return new JsonResponse(
                 $this->serializer->serialize($correction)
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
-    
     #[Route(path: '/{id}/peer/drop/fetch', name: 'claro_dropzone_peer_drop_fetch', methods: ['GET'])]
     public function peerDropFetchAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Dropzone', mapping: ['id' => 'uuid'])]
-    Dropzone $dropzone, #[CurrentUser] ?User $user): JsonResponse
+        Dropzone $dropzone, #[CurrentUser] ?User $user): JsonResponse
     {
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
         $drop = $this->dropManager->getPeerDrop($dropzone, $user);
@@ -178,11 +170,10 @@ class DropzoneController
         return new JsonResponse($data);
     }
 
-    
     #[Route(path: '/{id}/team/{teamId}/peer/drop/fetch', name: 'claro_dropzone_team_peer_drop_fetch', methods: ['GET'])]
     public function teamPeerDropFetchAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Dropzone', mapping: ['id' => 'uuid'])]
-    Dropzone $dropzone, #[MapEntity(class: 'Claroline\CommunityBundle\Entity\Team', mapping: ['teamId' => 'uuid'])]
-    Team $team, #[CurrentUser] ?User $user): JsonResponse
+        Dropzone $dropzone, #[MapEntity(class: 'Claroline\CommunityBundle\Entity\Team', mapping: ['teamId' => 'uuid'])]
+        Team $team, #[CurrentUser] ?User $user): JsonResponse
     {
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
         $this->checkTeamUser($team, $user);
@@ -194,11 +185,10 @@ class DropzoneController
 
     /**
      * Downloads a document.
-     *
      */
     #[Route(path: '/{document}/download', name: 'claro_dropzone_document_download', methods: ['GET'])]
     public function downloadAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Document', mapping: ['document' => 'uuid'])]
-    Document $document): StreamedResponse
+        Document $document): StreamedResponse
     {
         $this->checkDocumentAccess($document);
         $data = $document->getData();

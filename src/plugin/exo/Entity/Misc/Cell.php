@@ -2,12 +2,12 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\GridQuestion;
 use UJM\ExoBundle\Library\Model\ShuffleTrait;
@@ -26,33 +26,29 @@ class Cell
     /**
      * Data associated to the cell.
      *
-     *
      * @var string
      */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private $data = null;
+    private $data;
 
     /**
      * X coordinate of the item in the grid.
      *
-     *
      * @var int
      */
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    private $coordsX = null;
+    private $coordsX;
 
     /**
      * Y coordinate of the item in the grid.
      *
-     *
      * @var int
      */
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    private $coordsY = null;
+    private $coordsY;
 
     /**
      * Font color in the cell.
-     *
      *
      * @var string
      */
@@ -62,7 +58,6 @@ class Cell
     /**
      * Cell background color.
      *
-     *
      * @var string
      */
     #[ORM\Column(type: Types::STRING, nullable: false)]
@@ -70,7 +65,6 @@ class Cell
 
     /**
      * The list of texts attached to the cell.
-     *
      *
      * @var Collection<int, CellChoice>
      */
@@ -199,8 +193,6 @@ class Cell
 
     /**
      * Set Y coordinate.
-     *
-     * @param $coordsY
      */
     public function setCoordsY($coordsY)
     {
@@ -315,9 +307,9 @@ class Cell
             $tmpText = trim($choice->getText());
             if ($tmpText === $text
               || (
-                  !$choice->isCaseSensitive() &&
-                  strtoupper(TextNormalizer::stripDiacritics($tmpText)) === $iText)
-          ) {
+                  !$choice->isCaseSensitive()
+                  && strtoupper(TextNormalizer::stripDiacritics($tmpText)) === $iText)
+            ) {
                 $found = $choice;
                 break;
             }

@@ -15,33 +15,23 @@ use JVal\Exception\Constraint\InvalidTypeException;
 use JVal\Exception\Constraint\NotStrictlyPositiveException;
 use JVal\Types;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "multipleOf" keyword.
  */
 class MultipleOfConstraint implements Constraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['multipleOf'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         return Types::TYPE_INTEGER === $type || Types::TYPE_NUMBER === $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker)
     {
         $context->enterNode('multipleOf');
 
@@ -56,10 +46,7 @@ class MultipleOfConstraint implements Constraint
         $context->leaveNode();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         $divider = $schema->multipleOf;
         $modulus = fmod($instance, $divider);

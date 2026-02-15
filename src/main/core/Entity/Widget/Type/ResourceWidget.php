@@ -2,8 +2,8 @@
 
 namespace Claroline\CoreBundle\Entity\Widget\Type;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

@@ -4,9 +4,9 @@ namespace Claroline\TemplateBundle\Subscriber;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\TemplateBundle\Entity\Template;
-use Claroline\AppBundle\Event\CrudEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class TemplateSubscriber implements EventSubscriberInterface

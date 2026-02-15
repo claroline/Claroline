@@ -10,17 +10,11 @@ use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
  */
 class KeywordValidator extends JsonSchemaValidator
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getJsonSchemaUri(): string
     {
         return 'misc/keyword.json';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validateAfterSchema(mixed $keyword, array $options = []): array
     {
         return [];

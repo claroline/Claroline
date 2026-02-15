@@ -3,7 +3,6 @@
 namespace Claroline\InstallationBundle\Updater\Helper;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 
 trait RemoveResourceTrait

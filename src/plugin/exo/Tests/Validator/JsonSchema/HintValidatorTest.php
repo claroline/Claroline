@@ -11,7 +11,7 @@ class HintValidatorTest extends JsonSchemaTestCase
     /**
      * @var HintValidator
      */
-    private $validator = null;
+    private $validator;
 
     protected function setUp(): void
     {

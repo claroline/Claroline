@@ -67,9 +67,8 @@ class ScormLib
             }
 
             return $this->parseItemNodes($organization, $resources);
-        } else {
-            throw new InvalidScormArchiveException('no_organization_found_message');
         }
+        throw new InvalidScormArchiveException('no_organization_found_message');
     }
 
     /**

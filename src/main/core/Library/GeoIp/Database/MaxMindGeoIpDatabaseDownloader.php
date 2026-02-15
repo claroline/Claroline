@@ -55,7 +55,7 @@ class MaxMindGeoIpDatabaseDownloader
         foreach ($this->httpClient->stream($response) as $chunk) {
             try {
                 $this->filesystem->appendToFile($tmpArchive, $chunk->getContent());
-            } catch (ExceptionInterface | IOException $e) {
+            } catch (ExceptionInterface|IOException $e) {
                 if (!$catchExceptions) {
                     throw $e;
                 }
@@ -71,7 +71,7 @@ class MaxMindGeoIpDatabaseDownloader
         try {
             $archive = (new \PharData($tmpArchive));
             $archive->extractTo($extractDirectory, null, true);
-        } catch (\RuntimeException | \PharException $e) {
+        } catch (\RuntimeException|\PharException $e) {
             if (!$catchExceptions) {
                 throw $e;
             }

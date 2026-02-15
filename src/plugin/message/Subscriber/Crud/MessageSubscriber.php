@@ -3,8 +3,8 @@
 namespace Claroline\MessageBundle\Subscriber\Crud;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

@@ -12,33 +12,23 @@ namespace Claroline\AppBundle\JVal\Constraint;
 use JVal\Context;
 use JVal\Types;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "minLength" keyword.
  */
 class MinLengthConstraint extends AbstractCountConstraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['minLength'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         return Types::TYPE_STRING === $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         $length = extension_loaded('mbstring') ?
             mb_strlen($instance, mb_detect_encoding($instance)) :

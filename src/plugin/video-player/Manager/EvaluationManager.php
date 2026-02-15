@@ -3,10 +3,10 @@
 namespace Claroline\VideoPlayerBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\EvaluationBundle\Repository\UserEvaluation\ResourceAttemptRepository;

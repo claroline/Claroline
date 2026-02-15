@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Controller\Platform;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ConnectionMessageManager;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -43,7 +43,7 @@ class ConnectionMessageController extends AbstractCrudController
      */
     #[Route(path: '/{id}/discard', name: 'discard', methods: 'PUT')]
     public function discardAction(#[MapEntity(class: 'Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage', mapping: ['id' => 'uuid'])]
-    ConnectionMessage $message, #[CurrentUser] ?User $user): JsonResponse
+        ConnectionMessage $message, #[CurrentUser] ?User $user): JsonResponse
     {
         if (null === $user) {
             return new JsonResponse(null, 204);

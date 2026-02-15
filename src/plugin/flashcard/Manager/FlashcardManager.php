@@ -3,8 +3,8 @@
 namespace Claroline\FlashcardBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\FlashcardBundle\Entity\CardDrawnProgression;

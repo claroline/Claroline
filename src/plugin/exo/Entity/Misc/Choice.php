@@ -2,8 +2,8 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Display\Order;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;

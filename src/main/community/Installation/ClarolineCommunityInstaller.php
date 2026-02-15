@@ -22,6 +22,7 @@ class ClarolineCommunityInstaller extends AdditionalInstaller
             '15.0.0' => Updater150000::class,
         ];
     }
+
     public function hasMigrations(): bool
     {
         return true;

@@ -2,10 +2,9 @@
 
 namespace Claroline\PeerTubeBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
 
 #[ORM\Table(name: 'claro_peertube_video')]
 #[ORM\Entity]

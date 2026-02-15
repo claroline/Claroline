@@ -11,25 +11,18 @@ namespace Claroline\AppBundle\JVal\Constraint;
 
 use JVal\Context;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "maximum" and "exclusiveMaximum" keywords.
  */
 class MaximumConstraint extends AbstractRangeConstraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['maximum', 'exclusiveMaximum'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         if (false === $schema->exclusiveMaximum) {
             if ($instance > $schema->maximum) {

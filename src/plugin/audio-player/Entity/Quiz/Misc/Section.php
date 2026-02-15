@@ -63,9 +63,6 @@ class Section implements AnswerPartInterface
         $this->end = $end;
     }
 
-    /**
-     * @return float
-     */
     public function getStartTolerance(): float
     {
         return $this->startTolerance;

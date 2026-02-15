@@ -17,33 +17,23 @@ use JVal\Exception\Constraint\NotUniqueException;
 use JVal\Types;
 use JVal\Utils;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "enum" keyword.
  */
 class EnumConstraint implements Constraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['enum'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker)
     {
         $context->enterNode('enum');
 
@@ -66,10 +56,7 @@ class EnumConstraint implements Constraint
         $context->leaveNode();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         $hasMatch = false;
 

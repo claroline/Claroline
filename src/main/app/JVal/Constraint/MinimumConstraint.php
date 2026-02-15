@@ -11,25 +11,18 @@ namespace Claroline\AppBundle\JVal\Constraint;
 
 use JVal\Context;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "minimum" and "exclusiveMinimum" keywords.
  */
 class MinimumConstraint extends AbstractRangeConstraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['minimum', 'exclusiveMinimum'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         if (false === $schema->exclusiveMinimum) {
             if ($instance < $schema->minimum) {

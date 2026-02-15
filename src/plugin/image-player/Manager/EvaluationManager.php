@@ -3,8 +3,8 @@
 namespace Claroline\ImagePlayerBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 

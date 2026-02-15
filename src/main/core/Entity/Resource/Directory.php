@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Parameters\ListParameters;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_directory')]

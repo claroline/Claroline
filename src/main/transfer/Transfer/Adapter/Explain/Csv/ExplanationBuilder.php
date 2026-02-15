@@ -51,11 +51,6 @@ class ExplanationBuilder
 
     /**
      * A oneOf is simply another schema that needs to be explained.
-     *
-     * @param \stdClass   $data
-     * @param Explanation $explanation
-     * @param string      $currentPath
-     * @param bool        $isArray
      */
     private function explainOneOf(\stdClass $data, Explanation $explanation, string $currentPath, ?bool $isArray = false): void
     {

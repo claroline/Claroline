@@ -50,9 +50,9 @@ class ShortcutSerializer
             $shortcut->refreshUuid();
         }
 
-        if (!empty($data['target']) &&
-            !empty($data['target']['id']) &&
-            (!$shortcut->getTarget() || $data['target']['id'] !== $shortcut->getTarget()->getUuid())
+        if (!empty($data['target'])
+            && !empty($data['target']['id'])
+            && (!$shortcut->getTarget() || $data['target']['id'] !== $shortcut->getTarget()->getUuid())
         ) {
             // the target is specified and as changed
             /** @var ResourceNode $target */

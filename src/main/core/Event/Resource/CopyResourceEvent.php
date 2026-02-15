@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Event\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**

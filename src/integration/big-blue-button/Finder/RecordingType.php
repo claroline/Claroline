@@ -7,7 +7,6 @@ use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\RelatedEntityType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
-use Claroline\BigBlueButtonBundle\Entity\BBB;
 use Claroline\BigBlueButtonBundle\Entity\Recording;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

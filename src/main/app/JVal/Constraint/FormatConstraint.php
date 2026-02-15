@@ -9,13 +9,11 @@
 
 namespace Claroline\AppBundle\JVal\Constraint;
 
-use DateTime;
 use JVal\Constraint;
 use JVal\Context;
 use JVal\Exception\Constraint\InvalidTypeException;
 use JVal\Types;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "format" keyword.
@@ -25,7 +23,7 @@ class FormatConstraint implements Constraint
     /**
      * @see http://stackoverflow.com/a/1420225
      */
-    const HOSTNAME_REGEX = '/^
+    public const HOSTNAME_REGEX = '/^
       (?=.{1,255}$)
       [0-9a-z]
       (([0-9a-z]|-){0,61}[0-9a-z])?
@@ -40,28 +38,19 @@ class FormatConstraint implements Constraint
      * enforces the general structure of the URI (each part, like scheme,
      * authority, etc. should be validated separately)
      */
-    const URI_REGEX = '#^(([^:/?\#]+):)?//([^/?\#]*)(\?([^\#]*))?(\#(.*))?#ix';
+    public const URI_REGEX = '#^(([^:/?\#]+):)?//([^/?\#]*)(\?([^\#]*))?(\#(.*))?#ix';
 
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['format'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         return Types::TYPE_STRING === $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker)
     {
         if (!is_string($schema->format)) {
             $context->enterNode('format');
@@ -72,10 +61,7 @@ class FormatConstraint implements Constraint
         // TODO: add option to treat unknown format as a schema error
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         if (!is_string($instance)) {
             $context->addViolation('should be a string');
@@ -109,18 +95,15 @@ class FormatConstraint implements Constraint
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     private function isDateTimeValid($date, $format)
     {
-        $dateTime = DateTime::createFromFormat($format, $date);
+        $dateTime = \DateTime::createFromFormat($format, $date);
 
         if (!$dateTime) {
             return false;
         }
 
-        $errors = DateTime::getLastErrors();
+        $errors = \DateTime::getLastErrors();
 
         return 0 === $errors['warning_count'] && 0 === $errors['error_count'];
     }

@@ -23,73 +23,43 @@ class WorkspaceRegistrationQueue
 {
     use Id;
 
-    /**
-     *
-     * @var Role
-     */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Role::class)]
     private ?Role $role = null;
 
-    /**
-     *
-     * @var User
-     */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user = null;
 
-    /**
-     *
-     * @var Workspace
-     */
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Workspace::class)]
     private ?Workspace $workspace = null;
 
-    /**
-     * @param mixed $role
-     */
     public function setRole($role)
     {
         $this->role = $role;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRole()
     {
         return $this->role;
     }
 
-    /**
-     * @param mixed $user
-     */
     public function setUser($user)
     {
         $this->user = $user;
     }
 
-    /**
-     * @return mixed
-     */
     public function getUser()
     {
         return $this->user;
     }
 
-    /**
-     * @param mixed $workspace
-     */
     public function setWorkspace($workspace)
     {
         $this->workspace = $workspace;
     }
 
-    /**
-     * @return mixed
-     */
     public function getWorkspace()
     {
         return $this->workspace;

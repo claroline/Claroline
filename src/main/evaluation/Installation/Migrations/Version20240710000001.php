@@ -14,6 +14,7 @@ use Doctrine\Migrations\AbstractMigration;
 final class Version20240710000001 extends AbstractMigration
 {
     use ConditionalMigrationTrait;
+
     public function up(Schema $schema): void
     {
         if ($this->checkColumnExists('innova_step', 'step_order', $this->connection)) {

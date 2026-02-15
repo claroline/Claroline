@@ -10,7 +10,7 @@ class DateRangeNormalizer
      *
      * @var string
      */
-    const DATE_FORMAT = 'Y-m-d\TH:i:s';
+    public const DATE_FORMAT = 'Y-m-d\TH:i:s';
 
     /**
      * Normalizes two DateTimes to an array of date strings.

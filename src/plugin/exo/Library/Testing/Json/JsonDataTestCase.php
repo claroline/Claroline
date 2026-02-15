@@ -33,8 +33,6 @@ abstract class JsonDataTestCase extends TransactionalTestCase
      * Loads data set from examples of the JSON quiz schema.
      *
      * @param string $uri
-     *
-     * @return mixed
      */
     protected function loadExampleData($uri)
     {
@@ -47,8 +45,6 @@ abstract class JsonDataTestCase extends TransactionalTestCase
      * Loads data set from local Tests directory.
      *
      * @param string $uri
-     *
-     * @return mixed
      */
     public function loadTestData($uri)
     {

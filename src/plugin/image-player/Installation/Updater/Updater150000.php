@@ -6,7 +6,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\ImagePlayerBundle\Component\Resource\ImageResource;
 use Claroline\InstallationBundle\Updater\Updater;
-use Claroline\VideoPlayerBundle\Component\Resource\VideoResource;
 use Doctrine\DBAL\Connection;
 
 class Updater150000 extends Updater

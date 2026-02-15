@@ -11,8 +11,6 @@
 
 namespace Claroline\DropZoneBundle\Controller;
 
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
-use Exception;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -20,6 +18,7 @@ use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Entity\Revision;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -56,11 +55,10 @@ class RevisionController extends AbstractCrudController
 
     /**
      * Submits Drop for revision.
-     *
      */
     #[Route(path: '/drop/{id}/submit/revision', name: 'submit_for_revision', methods: ['PUT'])]
     public function submitForRevisionAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Drop', mapping: ['id' => 'uuid'])]
-    Drop $drop, #[CurrentUser] ?User $user): JsonResponse
+        Drop $drop, #[CurrentUser] ?User $user): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -73,15 +71,14 @@ class RevisionController extends AbstractCrudController
                 'drop' => $this->serializer->serialize($drop),
                 'revision' => $this->serializer->serialize($revision),
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
     }
 
-    
     #[Route(path: '/{id}/revisions/list', name: 'dropzone_list', methods: ['GET'])]
     public function revisionsListAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Dropzone', mapping: ['id' => 'uuid'])]
-    Dropzone $dropzone, Request $request): JsonResponse
+        Dropzone $dropzone, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
 
@@ -93,10 +90,9 @@ class RevisionController extends AbstractCrudController
         return new JsonResponse($data, 200);
     }
 
-    
     #[Route(path: '/drop/{drop}/revisions/list', name: 'drop_list', methods: ['GET'])]
     public function dropRevisionsListAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Drop', mapping: ['drop' => 'uuid'])]
-    Drop $drop, #[CurrentUser] ?User $user, Request $request): JsonResponse
+        Drop $drop, #[CurrentUser] ?User $user, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         if (!$this->authorization->isGranted('EDIT', $dropzone->getResourceNode()) && $drop->getUser() !== $user && !in_array($user, $drop->getUsers())) {
@@ -111,10 +107,9 @@ class RevisionController extends AbstractCrudController
         return new JsonResponse($data, 200);
     }
 
-    
     #[Route(path: '/{id}/revision/drop', name: 'drop_get', methods: ['GET'])]
     public function dropFromRevisionFetchAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Revision', mapping: ['id' => 'uuid'])]
-    Revision $revision, #[CurrentUser] ?User $user): JsonResponse
+        Revision $revision, #[CurrentUser] ?User $user): JsonResponse
     {
         $drop = $revision->getDrop();
         $dropzone = $drop->getDropzone();

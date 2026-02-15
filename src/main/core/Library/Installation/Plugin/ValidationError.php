@@ -21,9 +21,6 @@ class ValidationError
 
     /**
      * Constructor.
-     *
-     * @param string $errorMsg
-     * @param int    $errorCode
      */
     public function __construct($message, $code = null)
     {

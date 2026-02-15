@@ -2,9 +2,9 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\OrderingQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;

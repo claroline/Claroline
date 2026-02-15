@@ -22,8 +22,6 @@ interface AdapterInterface
      * Explain how to build the schema when using an identifier from schema.
      *
      * @param \stdClass[] $schemas
-     *
-     * @return Explanation
      */
     public function explainIdentifiers(array $schemas): Explanation;
 

@@ -11,27 +11,25 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
-use DateTimeInterface;
-use DateTime;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_dropzonebundle_dropzone')]
 #[ORM\Entity]
 class Dropzone extends AbstractResource
 {
-    const STATE_NOT_STARTED = 'not_started';
-    const STATE_ALLOW_DROP = 'drop';
-    const STATE_FINISHED = 'finished';
-    const STATE_PEER_REVIEW = 'review';
-    const STATE_ALLOW_DROP_AND_PEER_REVIEW = 'drop_review';
-    const STATE_WAITING_FOR_PEER_REVIEW = 'review_standby';
+    public const STATE_NOT_STARTED = 'not_started';
+    public const STATE_ALLOW_DROP = 'drop';
+    public const STATE_FINISHED = 'finished';
+    public const STATE_PEER_REVIEW = 'review';
+    public const STATE_ALLOW_DROP_AND_PEER_REVIEW = 'drop_review';
+    public const STATE_WAITING_FOR_PEER_REVIEW = 'review_standby';
 
-    const DROP_TYPE_USER = 'user';
-    const DROP_TYPE_TEAM = 'team';
+    public const DROP_TYPE_USER = 'user';
+    public const DROP_TYPE_TEAM = 'team';
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $instruction = null;
@@ -85,16 +83,16 @@ class Dropzone extends AbstractResource
     private string $manualState = self::STATE_NOT_STARTED;
 
     #[ORM\Column(name: 'drop_start_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $dropStartDate = null;
+    private ?\DateTimeInterface $dropStartDate = null;
 
     #[ORM\Column(name: 'drop_end_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $dropEndDate = null;
+    private ?\DateTimeInterface $dropEndDate = null;
 
     #[ORM\Column(name: 'review_start_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $reviewStartDate = null;
+    private ?\DateTimeInterface $reviewStartDate = null;
 
     #[ORM\Column(name: 'review_end_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $reviewEndDate = null;
+    private ?\DateTimeInterface $reviewEndDate = null;
 
     #[ORM\Column(name: 'comment_in_correction_enabled', type: Types::BOOLEAN, nullable: false)]
     private bool $commentInCorrectionEnabled = false;
@@ -294,42 +292,42 @@ class Dropzone extends AbstractResource
         $this->manualState = $manualState;
     }
 
-    public function getDropStartDate(): ?DateTimeInterface
+    public function getDropStartDate(): ?\DateTimeInterface
     {
         return $this->dropStartDate;
     }
 
-    public function setDropStartDate(?DateTimeInterface $dropStartDate = null): void
+    public function setDropStartDate(?\DateTimeInterface $dropStartDate = null): void
     {
         $this->dropStartDate = $dropStartDate;
     }
 
-    public function getDropEndDate(): ?DateTimeInterface
+    public function getDropEndDate(): ?\DateTimeInterface
     {
         return $this->dropEndDate;
     }
 
-    public function setDropEndDate(?DateTimeInterface $dropEndDate = null): void
+    public function setDropEndDate(?\DateTimeInterface $dropEndDate = null): void
     {
         $this->dropEndDate = $dropEndDate;
     }
 
-    public function getReviewStartDate(): ?DateTimeInterface
+    public function getReviewStartDate(): ?\DateTimeInterface
     {
         return $this->reviewStartDate;
     }
 
-    public function setReviewStartDate(?DateTimeInterface $reviewStartDate = null): void
+    public function setReviewStartDate(?\DateTimeInterface $reviewStartDate = null): void
     {
         $this->reviewStartDate = $reviewStartDate;
     }
 
-    public function getReviewEndDate(): ?DateTimeInterface
+    public function getReviewEndDate(): ?\DateTimeInterface
     {
         return $this->reviewEndDate;
     }
 
-    public function setReviewEndDate(?DateTimeInterface $reviewEndDate = null): void
+    public function setReviewEndDate(?\DateTimeInterface $reviewEndDate = null): void
     {
         $this->reviewEndDate = $reviewEndDate;
     }
@@ -471,29 +469,29 @@ class Dropzone extends AbstractResource
 
     public function isDropEnabled(): bool
     {
-        $currentDate = new DateTime();
+        $currentDate = new \DateTime();
 
         return (
-            $this->manualPlanning &&
-            in_array($this->manualState, [self::STATE_ALLOW_DROP, self::STATE_ALLOW_DROP_AND_PEER_REVIEW])
+            $this->manualPlanning
+            && in_array($this->manualState, [self::STATE_ALLOW_DROP, self::STATE_ALLOW_DROP_AND_PEER_REVIEW])
         ) || (
-            !$this->manualPlanning &&
-            (!empty($this->dropStartDate) && $currentDate >= $this->dropStartDate) &&
-            (!empty($this->dropEndDate) && $currentDate <= $this->dropEndDate)
+            !$this->manualPlanning
+            && (!empty($this->dropStartDate) && $currentDate >= $this->dropStartDate)
+            && (!empty($this->dropEndDate) && $currentDate <= $this->dropEndDate)
         );
     }
 
     public function isReviewEnabled(): bool
     {
-        $currentDate = new DateTime();
+        $currentDate = new \DateTime();
 
         return $this->peerReview && ((
-            $this->manualPlanning &&
-            in_array($this->manualState, [self::STATE_PEER_REVIEW, self::STATE_ALLOW_DROP_AND_PEER_REVIEW])
+            $this->manualPlanning
+            && in_array($this->manualState, [self::STATE_PEER_REVIEW, self::STATE_ALLOW_DROP_AND_PEER_REVIEW])
         ) || (
-            !$this->manualPlanning &&
-            (!empty($this->reviewStartDate) && $currentDate >= $this->reviewStartDate) &&
-            (!empty($this->reviewEndDate) && $currentDate <= $this->reviewEndDate)
+            !$this->manualPlanning
+            && (!empty($this->reviewStartDate) && $currentDate >= $this->reviewStartDate)
+            && (!empty($this->reviewEndDate) && $currentDate <= $this->reviewEndDate)
         ));
     }
 

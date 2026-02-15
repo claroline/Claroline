@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Command\Workspace;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Console\Command\Command;

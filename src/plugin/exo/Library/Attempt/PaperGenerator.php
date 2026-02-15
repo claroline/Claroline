@@ -251,7 +251,6 @@ class PaperGenerator
      *
      * @param array $collection - the original collection
      * @param int   $count      - the number of items to pick in the collection (if 0, the whole collection is returned)
-     * @param bool  $force
      *
      * @return array - the truncated collection
      */

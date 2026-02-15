@@ -23,19 +23,18 @@ class SerializerProvider
             // 1. the serializer implements the getClass method, so we just call it
             //    this is the recommended way because it's more efficient than using reflection
             return $serializer->getClass();
-        } else {
-            // 2. else, we try to find the correct serializer by using the type hint of the `serialize` method
-            //    this is not always possible, because some serializers can not use type hint (mostly because of an Interface),
-            //    so for this case the `getClass` method is required
-            $p = new \ReflectionParameter([get_class($serializer), 'serialize'], 0);
-            $type = method_exists($p, 'getType') ? $p->getType() : $p->getClass();
-
-            if (!$type) {
-                throw new \Exception(get_class($serializer).' is missing type hinting or getClass method');
-            }
-
-            return $type->getName();
         }
+        // 2. else, we try to find the correct serializer by using the type hint of the `serialize` method
+        //    this is not always possible, because some serializers can not use type hint (mostly because of an Interface),
+        //    so for this case the `getClass` method is required
+        $p = new \ReflectionParameter([get_class($serializer), 'serialize'], 0);
+        $type = method_exists($p, 'getType') ? $p->getType() : $p->getClass();
+
+        if (!$type) {
+            throw new \Exception(get_class($serializer).' is missing type hinting or getClass method');
+        }
+
+        return $type->getName();
     }
 
     /**

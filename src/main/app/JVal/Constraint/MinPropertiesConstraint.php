@@ -12,33 +12,23 @@ namespace Claroline\AppBundle\JVal\Constraint;
 use JVal\Context;
 use JVal\Types;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "minProperties" keyword.
  */
 class MinPropertiesConstraint extends AbstractCountConstraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['minProperties'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         return Types::TYPE_OBJECT === $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         if (count(get_object_vars($instance)) < $schema->minProperties) {
             $context->addViolation(

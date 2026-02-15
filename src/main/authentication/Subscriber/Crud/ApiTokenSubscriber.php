@@ -3,8 +3,8 @@
 namespace Claroline\AuthenticationBundle\Subscriber\Crud;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
-use Claroline\AuthenticationBundle\Entity\ApiToken;
 use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\AuthenticationBundle\Entity\ApiToken;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 

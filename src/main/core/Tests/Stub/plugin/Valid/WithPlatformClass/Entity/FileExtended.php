@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * @ORM\Entity
+ *
  * @ORM\Table(name="valid_custom_resource_a")
  */
 class FileExtended extends AbstractResource

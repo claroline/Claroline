@@ -12,10 +12,10 @@
 namespace Claroline\TagBundle\Entity;
 
 use Claroline\AppBundle\API\Attribute\CrudEntity;
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\TagBundle\Finder\TaggedObjectType;
 use Claroline\TagBundle\Repository\TaggedObjectRepository;
 use Doctrine\DBAL\Types\Types;
-use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_tagbundle_tagged_object')]

@@ -161,19 +161,18 @@ class GraphicDefinition extends AbstractDefinition
                 $coords[] = (float) $coords[1] + $area->getSize();
 
                 return $this->isPointInRect($coords, $x, $y);
-            } else {
-                // must be a circle
-                $r = $area->getSize() / 2;
-                $cx = (float) $coords[0] + $r;
-                $cy = (float) $coords[1] + $r;
-
-                // coordinates relative to the circle center
-                $x = abs($cx - $x);
-                $y = abs($cy - $y);
-
-                // inside the circle if distance to center <= radius
-                return $x * $x + $y * $y <= $r * $r;
             }
+            // must be a circle
+            $r = $area->getSize() / 2;
+            $cx = (float) $coords[0] + $r;
+            $cy = (float) $coords[1] + $r;
+
+            // coordinates relative to the circle center
+            $x = abs($cx - $x);
+            $y = abs($cy - $y);
+
+            // inside the circle if distance to center <= radius
+            return $x * $x + $y * $y <= $r * $r;
         }
 
         // must be rect

@@ -14,33 +14,23 @@ use JVal\Context;
 use JVal\Exception\Constraint\InvalidTypeException;
 use JVal\Types;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "not" keyword.
  */
 class NotConstraint implements Constraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['not'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker)
     {
         $context->enterNode('not');
 
@@ -52,10 +42,7 @@ class NotConstraint implements Constraint
         $context->leaveNode();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         $altContext = $context->duplicate();
         $walker->applyConstraints($instance, $schema->not, $altContext);

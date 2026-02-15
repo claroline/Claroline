@@ -16,7 +16,6 @@ use JVal\Exception\Constraint\InvalidTypeException;
 use JVal\Types;
 use JVal\Utils;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "properties", "additionalProperties" and
@@ -24,26 +23,17 @@ use stdClass;
  */
 class PropertiesConstraint implements Constraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['properties', 'additionalProperties', 'patternProperties'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         return Types::TYPE_OBJECT === $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker)
     {
         $this->createDefaults($schema);
 
@@ -58,10 +48,7 @@ class PropertiesConstraint implements Constraint
         $context->leaveNode();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         // implementation of the algorithms described in 5.4.4.4 and in 8.3
         foreach ($instance as $property => $value) {
@@ -95,23 +82,23 @@ class PropertiesConstraint implements Constraint
         }
     }
 
-    private function createDefaults(stdClass $schema)
+    private function createDefaults(\stdClass $schema)
     {
         if (!property_exists($schema, 'properties')) {
-            $schema->properties = new stdClass();
+            $schema->properties = new \stdClass();
         }
 
         if (!property_exists($schema, 'additionalProperties')
             || true === $schema->additionalProperties) {
-            $schema->additionalProperties = new stdClass();
+            $schema->additionalProperties = new \stdClass();
         }
 
         if (!property_exists($schema, 'patternProperties')) {
-            $schema->patternProperties = new stdClass();
+            $schema->patternProperties = new \stdClass();
         }
     }
 
-    private function parsePropertiesProperty(stdClass $schema, Context $context, Walker $walker)
+    private function parsePropertiesProperty(\stdClass $schema, Context $context, Walker $walker)
     {
         if (!is_object($schema->properties)) {
             throw new InvalidTypeException($context, Types::TYPE_OBJECT);
@@ -129,7 +116,7 @@ class PropertiesConstraint implements Constraint
         }
     }
 
-    private function parseAdditionalPropertiesProperty(stdClass $schema, Context $context, Walker $walker)
+    private function parseAdditionalPropertiesProperty(\stdClass $schema, Context $context, Walker $walker)
     {
         if (is_object($schema->additionalProperties)) {
             $walker->parseSchema($schema->additionalProperties, $context);
@@ -138,7 +125,7 @@ class PropertiesConstraint implements Constraint
         }
     }
 
-    private function parsePatternPropertiesProperty(stdClass $schema, Context $context, Walker $walker)
+    private function parsePatternPropertiesProperty(\stdClass $schema, Context $context, Walker $walker)
     {
         if (!is_object($schema->patternProperties)) {
             throw new InvalidTypeException($context, Types::TYPE_OBJECT);

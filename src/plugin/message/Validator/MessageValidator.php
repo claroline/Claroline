@@ -70,7 +70,7 @@ class MessageValidator implements ValidatorInterface
         $usernames = [];
         $groupNames = [];
         $workspaceCodes = [];
-        //split the string of target into different array.
+        // split the string of target into different array.
         foreach ($names as $name) {
             if ('{' === substr($name, 0, 1)) {
                 $groupNames[] = trim($name, '{}');

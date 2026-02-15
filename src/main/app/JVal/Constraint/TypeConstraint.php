@@ -16,33 +16,23 @@ use JVal\Exception\Constraint\NotPrimitiveTypeException;
 use JVal\Exception\Constraint\NotUniqueException;
 use JVal\Types;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "type" keyword.
  */
 class TypeConstraint implements Constraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['type'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker)
     {
         $context->enterNode('type');
 
@@ -75,10 +65,7 @@ class TypeConstraint implements Constraint
         $context->leaveNode();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         if (is_string($schema->type)) {
             if (!Types::isA($instance, $schema->type)) {

@@ -39,9 +39,6 @@ class SqlFormatterExtension extends AbstractExtension
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions(): array
     {
         return [

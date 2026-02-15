@@ -97,9 +97,9 @@ class AttemptController
 
         if (!empty($errors)) {
             return new JsonResponse($errors, 422);
-        } else {
-            return new JsonResponse(null, 204);
         }
+
+        return new JsonResponse(null, 204);
     }
 
     /**

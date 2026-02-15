@@ -224,9 +224,9 @@ class Sco
     {
         if (Scorm::SCORM_2004 === $this->scorm->getVersion()) {
             return $this->scoreToPassDecimal;
-        } else {
-            return $this->scoreToPassInt;
         }
+
+        return $this->scoreToPassInt;
     }
 
     public function setScoreToPass(float|int|null $scoreToPass): void

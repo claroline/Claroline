@@ -38,8 +38,6 @@ class StepItem
 
     /**
      * The answer is mandatory to continue the quiz.
-     *
-     * @var bool
      */
     #[ORM\Column(name: 'mandatory', type: Types::BOOLEAN, nullable: true)]
     private bool $mandatory = false;

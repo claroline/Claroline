@@ -18,10 +18,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class RevisionComment extends AbstractComment
 {
-    /**
-     *
-     * @var Revision
-     */
     #[ORM\JoinColumn(name: 'revision_id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Revision::class, inversedBy: 'comments')]
     private ?Revision $revision = null;

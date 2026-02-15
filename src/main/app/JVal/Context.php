@@ -46,8 +46,6 @@ class Context extends JValContext
     /**
      * Leaves the current node and enters another node located at the same
      * depth in the hierarchy.
-     *
-     * @param string $pathSegmentextends JValContext
      */
     public function enterSibling($pathSegment)
     {

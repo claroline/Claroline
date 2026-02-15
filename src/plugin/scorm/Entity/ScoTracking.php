@@ -11,12 +11,10 @@
 
 namespace Claroline\ScormBundle\Entity;
 
-use Doctrine\DBAL\Types\Types;
-use DateTime;
-use DateInterval;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_scorm_sco_tracking')]
@@ -26,18 +24,10 @@ class ScoTracking
     use Id;
     use Uuid;
 
-    /**
-     *
-     * @var User
-     */
     #[ORM\JoinColumn(name: 'user_id', onDelete: 'SET NULL', nullable: true)]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $user = null;
 
-    /**
-     *
-     * @var Sco
-     */
     #[ORM\JoinColumn(name: 'sco_id', onDelete: 'CASCADE', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Sco::class)]
     protected ?Sco $sco = null;
@@ -252,9 +242,9 @@ class ScoTracking
     {
         if (Scorm::SCORM_2004 === $this->sco->getScorm()->getVersion()) {
             return $this->totalTimeString;
-        } else {
-            return $this->totalTimeInt;
         }
+
+        return $this->totalTimeInt;
     }
 
     public function setTotalTime($totalTime)
@@ -371,7 +361,7 @@ class ScoTracking
         return $this->latestDate;
     }
 
-    public function setLatestDate(?DateTime $latestDate = null)
+    public function setLatestDate(?\DateTime $latestDate = null)
     {
         $this->latestDate = $latestDate;
     }
@@ -390,9 +380,9 @@ class ScoTracking
     {
         if (Scorm::SCORM_2004 === $this->sco->getScorm()->getVersion()) {
             return $this->getFormattedTotalTimeString();
-        } else {
-            return $this->getFormattedTotalTimeInt();
         }
+
+        return $this->getFormattedTotalTimeInt();
     }
 
     public function getFormattedTotalTimeInt()
@@ -436,8 +426,8 @@ class ScoTracking
         $formattedTime = '';
 
         if (!empty($this->totalTimeString) && 'PT' !== $this->totalTimeString && preg_match($pattern, $this->totalTimeString)) {
-            $interval = new DateInterval($this->totalTimeString);
-            $time = new DateTime();
+            $interval = new \DateInterval($this->totalTimeString);
+            $time = new \DateTime();
             $time->setTimestamp(0);
             $time->add($interval);
             $timeInSecond = $time->getTimestamp();

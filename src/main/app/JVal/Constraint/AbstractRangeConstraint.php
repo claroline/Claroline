@@ -15,26 +15,19 @@ use JVal\Exception\Constraint\InvalidTypeException;
 use JVal\Exception\Constraint\MissingKeywordException;
 use JVal\Types;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Base class for constraints based on a numeric limit.
  */
 abstract class AbstractRangeConstraint implements Constraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         return Types::TYPE_INTEGER === $type
             || Types::TYPE_NUMBER === $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker)
     {
         $property = $this->keywords()[0];
         $secondaryProperty = $this->keywords()[1];

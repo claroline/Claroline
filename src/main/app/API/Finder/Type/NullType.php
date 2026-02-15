@@ -20,7 +20,6 @@ class NullType extends AbstractType
 
     public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
     {
-
         $requestValue = null === $finder->getFilterValue() ? null : filter_var($finder->getFilterValue(), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
         $value = null === $requestValue ? $options['default'] : $requestValue;
 

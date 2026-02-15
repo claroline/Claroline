@@ -48,9 +48,8 @@ class SessionUserType extends AbstractType
                             $queryBuilder->andWhere("{$finder->getAlias()}.canceled = true");
 
                             return;
-                        } else {
-                            $queryBuilder->andWhere("{$finder->getAlias()}.canceled = false");
                         }
+                        $queryBuilder->andWhere("{$finder->getAlias()}.canceled = false");
 
                         switch ($finder->getFilterValue()) {
                             case self::NO_SESSION:

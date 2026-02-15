@@ -14,9 +14,6 @@ class AnswerRepository extends EntityRepository
      * Returns all answers to a question.
      * It can be limited to only one exercise.
      *
-     * @param Exercise $exercise
-     * @param bool     $finishedPapersOnly
-     *
      * @return Answer[]
      */
     public function findByQuestion(Item $question, ?Exercise $exercise = null, ?bool $finishedPapersOnly = false): array

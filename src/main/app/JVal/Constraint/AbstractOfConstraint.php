@@ -15,25 +15,18 @@ use JVal\Exception\Constraint\EmptyArrayException;
 use JVal\Exception\Constraint\InvalidTypeException;
 use JVal\Types;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Base class for constraints based on a set of sub-schemas.
  */
 abstract class AbstractOfConstraint implements Constraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker)
     {
         $keyword = $this->keywords()[0];
         $context->enterNode($keyword);

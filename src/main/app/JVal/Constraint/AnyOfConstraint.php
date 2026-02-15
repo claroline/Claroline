@@ -11,25 +11,18 @@ namespace Claroline\AppBundle\JVal\Constraint;
 
 use JVal\Context;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "anyOf" keyword.
  */
 class AnyOfConstraint extends AbstractOfConstraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['anyOf'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         $accumulatingContext = $context->duplicate();
         $hasMatch = false;

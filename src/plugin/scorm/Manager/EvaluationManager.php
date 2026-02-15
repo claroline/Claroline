@@ -4,9 +4,9 @@ namespace Claroline\ScormBundle\Manager;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceAttempt;
 use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\ScormBundle\Entity\Sco;
 use Claroline\ScormBundle\Entity\Scorm;
@@ -328,10 +328,6 @@ class EvaluationManager
 
     /**
      * Converts a time in seconds to a DateInterval string.
-     *
-     * @param int $seconds
-     *
-     * @return string
      */
     private function retrieveIntervalFromSeconds(int $seconds): string
     {

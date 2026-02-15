@@ -11,14 +11,12 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
-use DateTimeInterface;
-use Claroline\DropZoneBundle\Repository\DocumentRepository;
-use Doctrine\DBAL\Types\Types;
-use DateTime;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\DropZoneBundle\Repository\DocumentRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'claro_dropzonebundle_document')]
@@ -28,15 +26,11 @@ class Document
     use Id;
     use Uuid;
 
-    const DOCUMENT_TYPE_FILE = 'file';
-    const DOCUMENT_TYPE_TEXT = 'html';
-    const DOCUMENT_TYPE_URL = 'url';
-    const DOCUMENT_TYPE_RESOURCE = 'resource';
+    public const DOCUMENT_TYPE_FILE = 'file';
+    public const DOCUMENT_TYPE_TEXT = 'html';
+    public const DOCUMENT_TYPE_URL = 'url';
+    public const DOCUMENT_TYPE_RESOURCE = 'resource';
 
-    /**
-     *
-     * @var Drop
-     */
     #[ORM\JoinColumn(name: 'drop_id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Drop::class, inversedBy: 'documents')]
     protected ?Drop $drop = null;
@@ -65,24 +59,16 @@ class Document
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     protected $content;
 
-    /**
-     *
-     * @var ResourceNode
-     */
     #[ORM\JoinColumn(name: 'resource_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: ResourceNode::class)]
     protected ?ResourceNode $resource = null;
 
-    /**
-     *
-     * @var User
-     */
     #[ORM\JoinColumn(name: 'user_id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $user = null;
 
     /**
-     * @var DateTimeInterface
+     * @var \DateTimeInterface
      */
     #[ORM\Column(name: 'drop_date', type: Types::DATETIME_MUTABLE, nullable: false)]
     protected $dropDate;
@@ -200,14 +186,14 @@ class Document
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getDropDate()
     {
         return $this->dropDate;
     }
 
-    public function setDropDate(DateTime $dropDate)
+    public function setDropDate(\DateTime $dropDate)
     {
         $this->dropDate = $dropDate;
     }
@@ -284,9 +270,6 @@ class Document
         $this->isManager = $isManager;
     }
 
-    /**
-     * @return mixed
-     */
     public function toArray()
     {
         $json = [

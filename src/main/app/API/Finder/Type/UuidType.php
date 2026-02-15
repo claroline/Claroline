@@ -5,7 +5,6 @@ namespace Claroline\AppBundle\API\Finder\Type;
 use Claroline\AppBundle\API\Finder\AbstractType;
 use Claroline\AppBundle\API\Finder\FinderInterface;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UuidType extends AbstractType
 {

@@ -12,8 +12,8 @@
 namespace Claroline\InstallationBundle\Manager;
 
 use Claroline\InstallationBundle\Migrations\Generator;
-use Claroline\InstallationBundle\Migrations\Writer;
 use Claroline\InstallationBundle\Migrations\Migrator;
+use Claroline\InstallationBundle\Migrations\Writer;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;

@@ -2,9 +2,9 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Misc\Hole;
 
@@ -23,7 +23,6 @@ class ClozeQuestion extends AbstractItem
 
     /**
      * The list of holes present in the text.
-     *
      *
      * @var Collection<int, Hole>
      */

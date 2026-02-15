@@ -12,25 +12,18 @@ namespace Claroline\AppBundle\JVal\Constraint;
 use JVal\Constraint\OneOfConstraint as JValConstraint;
 use JVal\Context;
 use JVal\Walker;
-use stdClass;
 
 /**
  * Constraint for the "oneOf" keyword.
  */
 class OneOfConstraint extends JValConstraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function keywords()
     {
         return ['oneOf'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply($instance, stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
     {
         $accumulatingContext = $context->duplicate(false);
         $hasMatch = false;

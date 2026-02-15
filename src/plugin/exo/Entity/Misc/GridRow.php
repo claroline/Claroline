@@ -2,10 +2,10 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\PairQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
@@ -26,7 +26,6 @@ class GridRow implements AnswerPartInterface
     /**
      * If set to true the items order in answer must match the order set by the author.
      *
-     *
      * @var bool
      */
     #[ORM\Column(type: Types::BOOLEAN)]
@@ -43,9 +42,6 @@ class GridRow implements AnswerPartInterface
 
     /**
      * The parent question.
-     *
-     *
-     * @var PairQuestion
      */
     #[ORM\JoinColumn(name: 'pair_question_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: PairQuestion::class, inversedBy: 'rows')]
@@ -71,8 +67,6 @@ class GridRow implements AnswerPartInterface
 
     /**
      * Set ordered.
-     *
-     * @param $ordered
      */
     public function setOrdered($ordered)
     {
@@ -93,8 +87,6 @@ class GridRow implements AnswerPartInterface
 
     /**
      * Get an item by its uuid.
-     *
-     * @param $uuid
      *
      * @return GridItem|null
      */

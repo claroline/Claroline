@@ -65,7 +65,6 @@ class LocationSubscriber implements EventSubscriberInterface
         );
     }
 
-
     public function postDelete(DeleteEvent $event): void
     {
         /** @var Location $location */

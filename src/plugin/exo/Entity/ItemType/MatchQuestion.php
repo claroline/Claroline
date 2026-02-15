@@ -2,8 +2,8 @@
 
 namespace UJM\ExoBundle\Entity\ItemType;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Misc\Association;
 use UJM\ExoBundle\Entity\Misc\Label;

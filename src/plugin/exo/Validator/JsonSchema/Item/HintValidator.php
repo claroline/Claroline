@@ -15,9 +15,6 @@ class HintValidator extends JsonSchemaValidator
         return 'hint.json';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validateAfterSchema(mixed $hint, array $options = []): array
     {
         $errors = [];

@@ -113,8 +113,6 @@ class FieldFacetChoice
 
     /**
      * for the api form select field.
-     *
-     * @return string
      */
     public function getValue(): ?string
     {

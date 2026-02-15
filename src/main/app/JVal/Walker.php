@@ -15,8 +15,6 @@ use JVal\Resolver;
 use JVal\Types;
 use JVal\Uri;
 use JVal\Walker as JValWalker;
-use SplObjectStorage;
-use stdClass;
 
 /**
  * Implements the three steps needed to perform a JSON Schema validation,
@@ -39,12 +37,12 @@ class Walker extends JValWalker
     private $resolver;
 
     /**
-     * @var SplObjectStorage
+     * @var \SplObjectStorage
      */
     private $parsedSchemas;
 
     /**
-     * @var SplObjectStorage
+     * @var \SplObjectStorage
      */
     private $resolvedSchemas;
 
@@ -67,12 +65,12 @@ class Walker extends JValWalker
     /**
      * Recursively resolves JSON pointer references within a given schema.
      *
-     * @param stdClass $schema The schema to resolve
-     * @param Uri      $uri    The URI of the schema
+     * @param \stdClass $schema The schema to resolve
+     * @param Uri       $uri    The URI of the schema
      *
-     * @return stdClass
+     * @return \stdClass
      */
-    public function resolveReferences(stdClass $schema, Uri $uri)
+    public function resolveReferences(\stdClass $schema, Uri $uri)
     {
         $this->resolver->initialize($schema, $uri);
 
@@ -82,9 +80,9 @@ class Walker extends JValWalker
     /**
      * @param bool $inProperties
      *
-     * @return stdClass
+     * @return \stdClass
      */
-    private function doResolveReferences(stdClass $schema, Uri $uri, $inProperties = false)
+    private function doResolveReferences(\stdClass $schema, Uri $uri, $inProperties = false)
     {
         if ($this->isProcessed($schema, $this->resolvedSchemas)) {
             return $schema;
@@ -130,9 +128,9 @@ class Walker extends JValWalker
     /**
      * Recursively normalizes a given schema and validates its syntax.
      *
-     * @return stdClass
+     * @return \stdClass
      */
-    public function parseSchema(stdClass $schema, Context $context)
+    public function parseSchema(\stdClass $schema, Context $context)
     {
         if ($this->isProcessed($schema, $this->parsedSchemas)) {
             return $schema;
@@ -152,10 +150,8 @@ class Walker extends JValWalker
     /**
      * Validates an instance against a given schema, populating a context
      * with encountered violations.
-     *
-     * @param mixed $instance
      */
-    public function applyConstraints($instance, stdClass $schema, Context $context, array $options = [])
+    public function applyConstraints($instance, \stdClass $schema, Context $context, array $options = [])
     {
         $cacheKey = gettype($instance).spl_object_hash($schema);
         $constraints = &$this->constraintsCache[$cacheKey];
@@ -178,7 +174,7 @@ class Walker extends JValWalker
      *
      * @return bool
      */
-    private function isProcessed(stdClass $schema, SplObjectStorage $storage)
+    private function isProcessed(\stdClass $schema, \SplObjectStorage $storage)
     {
         if ($storage->contains($schema)) {
             return true;
@@ -194,7 +190,7 @@ class Walker extends JValWalker
      *
      * @return string
      */
-    private function getVersion(stdClass $schema)
+    private function getVersion(\stdClass $schema)
     {
         return property_exists($schema, '$schema') && is_string($schema->{'$schema'}) ?
             $schema->{'$schema'} :
@@ -208,7 +204,7 @@ class Walker extends JValWalker
      *
      * @return Constraint[]
      */
-    private function filterConstraintsForSchema(array $constraints, stdClass $schema)
+    private function filterConstraintsForSchema(array $constraints, \stdClass $schema)
     {
         $filtered = [];
 

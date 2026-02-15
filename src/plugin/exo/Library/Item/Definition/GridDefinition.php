@@ -170,16 +170,15 @@ class GridDefinition extends AbstractDefinition
                         if (empty($givenAnwser)) {
                             $all = false;
                             break;
-                        } else {
-                            // check answer
-                            $cell = $question->getCell($expectedCellUuid);
-                            $currentAnswer = reset($givenAnwser);
-                            $choice = $cell->getChoice($currentAnswer['text']);
-                            // wrong or empty anwser -> score will not be applied
-                            if (empty($choice) || (!empty($choice) && !$choice->isExpected())) {
-                                $all = false;
-                                break;
-                            }
+                        }
+                        // check answer
+                        $cell = $question->getCell($expectedCellUuid);
+                        $currentAnswer = reset($givenAnwser);
+                        $choice = $cell->getChoice($currentAnswer['text']);
+                        // wrong or empty anwser -> score will not be applied
+                        if (empty($choice) || (!empty($choice) && !$choice->isExpected())) {
+                            $all = false;
+                            break;
                         }
                     }
 
@@ -226,15 +225,14 @@ class GridDefinition extends AbstractDefinition
                         if (empty($givenAnwser)) {
                             $all = false;
                             break;
-                        } else {
-                            $cell = $question->getCell($expectedCellUuid);
-                            $currentAnswer = reset($givenAnwser);
-                            $choice = $cell->getChoice($currentAnswer['text']);
-                            // wrong or empty anwser -> score will not be applied
-                            if (empty($choice) || (!empty($choice) && !$choice->isExpected())) {
-                                $all = false;
-                                break;
-                            }
+                        }
+                        $cell = $question->getCell($expectedCellUuid);
+                        $currentAnswer = reset($givenAnwser);
+                        $choice = $cell->getChoice($currentAnswer['text']);
+                        // wrong or empty anwser -> score will not be applied
+                        if (empty($choice) || (!empty($choice) && !$choice->isExpected())) {
+                            $all = false;
+                            break;
                         }
                     }
 
