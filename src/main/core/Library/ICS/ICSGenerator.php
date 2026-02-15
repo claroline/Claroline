@@ -86,7 +86,7 @@ class ICSGenerator
         return $ics->toString();
     }
 
-    public function createFile(array $icsProps, string $filename = null): string
+    public function createFile(array $icsProps, ?string $filename = null): string
     {
         if (empty($filename)) {
             $filename = Uuid::uuid4()->toString();

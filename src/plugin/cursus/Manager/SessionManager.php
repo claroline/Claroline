@@ -58,7 +58,7 @@ class SessionManager
         $this->sessionUserRepo = $om->getRepository(SessionUser::class);
     }
 
-    public function setDefaultSession(Course $course, Session $session = null): void
+    public function setDefaultSession(Course $course, ?Session $session = null): void
     {
         /** @var Session[] $defaultSessions */
         $defaultSessions = $this->sessionRepo->findBy(['course' => $course, 'defaultSession' => true]);
@@ -245,7 +245,7 @@ class SessionManager
     /**
      * Gets/generates workspace roles for session depending on given role name and type.
      */
-    public function generateRoleForSession(Workspace $workspace, Role $courseRole = null, ?string $type = 'learner'): Role
+    public function generateRoleForSession(Workspace $workspace, ?Role $courseRole = null, ?string $type = 'learner'): Role
     {
         if (empty($courseRole)) {
             if ('manager' === $type) {

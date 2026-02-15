@@ -13,7 +13,7 @@ class CreateOperationalLog extends AbstractCreateLog
         \DateTimeInterface $date,
         string $action,
         string $details,
-        int $doerId = null,
+        ?int $doerId = null,
         private readonly string $objectClass,
         private readonly string $objectId,
         private readonly string $contextName,

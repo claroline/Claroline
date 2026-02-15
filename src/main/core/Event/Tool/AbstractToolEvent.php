@@ -20,7 +20,7 @@ abstract class AbstractToolEvent extends Event
     private string $context;
     private ?ContextSubjectInterface $contextSubject = null;
 
-    public function __construct(string $toolName, string $context, ContextSubjectInterface $contextSubject = null)
+    public function __construct(string $toolName, string $context, ?ContextSubjectInterface $contextSubject = null)
     {
         $this->toolName = $toolName;
         $this->context = $context;

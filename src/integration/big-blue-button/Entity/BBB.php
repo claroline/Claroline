@@ -133,7 +133,7 @@ class BBB extends AbstractResource
         return $this->ratio;
     }
 
-    public function setRatio(float $ratio = null): void
+    public function setRatio(?float $ratio = null): void
     {
         $this->ratio = $ratio;
     }
@@ -153,7 +153,7 @@ class BBB extends AbstractResource
         return $this->server;
     }
 
-    public function setServer(string $server = null): void
+    public function setServer(?string $server = null): void
     {
         $this->server = $server;
     }
@@ -163,7 +163,7 @@ class BBB extends AbstractResource
         return $this->runningOn;
     }
 
-    public function setRunningOn(string $server = null): void
+    public function setRunningOn(?string $server = null): void
     {
         $this->runningOn = $server;
     }

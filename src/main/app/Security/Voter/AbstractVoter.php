@@ -109,7 +109,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, CacheableVoterI
     /**
      * @deprecated use isContextToolGranted()
      */
-    protected function isToolGranted($permission, string $toolName, Workspace $workspace = null): bool
+    protected function isToolGranted($permission, string $toolName, ?Workspace $workspace = null): bool
     {
         return $this->isContextToolGranted($permission, $toolName, !empty($workspace) ? 'workspace' : 'desktop', $workspace);
     }
@@ -122,7 +122,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, CacheableVoterI
         return $this->isContextToolGranted('OPEN', $name, 'administration');
     }
 
-    protected function isContextToolGranted(string $permission, string $toolName, string $context, ContextSubjectInterface|string $contextSubject = null): bool
+    protected function isContextToolGranted(string $permission, string $toolName, string $context, ContextSubjectInterface|string|null $contextSubject = null): bool
     {
         $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
         if ($contextSubject instanceof ContextSubjectInterface) {

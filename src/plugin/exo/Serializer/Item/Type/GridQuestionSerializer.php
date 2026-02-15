@@ -98,7 +98,7 @@ class GridQuestionSerializer
         return $solutions;
     }
 
-    public function deserialize(array $data, GridQuestion $gridQuestion = null, array $options = []): GridQuestion
+    public function deserialize(array $data, ?GridQuestion $gridQuestion = null, array $options = []): GridQuestion
     {
         if (empty($gridQuestion)) {
             $gridQuestion = new GridQuestion();

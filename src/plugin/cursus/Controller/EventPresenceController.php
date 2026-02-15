@@ -315,7 +315,7 @@ class EventPresenceController
     ): StreamedResponse {
         $this->checkPermission('OPEN', $eventPresence, [], true);
 
-        $file = $request->get('file');
+        $file = $request->query->all()['file'];
         $content = file_get_contents($file['url']);
         $downloadedName = $this->translator->trans('evidence', [], 'presence').'-'.$file['num'].'-'.$eventPresence->getUser()->getUsername().'-'.$eventPresence->getEvent()->getCode();
         $extension = pathinfo($file['url'], \PATHINFO_EXTENSION);

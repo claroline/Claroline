@@ -215,7 +215,7 @@ class Exercise extends AbstractResource
         return $this->correctionMode;
     }
 
-    public function setDateCorrection(\DateTimeInterface $dateCorrection = null): void
+    public function setDateCorrection(?\DateTimeInterface $dateCorrection = null): void
     {
         $this->dateCorrection = $dateCorrection;
     }
@@ -280,12 +280,12 @@ class Exercise extends AbstractResource
         return $this->intermediateScores;
     }
 
-    public function setIntermediateScores(string $intermediateScores = null): void
+    public function setIntermediateScores(?string $intermediateScores = null): void
     {
         $this->intermediateScores = $intermediateScores;
     }
 
-    public function setAttemptsReachedMessage(string $attemptsReachedMessage = null): void
+    public function setAttemptsReachedMessage(?string $attemptsReachedMessage = null): void
     {
         $this->attemptsReachedMessage = $attemptsReachedMessage;
     }
@@ -445,7 +445,7 @@ class Exercise extends AbstractResource
         $this->scoreRule = $scoreRule;
     }
 
-    public function setSuccessScore(float $successScore = null): void
+    public function setSuccessScore(?float $successScore = null): void
     {
         $this->successScore = $successScore;
     }

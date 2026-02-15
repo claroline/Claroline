@@ -24,12 +24,12 @@ class RoutingHelper
         return $this->router->generate('claro_index');
     }
 
-    public function desktopUrl(string $toolName = null): string
+    public function desktopUrl(?string $toolName = null): string
     {
         return $this->indexUrl().'#/desktop/'.$toolName;
     }
 
-    public function desktopPath(string $toolName = null): string
+    public function desktopPath(?string $toolName = null): string
     {
         return $this->indexPath().'#/desktop/'.$toolName;
     }
@@ -54,22 +54,22 @@ class RoutingHelper
         return $this->indexPath().'#'.$this->resourceFragment($resource);
     }
 
-    public function adminUrl(string $adminToolName = null): string
+    public function adminUrl(?string $adminToolName = null): string
     {
         return $this->indexUrl().'#/administration/'.$adminToolName;
     }
 
-    public function adminPath(string $adminToolName = null): string
+    public function adminPath(?string $adminToolName = null): string
     {
         return $this->indexPath().'#/administration/'.$adminToolName;
     }
 
-    public function workspaceUrl(Workspace $workspace, string $toolName = null): string
+    public function workspaceUrl(Workspace $workspace, ?string $toolName = null): string
     {
         return $this->indexUrl().'#'.$this->workspaceFragment($workspace, $toolName);
     }
 
-    public function workspacePath(Workspace $workspace, string $toolName = null): string
+    public function workspacePath(Workspace $workspace, ?string $toolName = null): string
     {
         return $this->indexPath().'#'.$this->workspaceFragment($workspace, $toolName);
     }

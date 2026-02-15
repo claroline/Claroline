@@ -21,7 +21,7 @@ trait EvaluationFeedbacks
         return $this->successMessage;
     }
 
-    public function setSuccessMessage(string $successMessage = null): void
+    public function setSuccessMessage(?string $successMessage = null): void
     {
         $this->successMessage = $successMessage;
     }
@@ -31,7 +31,7 @@ trait EvaluationFeedbacks
         return $this->failureMessage;
     }
 
-    public function setFailureMessage(string $failureMessage = null): void
+    public function setFailureMessage(?string $failureMessage = null): void
     {
         $this->failureMessage = $failureMessage;
     }

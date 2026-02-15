@@ -134,8 +134,8 @@ class MessageManager
     public function sendMessage(
         ?string $content,
         ?string $object,
-        array $receivers = null,
-        User $sender = null,
+        ?array $receivers = null,
+        ?User $sender = null,
         array $attachments = []
     ): array {
         $users = [];

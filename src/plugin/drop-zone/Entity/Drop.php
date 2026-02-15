@@ -179,7 +179,7 @@ class Drop
         return $this->user;
     }
 
-    public function setUser(User $user = null)
+    public function setUser(?User $user = null)
     {
         $this->user = $user;
     }
@@ -219,7 +219,7 @@ class Drop
         return $this->dropDate;
     }
 
-    public function setDropDate(DateTime $dropDate = null)
+    public function setDropDate(?DateTime $dropDate = null)
     {
         $this->dropDate = $dropDate;
     }

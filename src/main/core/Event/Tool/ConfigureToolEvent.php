@@ -18,7 +18,7 @@ class ConfigureToolEvent extends AbstractToolEvent
     private array $parameters = [];
     private array $data = [];
 
-    public function __construct(string $toolName, string $context, ContextSubjectInterface $contextSubject = null, ?array $parameters = [])
+    public function __construct(string $toolName, string $context, ?ContextSubjectInterface $contextSubject = null, ?array $parameters = [])
     {
         parent::__construct($toolName, $context, $contextSubject);
 

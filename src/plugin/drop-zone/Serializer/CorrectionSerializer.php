@@ -59,7 +59,7 @@ class CorrectionSerializer
         ];
     }
 
-    public function deserialize(array $data, Correction $correction = null): Correction
+    public function deserialize(array $data, ?Correction $correction = null): Correction
     {
         if (empty($correction)) {
             $correction = $this->correctionRepo->findOneBy(['uuid' => $data['id']]);

@@ -25,7 +25,7 @@ class MessageFinder extends AbstractFinder
         return Message::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], ?array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         $workspaceJoin = false;
 

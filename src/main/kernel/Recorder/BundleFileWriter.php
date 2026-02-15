@@ -27,7 +27,7 @@ class BundleFileWriter implements LoggerAwareInterface
     private string $sourceFile;
     private string $targetFile;
 
-    public function __construct(Filesystem $fs, string $sourceFile, string $targetFile, LoggerInterface $logger = null)
+    public function __construct(Filesystem $fs, string $sourceFile, string $targetFile, ?LoggerInterface $logger = null)
     {
         if (!file_exists($sourceFile)) {
             throw new \LogicException(sprintf('Source file "%s" does not exist.', $sourceFile));

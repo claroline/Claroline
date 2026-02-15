@@ -31,7 +31,7 @@ class ActivityController
 
     #[Route(path: '/logs/{contextId}', name: 'apiv2_community_functional_logs', methods: ['GET'])]
     public function functionalLogsAction(
-        string $contextId = null,
+        ?string $contextId = null,
         #[MapQueryString]
         ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
@@ -46,7 +46,7 @@ class ActivityController
         return $logs->toResponse();
     }
 
-    private function checkToolAccess(string $rights = 'OPEN', string $contextId = null): bool
+    private function checkToolAccess(string $rights = 'OPEN', ?string $contextId = null): bool
     {
         if ($contextId) {
             $communityTool = $this->toolManager->getOrderedTool('community', WorkspaceContext::getName(), $contextId);

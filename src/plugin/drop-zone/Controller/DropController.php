@@ -90,7 +90,7 @@ class DropController
     #[Route(path: '/{id}/drops/{teamId}', name: 'claro_dropzone_drop_create', defaults: ['teamId' => null], methods: ['POST'])]
     public function createAction(#[MapEntity(class: 'Claroline\DropZoneBundle\Entity\Dropzone', mapping: ['id' => 'uuid'])]
         Dropzone $dropzone, #[CurrentUser] ?User $user, #[MapEntity(class: 'Claroline\CommunityBundle\Entity\Team', mapping: ['teamId' => 'uuid'])]
-        Team $team = null): JsonResponse
+        ?Team $team = null): JsonResponse
     {
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
 

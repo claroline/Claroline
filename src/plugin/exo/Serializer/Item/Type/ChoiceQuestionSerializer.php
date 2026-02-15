@@ -47,7 +47,7 @@ class ChoiceQuestionSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, ChoiceQuestion $choiceQuestion = null, array $options = []): ChoiceQuestion
+    public function deserialize(array $data, ?ChoiceQuestion $choiceQuestion = null, array $options = []): ChoiceQuestion
     {
         if (empty($choiceQuestion)) {
             $choiceQuestion = new ChoiceQuestion();

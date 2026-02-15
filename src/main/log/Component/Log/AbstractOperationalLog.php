@@ -125,7 +125,7 @@ abstract class AbstractOperationalLog implements EventSubscriberInterface, Compo
      *     - If $doer is not set, the method will try to retrieve it from the TokenStorage.
      *     - We allow to set the doer through params for some edge cases where the doer is not the current user.
      */
-    protected function log(string $action, string $message, object $object, array $changeset = [], User $doer = null): void
+    protected function log(string $action, string $message, object $object, array $changeset = [], ?User $doer = null): void
     {
         if (empty($doer)) {
             $doer = $this->getCurrentUser();
@@ -134,10 +134,10 @@ abstract class AbstractOperationalLog implements EventSubscriberInterface, Compo
         $this->logManager->logOperational(
             static::getName().'.'.$action,
             $message,
-            $doer,
             static::getEntityClass(),
             $object->getUuid(),
             $this->getContext($object),
+            $doer,
             $this->getContextId($object),
             $this->getParentId($object),
             $changeset

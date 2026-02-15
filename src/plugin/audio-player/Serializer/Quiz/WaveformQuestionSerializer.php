@@ -43,7 +43,7 @@ class WaveformQuestionSerializer
     /**
      * Converts raw data into a Waveform question entity.
      */
-    public function deserialize(array $data, WaveformQuestion $waveformQuestion = null, array $options = []): WaveformQuestion
+    public function deserialize(array $data, ?WaveformQuestion $waveformQuestion = null, array $options = []): WaveformQuestion
     {
         if (empty($waveformQuestion)) {
             $waveformQuestion = new WaveformQuestion();

@@ -66,7 +66,7 @@ class ResourceContentSerializer
      * The only purpose of this serializer is to expose a common data representation of a resource,
      * it's not made to create/update them so the deserialization only returns an existing ResourceNode
      */
-    public function deserialize(mixed $data, ResourceNode $resourceNode = null, array $options = []): ?ResourceNode
+    public function deserialize(mixed $data, ?ResourceNode $resourceNode = null, array $options = []): ?ResourceNode
     {
         if (empty($resourceNode)) {
             $id = method_exists($data, 'getId') ? $data->getId() : $data['id'];

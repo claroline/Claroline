@@ -89,7 +89,7 @@ class SetQuestionSerializer
         return $solutions;
     }
 
-    public function deserialize(array $data, MatchQuestion $setQuestion = null, array $options = []): MatchQuestion
+    public function deserialize(array $data, ?MatchQuestion $setQuestion = null, array $options = []): MatchQuestion
     {
         if (empty($setQuestion)) {
             $setQuestion = new MatchQuestion();

@@ -136,7 +136,7 @@ class Document
         return $this->file;
     }
 
-    public function setFile(array $file = null)
+    public function setFile(?array $file = null)
     {
         $this->file = $file;
     }
@@ -181,7 +181,7 @@ class Document
         return $this->resource;
     }
 
-    public function setResource(ResourceNode $resource = null)
+    public function setResource(?ResourceNode $resource = null)
     {
         $this->resource = $resource;
     }
@@ -263,7 +263,7 @@ class Document
         return $this->revision;
     }
 
-    public function setRevision(Revision $revision = null)
+    public function setRevision(?Revision $revision = null)
     {
         $this->revision = $revision;
     }

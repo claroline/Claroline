@@ -37,7 +37,7 @@ final class ExportTool extends ToolComponent
         ]);
     }
 
-    public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
+    public function open(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null): ?array
     {
         $options = [];
         $extra = [];

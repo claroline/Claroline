@@ -35,7 +35,7 @@ abstract class AdditionalInstaller implements AdditionalInstallerInterface, Logg
      */
     private ?ContainerInterface $updaterLocator;
 
-    public function __construct(ContainerInterface $updaterLocator = null)
+    public function __construct(?ContainerInterface $updaterLocator = null)
     {
         $this->updaterLocator = $updaterLocator;
     }
@@ -131,7 +131,7 @@ abstract class AdditionalInstaller implements AdditionalInstallerInterface, Logg
     {
     }
 
-    public function end(string $currentVersion = null, string $targetVersion = null): void
+    public function end(?string $currentVersion = null, ?string $targetVersion = null): void
     {
     }
 

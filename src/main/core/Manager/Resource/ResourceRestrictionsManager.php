@@ -144,7 +144,7 @@ class ResourceRestrictionsManager
      * Submits a code to unlock a resource.
      * NB. The resource will stay unlocked as long as the user session stays alive.
      */
-    public function unlock(ResourceNode $resourceNode, string $code = null): void
+    public function unlock(ResourceNode $resourceNode, ?string $code = null): void
     {
         $accessCode = $resourceNode->getAccessCode();
         if ($accessCode) {

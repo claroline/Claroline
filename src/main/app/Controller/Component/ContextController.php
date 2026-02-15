@@ -51,7 +51,7 @@ class ContextController
      * Opens a context.
      */
     #[Route(path: '', name: 'claro_context_open', methods: ['GET'])]
-    public function openAction(string $context, string $contextId = null): JsonResponse
+    public function openAction(string $context, ?string $contextId = null): JsonResponse
     {
         // retrieve the requested context
         try {
@@ -115,7 +115,7 @@ class ContextController
      * Configures a context.
      */
     #[Route(path: '', name: 'claro_context_configure', methods: ['PUT'])]
-    public function configureAction(Request $request, string $context, string $contextId = null): JsonResponse
+    public function configureAction(Request $request, string $context, ?string $contextId = null): JsonResponse
     {
         // retrieve the requested context
         try {
@@ -148,7 +148,7 @@ class ContextController
      * Gets the list of available tools (all tools implemented, not only the enabled ones in the context).
      */
     #[Route(path: '/tools', name: 'claro_context_get_available_tools', methods: ['GET'])]
-    public function getAvailableToolsAction(string $context, string $contextId = null): JsonResponse
+    public function getAvailableToolsAction(string $context, ?string $contextId = null): JsonResponse
     {
         $contextHandler = $this->contextProvider->getContext($context);
         $contextSubject = $contextHandler->getSubject($contextId);

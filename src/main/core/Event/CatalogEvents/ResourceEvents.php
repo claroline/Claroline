@@ -49,7 +49,7 @@ final class ResourceEvents
      */
     public const IMPORT = 'resource.import';
 
-    public static function getEventName(string $event, string $resourceName = null): string
+    public static function getEventName(string $event, ?string $resourceName = null): string
     {
         if ($resourceName) {
             return $event.'.'.$resourceName;

@@ -39,7 +39,7 @@ class DataSourceProvider extends AbstractComponentProvider
      *
      * @return DataSourceInterface[]
      */
-    public function getAvailableSources(string $context, ContextSubjectInterface $contextSubject = null): array
+    public function getAvailableSources(string $context, ?ContextSubjectInterface $contextSubject = null): array
     {
         $available = [];
         foreach ($this->getRegisteredComponents() as $sourceComponent) {
@@ -51,7 +51,7 @@ class DataSourceProvider extends AbstractComponentProvider
         return $available;
     }
 
-    public function getDataSource(string $name, string $context, ContextSubjectInterface $contextSubject = null): DataSourceInterface
+    public function getDataSource(string $name, string $context, ?ContextSubjectInterface $contextSubject = null): DataSourceInterface
     {
         return $this->getComponent($name);
     }

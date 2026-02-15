@@ -27,7 +27,7 @@ class ParametersTool extends ToolComponent
         return 'cog';
     }
 
-    public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool
+    public function isRequired(string $context, ?ContextSubjectInterface $contextSubject = null): bool
     {
         return true;
     }
@@ -37,7 +37,7 @@ class ParametersTool extends ToolComponent
         return AdministrationContext::getName() === $context;
     }
 
-    public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
+    public function open(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null): ?array
     {
         $parameters = $this->serializer->serialize();
 

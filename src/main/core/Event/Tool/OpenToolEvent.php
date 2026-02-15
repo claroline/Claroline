@@ -22,8 +22,8 @@ class OpenToolEvent extends AbstractToolEvent
     public function __construct(
         string $toolName,
         string $context,
-        ContextSubjectInterface $contextSubject = null,
-        User $user = null
+        ?ContextSubjectInterface $contextSubject = null,
+        ?User $user = null
     ) {
         parent::__construct($toolName, $context, $contextSubject);
 

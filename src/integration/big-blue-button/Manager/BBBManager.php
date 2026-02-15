@@ -35,7 +35,7 @@ class BBBManager
         return $this->serverManager->getServers($onlyAvailable);
     }
 
-    public function getMeetingUrl(BBB $bbb, bool $moderator = false, string $username = null): string
+    public function getMeetingUrl(BBB $bbb, bool $moderator = false, ?string $username = null): string
     {
         $user = null;
         if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()?->getUser() instanceof User) {
@@ -179,7 +179,7 @@ class BBBManager
         return $success;
     }
 
-    public function endMeeting(BBB $bbb, string $serverName = null): void
+    public function endMeeting(BBB $bbb, ?string $serverName = null): void
     {
         $meetingId = $bbb->getUuid();
 

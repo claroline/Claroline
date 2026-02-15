@@ -71,7 +71,7 @@ class Category
     /**
      * @internal use ClacoForm::addCategory/ClacoForm::removeCategory
      */
-    public function setClacoForm(ClacoForm $clacoForm = null): void
+    public function setClacoForm(?ClacoForm $clacoForm = null): void
     {
         $this->clacoForm = $clacoForm;
     }

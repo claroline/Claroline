@@ -14,7 +14,7 @@ trait Color
         return $this->color;
     }
 
-    public function setColor(string $color = null): void
+    public function setColor(?string $color = null): void
     {
         $this->color = $color;
     }

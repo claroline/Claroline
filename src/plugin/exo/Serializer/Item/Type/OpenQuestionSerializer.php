@@ -29,7 +29,7 @@ class OpenQuestionSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, OpenQuestion $openQuestion = null, array $options = []): OpenQuestion
+    public function deserialize(array $data, ?OpenQuestion $openQuestion = null, array $options = []): OpenQuestion
     {
         if (empty($openQuestion)) {
             $openQuestion = new OpenQuestion();

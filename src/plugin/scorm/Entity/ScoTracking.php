@@ -371,7 +371,7 @@ class ScoTracking
         return $this->latestDate;
     }
 
-    public function setLatestDate(DateTime $latestDate = null)
+    public function setLatestDate(?DateTime $latestDate = null)
     {
         $this->latestDate = $latestDate;
     }

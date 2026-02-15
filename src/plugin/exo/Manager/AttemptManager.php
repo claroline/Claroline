@@ -42,7 +42,7 @@ class AttemptManager
      *
      * Based on the maximum attempt allowed and the number of already done by the user.
      */
-    public function canPass(Exercise $exercise, User $user = null): bool
+    public function canPass(Exercise $exercise, ?User $user = null): bool
     {
         $canPass = true;
         if ($user) {
@@ -58,7 +58,7 @@ class AttemptManager
         return $canPass;
     }
 
-    public function getErrors(Exercise $exercise, User $user = null): array
+    public function getErrors(Exercise $exercise, ?User $user = null): array
     {
         $errors = [];
         if ($user) {
@@ -83,7 +83,7 @@ class AttemptManager
      * A user can submit to a paper only if it is its own and the paper is not closed (= no end).
      * ATTENTION: As is, anonymous have access to all the other anonymous Papers !!!
      */
-    public function canUpdate(Paper $paper, User $user = null): bool
+    public function canUpdate(Paper $paper, ?User $user = null): bool
     {
         return empty($paper->getEnd())
             && $user === $paper->getUser();
@@ -101,7 +101,7 @@ class AttemptManager
      *
      * @return Paper - a new paper or an unfinished one
      */
-    public function startOrContinue(Exercise $exercise, User $user = null): Paper
+    public function startOrContinue(Exercise $exercise, ?User $user = null): Paper
     {
         $paper = null; // The paper to use for the new attempt
 
@@ -139,7 +139,7 @@ class AttemptManager
         return $paper;
     }
 
-    public function getLastPaper(Exercise $exercise, User $user = null): ?Paper
+    public function getLastPaper(Exercise $exercise, ?User $user = null): ?Paper
     {
         if (null !== $user) {
             return $this->paperRepository->findLastPaper($exercise, $user);

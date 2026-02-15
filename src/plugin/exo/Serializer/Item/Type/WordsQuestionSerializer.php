@@ -35,7 +35,7 @@ class WordsQuestionSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, OpenQuestion $wordsQuestion = null, array $options = []): OpenQuestion
+    public function deserialize(array $data, ?OpenQuestion $wordsQuestion = null, array $options = []): OpenQuestion
     {
         if (empty($wordsQuestion)) {
             $wordsQuestion = new OpenQuestion();

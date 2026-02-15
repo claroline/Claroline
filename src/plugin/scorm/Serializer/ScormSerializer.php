@@ -95,7 +95,7 @@ class ScormSerializer
         }, $scorm->getRootScos());
     }
 
-    private function deserializeScos($data, Scorm $scorm, Sco $parent = null, array $options = []): array
+    private function deserializeScos($data, Scorm $scorm, ?Sco $parent = null, array $options = []): array
     {
         $updated = [];
 

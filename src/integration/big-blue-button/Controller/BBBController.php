@@ -64,7 +64,7 @@ class BBBController
     }
 
     #[Route(path: '/meeting/join/{username}', name: 'apiv2_bbb_meeting_join')]
-    public function joinMeetingAction(#[MapEntity(mapping: ['id' => 'uuid'])] BBB $bbb, string $username = null): RedirectResponse
+    public function joinMeetingAction(#[MapEntity(mapping: ['id' => 'uuid'])] BBB $bbb, ?string $username = null): RedirectResponse
     {
         $this->checkPermission('OPEN', $bbb->getResourceNode(), [], true);
 

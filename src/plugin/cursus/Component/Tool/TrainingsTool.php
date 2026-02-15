@@ -41,7 +41,7 @@ class TrainingsTool extends ToolComponent
         ]);
     }
 
-    public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
+    public function open(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null): ?array
     {
         $user = $this->tokenStorage->getToken()?->getUser();
 

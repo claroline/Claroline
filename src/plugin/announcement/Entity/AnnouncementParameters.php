@@ -51,7 +51,7 @@ class AnnouncementParameters extends AbstractTool
         return $this->templateEmail;
     }
 
-    public function setTemplateEmail(Template $template = null): void
+    public function setTemplateEmail(?Template $template = null): void
     {
         $this->templateEmail = $template;
     }
@@ -61,7 +61,7 @@ class AnnouncementParameters extends AbstractTool
         return $this->templatePdf;
     }
 
-    public function setTemplatePdf(Template $template = null): void
+    public function setTemplatePdf(?Template $template = null): void
     {
         $this->templatePdf = $template;
     }

@@ -44,7 +44,7 @@ class EventUserController extends AbstractCrudController
     #[Route(path: '/context/{context}/{contextId}', name: 'context_list', methods: ['GET'])]
     public function listByContextAction(
         string $context,
-        string $contextId = null,
+        ?string $contextId = null,
         #[MapQueryString]
         ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {

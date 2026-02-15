@@ -67,7 +67,7 @@ class PaperSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, Paper $paper = null, array $options = []): Paper
+    public function deserialize(array $data, ?Paper $paper = null, array $options = []): Paper
     {
         $paper = $paper ?: new Paper();
 

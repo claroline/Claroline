@@ -71,7 +71,7 @@ trait Evaluated
         return $this->estimatedDuration;
     }
 
-    public function setEstimatedDuration(int $estimatedDuration = null): void
+    public function setEstimatedDuration(?int $estimatedDuration = null): void
     {
         $this->estimatedDuration = $estimatedDuration;
     }

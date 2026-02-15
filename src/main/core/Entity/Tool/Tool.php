@@ -65,7 +65,7 @@ class Tool
         return $this->class;
     }
 
-    public function setIcon(string $icon = null): void
+    public function setIcon(?string $icon = null): void
     {
         $this->class = $icon;
     }

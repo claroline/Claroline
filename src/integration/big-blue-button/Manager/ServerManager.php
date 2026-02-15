@@ -55,7 +55,7 @@ class ServerManager
         return $server['limit'] > $this->countParticipants($serverName);
     }
 
-    public function countParticipants(string $serverName, string $tag = null): int
+    public function countParticipants(string $serverName, ?string $tag = null): int
     {
         $meetings = $this->getMeetings($serverName, $tag);
 
@@ -67,7 +67,7 @@ class ServerManager
         return $count;
     }
 
-    public function getMeetings(string $serverName, string $tag = null): array
+    public function getMeetings(string $serverName, ?string $tag = null): array
     {
         $meetings = [];
 

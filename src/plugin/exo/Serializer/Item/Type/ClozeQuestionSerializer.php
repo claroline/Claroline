@@ -37,7 +37,7 @@ class ClozeQuestionSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, ClozeQuestion $clozeQuestion = null, array $options = []): ClozeQuestion
+    public function deserialize(array $data, ?ClozeQuestion $clozeQuestion = null, array $options = []): ClozeQuestion
     {
         if (empty($clozeQuestion)) {
             $clozeQuestion = new ClozeQuestion();

@@ -46,7 +46,7 @@ class SessionUserController extends AbstractCrudController
     #[Route(path: '/context/{context}/{contextId}', name: 'context_list', methods: ['GET'])]
     public function listByContextAction(
         string $context,
-        string $contextId = null,
+        ?string $contextId = null,
         #[MapQueryString]
         ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {
@@ -68,7 +68,7 @@ class SessionUserController extends AbstractCrudController
     public function listByCourseAction(
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Course $course,
-        string $sessionId = null,
+        ?string $sessionId = null,
         #[MapQueryString]
         ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {

@@ -37,7 +37,7 @@ class HintSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, Hint $hint = null, array $options = []): Hint
+    public function deserialize(array $data, ?Hint $hint = null, array $options = []): Hint
     {
         $hint = $hint ?: new Hint();
         $this->sipe('id', 'setUuid', $data, $hint);

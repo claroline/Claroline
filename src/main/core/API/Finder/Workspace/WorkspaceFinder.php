@@ -34,7 +34,7 @@ class WorkspaceFinder extends AbstractFinder
         return Workspace::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], ?array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         $organizationJoin = false;
 

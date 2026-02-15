@@ -25,7 +25,7 @@ class ResourceEvaluationFinder extends AbstractFinder
         return ResourceAttempt::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], ?array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         $userJoin = false;
         $nodeJoin = false;

@@ -62,7 +62,7 @@ class ClarolineCoreInstaller extends AdditionalInstaller
         $this->setUpdateDate();
     }
 
-    public function end(string $currentVersion = null, string $targetVersion = null): void
+    public function end(?string $currentVersion = null, ?string $targetVersion = null): void
     {
         $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
 

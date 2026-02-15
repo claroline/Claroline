@@ -84,7 +84,7 @@ class PairQuestionSerializer
         return $newCoords;
     }
 
-    public function deserialize(mixed $data, PairQuestion $pairQuestion = null, array $options = []): PairQuestion
+    public function deserialize(mixed $data, ?PairQuestion $pairQuestion = null, array $options = []): PairQuestion
     {
         if (empty($pairQuestion)) {
             $pairQuestion = new PairQuestion();

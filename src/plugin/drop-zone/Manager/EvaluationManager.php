@@ -91,7 +91,7 @@ class EvaluationManager
      *
      * (I don't know why drop is optional)
      */
-    public function checkCompletion(Dropzone $dropzone, array $users, Drop $drop = null): void
+    public function checkCompletion(Dropzone $dropzone, array $users, ?Drop $drop = null): void
     {
         $teamId = !empty($drop) ? $drop->getTeamUuid() : null;
 

@@ -97,7 +97,7 @@ class Step
     /**
      * @internal use Sequence::addStep() or Sequence::removeStep()
      */
-    public function setSequence(Sequence $path = null): void
+    public function setSequence(?Sequence $path = null): void
     {
         if (!empty($this->path)) {
             $this->path->removeStep($this);
@@ -190,7 +190,7 @@ class Step
         return $this->numbering;
     }
 
-    public function setNumbering(string $numbering = null): void
+    public function setNumbering(?string $numbering = null): void
     {
         $this->numbering = $numbering;
     }
@@ -210,7 +210,7 @@ class Step
         return $this->estimatedDuration;
     }
 
-    public function setEstimatedDuration(int $estimatedDuration = null): void
+    public function setEstimatedDuration(?int $estimatedDuration = null): void
     {
         $this->estimatedDuration = $estimatedDuration;
     }
@@ -220,7 +220,7 @@ class Step
         return $this->resource;
     }
 
-    public function setResource(ResourceNode $resource = null): void
+    public function setResource(?ResourceNode $resource = null): void
     {
         $this->resource = $resource;
     }
@@ -286,7 +286,7 @@ class Step
         return $this->slug;
     }
 
-    public function setSlug(string $slug = null): void
+    public function setSlug(?string $slug = null): void
     {
         $this->slug = $slug;
     }

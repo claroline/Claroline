@@ -63,7 +63,7 @@ abstract class AbstractEvaluation implements EvaluationInterface
         return $this->startedAt;
     }
 
-    public function setStartedAt(\DateTimeInterface $startedAt = null): void
+    public function setStartedAt(?\DateTimeInterface $startedAt = null): void
     {
         $this->startedAt = $startedAt;
     }
@@ -73,7 +73,7 @@ abstract class AbstractEvaluation implements EvaluationInterface
         return $this->endedAt;
     }
 
-    public function setEndedAt(\DateTimeInterface $endedAt = null): void
+    public function setEndedAt(?\DateTimeInterface $endedAt = null): void
     {
         $this->endedAt = $endedAt;
     }
@@ -113,7 +113,7 @@ abstract class AbstractEvaluation implements EvaluationInterface
         return $this->score;
     }
 
-    public function setScore(float $score = null): void
+    public function setScore(?float $score = null): void
     {
         $this->score = $score;
     }
@@ -132,7 +132,7 @@ abstract class AbstractEvaluation implements EvaluationInterface
         return $this->scoreMin;
     }
 
-    public function setScoreMin(float $scoreMin = null): void
+    public function setScoreMin(?float $scoreMin = null): void
     {
         $this->scoreMin = $scoreMin;
     }
@@ -142,7 +142,7 @@ abstract class AbstractEvaluation implements EvaluationInterface
         return $this->scoreMax;
     }
 
-    public function setScoreMax(float $scoreMax = null): void
+    public function setScoreMax(?float $scoreMax = null): void
     {
         $this->scoreMax = $scoreMax;
     }

@@ -122,7 +122,7 @@ class CorrectionManager
         return $correction;
     }
 
-    public function denyCorrection(Correction $correction, string $comment = null): Correction
+    public function denyCorrection(Correction $correction, ?string $comment = null): Correction
     {
         $correction->setCorrectionDenied(true);
         $correction->setCorrectionDeniedComment($comment);

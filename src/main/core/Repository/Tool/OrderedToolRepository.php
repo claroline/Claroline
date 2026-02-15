@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityRepository;
 
 class OrderedToolRepository extends EntityRepository
 {
-    public function findByContext(string $context, string $contextId = null): array
+    public function findByContext(string $context, ?string $contextId = null): array
     {
         return $this->getEntityManager()
             ->createQuery('

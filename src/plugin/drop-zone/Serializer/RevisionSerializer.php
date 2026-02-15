@@ -74,7 +74,7 @@ class RevisionSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, Revision $revision = null): Revision
+    public function deserialize(array $data, ?Revision $revision = null): Revision
     {
         if (empty($revision)) {
             $revision = $this->revisionRepo->findOneBy(['uuid' => $data['id']]);

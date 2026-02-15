@@ -79,7 +79,7 @@ class AnalyticsController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Exercise $exercise,
         #[MapEntity(mapping: ['userId' => 'uuid'])]
-        User $user = null
+        ?User $user = null
     ): JsonResponse {
         $statsAdmin = $this->checkPermission('FOLLOW', $exercise->getResourceNode());
         if (!$statsAdmin) {

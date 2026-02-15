@@ -14,8 +14,8 @@ class ExportToolEvent extends AbstractToolEvent
     public function __construct(
         string $toolName,
         string $context,
-        Workspace $workspace = null,
-        FileBag $fileBag = null
+        ?Workspace $workspace = null,
+        ?FileBag $fileBag = null
     ) {
         parent::__construct($toolName, $context, $workspace);
 

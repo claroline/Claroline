@@ -17,7 +17,7 @@ trait Thumbnail
         return $this->thumbnail;
     }
 
-    public function setThumbnail(string $thumbnail = null): void
+    public function setThumbnail(?string $thumbnail = null): void
     {
         $this->thumbnail = $thumbnail;
     }

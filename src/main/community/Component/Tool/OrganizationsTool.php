@@ -23,7 +23,7 @@ class OrganizationsTool extends ToolComponent
         return AdministrationContext::getName() === $context;
     }
 
-    public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool
+    public function isRequired(string $context, ?ContextSubjectInterface $contextSubject = null): bool
     {
         return true;
     }

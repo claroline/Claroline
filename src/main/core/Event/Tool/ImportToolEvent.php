@@ -22,8 +22,8 @@ class ImportToolEvent extends AbstractToolEvent
     public function __construct(
         string $toolName,
         string $context,
-        Workspace $workspace = null,
-        FileBag $fileBag = null,
+        ?Workspace $workspace = null,
+        ?FileBag $fileBag = null,
         ?array $data = [],
         ?array $entities = []
     ) {

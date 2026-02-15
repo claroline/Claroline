@@ -86,7 +86,7 @@ final class AnnouncementTool extends ToolComponent
         ];
     }
 
-    public function export(string $context, ?ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
+    public function export(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null): ?array
     {
         if (WorkspaceContext::getName() !== $context) {
             return [];
@@ -101,7 +101,7 @@ final class AnnouncementTool extends ToolComponent
         ];
     }
 
-    public function import(string $context, ?ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null, array $data = [], array $entities = []): ?array
+    public function import(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null, array $data = [], array $entities = []): ?array
     {
         if (WorkspaceContext::getName() !== $context) {
             return [];

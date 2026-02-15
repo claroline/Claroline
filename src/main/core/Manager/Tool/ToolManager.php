@@ -78,7 +78,7 @@ class ToolManager
         $this->toolRightsManager->setToolRights($orderedTool, $role, $mask);
     }
 
-    public function getOrderedTool(string $name, string $context, string $contextId = null): ?OrderedTool
+    public function getOrderedTool(string $name, string $context, ?string $contextId = null): ?OrderedTool
     {
         return $this->orderedToolRepo->findOneByNameAndContext($name, $context, $contextId);
     }
@@ -86,7 +86,7 @@ class ToolManager
     /**
      * @return OrderedTool[]
      */
-    public function getOrderedTools(string $context, string $contextId = null, ?array $roles = []): array
+    public function getOrderedTools(string $context, ?string $contextId = null, ?array $roles = []): array
     {
         return $this->orderedToolRepo->findByContext($context, $contextId, $roles);
     }

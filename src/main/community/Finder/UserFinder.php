@@ -28,7 +28,7 @@ class UserFinder extends AbstractFinder
         return User::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], ?array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         $roleJoin = false;
         $groupJoin = false;
@@ -256,7 +256,7 @@ class UserFinder extends AbstractFinder
         return $qb;
     }
 
-    private function sortBy(QueryBuilder $qb, array $sortBy = null): void
+    private function sortBy(QueryBuilder $qb, ?array $sortBy = null): void
     {
         // manages custom sort properties
         if ($sortBy && 0 !== $sortBy['direction']) {

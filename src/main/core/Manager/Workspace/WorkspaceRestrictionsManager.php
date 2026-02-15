@@ -159,7 +159,7 @@ class WorkspaceRestrictionsManager
      *
      * @throws InvalidDataException - If the submitted code is incorrect
      */
-    public function unlock(Workspace $workspace, string $code = null): void
+    public function unlock(Workspace $workspace, ?string $code = null): void
     {
         $accessCode = $workspace->getAccessCode();
         if ($accessCode) {

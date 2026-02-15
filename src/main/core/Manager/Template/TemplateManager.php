@@ -62,7 +62,7 @@ class TemplateManager
     /**
      * @deprecated use TemplateManager::compile()
      */
-    public function getTemplate(string $templateType, array $placeholders = [], string $locale = null, string $mode = 'content'): string
+    public function getTemplate(string $templateType, array $placeholders = [], ?string $locale = null, string $mode = 'content'): string
     {
         $compiledTemplate = $this->compile($templateType, $placeholders, $locale);
 
@@ -76,7 +76,7 @@ class TemplateManager
     /**
      * @deprecated use TemplateManager::compile()
      */
-    public function getTemplateContent(Template $template, array $placeholders = [], string $locale = null, string $mode = 'content'): string
+    public function getTemplateContent(Template $template, array $placeholders = [], ?string $locale = null, string $mode = 'content'): string
     {
         $compiledTemplate = $this->compile($template, $placeholders, $locale);
 

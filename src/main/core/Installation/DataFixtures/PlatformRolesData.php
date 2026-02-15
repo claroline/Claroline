@@ -23,7 +23,7 @@ class PlatformRolesData extends AbstractFixture implements PreInstallInterface, 
 {
     private RoleManager $roleManager;
 
-    public function setContainer(ContainerInterface $container = null): void
+    public function setContainer(?ContainerInterface $container = null): void
     {
         $this->roleManager = $container->get('claroline.manager.role_manager');
     }

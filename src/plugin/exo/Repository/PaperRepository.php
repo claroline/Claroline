@@ -184,7 +184,7 @@ class PaperRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getAvgScoreByAttempts(Exercise $exercise, bool $finishedOnly = false, User $user = null): array
+    public function getAvgScoreByAttempts(Exercise $exercise, bool $finishedOnly = false, ?User $user = null): array
     {
         $parameters = [
             'exercise' => $exercise,

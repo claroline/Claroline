@@ -30,7 +30,7 @@ class MessagesTool extends ToolComponent
         return DesktopContext::getName() === $context;
     }
 
-    public function getStatus(string $context, ContextSubjectInterface $contextSubject = null): ?int
+    public function getStatus(string $context, ?ContextSubjectInterface $contextSubject = null): ?int
     {
         return $this->crud->count(Message::class, [
             'read' => false,

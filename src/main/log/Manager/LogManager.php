@@ -72,10 +72,10 @@ class LogManager
     public function logOperational(
         string $action,
         string $message,
-        ?User $doer = null,
         string $objectClass,
         string $objectId,
         string $contextName,
+        ?User $doer = null,
         ?string $contextId = null,
         ?string $parentId = null,
         ?array $changeset = []
@@ -107,7 +107,7 @@ class LogManager
     /**
      * Create a new security log.
      */
-    public function logSecurity(string $action, string $message, User $doer = null, User $target = null): void
+    public function logSecurity(string $action, string $message, ?User $doer = null, ?User $target = null): void
     {
         $this->securityLogs[] = new CreateSecurityLog(
             new \DateTime(),
@@ -131,7 +131,7 @@ class LogManager
     /**
      * Create a new message log.
      */
-    public function logMessage(string $action, string $message, User $doer = null, User $receiver = null): void
+    public function logMessage(string $action, string $message, ?User $doer = null, ?User $receiver = null): void
     {
         $this->messageLogs[] = new CreateMessageLog(
             new \DateTime(),

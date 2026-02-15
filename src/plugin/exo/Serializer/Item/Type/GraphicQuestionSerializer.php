@@ -44,7 +44,7 @@ class GraphicQuestionSerializer
     /**
      * Converts raw data into a Graphic question entity.
      */
-    public function deserialize(array $data, GraphicQuestion $graphicQuestion = null, ?array $options = []): GraphicQuestion
+    public function deserialize(array $data, ?GraphicQuestion $graphicQuestion = null, ?array $options = []): GraphicQuestion
     {
         if (empty($graphicQuestion)) {
             $graphicQuestion = new GraphicQuestion();

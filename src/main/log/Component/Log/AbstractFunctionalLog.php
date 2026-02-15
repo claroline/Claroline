@@ -18,7 +18,7 @@ abstract class AbstractFunctionalLog implements EventSubscriberInterface, Compon
      *     - If $doer is not set, the method will try to retrieve it from the TokenStorage.
      *     - We allow setting the doer through params for some edge cases where the doer is not the current user.
      */
-    protected function log(string $message, ?object $object = null, User $doer = null): void
+    protected function log(string $message, ?object $object = null, ?User $doer = null): void
     {
         if (empty($doer)) {
             $doer = $this->getCurrentUser();

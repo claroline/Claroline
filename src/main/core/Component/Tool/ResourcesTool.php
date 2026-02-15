@@ -50,7 +50,7 @@ class ResourcesTool extends ToolComponent
         return WorkspaceContext::getName() === $context;
     }
 
-    public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
+    public function open(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null): ?array
     {
         return [
             'root' => $this->serializer->serialize(
@@ -59,7 +59,7 @@ class ResourcesTool extends ToolComponent
         ];
     }
 
-    public function create(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): void
+    public function create(string $context, ?ContextSubjectInterface $contextSubject = null, array $configData = []): void
     {
 
         /*$root = $this->resourceManager->getWorkspaceRoot($workspace);
@@ -69,7 +69,7 @@ class ResourcesTool extends ToolComponent
 
     }
 
-    public function export(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
+    public function export(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null): ?array
     {
         $root = $this->resourceRepository->findWorkspaceRoot($contextSubject);
         if (empty($root)) {
@@ -81,7 +81,7 @@ class ResourcesTool extends ToolComponent
         ];
     }
 
-    public function import(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null, array $data = [], array $entities = []): ?array
+    public function import(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null, array $data = [], array $entities = []): ?array
     {
         if (empty($data['resources'])) {
             return [];

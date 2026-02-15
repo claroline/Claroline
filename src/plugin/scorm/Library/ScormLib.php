@@ -79,7 +79,7 @@ class ScormLib
      *
      * @throws InvalidScormArchiveException
      */
-    private function parseItemNodes(\DOMNode $source, \DOMNodeList $resources, Sco $parentSco = null): array
+    private function parseItemNodes(\DOMNode $source, \DOMNodeList $resources, ?Sco $parentSco = null): array
     {
         $item = $source->firstChild;
         $scos = [];

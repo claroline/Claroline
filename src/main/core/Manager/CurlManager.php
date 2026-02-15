@@ -17,7 +17,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CurlManager
 {
-    public function exec(string $url, mixed $payload = null, string $type = 'GET', ?array $options = [], bool $autoClose = true, \CurlHandle &$ch = null): bool|string
+    /**
+     * @param bool $autoClose Deprecated: no longer used since PHP 8.0+ automatically cleans up CurlHandle objects
+     */
+    public function exec(string $url, mixed $payload = null, string $type = 'GET', ?array $options = [], bool $autoClose = true, ?\CurlHandle &$ch = null): bool|string
     {
         $options[CURLOPT_RETURNTRANSFER] = true;
 
@@ -49,9 +52,8 @@ class CurlManager
         $serverOutput = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        if ($autoClose) {
-            curl_close($ch);
-        }
+        // curl_close() removed: deprecated in PHP 8.5, no-op since PHP 8.0
+        // CurlHandle objects are automatically cleaned up when they go out of scope
 
         if (0 === $httpCode) {
             throw new \Exception(curl_error($ch));

@@ -170,7 +170,7 @@ class Chapter implements CrudEntityInterface, UserViewCounterInterface
         return $this->internalNote;
     }
 
-    public function setInternalNote(string $internalNote = null): void
+    public function setInternalNote(?string $internalNote = null): void
     {
         $this->internalNote = $internalNote;
     }

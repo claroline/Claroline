@@ -113,7 +113,7 @@ class Message
         return $this->user;
     }
 
-    public function setSender(User $sender = null): void
+    public function setSender(?User $sender = null): void
     {
         $this->user = $sender;
         $this->senderUsername = $sender ? $sender->getUsername() : 'claroline-connect';

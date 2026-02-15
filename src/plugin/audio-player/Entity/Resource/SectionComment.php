@@ -63,7 +63,7 @@ class SectionComment
         return $this->user;
     }
 
-    public function setUser(User $user = null): void
+    public function setUser(?User $user = null): void
     {
         $this->user = $user;
     }
@@ -83,7 +83,7 @@ class SectionComment
         return $this->editionDate;
     }
 
-    public function setEditionDate(\DateTimeInterface $editionDate = null): void
+    public function setEditionDate(?\DateTimeInterface $editionDate = null): void
     {
         $this->editionDate = $editionDate;
     }

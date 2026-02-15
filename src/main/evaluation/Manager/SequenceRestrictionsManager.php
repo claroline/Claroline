@@ -145,7 +145,7 @@ class SequenceRestrictionsManager
      * Submits a code to unlock a sequence.
      * NB. The sequence will stay unlocked as long as the user session stays alive.
      */
-    public function unlock(Sequence $sequence, string $code = null): void
+    public function unlock(Sequence $sequence, ?string $code = null): void
     {
         $accessCode = $sequence->getAccessCode();
         if ($accessCode) {

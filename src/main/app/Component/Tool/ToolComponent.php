@@ -42,12 +42,12 @@ abstract class ToolComponent implements ToolInterface
         return [];
     }
 
-    public function export(string $context, ?ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
+    public function export(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null): ?array
     {
         return [];
     }
 
-    public function import(string $context, ?ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null, array $data = [], array $entities = []): ?array
+    public function import(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null, array $data = [], array $entities = []): ?array
     {
         return [];
     }

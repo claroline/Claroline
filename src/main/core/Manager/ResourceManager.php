@@ -165,9 +165,9 @@ class ResourceManager
     public function create(
         AbstractResource $resource,
         ResourceType $resourceType,
-        User $creator = null,
-        Workspace $workspace = null,
-        ResourceNode $parent = null,
+        ?User $creator = null,
+        ?Workspace $workspace = null,
+        ?ResourceNode $parent = null,
         array $rights = [],
         bool $isPublished = true,
         bool $createRights = true
@@ -453,7 +453,7 @@ class ResourceManager
      * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
      * 'create' => array('directory', ...), 'role' => $entity))
      */
-    private function setRights(ResourceNode $node, ResourceNode $parent = null, array $rights = []): void
+    private function setRights(ResourceNode $node, ?ResourceNode $parent = null, array $rights = []): void
     {
         if (0 === count($rights) && null !== $parent) {
             $this->rightsManager->copy($parent, $node);

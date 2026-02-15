@@ -56,7 +56,7 @@ class ContentItemDefinition implements ItemDefinitionInterface
      *
      * @param ContentItem $question
      */
-    public function deserializeQuestion(array $data, AbstractItem $question = null, array $options = []): ContentItem
+    public function deserializeQuestion(array $data, ?AbstractItem $question = null, array $options = []): ContentItem
     {
         return $this->getItemSerializer()->deserialize($data, $question, $options);
     }

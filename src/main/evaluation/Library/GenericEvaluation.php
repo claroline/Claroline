@@ -8,7 +8,7 @@ final class GenericEvaluation implements EvaluationInterface
     private ?float $score = null;
     private ?float $scoreMax = null;
 
-    public function __construct(?float $progression = 0, float $scoreMax = null, float $score = null)
+    public function __construct(?float $progression = 0, ?float $scoreMax = null, ?float $score = null)
     {
         if ($progression < 0 || $progression > 100) {
             throw new \InvalidArgumentException('progression should be a percentage (range: 0-100).');

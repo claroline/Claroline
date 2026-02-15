@@ -77,7 +77,7 @@ class PluginManager implements LoggerAwareInterface
         $this->versionManager->execute($version);
     }
 
-    public function end(PluginBundleInterface $plugin, string $currentVersion = null, string $targetVersion = null): void
+    public function end(PluginBundleInterface $plugin, ?string $currentVersion = null, ?string $targetVersion = null): void
     {
         $this->baseInstaller->end($plugin, $currentVersion, $targetVersion);
     }

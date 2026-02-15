@@ -50,7 +50,7 @@ class WorkspaceUserQueueManager
         $this->om->flush();
     }
 
-    public function addUserQueue(Workspace $workspace, User $user, Role $role = null): WorkspaceRegistrationQueue
+    public function addUserQueue(Workspace $workspace, User $user, ?Role $role = null): WorkspaceRegistrationQueue
     {
         if (empty($role)) {
             $role = $workspace->getDefaultRole();

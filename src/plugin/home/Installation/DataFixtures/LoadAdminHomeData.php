@@ -30,7 +30,7 @@ class LoadAdminHomeData extends AbstractFixture implements PostInstallInterface
     private TranslatorInterface $translator;
     private SerializerProvider $serializer;
 
-    public function setContainer(ContainerInterface $container = null): void
+    public function setContainer(?ContainerInterface $container = null): void
     {
         $this->translator = $container->get('translator');
         $this->serializer = $container->get(SerializerProvider::class);

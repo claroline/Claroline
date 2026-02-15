@@ -43,7 +43,7 @@ class ToolController
     }
 
     #[Route(path: '/open/{name}/{context}/{contextId}', name: 'claro_tool_open', methods: ['GET'])]
-    public function openAction(string $name, string $context, string $contextId = null): JsonResponse
+    public function openAction(string $name, string $context, ?string $contextId = null): JsonResponse
     {
         try {
             $contextHandler = $this->contextProvider->getContext($context, $contextId);
@@ -66,7 +66,7 @@ class ToolController
     }
 
     #[Route(path: '/configure/{name}/{context}/{contextId}', name: 'claro_tool_configure', methods: ['PUT'])]
-    public function configureAction(Request $request, string $name, string $context, string $contextId = null): JsonResponse
+    public function configureAction(Request $request, string $name, string $context, ?string $contextId = null): JsonResponse
     {
         try {
             $contextHandler = $this->contextProvider->getContext($context, $contextId);
@@ -113,7 +113,7 @@ class ToolController
     }
 
     #[Route(path: '/rights/{name}/{context}/{contextId}', name: 'apiv2_tool_get_rights', methods: ['GET'])]
-    public function getRightsAction(string $name, string $context, string $contextId = null): JsonResponse
+    public function getRightsAction(string $name, string $context, ?string $contextId = null): JsonResponse
     {
         try {
             $contextHandler = $this->contextProvider->getContext($context, $contextId);
@@ -133,7 +133,7 @@ class ToolController
     }
 
     #[Route(path: '/search/{name}/{context}/{contextId}', name: 'claro_tool_search', methods: ['GET'])]
-    public function searchAction(string $name, string $context, string $contextId = null): StreamedJsonResponse
+    public function searchAction(string $name, string $context, ?string $contextId = null): StreamedJsonResponse
     {
         try {
             $contextHandler = $this->contextProvider->getContext($context, $contextId);

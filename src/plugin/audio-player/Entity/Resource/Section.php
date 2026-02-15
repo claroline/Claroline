@@ -101,7 +101,7 @@ class Section
         return $this->user;
     }
 
-    public function setUser(User $user = null): void
+    public function setUser(?User $user = null): void
     {
         $this->user = $user;
     }

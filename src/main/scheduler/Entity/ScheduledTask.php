@@ -261,7 +261,7 @@ class ScheduledTask implements CrudEntityInterface
         return $this->group;
     }
 
-    public function setGroup(Group $group = null): void
+    public function setGroup(?Group $group = null): void
     {
         $this->group = $group;
     }

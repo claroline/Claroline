@@ -25,7 +25,7 @@ trait Creator
     /**
      * Sets the entity creator.
      */
-    public function setCreator(User $creator = null): void
+    public function setCreator(?User $creator = null): void
     {
         $this->creator = $creator;
     }

@@ -92,7 +92,7 @@ class CourseRepository extends EntityRepository
         ];
     }
 
-    public function getRegistrationStats(Course $course, Session $session = null): array
+    public function getRegistrationStats(Course $course, ?Session $session = null): array
     {
         // count the total participants
         $total = $this->countUsers($course, AbstractRegistration::LEARNER, $session);
@@ -144,7 +144,7 @@ class CourseRepository extends EntityRepository
             ->toIterable();
     }
 
-    private function getRegistrationFieldStats(FieldFacet $field, Course $course, Session $session = null): array
+    private function getRegistrationFieldStats(FieldFacet $field, Course $course, ?Session $session = null): array
     {
         $dql = '
             SELECT COUNT(ffv) as count, ffv.value
@@ -207,7 +207,7 @@ class CourseRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
-    private function countUsers(Course $course, string $type, Session $session = null): int
+    private function countUsers(Course $course, string $type, ?Session $session = null): int
     {
         $dql = '
             SELECT COUNT(su) as count

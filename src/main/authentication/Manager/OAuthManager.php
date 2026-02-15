@@ -99,10 +99,10 @@ class OAuthManager implements LoggerAwareInterface
         // get the PKCE code generated for you and store it to the session.
         $session->set('oauth2pkceCode', $provider->getPkceCode());
 
-        if (!empty($request->get('redirectPath')) && '#/login' !== $request->get('redirectPath')) {
+        if (!empty($request->query->get('redirectPath')) && '#/login' !== $request->query->get('redirectPath')) {
             // store it in session before leaving claroline for authentication
             // this will allow use to redirect to the correct ui fragment when going back to claroline
-            $session->set('redirectPath', $request->get('redirectPath'));
+            $session->set('redirectPath', $request->query->get('redirectPath'));
         }
 
         return $authorizationUrl;
@@ -124,7 +124,7 @@ class OAuthManager implements LoggerAwareInterface
 
         // Try to get an access token (using the authorization code grant)
         $token = $provider->getAccessToken('authorization_code', [
-            'code' => $request->get('code'),
+            'code' => $request->query->get('code'),
             'redirect_uri' => $this->router->generate('claro_security_login_check_oauth2', [], UrlGeneratorInterface::ABSOLUTE_URL),
         ]);
         // We got an access token, let's now get the user's details
@@ -217,13 +217,13 @@ class OAuthManager implements LoggerAwareInterface
         }
 
         // check given state against previously stored one to mitigate CSRF attack
-        if (empty($request->get('state')) || $request->get('state') !== $session->get('oauth2state')) {
+        if (empty($request->query->get('state')) || $request->query->get('state') !== $session->get('oauth2state')) {
             $session->set('oauth2state', null);
 
             throw new BadRequestHttpException('Invalid state.');
         }
 
-        if (empty($request->get('code'))) {
+        if (empty($request->query->get('code'))) {
             throw new BadRequestHttpException('Missing validation code.');
         }
     }

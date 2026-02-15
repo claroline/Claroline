@@ -51,7 +51,7 @@ abstract class AbstractFinder
     /**
      * The queried object is already named "obj".
      */
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], ?array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         foreach ($searches as $filterName => $filterValue) {
             $this->setDefaults($qb, $filterName, $filterValue);
@@ -60,7 +60,7 @@ abstract class AbstractFinder
         return $qb;
     }
 
-    public function find(?array $filters = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false): int|array
+    public function find(?array $filters = [], ?array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false): int|array
     {
         // sorting is not required when we count stuff
         $sortBy = $count ? null : $sortBy;
@@ -150,7 +150,7 @@ abstract class AbstractFinder
         }
     }
 
-    private function sortResults(QueryBuilder $qb, array $sortBy = null): void
+    private function sortResults(QueryBuilder $qb, ?array $sortBy = null): void
     {
         if ($sortBy && $sortBy['property'] && 0 !== $sortBy['direction']) {
             // query needs to be sorted, check if the Finder implementation has a custom sort system

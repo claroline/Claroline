@@ -109,7 +109,7 @@ class HomeTab implements UserViewCounterInterface
         return $this->class;
     }
 
-    public function setClass(string $class = null): void
+    public function setClass(?string $class = null): void
     {
         $this->class = $class;
     }
@@ -119,7 +119,7 @@ class HomeTab implements UserViewCounterInterface
         return $this->name;
     }
 
-    public function setName(string $name = null): void
+    public function setName(?string $name = null): void
     {
         $this->name = $name;
     }

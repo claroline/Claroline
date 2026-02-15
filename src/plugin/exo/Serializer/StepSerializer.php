@@ -54,7 +54,7 @@ class StepSerializer
     /**
      * Converts raw data into a Step entity.
      */
-    public function deserialize(array $data, Step $step = null, array $options = []): Step
+    public function deserialize(array $data, ?Step $step = null, array $options = []): Step
     {
         $step = $step ?: new Step();
 

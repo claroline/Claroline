@@ -59,12 +59,12 @@ class CommunityTool extends ToolComponent
         ]);
     }
 
-    public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool
+    public function isRequired(string $context, ?ContextSubjectInterface $contextSubject = null): bool
     {
         return false;
     }
 
-    public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
+    public function open(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null): ?array
     {
         if ($context === WorkspaceContext::getName()) {
             $userTeams = [];
@@ -89,7 +89,7 @@ class CommunityTool extends ToolComponent
         ];
     }
 
-    public function configure(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array
+    public function configure(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null, array $configData = []): ?array
     {
         $this->om->startFlushSuite();
 
@@ -113,7 +113,7 @@ class CommunityTool extends ToolComponent
         ];
     }
 
-    public function export(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
+    public function export(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null): ?array
     {
         if (WorkspaceContext::getName() !== $context) {
             return [];
@@ -128,7 +128,7 @@ class CommunityTool extends ToolComponent
         ];
     }
 
-    public function import(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null, array $data = [], array $entities = []): ?array
+    public function import(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null, array $data = [], array $entities = []): ?array
     {
         if (WorkspaceContext::getName() !== $context) {
             return [];

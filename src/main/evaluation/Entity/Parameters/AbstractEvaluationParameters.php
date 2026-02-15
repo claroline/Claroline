@@ -100,7 +100,7 @@ abstract class AbstractEvaluationParameters
         return $this->successMessage;
     }
 
-    public function setSuccessMessage(string $successMessage = null): void
+    public function setSuccessMessage(?string $successMessage = null): void
     {
         $this->successMessage = $successMessage;
     }
@@ -110,7 +110,7 @@ abstract class AbstractEvaluationParameters
         return $this->failureMessage;
     }
 
-    public function setFailureMessage(string $failureMessage = null): void
+    public function setFailureMessage(?string $failureMessage = null): void
     {
         $this->failureMessage = $failureMessage;
     }

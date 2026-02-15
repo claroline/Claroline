@@ -131,7 +131,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate = null): void
+    public function setStartDate(?\DateTimeInterface $startDate = null): void
     {
         $this->startDate = $startDate;
     }
@@ -141,7 +141,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
         return $this->endDate;
     }
 
-    public function setEndDate(\DateTimeInterface $endDate = null): void
+    public function setEndDate(?\DateTimeInterface $endDate = null): void
     {
         $this->endDate = $endDate;
     }
@@ -158,7 +158,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
         return $this->location;
     }
 
-    public function setLocation(Location $location = null): void
+    public function setLocation(?Location $location = null): void
     {
         $this->location = $location;
     }
@@ -186,7 +186,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
         return $this->invitationTemplate;
     }
 
-    public function setInvitationTemplate(Template $template = null): void
+    public function setInvitationTemplate(?Template $template = null): void
     {
         $this->invitationTemplate = $template;
     }
@@ -218,7 +218,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
         return $this->canceledTemplate;
     }
 
-    public function setCanceledTemplate(Template $template = null): void
+    public function setCanceledTemplate(?Template $template = null): void
     {
         $this->canceledTemplate = $template;
     }

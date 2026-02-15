@@ -35,7 +35,7 @@ class WorkspacesTool extends ToolComponent
         ]);
     }
 
-    public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
+    public function open(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null): ?array
     {
         return [
             'creatable' => $this->authorization->isGranted('CREATE', new Workspace()),

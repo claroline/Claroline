@@ -13,7 +13,7 @@ class CreateFunctionalLog extends AbstractCreateLog
         \DateTimeInterface $date,
         string $action,
         string $details,
-        int $doerId = null,
+        ?int $doerId = null,
         private readonly ?string $objectClass = null,
         private readonly ?string $objectId = null,
         private readonly ?string $contextId = null

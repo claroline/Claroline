@@ -15,7 +15,7 @@ class DateNormalizer
     /**
      * Normalizes a DateTime to a string.
      */
-    public static function normalize(\DateTimeInterface $date = null): ?string
+    public static function normalize(?\DateTimeInterface $date = null): ?string
     {
         if (!empty($date)) {
             return $date->format(static::DATE_FORMAT);
@@ -27,7 +27,7 @@ class DateNormalizer
     /**
      * Denormalizes a string into a DateTime object.
      */
-    public static function denormalize(string $dateString = null): ?\DateTimeInterface
+    public static function denormalize(?string $dateString = null): ?\DateTimeInterface
     {
         if (!empty($dateString)) {
             try {

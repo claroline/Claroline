@@ -72,7 +72,7 @@ class ClacoForm extends AbstractResource
         return $this->template;
     }
 
-    public function setTemplate(string $template = null): void
+    public function setTemplate(?string $template = null): void
     {
         $this->template = $template;
     }
@@ -159,7 +159,7 @@ class ClacoForm extends AbstractResource
         return $this->confirmMessage;
     }
 
-    public function setConfirmMessage(string $message = null): void
+    public function setConfirmMessage(?string $message = null): void
     {
         $this->confirmMessage = $message;
     }
@@ -169,7 +169,7 @@ class ClacoForm extends AbstractResource
         return $this->helpMessage;
     }
 
-    public function setHelpMessage(string $message = null): void
+    public function setHelpMessage(?string $message = null): void
     {
         $this->helpMessage = $message;
     }
@@ -282,7 +282,7 @@ class ClacoForm extends AbstractResource
             null;
     }
 
-    public function setRandomStartDate(\DateTime $startDate = null): void
+    public function setRandomStartDate(?\DateTime $startDate = null): void
     {
         if (is_null($this->details)) {
             $this->details = [];
@@ -297,7 +297,7 @@ class ClacoForm extends AbstractResource
             null;
     }
 
-    public function setRandomEndDate(\DateTime $endDate = null): void
+    public function setRandomEndDate(?\DateTime $endDate = null): void
     {
         if (is_null($this->details)) {
             $this->details = [];

@@ -99,7 +99,7 @@ class OrganizationSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, Organization $organization = null, array $options = []): Organization
+    public function deserialize(array $data, ?Organization $organization = null, array $options = []): Organization
     {
         $this->sipe('name', 'setName', $data, $organization);
         $this->sipe('code', 'setCode', $data, $organization);

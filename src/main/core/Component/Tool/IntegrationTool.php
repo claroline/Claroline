@@ -18,7 +18,7 @@ class IntegrationTool extends ToolComponent
         return 'plug';
     }
 
-    public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool
+    public function isRequired(string $context, ?ContextSubjectInterface $contextSubject = null): bool
     {
         return true;
     }

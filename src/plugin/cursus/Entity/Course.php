@@ -130,7 +130,7 @@ class Course extends AbstractTraining
         return $this->plainDescription;
     }
 
-    public function setPlainDescription(string $description = null): void
+    public function setPlainDescription(?string $description = null): void
     {
         $this->plainDescription = $description;
     }
@@ -150,7 +150,7 @@ class Course extends AbstractTraining
         return $this->objectives;
     }
 
-    public function setObjectives(string $objectives = null): void
+    public function setObjectives(?string $objectives = null): void
     {
         $this->objectives = $objectives;
     }

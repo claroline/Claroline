@@ -32,12 +32,12 @@ class PrivacyTool extends ToolComponent
         return AdministrationContext::getName() === $context;
     }
 
-    public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool
+    public function isRequired(string $context, ?ContextSubjectInterface $contextSubject = null): bool
     {
         return true;
     }
 
-    public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
+    public function open(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null): ?array
     {
         $privacyParameters = $this->privacyManager->getParameters();
         $serializedParameters = $this->serializer->serialize($privacyParameters);

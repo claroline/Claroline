@@ -84,7 +84,7 @@ abstract class RepositoryTestCase extends WebTestCase
         throw new \InvalidArgumentException("Unknown fixture reference '{$reference}'");
     }
 
-    protected static function createUser(string $name, array $roles = [], Workspace $personalWorkspace = null): void
+    protected static function createUser(string $name, array $roles = [], ?Workspace $personalWorkspace = null): void
     {
         $user = self::$persister->user($name);
 
@@ -114,7 +114,7 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($name, $group);
     }
 
-    protected static function createRole($name, Workspace $workspace = null): void
+    protected static function createRole($name, ?Workspace $workspace = null): void
     {
         $role = new Role();
         $role->setName($name);
@@ -155,7 +155,7 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($name, $workspace);
     }
 
-    protected static function createResourceType(string $name, string $class, ?bool $isExportable = true, Plugin $plugin = null): void
+    protected static function createResourceType(string $name, string $class, ?bool $isExportable = true, ?Plugin $plugin = null): void
     {
         $type = new ResourceType();
         $type->setName($name);
@@ -173,7 +173,7 @@ abstract class RepositoryTestCase extends WebTestCase
         ResourceType $type,
         User $creator,
         Workspace $workspace,
-        Directory $parent = null
+        ?Directory $parent = null
     ): void {
         if ($parent) {
             $parent = $parent->getResourceNode();

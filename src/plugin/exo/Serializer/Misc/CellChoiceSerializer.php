@@ -38,7 +38,7 @@ class CellChoiceSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, CellChoice $choice = null, array $options = []): CellChoice
+    public function deserialize(array $data, ?CellChoice $choice = null, array $options = []): CellChoice
     {
         if (empty($choice)) {
             $choice = new CellChoice();

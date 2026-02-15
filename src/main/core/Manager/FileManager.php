@@ -111,10 +111,10 @@ class FileManager implements LoggerAwareInterface
      */
     public function createFile(
         File $tmpFile,
-        string $name = null,
-        string $objectClass = null,
-        string $objectUuid = null,
-        string $objectName = null
+        ?string $name = null,
+        ?string $objectClass = null,
+        ?string $objectUuid = null,
+        ?string $objectName = null
     ): PublicFile {
         $fileName = $name ? $name : $tmpFile->getFilename();
         $directoryName = $this->getActiveDirectoryName();
@@ -151,9 +151,9 @@ class FileManager implements LoggerAwareInterface
     public function createFileFromData(
         string $data,
         string $fileName,
-        string $objectClass = null,
-        string $objectUuid = null,
-        string $objectName = null
+        ?string $objectClass = null,
+        ?string $objectUuid = null,
+        ?string $objectName = null
     ): PublicFile {
         $directoryName = $this->getActiveDirectoryName();
         $dataParts = explode(',', $data);
@@ -193,7 +193,7 @@ class FileManager implements LoggerAwareInterface
         return $publicFile;
     }
 
-    public function updateFile(string $linkedClass, string $linkedId, string $fileUrl = null, string $oldFileUrl = null): void
+    public function updateFile(string $linkedClass, string $linkedId, ?string $fileUrl = null, ?string $oldFileUrl = null): void
     {
         if (empty($fileUrl) && empty($oldFileUrl)) {
             return;
@@ -369,7 +369,7 @@ class FileManager implements LoggerAwareInterface
         return $activeDirectoryName;
     }
 
-    private function generateNextDirectoryName(string $name = null): string
+    private function generateNextDirectoryName(?string $name = null): string
     {
         if (is_null($name)) {
             $next = 'aaaaaaaaaaaaaaaaaaaa';
@@ -387,7 +387,7 @@ class FileManager implements LoggerAwareInterface
         return $next;
     }
 
-    private function createFileUse(PublicFile $publicFile, string $class, string $uuid, string $name = null): PublicFileUse
+    private function createFileUse(PublicFile $publicFile, string $class, string $uuid, ?string $name = null): PublicFileUse
     {
         $cleanClass = str_replace('Proxies\\__CG__\\', '', $class);
         $publicFileUse = $this->om->getRepository(PublicFileUse::class)->findOneBy([

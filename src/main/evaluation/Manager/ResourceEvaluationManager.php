@@ -73,7 +73,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         return $evaluation;
     }
 
-    public function createAttempt(ResourceNode $node, User $user, ?array $data = [], \DateTimeInterface $date = null): ResourceAttempt
+    public function createAttempt(ResourceNode $node, User $user, ?array $data = [], ?\DateTimeInterface $date = null): ResourceAttempt
     {
         // retrieve the parent evaluation for the attempt
         $evaluation = $this->getUserEvaluation($node, $user);
@@ -90,7 +90,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         return $attempt;
     }
 
-    public function updateAttempt(ResourceAttempt $attempt, ?array $data = [], \DateTimeInterface $date = null): ResourceAttempt
+    public function updateAttempt(ResourceAttempt $attempt, ?array $data = [], ?\DateTimeInterface $date = null): ResourceAttempt
     {
         // update the current attempt data
         $attemptUpdated = $this->updateEvaluation($attempt, $data, $date);
@@ -120,7 +120,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         return $attempt;
     }
 
-    public function updateUserEvaluation(ResourceNode $node, User $user, ?array $data = [], \DateTimeInterface $date = null, ?bool $withCreation = true): ?ResourceEvaluation
+    public function updateUserEvaluation(ResourceNode $node, User $user, ?array $data = [], ?\DateTimeInterface $date = null, ?bool $withCreation = true): ?ResourceEvaluation
     {
         $this->om->startFlushSuite();
 

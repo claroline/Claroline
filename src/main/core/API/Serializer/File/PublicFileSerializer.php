@@ -53,7 +53,7 @@ class PublicFileSerializer
         ];
     }
 
-    public function deserialize($data, PublicFile $file = null, array $options = []): ?PublicFile
+    public function deserialize($data, ?PublicFile $file = null, array $options = []): ?PublicFile
     {
         // this is currently done in FileUtilities
         // todo : write correctly

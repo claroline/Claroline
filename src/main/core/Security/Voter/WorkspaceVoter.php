@@ -134,7 +134,7 @@ class WorkspaceVoter extends AbstractVoter implements CacheableVoterInterface
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    private function checkPatch(TokenInterface $token, Workspace $workspace, ObjectCollection $collection = null): int
+    private function checkPatch(TokenInterface $token, Workspace $workspace, ?ObjectCollection $collection = null): int
     {
         // single property: no check now
         if (!$collection) {

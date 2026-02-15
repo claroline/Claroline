@@ -22,7 +22,7 @@ class DefaultOrganizationData extends AbstractFixture implements PreInstallInter
 {
     private OrganizationManager $organizationManager;
 
-    public function setContainer(ContainerInterface $container = null): void
+    public function setContainer(?ContainerInterface $container = null): void
     {
         $this->organizationManager = $container->get('claroline.manager.organization_manager');
     }

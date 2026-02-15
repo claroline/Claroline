@@ -70,7 +70,7 @@ class ProgressionTool extends ToolComponent
         return $progression.'%';
     }
 
-    public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
+    public function open(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null): ?array
     {
         $workspaceEvaluation = null;
 
@@ -102,7 +102,7 @@ class ProgressionTool extends ToolComponent
         ];
     }
 
-    public function configure(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array
+    public function configure(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null, array $configData = []): ?array
     {
         if (!empty($configData['evaluation'])) {
             $this->crud->update($contextSubject, ['evaluation' => $configData['evaluation']], [Crud::NO_PERMISSIONS]);
@@ -115,7 +115,7 @@ class ProgressionTool extends ToolComponent
         return [];
     }
 
-    public function export(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
+    public function export(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null): ?array
     {
         $sequences = $this->om->getRepository(Sequence::class)->findBy(['workspace' => $contextSubject]);
         if (empty($sequences)) {
@@ -133,7 +133,7 @@ class ProgressionTool extends ToolComponent
         ];
     }
 
-    public function import(string $context, ?ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null, array $data = [], array $entities = []): ?array
+    public function import(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null, array $data = [], array $entities = []): ?array
     {
         if (empty($data['sequences'])) {
             return [];

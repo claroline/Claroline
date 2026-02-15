@@ -79,7 +79,7 @@ class Revision
         return $this->creator;
     }
 
-    public function setCreator(User $creator = null)
+    public function setCreator(?User $creator = null)
     {
         $this->creator = $creator;
     }

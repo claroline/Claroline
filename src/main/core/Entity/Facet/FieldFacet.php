@@ -122,7 +122,7 @@ class FieldFacet
         $this->fieldFacetChoices = new ArrayCollection();
     }
 
-    public function setPanelFacet(PanelFacet $panelFacet = null): void
+    public function setPanelFacet(?PanelFacet $panelFacet = null): void
     {
         $this->panelFacet = $panelFacet;
 

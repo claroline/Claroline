@@ -29,7 +29,7 @@ class ContentItemSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, ContentItem $contentItem = null, ?array $options = []): ContentItem
+    public function deserialize(array $data, ?ContentItem $contentItem = null, ?array $options = []): ContentItem
     {
         if (empty($contentItem)) {
             $contentItem = new ContentItem();

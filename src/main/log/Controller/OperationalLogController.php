@@ -29,7 +29,7 @@ class OperationalLogController
     #[Route(path: '/context/{context}/{contextId}', name: 'apiv2_logs_operational', methods: ['GET'])]
     public function listByContextAction(
         string $context,
-        string $contextId = null,
+        ?string $contextId = null,
         #[MapQueryString]
         ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {

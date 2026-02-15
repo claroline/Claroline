@@ -92,7 +92,7 @@ class MatchQuestionSerializer
     /**
      * Converts raw data into a Match question entity.
      */
-    public function deserialize(array $data, MatchQuestion $matchQuestion = null, array $options = []): MatchQuestion
+    public function deserialize(array $data, ?MatchQuestion $matchQuestion = null, array $options = []): MatchQuestion
     {
         if (empty($matchQuestion)) {
             $matchQuestion = new MatchQuestion();

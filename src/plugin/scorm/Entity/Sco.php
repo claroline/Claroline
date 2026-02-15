@@ -102,7 +102,7 @@ class Sco
         return $this->scorm;
     }
 
-    public function setScorm(Scorm $scorm = null): void
+    public function setScorm(?Scorm $scorm = null): void
     {
         $this->scorm = $scorm;
     }
@@ -112,7 +112,7 @@ class Sco
         return $this->scoParent;
     }
 
-    public function setScoParent(Sco $scoParent = null): void
+    public function setScoParent(?Sco $scoParent = null): void
     {
         $this->scoParent = $scoParent;
     }

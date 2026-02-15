@@ -127,7 +127,7 @@ class Persister
     /**
      * @param array $questionData - grouping questions in sub arrays will create 1 step for one sub array
      */
-    public function exercise(string $title, array $questionData = [], User $user = null): Exercise
+    public function exercise(string $title, array $questionData = [], ?User $user = null): Exercise
     {
         $exercise = new Exercise();
         $exercise->setExpectedAnswers(true);

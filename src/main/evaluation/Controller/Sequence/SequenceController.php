@@ -67,7 +67,7 @@ class SequenceController extends AbstractCrudController
     #[Route(path: '/context/{context}/{contextId}', name: 'context_list', defaults: ['contextId' => null], methods: ['GET'])]
     public function listByContextAction(
         string $context,
-        string $contextId = null,
+        ?string $contextId = null,
         #[MapQueryString]
         ?FinderRequest $finderRequest = new FinderRequest()
     ): StreamedJsonResponse {

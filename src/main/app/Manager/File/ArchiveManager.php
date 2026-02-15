@@ -19,7 +19,7 @@ final class ArchiveManager
      * Creates a new archive and fills it with the content of the FileBag if any.
      * If no destinationPath is specified, the archive will be created in the platform temp dir.
      */
-    public function create(string $destinationPath = null, FileBag $fileBag = null): \ZipArchive
+    public function create(?string $destinationPath = null, ?FileBag $fileBag = null): \ZipArchive
     {
         $archive = new \ZipArchive();
 
@@ -44,7 +44,7 @@ final class ArchiveManager
      * Extracts files from an archive.
      * If no destinationPath is specified, the files will be extracted in the platform temp dir.
      */
-    public function extractFiles(\ZipArchive $archive, string $destinationPath = null): FileBag
+    public function extractFiles(\ZipArchive $archive, ?string $destinationPath = null): FileBag
     {
         $fileBag = new FileBag();
 

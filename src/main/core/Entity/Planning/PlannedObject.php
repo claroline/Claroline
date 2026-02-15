@@ -96,7 +96,7 @@ class PlannedObject
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate = null): void
+    public function setStartDate(?\DateTimeInterface $startDate = null): void
     {
         $this->startDate = $startDate;
     }
@@ -106,7 +106,7 @@ class PlannedObject
         return $this->endDate;
     }
 
-    public function setEndDate(\DateTimeInterface $endDate = null): void
+    public function setEndDate(?\DateTimeInterface $endDate = null): void
     {
         $this->endDate = $endDate;
     }
@@ -123,7 +123,7 @@ class PlannedObject
         return $this->color;
     }
 
-    public function setColor(string $color = null): void
+    public function setColor(?string $color = null): void
     {
         $this->color = $color;
     }
@@ -133,7 +133,7 @@ class PlannedObject
         return $this->locationUrl;
     }
 
-    public function setLocationUrl(string $locationUrl = null): void
+    public function setLocationUrl(?string $locationUrl = null): void
     {
         $this->locationUrl = $locationUrl;
     }
@@ -143,7 +143,7 @@ class PlannedObject
         return $this->location;
     }
 
-    public function setLocation(Location $location = null): void
+    public function setLocation(?Location $location = null): void
     {
         $this->location = $location;
     }

@@ -32,7 +32,7 @@ class AuthenticationTool extends ToolComponent
         return 'shield-alt';
     }
 
-    public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool
+    public function isRequired(string $context, ?ContextSubjectInterface $contextSubject = null): bool
     {
         return true;
     }
@@ -42,7 +42,7 @@ class AuthenticationTool extends ToolComponent
         return AdministrationContext::getName() === $context;
     }
 
-    public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
+    public function open(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null): ?array
     {
         return [
             'authentication' => $this->serializer->serialize(

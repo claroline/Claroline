@@ -29,7 +29,7 @@ interface AdditionalInstallerInterface
 
     public function postUninstall(): void;
 
-    public function end(string $currentVersion = null, string $targetVersion = null);
+    public function end(?string $currentVersion = null, ?string $targetVersion = null);
 
     /**
      * @return string[] An array of Updater service identifiers (i.e. Fully Qualified Class Name) indexed by version

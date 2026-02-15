@@ -8,7 +8,7 @@ use Symfony\Component\DomCrawler\Crawler;
 
 trait RequestTrait
 {
-    public function request(string $method, string $uri, User $user = null, array $parameters = [], ?string $content = null): Crawler
+    public function request(string $method, string $uri, ?User $user = null, array $parameters = [], ?string $content = null): Crawler
     {
         if (!$this->client instanceof KernelBrowser) {
             throw new \Exception('This method requires a client property of type Symfony\Bundle\FrameworkBundle\KernelBrowser');

@@ -86,7 +86,7 @@ class Step
     /**
      * @internal use Path::addStep() or Path::removeStep()
      */
-    public function setPath(Path $path = null): void
+    public function setPath(?Path $path = null): void
     {
         if (!empty($this->path)) {
             $this->path->removeStep($this);
@@ -104,7 +104,7 @@ class Step
         return $this->path;
     }
 
-    public function setParent(Step $parent = null): void
+    public function setParent(?Step $parent = null): void
     {
         if ($parent !== $this->parent) {
             $this->parent = $parent;
@@ -182,7 +182,7 @@ class Step
         return $this->numbering;
     }
 
-    public function setNumbering(string $numbering = null): void
+    public function setNumbering(?string $numbering = null): void
     {
         $this->numbering = $numbering;
     }
@@ -192,7 +192,7 @@ class Step
         return $this->resource;
     }
 
-    public function setResource(ResourceNode $resource = null): void
+    public function setResource(?ResourceNode $resource = null): void
     {
         $this->resource = $resource;
     }
@@ -238,7 +238,7 @@ class Step
         return $this->slug;
     }
 
-    public function setSlug(string $slug = null): void
+    public function setSlug(?string $slug = null): void
     {
         $this->slug = $slug;
     }

@@ -57,7 +57,7 @@ class ResourceAttempt extends AbstractEvaluation
         return $this->comment;
     }
 
-    public function setComment(string $comment = null): void
+    public function setComment(?string $comment = null): void
     {
         $this->comment = $comment;
     }

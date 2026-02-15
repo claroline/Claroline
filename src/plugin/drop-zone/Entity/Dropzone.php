@@ -299,7 +299,7 @@ class Dropzone extends AbstractResource
         return $this->dropStartDate;
     }
 
-    public function setDropStartDate(DateTimeInterface $dropStartDate = null): void
+    public function setDropStartDate(?DateTimeInterface $dropStartDate = null): void
     {
         $this->dropStartDate = $dropStartDate;
     }
@@ -309,7 +309,7 @@ class Dropzone extends AbstractResource
         return $this->dropEndDate;
     }
 
-    public function setDropEndDate(DateTimeInterface $dropEndDate = null): void
+    public function setDropEndDate(?DateTimeInterface $dropEndDate = null): void
     {
         $this->dropEndDate = $dropEndDate;
     }
@@ -319,7 +319,7 @@ class Dropzone extends AbstractResource
         return $this->reviewStartDate;
     }
 
-    public function setReviewStartDate(DateTimeInterface $reviewStartDate = null): void
+    public function setReviewStartDate(?DateTimeInterface $reviewStartDate = null): void
     {
         $this->reviewStartDate = $reviewStartDate;
     }
@@ -329,7 +329,7 @@ class Dropzone extends AbstractResource
         return $this->reviewEndDate;
     }
 
-    public function setReviewEndDate(DateTimeInterface $reviewEndDate = null): void
+    public function setReviewEndDate(?DateTimeInterface $reviewEndDate = null): void
     {
         $this->reviewEndDate = $reviewEndDate;
     }

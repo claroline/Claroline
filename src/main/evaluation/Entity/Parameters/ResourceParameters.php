@@ -51,7 +51,7 @@ class ResourceParameters extends AbstractEvaluationParameters
         return $this->attemptsReachedMessage;
     }
 
-    public function setAttemptsReachedMessage(string $attemptsReachedMessage = null): void
+    public function setAttemptsReachedMessage(?string $attemptsReachedMessage = null): void
     {
         $this->attemptsReachedMessage = $attemptsReachedMessage;
     }

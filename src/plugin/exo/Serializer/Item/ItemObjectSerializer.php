@@ -42,7 +42,7 @@ class ItemObjectSerializer
     /**
      * Converts raw data into a ItemObject entity.
      */
-    public function deserialize(array $data, ItemObject $itemObject = null, array $options = []): ItemObject
+    public function deserialize(array $data, ?ItemObject $itemObject = null, array $options = []): ItemObject
     {
         $itemObject = $itemObject ?: new ItemObject();
 

@@ -121,7 +121,7 @@ class Persister
         return $role;
     }
 
-    public function file(string $fileName, string $mimeType, bool $withNode = false, User $creator = null): File
+    public function file(string $fileName, string $mimeType, bool $withNode = false, ?User $creator = null): File
     {
         $file = new File();
         $file->setSize(123);

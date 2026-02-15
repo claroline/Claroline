@@ -38,7 +38,7 @@ class DropManager
      *
      * @return array
      */
-    private function getUnfinishedPeerDrops(Dropzone $dropzone, User $user = null, $teamId = null)
+    private function getUnfinishedPeerDrops(Dropzone $dropzone, ?User $user = null, $teamId = null)
     {
         $drops = [];
 
@@ -96,7 +96,7 @@ class DropManager
      *
      * @return Drop|null
      */
-    public function getPeerDrop(Dropzone $dropzone, User $user = null, $teamId = null, $teamName = null, $withCreation = true)
+    public function getPeerDrop(Dropzone $dropzone, ?User $user = null, $teamId = null, $teamName = null, $withCreation = true)
     {
         $peerDrop = null;
 
@@ -144,7 +144,7 @@ class DropManager
      *
      * @return array
      */
-    public function getFinishedPeerDrops(Dropzone $dropzone, User $user = null, $teamId = null)
+    public function getFinishedPeerDrops(Dropzone $dropzone, ?User $user = null, $teamId = null)
     {
         $drops = [];
 
@@ -173,7 +173,7 @@ class DropManager
      *
      * @return Drop|null
      */
-    public function getAvailableDropForPeer(Dropzone $dropzone, User $user = null, $teamId = null, $teamName = null)
+    public function getAvailableDropForPeer(Dropzone $dropzone, ?User $user = null, $teamId = null, $teamName = null)
     {
         $peerDrop = null;
         $drops = [];

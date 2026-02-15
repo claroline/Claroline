@@ -62,7 +62,7 @@ class AnswerSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, Answer $answer = null, array $options = []): Answer
+    public function deserialize(array $data, ?Answer $answer = null, array $options = []): Answer
     {
         $answer = $answer ?: new Answer();
 

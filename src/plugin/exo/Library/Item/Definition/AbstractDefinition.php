@@ -57,7 +57,7 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Answerable
     /**
      * Deserializes question data.
      */
-    public function deserializeQuestion(array $data, AbstractItem $question = null, array $options = []): AbstractItem
+    public function deserializeQuestion(array $data, ?AbstractItem $question = null, array $options = []): AbstractItem
     {
         return $this->getQuestionSerializer()->deserialize($data, $question, $options);
     }

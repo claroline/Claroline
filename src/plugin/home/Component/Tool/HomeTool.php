@@ -48,7 +48,7 @@ class HomeTool extends ToolComponent
         ]);
     }
 
-    public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
+    public function open(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null): ?array
     {
         $homeTabs = $this->om->getRepository(HomeTab::class)->findBy([
             'contextName' => $context,
@@ -117,7 +117,7 @@ class HomeTool extends ToolComponent
         ];
     }
 
-    public function export(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
+    public function export(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null): ?array
     {
         $homeTabs = $this->om->getRepository(HomeTab::class)->findBy([
             'contextName' => $context,
@@ -129,7 +129,7 @@ class HomeTool extends ToolComponent
         ];
     }
 
-    public function import(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null, array $data = [], array $entities = []): ?array
+    public function import(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null, array $data = [], array $entities = []): ?array
     {
         if (empty($data['tabs'])) {
             return [];

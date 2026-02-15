@@ -13,7 +13,7 @@ class CreateSecurityLog extends AbstractCreateLog
         \DateTimeInterface $date,
         string $action,
         string $details,
-        int $doerId = null,
+        ?int $doerId = null,
         private readonly ?int $targetId = null
     ) {
         parent::__construct($date, $action, $details, $doerId);

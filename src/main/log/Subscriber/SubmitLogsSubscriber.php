@@ -71,7 +71,7 @@ class SubmitLogsSubscriber implements EventSubscriberInterface
         $this->messageBus->dispatch(new SubmitLogs($type, $doerIp, $logs), $stamps);
     }
 
-    private function getDoerIp(Request $request = null): string
+    private function getDoerIp(?Request $request = null): string
     {
         $doerIp = 'CLI';
         if ($request) {

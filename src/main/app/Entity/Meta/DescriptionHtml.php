@@ -21,7 +21,7 @@ trait DescriptionHtml
         return $this->descriptionHtml;
     }
 
-    public function setDescriptionHtml(string $description = null): void
+    public function setDescriptionHtml(?string $description = null): void
     {
         $this->descriptionHtml = $description;
     }

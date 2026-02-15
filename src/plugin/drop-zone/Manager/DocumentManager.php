@@ -29,7 +29,7 @@ class DocumentManager
      *
      * @deprecated use crud instead
      */
-    public function createDocument(Drop $drop, User $user, string $documentType, $documentData, Revision $revision = null, ?bool $isManager = false): Document
+    public function createDocument(Drop $drop, User $user, string $documentType, $documentData, ?Revision $revision = null, ?bool $isManager = false): Document
     {
         $document = new Document();
         $document->setDrop($drop);
@@ -55,7 +55,7 @@ class DocumentManager
     /**
      * Creates Files Documents.
      */
-    public function createFilesDocuments(Drop $drop, User $user, array $files, Revision $revision = null, bool $isManager = false): array
+    public function createFilesDocuments(Drop $drop, User $user, array $files, ?Revision $revision = null, bool $isManager = false): array
     {
         $documents = [];
         $currentDate = new \DateTime();

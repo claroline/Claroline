@@ -46,7 +46,7 @@ class DropzoneManager
         $this->correctionRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Correction');
     }
 
-    public function getDropzoneData(Dropzone $dropzone, User $user = null): array
+    public function getDropzoneData(Dropzone $dropzone, ?User $user = null): array
     {
         $resourceNode = $dropzone->getResourceNode();
 

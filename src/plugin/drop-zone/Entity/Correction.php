@@ -174,7 +174,7 @@ class Correction
         return $this->user;
     }
 
-    public function setUser(User $user = null)
+    public function setUser(?User $user = null)
     {
         $this->user = $user;
     }
@@ -261,7 +261,7 @@ class Correction
         return $this->endDate;
     }
 
-    public function setEndDate(DateTime $endDate = null)
+    public function setEndDate(?DateTime $endDate = null)
     {
         $this->endDate = $endDate;
     }

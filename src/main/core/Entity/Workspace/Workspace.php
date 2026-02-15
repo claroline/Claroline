@@ -273,7 +273,7 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface, UserVie
     /**
      * @deprecated
      */
-    public function setMaxTeams(int $maxTeams = null): void
+    public function setMaxTeams(?int $maxTeams = null): void
     {
         $this->maxTeams = $maxTeams;
     }
@@ -293,7 +293,7 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface, UserVie
         return $this->options;
     }
 
-    public function setOptions(WorkspaceOptions $options = null): void
+    public function setOptions(?WorkspaceOptions $options = null): void
     {
         $this->options = $options;
     }
@@ -333,7 +333,7 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface, UserVie
     /**
      * @deprecated
      */
-    public function setDefaultRole(Role $role = null): void
+    public function setDefaultRole(?Role $role = null): void
     {
         $this->defaultRole = $role;
     }
@@ -370,7 +370,7 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface, UserVie
         return $this->contactEmail;
     }
 
-    public function setContactEmail(string $email = null): void
+    public function setContactEmail(?string $email = null): void
     {
         $this->contactEmail = $email;
     }
@@ -396,7 +396,7 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface, UserVie
     /**
      * @deprecated
      */
-    public function setEstimatedDuration(int $estimatedDuration = null): void
+    public function setEstimatedDuration(?int $estimatedDuration = null): void
     {
         $this->estimatedDuration = $estimatedDuration;
     }
@@ -406,7 +406,7 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface, UserVie
         return $this->scoreTotal;
     }
 
-    public function setScoreTotal(float $scoreTotal = null): void
+    public function setScoreTotal(?float $scoreTotal = null): void
     {
         $this->scoreTotal = $scoreTotal;
     }

@@ -39,7 +39,7 @@ class TransferManager implements LoggerAwareInterface
     ) {
     }
 
-    public function import(string $archivePath, Workspace $workspace = null): Workspace
+    public function import(string $archivePath, ?Workspace $workspace = null): Workspace
     {
         $archive = new \ZipArchive();
         $archive->open($archivePath);

@@ -15,7 +15,7 @@ class PdfManager
     ) {
     }
 
-    public function fromHtml(string $htmlContent, string $title = null): ?string
+    public function fromHtml(string $htmlContent, ?string $title = null): ?string
     {
         $domPdf = new Dompdf([
             'isHtml5ParserEnabled' => true,

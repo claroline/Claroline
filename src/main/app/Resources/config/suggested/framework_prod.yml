@@ -5,6 +5,8 @@ framework:
     form: false
     csrf_protection: false
     default_locale: en
+    property_info:
+        with_constructor_extractor: true
 
     session:
         #name: claroline

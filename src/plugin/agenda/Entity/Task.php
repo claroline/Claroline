@@ -31,7 +31,7 @@ class Task extends AbstractPlanned
         return $this->workspace;
     }
 
-    public function setWorkspace(Workspace $workspace = null): void
+    public function setWorkspace(?Workspace $workspace = null): void
     {
         $this->workspace = $workspace;
     }

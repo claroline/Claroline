@@ -37,7 +37,7 @@ class WidgetController
      * Lists available widgets for a given context.
      */
     #[Route(path: '/{context}/{contextId}', name: 'apiv2_widget_available', methods: ['GET'])]
-    public function listAction(string $context, string $contextId = null): JsonResponse
+    public function listAction(string $context, ?string $contextId = null): JsonResponse
     {
         $contextHandler = $this->contextProvider->getContext($context);
         $contextSubject = $contextHandler->getObject($contextId);

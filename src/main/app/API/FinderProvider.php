@@ -109,7 +109,7 @@ class FinderProvider
     /**
      * Builds and fires the query for a given class. There will be no serialization here.
      */
-    public function fetch(string $class, ?array $filters = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false): int|array
+    public function fetch(string $class, ?array $filters = [], ?array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false): int|array
     {
         try {
             return $this->get($class)->find($filters, $sortBy, $page, $limit, $count);

@@ -40,7 +40,7 @@ class ItemObject
         $this->refreshUuid();
     }
 
-    public function setQuestion(Item $question = null): void
+    public function setQuestion(?Item $question = null): void
     {
         $this->question = $question;
     }

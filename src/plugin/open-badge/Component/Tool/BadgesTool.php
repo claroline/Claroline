@@ -49,7 +49,7 @@ class BadgesTool extends ToolComponent
         ]);
     }
 
-    public function getStatus(string $context, ContextSubjectInterface $contextSubject = null): ?int
+    public function getStatus(string $context, ?ContextSubjectInterface $contextSubject = null): ?int
     {
         $user = $this->tokenStorage->getToken()?->getUser();
         if ($user instanceof User) {
@@ -65,7 +65,7 @@ class BadgesTool extends ToolComponent
         return null;
     }
 
-    public function export(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
+    public function export(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null): ?array
     {
         if (WorkspaceContext::getName() !== $context) {
             return [];
@@ -88,7 +88,7 @@ class BadgesTool extends ToolComponent
         ];
     }
 
-    public function import(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null, array $data = [], array $entities = []): ?array
+    public function import(string $context, ?ContextSubjectInterface $contextSubject = null, ?FileBag $fileBag = null, array $data = [], array $entities = []): ?array
     {
         if (WorkspaceContext::getName() !== $context) {
             return [];

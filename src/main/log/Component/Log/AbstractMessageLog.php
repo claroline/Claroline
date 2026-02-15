@@ -17,7 +17,7 @@ abstract class AbstractMessageLog implements EventSubscriberInterface, Component
      *     - If $doer is not set, the method will try to retrieve it from the TokenStorage.
      *     - We allow to set the doer through params for some edge cases where the doer is not the current user.
      */
-    protected function log(string $message, User $receiver, User $doer = null): void
+    protected function log(string $message, User $receiver, ?User $doer = null): void
     {
         if (empty($doer)) {
             $doer = $this->getCurrentUser();

@@ -185,7 +185,7 @@ class Role implements CrudEntityInterface
         $group->removeRole($this);
     }
 
-    public function setWorkspace(Workspace $ws = null): void
+    public function setWorkspace(?Workspace $ws = null): void
     {
         $this->workspace = $ws;
     }

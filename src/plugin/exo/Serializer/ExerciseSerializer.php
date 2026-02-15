@@ -78,7 +78,7 @@ class ExerciseSerializer
     /**
      * Converts raw data into an Exercise entity.
      */
-    public function deserialize(array $data, Exercise $exercise = null, array $options = []): Exercise
+    public function deserialize(array $data, ?Exercise $exercise = null, array $options = []): Exercise
     {
         $exercise = $exercise ?: new Exercise();
 

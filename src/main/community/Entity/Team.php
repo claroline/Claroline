@@ -100,7 +100,7 @@ class Team
         return $this->role;
     }
 
-    public function setRole(Role $role = null): void
+    public function setRole(?Role $role = null): void
     {
         $this->role = $role;
     }
@@ -134,7 +134,7 @@ class Team
         return $this->managerRole;
     }
 
-    public function setManagerRole(Role $managerRole = null): void
+    public function setManagerRole(?Role $managerRole = null): void
     {
         $this->managerRole = $managerRole;
     }
@@ -144,7 +144,7 @@ class Team
         return $this->maxUsers;
     }
 
-    public function setMaxUsers(int $maxUsers = null): void
+    public function setMaxUsers(?int $maxUsers = null): void
     {
         $this->maxUsers = $maxUsers;
     }
@@ -174,7 +174,7 @@ class Team
         return $this->directory;
     }
 
-    public function setDirectory(ResourceNode $directory = null): void
+    public function setDirectory(?ResourceNode $directory = null): void
     {
         $this->directory = $directory;
     }

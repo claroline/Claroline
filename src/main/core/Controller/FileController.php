@@ -77,7 +77,7 @@ class FileController
     }
 
     #[Route(path: '/tinymce/destinations/{workspace}', name: 'claro_tinymce_file_destinations', defaults: ['workspace' => null], methods: ['GET'])]
-    public function listTinyMceDestinationsAction(Workspace $workspace = null): JsonResponse
+    public function listTinyMceDestinationsAction(?Workspace $workspace = null): JsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
@@ -167,10 +167,10 @@ class FileController
     public function fileSaveAction(Request $request): JsonResponse
     {
         $url = null;
-        $fileName = $request->get('fileName');
-        $objectClass = $request->get('objectClass');
-        $objectUuid = $request->get('objectUuid');
-        $objectName = $request->get('objectName');
+        $fileName = $request->request->get('fileName');
+        $objectClass = $request->request->get('objectClass');
+        $objectUuid = $request->request->get('objectUuid');
+        $objectName = $request->request->get('objectName');
 
         if ($request->files->get('file')) {
             $publicFile = $this->fileManager->createFile(

@@ -166,7 +166,7 @@ class DocimologyManager
         return $questionStatistics;
     }
 
-    public function getAttemptsScores(Exercise $exercise, bool $finishedOnly = false, User $user = null): array
+    public function getAttemptsScores(Exercise $exercise, bool $finishedOnly = false, ?User $user = null): array
     {
         $data = [
             'total' => [],
@@ -310,7 +310,7 @@ class DocimologyManager
      * Get scores for a paper.
      * If $scoreOn is not null then all scores are reported on this value.
      */
-    private function getPapersScores(array $papers, float $scoreOn = null): array
+    private function getPapersScores(array $papers, ?float $scoreOn = null): array
     {
         $scores = [];
         /** @var Paper $paper */

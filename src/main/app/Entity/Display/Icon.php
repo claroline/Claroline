@@ -14,7 +14,7 @@ trait Icon
         return $this->icon;
     }
 
-    public function setIcon(string $icon = null): void
+    public function setIcon(?string $icon = null): void
     {
         $this->icon = $icon;
     }

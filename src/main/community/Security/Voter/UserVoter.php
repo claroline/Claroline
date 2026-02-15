@@ -105,7 +105,7 @@ class UserVoter extends AbstractRoleSubjectVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    private function checkPatch(TokenInterface $token, User $user, ObjectCollection $collection = null): int
+    private function checkPatch(TokenInterface $token, User $user, ?ObjectCollection $collection = null): int
     {
         if (!$collection) {
             return VoterInterface::ACCESS_GRANTED;

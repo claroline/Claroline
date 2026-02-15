@@ -77,7 +77,7 @@ class FlashcardDeckController
         $node = $deck->getResourceNode();
         $resourceUserEvaluation = $this->evaluationManager->getResourceUserEvaluation($node, $user);
 
-        $this->evaluationManager->updateCardDrawnProgression($card, $user, $request->get('isSuccessful'));
+        $this->evaluationManager->updateCardDrawnProgression($card, $user, $request->query->get('isSuccessful'));
 
         $attempt = $this->resourceEvalRepo->findOneInProgress($node, $user);
         $attempt = $this->flashcardManager->calculateSession($attempt, $deck, $user);

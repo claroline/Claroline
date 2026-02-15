@@ -37,7 +37,7 @@ interface ItemDefinitionInterface
     /**
      * Deserializes question data.
      */
-    public function deserializeQuestion(array $data, AbstractItem $question = null, array $options = []): AbstractItem;
+    public function deserializeQuestion(array $data, ?AbstractItem $question = null, array $options = []): AbstractItem;
 
     /**
      * Generates new UUIDs for the Item entities.

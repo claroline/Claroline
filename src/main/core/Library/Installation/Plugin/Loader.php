@@ -28,7 +28,7 @@ class Loader
     /**
      * Searches a plugin bundle by its FQCN and returns an instance of it.
      */
-    public function load(string $pluginFqcn, string $pluginPath = null): PluginBundleInterface
+    public function load(string $pluginFqcn, ?string $pluginPath = null): PluginBundleInterface
     {
         if (!$pluginPath) {
             $rPlugin = new \ReflectionClass($pluginFqcn);

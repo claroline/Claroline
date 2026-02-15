@@ -14,7 +14,7 @@ trait Phone
         return $this->phone;
     }
 
-    public function setPhone(string $phone = null): void
+    public function setPhone(?string $phone = null): void
     {
         $this->phone = $phone;
     }

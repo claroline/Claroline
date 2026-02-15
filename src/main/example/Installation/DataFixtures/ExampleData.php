@@ -28,7 +28,7 @@ class ExampleData extends AbstractFixture implements PreInstallInterface, PreUpd
     private FileManager $fileManager;
     private string $projectDir;
 
-    public function setContainer(ContainerInterface $container = null): void
+    public function setContainer(?ContainerInterface $container = null): void
     {
         $this->tempManager = $container->get(TempFileManager::class);
         $this->fileManager = $container->get(FileManager::class);

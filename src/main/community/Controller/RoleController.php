@@ -84,7 +84,7 @@ class RoleController extends AbstractCrudController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Role $role,
         string $contextType,
-        string $contextId = null
+        ?string $contextId = null
     ): JsonResponse {
         $this->checkPermission('OPEN', $role, [], true);
 
@@ -107,7 +107,7 @@ class RoleController extends AbstractCrudController
         #[MapEntity(mapping: ['id' => 'uuid'])]
         Role $role,
         string $contextType,
-        string $contextId = null
+        ?string $contextId = null
     ): JsonResponse {
         $this->checkPermission('ADMINISTRATE', $role, [], true);
 

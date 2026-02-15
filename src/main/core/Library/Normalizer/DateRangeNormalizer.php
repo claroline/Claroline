@@ -15,7 +15,7 @@ class DateRangeNormalizer
     /**
      * Normalizes two DateTimes to an array of date strings.
      */
-    public static function normalize(\DateTimeInterface $startDate = null, \DateTimeInterface $endDate = null): array
+    public static function normalize(?\DateTimeInterface $startDate = null, ?\DateTimeInterface $endDate = null): array
     {
         if (!empty($startDate) || !empty($endDate)) {
             return [

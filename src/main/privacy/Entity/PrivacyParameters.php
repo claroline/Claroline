@@ -169,7 +169,7 @@ class PrivacyParameters
         return $this->tosTemplate;
     }
 
-    public function setTosTemplate(Template $tosTemplate = null): void
+    public function setTosTemplate(?Template $tosTemplate = null): void
     {
         $this->tosTemplate = $tosTemplate;
     }
@@ -179,7 +179,7 @@ class PrivacyParameters
         return $this->privacyTemplate;
     }
 
-    public function setPrivacyTemplate(Template $privacyTemplate = null): void
+    public function setPrivacyTemplate(?Template $privacyTemplate = null): void
     {
         $this->privacyTemplate = $privacyTemplate;
     }

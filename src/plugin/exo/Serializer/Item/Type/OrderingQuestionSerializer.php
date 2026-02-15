@@ -76,7 +76,7 @@ class OrderingQuestionSerializer
         }, $question->getItems()->toArray());
     }
 
-    public function deserialize(array $data, OrderingQuestion $question = null, array $options = []): OrderingQuestion
+    public function deserialize(array $data, ?OrderingQuestion $question = null, array $options = []): OrderingQuestion
     {
         if (empty($question)) {
             $question = new OrderingQuestion();

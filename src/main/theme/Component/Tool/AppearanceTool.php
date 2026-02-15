@@ -36,7 +36,7 @@ class AppearanceTool extends ToolComponent
         return 'paintbrush';
     }
 
-    public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool
+    public function isRequired(string $context, ?ContextSubjectInterface $contextSubject = null): bool
     {
         return true;
     }
@@ -46,7 +46,7 @@ class AppearanceTool extends ToolComponent
         return AdministrationContext::getName() === $context;
     }
 
-    public function open(OrderedTool $tool, string $context, ContextSubjectInterface $contextSubject = null): ?array
+    public function open(OrderedTool $tool, string $context, ?ContextSubjectInterface $contextSubject = null): ?array
     {
         $colorCharts = $this->om->getRepository(ColorCollection::class)->findAll();
         $parameters = $this->parametersSerializer->serialize(); // only get appearance options

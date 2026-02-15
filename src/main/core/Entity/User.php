@@ -254,7 +254,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         return 'offline';
     }
 
-    public function setStatus(string $status = null): void
+    public function setStatus(?string $status = null): void
     {
         $this->status = $status;
     }
@@ -411,6 +411,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         return in_array($roleName, $roleNames);
     }
 
+    #[\Deprecated(message: 'since Symfony 7.3, use __serialize() instead')]
     public function eraseCredentials(): void
     {
         $this->plainPassword = null;

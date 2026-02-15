@@ -35,7 +35,7 @@ class Validator
      *
      * @return Validator
      */
-    public static function build(Closure $preFetchHook = null, array $constraints = [])
+    public static function build(?Closure $preFetchHook = null, array $constraints = [])
     {
         $registry = new Registry($constraints);
         $resolver = new Resolver();
@@ -49,7 +49,7 @@ class Validator
         return new self($walker);
     }
 
-    public static function buildDefault(Closure $preFetchHook = null)
+    public static function buildDefault(?Closure $preFetchHook = null)
     {
         $constraints = [
             new ClarolineConstraint(),

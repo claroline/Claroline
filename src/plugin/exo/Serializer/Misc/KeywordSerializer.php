@@ -40,7 +40,7 @@ class KeywordSerializer
     /**
      * Converts raw data into a Keyword entity.
      */
-    public function deserialize(array $data, Keyword $keyword = null, array $options = []): Keyword
+    public function deserialize(array $data, ?Keyword $keyword = null, array $options = []): Keyword
     {
         if (empty($keyword)) {
             $keyword = new Keyword();

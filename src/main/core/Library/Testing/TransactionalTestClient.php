@@ -29,8 +29,8 @@ class TransactionalTestClient extends KernelBrowser
     public function __construct(
         KernelInterface $kernel,
         array $server = [],
-        History $history = null,
-        CookieJar $cookieJar = null
+        ?History $history = null,
+        ?CookieJar $cookieJar = null
     ) {
         parent::__construct($kernel, $server, $history, $cookieJar);
 

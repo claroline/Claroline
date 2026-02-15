@@ -140,7 +140,7 @@ trait ListParameters
         return $this->sortBy;
     }
 
-    public function setSortBy(string $sortBy = null): void
+    public function setSortBy(?string $sortBy = null): void
     {
         $this->sortBy = $sortBy;
     }
@@ -200,7 +200,7 @@ trait ListParameters
         return $this->searchMode;
     }
 
-    public function setSearchMode(string $searchMode = null): void
+    public function setSearchMode(?string $searchMode = null): void
     {
         $this->searchMode = $searchMode;
     }
