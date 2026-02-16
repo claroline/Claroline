@@ -109,9 +109,9 @@ const TrainingsTool = (props) =>
         render: (routerProps) => (
           <SignPresence code={routerProps.match.params.code} path={`${props.path}/presence`} />
         )
-      },
-      {
+      }, {
         path: '/presence',
+        exact: true,
         render: () => (
           <EventPresence path={`${props.path}/presence`}/>
         )

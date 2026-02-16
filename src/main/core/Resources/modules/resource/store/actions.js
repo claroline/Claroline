@@ -27,6 +27,7 @@ actions.open = (slug, embedded = false) => ({
 actions.fetchResource = (slug, embedded = false) => (dispatch) => dispatch({
   [API_REQUEST]: {
     silent: true,
+    silentError: true,
     url: embedded ?
       ['claro_resource_load_embedded', {id: slug, embedded: embedded ? 1 : 0}] :
       ['claro_resource_load', {id: slug}],

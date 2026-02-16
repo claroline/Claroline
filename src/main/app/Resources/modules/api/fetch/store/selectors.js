@@ -33,9 +33,18 @@ const data = createSelector(
   (state, storeName) => get(state, storeName+'.data', null)
 )
 
+const invalidated = createSelector(
+  [
+    (state) => state,
+    (state, storeName) => storeName
+  ],
+  (state, storeName) => get(state, storeName+'.invalidated', null)
+)
+
 export const selectors = {
   status,
   errorCode,
   error,
-  data
+  data,
+  invalidated
 }

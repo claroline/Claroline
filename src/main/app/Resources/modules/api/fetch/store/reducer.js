@@ -16,15 +16,15 @@ const defaultState = {
   status: constants.STATUS_IDLE,
   errorCode: null,
   error: null,
-  data: null
+  data: null,
+  invalidated: false
 }
 
 const baseReducer = {
   status: makeInstanceReducer(defaultState.status, {
     [API_FETCH_PENDING]: () => constants.STATUS_PENDING,
     [API_FETCH_FULFILLED]: () => constants.STATUS_SUCCEEDED,
-    [API_FETCH_FAILED]: () => constants.STATUS_FAILED,
-    [API_FETCH_INVALIDATE]: () => constants.STATUS_IDLE
+    [API_FETCH_FAILED]: () => constants.STATUS_FAILED
   }),
 
   errorCode: makeInstanceReducer(defaultState.errorCode, {
@@ -37,9 +37,12 @@ const baseReducer = {
     [API_FETCH_FAILED]: (state, action) => action.error
   }),
 
-  /**
-   * Reduces the data of the form.
-   */
+  invalidated: makeInstanceReducer(defaultState.invalidated, {
+    [API_FETCH_INVALIDATE]: () => true,
+    [API_FETCH_FULFILLED]: () => false,
+    [API_FETCH_FAILED]: () => false
+  }),
+
   data: makeInstanceReducer(defaultState.data, {
     [API_FETCH_FULFILLED]: (state, action) => action.response,
     [API_FETCH_FAILED]: (state, action) => action.data || state,
