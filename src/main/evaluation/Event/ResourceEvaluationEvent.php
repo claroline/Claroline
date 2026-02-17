@@ -3,8 +3,8 @@
 namespace Claroline\EvaluationBundle\Event;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\EvaluationBundle\Entity\UserEvaluation\ResourceEvaluation;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**

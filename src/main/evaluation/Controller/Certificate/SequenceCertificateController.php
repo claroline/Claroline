@@ -153,9 +153,28 @@ class SequenceCertificateController
         }
 
         $certificateFiles = [];
+
         foreach ($sequenceEvaluations as $evaluation) {
-            if (in_array($evaluation->getStatus(), [EvaluationStatus::COMPLETED, EvaluationStatus::PASSED]) && $this->checkPermission('OPEN', $evaluation)) {
-                $certificateFiles[] = $this->certificateManager->getCertificate($evaluation, $regenerate);
+            if (
+                in_array($evaluation->getStatus(), [EvaluationStatus::COMPLETED, EvaluationStatus::PASSED], true)
+                && $this->checkPermission('OPEN', $evaluation)
+            ) {
+                $path = $this->certificateManager->getCertificate($evaluation, $regenerate);
+
+                $evaluationUserName =
+                    $evaluation->getUser()->getLastName().'-'.$evaluation->getUser()->getFirstName();
+
+                $filenameInZip = TextNormalizer::toKey($evaluationUserName.'-'.$sequence->getCode()).'.pdf';
+
+                // ensure single name file for 2 same username
+                $base = $filenameInZip;
+                $i = 2;
+                while (in_array($filenameInZip, $certificateFiles, true)) {
+                    $filenameInZip = preg_replace('/\.pdf$/', '', $base)."-{$i}.pdf";
+                    ++$i;
+                }
+
+                $certificateFiles[$path] = $filenameInZip;
             }
         }
 
@@ -168,13 +187,16 @@ class SequenceCertificateController
 
             return new BinaryFileResponse($archive, 200, [
                 'Content-Type' => 'application/zip',
-                'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($sequence->getName()).'.zip',
+                'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($sequence->getCode()).'.zip',
             ]);
         }
 
-        return new BinaryFileResponse($certificateFiles[0], 200, [
+        $singlePath = array_key_first($certificateFiles);
+        $singleName = $certificateFiles[$singlePath];
+
+        return new BinaryFileResponse($singlePath, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($sequence->getName()).'.pdf',
+            'Content-Disposition' => 'attachment; filename='.$singleName,
         ]);
     }
 }
