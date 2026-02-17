@@ -29,5 +29,6 @@
 
   "copy_course_confirm_message": "{1} Are you sure you want to copy this training ? | [2,Inf[ Are you sure you want to copy these %count% trainings?",
   "copy_session_confirm_message": "{1} Are you sure you want to copy this session ? | [2,Inf[ Are you sure you want to copy these %count% sessions?",
-  "copy_event_confirm_message": "{1} Are you sure you want to copy this event ? | [2,Inf[ Are you sure you want to copy these %count% events?"
+  "copy_event_confirm_message": "{1} Are you sure you want to copy this event ? | [2,Inf[ Are you sure you want to copy these %count% events?",
+  "copy_presence_link": "Copy Presence Link"
 }
