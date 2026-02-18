@@ -141,6 +141,7 @@ class DataInput extends Component {
         // the props to pass to the input
         merge({}, this.props.options, {
           id: this.props.id,
+          className: this.props.inputClassName,
           label: this.props.label,
           value: this.props.value,
           error: this.props.error,
@@ -184,6 +185,7 @@ class DataInput extends Component {
 DataInput.propTypes = {
   id: T.string.isRequired,
   className: T.string,
+  inputClassName: T.string,
   type: T.string,
   label: T.string,
   icon: T.string,

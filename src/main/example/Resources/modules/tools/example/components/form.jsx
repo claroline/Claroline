@@ -44,6 +44,13 @@ const ExampleForm = () =>
                 required: true,
                 options: {long: true}
               }, {
+                name: 'longTextResize',
+                label: 'Long text (Fit content)',
+                type: 'string',
+                placeholder: 'My placeholder',
+                required: true,
+                options: {long: true, autoResize: true, minRows: 1}
+              }, {
                 name: 'htmlText',
                 label: 'HTML text',
                 type: 'html',
