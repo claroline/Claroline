@@ -60,6 +60,14 @@ const SequenceEditorOverview = () => {
                 minRows: 2
               }
             }, {
+              name: 'estimatedDuration',
+              label: trans('estimated_duration'),
+              help: trans('estimated_duration_help'),
+              type: 'number',
+              options: {
+                unit: trans('minutes')
+              }
+            },{
               name: 'meta.descriptionHtml',
               label: trans('description_long'),
               type: 'html',
