@@ -4,9 +4,11 @@ import {CLIPBOARD_BUTTON} from '#/main/app/buttons'
 import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {declareAction} from '#/main/app/action'
+import {route as toolRoute} from '#/main/core/tool/routing'
 
 export default declareAction((events, refresher, path) => {
-  const presenceUrl = window.location.href.split(path)[0] + '/desktop/trainings/presence/' + get(events[0], 'code')
+  const toolPath = toolRoute('trainings')
+  const presenceUrl = `${window.location.href.split(path)[0]}${toolPath}/presence/${get(events[0], 'code')}`
 
   return {
     name: 'copy-presence-link',
