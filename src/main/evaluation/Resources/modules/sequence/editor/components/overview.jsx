@@ -2,7 +2,7 @@ import React from 'react'
 import {useSelector} from 'react-redux'
 import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl'
+import {trans, transChoice} from '#/main/app/intl'
 
 import {selectors} from '#/main/evaluation/sequence/editor/store'
 import {EditorOverview} from '#/main/app/editor/components/overview'
@@ -62,7 +62,11 @@ const SequenceEditorOverview = () => {
             }, {
               name: 'estimatedDuration',
               label: trans('estimated_duration'),
-              help: trans('estimated_duration_help'),
+              help: `${trans('estimated_duration_help')} ${transChoice(
+                'estimated_resource_duration',
+                get(sequence, 'resourceDuration', 0),
+                { count: get(sequence, 'resourceDuration', 0) }, 'sequence'
+              )}`,
               type: 'number',
               options: {
                 unit: trans('minutes')

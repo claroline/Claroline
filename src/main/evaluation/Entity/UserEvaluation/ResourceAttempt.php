@@ -14,8 +14,8 @@ namespace Claroline\EvaluationBundle\Entity\UserEvaluation;
 use Claroline\AppBundle\API\Attribute\CrudEntity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\EvaluationBundle\Finder\ResourceAttemptType;
-use Doctrine\DBAL\Types\Types;
 use Claroline\EvaluationBundle\Repository\UserEvaluation\ResourceAttemptRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

@@ -272,6 +272,17 @@ class Sequence implements CrudEntityInterface, UserViewCounterInterface
         return false;
     }
 
+    public function getRessourcesDuration(): int
+    {
+        $total = 0;
+
+        foreach ($this->getSteps() as $step) {
+            $total += $step->getResource()?->getEstimatedDuration() ?? 0;
+        }
+
+        return $total;
+    }
+
     public function getScoreTotal(): ?float
     {
         return $this->scoreTotal;
