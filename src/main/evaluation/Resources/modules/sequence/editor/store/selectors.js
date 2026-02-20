@@ -37,11 +37,12 @@ const steps = createSelector(
 const totalEstimatedDuration = createSelector(
   [steps],
   (steps) => {
-    const sum = (stepsList = []) =>
-      stepsList.reduce((total, step) => {
-        const own = step?.primaryResource?.estimatedDuration ?? 0
-        const children = sum(step?.children ?? [])
-        return total + own + children
+    const sum = (stepsList) =>
+      (stepsList || []).reduce((total, step) => {
+        const primary = step && step.primaryResource
+        const own = (primary && primary.estimatedDuration) ? primary.estimatedDuration : 0
+        const children = step && step.children ? step.children : []
+        return total + own + sum(children)
       }, 0)
 
     return sum(steps)
