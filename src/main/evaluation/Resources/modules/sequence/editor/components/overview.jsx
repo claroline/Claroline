@@ -10,6 +10,7 @@ import {EditorOverview} from '#/main/app/editor/components/overview'
 const SequenceEditorOverview = () => {
   const workspace = useSelector(selectors.workspace)
   const sequence = useSelector(selectors.data)
+  const totalEstimatedDuration = useSelector(selectors.totalEstimatedDuration)
 
   return (
     <EditorOverview
@@ -62,11 +63,14 @@ const SequenceEditorOverview = () => {
             }, {
               name: 'estimatedDuration',
               label: trans('estimated_duration'),
-              help: `${trans('estimated_duration_help')} ${transChoice(
-                'estimated_resource_duration',
-                get(sequence, 'resourceDuration', 0),
-                { count: get(sequence, 'resourceDuration', 0) }, 'sequence'
-              )}`,
+              help:
+                `${trans('estimated_duration_help')}<br/>` +
+                transChoice(
+                  'estimated_resource_duration',
+                  totalEstimatedDuration,
+                  { duration: totalEstimatedDuration },
+                  'sequence'
+                ),
               type: 'number',
               options: {
                 unit: trans('minutes')

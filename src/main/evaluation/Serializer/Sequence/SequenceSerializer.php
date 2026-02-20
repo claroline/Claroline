@@ -111,7 +111,6 @@ class SequenceSerializer
                 return $this->stepSerializer->serialize($step, $options);
             }, $sequence->getRootSteps())),
             'estimatedDuration' => $sequence->getEstimatedDuration(),
-            'resourceDuration' => $sequence->getRessourcesDuration(),
             'objective' => $sequence->getObjective(),
             'evaluation' => [
                 'certified' => $sequence->isCertified(),
