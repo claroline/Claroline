@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import omit from 'lodash/omit'
 
 const Textarea = (props) => {
   // the data attribute on the container is used by a CSS trick to make the height of the textarea fit its content
@@ -10,7 +11,7 @@ const Textarea = (props) => {
       'textarea-resize-container': props.autoResize
     })} data-textarea-content={props.value || ''}>
       <textarea
-        {...props}
+        {...omit(props, 'size', 'minRows', 'autoResize')}
         className={classes('form-control', props.className, {
           [`form-control-${props.size}`]: !!props.size,
           'scroller-thin': !props.autoResize
