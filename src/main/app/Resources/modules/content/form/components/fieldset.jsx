@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
@@ -60,7 +60,7 @@ class FormFieldset extends Component {
 
       let customInput
       if (field.component) {
-        customInput = field.component
+        customInput = createElement(field.component, this.props)
       } else if (field.render) {
         customInput = field.render(this.props.data, this.props.errors)
       }
@@ -82,6 +82,7 @@ class FormFieldset extends Component {
           recommended={field.recommended}
           disabled={this.props.disabled || (typeof field.disabled === 'function' ? field.disabled(this.props.data) : field.disabled)}
           autoFocus={field.autoFocus}
+          additional={field.additional}
 
           value={value}
           error={get(this.props.errors, field.name)}

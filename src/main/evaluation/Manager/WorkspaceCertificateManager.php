@@ -78,9 +78,16 @@ class WorkspaceCertificateManager
         $tmpFile = $this->tempFileManager->generate();
 
         $archive = $this->archiveManager->create($tmpFile, new FileBag());
-        foreach ($certificateFiles as $certificate) {
-            $archive->addFromString(basename($certificate), file_get_contents($certificate));
+
+        foreach ($certificateFiles as $path => $nameInZip) {
+            $nameInZip = trim($nameInZip);
+            if ('' === $nameInZip) {
+                $nameInZip = basename($path);
+            }
+
+            $archive->addFromString($nameInZip, file_get_contents($path));
         }
+
         $archive->close();
 
         return $tmpFile;

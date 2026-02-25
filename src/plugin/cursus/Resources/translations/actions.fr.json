@@ -45,5 +45,6 @@
 
   "copy_course_confirm_message":"{1} Êtes-vous sûr(e) de vouloir copier cette formation ? | [2,Inf[ Êtes-vous sûr(e) de vouloir copier ces %count% formations ?",
   "copy_session_confirm_message":"{1} Êtes-vous sûr(e) de vouloir copier cette session  ? | [2,Inf[ Êtes-vous sûr(e) de vouloir copier ces %count% sessions ?",
-  "copy_event_confirm_message":"{1} Êtes-vous sûr(e) de vouloir copier cette séance  ? | [2,Inf[ Êtes-vous sûr(e) de vouloir copier ces %count% séances ?"
+  "copy_event_confirm_message":"{1} Êtes-vous sûr(e) de vouloir copier cette séance  ? | [2,Inf[ Êtes-vous sûr(e) de vouloir copier ces %count% séances ?",
+  "copy_presence_link": "Copier le lien de présence"
 }

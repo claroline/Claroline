@@ -75,9 +75,11 @@ registry.add('ClarolineCursusBundle', {
       'export-presence-empty' : () => { return import(/* webpackChunkName: "training-action-event-presence-empty" */  '#/plugin/cursus/actions/event/export-presence-empty') },
       'export-presence-filled': () => { return import(/* webpackChunkName: "training-action-event-presence-filled" */ '#/plugin/cursus/actions/event/export-presence-filled') },
       'copy'                  : () => { return import(/* webpackChunkName: "training-action-event-copy" */            '#/plugin/cursus/actions/event/copy') },
+      'copy-presence-link'    : () => { return import(/* webpackChunkName: "training-action-event-copy-presence-link" */       '#/plugin/cursus/actions/event/copy-presence-link') },
       'delete'                : () => { return import(/* webpackChunkName: "training-action-event-delete" */          '#/plugin/cursus/actions/event/delete') },
       'confirm-status'        : () => { return import(/* webpackChunkName: "training-action-event-confirm-status" */  '#/plugin/cursus/actions/event/confirm-status') },
       'add-users'             : () => { return import(/* webpackChunkName: "training-action-event-add-users" */       '#/plugin/cursus/actions/event/add-users') }
+
     },
     training_event_registration: {
       'open'                   : () => { return import(/* webpackChunkName: "training-action-event_registration-open" */   '#/plugin/cursus/actions/event_registration/open') },

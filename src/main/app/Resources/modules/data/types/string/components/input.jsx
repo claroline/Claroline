@@ -1,10 +1,11 @@
 import React, {PureComponent} from 'react'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {getValidationClassName} from '#/main/app/content/form/validator'
-import isEmpty from 'lodash/isEmpty'
+import {Textarea} from '#/main/app/input/components/textarea'
 
 class StringInput extends PureComponent {
   constructor(props) {
@@ -20,12 +21,8 @@ class StringInput extends PureComponent {
   render() {
     const commonProps = {
       id: this.props.id,
-      className: classes('form-control', this.props.className, getValidationClassName(this.props.error), {
-        [`form-control-${this.props.size}`]: !!this.props.size
-      }),
       value: this.props.value || '',
       disabled: this.props.disabled,
-      onChange: this.onChange,
       placeholder: this.props.placeholder,
       autoComplete: this.props.autoComplete,
       autoFocus: this.props.autoFocus,
@@ -35,10 +32,13 @@ class StringInput extends PureComponent {
 
     if (this.props.long) {
       return (
-        <textarea
+        <Textarea
           {...commonProps}
-          className={classes(commonProps.className, 'scroller-thin')}
-          rows={this.props.minRows}
+          className={classes(this.props.className, getValidationClassName(this.props.error))}
+          size={this.props.size}
+          minRows={this.props.minRows}
+          autoResize={this.props.autoResize}
+          onChange={this.props.onChange}
         />
       )
     }
@@ -46,7 +46,11 @@ class StringInput extends PureComponent {
     return (
       <input
         {...commonProps}
+        className={classes('form-control', this.props.className, getValidationClassName(this.props.error), {
+          [`form-control-${this.props.size}`]: !!this.props.size
+        })}
         type="text"
+        onChange={this.onChange}
       />
     )
   }
@@ -56,12 +60,14 @@ implementPropTypes(StringInput, DataInputTypes, {
   value: T.string,
   long: T.bool,
   minRows: T.number,
+  autoResize: T.bool,
   minLength: T.number,
   maxLength: T.number
 }, {
   value: '',
   long: false,
-  minRows: 4
+  minRows: 4,
+  autoResize: true
 })
 
 export {

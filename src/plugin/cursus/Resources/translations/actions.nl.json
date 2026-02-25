@@ -27,5 +27,6 @@
     "copy_session_confirm_title": "{1} Kopie van een sessie | [2,Inf[ Kopie van meerdere sessies",
     "copy_session_confirm_message": "{1} Weet u zeker dat u deze sessie wilt kopiëren? | [2,Inf[ Weet u zeker dat u deze %count% sessies wilt kopiëren?",
     "copy_event_confirm_title": "{1} Kopie van een sessie | [2,Inf[ Kopie van meerdere sessies",
-    "copy_event_confirm_message": "{1} Weet u zeker dat u deze sessie wilt kopiëren? | [2,Inf[ Weet u zeker dat u deze %count% sessies wilt kopiëren?"
+    "copy_event_confirm_message": "{1} Weet u zeker dat u deze sessie wilt kopiëren? | [2,Inf[ Weet u zeker dat u deze %count% sessies wilt kopiëren?",
+    "copy_presence_link": "Kopieer de aanwezigheidslink"
 }

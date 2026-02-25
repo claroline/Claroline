@@ -60,7 +60,7 @@ const loadedReducer = makeInstanceReducer(defaultState.loaded, {
 })
 
 const errorReducer = makeInstanceReducer(defaultState.error, {
-  [LIST_DATA_LOAD]: () => true,
+  [LIST_DATA_LOAD]: () => null,
   [LIST_SET_ERROR]: (state, action) => ({
     code: action.code.toUpperCase(),
     message: action.message,

@@ -84,7 +84,7 @@ const WorkspaceErrorNotRegistered = ({contentName, backAction, contactEmail, sel
       }) : null}
       primaryAction={{
         type: ASYNC_BUTTON,
-        label: trans('restricted_workspace.self_register', {}, 'workspace'),
+        label: trans('self_register_workspace', {}, 'actions'),
         async: registerToWorkspace
       }}
       backAction={backAction}
