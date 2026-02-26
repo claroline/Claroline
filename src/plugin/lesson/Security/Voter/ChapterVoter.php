@@ -40,13 +40,24 @@ class ChapterVoter extends AbstractVoter
                     }
 
                     return VoterInterface::ACCESS_DENIED;
-
                 case self::OPEN: // member of organization & OPEN right on tool
-                    if ($this->isGranted('OPEN', $parentNode)) {
+                    if (!$this->isGranted('OPEN', $parentNode)) {
+                        return VoterInterface::ACCESS_DENIED;
+                    }
+
+                    if ($this->isGranted('EDIT', $parentNode)) {
                         return VoterInterface::ACCESS_GRANTED;
                     }
 
-                    return VoterInterface::ACCESS_DENIED;
+                    $chapter = $object;
+                    while (null !== $chapter) {
+                        if (!$chapter->isPublished()) {
+                            return VoterInterface::ACCESS_DENIED;
+                        }
+                        $chapter = $chapter->getParent();
+                    }
+
+                    return VoterInterface::ACCESS_GRANTED;
             }
         }
 

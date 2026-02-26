@@ -81,6 +81,11 @@ const ChapterForm = () => {
                   }
                 }
               }, {
+                name: 'meta.published',
+                label: trans('publish_chapter', {}, 'lesson'),
+                type: 'boolean',
+                help: trans('publish_chapter_help', {}, 'lesson')
+              }, {
                 name: 'tags',
                 label: trans('tags'),
                 type: 'tag'
