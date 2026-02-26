@@ -31,6 +31,12 @@ class Lesson extends AbstractResource
     private bool $navigation = false;
 
     /**
+     * Display the summary opened as default.
+     */
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $openSummary = false;
+
+    /**
      * Numbering of the chapters.
      */
     #[ORM\Column]
@@ -77,6 +83,16 @@ class Lesson extends AbstractResource
     public function setNavigation(bool $navigation): void
     {
         $this->navigation = $navigation;
+    }
+
+    public function getOpenSummary(): bool
+    {
+        return $this->openSummary;
+    }
+
+    public function setOpenSummary(bool $openSummary): void
+    {
+        $this->openSummary = $openSummary;
     }
 
     public function getNumbering(): string

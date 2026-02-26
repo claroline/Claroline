@@ -11,5 +11,13 @@
     "move_relation": "Relation with parent chapter",
     "subchapter": "As sub-chapter",
     "sibling": "At the same level",
+<<<<<<< Updated upstream
     "add_internal_note": "Add internal note"
+=======
+    "add_internal_note": "Add internal note",
+    "publish_chapter": "Publish chapter",
+    "publish_chapter_help": "Until the page is published, it and its subpages are only accessible to users with the Edit permission.",
+    "show_summary": "Standaard samenvatting weergeven",
+    "show_summary_help": "Expand the summary of contents on opening."
+>>>>>>> Stashed changes
 }

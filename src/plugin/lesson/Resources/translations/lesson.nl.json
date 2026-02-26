@@ -20,5 +20,13 @@
     "new_subchapter": "Nieuw subhoofdstuk",
     "subchapter": "Als subhoofdstuk",
     "sibling": "Op hetzelfde niveau",
+<<<<<<< Updated upstream
     "start_disabled_empty": "De cursus is leeg."
+=======
+    "start_disabled_empty": "De cursus is leeg.",
+    "publish_chapter": "Publiceer de pagina",
+    "publish_chapter_help": "Totdat de pagina is gepubliceerd, zijn deze en de bijbehorende subpagina's alleen toegankelijk voor gebruikers met de 'Bewerken'-machtiging.",
+    "show_summary": "Toon standaardoverzicht",
+    "show_summary_help": "Vouw de inhoudsopgave uit bij het openen van de pagina."
+>>>>>>> Stashed changes
 }

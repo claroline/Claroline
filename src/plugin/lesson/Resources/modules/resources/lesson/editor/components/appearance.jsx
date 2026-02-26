@@ -38,6 +38,11 @@ const LessonEditorAppearance = () =>
             label: trans('show_navigation', {}, 'lesson'),
             help: trans('show_navigation_help', {}, 'lesson'),
             displayed: (formData) => 'none' !== get(formData, 'resource.display.pagination')
+          },{
+            name: 'resource.display.showSummary',
+            type: 'boolean',
+            label: trans('show_summary', {}, 'lesson'),
+            help: trans('show_summary_help', {}, 'lesson')
           }, {
             name: 'resource.display.showMeta',
             type: 'boolean',
