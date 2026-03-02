@@ -22,17 +22,17 @@ use JVal\Walker;
  */
 class DependenciesConstraint implements Constraint
 {
-    public function keywords()
+    public function keywords(): array
     {
         return ['dependencies'];
     }
 
-    public function supports($type)
+    public function supports($type): bool
     {
         return Types::TYPE_OBJECT === $type;
     }
 
-    public function normalize(\stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker): void
     {
         $context->enterNode('dependencies');
 
@@ -46,7 +46,8 @@ class DependenciesConstraint implements Constraint
             if (is_object($value)) {
                 $walker->parseSchema($value, $context);
             } elseif (is_array($value)) {
-                if (0 === $propertyCount = count($value)) {
+                $propertyCount = count($value);
+                if (0 === $propertyCount) {
                     throw new EmptyArrayException($context);
                 }
 
@@ -71,7 +72,7 @@ class DependenciesConstraint implements Constraint
         $context->leaveNode();
     }
 
-    public function apply($instance, \stdClass $schema, Context $context, Walker $walker)
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker): void
     {
         foreach ($schema->dependencies as $property => $value) {
             if (property_exists($instance, $property)) {

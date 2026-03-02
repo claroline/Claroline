@@ -22,17 +22,17 @@ use JVal\Walker;
  */
 class ClarolineConstraint implements Constraint
 {
-    public function keywords()
+    public function keywords(): array
     {
         return ['claroline'];
     }
 
-    public function supports($type)
+    public function supports($type): bool
     {
         return Types::TYPE_OBJECT === $type;
     }
 
-    public function normalize(\stdClass $schema, Context $context, Walker $walker)
+    public function normalize(\stdClass $schema, Context $context, Walker $walker): void
     {
         $context->enterNode('claroline');
 
@@ -41,7 +41,8 @@ class ClarolineConstraint implements Constraint
                 throw new InvalidTypeException($context, Types::TYPE_ARRAY);
             }
 
-            if (0 === $requiredCount = count($schema->requiredAtCreation)) {
+            $requiredCount = count($schema->requiredAtCreation);
+            if (0 === $requiredCount) {
                 throw new EmptyArrayException($context);
             }
 
@@ -61,7 +62,7 @@ class ClarolineConstraint implements Constraint
         $context->leaveNode();
     }
 
-    public function apply($instance, \stdClass $schema, Context $context, Walker $walker, array $options = [])
+    public function apply($instance, \stdClass $schema, Context $context, Walker $walker, ?array $options = []): void
     {
         if (isset($schema->claroline)) {
             if (isset($schema->claroline->requiredAtCreation) && in_array('create', $options)) {
@@ -72,7 +73,7 @@ class ClarolineConstraint implements Constraint
         }
     }
 
-    private function applyRequired($instance, \stdClass $schema, Context $context, Walker $walker, array $options = [])
+    private function applyRequired($instance, \stdClass $schema, Context $context, Walker $walker, ?array $options = []): void
     {
         foreach ($schema->requiredAtCreation as $property) {
             if (in_array('create', $options) && !property_exists($instance, $property)) {
