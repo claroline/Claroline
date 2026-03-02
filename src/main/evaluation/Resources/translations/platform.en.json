@@ -1,4 +1,5 @@
 {
   "evaluation": "Learning Report",
-  "estimated_duration": "Estimated duration"
+  "estimated_duration": "Estimated duration",
+  "estimated_duration_help": "Estimate the time required to access the content or complete the activity."
 }

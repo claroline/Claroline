@@ -4,5 +4,7 @@
   "evaluation_incomplete_status": "Vous n'avez pas encore terminé la séquence.",
   "evaluation_failed_status": "Malheureusement vous n'avez pas réussi la séquence.",
   "evaluation_completed_status": "Félicitations ! Vous avez terminé la séquence.",
-  "evaluation_passed_status": "Félicitations ! Vous avez réussi la séquence."
+  "evaluation_passed_status": "Félicitations ! Vous avez réussi la séquence.",
+  "estimated_resource_duration": "Durée calculée de l'ensemble des ressources du parcours: %duration% min.",
+  "use_calculated_duration": "Utiliser cette durée"
 }

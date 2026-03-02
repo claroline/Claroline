@@ -64,6 +64,7 @@ class ResourceNodeSerializer
                 'name' => $resourceNode->getName(),
                 'code' => $resourceNode->getCode(),
                 'poster' => $resourceNode->getPoster(),
+                'estimatedDuration' => $resourceNode->getEstimatedDuration(),
                 'meta' => [
                     'description' => $resourceNode->getDescription(),
                     'public' => $resourceNode->isPublic(),

@@ -35,6 +35,7 @@ class LessonSerializer
                 'numbering' => $lesson->getNumbering(),
                 'pagination' => $lesson->getPagination(),
                 'navigation' => $lesson->hasNavigation(),
+                'showSummary' => $lesson->getOpenSummary(),
             ],
         ];
     }
@@ -52,6 +53,7 @@ class LessonSerializer
         $this->sipe('display.numbering', 'setNumbering', $data, $lesson);
         $this->sipe('display.pagination', 'setPagination', $data, $lesson);
         $this->sipe('display.navigation', 'setNavigation', $data, $lesson);
+        $this->sipe('display.showSummary', 'setOpenSummary', $data, $lesson);
 
         return $lesson;
     }

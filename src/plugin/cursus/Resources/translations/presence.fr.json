@@ -19,7 +19,7 @@
   "event_not_found_retry": "Saisir à nouveau le code de la séance",
   "event_presence_label": "Entrer vos nom et prénom",
 
-  "event_not_registered": "Vous n'êtes pas incrit à cette séance",
+  "event_not_registered": "Vous n'êtes pas inscrit à cette séance",
   "event_not_registered_desc": "Vous devez être inscrit à cette séance pour confirmer votre présence.",
 
   "not_registered": "Connexion requise",

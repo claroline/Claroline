@@ -120,13 +120,6 @@ const SequenceEditorStep = props => {
                 workspace: workspace
               }
             }, {
-              name: 'estimatedDuration',
-              label: trans('estimated_duration'),
-              type: 'number',
-              options: {
-                unit: trans('minutes')
-              }
-            }, {
               name: 'objective',
               label: trans('objective', {}, 'evaluation'),
               type: 'html',

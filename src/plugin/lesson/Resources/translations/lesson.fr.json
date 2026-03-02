@@ -24,5 +24,7 @@
     "no_page_manager_help": "Créez une nouvelle page pour commencer à ajouter du contenu à votre connaissance.",
     "internal_note": "Note interne",
     "publish_chapter": "Publier la page",
-    "publish_chapter_help": "Temps que la page n'est pas publiée, celle-ci et ses sous-pages sont uniquement accessibles aux utilisateurs ayant la permission Modifier."
+    "publish_chapter_help": "Temps que la page n'est pas publiée, celle-ci et ses sous-pages sont uniquement accessibles aux utilisateurs ayant la permission Modifier.",
+    "show_summary": "Afficher le sommaire par défaut",
+    "show_summary_help": "Déployer le sommaire à l'ouverture."
 }

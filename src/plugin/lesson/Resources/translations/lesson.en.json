@@ -13,5 +13,7 @@
     "sibling": "At the same level",
     "add_internal_note": "Add internal note",
     "publish_chapter": "Publish chapter",
-    "publish_chapter_help": "Until the page is published, it and its subpages are only accessible to users with the Edit permission."
+    "publish_chapter_help": "Until the page is published, it and its subpages are only accessible to users with the Edit permission.",
+    "show_summary": "Standaard samenvatting weergeven",
+    "show_summary_help": "Expand the summary of contents on opening."
 }
