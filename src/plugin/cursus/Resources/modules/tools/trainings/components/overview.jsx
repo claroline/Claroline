@@ -19,7 +19,7 @@ const TrainingsOverview = () => {
     <ToolOverview>
       <PageSection size="lg">
         <Button
-          className="btn btn-primary ms-auto mt-5 mb-5"
+          className="btn btn-primary ms-auto mt-5"
           type={LINK_BUTTON}
           label={trans('presence_confirm', {}, 'presence')}
           target={`${toolPath}/presence`}

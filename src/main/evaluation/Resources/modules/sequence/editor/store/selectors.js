@@ -34,6 +34,21 @@ const steps = createSelector(
   (data) => data.steps || []
 )
 
+const totalEstimatedDuration = createSelector(
+  [steps],
+  (steps) => {
+    const sum = (stepsList) =>
+      (stepsList || []).reduce((total, step) => {
+        const primary = step && step.primaryResource
+        const own = (primary && primary.estimatedDuration) ? primary.estimatedDuration : 0
+        const children = step && step.children ? step.children : []
+        return total + own + sum(children)
+      }, 0)
+
+    return sum(steps)
+  }
+)
+
 const assignments = createSelector(
   [data],
   (data) => data.assignments || []
@@ -57,6 +72,7 @@ export const selectors = {
   workspace,
   workspaceId,
   steps,
+  totalEstimatedDuration,
   assignments,
   requirements,
   numbering

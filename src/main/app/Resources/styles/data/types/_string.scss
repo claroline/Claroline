@@ -1,5 +1,51 @@
-/*.string-cell {
-  white-space: nowrap;
+input[type=text].form-control {
   text-overflow: ellipsis;
-  overflow: hidden;
-}*/
+}
+
+.textarea-resize-container {
+  /* This is the wrapper element around the `<textarea>` */
+  display: grid;
+
+  &:after {
+    /* Note the weird space! Needed to prevent jumpy behavior */
+    content: attr(data-textarea-content) " ";
+    /* This is how `<textarea>` text behaves */
+    white-space: pre-wrap;
+    /* Hidden from view, clicks, and screen readers */
+    visibility: hidden;
+
+    /* Give the same styles than textarea to replicate the sizing */
+    min-height: $input-height;
+    padding: $input-padding-y $input-padding-x;
+    font-family: $input-font-family;
+    @include font-size($input-font-size);
+    font-weight: $input-font-weight;
+    line-height: $input-line-height;
+    border: $input-border-width solid;
+
+    /* textarea and ::after should occupy the first (and only) cell of the grid: */
+    grid-area: 1 / 1 / 2 / 2;
+  }
+
+  textarea {
+    /* You could leave this, but after a user resizes, then it ruins the auto sizing */
+    resize: none;
+    /* Firefox shows scrollbar on growth, you can hide like this. */
+    overflow: hidden;
+
+    /* textarea and ::after should occupy the first (and only) cell of the grid: */
+    grid-area: 1 / 1 / 2 / 2;
+  }
+}
+
+.textarea-container-sm:after {
+  min-height: $input-height-sm;
+  padding: $input-padding-y-sm $input-padding-x-sm;
+  @include font-size($input-font-size-sm);
+}
+
+.textarea-container-lg:after {
+  min-height: $input-height-lg;
+  padding: $input-padding-y-lg $input-padding-x-lg;
+  @include font-size($input-font-size-lg);
+}

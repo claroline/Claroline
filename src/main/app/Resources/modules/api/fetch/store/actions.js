@@ -46,6 +46,7 @@ actions.fetch = (name, url, silent = false, silentError = false) => (dispatch) =
     error: (response, errorStatus) => {
       if (typeof response === 'object' && response.error) {
         const data = response.data ? response.data : omit(response, 'error')
+
         return dispatch(actions.fail(name, response.error, errorStatus, data))
       }
 

@@ -137,24 +137,31 @@ class DataInput extends Component {
     }
 
     if (this.state.input) {
-      return createElement(this.state.input,
-        // the props to pass to the input
-        merge({}, this.props.options, {
-          id: this.props.id,
-          label: this.props.label,
-          value: this.props.value,
-          error: this.props.error,
-          required: this.props.required,
-          help: this.props.help,
-          recommended: this.props.recommended,
-          placeholder: this.props.placeholder,
-          disabled: this.props.disabled,
-          autoComplete: this.props.autoComplete,
-          autoFocus: this.props.autoFocus,
-          size: this.props.size,
-          onChange: this.onChange,
-          onError: this.props.onError || identity
-        })
+      return (
+        <>
+          {createElement(this.state.input,
+            // the props to pass to the input
+            merge({}, this.props.options, {
+              id: this.props.id,
+              className: this.props.inputClassName,
+              label: this.props.label,
+              value: this.props.value,
+              error: this.props.error,
+              required: this.props.required,
+              help: this.props.help,
+              recommended: this.props.recommended,
+              placeholder: this.props.placeholder,
+              disabled: this.props.disabled,
+              autoComplete: this.props.autoComplete,
+              autoFocus: this.props.autoFocus,
+              size: this.props.size,
+              onChange: this.onChange,
+              onError: this.props.onError || identity
+            })
+          )}
+
+          {this.props.additional}
+        </>
       )
     }
   }
@@ -184,6 +191,7 @@ class DataInput extends Component {
 DataInput.propTypes = {
   id: T.string.isRequired,
   className: T.string,
+  inputClassName: T.string,
   type: T.string,
   label: T.string,
   icon: T.string,
@@ -214,6 +222,7 @@ DataInput.propTypes = {
   onError: T.func,
 
   // customization
+  additional: T.node,
   // It will replace the render of the input.
   children: T.node,
   render: T.func

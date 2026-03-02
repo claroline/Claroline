@@ -62,7 +62,6 @@ class StepSerializer
             'poster' => $step->getPoster(),
             'description' => $step->getDescription(),
             'primaryResource' => $step->getResource() ? $this->resourceNodeSerializer->serialize($step->getResource(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
-            'estimatedDuration' => $step->getEstimatedDuration(),
             'objective' => $step->getObjective(),
             'secondaryResources' => array_map(function (SecondaryResource $secondaryResource) {
                 return $this->resourceNodeSerializer->serialize($secondaryResource->getResource(), [SerializerInterface::SERIALIZE_MINIMAL]);
@@ -96,7 +95,6 @@ class StepSerializer
         $this->sipe('scored', 'setScored', $data, $step);
         $this->sipe('display.numbering', 'setNumbering', $data, $step);
 
-        $this->sipe('estimatedDuration', 'setEstimatedDuration', $data, $step);
         $this->sipe('objective', 'setObjective', $data, $step);
 
         $this->sipe('evaluation.required', 'setRequired', $data, $step);

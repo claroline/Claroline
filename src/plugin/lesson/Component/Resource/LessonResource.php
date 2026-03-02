@@ -42,13 +42,43 @@ final class LessonResource extends ResourceComponent implements DownloadableReso
     /** @param Lesson $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
-        $internalNotes = $this->authorization->isGranted('VIEW_INTERNAL_NOTES', $resource->getResourceNode());
-        $chapters = $this->om->getRepository(Chapter::class)->getChildren($resource->getRoot(), false, null, 'ASC', true);
+        $resourceNode = $resource->getResourceNode();
+
+        $internalNotes = $this->authorization->isGranted('VIEW_INTERNAL_NOTES', $resourceNode);
+        $canEdit = $this->authorization->isGranted('EDIT', $resourceNode);
+
+        $chapters = $this->om
+            ->getRepository(Chapter::class)
+            ->getChildren($resource->getRoot(), false, null, 'ASC', true);
+
+        if (!$canEdit) {
+            $publishedChapters = [];
+            $isPublished = function (Chapter $chapter) use (&$isPublished, &$publishedChapters): bool {
+                $id = $chapter->getId();
+                if (isset($publishedChapters[$id])) {
+                    return $publishedChapters[$id];
+                }
+                // A chapter is considered not published if:
+                // - It is not published itself
+                // - OR any of its parents (or ancestors) is not published
+                if (!$chapter->isPublished()) {
+                    return $publishedChapters[$id] = false;
+                }
+                $parent = $chapter->getParent();
+
+                return $publishedChapters[$id] =
+                    $parent ? $isPublished($parent) : true;
+            };
+            $chapters = array_values(array_filter($chapters, $isPublished));
+        }
 
         return [
             'placeholders' => $this->placeholderManager->getAvailablePlaceholders(),
             'chapters' => array_map(function (Chapter $chapter) use ($internalNotes) {
-                return $this->serializer->serialize($chapter, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : []);
+                return $this->serializer->serialize(
+                    $chapter,
+                    $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : []
+                );
             }, $chapters),
         ];
     }

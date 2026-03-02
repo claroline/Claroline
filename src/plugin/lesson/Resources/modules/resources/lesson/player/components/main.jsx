@@ -49,7 +49,7 @@ const LessonPlayer = () => {
   return (
     <ResourcePage>
       {!embedded && 1 < pages.length &&
-        <PageAside closable={true} show={false}>
+        <PageAside closable={true} show={get(lesson, 'display.showSummary', false) }>
           <PlayerSummary
             path={resourcePath}
             title={resourceName}
