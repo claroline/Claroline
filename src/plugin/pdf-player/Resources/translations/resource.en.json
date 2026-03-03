@@ -1,5 +1,9 @@
 {
   "pdf": "PDF",
   "pdf_desc": "Integrate a PDF file.",
-  "count_pages": "{0, 1} %count% page|]1,Inf[ %count% pages"
+  "count_pages": "{0, 1} %count% page|]1,Inf[ %count% pages",
+  "scroll_mode": "Scroll mode",
+  "scroll_page": "Page",
+  "scroll_horizontal": "Horizontal",
+  "scroll_vertical": "Vertical"
 }

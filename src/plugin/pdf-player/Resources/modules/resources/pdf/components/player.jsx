@@ -27,12 +27,13 @@ import {Tree} from '#/main/app/components/tree'
 import {Menu} from '#/main/app/overlays/menu'
 import {PageContent} from '#/main/app/page'
 import {ResourcePage} from '#/main/core/resource'
+import {selectors} from '#/plugin/pdf-player/resources/pdf/store'
+import {useSelector} from 'react-redux'
 
 const MIN_SCALE = 10
 const BASE_SCALE = 100
 const MAX_SCALE = 1000
 const DEFAULT_SCALE = 'auto'
-const DEFAULT_SCROLL_MODE = ScrollMode.PAGE
 
 const SCALES = {
   'auto': trans('pdf_zoom_auto', {}, 'resource'),
@@ -252,7 +253,7 @@ class PdfPlayer extends Component {
       page: 1,
       pages: 1,
       scale: DEFAULT_SCALE,
-      scrollMode: DEFAULT_SCROLL_MODE,
+      scrollMode: props.defaultScrollMode,
       summary: []
     }
 
@@ -423,6 +424,19 @@ PdfPlayer.propTypes = {
   loadFile: T.func.isRequired
 }
 
-export {
-  PdfPlayer
+const PdfPlayerContainer = (props) => {
+  const scrollModeName = useSelector(selectors.pdfPlayerScrollMode)
+  const modeValue = ScrollMode[scrollModeName]
+  const defaultScrollMode = (modeValue === undefined || modeValue === null)
+    ? ScrollMode.PAGE
+    : modeValue
+
+  return (
+    <PdfPlayer
+      {...props}
+      defaultScrollMode={defaultScrollMode}
+    />
+  )
 }
+
+export { PdfPlayerContainer as PdfPlayer }

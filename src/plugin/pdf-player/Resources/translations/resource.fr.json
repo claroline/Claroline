@@ -9,5 +9,9 @@
   "pdf_scroll_mode": "Mode de défilement",
   "pdf_scroll_page": "Page",
   "pdf_scroll_vertical": "Vertical",
-  "pdf_scroll_horizontal": "Horizontal"
+  "pdf_scroll_horizontal": "Horizontal",
+  "scroll_mode": "Mode de défilement",
+  "scroll_page": "Page",
+  "scroll_horizontal": "Horizontal",
+  "scroll_vertical": "Vertical"
 }

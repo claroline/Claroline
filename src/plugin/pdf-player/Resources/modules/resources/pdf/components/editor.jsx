@@ -4,6 +4,7 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {actions, ResourceEditor, ResourceEditorOverview} from '#/main/core/resource/editor'
+import {PdfEditorAppearance} from '#/plugin/pdf-player/resources/pdf/components/appearance'
 
 const PdfEditorOverview = () => {
   const dispatch = useDispatch()
@@ -55,6 +56,7 @@ const PdfEditorOverview = () => {
 const PdfEditor = () =>
   <ResourceEditor
     overviewPage={PdfEditorOverview}
+    appearancePage={PdfEditorAppearance}
   />
 
 export {

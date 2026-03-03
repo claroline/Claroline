@@ -12,6 +12,9 @@ class Pdf extends AbstractResource
     #[ORM\Column(nullable: false)]
     private ?string $url = null;
 
+    #[ORM\Column(nullable: false)]
+    private ?string $scrollMode = 'PAGE';
+
     public function getUrl(): ?string
     {
         return $this->url;
@@ -20,5 +23,15 @@ class Pdf extends AbstractResource
     public function setUrl(string $url): void
     {
         $this->url = $url;
+    }
+
+    public function getScrollMode(): ?string
+    {
+        return $this->scrollMode;
+    }
+
+    public function setScrollMode(string $scrollMode): void
+    {
+        $this->scrollMode = $scrollMode;
     }
 }

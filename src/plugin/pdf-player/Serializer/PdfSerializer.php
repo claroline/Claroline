@@ -32,12 +32,16 @@ class PdfSerializer
     {
         return [
             'url' => $pdf->getUrl(),
+            'display' => [
+                'scrollMode' => $pdf->getScrollMode(),
+            ],
         ];
     }
 
     public function deserialize(array $data, Pdf $pdf, array $options = []): Pdf
     {
         $this->sipe('url', 'setUrl', $data, $pdf);
+        $this->sipe('display.scrollMode', 'setScrollMode', $data, $pdf);
 
         return $pdf;
     }
