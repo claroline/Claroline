@@ -12,6 +12,8 @@ import {
   PDFViewer,
   ScrollMode
 } from 'pdfjs-dist/web/pdf_viewer'
+
+// eslint-disable-next-line
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
   import.meta.url
