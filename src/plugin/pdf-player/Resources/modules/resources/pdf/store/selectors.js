@@ -11,5 +11,5 @@ const pdfPlayerScrollMode = createSelector(
 )
 
 export const selectors = {
-  pdfPlayerScrollMode,
+  pdfPlayerScrollMode
 }
