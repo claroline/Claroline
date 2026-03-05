@@ -105,6 +105,7 @@ class EventType extends AbstractType
             ])
         ;
     }
+
     public function getParent(): ?string
     {
         return EntityType::class;
