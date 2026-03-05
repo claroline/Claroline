@@ -44,11 +44,32 @@ export default (contextType, contextData, refresher, currentUser) => {
         }
       }, {
         name: 'event',
+        alias: 'event.plannedObject.name',
         type: 'training_event',
         label: trans('training_event', {}, 'data_sources'),
         displayed: true,
         filterable: true
       }, {
+        name: 'eventStart',
+        type: 'date',
+        label: trans('start_date'),
+        alias: 'event.plannedObject.startDate',
+        displayed: true,
+        filterable: false,
+        sortable: true,
+        options: { time: true }
+      }, {
+        name: 'end',
+        alias: 'event.plannedObject.endDate',
+        type: 'date',
+        label: trans('end_date'),
+        filterable: false,
+        sortable: true,
+        options: {
+          time: true
+        },
+        displayed: true
+      },  {
         name: 'eventStatus',
         type: 'choice',
         label: trans('event_status', {}, 'presence'),
