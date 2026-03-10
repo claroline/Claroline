@@ -13,12 +13,10 @@ import {
   ScrollMode
 } from 'pdfjs-dist/web/pdf_viewer'
 
-/* eslint-disable */
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
   import.meta.url
 ).toString()
-/* eslint-enable */
 
 import {url} from '#/main/app/api'
 import {toKey} from '#/main/app/utils/text'

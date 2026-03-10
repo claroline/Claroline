@@ -54,7 +54,7 @@ jobs:
 
       - name: "Install ESLint"
         if: ${{ env.DIFF != '' }}
-        run: npm install eslint eslint-plugin-react@7.21.5 --legacy-peer-deps
+        run: npm install eslint@9.39.4 eslint-plugin-react@7.21.5 @eslint/js@9 @eslint/eslintrc@3 globals --legacy-peer-deps
         env:
           DIFF: ${{ steps.diff.outputs.diff_js }}
 
