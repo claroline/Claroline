@@ -248,9 +248,9 @@ PdfMenu.propTypes = {
 class PdfPlayer extends Component {
   constructor(props) {
     super(props)
+    this.viewer = null
 
     this.state = {
-      viewer: null,
       page: 1,
       pages: 1,
       scale: DEFAULT_SCALE,
@@ -312,9 +312,8 @@ class PdfPlayer extends Component {
             this.setState({summary: outline.map(getItem)})
           }
         })
-
+        this.viewer = pdfViewer
         this.setState({
-          pages: pdf.numPages,
           viewer: pdfViewer
         })
       })
@@ -322,12 +321,13 @@ class PdfPlayer extends Component {
   }
 
   resize() {
-    if (!this.state.viewer) {
+    if (!this.viewer) {
       return
     }
 
-    this.state.viewer.scrollMode = this.state.scrollMode
-    this.state.viewer.currentScaleValue = this.state.scale
+    this.viewer.scrollMode = this.state.scrollMode
+    this.viewer.currentScaleValue = this.state.scale
+
   }
 
   renderPage(pageNumber) {
@@ -383,7 +383,7 @@ class PdfPlayer extends Component {
             summary={this.state.summary}
             currentPage={this.state.page}
             pages={this.state.pages}
-            changePage={(newPage) => this.changePage(this.state.viewer, newPage)}
+            changePage={(newPage) => this.changePage(this.viewer, newPage)}
             scaleValue={isNumber(this.state.scale) ? this.state.scale * 100 : this.state.scale}
             zoom={this.zoom}
             scale={this.scale}
@@ -395,7 +395,7 @@ class PdfPlayer extends Component {
           <div
             className="pdf-container position-relative w-100 flex-fill"
             role="presentation"
-            style={{height: get(this.state.viewer, 'container.offsetHeight')}}
+            style={{height: get(this.viewer, 'container.offsetHeight')}}
           >
             <div
               id={'pdf-' + this.props.nodeId}
@@ -422,7 +422,8 @@ PdfPlayer.propTypes = {
   embedded: T.bool,
   updateProgression: T.func.isRequired,
   currentUser: T.object,
-  loadFile: T.func.isRequired
+  loadFile: T.func.isRequired,
+  defaultScrollMode: T.number.isRequired
 }
 
 const PdfPlayerContainer = (props) => {
