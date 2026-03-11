@@ -44,23 +44,34 @@ export default (contextType, contextData, refresher, currentUser) => {
         }
       }, {
         name: 'event',
-        alias: 'event.plannedObject.name',
         type: 'training_event',
-        label: trans('training_event', {}, 'data_sources'),
+        label: trans('session_event', {}, 'cursus'),
         displayed: true,
         filterable: true
       }, {
-        name: 'eventStart',
+        name: 'event.session',
+        type: 'training_session',
+        label: trans('session', {}, 'cursus'),
+        displayable: false,
+        filterable: true,
+        sortable: false
+      }, {
+        name: 'event.session.course',
+        type: 'training_course',
+        label: trans('course', {}, 'cursus'),
+        displayable: false,
+        filterable: true,
+        sortable: false
+      }, {
+        name: 'event.start',
         type: 'date',
         label: trans('start_date'),
-        alias: 'event.plannedObject.startDate',
         displayed: true,
         filterable: false,
         sortable: true,
         options: { time: true }
       }, {
-        name: 'end',
-        alias: 'event.plannedObject.endDate',
+        name: 'event.end',
         type: 'date',
         label: trans('end_date'),
         filterable: false,
@@ -75,6 +86,7 @@ export default (contextType, contextData, refresher, currentUser) => {
         label: trans('event_status', {}, 'presence'),
         alias: 'event.plannedObject.status',
         filterable: true,
+        displayable: false,
         options: {
           choices: {
             not_started: trans('session_not_started', {}, 'cursus'),

@@ -5,6 +5,7 @@ namespace Claroline\CursusBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractType;
 use Claroline\AppBundle\API\Finder\FinderBuilderInterface;
 use Claroline\AppBundle\API\Finder\FinderInterface;
+use Claroline\AppBundle\API\Finder\FinderRequest;
 use Claroline\AppBundle\API\Finder\Type\ClosureType;
 use Claroline\AppBundle\API\Finder\Type\EntityType;
 use Claroline\AppBundle\API\Finder\Type\TextType;
@@ -28,6 +29,34 @@ class EventType extends AbstractType
 
     public function buildFinder(FinderBuilderInterface $builder, array $options): void
     {
+        // forward some request values (filter + sort) which must be handled by the underlying PlannedObject finder.
+        $builder->addRequestTransformer(function (FinderRequest $finderRequest, FinderInterface $finder) {
+            $remappedProps = [
+                'start' => 'startDate',
+                'end' => 'endDate',
+            ];
+
+            foreach ($remappedProps as $prop => $remappedProp) {
+                $propPath = $finder->getPropertyPath().'.'.$prop;
+
+                if ($finderRequest->hasFilter($propPath)) {
+                    $filterValue = $finderRequest->getFilter($propPath);
+
+                    $finderRequest->addFilter($finder->getPropertyPath().'.plannedObject.'.$remappedProp, $filterValue);
+                    $finderRequest->removeFilter($propPath);
+                }
+
+                if ($finderRequest->hasSort($propPath)) {
+                    $sortValue = $finderRequest->getSort($propPath);
+
+                    $finderRequest->addSort($finder->getPropertyPath().'.plannedObject.'.$remappedProp, $sortValue);
+                    $finderRequest->removeSort($propPath);
+                }
+            }
+
+            return $finderRequest;
+        });
+
         $builder
             ->add('code', TextType::class)
             ->add('plannedObject', PlannedObjectType::class)
@@ -104,6 +133,17 @@ class EventType extends AbstractType
                 },
             ])
         ;
+    }
+
+    public function buildQuery(QueryBuilder $queryBuilder, FinderInterface $finder, array $options): void
+    {
+        if ($finder->getSortValue()) {
+            if (!in_array("{$finder->getQueryPath()}_plannedObject", $queryBuilder->getAllAliases())) {
+                $queryBuilder->leftJoin("{$finder->getAlias()}.plannedObject", "{$finder->getQueryPath()}_plannedObject");
+            }
+
+            $queryBuilder->addOrderBy("{$finder->getQueryPath()}_plannedObject.name", $finder->getSortValue());
+        }
     }
 
     public function getParent(): ?string
