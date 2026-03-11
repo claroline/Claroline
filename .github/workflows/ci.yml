@@ -25,7 +25,7 @@ jobs:
           git fetch origin
           git diff --name-only --diff-filter=AM origin/${{ github.base_ref }} > git_diff_files.txt
           echo "::set-output name=diff_php::$(cat git_diff_files.txt | grep '.\+\.php' | sed ':a;N;$!ba;s/\n/ /g')"
-          echo "::set-output name=diff_js::$(cat git_diff_files.txt | grep 'Resources/modules/.\+\.js' | sed ':a;N;$!ba;s/\n/ /g')"
+          echo "::set-output name=diff_js::$(cat git_diff_files.txt | grep -E 'Resources/modules/.+\.(js|jsx)$' | sed ':a;N;$!ba;s/\n/ /g')"
 
       - name: "Install PHPMD"
         if: ${{ env.DIFF != '' }}
@@ -54,7 +54,7 @@ jobs:
 
       - name: "Install ESLint"
         if: ${{ env.DIFF != '' }}
-        run: npm install eslint@9.39.4 eslint-plugin-react@7.37.5 @eslint/js@9 @eslint/eslintrc@3 globals --legacy-peer-deps
+        run: npm install eslint@9.39.4 eslint-plugin-react@7.37.5 @eslint/js@9 @eslint/eslintrc@3 globals @stylistic/eslint-plugin --legacy-peer-deps
         env:
           DIFF: ${{ steps.diff.outputs.diff_js }}
 

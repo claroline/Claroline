@@ -21,9 +21,9 @@ const PdfEditorAppearance = () =>
               noEmpty: true,
               condensed: true,
               choices: {
-                PAGE: trans('Page', {}, 'resource'),
-                VERTICAL: trans('Vertical', {}, 'resource'),
-                HORIZONTAL: trans('Horizontal', {}, 'resource')
+                PAGE: trans('scroll_page', {}, 'resource'),
+                VERTICAL: trans('scroll_vertical', {}, 'resource'),
+                HORIZONTAL: trans('scroll_horizontal', {}, 'resource')
               }
             }
           }

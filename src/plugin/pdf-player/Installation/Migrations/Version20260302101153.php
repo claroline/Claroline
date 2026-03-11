@@ -14,10 +14,15 @@ final class Version20260302101153 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql('
-            ALTER TABLE claro_pdf_resource 
-            ADD scrollMode VARCHAR(255) NOT NULL
-        ');
+        $this->addSql("
+        ALTER TABLE claro_pdf_resource 
+        ADD scrollMode VARCHAR(255) NOT NULL DEFAULT 'PAGE'
+    ");
+        $this->addSql("
+        UPDATE claro_pdf_resource 
+        SET scrollMode = 'PAGE' 
+        WHERE scrollMode IS NULL
+    ");
     }
 
     public function down(Schema $schema): void
