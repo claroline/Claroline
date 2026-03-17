@@ -107,6 +107,8 @@
     "enable_edition_notification": "Activer les notifications des changements",
     "display_categories_help": "Les catégories restent toujours accessible aux gestionnaires.",
     "entry_creation_not_allowed": "Vous ne pouvez pas créer de fiche dans cette base de données.",
+    "entry_creation_not_allowed_desc": "Vous avez créer le nombre maximum de fiches autorisé ou les droits attribués à votre compte ne sont pas suffisant pour ajouter une fiche à \"%contentName%\".",
+    "entry_creation_not_allowed_contact": "Contactez un gestionnaire (%contactLink%) si vous pensez que vous devriez pouvoir créer une nouvelle fiche.",
     "show_confirm": "Confirmer la soumission des nouvelles fiches",
     "show_confirm_help": "Si coché, une demande de confirmation sera proposée aux utilisateurs avant de soumettre la fiche.",
     "confirm_message": "Message de confirmation",

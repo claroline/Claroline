@@ -140,7 +140,7 @@ const canAddEntry = createSelector(
   resourceSelect.resourceNode,
   params,
   myEntriesCount,
-  (resourceNode, managed, params, myEntriesCount) => {
+  (resourceNode, params, myEntriesCount) => {
     return hasPermission('edit', resourceNode)
       || (hasPermission('contribute', resourceNode) && (!params.max_entries || myEntriesCount < params.max_entries))
   }

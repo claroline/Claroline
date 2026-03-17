@@ -7,7 +7,6 @@ import get from 'lodash/get'
 import set from 'lodash/set'
 
 import {trans} from '#/main/app/intl/translation'
-import {Alert} from '#/main/app/components/alert'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {Form} from '#/main/app/content/form/components/form'
 import {DataInput} from '#/main/app/data/components/input'
@@ -20,8 +19,9 @@ import {
 } from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {EntryFormData} from '#/plugin/claco-form/resources/claco-form/player/components/entry-form-data'
 import {ResourcePage} from '#/main/core/resource'
-import {PageContent} from '#/main/app/page'
+import {PageContent, PageSection} from '#/main/app/page'
 import {FormContent} from '#/main/app/content/form/containers/content'
+import {ContentError} from '#/main/app/content/error'
 
 const EntryCategories = (props) => {
   return (
@@ -180,9 +180,25 @@ class EntryForm extends Component {
   render() {
     if (this.props.isNew && !this.props.canAddEntry) {
       return (
-        <Alert type="warning">
-          {trans('entry_creation_not_allowed', {}, 'clacoform')}
-        </Alert>
+        <ResourcePage>
+          <PageContent className="d-flex flex-column">
+            <PageSection className="py-5 my-auto">
+              <ContentError
+                title={trans('entry_creation_not_allowed', {}, 'clacoform')}
+                description={trans('entry_creation_not_allowed_desc', {contentName: `<b>${this.props.resourceName}</b>`}, 'clacoform')}
+                help={trans('entry_creation_not_allowed_contact', {contactLink: this.props.contactEmail ?
+                  `(<a href="mailto:${this.props.contactEmail}">${this.props.contactEmail}</a>)` : ''
+                }, 'clacoform')}
+                backAction={{
+                  type: LINK_BUTTON,
+                  label: trans('back_home', {}, 'actions'),
+                  target: this.props.path,
+                  exact: true
+                }}
+              />
+            </PageSection>
+          </PageContent>
+        </ResourcePage>
       )
     }
 
@@ -255,6 +271,8 @@ class EntryForm extends Component {
 EntryForm.propTypes = {
   path: T.string.isRequired,
   currentUser: T.object,
+  contactEmail: T.string,
+  resourceName: T.string.isRequired,
   canAdministrate: T.bool.isRequired,
   canAddEntry: T.bool.isRequired,
   clacoFormId: T.string.isRequired,
