@@ -225,6 +225,7 @@ class WorkspaceManager implements LoggerAwareInterface
             $workspace = $this->import($this->defaultWorkspacePath, $workspace);
 
             $workspace->setModel(true);
+            $workspace->setHidden(false);
 
             $this->om->persist($workspace);
             $this->om->flush();
