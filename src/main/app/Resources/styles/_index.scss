@@ -11,11 +11,7 @@
 
 // Libraries : Bootstrap (v5, partial), FontAwesome, FlagIcons
 @import "bootstrap";
-
-@import "node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
-@import "node_modules/@fortawesome/fontawesome-free/scss/solid";
-@import "node_modules/@fortawesome/fontawesome-free/scss/brands";
-@import "node_modules/@fortawesome/fontawesome-free/scss/regular";
+@import "fontawesome";
 
 @import "node_modules/flag-icons/sass/flag-icons";
 
