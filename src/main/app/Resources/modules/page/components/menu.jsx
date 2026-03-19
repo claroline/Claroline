@@ -65,7 +65,7 @@ const PageMenu = (props) => {
   const toolMenuTitleId = useId()
 
   return (
-    <div className={classes('app-page-menu px-4 d-flex gap-4 flex-nowrap align-items-center bg-body z-3')} role="presentation">
+    <div className={classes('app-page-menu px-4 d-flex gap-4 flex-nowrap align-items-center bg-body'/*, 'z-3'*/)} role="presentation">
       {!props.embedded && props.affix && createElement(props.affix, {
         breadcrumb: props.breadcrumb
       })}

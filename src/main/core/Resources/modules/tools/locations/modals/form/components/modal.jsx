@@ -7,10 +7,12 @@ import {FormModal} from '#/main/app/data/modals/form/components/modal'
 
 import {Location as LocationTypes} from '#/main/core/data/types/location/prop-types'
 
+const STORE_NAME = 'locationForm'
+
 const LocationFormModal = (props) =>
   <FormModal
     {...omit(props, 'location')}
-    name="locationForm"
+    name={STORE_NAME}
     title={trans(props.isNew ? 'new_location' : 'location', {}, 'location')}
     subtitle={props.isNew ? trans('new_location_desc', {}, 'location') : undefined}
     target={props.isNew ?

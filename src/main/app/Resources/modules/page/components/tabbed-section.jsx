@@ -8,7 +8,7 @@ import {Badge} from '#/main/app/components/badge'
 
 /**
  * Creates a section with tabs.
- * ATTENTION : it uses the Router to define the opened tab. YOU CAN HAVE ONLY ONE IN A PAGE !
+ * ATTENTION: it uses the Router to define the opened tab. YOU CAN HAVE ONLY ONE IN A PAGE !
  */
 const PageTabbedSection = (props) =>
   <PageSection {...omit(props, 'tabs', 'defaultTab')}>
