@@ -314,7 +314,7 @@ class PdfPlayer extends Component {
         })
         this.viewer = pdfViewer
         this.setState({
-          viewer: pdfViewer
+          pages: pdf.numPages
         })
       })
     })
