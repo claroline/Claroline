@@ -1,20 +1,19 @@
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 import {asset} from '#/main/app/config/asset'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {Button} from '#/main/app/action/components/button'
+import {Button, Toolbar} from '#/main/app/action'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Alert} from '#/main/app/components/alert'
 
 import {actions} from '#/main/app/api/store'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import isEmpty from 'lodash/isEmpty'
 import {getValidationClassName} from '#/main/app/content/form/validator'
-import {Toolbar} from '#/main/app/action'
 
 class ImageInputComponent extends PureComponent {
   constructor(props) {
@@ -168,11 +167,11 @@ class ImageInputComponent extends PureComponent {
 
 implementPropTypes(ImageInputComponent, DataInputTypes, {
   value: T.string, // the url of the image
-  size: T.arrayOf(T.number),
+  previewSize: T.arrayOf(T.number),
   uploadUrl: T.array.isRequired,
   uploadFile: T.func.isRequired
 }, {
-  size: [200, 200],
+  previewSize: [200, 200],
   uploadUrl: ['apiv2_public_file_image_upload']
 })
 

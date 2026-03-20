@@ -157,7 +157,7 @@ class ListData extends Component {
           <ListEmpty hasFilters={hasFilters} />
         }
 
-        {(this.props.loading || 0 !== this.props.totalResults) &&
+        {!this.props.error && (this.props.loading || 0 !== this.props.totalResults) &&
           createElement(DISPLAY_MODES[this.state.display.current].component, Object.assign({},
             DISPLAY_MODES[this.state.display.current].options,
             {
@@ -180,7 +180,7 @@ class ListData extends Component {
           <ListError {...this.props.error} />
         }
 
-        {0 !== this.props.totalResults && (this.props.count || this.props.pagination) &&
+        {!this.props.error && 0 !== this.props.totalResults && (this.props.count || this.props.pagination) &&
           <ListFooter
             count={this.props.count}
             totalResults={this.props.totalResults}

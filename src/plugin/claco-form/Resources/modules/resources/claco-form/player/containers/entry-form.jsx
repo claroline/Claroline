@@ -6,6 +6,7 @@ import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {notEmpty} from '#/main/app/data/types/validators'
 import {isFieldDisplayed} from '#/main/app/content/form/parameters/utils'
+import {selectors as contextSelectors} from '#/main/app/context'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
@@ -16,6 +17,8 @@ const EntryForm = withRouter(connect(
   state => ({
     currentUser: securitySelectors.currentUser(state),
     path: resourceSelectors.path(state),
+    resourceName: resourceSelectors.name(state),
+    contactEmail: contextSelectors.contactEmail(state),
 
     canAdministrate: selectors.canManageCurrentEntry(state),
     canAddEntry: selectors.canAddEntry(state),

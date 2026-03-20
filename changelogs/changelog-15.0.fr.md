@@ -1,3 +1,16 @@
+<h1> V15.0.15 </h1>
+
+<ul>
+  <li>Ajout de la possibilité de publier ou non une page de connaissance</li>
+  <li>Ajout de l'option pour toujours déplier le sommaire d'une connaissance</li>
+  <li>Ajout de la durée estimée d'une séquence</li>
+  <li>Ajout d'une option sur les pdf pour forcer l'affichage en mode déffilement à l'ouverture</li>
+  <li>Amélioration du nommage des certificats lors de l'export</li>
+  <li>Correction des filtres et des tris sur le widget liste des présences</li>
+  <li>L'activation des conditions d'utilisation est à nouveau possible</li>
+  <li>L'option limitant le nombre de fiche créables par un utilisateur dans une base de données est correctement prise en compte</li>
+</ul>
+
 <h1> V15.0.14 </h1>
 
 <ul>
@@ -7,7 +20,7 @@
   <li>Ajout de la possibilité de mettre sa présence à une séance depuis le catalogue de formation</li>
   <li>Amélioration de la page de notification de restriction d'accès à une ressource ou une formation</li>
   <li>Ajout du suivi du nombre de vues sur les connaissances, les annonces et les pages d'accueil</li>
-  <li>Ressource raccourci : l'accès à l'éditeur et le scroll sont à nouveau fonctionnel</li>
+  <li>Ressource raccourci : l'accès à l'éditeur et le scroll sont à nouveau fonctionnels</li>
   <li>Séquence : la ressource d'une étape a une action ouvrir pour y accéder directement </li>
   <li>La vue tableau est à nouveau fonctionnelle pour les annonces</li>
   <li>Le widget liste des séances peut être filtré par statuts de la séance</li>

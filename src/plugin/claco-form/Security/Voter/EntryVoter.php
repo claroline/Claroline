@@ -13,19 +13,30 @@ namespace Claroline\ClacoFormBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\ClacoFormBundle\Entity\Entry;
+use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class EntryVoter extends AbstractVoter
 {
+    public function __construct(
+        private readonly ClacoFormManager $clacoFormManager,
+    ) {
+    }
+
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
+        $clacoForm = $object->getClacoForm();
+        if ($this->isGranted('EDIT', $clacoForm->getResourceNode())) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
         switch ($attributes[0]) {
             case self::OPEN:
                 return $this->checkOpen($token, $object);
             case self::CREATE:
-                return $this->checkCreate($object);
+                return $this->checkCreate($token, $object);
             case self::EDIT:
             case self::DELETE:
                 return $this->checkEdit($token, $object);
@@ -75,11 +86,16 @@ class EntryVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    private function checkCreate(Entry $entry): int
+    private function checkCreate(TokenInterface $token, Entry $entry): int
     {
         $clacoForm = $entry->getClacoForm();
 
         if ($this->isGranted('CONTRIBUTE', $clacoForm->getResourceNode())) {
+            if ($clacoForm->getMaxEntries()
+                && $this->clacoFormManager->countUserEntries($clacoForm, $token->getUser()) >= $clacoForm->getMaxEntries()) {
+                return VoterInterface::ACCESS_DENIED;
+            }
+
             return VoterInterface::ACCESS_GRANTED;
         }
 
@@ -102,12 +118,6 @@ class EntryVoter extends AbstractVoter
 
     private function isEntryManager(Entry $entry, ?User $user): bool
     {
-        $clacoForm = $entry->getClacoForm();
-
-        if ($this->isGranted('EDIT', $clacoForm->getResourceNode())) {
-            return true;
-        }
-
         if ($user) {
             $categories = $entry->getCategories();
             foreach ($categories as $category) {

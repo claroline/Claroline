@@ -71,7 +71,7 @@ class PrivacyParametersSerializer
         $this->sipe('dpo.address.country', 'setDpoAddressCountry', $data, $privacyParameters);
         $this->sipe('dpo.phone', 'setDpoPhone', $data, $privacyParameters);
 
-        if (array_key_exists('tos', $data) && array_key_exists('template', $data['tos'])) {
+        if (array_key_exists('tos', $data)) {
             $this->sipe('tos.enabled', 'setTosEnabled', $data, $privacyParameters);
 
             $template = null;

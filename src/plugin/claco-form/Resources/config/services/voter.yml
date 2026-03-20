@@ -7,3 +7,5 @@ services:
 
     Claroline\ClacoFormBundle\Security\Voter\EntryVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter
+        arguments:
+            - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
