@@ -4,7 +4,7 @@
   <li>Ajout de la possibilité de publier ou non une page de connaissance</li>
   <li>Ajout de l'option pour toujours déplier le sommaire d'une connaissance</li>
   <li>Ajout de la durée estimée d'une séquence</li>
-  <li>Ajout d'une option sur les pdf pour forcer l'affichage en mode déffilement à l'ouverture</li>
+  <li>Ajout d'une option sur les pdf pour forcer l'affichage en mode défilement à l'ouverture</li>
   <li>Amélioration du nommage des certificats lors de l'export</li>
   <li>Correction des filtres et des tris sur le widget liste des présences</li>
   <li>L'activation des conditions d'utilisation est à nouveau possible</li>
