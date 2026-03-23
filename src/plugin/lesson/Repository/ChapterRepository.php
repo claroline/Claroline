@@ -69,6 +69,7 @@ class ChapterRepository extends NestedTreeRepository
             ->select('COUNT(c.id)')
             ->where('c.lesson = :lesson')
             ->andWhere('c.parent IS NOT NULL')
+            ->andWhere('c.published = true')
             ->setParameter('lesson', $lessonId)
             ->getQuery()
             ->getSingleScalarResult();
