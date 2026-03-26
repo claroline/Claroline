@@ -356,24 +356,6 @@ const OrderingEditor = props => {
       })
     })
 
-  const Items = (
-    <OrderingItems
-      item={props.item}
-      items={orderingItems.filter(i => undefined !== i._position)}
-      onChange={props.update}
-      hasScore={props.hasAnswerScores}
-    />
-  )
-
-  const Odds = (
-    <OrderingOdds
-      item={props.item}
-      items={orderingItems.filter(i => undefined === i._position)}
-      onChange={props.update}
-      hasScore={props.hasAnswerScores}
-    />
-  )
-
   return (
     <FormContent
       className="ordering-item ordering-editor mb-0 user-select-none"
@@ -413,12 +395,26 @@ const OrderingEditor = props => {
               name: 'items',
               label: trans('answer', {}, 'quiz'),
               required: true,
-              component: Items
+              render: () => (
+                <OrderingItems
+                  item={props.item}
+                  items={orderingItems.filter(i => undefined !== i._position)}
+                  onChange={props.update}
+                  hasScore={props.hasAnswerScores}
+                />
+              )
             }, {
               name: 'odds',
               label: trans('odds', {}, 'quiz'),
               displayed: props.item.mode === constants.MODE_BESIDE,
-              component: Odds
+              render: () => (
+                <OrderingOdds
+                  item={props.item}
+                  items={orderingItems.filter(i => undefined === i._position)}
+                  onChange={props.update}
+                  hasScore={props.hasAnswerScores}
+                />
+              )
             }
           ]
         }

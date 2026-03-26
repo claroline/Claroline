@@ -676,7 +676,7 @@ const SetEditor = (props) => {
               label: trans('answers', {}, 'quiz'),
               hideLabel: true,
               required: true,
-              component: Set
+              render: () => Set
             }, {
               name: 'random',
               label: trans('shuffle_answers', {}, 'quiz'),

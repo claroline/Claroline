@@ -65,7 +65,7 @@ const WordsEditor = (props) => {
               name: 'solutions',
               label: trans('keywords'),
               required: true,
-              component: KeyWordItems
+              render: () => KeyWordItems
             }, {
               name: 'contentType',
               type: 'choice',
