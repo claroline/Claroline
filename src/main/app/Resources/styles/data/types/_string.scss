@@ -49,3 +49,37 @@ input[type=text].form-control {
   padding: $input-padding-y-lg $input-padding-x-lg;
   @include font-size($input-font-size-lg);
 }
+
+.textarea-invisible-resize-container {
+  /* This is the wrapper element around the `<textarea>` */
+  display: grid;
+
+  &:after {
+    /* Note the weird space! Needed to prevent jumpy behavior */
+    content: attr(data-textarea-content) " ";
+    /* This is how `<textarea>` text behaves */
+    white-space: pre-wrap;
+    /* Hidden from view, clicks, and screen readers */
+    visibility: hidden;
+
+    /* textarea and ::after should occupy the first (and only) cell of the grid: */
+    grid-area: 1 / 1 / 2 / 2;
+  }
+}
+
+.textarea-invisible {
+  width: 100%;
+  border: none;
+  font-weight: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  padding: 0;
+  /* You could leave this, but after a user resizes, then it ruins the auto sizing */
+  resize: none;
+  /* Firefox shows scrollbar on growth, you can hide like this. */
+  overflow: hidden;
+
+  /* textarea and ::after should occupy the first (and only) cell of the grid: */
+  grid-area: 1 / 1 / 2 / 2;
+}
