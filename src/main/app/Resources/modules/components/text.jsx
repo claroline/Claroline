@@ -2,8 +2,30 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
+import range from 'lodash/range'
 
 import {nl2br as nl2brFn} from '#/main/app/utils/text'
+
+const TextSkeleton = ({
+  className,
+  rows = 5
+}) => {
+  return (
+    <p className={classes('placeholder-glow', className)}>
+      {range(0, rows).map(row =>
+        <span key={row} className={classes('placeholder rounded-1', {
+          'w-100': row !== rows - 1,
+          'w-25': row === rows - 1
+        })} />
+      )}
+    </p>
+  )
+}
+
+TextSkeleton.propTypes = {
+  className: T.string,
+  rows: T.number
+}
 
 /**
  * Displays a multiline text content.
@@ -46,5 +68,6 @@ Text.propTypes = {
 }
 
 export {
-  Text
+  Text,
+  TextSkeleton
 }
