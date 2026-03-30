@@ -12,7 +12,7 @@ const InvisibleTextarea = (props) => {
     })} data-textarea-content={props.value || ''}>
       <textarea
         {...omit(props, 'size', 'minRows', 'autoResize')}
-        className={classes(props.className, 'textarea-invisible', {
+        className={classes(props.className, 'textarea-invisible bg-transparent', {
           'scroller-thin': !props.autoResize
         })}
         rows={props.minRows}
