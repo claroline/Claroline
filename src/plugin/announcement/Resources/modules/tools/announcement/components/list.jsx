@@ -153,7 +153,8 @@ const AnnouncementList = () => {
                 type: LINK_BUTTON,
                 icon: 'fa fa-arrow-left',
                 label: trans('back_home', {}, 'actions'),
-                target: contextPath
+                target: contextPath,
+                exact: true
               }}
             />
           }

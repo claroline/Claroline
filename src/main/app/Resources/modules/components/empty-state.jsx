@@ -49,7 +49,13 @@ const EmptyState = (props) => {
     <div className={classes('my-auto content-lg text-center', props.className)}>
       {props.icon &&
         <div className="mb-4 position-relative d-flex align-items-center justify-content-center mx-auto opacity-75" style={{width: '12rem', height: '8rem'}}>
-          <span className={classes('text-primary border border-3 border-primary rounded-circle p-4 fs-1 bg-body z-1', props.icon)} aria-hidden={true} style={{fontSize: '3rem'}}/>
+          <span
+            className="text-primary border border-3 border-primary rounded-circle p-3 bg-body z-1 d-flex flex-column align-items-center justify-content-center"
+            style={{width: '6rem', height: '6rem'}}
+          >
+            <span className={classes(props.icon)} aria-hidden={true} style={{fontSize: '3rem'}}/>
+          </span>
+
           <Fog className="position-absolute" />
           <Stars className="position-absolute" />
         </div>
