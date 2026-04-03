@@ -419,7 +419,7 @@
     "text_left_align": "Align left",
     "text_length": "Length of the text",
     "text_long": "Long text",
-    "text_right_align": "Align right",
+    "align_right": "Align right",
     "textarea_rows": "Number of rows",
     "theme": "Theme",
     "thumbnail": "Thumbnail",

@@ -82,5 +82,12 @@
   "error_not_started_desc": "La période d'accès à ce contenu n'a pas encore commencée. Veuillez patientez jusqu'au %date% pour accéder au contenu de \"%contentName%\".",
   "error_ended": "Ce contenu n'est plus accessible.",
   "error_ended_desc": "La période d'accès à ce contenu est terminée. L'accès au contenu de \"%contentName%\" est fermé depuis le %date%.",
-  "error_invalid_dates_contact": "Contactez un gestionnaire %contactLink% si vous pensez que vous devriez avoir accès à ce contenu."
+  "error_invalid_dates_contact": "Contactez un gestionnaire %contactLink% si vous pensez que vous devriez avoir accès à ce contenu.",
+  "align_left": "Gauche",
+  "align_right": "Droite",
+  "align_center": "Centre",
+  "align_top": "Haut",
+  "align_bottom": "Bas",
+  "align_vertical": "Position verticale",
+  "align_horizontal": "Position horizontale"
 }

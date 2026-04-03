@@ -79,9 +79,9 @@ const WidgetForm = (props) => {
                   noEmpty: true,
                   condensed: true,
                   choices: {
-                    left: trans('text_left_align'),
-                    center: trans('center'),
-                    right: trans('text_right_align')
+                    left: trans('align_left'),
+                    center: trans('align_center'),
+                    right: trans('align_right')
                   }
                 }
               }, {
@@ -147,6 +147,8 @@ const WidgetForm = (props) => {
 WidgetForm.propTypes = {
   level: T.number,
   name: T.string.isRequired,
+  isNew: T.bool,
+  onSave: T.func.isRequired,
   children: T.node
 }
 
