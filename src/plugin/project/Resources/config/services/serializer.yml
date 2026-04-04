@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        tags: [claroline.serializer]
+
+    Claroline\ProjectBundle\Serializer\ProjectSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

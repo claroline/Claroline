@@ -1,0 +1,3 @@
+services:
+    Claroline\ProjectBundle\Component\Resource\ProjectResource:
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
