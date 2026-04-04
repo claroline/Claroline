@@ -12,3 +12,10 @@ services:
             - '@Claroline\AppBundle\API\Crud'
         tags:
             - { name: 'console.command', command: 'claroline:user:delete-disabled' }
+
+    Claroline\CommunityBundle\Command\ResetPasswordCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+        tags:
+            - { name: 'console.command', command: 'claroline:user:reset-password' }
