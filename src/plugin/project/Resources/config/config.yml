@@ -1,0 +1,4 @@
+plugin:
+  resources:
+    - name: claroline_project
+      class: Claroline\ProjectBundle\Entity\Project
