@@ -719,7 +719,7 @@ const PairEditor = props => {
               label: trans('answers', {}, 'quiz'),
               hideLabel: true,
               required: true,
-              component: Pair
+              render: () => Pair
             }, {
               name: '_pinItems',
               label: trans('pair_allow_pin_function', {}, 'quiz'),

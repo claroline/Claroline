@@ -221,7 +221,7 @@ const ChoiceEditor = props => {
           score = 0
         }
 
-        // create associated solution
+        // create the associated solution
         newSolutions.push({
           id: choiceId,
           feedback: '',
@@ -311,7 +311,7 @@ const ChoiceEditor = props => {
               label: trans('choices'),
               type: 'collection',
               required: true,
-              component: ChoicesComponent,
+              render: () => ChoicesComponent,
               options: {
                 minLength: 3
               }

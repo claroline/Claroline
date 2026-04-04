@@ -654,8 +654,6 @@ const GridEditor = (props) => {
       closePopover={() => props.update('_popover', null) }
     />
   </div>
-  
-  
 
   return (
     <FormContent
@@ -762,7 +760,7 @@ const GridEditor = (props) => {
             }, {
               name: 'solutions',
               required: true,
-              component: GridComponent
+              render: () => GridComponent
             }
           ]
         }

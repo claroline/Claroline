@@ -555,14 +555,6 @@ class GraphicElement extends Component {
 }
 
 const GraphicEditor = (props) => {
-  const GraphicComponent = (
-    <GraphicElement
-      {...props}
-      item={props.item}
-      hasScore={props.hasAnswerScores}
-    />
-  )
-
   return (
     <FormContent
       className="graphic-editor"
@@ -576,7 +568,13 @@ const GraphicEditor = (props) => {
               name: 'data',
               label: trans('image'),
               required: true,
-              component: GraphicComponent
+              render: () => (
+                <GraphicElement
+                  {...props}
+                  item={props.item}
+                  hasScore={props.hasAnswerScores}
+                />
+              )
             }
           ]
         }

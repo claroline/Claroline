@@ -545,14 +545,6 @@ class MatchElements extends Component {
 }
 
 const MatchEditor = props => {
-  const MatchComponent = (
-    <MatchElements
-      {...props}
-      item={props.item}
-      hasAnswerScores={props.hasAnswerScores}
-    />
-  )
-
   return (
     <FormContent
       className="match-editor"
@@ -566,7 +558,13 @@ const MatchEditor = props => {
               name: 'solutions',
               label: trans('answers', {}, 'quiz'),
               required: true,
-              component: MatchComponent
+              render: () => (
+                <MatchElements
+                  {...props}
+                  item={props.item}
+                  hasAnswerScores={props.hasAnswerScores}
+                />
+              )
             }, {
               name: 'random',
               label: trans('shuffle_answers', {}, 'quiz'),
