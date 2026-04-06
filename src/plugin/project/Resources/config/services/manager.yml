@@ -1,0 +1,19 @@
+services:
+    Claroline\ProjectBundle\Manager\ProjectManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\ProjectBundle\Manager\SubmissionManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\ProjectBundle\Manager\CorrectionManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\ProjectBundle\Serializer\CorrectionSerializer'
+            - '@Claroline\ProjectBundle\Manager\EvaluationManager'
+
+    Claroline\ProjectBundle\Manager\EvaluationManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'

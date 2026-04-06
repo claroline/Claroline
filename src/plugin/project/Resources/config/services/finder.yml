@@ -1,0 +1,5 @@
+services:
+    _defaults:
+        tags: [claroline.finder]
+
+    Claroline\ProjectBundle\Finder\SubmissionFinder: ~

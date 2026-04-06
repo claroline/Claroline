@@ -1,0 +1,23 @@
+services:
+    _defaults:
+        public: true
+
+    Claroline\ProjectBundle\Controller\ProjectController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\ProjectBundle\Manager\ProjectManager'
+
+    Claroline\ProjectBundle\Controller\SubmissionController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\ProjectBundle\Manager\SubmissionManager'
+            - '@Claroline\ProjectBundle\Serializer\SubmissionSerializer'
+
+    Claroline\ProjectBundle\Controller\CorrectionController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\ProjectBundle\Manager\CorrectionManager'
+            - '@Claroline\ProjectBundle\Serializer\CorrectionSerializer'

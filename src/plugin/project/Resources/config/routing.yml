@@ -1,0 +1,6 @@
+# JSON API
+claro_project:
+    resource: "@ClarolineProjectBundle/Controller/"
+    type: attribute
+    options:
+        expose: true
