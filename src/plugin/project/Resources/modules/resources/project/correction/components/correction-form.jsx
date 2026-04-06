@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import {trans} from '#/main/app/intl/translation'
 import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {PageSection} from '#/main/app/page/components/section'
+import {PageSection} from '#/main/app/page'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'
 

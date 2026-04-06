@@ -5,10 +5,8 @@ import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {ContentHtml} from '#/main/app/content/components/html'
-import {ToolPage} from '#/main/app/page/components/tool-page'
-import {PageSection} from '#/main/app/page/components/section'
-import {Alert} from '#/main/app/alert/components/alert'
-import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
+import {ResourcePage} from '#/main/core/resource'
+import {PageSection} from '#/main/app/page'
 
 import {selectors} from '#/plugin/project/resources/project/store/selectors'
 import {actions} from '#/plugin/project/resources/project/store/actions'
@@ -57,7 +55,7 @@ const MySubmission = () => {
   }, [project.id])
 
   return (
-    <ToolPage
+    <ResourcePage
       title={trans('my_submission', {}, 'project')}
     >
       {/* Deadline countdown */}
@@ -188,7 +186,7 @@ const MySubmission = () => {
           />
         </PageSection>
       }
-    </ToolPage>
+    </ResourcePage>
   )
 }
 
