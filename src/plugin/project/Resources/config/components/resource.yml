@@ -1,0 +1,10 @@
+services:
+    Claroline\ProjectBundle\Component\Resource\ProjectResource:
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\ProjectBundle\Serializer\ProjectSerializer'
+            - '@Claroline\ProjectBundle\Serializer\SubmissionSerializer'
+            - '@Claroline\ProjectBundle\Serializer\CorrectionSerializer'

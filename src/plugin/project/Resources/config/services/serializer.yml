@@ -1,0 +1,37 @@
+services:
+    _defaults:
+        tags: [claroline.serializer]
+
+    Claroline\ProjectBundle\Serializer\ProjectSerializer:
+        arguments:
+            - '@Claroline\ProjectBundle\Serializer\MilestoneSerializer'
+            - '@Claroline\ProjectBundle\Serializer\EvaluationCriteriaSerializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\ProjectBundle\Serializer\MilestoneSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\ProjectBundle\Serializer\EvaluationCriteriaSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\ProjectBundle\Serializer\SubmissionSerializer:
+        arguments:
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+            - '@Claroline\ProjectBundle\Serializer\AnnotationSerializer'
+
+    Claroline\ProjectBundle\Serializer\CorrectionSerializer:
+        arguments:
+            - '@Claroline\ProjectBundle\Serializer\CriteriaScoreSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\ProjectBundle\Serializer\CriteriaScoreSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\ProjectBundle\Serializer\AnnotationSerializer:
+        arguments:
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
