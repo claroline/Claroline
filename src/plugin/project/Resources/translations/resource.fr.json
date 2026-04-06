@@ -22,9 +22,18 @@
     "evaluation_type": "Mode d'évaluation",
     "evaluation_type_raw_score": "Note directe",
     "evaluation_type_simple_grid": "Grille critériée simple",
-    "advanced_options": "Options avancées",
+    "advanced_options": "Options avancées (en développement)",
     "group_mode": "Mode travail de groupe",
     "group_mode_help": "Les dépôts sont effectués par équipe et la note est propagée à tous les membres.",
     "iterative_mode": "Mode suivi itératif",
-    "iterative_mode_help": "Permet de définir plusieurs jalons successifs avec consignes et annotations thématisées."
+    "iterative_mode_help": "Permet de définir plusieurs jalons successifs avec consignes et annotations thématisées.",
+    "submission": "Dépôt de travail",
+    "file": "Fichier",
+    "drop_file_here": "Glissez-déposez votre fichier ici",
+    "rich_text": "Texte riche",
+    "rich_text_placeholder": "Saisissez votre texte ici...",
+    "url_placeholder": "Saisissez l'URL de votre travail",
+    "media": "Média",
+    "drop_media_here": "Glissez-déposez votre média ici",
+    "no_submission_required": "Aucun dépôt numérique n'est requis pour cette ressource."
 }
