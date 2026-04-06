@@ -5,7 +5,9 @@ services:
     Claroline\ProjectBundle\Controller\ProjectController:
         arguments:
             - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\ProjectBundle\Manager\ProjectManager'
+            - '@Claroline\ProjectBundle\Manager\PdfManager'
 
     Claroline\ProjectBundle\Controller\SubmissionController:
         arguments:
@@ -21,3 +23,9 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\ProjectBundle\Manager\CorrectionManager'
             - '@Claroline\ProjectBundle\Serializer\CorrectionSerializer'
+
+    Claroline\ProjectBundle\Controller\AnnotationController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\ProjectBundle\Serializer\AnnotationSerializer'

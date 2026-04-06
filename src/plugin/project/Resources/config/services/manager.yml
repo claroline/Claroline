@@ -17,3 +17,8 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
+
+    Claroline\ProjectBundle\Manager\PdfManager:
+        arguments:
+            - '@Claroline\AppBundle\Manager\PdfManager'
+            - '@twig'

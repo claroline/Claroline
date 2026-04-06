@@ -1,0 +1,106 @@
+<div style="font-family: Arial, sans-serif; padding: 20px;">
+    <h1 style="color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px;">
+        {{ project.resourceNode.name }}
+    </h1>
+
+    {% if user %}
+    <div style="margin-bottom: 20px;">
+        <h2 style="color: #555;">{{ 'learner'|trans }}</h2>
+        <p><strong>{{ user.firstName }} {{ user.lastName }}</strong></p>
+    </div>
+    {% endif %}
+
+    {% if submission %}
+    <div style="margin-bottom: 20px;">
+        <h2 style="color: #555;">{{ 'submission'|trans({}, 'project') }}</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="padding: 5px; font-weight: bold;">{{ 'submission_date'|trans({}, 'project') }}</td>
+                <td style="padding: 5px;">{{ submission.submittedDate|date('d/m/Y H:i') }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px; font-weight: bold;">{{ 'type'|trans }}</td>
+                <td style="padding: 5px;">{{ submission.contentType }}</td>
+            </tr>
+            {% if submission.urlContent %}
+            <tr>
+                <td style="padding: 5px; font-weight: bold;">URL</td>
+                <td style="padding: 5px;">{{ submission.urlContent }}</td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+    {% endif %}
+
+    <div style="margin-bottom: 20px;">
+        <h2 style="color: #555;">{{ 'correction'|trans({}, 'project') }}</h2>
+
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 5px; font-weight: bold; width: 200px;">{{ 'score'|trans }}</td>
+                    <td style="padding: 5px; font-size: 1.2em; font-weight: bold; color: #007bff;">
+                        {{ correction.score is not null ? correction.score : '-' }} / {{ project.scoreMax }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px; font-weight: bold;">{{ 'status'|trans }}</td>
+                    <td style="padding: 5px;">{{ correction.status }}</td>
+                </tr>
+                {% if correction.submissionDate %}
+                <tr>
+                    <td style="padding: 5px; font-weight: bold;">{{ 'correction_date'|trans({}, 'project') }}</td>
+                    <td style="padding: 5px;">{{ correction.submissionDate|date('d/m/Y H:i') }}</td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+
+        {% if correction.criteriaScores|length > 0 %}
+        <h3 style="color: #555;">{{ 'criteria'|trans({}, 'project') }}</h3>
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid #dee2e6;">
+            <thead>
+                <tr style="background: #e9ecef;">
+                    <th style="padding: 8px; text-align: left; border: 1px solid #dee2e6;">{{ 'criterion'|trans({}, 'project') }}</th>
+                    <th style="padding: 8px; text-align: center; border: 1px solid #dee2e6; width: 120px;">{{ 'score'|trans }}</th>
+                    <th style="padding: 8px; text-align: left; border: 1px solid #dee2e6;">{{ 'comment'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for criteriaScore in correction.criteriaScores %}
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #dee2e6;">
+                        {{ criteriaScore.criteria.label }}
+                        {% if criteriaScore.criteria.description %}
+                        <br><small style="color: #6c757d;">{{ criteriaScore.criteria.description }}</small>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 8px; text-align: center; border: 1px solid #dee2e6;">
+                        {{ criteriaScore.score }} / {{ criteriaScore.criteria.scoreMax }}
+                    </td>
+                    <td style="padding: 8px; border: 1px solid #dee2e6;">
+                        {{ criteriaScore.comment|default('-') }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr style="background: #e9ecef; font-weight: bold;">
+                    <td style="padding: 8px; border: 1px solid #dee2e6;">{{ 'total'|trans }}</td>
+                    <td style="padding: 8px; text-align: center; border: 1px solid #dee2e6;">
+                        {{ correction.score is not null ? correction.score : '-' }} / {{ project.scoreMax }}
+                    </td>
+                    <td style="padding: 8px; border: 1px solid #dee2e6;"></td>
+                </tr>
+            </tfoot>
+        </table>
+        {% endif %}
+
+        {% if correction.comment %}
+        <h3 style="color: #555; margin-top: 15px;">{{ 'general_comment'|trans({}, 'project') }}</h3>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid #007bff;">
+            {{ correction.comment|raw }}
+        </div>
+        {% endif %}
+    </div>
+</div>

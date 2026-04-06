@@ -19,10 +19,25 @@ const myCorrections = createSelector(
   (resource) => resource.myCorrections || []
 )
 
+const myDeadline = createSelector(
+  [resource],
+  (resource) => resource.myDeadline || null
+)
+
+/**
+ * Returns milestones sorted by position from the project configuration.
+ */
+const milestones = createSelector(
+  [project],
+  (project) => (project.milestones || []).sort((a, b) => a.position - b.position)
+)
+
 export const selectors = {
   STORE_NAME,
   resource,
   project,
   mySubmissions,
-  myCorrections
+  myCorrections,
+  myDeadline,
+  milestones
 }

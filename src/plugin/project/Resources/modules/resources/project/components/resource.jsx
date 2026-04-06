@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {Resource} from '#/main/core/resource'
 
 import {ProjectEditor} from '#/plugin/project/resources/project/editor/components/editor'
@@ -30,6 +30,16 @@ const ProjectResource = props =>
         label: trans('submissions', {}, 'project'),
         target: `${props.path}/submissions`,
         displayed: props.canEdit
+      }, {
+        name: 'export-summary-pdf',
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-fw fa-file-pdf',
+        label: trans('export_summary_pdf', {}, 'project'),
+        file: {
+          url: ['claro_project_summary_pdf', {id: props.project.id}]
+        },
+        displayed: props.canEdit,
+        group: trans('transfer')
       }
     ]}
     pages={[

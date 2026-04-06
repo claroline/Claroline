@@ -1,0 +1,59 @@
+<div style="font-family: Arial, sans-serif; padding: 20px;">
+    <h1 style="color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px;">
+        {{ project.resourceNode.name }} - {{ 'summary'|trans }}
+    </h1>
+
+    <div style="margin-bottom: 20px;">
+        <h2 style="color: #555;">{{ 'statistics'|trans }}</h2>
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid #dee2e6;">
+            <tr>
+                <td style="padding: 8px; font-weight: bold; border: 1px solid #dee2e6;">{{ 'score_max'|trans }}</td>
+                <td style="padding: 8px; border: 1px solid #dee2e6;">{{ project.scoreMax }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px; font-weight: bold; border: 1px solid #dee2e6;">{{ 'nb_corrections'|trans({}, 'project') }}</td>
+                <td style="padding: 8px; border: 1px solid #dee2e6;">{{ corrections|length }}</td>
+            </tr>
+        </table>
+    </div>
+
+    {% if corrections|length > 0 %}
+    <h2 style="color: #555;">{{ 'corrections'|trans({}, 'project') }}</h2>
+    <table style="width: 100%; border-collapse: collapse; border: 1px solid #dee2e6;">
+        <thead>
+            <tr style="background: #e9ecef;">
+                <th style="padding: 8px; text-align: left; border: 1px solid #dee2e6;">{{ 'learner'|trans }}</th>
+                <th style="padding: 8px; text-align: center; border: 1px solid #dee2e6;">{{ 'score'|trans }}</th>
+                <th style="padding: 8px; text-align: center; border: 1px solid #dee2e6;">{{ 'status'|trans }}</th>
+                <th style="padding: 8px; text-align: center; border: 1px solid #dee2e6;">{{ 'date'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for correction in corrections %}
+            <tr>
+                <td style="padding: 8px; border: 1px solid #dee2e6;">
+                    {% if correction.user %}
+                        {{ correction.user.firstName }} {{ correction.user.lastName }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #dee2e6;">
+                    {{ correction.score is not null ? correction.score : '-' }} / {{ project.scoreMax }}
+                </td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #dee2e6;">
+                    {{ correction.status }}
+                </td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #dee2e6;">
+                    {% if correction.submissionDate %}
+                        {{ correction.submissionDate|date('d/m/Y H:i') }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
