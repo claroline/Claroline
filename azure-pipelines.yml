@@ -1,0 +1,146 @@
+trigger: none
+
+pr:
+  branches:
+    include:
+      - '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+jobs:
+  - job: CodingStyle
+    displayName: 'Coding Style'
+    steps:
+      - checkout: self
+        fetchDepth: 2
+
+      - script: |
+          sudo update-alternatives --set php /usr/bin/php8.2
+          sudo update-alternatives --set phar /usr/bin/phar8.2
+          php --version
+        displayName: 'Use PHP 8.2'
+
+      - script: |
+          if [ -z "$(System.PullRequest.TargetBranch)" ]; then
+            echo "Not a PR context, skipping diff"
+            echo "##vso[task.setvariable variable=DIFF_PHP]"
+            echo "##vso[task.setvariable variable=DIFF_JS]"
+            exit 0
+          fi
+          TARGET_BRANCH=$(echo "$(System.PullRequest.TargetBranch)" | sed 's|refs/heads/||')
+          git fetch origin $TARGET_BRANCH
+          git diff --name-only --diff-filter=AM origin/$TARGET_BRANCH > git_diff_files.txt
+          DIFF_PHP=$(grep '.\+\.php' git_diff_files.txt | tr '\n' ' ' | sed 's/ $//' || true)
+          DIFF_JS=$(grep -E 'Resources/modules/.+\.(js|jsx)$' git_diff_files.txt | tr '\n' ' ' | sed 's/ $//' || true)
+          echo "##vso[task.setvariable variable=DIFF_PHP]$DIFF_PHP"
+          echo "##vso[task.setvariable variable=DIFF_JS]$DIFF_JS"
+        displayName: 'List modified files'
+
+      - script: wget -c https://phpmd.org/static/latest/phpmd.phar -O phpmd
+        displayName: 'Install PHPMD'
+        condition: and(succeeded(), ne(variables['DIFF_PHP'], ''))
+
+      - script: |
+          FILES=$(echo "$DIFF_PHP" | tr ' ' ',')
+          php phpmd "$FILES" text phpmd.xml --minimum-priority 1
+        displayName: 'Run PHPMD checks'
+        condition: and(succeeded(), ne(variables['DIFF_PHP'], ''))
+        env:
+          DIFF_PHP: $(DIFF_PHP)
+
+      - script: wget https://cs.symfony.com/download/php-cs-fixer-v3.phar -O php-cs-fixer
+        displayName: 'Install PHPCSFixer'
+        condition: and(succeeded(), ne(variables['DIFF_PHP'], ''))
+
+      - script: php php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.php --path-mode=intersection $DIFF_PHP
+        displayName: 'Run PHPCSFixer checks'
+        condition: and(succeeded(), ne(variables['DIFF_PHP'], ''))
+        env:
+          PHP_CS_FIXER_IGNORE_ENV: 1
+          DIFF_PHP: $(DIFF_PHP)
+
+      - script: npm install eslint@9.39.4 eslint-plugin-react@7.37.5 @eslint/js@9 @eslint/eslintrc@3 globals @stylistic/eslint-plugin --legacy-peer-deps
+        displayName: 'Install ESLint'
+        condition: and(succeeded(), ne(variables['DIFF_JS'], ''))
+
+      - script: node_modules/.bin/eslint --ext js --ext jsx $DIFF_JS
+        displayName: 'Run ESLint checks'
+        condition: and(succeeded(), ne(variables['DIFF_JS'], ''))
+        env:
+          DIFF_JS: $(DIFF_JS)
+
+  - job: PHPUnit
+    displayName: 'PHPUnit (PHP 8.2)'
+    dependsOn: CodingStyle
+    condition: succeeded('CodingStyle')
+    steps:
+      - checkout: self
+        fetchDepth: 2
+
+      - script: |
+          sudo apt-get install -y software-properties-common
+          sudo add-apt-repository ppa:ondrej/php -y
+          sudo apt-get update -qq
+          sudo apt-get install -y php8.2 php8.2-mysql php8.2-redis
+          php --version
+          php -m | grep pdo_mysql
+        displayName: 'Set ppa:ondrej/php and install PHP 8.2 with pdo_mysql and ext-redis'
+
+      - script: mkdir -p /home/vsts/.composer/cache
+        displayName: 'Create composer cache dir'
+
+      - task: Cache@2
+        inputs:
+          key: 'composer | "$(Agent.OS)" | $(Build.SourcesDirectory)/composer.json'
+          path: /home/vsts/.composer/cache
+          restoreKeys: |
+            composer | "$(Agent.OS)"
+            composer
+        displayName: 'Cache Composer dependencies'
+
+      - script: |
+          sudo systemctl start mysql.service
+          timeout 30 bash -c 'until [ -S /var/run/mysqld/mysqld.sock ]; do sleep 1; done'
+          MYSQL_VERSION=$(mysql -uroot -proot -e "SELECT VERSION();" -s -N)
+          echo "##vso[task.setvariable variable=MYSQL_VERSION]$MYSQL_VERSION"
+        displayName: 'Get MySQL version'
+
+      - script: |
+          sudo apt-get install -y yq
+          cp config/parameters.yml.dist config/parameters.yml
+          yq -y '.parameters.database_version = "$(MYSQL_VERSION)"' config/parameters.yml > tmp.yml && mv tmp.yml config/parameters.yml
+          yq -y '.parameters.database_name = "claroline"' config/parameters.yml > tmp.yml && mv tmp.yml config/parameters.yml
+          yq -y '.parameters.database_user = "root"' config/parameters.yml > tmp.yml && mv tmp.yml config/parameters.yml
+          yq -y '.parameters.database_password = "root"' config/parameters.yml > tmp.yml && mv tmp.yml config/parameters.yml
+        displayName: 'Setup parameters.yml'
+
+      - script: composer install --no-interaction
+        displayName: 'Install PHP dependencies with Composer'
+
+      - task: Cache@2
+        inputs:
+          key: 'npm | "$(Agent.OS)" | $(Build.SourcesDirectory)/package.json'
+          path: /home/vsts/.npm
+          restoreKeys: |
+            npm | "$(Agent.OS)"
+            npm
+        displayName: 'Cache node modules'
+
+      - script: npm install --legacy-peer-deps
+        displayName: 'Install JS dependencies with NPM'
+
+      - script: npm run webpack
+        displayName: 'Build JS files with Webpack'
+
+      - script: |
+          php bin/console claroline:install --env=test -vvv
+        displayName: 'Setup Claroline platform'
+
+      - script: php bin/phpunit --dont-report-useless-tests
+        displayName: 'Run PHPUnit Tests'
+
+      - script: php bin/console claroline:user:create --env=test -vvv -a John Doe john.doe john.doe john.doe@test.com
+        displayName: 'Create a Claroline user'
+
+
