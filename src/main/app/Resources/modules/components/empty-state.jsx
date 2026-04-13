@@ -44,16 +44,25 @@ const Fog = (props) =>
     </g>
   </svg>
 
-const EmptyState = (props) => {
+const EmptyState = ({
+  icon,
+  title,
+  description,
+  className,
+  size,
+  primaryAction,
+  secondaryAction,
+  children
+}) => {
   return (
-    <div className={classes('my-auto content-lg text-center', props.className)}>
-      {props.icon &&
-        <div className="mb-4 position-relative d-flex align-items-center justify-content-center mx-auto opacity-75" style={{width: '12rem', height: '8rem'}}>
+    <div className={classes('my-auto content-lg text-center', className)}>
+      {icon &&
+        <div className="mb-5 position-relative d-flex align-items-center justify-content-center mx-auto opacity-75" style={{width: '12rem', height: '8rem'}}>
           <span
             className="text-primary border border-3 border-primary rounded-circle p-3 bg-body z-1 d-flex flex-column align-items-center justify-content-center"
             style={{width: '6rem', height: '6rem'}}
           >
-            <span className={classes(props.icon)} aria-hidden={true} style={{fontSize: '3rem'}}/>
+            <span className={classes(icon)} aria-hidden={true} style={{fontSize: '3rem'}}/>
           </span>
 
           <Fog className="position-absolute" />
@@ -61,46 +70,52 @@ const EmptyState = (props) => {
         </div>
       }
 
-      <h2 className="h4 text-body-secondary mb-0">{props.title}</h2>
-      {props.description &&
-        <p className="text-body-tertiary mt-2 mb-0">{props.description}</p>
+      <p className="lead  mb-0">{title}</p>
+      {description &&
+        <p className="text-body-secondary mt-2 mb-0">{description}</p>
       }
 
       {(
-        (props.secondaryAction && get(props.secondaryAction, 'displayed', true)) ||
-        (props.primaryAction && get(props.primaryAction, 'displayed', true))
+        (secondaryAction && get(secondaryAction, 'displayed', true)) ||
+        (primaryAction && get(primaryAction, 'displayed', true))
       ) &&
         <div className="mt-5 d-flex gap-2 justify-content-center">
-          {props.secondaryAction && get(props.secondaryAction, 'displayed', true) &&
+          {secondaryAction && get(secondaryAction, 'displayed', true) &&
             <Button
-              {...props.secondaryAction}
+              {...secondaryAction}
               className="btn btn-link"
+              size={size}
             />
           }
 
-          {props.primaryAction && get(props.primaryAction, 'displayed', true) &&
+          {primaryAction && get(primaryAction, 'displayed', true) &&
             <Button
-              {...props.primaryAction}
+              {...primaryAction}
               className="btn btn-primary btn-wave"
+              size={size}
             />
           }
         </div>
       }
+
+      {children}
     </div>
   )
 }
 
 EmptyState.propTypes = {
+  className: T.string,
   icon: T.string,
   title: T.string.isRequired,
   description: T.string,
-  className: T.string,
+  size: T.oneOf(['sm', 'lg']),
   primaryAction: T.shape({
     // action types
   }),
   secondaryAction: T.shape({
     // action types
-  })
+  }),
+  children: T.any
 }
 
 export {

@@ -156,6 +156,7 @@ const AnnouncementList = () => {
                 target: contextPath,
                 exact: true
               }}
+              size="lg"
             />
           }
 

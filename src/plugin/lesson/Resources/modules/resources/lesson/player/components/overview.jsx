@@ -73,6 +73,7 @@ const LessonPlayerOverview = () => {
             target: contextPath,
             displayed: !embedded
           }}
+          size="lg"
         />
       }
 

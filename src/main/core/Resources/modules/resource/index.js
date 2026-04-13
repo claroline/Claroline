@@ -7,7 +7,7 @@ import {ResourceOverview} from '#/main/core/resource/components/overview'
 import {ResourceEditor} from '#/main/core/resource/editor'
 import {ResourceEmbedded} from '#/main/core/resource/containers/embedded'
 import {ResourceDashboard} from '#/main/core/resource/dashboard'
-import {selectors} from '#/main/core/resource/store'
+import {actions, selectors} from '#/main/core/resource/store'
 
 /**
  * Declare a new resource to the application.
@@ -84,6 +84,7 @@ export {
   ResourceOverview,
   ResourceEmbedded,
   ResourceDashboard,
+  actions,
   selectors,
   declareResource
 }
