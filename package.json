@@ -55,7 +55,7 @@
     "swagger-ui-react": "^5.32",
     "tinycolor2": "^1.6.0",
     "tinymce": "^7.7",
-    "uuid": "^9.0.0",
+    "uuid": "^14.0.0",
     "video.js": "^8.21",
     "wavesurfer.js": "2.2.1",
     "webpack": "^5.105",
