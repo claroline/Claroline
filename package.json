@@ -14,7 +14,7 @@
     "webpack:dev": "webpack-dev-server --config=webpack.config.dev.js"
   },
   "dependencies": {
-    "@babel/core": "^7.26",
+    "@babel/core": "^7.29",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-react": "^7.10.1",
