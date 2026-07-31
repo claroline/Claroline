@@ -36,7 +36,7 @@
     "mathjax": "2.7.4",
     "moment": "^2.30",
     "pdfjs-dist": "^4.10",
-    "postcss": "^8.4.31",
+    "postcss": "^8.5.25",
     "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-bootstrap": "^2.10",
