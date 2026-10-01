@@ -34,7 +34,7 @@
     "jsplumb": "^2.2.11",
     "lodash": "^4.18.1",
     "mathjax": "2.7.4",
-    "moment": "^2.30",
+    "moment": "^2.31",
     "pdfjs-dist": "^4.10",
     "postcss": "^8.4.31",
     "prop-types": "^15.8.1",
